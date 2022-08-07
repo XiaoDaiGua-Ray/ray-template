@@ -1,0 +1,27 @@
+/* fade */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.28s var(--r-bezier);
+}
+
+.fade-enter-from,
+.fade-leave-active {
+  opacity: 0;
+  transition: all 0.5s var(--r-bezier);
+}
+
+/* fade-transform */
+.fade-transform-leave-active,
+.fade-transform-enter-active {
+  transition: all 0.5s var(--r-bezier);
+}
+
+.fade-transform-enter-from {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.fade-transform-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
