@@ -1,6 +1,6 @@
 # Ray template
 
-模板按照个人习惯进行原始框架、组件的引入与封装, 采用 `Vue 3` `TypeScript` `TSX` 进行开发
+模板按照个人习惯进行原始框架、组件的引入与封装, 采用 `Vue 3` `TypeScript` `TSX` 进行开发, 但是如果使用 `@vueuse hook` 库，如果使用 `TSX` 开发会有一些 bug, 建议采用 `<script setup>` 形式开发
 
 ## 启动项目
 
@@ -26,25 +26,25 @@
 - assets: 项目静态资源入口
   - images: 项目图片资源
 
-- `component`: 全局共用组件
+- component: 全局共用组件
 
-- `icons`: 项目svg图标资源，需要配合 `RayIcon` 组件使用
+- icons: 项目svg图标资源，需要配合 RayIcon 组件使用
 
-- `language`: 国际化
+- language: 国际化
 
-- `router`: 路由表
+- router: 路由表
 
-- store: `pinia` 全局状态管理入口
+- store: 全局状态管理入口
   - modules
     - setting: demo
 
 - styles: 全局公共样式入口
 
-- types: 全局 `type`
+- types: 全局 type
 
 - utils: 工具包
-  - `cache`: 缓存方法
-  - `element`: `dom` 相关操作方法
+  - cache: 缓存方法
+  - element: dom 相关操作方法
 
 - vite-plugin: 插件注册
 ```
