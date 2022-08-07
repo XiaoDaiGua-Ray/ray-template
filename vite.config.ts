@@ -35,7 +35,7 @@ export default defineConfig(async () => {
       useCreateSvgIconsPlugin(),
     ],
     optimizeDeps: {
-      // include: ['vue', 'vue-router', 'pinia', 'vue-i18n'],
+      include: ['vue', 'vue-router', 'pinia', 'vue-i18n', '@vueuse/core'],
     },
     build: {
       ...useViteBuildPlugin(),

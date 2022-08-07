@@ -7,9 +7,9 @@ import { createSvgIconsPlugin } from 'vite-plugin-svg-icons' // svg图标
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite' // i18n
 
 import type { ComponentResolver, TypeImport } from 'unplugin-vue-components'
-import type { VitePluginCompression, ViteBuildPlugin } from './type'
+import type { VitePluginCompression } from './type'
 import type { ImportsMap, PresetName } from 'unplugin-auto-import/types'
-import type { ServerOptions } from 'vite'
+import type { ServerOptions, BuildOptions } from 'vite'
 
 /**
  *
@@ -148,11 +148,11 @@ export const useHTMLTitlePlugin = (title = 'ray template') => {
  *
  * @param options 自定义打包配置参数
  */
-export const useViteBuildPlugin = (options?: ViteBuildPlugin) => {
-  const defaultPlugin = {
+export const useViteBuildPlugin = (options?: BuildOptions) => {
+  const defaultPlugin: BuildOptions = {
     outDir: 'dist', // 打包后文件输出路径
     assetsDir: 'assets', // 指定静态资源存放路径
-    assetsInlineLimit: 2048,
+    assetsInlineLimit: 4096,
     cssCodeSplit: true, // 拆分css代码
     minify: 'esbuild', // 指定使用混淆器(terser|esbuild)
     sourcemap: false,
