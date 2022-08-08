@@ -31,7 +31,7 @@ export const useAliasOptions = (
     },
     {
       find: '@use-api',
-      replacement: path.resolve(__dirname, '../src/assets/api'),
+      replacement: path.resolve(__dirname, '../src/axios/api'),
     },
     {
       find: '@use-images',

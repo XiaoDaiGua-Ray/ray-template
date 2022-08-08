@@ -18,10 +18,10 @@
       "@/*": ["src/*"],
       "@use-utils": ["src/utils"],
       "@use-utils/*": ["src/utils/*"],
-      "@use-api": ["src/assets/api"],
-      "@use-api/*": ["src/utils/api/*"],
+      "@use-api": ["src/axios/api"],
+      "@use-api/*": ["src/axios/api/*"],
       "@use-images": ["src/assets/images"],
-      "@use-images/*": ["src/utils/images"]
+      "@use-images/*": ["src/assets/images"]
     },
     "suppressImplicitAnyIndexErrors": true,
     "types": ["vite-plugin-svg-icons/client"]
