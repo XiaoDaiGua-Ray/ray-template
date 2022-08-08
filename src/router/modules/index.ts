@@ -9,3 +9,9 @@ const routes = Object.keys(route).reduce((modules, modulePath) => {
 }, [] as RouteRecordRaw[])
 
 export default routes
+
+/**
+ *
+ * 这个方法可以自动载入路由表, 不需要手动进行导入
+ * 单个路由表格式可以参考 test.ts
+ */

@@ -1,6 +1,10 @@
 # Ray template
 
-模板按照个人习惯进行原始框架、组件的引入与封装, 采用 `Vue 3` `TypeScript` `TSX` 进行开发, 但是如果使用 `@vueuse hook` 库，如果使用 `TSX` 开发会有一些 bug, 建议采用 `<script setup>` 形式开发
+`模板按照个人习惯进行搭建, 可以根据个人喜好进行更改`
+
+## 项目说明
+
+项目采用 `Vue 3` `TypeScript` `TSX` `Vite` 进行开发, 已经集成了一些常用的开发库, 进行了一些 `Vite` 相关配置, 例如全局自动引入、`GIZ` 打包、按需引入打包、[reactivityTransform](https://vuejs.org/guide/extras/reactivity-transform.html)等, 解放你的双手. 国际化插件, 按照项目需求自己取舍. 引入了比较火的 `hook` 库 [@vueuse](https://vueuse.org/), 极大提高你的搬砖效率. `小提醒: 为了避免使用 @vueuse 时出现奇奇怪怪的错误(例如: useDraggable 在使用的时候, TSX 形式开发会失效), 建议采用 <script setup /> 形式进行开发`.
 
 ## 启动项目
 
@@ -9,8 +13,6 @@
 ## 项目打包
 
 `yarn build` / `npm run build`
-
-## 项目说明
 
 ## 使用开源库
 
@@ -48,3 +50,5 @@
 
 - vite-plugin: 插件注册
 ```
+
+### 祝大家搬砖愉快, 希望这个模板能帮你省很多时间
