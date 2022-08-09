@@ -28,7 +28,9 @@ const RayScrollReveal = defineComponent({
     }
 
     const handleScrollRevealSync = async () => {
-      emit('scrollRevealSync', ScrollReveal().sync)
+      const { sync } = ScrollReveal()
+
+      emit('scrollRevealSync', sync)
     }
 
     onMounted(async () => {
