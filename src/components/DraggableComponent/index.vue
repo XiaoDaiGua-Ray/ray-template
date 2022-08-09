@@ -2,7 +2,7 @@
 const el = ref<HTMLElement | null>(null)
 
 const { x, y, style } = useDraggable(el, {
-  initialValue: { x: 40, y: 140 },
+  initialValue: { x: 630, y: 14 },
 })
 </script>
 
@@ -18,5 +18,6 @@ const { x, y, style } = useDraggable(el, {
   padding: 8px 16px;
   border: 1px solid rgba(156, 163, 175, 0.3);
   cursor: move;
+  z-index: 10;
 }
 </style>

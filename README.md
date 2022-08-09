@@ -21,6 +21,15 @@
 - [vue-router](https://router.vuejs.org/zh/) `router`
 - [axios](http://axios-js.com/zh-cn/docs/index.html) `ajax request`
 - [vue-i18n](https://kazupon.github.io/vue-i18n/zh/introduction.html) `国际化`
+- [scrollreveal.js](https://scrollrevealjs.org/) `滚动加载动画`
+
+## 组件说明
+
+`RayIcon` 结合插件 `vite-plugin-svg-icons` 使用, 可以直接在项目中按照规范使用 `svg` 做为图标
+
+`RayScrollReveal` 基于 `ScrollReveal` 进行开发, 可以实现滚动加载动画
+
+`RayTransitionComponent` 路由过渡动画组件, 可根据自己喜好更改 `src/styles/animate.scss` 文件过渡效果
 
 ## 项目结构
 
