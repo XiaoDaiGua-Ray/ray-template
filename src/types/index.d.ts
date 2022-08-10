@@ -1,5 +1,7 @@
 export {}
 
+import type CryptoJS from 'crypto-js'
+
 export global {
   declare interface IUnknownObjectKey {
     [propName: string]: any
@@ -22,4 +24,10 @@ export global {
     | 'Math'
     | 'RegExp'
     | 'Error'
+
+  declare type WordArray = CryptoJS.lib.WordArray
+
+  declare type CipherOption = CryptoJS.lib.CipherOption
+
+  declare type CipherParams = CryptoJS.lib.CipherParams
 }
