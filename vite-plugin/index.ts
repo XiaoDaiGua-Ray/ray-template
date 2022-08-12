@@ -152,7 +152,7 @@ export const useViteBuildPlugin = (options?: BuildOptions) => {
   const defaultPlugin: BuildOptions = {
     outDir: 'dist', // 打包后文件输出路径
     assetsDir: 'assets', // 指定静态资源存放路径
-    assetsInlineLimit: 4096,
+    assetsInlineLimit: 4096, // 小于这个数字(字节)的静态资产文件将被内联为(base64)
     cssCodeSplit: true, // 拆分css代码
     minify: 'esbuild', // 指定使用混淆器(terser|esbuild)
     sourcemap: false,

@@ -2,6 +2,7 @@ import HmacSHA256 from 'crypto-js/hmac-sha256'
 import SHA256 from 'crypto-js/sha256'
 import AES from 'crypto-js/aes'
 import MD5 from 'crypto-js/md5'
+import BASE64 from 'crypto-js/enc-base64'
 
 /**
  *
@@ -85,6 +86,34 @@ export const useAESDecrypt = (
 export const useMD5 = (message: WordArray | string, cfg?: object) => {
   return new Promise((resolve) => {
     const cry = MD5(message, cfg)
+
+    resolve(cry)
+  })
+}
+
+/**
+ *
+ * @param wordArray 待转为 base64 信息
+ *
+ * base64 加密
+ */
+export const useBase64Stringify = (wordArray: WordArray) => {
+  return new Promise((resolve) => {
+    const cry = BASE64.stringify(wordArray)
+
+    resolve(cry)
+  })
+}
+
+/**
+ *
+ * @param str 待转为 base64 信息
+ *
+ * base64 解密
+ */
+export const useBase64Parse = (str: string) => {
+  return new Promise((resolve) => {
+    const cry = BASE64.parse(str)
 
     resolve(cry)
   })
