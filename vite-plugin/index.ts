@@ -3,7 +3,6 @@ import path from 'node:path'
 import viteCompression from 'vite-plugin-compression' // 压缩打包
 import AutoImport from 'unplugin-auto-import/vite' // 自动导入
 import ViteComponents from 'unplugin-vue-components/vite' // 自动按需导入
-import { createSvgIconsPlugin } from 'vite-plugin-svg-icons' // svg图标
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite' // i18n
 
 import type { ComponentResolver, TypeImport } from 'unplugin-vue-components'
@@ -65,7 +64,7 @@ export const useAutoImport = async (imp: (ImportsMap | PresetName)[] = []) =>
       /\.md$/, // .md
     ],
     dts: true,
-    imports: ['vue', 'vue-router', 'pinia', '@vueuse/core', ...imp],
+    imports: ['vue', 'vue-router', 'pinia', '@vueuse/core', 'vue-i18n', ...imp],
   })
 
 /**
@@ -100,35 +99,13 @@ export const useViteComponents = async (
 export const useViteCompression = (options?: VitePluginCompression) =>
   viteCompression(Object.assign(options ?? {}))
 
-/**
- *
- * 使用 svg 图标
- */
-export const useCreateSvgIconsPlugin = () =>
-  createSvgIconsPlugin({
-    // 指定需要缓存的图标文件夹
-    iconDirs: [path.resolve(process.cwd(), 'src/icons')],
-    // 指定symbolId格式
-    symbolId: 'icon-[dir]-[name]',
-
-    /**
-     * 自定义插入位置
-     * @default: body-last
-     */
-    // inject?: 'body-last' | 'body-first'
-
-    /**
-     * custom dom id
-     * @default: __svg__icons__dom__
-     */
-    // customDomId: '__svg__icons__dom__',
-  })
-
 export const useVueI18nPlugin = () =>
   VueI18nPlugin({
     runtimeOnly: true,
     compositionOnly: true,
-    include: [path.resolve(__dirname, '../src/language/**')],
+    forceStringify: true,
+    defaultSFCLang: 'json',
+    include: [path.resolve(__dirname, '../locales/**')],
   })
 
 /**
@@ -156,6 +133,12 @@ export const useViteBuildPlugin = (options?: BuildOptions) => {
     cssCodeSplit: true, // 拆分css代码
     minify: 'esbuild', // 指定使用混淆器(terser|esbuild)
     sourcemap: false,
+    terserOptions: {
+      compress: {
+        drop_console: true, // 打包后移除console
+        drop_debugger: true, // 打包后移除debugger
+      },
+    },
   }
 
   return Object.assign(defaultPlugin, options)
@@ -186,4 +169,62 @@ export const useViteServerPlugin = (options?: ServerOptions) => {
   }
 
   return Object.assign(server, options)
+}
+
+export const useEnvBuildOutput = (mode: string) => {
+  let buildOptions = {
+    outDir: 'dist/test-dist',
+    sourcemap: false,
+    terserOptions: {
+      compress: {
+        drop_console: true, // 打包后移除console
+        drop_debugger: true, // 打包后移除debugger
+      },
+    },
+  }
+
+  switch (mode) {
+    case 'test':
+      buildOptions = {
+        outDir: 'dist/test-dist',
+        sourcemap: true,
+        terserOptions: {
+          compress: {
+            drop_console: false, // 打包后移除console
+            drop_debugger: false, // 打包后移除debugger
+          },
+        },
+      }
+      break
+
+    case 'development':
+      buildOptions = {
+        outDir: 'dist/development-dist',
+        sourcemap: true,
+        terserOptions: {
+          compress: {
+            drop_console: false, // 打包后移除console
+            drop_debugger: false, // 打包后移除debugger
+          },
+        },
+      }
+      break
+
+    case 'production':
+      buildOptions = {
+        outDir: 'dist/production-dist',
+        sourcemap: false,
+        terserOptions: {
+          compress: {
+            drop_console: true, // 打包后移除console
+            drop_debugger: true, // 打包后移除debugger
+          },
+        },
+      }
+      break
+  }
+
+  return {
+    buildOptions,
+  }
 }

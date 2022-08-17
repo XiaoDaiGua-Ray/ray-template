@@ -23,10 +23,9 @@
 - [vue-i18n](https://kazupon.github.io/vue-i18n/zh/introduction.html) `国际化`
 - [scrollreveal.js](https://scrollrevealjs.org/) `滚动加载动画`
 - [crypto-js](https://github.com/brix/crypto-js) `加密`
+- [vite-svg-loader](https://github.com/jpkleemans/vite-svg-loader) `svg组件化`
 
 ## 组件说明
-
-`RayIcon` 结合插件 `vite-plugin-svg-icons` 使用, 可以直接在项目中按照规范使用 `svg` 做为图标
 
 `RayScrollReveal` 基于 `ScrollReveal` 进行开发, 可以实现滚动加载动画
 

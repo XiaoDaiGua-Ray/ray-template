@@ -2,22 +2,25 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
 import {
+  useAliasOptions,
+  useViteBuildPlugin,
+  useViteServerPlugin,
+  useEnvBuildOutput,
   useAutoImport,
   useViteComponents,
-  useAliasOptions,
   useViteCompression,
   useVueI18nPlugin,
   useHTMLTitlePlugin,
-  useViteBuildPlugin,
-  useCreateSvgIconsPlugin,
-  useViteServerPlugin,
 } from './vite-plugin/index'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import ViteInspect from 'vite-plugin-inspect'
+import viteSvgLoader from 'vite-svg-loader'
 
 // https://vitejs.dev/config/
-export default defineConfig(async () => {
+export default defineConfig(async ({ mode }) => {
+  const { buildOptions } = useEnvBuildOutput(mode)
+
   return {
     resolve: {
       alias: useAliasOptions(),
@@ -25,20 +28,20 @@ export default defineConfig(async () => {
     plugins: [
       vue({ reactivityTransform: true }),
       vueJsx(),
-      await useAutoImport(),
-      await useViteComponents(),
-      useViteCompression(),
-      VueI18nPlugin(),
       ViteInspect(), // 仅适用于开发模式(检查 Vite 插件的中间状态)
+      VueI18nPlugin(),
+      useAutoImport(),
+      useViteComponents(),
+      useViteCompression(),
       useVueI18nPlugin(),
       useHTMLTitlePlugin(),
-      useCreateSvgIconsPlugin(),
+      viteSvgLoader(),
     ],
     optimizeDeps: {
       include: ['vue', 'vue-router', 'pinia', 'vue-i18n', '@vueuse/core'],
     },
     build: {
-      ...useViteBuildPlugin(),
+      ...useViteBuildPlugin(buildOptions),
       rollupOptions: {
         external: 'virtual:svg-icons-register',
       },
