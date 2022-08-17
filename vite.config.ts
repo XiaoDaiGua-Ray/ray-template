@@ -42,9 +42,6 @@ export default defineConfig(async ({ mode }) => {
     },
     build: {
       ...useViteBuildPlugin(buildOptions),
-      rollupOptions: {
-        external: 'virtual:svg-icons-register',
-      },
     },
     css: {
       preprocessorOptions: {
