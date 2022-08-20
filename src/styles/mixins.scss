@@ -1,14 +1,14 @@
-// 文字溢出变为：......
-@mixin overflow-ellipsis {
+// 文字溢出变为: ......
+@mixin overflowEllipsis {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 }
 
 // 滚动条样式
-@mixin scroll-style {
+@mixin scrollStyle {
   ::-webkit-scrollbar {
-    /*改变纵向滚动条宽度*/
+    // 改变纵向滚动条宽度
     width: 5px;
     height: 5px;
     transition: background-color 0.2s var(--r-scrollbar-bezier);
@@ -16,26 +16,20 @@
   }
 
   ::-webkit-scrollbar-track {
-    /*改变滚动条轨道颜色*/
+    // 改变滚动条轨道颜色
     border-radius: 5px;
     background-color: transparent;
   }
 
   ::-webkit-scrollbar-thumb {
-    /*改变滚动条滑轨相关的样式*/
+    // 改变滚动条滑轨相关的样式
     border-radius: 5px;
     background-color: rgba(255, 255, 255, 0.2);
   }
   ::-webkit-scrollbar-thumb:hover {
-    /* 移入鼠标效果 */
+    // 移入鼠标效果
     border-radius: 5px;
     background-color: rgba(255, 255, 255, 0.3);
     cursor: pointer;
   }
-}
-
-@mixin flex-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }

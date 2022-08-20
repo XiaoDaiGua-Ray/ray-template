@@ -55,7 +55,9 @@
 
 - utils: 工具包
   - cache: 缓存方法
+  - crypto: 常用的加密方法
   - element: dom 相关操作方法
+  - hook: 常用 hook 方法
 
 - vite-plugin: 插件注册
 ```

@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 
 import '@/styles/base.scss'
 
-import 'amfe-flexible'
+// import 'amfe-flexible' // 如果为移动端项目, 解开该注释即可
 
 import App from './App'
 

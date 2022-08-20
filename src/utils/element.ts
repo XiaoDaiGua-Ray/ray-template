@@ -65,9 +65,9 @@ export const off = (
 /**
  *
  * @param element Target element dom
- * @param className 所需添加className，可：'xxx xxx' | 'xxx'格式添加
+ * @param className 所需添加className，可: 'xxx xxx' | 'xxx'格式添加
  *
- * @handle 添加元素className(可：'xxx xxx' | 'xxx'格式添加)
+ * @handle 添加元素className(可: 'xxx xxx' | 'xxx'格式添加)
  */
 export const addClass = (element: HTMLElement, className: string) => {
   if (element) {
@@ -84,9 +84,9 @@ export const addClass = (element: HTMLElement, className: string) => {
 /**
  *
  * @param element Target element dom
- * @param className 所需删除className，可：'xxx xxx' | 'xxx'格式删除
+ * @param className 所需删除className，可: 'xxx xxx' | 'xxx'格式删除
  *
- * @handle 删除元素className(可：'xxx xxx' | 'xxx'格式删除)
+ * @handle 删除元素className(可: 'xxx xxx' | 'xxx'格式删除)
  */
 export const removeClass = (element: HTMLElement, className: string) => {
   if (element) {
@@ -103,11 +103,11 @@ export const removeClass = (element: HTMLElement, className: string) => {
 /**
  *
  * @param element Target element dom
- * @param className 查询元素是否含有此className，可：'xxx xxx' | 'xxx'格式查询
+ * @param className 查询元素是否含有此className，可: 'xxx xxx' | 'xxx'格式查询
  *
  * @returns 返回boolean
  *
- * @handle 元素是否含有某个className(可：'xxx xxx' | 'xxx'格式查询)
+ * @handle 元素是否含有某个className(可: 'xxx xxx' | 'xxx'格式查询)
  */
 export const hasClass = (element: HTMLElement, className: string) => {
   const elementClassName = element.className
@@ -160,7 +160,7 @@ export const removeStyle = (el: HTMLElement, styles: string[]) => {
 /**
  *
  * @param element Target element dom
- * @param styleProp Element style  properties
+ * @param styleProp Element style properties
  *
  * @returns CSSStyleDeclaration
  */

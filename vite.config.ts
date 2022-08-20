@@ -28,14 +28,16 @@ export default defineConfig(async ({ mode }) => {
     plugins: [
       vue({ reactivityTransform: true }),
       vueJsx(),
-      ViteInspect(), // 仅适用于开发模式(检查 Vite 插件的中间状态)
+      ViteInspect(), // 仅适用于开发模式(检查 `Vite` 插件的中间状态)
       VueI18nPlugin(),
       useAutoImport(),
       useViteComponents(),
       useViteCompression(),
       useVueI18nPlugin(),
       useHTMLTitlePlugin(),
-      viteSvgLoader(),
+      viteSvgLoader({
+        defaultImport: 'component', // 默认以 `componetn` 形式导入 `svg`
+      }),
     ],
     optimizeDeps: {
       include: ['vue', 'vue-router', 'pinia', 'vue-i18n', '@vueuse/core'],
@@ -46,7 +48,7 @@ export default defineConfig(async ({ mode }) => {
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: '@import "./src/styles/mixins.scss";', // 全局mixin
+          additionalData: '@import "./src/styles/mixins.scss";', // 全局 `mixin` (根据自己需要取舍)
         },
       },
     },

@@ -17,7 +17,7 @@ export const useSetCache = <T>(
  *
  * @param key 需要获取目标缓存的key
  *
- * @returns 所获取的缓存值
+ * @returns 获取缓存值
  */
 export const useGetCache = (
   key: string,
