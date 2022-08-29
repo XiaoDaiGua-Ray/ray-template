@@ -28,10 +28,10 @@ export default defineConfig(async ({ mode }) => {
     plugins: [
       vue({ reactivityTransform: true }),
       vueJsx(),
-      ViteInspect(), // 仅适用于开发模式(检查 Vite 插件的中间状态)
+      ViteInspect(), // 仅适用于开发模式(检查 `Vite` 插件的中间状态)
       VueI18nPlugin(),
-      useAutoImport(),
-      useViteComponents(),
+      await useAutoImport(),
+      await useViteComponents(),
       useViteCompression(),
       useVueI18nPlugin(),
       useHTMLTitlePlugin(),
@@ -46,7 +46,7 @@ export default defineConfig(async ({ mode }) => {
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: '@import "./src/styles/mixins.scss";', // 全局mixin
+          additionalData: '@import "./src/styles/mixins.scss";', // 全局 `mixin`
         },
       },
     },
