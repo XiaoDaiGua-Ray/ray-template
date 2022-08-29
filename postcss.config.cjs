@@ -12,9 +12,11 @@ module.exports = {
       grid: true,
     },
     'postcss-pxtorem': {
-      rootValue: 37.5,
+      rootValue: 16, // 根元素字体大小或根据 `input` 参数返回根元素字体大小
       propList: ['*'],
       unitPrecision: 5,
+      propList: ['font', 'font-size', 'line-height', 'letter-spacing'], // 可以从 `px` 更改为 `rem` 的属性
+      selectorBlackList: [], // 要忽略并保留为 `px` 的选择器
     },
   },
 }

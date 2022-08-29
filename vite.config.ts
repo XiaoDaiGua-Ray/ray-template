@@ -35,7 +35,9 @@ export default defineConfig(async ({ mode }) => {
       useViteCompression(),
       useVueI18nPlugin(),
       useHTMLTitlePlugin(),
-      viteSvgLoader(),
+      viteSvgLoader({
+        defaultImport: 'component', // 默认以 `componetn` 形式导入 `svg`
+      }),
     ],
     optimizeDeps: {
       include: ['vue', 'vue-router', 'pinia', 'vue-i18n', '@vueuse/core'],

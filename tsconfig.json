@@ -24,10 +24,7 @@
       "@use-images/*": ["src/assets/images"]
     },
     "suppressImplicitAnyIndexErrors": true,
-    "types": [
-      "vite-plugin-svg-icons/client",
-      "@intlify/unplugin-vue-i18n/messages"
-    ]
+    "types": ["@intlify/unplugin-vue-i18n/messages"]
   },
   "include": [
     "src/**/*.ts",

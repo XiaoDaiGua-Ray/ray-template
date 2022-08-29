@@ -190,8 +190,8 @@ export const useEnvBuildOutput = (mode: string) => {
         sourcemap: true,
         terserOptions: {
           compress: {
-            drop_console: false, // 打包后移除console
-            drop_debugger: false, // 打包后移除debugger
+            drop_console: false,
+            drop_debugger: false,
           },
         },
       }
@@ -203,8 +203,8 @@ export const useEnvBuildOutput = (mode: string) => {
         sourcemap: true,
         terserOptions: {
           compress: {
-            drop_console: false, // 打包后移除console
-            drop_debugger: false, // 打包后移除debugger
+            drop_console: false,
+            drop_debugger: false,
           },
         },
       }
@@ -216,8 +216,8 @@ export const useEnvBuildOutput = (mode: string) => {
         sourcemap: false,
         terserOptions: {
           compress: {
-            drop_console: true, // 打包后移除console
-            drop_debugger: true, // 打包后移除debugger
+            drop_console: true,
+            drop_debugger: true,
           },
         },
       }
