@@ -6,29 +6,56 @@ const RayScrollReveal = defineComponent({
   name: 'RayScrollReveal',
   props: {
     options: {
+      // ScrollReveal reveal options
       type: Object as PropType<scrollReveal.ScrollRevealObjectOptions>,
+    },
+    width: {
+      type: String,
+    },
+    reset: {
+      type: Boolean,
+      default: false,
     },
   },
   emits: ['scrollRevealSync'],
   setup(props, { emit }) {
     const scrollRevealRef = ref<HTMLElement>()
+    const cssVarsRef = computed(() => {
+      const scsVars = {
+        '--ray-scroll-reveal-width': props.width,
+      }
 
+      return scsVars
+    })
+    let scrollRevealCore: scrollReveal.ScrollRevealObject
+
+    /**
+     *
+     * 为 `dom` 注册 `ScrollReveal` 动画效果
+     */
     const handleRegisterScrollReveal = async () => {
       const el = scrollRevealRef.value as HTMLElement
       const defaultOptions = {
         distance: '50px',
         duration: 600,
-        reset: true,
+        reset: props.reset,
         easing: 'ease',
         scale: 0.99,
         mobile: true,
       }
 
-      ScrollReveal().reveal(el, Object.assign(defaultOptions, props.options))
+      scrollRevealCore = ScrollReveal().reveal(
+        el,
+        Object.assign(defaultOptions, props.options),
+      )
     }
 
+    /**
+     *
+     * 处理 `dom` 新增后无法绑定过渡动画情况
+     */
     const handleScrollRevealSync = async () => {
-      const { sync } = ScrollReveal()
+      const { sync } = scrollRevealCore
 
       emit('scrollRevealSync', sync)
     }
@@ -40,11 +67,16 @@ const RayScrollReveal = defineComponent({
 
     return {
       scrollRevealRef,
+      cssVarsRef,
     }
   },
   render() {
     return (
-      <div class="ray-scroll-reveal" ref="scrollRevealRef">
+      <div
+        class="ray-scroll-reveal"
+        ref="scrollRevealRef"
+        style={this.cssVarsRef}
+      >
         {this.$slots.default?.()}
       </div>
     )
