@@ -27,7 +27,6 @@ const RayScrollReveal = defineComponent({
 
       return scsVars
     })
-    let scrollRevealCore: scrollReveal.ScrollRevealObject
 
     /**
      *
@@ -44,10 +43,7 @@ const RayScrollReveal = defineComponent({
         mobile: true,
       }
 
-      scrollRevealCore = ScrollReveal().reveal(
-        el,
-        Object.assign(defaultOptions, props.options),
-      )
+      ScrollReveal().reveal(el, Object.assign(defaultOptions, props.options))
     }
 
     /**
@@ -55,7 +51,7 @@ const RayScrollReveal = defineComponent({
      * 处理 `dom` 新增后无法绑定过渡动画情况
      */
     const handleScrollRevealSync = async () => {
-      const { sync } = scrollRevealCore
+      const { sync } = ScrollReveal()
 
       emit('scrollRevealSync', sync)
     }
@@ -88,7 +84,7 @@ export default RayScrollReveal
 /**
  *
  * 滚动加载过度组件, 来回滚动时, 可以重复触发效果
- * 只需要将 `dom` 插入在 `RayScrollReveal` 组件下即可
- * 如果需要使用重新注册加载脚本或者有新的 `dom` 插入, 调用 `scrollRevealCallback` 函数即可捕获添加到 `dom` 的任何新元素
+ * 只需要将 dom 插入在 RayScrollReveal 组件下即可
+ * 如果需要使用重新注册加载脚本或者有新的 dom 插入, 调用 scrollRevealCallback 函数即可捕获添加到 dom 的任何新元素
  * 注意: 插件始终是以显示屏为窗口作为判断元素是否显示, 所以自定义滚动条滚动加载元素不生效
  */
