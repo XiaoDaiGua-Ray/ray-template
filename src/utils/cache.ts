@@ -6,11 +6,13 @@
 export const useSetCache = <T>(
   key: string,
   value: T,
-  type: TCacheType = 'sessionStorage',
+  type: CacheType = 'sessionStorage',
 ) => {
+  const waitCacheValue = JSON.stringify(value)
+
   type === 'localStorage'
-    ? window.localStorage.setItem(key, JSON.stringify(value))
-    : window.sessionStorage.setItem(key, JSON.stringify(value))
+    ? window.localStorage.setItem(key, waitCacheValue)
+    : window.sessionStorage.setItem(key, waitCacheValue)
 }
 
 /**
@@ -21,7 +23,7 @@ export const useSetCache = <T>(
  */
 export const useGetCache = (
   key: string,
-  type: TCacheType = 'sessionStorage',
+  type: CacheType = 'sessionStorage',
 ) => {
   let data =
     type === 'localStorage'
@@ -37,7 +39,7 @@ export const useGetCache = (
  */
 export const useRemoveCache = (
   key: string | 'all' | 'all-sessionStorage' | 'all-localStorage',
-  type: TCacheType = 'sessionStorage',
+  type: CacheType = 'sessionStorage',
 ) => {
   if (key === 'all') {
     window.window.localStorage.clear()

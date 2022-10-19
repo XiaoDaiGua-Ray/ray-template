@@ -30,4 +30,6 @@ export global {
   declare type CipherOption = CryptoJS.lib.CipherOption
 
   declare type CipherParams = CryptoJS.lib.CipherParams
+
+  declare type VoidFunc = (...args: unknown[]) => void
 }

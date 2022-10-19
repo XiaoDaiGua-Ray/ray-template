@@ -1,5 +1,5 @@
 export {}
 
 declare global {
-  declare type TCacheType = 'sessionStorage' | 'localStorage'
+  declare type CacheType = 'sessionStorage' | 'localStorage'
 }
