@@ -11,6 +11,7 @@ import {
   useViteCompression,
   useVueI18nPlugin,
   useHTMLTitlePlugin,
+  useSVGIcon,
 } from './vite-plugin/index'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
@@ -38,6 +39,7 @@ export default defineConfig(async ({ mode }) => {
       viteSvgLoader({
         defaultImport: 'component', // 默认以 `componetn` 形式导入 `svg`
       }),
+      useSVGIcon(),
     ],
     optimizeDeps: {
       include: ['vue', 'vue-router', 'pinia', 'vue-i18n', '@vueuse/core'],

@@ -4,11 +4,30 @@ import viteCompression from 'vite-plugin-compression' // 压缩打包
 import AutoImport from 'unplugin-auto-import/vite' // 自动导入
 import ViteComponents from 'unplugin-vue-components/vite' // 自动按需导入
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite' // i18n
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons' // `svg icon`
 
 import type { ComponentResolver, TypeImport } from 'unplugin-vue-components'
 import type { VitePluginCompression } from './type'
 import type { ImportsMap, PresetName } from 'unplugin-auto-import/types'
 import type { ServerOptions, BuildOptions } from 'vite'
+import type { ViteSvgIconsPlugin } from 'vite-plugin-svg-icons'
+
+/**
+ *
+ * @param options `svg icon` 自定义配置
+ *
+ * 使用 `svg` 作为图标
+ */
+export const useSVGIcon = (options?: ViteSvgIconsPlugin) => {
+  const defaultOptions = {
+    iconDirs: [path.resolve(process.cwd(), 'src/icons')],
+    symbolId: 'icon-[dir]-[name]',
+    inject: 'body-last',
+    customDomId: '__svg__icons__dom__',
+  }
+
+  return createSvgIconsPlugin(Object.assign(defaultOptions, options))
+}
 
 /**
  *

@@ -3,6 +3,7 @@ import { createApp } from 'vue'
 import '@/styles/base.scss'
 
 // import 'amfe-flexible' // 如果为移动端项目, 解开该注释即可
+import 'virtual:svg-icons-register' // `vite-plugin-svg-icons` 脚本, 如果不使用此插件注释即可
 
 import App from './App'
 
