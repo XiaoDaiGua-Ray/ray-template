@@ -3,7 +3,9 @@ import type { RouteRecordRaw } from 'vue-router'
 const route = import.meta.glob('./*.ts', { eager: true }) as IUnknownObjectKey
 
 const routes = Object.keys(route).reduce((modules, modulePath) => {
-  modules.push(route[modulePath].default)
+  const _default = route[modulePath]
+
+  modules.push(_default as unknown as RouteRecordRaw)
 
   return modules
 }, [] as RouteRecordRaw[])

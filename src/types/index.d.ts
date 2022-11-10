@@ -4,7 +4,7 @@ import type CryptoJS from 'crypto-js'
 
 export global {
   declare interface IUnknownObjectKey {
-    [propName: string]: any
+    [propName: string]: unknown
   }
 
   declare type EventListenerOrEventListenerObject =

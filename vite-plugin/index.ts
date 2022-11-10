@@ -191,20 +191,20 @@ export const useViteServerPlugin = (options?: ServerOptions) => {
 }
 
 export const useEnvBuildOutput = (mode: string) => {
-  let buildOptions = {
+  const buildOptions: BuildOptions = {
     outDir: 'dist/test-dist',
     sourcemap: false,
     terserOptions: {
       compress: {
-        drop_console: true, // 打包后移除console
-        drop_debugger: true, // 打包后移除debugger
+        drop_console: true, // 打包后移除 `console`
+        drop_debugger: true, // 打包后移除 `debugger`
       },
     },
   }
 
   switch (mode) {
     case 'test':
-      buildOptions = {
+      Object.assign(buildOptions, {
         outDir: 'dist/test-dist',
         sourcemap: true,
         terserOptions: {
@@ -213,11 +213,12 @@ export const useEnvBuildOutput = (mode: string) => {
             drop_debugger: false,
           },
         },
-      }
+      })
+
       break
 
     case 'development':
-      buildOptions = {
+      Object.assign(buildOptions, {
         outDir: 'dist/development-dist',
         sourcemap: true,
         terserOptions: {
@@ -226,11 +227,12 @@ export const useEnvBuildOutput = (mode: string) => {
             drop_debugger: false,
           },
         },
-      }
+      })
+
       break
 
     case 'production':
-      buildOptions = {
+      Object.assign(buildOptions, {
         outDir: 'dist/production-dist',
         sourcemap: false,
         terserOptions: {
@@ -239,7 +241,10 @@ export const useEnvBuildOutput = (mode: string) => {
             drop_debugger: true,
           },
         },
-      }
+      })
+      break
+
+    default:
       break
   }
 

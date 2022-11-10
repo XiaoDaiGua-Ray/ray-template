@@ -135,10 +135,14 @@ export const addStyle = (
         el.style[item] = styles[item]
       })
     } else if (useValidteValueType(styles, 'String')) {
-      ;(styles as string).split(';').forEach((item) => {
+      const _styles = styles as string
+
+      _styles.split(';').forEach((item) => {
         const [_k, _v] = item.split(':')
 
-        _k && _v && (el.style[_k.trim()] = _v.trim())
+        if (_k && _v) {
+          el.style[_k.trim()] = _v.trim()
+        }
       })
     }
   }

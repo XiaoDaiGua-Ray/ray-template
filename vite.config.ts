@@ -17,6 +17,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import ViteInspect from 'vite-plugin-inspect'
 import viteSvgLoader from 'vite-svg-loader'
+import viteEslintPlugin from 'vite-plugin-eslint'
 
 // https://vitejs.dev/config/
 export default defineConfig(async ({ mode }) => {
@@ -40,6 +41,17 @@ export default defineConfig(async ({ mode }) => {
         defaultImport: 'component', // 默认以 `componetn` 形式导入 `svg`
       }),
       useSVGIcon(),
+      viteEslintPlugin,
+      {
+        include: [
+          'src/**/*.ts',
+          'src/**/*.tsx',
+          'src/**/*.vue',
+          'src/*.ts',
+          'src/*.tsx',
+          'src/*.vue',
+        ],
+      },
     ],
     optimizeDeps: {
       include: ['vue', 'vue-router', 'pinia', 'vue-i18n', '@vueuse/core'],

@@ -32,7 +32,7 @@ export interface VitePluginCompression {
   /**
    * Compression Options
    */
-  compressionOptions?: {}
+  compressionOptions?: object
   /**
    * Delete the corresponding source file after compressing the file
    * @default: false
