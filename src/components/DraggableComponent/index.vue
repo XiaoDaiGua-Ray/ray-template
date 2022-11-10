@@ -7,7 +7,7 @@ const { x, y, style } = useDraggable(el, {
 </script>
 
 <template>
-  <div class="draggable-component" ref="el" :style="style">
+  <div ref="el" class="draggable-component" :style="style">
     Drag me! I am at {{ x }}, {{ y }}
   </div>
 </template>

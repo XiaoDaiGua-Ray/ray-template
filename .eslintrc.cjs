@@ -22,7 +22,7 @@ module.exports = {
       tsx: true,
     },
   },
-  plugins: ['vue', 'react'],
+  plugins: ['vue', '@typescript-eslint', 'prettier'],
   globals: {
     defineProps: 'readonly',
     defineEmits: 'readonly',
@@ -34,7 +34,7 @@ module.exports = {
     'prettier/prettier': 'error',
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
-    '@typescript-eslint/ban-types': 'error',
+    '@typescript-eslint/ban-types': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
@@ -65,8 +65,8 @@ module.exports = {
     'no-extend-native': 2, // 禁止扩展 `native` 对象
     'no-extra-bind': 2, // 禁止不必要的函数绑定
     'no-extra-boolean-cast': 2, // 禁止不必要的 `bool` 转换
-    'no-extra-parens': 2, // 禁止非必要的括号
-    'no-extra-semi': 2, // 禁止多余的冒号
+    'no-extra-parens': 0, // 禁止非必要的括号
+    'no-extra-semi': 2, // 忽略多余的冒号
     'no-fallthrough': 1, // 禁止 `switch` 穿透
     'no-func-assign': 2, // 禁止重复的函数声明
     'no-implicit-coercion': 1, // 禁止隐式转换
@@ -91,6 +91,7 @@ module.exports = {
     'no-useless-call': 2, // 禁止不必要的 `call` 和 `apply`
     'no-var': 'error', // 禁用 `var`
     'no-with': 2, // 禁用 `with`
+    'no-undef': 0,
     'vue/multi-word-component-names': [
       'off',
       {
