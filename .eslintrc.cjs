@@ -86,7 +86,14 @@ module.exports = {
     'no-sparse-arrays': 2, // 禁止稀疏数组
     'no-trailing-spaces': 1, // 一行结束后面不要有空格
     'no-unreachable': 2, // 禁止有无法执行的代码
-    'no-unused-expressions': 2, // 禁止无用的表达式
+    'no-unused-expressions': [
+      'error',
+      {
+        allowShortCircuit: true,
+        allowTernary: true,
+        allowTaggedTemplates: true,
+      },
+    ], // 禁止无用的表达式
     'no-use-before-define': 2, // 禁止定义前使用
     'no-useless-call': 2, // 禁止不必要的 `call` 和 `apply`
     'no-var': 'error', // 禁用 `var`
