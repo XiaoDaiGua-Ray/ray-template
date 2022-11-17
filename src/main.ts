@@ -1,5 +1,7 @@
 import { createApp } from 'vue'
 
+import type { App as AppType } from 'vue'
+
 import '@/styles/base.scss'
 
 // import 'amfe-flexible' // 如果为移动端项目, 解开该注释即可
@@ -12,15 +14,36 @@ import { setupStore } from './store/index'
 import { setupI18n } from './language/index'
 
 const setupTemplate = () => {
-  const app = createApp(App)
+  const instance = createApp(App)
 
-  setupRouter(app)
+  setupRouter(instance)
 
-  setupStore(app)
+  setupStore(instance)
 
-  setupI18n(app)
+  setupI18n(instance)
 
-  app.mount('#app')
+  instance.mount('#app')
 }
 
-setupTemplate()
+if (window.__POWERED_BY_WUJIE__) {
+  let instance: AppType<Element>
+
+  window.__WUJIE_MOUNT = () => {
+    instance = createApp(App)
+
+    setupRouter(instance)
+
+    setupStore(instance)
+
+    setupI18n(instance)
+
+    instance.mount('#app')
+  }
+  window.__WUJIE_UNMOUNT = () => {
+    instance.unmount()
+  }
+
+  window.__WUJIE.mount()
+} else {
+  setupTemplate()
+}

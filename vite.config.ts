@@ -67,7 +67,9 @@ export default defineConfig(async ({ mode }) => {
       },
     },
     server: {
-      ...useViteServerPlugin(),
+      ...useViteServerPlugin({
+        port: 7749,
+      }),
     },
   }
 })
