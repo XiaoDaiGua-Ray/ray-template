@@ -1,3 +1,3 @@
 import autoLayoutChildrenRoutes from './modules/index'
 
-export const constantRoutes = []
+export const constantRoutes = autoLayoutChildrenRoutes
