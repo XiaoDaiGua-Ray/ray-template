@@ -31,8 +31,9 @@ const App = defineComponent({
         <br />
         hello! Welcome to this template!
         <h1>
-          当前鼠标位置: x: {this.x}, y: {this.y} {this.ray('Test')}
+          当前鼠标位置: x: {this.x}, y: {this.y}
         </h1>
+        <h1>测试 i18n {this.ray('Test')}</h1>
         <DraggableComponent />
         {Array.from({ length: 10 }, (_, i) => i).map((_, idx) => (
           <RayScrollReveal>
