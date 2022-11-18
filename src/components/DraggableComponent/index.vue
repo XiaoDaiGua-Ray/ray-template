@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import type { MaybeComputedRef } from '@vueuse/core'
+
 const el = ref<HTMLElement | null>(null)
 
-const { x, y, style } = useDraggable(el, {
+const { x, y, style } = useDraggable(el as MaybeComputedRef<HTMLElement>, {
   initialValue: { x: 630, y: 14 },
 })
 </script>

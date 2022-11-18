@@ -22,3 +22,5 @@ dist
 *.njsproj
 *.sln
 *.sw?
+yarn-*.*
+yarn.*
