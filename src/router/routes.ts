@@ -1,6 +1,10 @@
-import autoLayoutChildrenRoutes from './modules/index'
-
-export const constantRoutes = autoLayoutChildrenRoutes
+export const constantRoutes = [
+  {
+    path: '/',
+    name: 'demo-active',
+    component: () => import('@/App'),
+  },
+]
 
 /**
  *

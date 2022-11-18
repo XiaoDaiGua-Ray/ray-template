@@ -1,5 +1,5 @@
 export default {
-  path: '',
-  name: 'app',
+  path: '/',
+  name: 'dmeo',
   component: () => import('@/App'),
 }
