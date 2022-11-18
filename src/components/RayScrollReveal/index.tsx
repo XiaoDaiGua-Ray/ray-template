@@ -1,4 +1,5 @@
-import { defineComponent, PropType } from 'vue'
+import { defineComponent } from 'vue'
+import type { PropType } from 'vue'
 import './index.scss'
 import ScrollReveal from 'scrollreveal'
 
@@ -8,9 +9,11 @@ const RayScrollReveal = defineComponent({
     options: {
       // ScrollReveal reveal options
       type: Object as PropType<scrollReveal.ScrollRevealObjectOptions>,
+      default: {} as scrollReveal.ScrollRevealObjectOptions,
     },
     width: {
       type: String,
+      default: 'auto',
     },
     reset: {
       type: Boolean,

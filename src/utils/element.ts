@@ -7,9 +7,9 @@ import { useValidteValueType } from '@use-utils/hook'
  *
  * @returns 目标节点下所有子节点
  */
-export const useObtainElementChildNodes = (
+export const useElementChildNodes = (
   el: HTMLElement,
-  target?: Array<string> | string,
+  target?: string[] | string,
 ) => {
   let nodes = Array.from(el.childNodes)
 
@@ -123,7 +123,7 @@ export const hasClass = (element: HTMLElement, className: string) => {
 /**
  *
  * @param el Target element dom
- * @param styles 所需绑定样式(如果为字符串，则必须以分号结尾每个行内样式描述)
+ * @param styles 所需绑定样式(如果为字符串, 则必须以分号结尾每个行内样式描述)
  */
 export const addStyle = (
   el: HTMLElement,
@@ -159,21 +159,4 @@ export const removeStyle = (el: HTMLElement, styles: string[]) => {
       el.style[item] = null
     })
   }
-}
-
-/**
- *
- * @param element Target element dom
- * @param styleProp Element style properties
- *
- * @returns CSSStyleDeclaration
- */
-export const useElementStyle = (element: HTMLElement, styleProp: string[]) => {
-  const styles = styleProp.reduce((_pre, _item) => {
-    _pre[_item] = element.style[_item]
-
-    return _pre
-  }, {} as CSSStyleDeclaration)
-
-  return styles
 }

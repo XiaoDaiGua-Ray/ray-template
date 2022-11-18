@@ -34,6 +34,8 @@ export const useSVGIcon = (options?: ViteSvgIconsPlugin) => {
  * @param options 别名
  *
  * 使用别名
+ * 使用时, 必须以 `vite-plugin` 作为起始位置
+ * 配置后, 需要在 `tsconfig.json` 中配置对应的 `paths`
  */
 export const useAliasOptions = (
   options?: { find: string; replacement: string }[],

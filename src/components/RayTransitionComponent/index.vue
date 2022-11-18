@@ -12,7 +12,7 @@
   </router-view>
 </template>
 <script lang="ts" setup>
-const props = defineProps({
+defineProps({
   transitionPropName: {
     type: String,
     default: 'fade-transform',

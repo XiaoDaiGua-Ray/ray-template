@@ -10,12 +10,9 @@ export const setCache = <T>(
 ) => {
   const waitCacheValue = JSON.stringify(value)
 
-  const func =
-    type === 'localStorage'
-      ? window.localStorage.setItem
-      : window.sessionStorage.setItem
-
-  func(key, waitCacheValue)
+  type === 'localStorage'
+    ? window.localStorage.setItem(key, waitCacheValue)
+    : window.sessionStorage.setItem(key, waitCacheValue)
 }
 
 /**
@@ -49,11 +46,8 @@ export const removeCache = (
   } else if (key === 'all-localStorage') {
     window.localStorage.clear()
   } else {
-    const func =
-      type === 'localStorage'
-        ? window.localStorage.removeItem
-        : window.sessionStorage.removeItem
-
-    func(key)
+    type === 'localStorage'
+      ? window.localStorage.removeItem(key)
+      : window.sessionStorage.removeItem(key)
   }
 }

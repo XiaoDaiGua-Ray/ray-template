@@ -3,8 +3,8 @@ import axios from 'axios'
 import { useDetermineEnv } from '@use-utils/hook'
 
 const server = axios.create({
-  baseURL: '', // import.meta.env,
-  withCredentials: false, // 是否允许跨域携带cookie
+  baseURL: '', // `import.meta.env`,
+  withCredentials: false, // 是否允许跨域携带 `cookie`
   timeout: 5 * 1000,
 })
 
@@ -16,6 +16,8 @@ server.interceptors.request.use(
       // TODO: 开发环境
     } else if (MODE === 'production') {
       // TODO: 生产环境
+    } else if (MODE === 'test') {
+      // TODO: 测试环境
     }
 
     return request

@@ -1,3 +1,10 @@
+// 弹性盒子垂直居中
+@mixin flexCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 // 文字溢出变为: ......
 @mixin overflowEllipsis {
   text-overflow: ellipsis;

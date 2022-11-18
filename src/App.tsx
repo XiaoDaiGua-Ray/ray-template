@@ -1,9 +1,9 @@
 import { defineComponent } from 'vue'
-import RayTransitionComponent from '@/components/RayTransitionComponent/index.vue' // 以封装动画路由组件
+import RayTransitionComponent from '@/components/RayTransitionComponent/index.vue' // 动画路由组件
 import DraggableComponent from '@/components/DraggableComponent/index.vue'
 import RayScrollReveal from '@/components/RayScrollReveal/index'
-import R from '@/icons/ray.svg' // 使用 vite-svg-loader 作为 svg 使用插件, 故而不需要使用 RayIcon 作为组件引入
-import RayIcon from '@/components/RayIcon/index'
+import R from '@/icons/ray.svg' // 使用 `vite-svg-loader` 作为 `svg` 使用插件, 故而不需要使用 `RayIcon` 作为组件引入
+import RayIcon from '@/components/RayIcon/index' // `svg` 图标组件
 
 const App = defineComponent({
   name: 'App',

@@ -41,17 +41,17 @@ export default defineConfig(async ({ mode }) => {
         defaultImport: 'component', // 默认以 `componetn` 形式导入 `svg`
       }),
       useSVGIcon(),
-      // viteEslintPlugin,
-      // {
-      //   include: [
-      //     'src/**/*.ts',
-      //     'src/**/*.tsx',
-      //     'src/**/*.vue',
-      //     'src/*.ts',
-      //     'src/*.tsx',
-      //     'src/*.vue',
-      //   ],
-      // },
+      viteEslintPlugin,
+      {
+        include: [
+          'src/**/*.ts',
+          'src/**/*.tsx',
+          'src/**/*.vue',
+          'src/*.ts',
+          'src/*.tsx',
+          'src/*.vue',
+        ],
+      },
     ],
     optimizeDeps: {
       include: ['vue', 'vue-router', 'pinia', 'vue-i18n', '@vueuse/core'],

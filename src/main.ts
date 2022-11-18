@@ -1,5 +1,7 @@
 import { createApp } from 'vue'
 
+import type { App as AppType } from 'vue'
+
 import '@/styles/base.scss'
 
 // import 'amfe-flexible' // 如果为移动端项目, 解开该注释即可
@@ -7,14 +9,20 @@ import 'virtual:svg-icons-register' // `vite-plugin-svg-icons` 脚本, 如果不
 
 import App from './App'
 
-import { setupRouter } from './router/index'
+import { setupRouter, setupRouterLoadingBar } from './router/index'
 import { setupStore } from './store/index'
 import { setupI18n } from './language/index'
 
+/**
+ *
+ * 普通应用注册方法
+ */
 const setupTemplate = () => {
   const app = createApp(App)
 
   setupRouter(app)
+
+  setupRouterLoadingBar()
 
   setupStore(app)
 
@@ -23,4 +31,49 @@ const setupTemplate = () => {
   app.mount('#app')
 }
 
-setupTemplate()
+/**
+ *
+ * 作为 `wujie-micro` 子应用注册应用方法
+ * 注意: 此处的 `instance` 名称不可以写为 `app`
+ */
+const setupWujieTemplate = () => {
+  let instance: AppType<Element>
+
+  window.__WUJIE_MOUNT = () => {
+    instance = createApp(App)
+
+    setupRouter(instance)
+
+    setupRouterLoadingBar()
+
+    setupStore(instance)
+
+    setupI18n(instance)
+
+    instance.mount('#app')
+  }
+
+  window.__WUJIE_UNMOUNT = () => {
+    instance.unmount()
+  }
+
+  window.__WUJIE.mount()
+}
+
+/**
+ *
+ * 如果此处需要作为微服务主应用使用, 则只需要执行 `setupTemplate` 方法即可
+ *
+ * 作为主应用
+ * ----------------------------------------------------------------
+ * # 示例
+ * const setupTemplate = () => {
+ *   const app = createApp(App)
+ *   setupRouter(app)
+ *   ...
+ * }
+ * setupTemplate()
+ * ----------------------------------------------------------------
+ */
+
+window.__POWERED_BY_WUJIE__ ? setupWujieTemplate() : setupTemplate()
