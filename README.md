@@ -82,6 +82,7 @@ import {
 /**
  *
  * 全局注入 `naive-ui` 组件: `dialog`、`message`、`loadingBar`、`notification`
+ * 注意: 脱离上下文创建方式, 不会受 `n-xxx-provider` 控制
  */
 const GlobalInject = defineComponent({
   name: 'GlovalInject',
@@ -110,7 +111,8 @@ const GlobalProvider = defineComponent({
         <NNotificationProvider>
           <NMessageProvider>
             <NLoadingBarProvider>
-              <GlobalInject>{this.$slots.default?.()}</GlobalInject>
+              {/* <GlobalInject>{this.$slots.default?.()}</GlobalInject> */}
+              {this.$slots.default?.()}
             </NLoadingBarProvider>
           </NMessageProvider>
         </NNotificationProvider>

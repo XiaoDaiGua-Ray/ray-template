@@ -21,13 +21,11 @@
       "@use-api": ["src/axios/api"],
       "@use-api/*": ["src/axios/api/*"],
       "@use-images": ["src/assets/images"],
-      "@use-images/*": ["src/assets/images"]
+      "@use-images/*": ["src/assets/images"],
+      "@use-micro/*": ["src/micro/*"]
     },
     "suppressImplicitAnyIndexErrors": true,
-    "types": [
-      "@intlify/unplugin-vue-i18n/messages",
-      "vite-plugin-svg-icons/client"
-    ]
+    "types": ["@intlify/unplugin-vue-i18n/messages"]
   },
   "include": [
     "src/**/*.ts",
@@ -36,7 +34,9 @@
     "src/**/*.ts",
     "src/**/*.vue",
     "src/*.ts",
-    "src/*.vue"
+    "src/*.vue",
+    "components.d.ts",
+    "auto-imports.d.ts"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
