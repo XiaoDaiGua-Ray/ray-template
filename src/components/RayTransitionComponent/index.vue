@@ -1,21 +1,21 @@
 <template>
-  <router-view v-slot="{ Component, route }">
-    <transition
-      :name="transitionPropName"
-      :mode="transitionMode"
-      :appear="transitionAppear"
-    >
-      <keep-alive include="layout">
-        <component :is="Component" :key="route" />
-      </keep-alive>
-    </transition>
+  <router-view>
+    <template #default="{ Component, route }">
+      <transition
+        :name="transitionPropName"
+        :mode="transitionMode"
+        :appear="transitionAppear"
+      >
+        <component :is="Component" :key="route.fullPath" />
+      </transition>
+    </template>
   </router-view>
 </template>
 <script lang="ts" setup>
 defineProps({
   transitionPropName: {
     type: String,
-    default: 'fade-transform',
+    default: 'fade',
   },
   transitionMode: {
     type: String,

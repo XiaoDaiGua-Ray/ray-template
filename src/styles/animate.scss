@@ -1,27 +1,14 @@
-/* fade */
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.28s var(--r-bezier);
+  transition: all 0.35s;
 }
 
-.fade-enter-from,
-.fade-leave-active {
-  opacity: 0;
-  transition: all 0.5s var(--r-bezier);
-}
-
-/* fade-transform */
-.fade-transform-leave-active,
-.fade-transform-enter-active {
-  transition: all 0.5s var(--r-bezier);
-}
-
-.fade-transform-enter-from {
+.fade-enter-from {
   opacity: 0;
   transform: translateX(-30px);
 }
 
-.fade-transform-leave-to {
+.fade-leave-to {
   opacity: 0;
   transform: translateX(30px);
 }

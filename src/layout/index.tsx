@@ -1,4 +1,5 @@
 import './index.scss'
+import { Transition } from 'vue'
 import { NLayout, NLayoutContent } from 'naive-ui'
 import RayTransitionComponent from '@/components/RayTransitionComponent/index.vue'
 import LayoutMenu from './Menu/index'

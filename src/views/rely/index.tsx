@@ -1,4 +1,4 @@
-import RayTransitionComponent from '@/components/RayTransitionComponent/index.vue'
+import { RouterView } from 'vue-router'
 
 const Rely = defineComponent({
   name: 'Rely',
@@ -6,7 +6,7 @@ const Rely = defineComponent({
     return {}
   },
   render() {
-    return <RayTransitionComponent />
+    return <RouterView />
   },
 })
 
