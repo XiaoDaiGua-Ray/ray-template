@@ -7,7 +7,8 @@
   "LayoutHeaderTooltipOptions": {
     "Reload": "Reload Current Page",
     "Lock": "Lock",
-    "Setting": "Setting"
+    "Setting": "Setting",
+    "Github": "Github"
   },
   "LayoutHeaderSettingOptions": {
     "Title": "Configuration",

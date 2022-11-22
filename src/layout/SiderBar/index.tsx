@@ -38,11 +38,11 @@ const SiderBar = defineComponent({
           handleSelect: (key: string | number) => updateLocale(String(key)),
         },
       },
-      // {
-      //   name: 'lock',
-      //   size: 18,
-      //   tooltip: 'LayoutHeaderTooltipOptions.Lock',
-      // },
+      {
+        name: 'github',
+        size: 18,
+        tooltip: 'LayoutHeaderTooltipOptions.Github',
+      },
       {
         name: 'setting',
         size: 18,
@@ -55,9 +55,11 @@ const SiderBar = defineComponent({
 
         setTimeout(() => changeReloadLog(true))
       },
-      // lock: () => {},
       setting: () => {
         showSettings.value = true
+      },
+      github: () => {
+        window.open('https://github.com/XiaoDaiGua-Ray/ray-template')
       },
     }
 
