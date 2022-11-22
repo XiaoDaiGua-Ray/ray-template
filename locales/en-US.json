@@ -1,3 +1,21 @@
 {
-  "Test": "Test"
+  "GlobalMenuOptions": {
+    "Dashboard": "Home",
+    "Rely": "Rely",
+    "RelyAbout": "Rely About"
+  },
+  "LayoutHeaderTooltipOptions": {
+    "Reload": "Reload Current Page",
+    "Lock": "Lock",
+    "Setting": "Setting"
+  },
+  "LayoutHeaderSettingOptions": {
+    "Title": "Configuration",
+    "ThemeOptions": {
+      "Title": "Theme",
+      "Dark": "Dark",
+      "Light": "Light",
+      "PrimaryColorConfig": "Primary Color"
+    }
+  }
 }

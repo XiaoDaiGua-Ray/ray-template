@@ -31,3 +31,11 @@ export const setupRouterLoadingBar = () => {
     window?.$loadingBar?.error()
   })
 }
+
+/**
+ *
+ * 路由权限守卫
+ */
+export const permissionRouter = () => {
+  // router.beforeEach()
+}

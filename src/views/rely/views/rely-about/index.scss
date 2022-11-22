@@ -1,0 +1,9 @@
+.rely-about {
+  & .n-card {
+    margin-top: 18px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+}

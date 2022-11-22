@@ -9,7 +9,11 @@ import 'virtual:svg-icons-register' // `vite-plugin-svg-icons` 脚本, 如果不
 
 import App from './App'
 
-import { setupRouter, setupRouterLoadingBar } from './router/index'
+import {
+  setupRouter,
+  setupRouterLoadingBar,
+  permissionRouter,
+} from './router/index'
 import { setupStore } from './store/index'
 import { setupI18n } from './language/index'
 
@@ -20,11 +24,13 @@ import { setupI18n } from './language/index'
 const setupTemplate = () => {
   const app = createApp(App)
 
+  setupStore(app)
+
   setupRouter(app)
 
   setupRouterLoadingBar()
 
-  setupStore(app)
+  permissionRouter()
 
   setupI18n(app)
 
@@ -42,11 +48,13 @@ const setupWujieTemplate = () => {
   window.__WUJIE_MOUNT = () => {
     instance = createApp(App)
 
+    setupStore(instance)
+
     setupRouter(instance)
 
     setupRouterLoadingBar()
 
-    setupStore(instance)
+    permissionRouter()
 
     setupI18n(instance)
 

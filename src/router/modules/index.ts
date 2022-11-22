@@ -1,6 +1,7 @@
-import demo from './demo'
+import dashboard from './dashboard'
+import reyl from './rely'
 
-const routes = [demo]
+const routes = [dashboard, reyl]
 
 export default routes
 

@@ -6,10 +6,27 @@ import type {
   DialogApi,
   LoadingBarApi,
   NotificationApi,
+  MenuOption,
+  MenuDividerOption,
+  MenuGroupOption,
 } from 'naive-ui'
 
 export global {
-  interface Window {
+  const __APP_INFO__: {
+    pkg: {
+      name: string
+      version: string
+      dependencies: Recordable<string>
+      devDependencies: Recordable<string>
+    }
+  }
+
+  declare type NaiveMenuOptions =
+    | MenuOption
+    | MenuDividerOption
+    | MenuGroupOption
+
+  declare interface Window {
     // 是否存在无界
     __POWERED_BY_WUJIE__?: boolean
     // 子应用公共加载路径
@@ -69,4 +86,6 @@ export global {
   declare type CipherParams = CryptoJS.lib.CipherParams
 
   declare type VoidFunc = (...args: unknown[]) => void
+
+  declare type NaiveDrawerPlacement = 'top' | 'right' | 'bottom' | 'left'
 }

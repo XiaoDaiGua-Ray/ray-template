@@ -21,11 +21,11 @@ const RayIcon = defineComponent({
     },
     width: {
       type: [Number, String],
-      default: 14,
+      default: 0,
     },
     height: {
       type: [Number, String],
-      default: 14,
+      default: 0,
     },
     customClassName: {
       type: String,

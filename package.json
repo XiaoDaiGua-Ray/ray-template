@@ -1,5 +1,5 @@
 {
-  "name": "vue3-ts-template",
+  "name": "ray-template",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -15,6 +15,7 @@
     "amfe-flexible": "^2.2.1",
     "axios": "^0.27.2",
     "crypto-js": "^4.1.1",
+    "naive-ui": "^2.34.0",
     "pinia": "^2.0.17",
     "sass": "^1.54.3",
     "scrollreveal": "^4.0.9",

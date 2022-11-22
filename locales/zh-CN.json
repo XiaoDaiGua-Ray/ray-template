@@ -1,3 +1,21 @@
 {
-  "Test": "测试"
+  "GlobalMenuOptions": {
+    "Dashboard": "首页",
+    "Rely": "依赖项",
+    "RelyAbout": "关于"
+  },
+  "LayoutHeaderTooltipOptions": {
+    "Reload": "刷新当前页面",
+    "Lock": "锁屏",
+    "Setting": "设置"
+  },
+  "LayoutHeaderSettingOptions": {
+    "Title": "项目配置",
+    "ThemeOptions": {
+      "Title": "主题",
+      "Dark": "暗色",
+      "Light": "明亮",
+      "PrimaryColorConfig": "主题色"
+    }
+  }
 }

@@ -1,8 +1,13 @@
+import Layout from '@/layout/index'
+import childrenRoutes from './modules/index'
+
 export const constantRoutes = [
   {
     path: '/',
-    name: 'demo-active',
-    component: () => import('@/App'),
+    name: 'layout',
+    redirect: '/dashboard',
+    component: Layout,
+    children: childrenRoutes,
   },
 ]
 

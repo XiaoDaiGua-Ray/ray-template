@@ -20,6 +20,17 @@ export const setupI18n = (app: App<Element>) => {
   app.use(i18n)
 }
 
+export const useLanguageOptions = () => [
+  {
+    key: 'zh-CN',
+    label: '中文(简体)',
+  },
+  {
+    key: 'en-US',
+    label: 'English(US)',
+  },
+]
+
 /**
  *
  * 注册 `vue-i18n`
