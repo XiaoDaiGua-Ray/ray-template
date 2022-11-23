@@ -18,5 +18,14 @@
       "Light": "Light",
       "PrimaryColorConfig": "Primary Color"
     }
+  },
+  "LoginModule": {
+    "Register": "Register",
+    "Signin": "Signin",
+    "NamePlaceholder": "please enter user name",
+    "PasswordPlaceholder": "please enter password",
+    "Login": "Login",
+    "Name": "User Name",
+    "Password": "User Password"
   }
 }

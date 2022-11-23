@@ -18,5 +18,14 @@
       "Light": "明亮",
       "PrimaryColorConfig": "主题色"
     }
+  },
+  "LoginModule": {
+    "Register": "注册",
+    "Signin": "登陆",
+    "NamePlaceholder": "请输入用户名",
+    "PasswordPlaceholder": "请输入密码",
+    "Login": "登 陆",
+    "Name": "用户名",
+    "Password": "密码"
   }
 }

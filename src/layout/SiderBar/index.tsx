@@ -4,6 +4,8 @@ import RayIcon from '@/components/RayIcon/index'
 import { useMenu, useSetting } from '@/store'
 import { useLanguageOptions } from '@/language/index'
 import SettingDrawer from './Components/SettingDrawer/index'
+import { useAvatarOptions } from './hook'
+import { removeCache } from '@/utils/cache'
 
 import type { IconEventMapOptions, IconEventMap } from './type'
 
@@ -47,6 +49,35 @@ const SiderBar = defineComponent({
         name: 'setting',
         size: 18,
         tooltip: 'LayoutHeaderTooltipOptions.Setting',
+      },
+      {
+        name: 'ray',
+        size: 22,
+        tooltip: '',
+        dropdown: {
+          methodName: 'handleSelect', // 默认为 `handleSelect`
+          switch: true,
+          options: useAvatarOptions(),
+          handleSelect: (key: string | number) => {
+            if (key === 'logout') {
+              window.$dialog.warning({
+                title: '提示',
+                content: '您确定要退出登录吗',
+                positiveText: '确定',
+                negativeText: '不确定',
+                onPositiveClick: () => {
+                  window.$message.info('账号退出中...')
+
+                  removeCache('all-sessionStorage')
+
+                  setTimeout(() => window.location.reload(), 2 * 1000)
+                },
+              })
+            } else {
+              window.$message.info('这个人很懒, 没做这个功能~')
+            }
+          },
+        },
       },
     ]
     const iconEventMap: IconEventMapOptions = {

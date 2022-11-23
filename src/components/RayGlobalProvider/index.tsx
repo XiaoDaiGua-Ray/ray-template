@@ -24,9 +24,9 @@ const GlobalProvider = defineComponent({
     const { message, notification, dialog, loadingBar } = createDiscreteApi(
       ['message', 'dialog', 'notification', 'loadingBar'],
       {
-        configProviderProps: computed(() => ({
+        configProviderProps: {
           theme: modelThemeValue.value,
-        })),
+        },
       },
     )
 

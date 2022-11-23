@@ -4,6 +4,11 @@ import childrenRoutes from './modules/index'
 export const constantRoutes = [
   {
     path: '/',
+    name: 'login',
+    component: () => import('@/views/login/index'),
+  },
+  {
+    path: '/',
     name: 'layout',
     redirect: '/dashboard',
     component: Layout,

@@ -1,6 +1,7 @@
 import type { App } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { constantRoutes } from './routes'
+import { getCache } from '@/utils/cache'
 
 export const router = createRouter({
   history: createWebHashHistory(),
@@ -37,5 +38,22 @@ export const setupRouterLoadingBar = () => {
  * 路由权限守卫
  */
 export const permissionRouter = () => {
-  // router.beforeEach()
+  router.beforeEach((to, from, next) => {
+    const token = getCache('token')
+    const route = getCache('menuKey')
+
+    if (token !== 'no') {
+      if (to.path === '/' || from.path === '/login') {
+        next(route)
+      } else {
+        next()
+      }
+    } else {
+      if (to.path === '/' || from.path === '/login') {
+        next()
+      } else {
+        next('/')
+      }
+    }
+  })
 }

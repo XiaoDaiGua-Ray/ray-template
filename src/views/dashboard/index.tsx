@@ -26,7 +26,7 @@ const Dashboard = defineComponent({
         label: '从事搬砖时长',
         des: () => (
           <NSpace>
-            <NTag type="success">练习时长两年半</NTag>
+            <NTag type="success">练习时长两年半的小白前端搬砖师</NTag>
           </NSpace>
         ),
       },
