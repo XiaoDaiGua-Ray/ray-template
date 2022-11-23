@@ -1,5 +1,3 @@
-import { getCache } from '@/utils/cache'
-
 export const useSwatchesColorOptions = () => [
   '#FFFFFF',
   '#18A058',

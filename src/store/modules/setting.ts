@@ -2,8 +2,13 @@ import { setCache, getCache } from '@/utils/cache'
 
 export const useSetting = defineStore('setting', () => {
   const cachePrimaryColor: string =
-    getCache('primaryColor') === 'no' ? '#18A058' : getCache('primaryColor')
-  const cacheTheme = getCache('theme') === 'no' ? false : getCache('theme')
+    getCache('primaryColor', 'localStorage') === 'no'
+      ? '#18A058'
+      : getCache('primaryColor', 'localStorage')
+  const cacheTheme =
+    getCache('theme', 'localStorage') === 'no'
+      ? false
+      : getCache('theme', 'localStorage')
 
   const settingState = reactive({
     drawerPlacement: 'right' as NaiveDrawerPlacement,
@@ -26,13 +31,13 @@ export const useSetting = defineStore('setting', () => {
   const changeTheme = (bool: boolean) => {
     settingState.themeValue = bool
 
-    setCache('theme', bool)
+    setCache('theme', bool, 'localStorage')
   }
 
   const changePrimaryColor = (value: string) => {
     settingState.primaryColorOverride.common.primaryColor = value
 
-    setCache('primaryColor', value)
+    setCache('primaryColor', value, 'localStorage')
   }
 
   return {

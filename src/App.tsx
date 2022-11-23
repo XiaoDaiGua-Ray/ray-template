@@ -3,13 +3,6 @@ import { RouterView } from 'vue-router'
 
 const App = defineComponent({
   name: 'App',
-  setup() {
-    const { height: windowHeight } = useWindowSize()
-
-    return {
-      windowHeight,
-    }
-  },
   render() {
     return (
       <RayGlobalProvider>

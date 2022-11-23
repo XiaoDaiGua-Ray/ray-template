@@ -89,9 +89,10 @@ const RelyAbout = defineComponent({
     return (
       <div class="rely-about">
         <NCard title="关于项目">
-          ray-template 是一个基于 vue3、vite3、TypeScript 的中后台解决方案,
-          相对于市面上已有的成熟模板, 此项目的特点便是轻巧.
-          不需要手动去剔除冗余的、不相关的东西. 持续更新中.
+          ray template 是一个基于: tsx pinia vue3.x vite sass 的中后台解决方案.
+          项目干净与轻巧,
+          已经集成了很多项目中可能需要的搬砖工具可以让你快速起一个相关项目,
+          并且不需要剔除大量无用页面与组件.
         </NCard>
         <NCard title="项目信息">
           <NDescriptions bordered labelPlacement="left">

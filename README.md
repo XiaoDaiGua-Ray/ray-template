@@ -69,88 +69,12 @@
 
 ## 如果你采用的 `naive-ui` 作为组件库, 可能需要它
 
-```tsx
-/* eslint-disable */
-import {
-  createDiscreteApi,
-  NDialogProvider,
-  NLoadingBarProvider,
-  NMessageProvider,
-  NNotificationProvider,
-} from 'naive-ui'
-
-/**
- *
- * 全局注入 `naive-ui` 组件: `dialog`、`message`、`loadingBar`、`notification`
- * 注意: 脱离上下文创建方式, 不会受 `n-xxx-provider` 控制
- */
-const GlobalInject = defineComponent({
-  name: 'GlovalInject',
-  setup() {
-    // 创建 `naive-ui` 组件, 并且让其可以在 `setup` 外使用
-    const { message, notification, dialog, loadingBar } = createDiscreteApi(
-      ['message', 'dialog', 'notification', 'loadingBar'],
-      {},
-    )
-
-    window.$dialog = dialog // 注入 `dialog`
-    window.$message = message // 注入 `message`
-    window.$loadingBar = loadingBar // 注入 `loadingBar`
-    window.$notification = notification // 注入 `notification`
-  },
-  render() {
-    return <>{this.$slots.default?.()}</>
-  },
-})
-
-const GlobalProvider = defineComponent({
-  name: 'GlobalProvider',
-  render() {
-    return (
-      <NDialogProvider>
-        <NNotificationProvider>
-          <NMessageProvider>
-            <NLoadingBarProvider>
-              {/* <GlobalInject>{this.$slots.default?.()}</GlobalInject> */}
-              {this.$slots.default?.()}
-            </NLoadingBarProvider>
-          </NMessageProvider>
-        </NNotificationProvider>
-      </NDialogProvider>
-    )
-  },
-})
-
-export default GlobalProvider
 ```
-
-> 如何使用
-
-- 打开 `App.tsx`
-- 引入组件
-- 在 `RouterView` 组件外层包裹即可
-
-```tsx
-import { defineComponent } from 'vue'
-import { NConfigProvider, NGlobalStyle } from 'naive-ui'
-import { RouterView } from 'vue-router'
-import RayGlobalProvider from '@/components/RayGlobalProvider/index'
-
-const App = defineComponent({
-  name: 'App',
-  render() {
-    return (
-      <NConfigProvider>
-        <RayGlobalProvider>
-          <RouterView />
-          <NGlobalStyle />
-        </RayGlobalProvider>
-      </NConfigProvider>
-    )
-  },
-})
-
-export default App
+# 如何在项目内使用提示组件
+window.$dialog
+window.$message
+window.$loadingBar
+window.$notification
 ```
 
 ### 祝大家搬砖愉快, 希望这个模板能帮你省很多时间
