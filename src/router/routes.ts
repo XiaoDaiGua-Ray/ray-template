@@ -14,6 +14,11 @@ export const constantRoutes = [
     component: Layout,
     children: childrenRoutes,
   },
+  {
+    path: '/:catchAll(.*)',
+    name: 'error-page',
+    component: () => import('@/views/error/index'),
+  },
 ]
 
 /**

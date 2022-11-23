@@ -6,6 +6,7 @@ import {
   NConfigProvider,
   createDiscreteApi,
   darkTheme,
+  NGlobalStyle,
 } from 'naive-ui'
 import { useSetting } from '@/store'
 
@@ -24,9 +25,9 @@ const GlobalProvider = defineComponent({
     const { message, notification, dialog, loadingBar } = createDiscreteApi(
       ['message', 'dialog', 'notification', 'loadingBar'],
       {
-        configProviderProps: {
+        configProviderProps: computed(() => ({
           theme: modelThemeValue.value,
-        },
+        })),
       },
     )
 
@@ -50,6 +51,7 @@ const GlobalProvider = defineComponent({
           <NMessageProvider>
             <NDialogProvider>
               <NNotificationProvider>
+                <NGlobalStyle />
                 {this.$slots.default?.()}
               </NNotificationProvider>
             </NDialogProvider>

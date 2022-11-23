@@ -35,10 +35,7 @@ const Login = defineComponent({
   },
   render() {
     return (
-      <div
-        class={['login', this.themeValue ? 'login--dark' : '']}
-        style={[`height: ${this.windowHeight}px`]}
-      >
+      <div class={['login']} style={[`height: ${this.windowHeight}px`]}>
         <NSpace>
           <NGradientText class="login-title" type="info">
             Ray Template
