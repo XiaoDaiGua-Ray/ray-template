@@ -2,7 +2,8 @@
   "GlobalMenuOptions": {
     "Dashboard": "首页",
     "Rely": "依赖项",
-    "RelyAbout": "关于"
+    "RelyAbout": "关于",
+    "Error": "错误页"
   },
   "LayoutHeaderTooltipOptions": {
     "Reload": "刷新当前页面",

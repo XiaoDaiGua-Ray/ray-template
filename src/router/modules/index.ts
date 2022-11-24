@@ -1,7 +1,8 @@
 import dashboard from './dashboard'
 import reyl from './rely'
+import error from './error'
 
-const routes = [dashboard, reyl]
+const routes = [dashboard, error, reyl]
 
 export default routes
 

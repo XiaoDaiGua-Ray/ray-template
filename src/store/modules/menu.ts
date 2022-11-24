@@ -9,14 +9,27 @@ export const useMenu = defineStore('menu', () => {
   const router = useRouter()
   const { t } = useI18n()
 
-  const cacheMenuKey = getCache('menuKey') === 'no' ? '' : getCache('menuKey')
+  const cacheMenuKey =
+    getCache('menuKey') === 'no' ? '/dashboard' : getCache('menuKey')
 
   const menuState = reactive({
     menuKey: cacheMenuKey as string | null, // 当前菜单 `key`
     options: [] as RouteRecordRaw[], // 菜单列表
     collapsed: false, // 是否折叠菜单
-    reloadRouteLog: true, // 刷新路由开关
+    menuTagOptions: [] as RouteRecordRaw[],
   })
+
+  const handleMenuTagOptions = (item: RouteRecordRaw) => {
+    if (item.path !== menuState.menuKey) {
+      const tag = menuState.menuTagOptions.find(
+        (curr) => curr.path === item.path,
+      )
+
+      if (!tag) {
+        menuState.menuTagOptions.push(item)
+      }
+    }
+  }
 
   /**
    *
@@ -26,6 +39,8 @@ export const useMenu = defineStore('menu', () => {
    * 修改 `menu key` 后的回调函数
    */
   const menuModelValueChange = (key: string, item: MenuOption) => {
+    handleMenuTagOptions(item as unknown as RouteRecordRaw)
+
     menuState.menuKey = key
 
     router.push(`${item.path}`)
@@ -69,7 +84,14 @@ export const useMenu = defineStore('menu', () => {
             ),
         }
 
-        return curr.meta?.icon ? Object.assign(route, expandIcon) : route
+        const attr = curr.meta?.icon ? Object.assign(route, expandIcon) : route
+
+        // 初始化 `menu tag`
+        if (curr.path === cacheMenuKey) {
+          menuState.menuTagOptions.push(attr)
+        }
+
+        return attr
       })
     }
 
@@ -83,17 +105,14 @@ export const useMenu = defineStore('menu', () => {
   const collapsedMenu = (collapsed: boolean) =>
     (menuState.collapsed = collapsed)
 
-  /**
-   *
-   * @param bool 刷新页面开关
-   */
-  const changeReloadLog = (bool: boolean) => (menuState.reloadRouteLog = bool)
+  const spliceMenTagOptions = (idx: number) =>
+    menuState.menuTagOptions.splice(idx, 1)
 
   return {
     ...toRefs(menuState),
     menuModelValueChange,
     setupAppRoutes,
     collapsedMenu,
-    changeReloadLog,
+    spliceMenTagOptions,
   }
 })

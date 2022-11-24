@@ -1,7 +1,7 @@
 import './index.scss'
 import { NLayoutHeader, NSpace, NTooltip, NDropdown } from 'naive-ui'
 import RayIcon from '@/components/RayIcon/index'
-import { useMenu, useSetting } from '@/store'
+import { useSetting } from '@/store'
 import { useLanguageOptions } from '@/language/index'
 import SettingDrawer from './Components/SettingDrawer/index'
 import { useAvatarOptions } from './hook'
@@ -12,12 +12,10 @@ import type { IconEventMapOptions, IconEventMap } from './type'
 const SiderBar = defineComponent({
   name: 'SiderBar',
   setup() {
-    const menuStore = useMenu()
     const settingStore = useSetting()
 
     const { t } = useI18n()
-    const { changeReloadLog } = menuStore
-    const { updateLocale } = settingStore
+    const { updateLocale, changeReloadLog } = settingStore
     const modelDrawerPlacement = ref(settingStore.drawerPlacement)
     const showSettings = ref(false)
 

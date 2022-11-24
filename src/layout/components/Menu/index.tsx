@@ -6,7 +6,11 @@ const LayoutMenu = defineComponent({
   setup() {
     const menuStore = useMenu()
     const { menuModelValueChange, setupAppRoutes, collapsedMenu } = menuStore
-    const modelMenuKey = ref(menuStore.menuKey)
+    const modelMenuKey = computed({
+      get: () => menuStore.menuKey,
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      set: () => {},
+    })
     const modelMenuOptions = computed(() => menuStore.options)
     const modelCollapsed = computed(() => menuStore.collapsed)
 

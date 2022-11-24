@@ -2,7 +2,8 @@
   "GlobalMenuOptions": {
     "Dashboard": "Home",
     "Rely": "Rely",
-    "RelyAbout": "Rely About"
+    "RelyAbout": "Rely About",
+    "Error": "Error Page"
   },
   "LayoutHeaderTooltipOptions": {
     "Reload": "Reload Current Page",

@@ -7,6 +7,8 @@ import {
   NSwitch,
   NColorPicker,
   NTooltip,
+  NDescriptions,
+  NDescriptionsItem,
 } from 'naive-ui'
 import RayIcon from '@/components/RayIcon/index'
 import { useSwatchesColorOptions } from './hook'
@@ -35,8 +37,9 @@ const SettingDrawer = defineComponent({
     const { t } = useI18n()
     const settingStore = useSetting()
 
-    const { changeTheme, changePrimaryColor } = settingStore
-    const { themeValue, primaryColorOverride } = storeToRefs(settingStore)
+    const { changeTheme, changePrimaryColor, changeMenuTagLog } = settingStore
+    const { themeValue, primaryColorOverride, menuTagLog } =
+      storeToRefs(settingStore)
 
     const modelShow = computed({
       get: () => props.show,
@@ -57,6 +60,8 @@ const SettingDrawer = defineComponent({
       changeTheme,
       themeValue,
       primaryColorOverride,
+      changeMenuTagLog,
+      menuTagLog,
     }
   },
   render() {
@@ -119,6 +124,15 @@ const SettingDrawer = defineComponent({
               v-model:value={this.primaryColorOverride.common.primaryColor}
               onUpdateValue={this.changePrimaryColor.bind(this)}
             />
+            <NDivider titlePlacement="center">界面显示</NDivider>
+            <NDescriptions labelPlacement="left" column={1}>
+              <NDescriptionsItem label="显示多标签">
+                <NSwitch
+                  v-model:value={this.menuTagLog}
+                  onUpdateValue={this.changeMenuTagLog.bind(this)}
+                />
+              </NDescriptionsItem>
+            </NDescriptions>
           </NSpace>
         </NDrawerContent>
       </NDrawer>

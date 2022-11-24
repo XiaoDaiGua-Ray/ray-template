@@ -22,13 +22,11 @@ const Login = defineComponent({
     const { t } = useI18n()
     const { height: windowHeight } = useWindowSize()
     const settingStore = useSetting()
-    const { themeValue } = storeToRefs(settingStore)
     const { updateLocale } = settingStore
 
     return {
       ...toRefs(state),
       windowHeight,
-      themeValue,
       updateLocale,
       ray: t,
     }

@@ -6,7 +6,8 @@
   }
 
   & .layout-content__router-view {
-    height: calc(100% - $layoutHeaderHeight);
-    padding: $layoutRouterViewContainer;
+    // height: calc(100% - $layoutHeaderHeight - $layoutMenuHeight);
+    height: var(--layout-content-height);
+    padding: $layoutRouterViewContainer / 2;
   }
 }
