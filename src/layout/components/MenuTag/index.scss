@@ -1,11 +1,11 @@
-$space: $layoutRouterViewContainer / 2;
+$space: calc($layoutRouterViewContainer / 2);
 
 .menu-tag {
   height: $layoutMenuHeight;
 
   & .menu-tag-sapce {
     width: calc(100% - $space * 2);
-    padding: $layoutRouterViewContainer / 2;
+    padding: $space;
   }
 
   & .n-tag {
