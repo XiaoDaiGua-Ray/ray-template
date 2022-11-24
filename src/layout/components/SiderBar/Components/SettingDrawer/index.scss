@@ -1,0 +1,8 @@
+.setting-drawer__space {
+  width: 100%;
+
+  & .n-descriptions-table-content {
+    display: flex !important;
+    justify-content: space-between;
+  }
+}

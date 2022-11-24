@@ -4,10 +4,6 @@
 
 > 模板按照个人习惯进行搭建, 可以根据个人喜好进行更改. 预设了一些组件库、国际化库的东西. 建议使用 `naive-ui` 作为组件库.
 
-## 预览地址
-
-[**`Ray Template`**](https://xiaodaigua-ray.github.io/#/)
-
 ## 项目说明
 
 > 项目采用 `Vue 3` `TypeScript` `TSX` `Vite` 进行开发, 已经集成了一些常用的开发库, 进行了一些 `Vite` 相关配置, 例如全局自动引入、`GZ` 打包、按需引入打包、[reactivityTransform](https://vuejs.org/guide/extras/reactivity-transform.html)等, 解放你的双手. 国际化插件, 按照项目需求自己取舍. 引入了比较火的 `hook` 库 [@vueuse](https://vueuse.org/), 极大提高你的搬砖效率. `小提醒: 为了避免使用 @vueuse 时出现奇奇怪怪的错误(例如: useDraggable 在使用的时候, TSX 形式开发会失效), 建议采用 <script setup /> 形式进行开发`. 可以根据自己项目实际需求进行配置 `px` 与 'rem' 转换比例(使用 `postcss-pxtorem` 与 `autoprefixer` 实现).

@@ -1,0 +1,16 @@
+.layout-header {
+  height: $layoutHeaderHeight;
+  padding: 0 $layoutRouterViewContainer;
+  display: flex;
+  align-items: center;
+
+  > .layout-header__method {
+    width: 100%;
+
+    & .layout-header__method--icon {
+      cursor: pointer;
+      outline: none;
+      border: none;
+    }
+  }
+}

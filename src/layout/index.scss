@@ -1,0 +1,13 @@
+.layout {
+  box-sizing: border-box;
+
+  > .layout-full {
+    height: 100%;
+  }
+
+  & .layout-content__router-view {
+    // height: calc(100% - $layoutHeaderHeight - $layoutMenuHeight);
+    height: var(--layout-content-height);
+    padding: calc($layoutRouterViewContainer / 2);
+  }
+}
