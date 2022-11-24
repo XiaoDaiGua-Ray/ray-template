@@ -7,6 +7,7 @@ import type { RouteRecordRaw } from 'vue-router'
 
 export const useMenu = defineStore('menu', () => {
   const router = useRouter()
+  const route = useRoute()
   const { t } = useI18n()
 
   const cacheMenuKey =
@@ -45,6 +46,30 @@ export const useMenu = defineStore('menu', () => {
 
     router.push(`${item.path}`)
     setCache('menuKey', key)
+  }
+
+  /**
+   *
+   * @param path 路由地址
+   *
+   * 监听路由地址变化更新菜单状态
+   */
+  const updateMenuKeyWhenRouteUpdate = (path: string) => {
+    const matchMenuItem = (options: MenuOption[]) => {
+      for (const i of options) {
+        if (i?.children?.length) {
+          matchMenuItem(i.children)
+        }
+
+        if (path === i.path) {
+          menuModelValueChange(i.path, i)
+
+          break
+        }
+      }
+    }
+
+    matchMenuItem(menuState.options)
   }
 
   /**
@@ -107,6 +132,13 @@ export const useMenu = defineStore('menu', () => {
 
   const spliceMenTagOptions = (idx: number) =>
     menuState.menuTagOptions.splice(idx, 1)
+
+  watch(
+    () => route.fullPath,
+    (newData) => {
+      updateMenuKeyWhenRouteUpdate(newData)
+    },
+  )
 
   return {
     ...toRefs(menuState),
