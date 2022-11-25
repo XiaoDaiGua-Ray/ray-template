@@ -6,12 +6,14 @@ import {
   NTabPane,
   NGradientText,
   NDropdown,
+  NDivider,
 } from 'naive-ui'
 import Signin from './components/Signin/index'
 import Register from './components/Register/index'
 import { useSetting } from '@/store'
 import RayIcon from '@/components/RayIcon'
 import { useLanguageOptions } from '@/language/index'
+import RayLink from '@/components/RayLink/index'
 
 const Login = defineComponent({
   name: 'Login',
@@ -23,7 +25,6 @@ const Login = defineComponent({
     const { height: windowHeight } = useWindowSize()
     const settingStore = useSetting()
     const { updateLocale } = settingStore
-
     return {
       ...toRefs(state),
       windowHeight,
@@ -54,6 +55,8 @@ const Login = defineComponent({
               <Register />
             </NTabPane>
           </NTabs>
+          <NDivider>友情链接</NDivider>
+          <RayLink />
         </NCard>
       </div>
     )

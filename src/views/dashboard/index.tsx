@@ -8,6 +8,7 @@ import {
   NSpace,
 } from 'naive-ui'
 import RayIcon from '@/components/RayIcon/index'
+import RayLink from '@/components/RayLink/index'
 
 const Dashboard = defineComponent({
   name: 'Dashboard',
@@ -91,6 +92,9 @@ const Dashboard = defineComponent({
               </NDescriptionsItem>
             ))}
           </NDescriptions>
+        </NCard>
+        <NCard title="友情链接">
+          <RayLink />
         </NCard>
       </NLayout>
     )
