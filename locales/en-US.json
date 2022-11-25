@@ -9,7 +9,9 @@
     "Reload": "Reload Current Page",
     "Lock": "Lock",
     "Setting": "Setting",
-    "Github": "Github"
+    "Github": "Github",
+    "FullScreen": "Full Screen",
+    "CancelFullScreen": "Cancel Full Screen"
   },
   "LayoutHeaderSettingOptions": {
     "Title": "Configuration",

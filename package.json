@@ -19,6 +19,7 @@
     "pinia": "^2.0.17",
     "pinia-plugin-persistedstate": "^2.4.0",
     "sass": "^1.54.3",
+    "screenfull": "^6.0.2",
     "scrollreveal": "^4.0.9",
     "vue": "^3.2.37",
     "vue-i18n": "^9.2.2",

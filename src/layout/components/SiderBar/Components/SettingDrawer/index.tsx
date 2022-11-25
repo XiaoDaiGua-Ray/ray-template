@@ -37,7 +37,7 @@ const SettingDrawer = defineComponent({
     const { t } = useI18n()
     const settingStore = useSetting()
 
-    const { changeTheme, changePrimaryColor, changeMenuTagLog } = settingStore
+    const { changePrimaryColor, changeSwitcher } = settingStore
     const { themeValue, primaryColorOverride, menuTagLog } =
       storeToRefs(settingStore)
 
@@ -57,11 +57,10 @@ const SettingDrawer = defineComponent({
       ray: t,
       handleRailStyle,
       changePrimaryColor,
-      changeTheme,
       themeValue,
       primaryColorOverride,
-      changeMenuTagLog,
       menuTagLog,
+      changeSwitcher,
     }
   },
   render() {
@@ -83,7 +82,9 @@ const SettingDrawer = defineComponent({
                     <NSwitch
                       v-model:value={this.themeValue}
                       railStyle={this.handleRailStyle.bind(this)}
-                      onUpdateValue={this.changeTheme.bind(this)}
+                      onUpdateValue={(bool: boolean) =>
+                        this.changeSwitcher(bool, 'themeValue')
+                      }
                     >
                       {{
                         'checked-icon': () =>
@@ -129,7 +130,9 @@ const SettingDrawer = defineComponent({
               <NDescriptionsItem label="显示多标签">
                 <NSwitch
                   v-model:value={this.menuTagLog}
-                  onUpdateValue={this.changeMenuTagLog.bind(this)}
+                  onUpdateValue={(bool: boolean) =>
+                    this.changeSwitcher(bool, 'menuTagLog')
+                  }
                 />
               </NDescriptionsItem>
             </NDescriptions>

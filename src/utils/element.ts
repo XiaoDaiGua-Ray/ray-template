@@ -1,4 +1,4 @@
-import { useValidteValueType } from '@use-utils/hook'
+import { validteValueType } from '@use-utils/hook'
 
 /**
  *
@@ -7,7 +7,7 @@ import { useValidteValueType } from '@use-utils/hook'
  *
  * @returns 目标节点下所有子节点
  */
-export const useElementChildNodes = (
+export const getElementChildNodes = (
   el: HTMLElement,
   target?: string[] | string,
 ) => {
@@ -130,11 +130,11 @@ export const addStyle = (
   styles: string | Partial<CSSStyleDeclaration>,
 ) => {
   if (el) {
-    if (useValidteValueType(styles, 'Object')) {
+    if (validteValueType(styles, 'Object')) {
       Object.keys(styles).forEach((item) => {
         el.style[item] = styles[item]
       })
-    } else if (useValidteValueType(styles, 'String')) {
+    } else if (validteValueType(styles, 'String')) {
       const _styles = styles as string
 
       _styles.split(';').forEach((item) => {

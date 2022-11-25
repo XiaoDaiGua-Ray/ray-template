@@ -34,7 +34,7 @@ export const useImagebufferToBase64 = (
  * @param value 目标值
  * @param type 类型
  */
-export const useValidteValueType = <T>(value: T, type: ValidteValueType) => {
+export const validteValueType = <T>(value: T, type: ValidteValueType) => {
   const _v = Object.prototype.toString.call(value)
 
   return _v.includes(type)

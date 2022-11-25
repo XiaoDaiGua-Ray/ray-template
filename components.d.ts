@@ -7,7 +7,6 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
-    DraggableComponent: typeof import('./src/components/DraggableComponent/index.vue')['default']
     RayTransitionComponent: typeof import('./src/components/RayTransitionComponent/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

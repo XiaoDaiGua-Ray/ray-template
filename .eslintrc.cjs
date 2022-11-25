@@ -66,7 +66,7 @@ module.exports = {
     'no-extra-bind': 2, // 禁止不必要的函数绑定
     'no-extra-boolean-cast': 2, // 禁止不必要的 `bool` 转换
     'no-extra-parens': 0, // 禁止非必要的括号
-    'no-extra-semi': 2, // 忽略多余的冒号
+    semi: ['error', 'never', { beforeStatementContinuationChars: 'always' }],
     'no-fallthrough': 1, // 禁止 `switch` 穿透
     'no-func-assign': 2, // 禁止重复的函数声明
     'no-implicit-coercion': 1, // 禁止隐式转换

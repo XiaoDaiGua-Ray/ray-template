@@ -19,34 +19,19 @@ export const useSetting = defineStore(
       locale.value = key
     }
 
-    const changeTheme = (bool: boolean) => {
-      settingState.themeValue = bool
-    }
-
     const changePrimaryColor = (value: string) => {
       settingState.primaryColorOverride.common.primaryColor = value
     }
 
-    /**
-     *
-     * @param bool 刷新页面开关
-     */
-    const changeReloadLog = (bool: boolean) =>
-      (settingState.reloadRouteLog = bool)
-
-    /**
-     *
-     * @param bool 刷新页面开关
-     */
-    const changeMenuTagLog = (bool: boolean) => (settingState.menuTagLog = bool)
+    const changeSwitcher = (bool: boolean, key: keyof typeof settingState) => {
+      ;(settingState[key] as unknown) = bool
+    }
 
     return {
       ...toRefs(settingState),
       updateLocale,
-      changeTheme,
       changePrimaryColor,
-      changeReloadLog,
-      changeMenuTagLog,
+      changeSwitcher,
     }
   },
   {
