@@ -23,6 +23,18 @@ const RayLink = defineComponent({
         tooltip: '云图床',
         icon: 'https://yunkuangao.com/images/20170801_005902048_iOS.md.jpg',
       },
+      {
+        key: 'ray-js-note',
+        src: 'https://note.youdao.com/s/ObWEe2BB',
+        tooltip: 'Ray的前端学习笔记',
+        icon: 'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
+      },
+      {
+        key: 'ray-js-cover',
+        src: 'https://note.youdao.com/s/IC8xKPdB',
+        tooltip: 'Ray的面试题总结',
+        icon: 'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
+      },
     ]
 
     const handleLinkClick = (item: AvatarOptions) => {
