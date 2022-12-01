@@ -10,6 +10,7 @@ import type {
   MenuDividerOption,
   MenuGroupOption,
 } from 'naive-ui'
+import type { ECharts } from 'echarts/core'
 
 export global {
   const __APP_INFO__: {
@@ -88,4 +89,8 @@ export global {
   declare type VoidFunc = (...args: unknown[]) => void
 
   declare type NaiveDrawerPlacement = 'top' | 'right' | 'bottom' | 'left'
+
+  declare type AnyFunc = (...args: unknown[]) => unknown
+
+  declare type EChartsInstance = ECharts
 }

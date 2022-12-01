@@ -1,0 +1,306 @@
+import './index.scss'
+import * as echarts from 'echarts/core' // `echarts` 核心模块
+import {
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  DatasetComponent,
+  TransformComponent,
+  LegendComponent,
+  ToolboxComponent,
+  AriaComponent,
+} from 'echarts/components' // 提示框, 标题, 直角坐标系, 数据集, 内置数据转换器等组件(组件后缀都为 `Component`)
+import {
+  BarChart,
+  LineChart,
+  PieChart,
+  CandlestickChart,
+  ScatterChart,
+} from 'echarts/charts' // 系列类型(后缀都为 `SeriesOption`)
+import { LabelLayout, UniversalTransition } from 'echarts/features' // 标签自动布局, 全局过渡动画等特性
+import { CanvasRenderer, SVGRenderer } from 'echarts/renderers' // `echarts` 渲染器
+import { useSetting } from '@/store'
+import { cloneDeep } from 'lodash-es'
+
+import type { PropType } from 'vue'
+
+export type AutoResize =
+  | boolean
+  | {
+      width: number
+      height: number
+    }
+
+export interface LoadingOptions {
+  text: string // 文本内容
+  color: string // 颜色
+  textColor: string // 字体颜色
+  maskColor: string // 遮罩颜色
+  zlevel: number // 水平
+  fontSize: number // 字体大小
+  showSpinner: boolean // 是否显示旋转动画(`spinner`)
+  spinnerRadius: number // 旋转动画(`spinner`)的半径
+  lineWidth: number // 旋转动画(`spinner`)的线宽
+  fontWeight: string // 字体粗细
+  fontStyle: string // 字体风格
+  fontFamily: string // 字体系列
+}
+
+export type ChartTheme = 'dark' | '' | object
+
+/**
+ *
+ * @returns LoadingOptions
+ *
+ * 为了方便使用加载动画, 写了此方法, 虽然没啥用
+ */
+export const loadingOptions = (options: LoadingOptions) =>
+  Object.assign(
+    {
+      text: 'loading',
+      color: '#c23531',
+      textColor: '#000',
+      maskColor: 'rgba(255, 255, 255, 0.9)',
+      zlevel: 0,
+      fontSize: 12,
+      showSpinner: true,
+      spinnerRadius: 10,
+      lineWidth: 5,
+      fontWeight: 'normal',
+      fontStyle: 'normal',
+      fontFamily: 'sans-serif',
+    },
+    options,
+  )
+
+const RayChart = defineComponent({
+  name: 'RayChart',
+  props: {
+    width: {
+      /* `chart` 容器宽度, 默认撑满 */
+      type: String,
+      default: '100%',
+    },
+    height: {
+      /* `chart` 容器高度, 默认撑满 */
+      type: String,
+      default: '100%',
+    },
+    autoResize: {
+      /**
+       *
+       * `chart` 是否跟随窗口尺寸变化自动变化
+       *
+       * 如果为对象, 则可以指定其变化尺寸, 实现图表大小不等于容器大小的效果
+       */
+      type: [Boolean, Object] as PropType<AutoResize>,
+      default: true,
+    },
+    canvasRender: {
+      /* `chart` 渲染器, 默认使用 `canvas` */
+      type: Boolean,
+      default: true,
+    },
+    showAria: {
+      /**
+       *
+       * 是否开启 `chart` 无障碍访问
+       *
+       * 此选项会覆盖 `options` 中的 `aria` 配置
+       */
+      type: Boolean,
+      default: false,
+    },
+    options: {
+      type: Object,
+      default: () => ({}),
+    },
+    renderSuccess: {
+      type: Function as PropType<AnyFunc>,
+      default: () => ({}),
+    },
+    theme: {
+      type: [String, Object] as PropType<ChartTheme>,
+      default: '',
+    },
+    autoChangeTheme: {
+      /**
+       *
+       * 是否自动跟随模板主题切换
+       *
+       * 如果开启此属性, 则会覆盖 `theme` 属性
+       *
+       * 注意: 这个属性重度依赖此模板, 所以默认不开启. 并且动态切换主题有一定的性能问题
+       */
+      type: Boolean,
+      default: false,
+    },
+  },
+  setup(props) {
+    const settingStore = useSetting()
+    const { themeValue } = storeToRefs(settingStore)
+    const rayChartRef = ref<HTMLElement>() // `echart` 容器实例
+    const echartInstance = ref<EChartsInstance>() // `echart` 实例
+
+    const cssVarsRef = computed(() => {
+      const cssVars = {
+        '--ray-chart-width': props.width,
+        '--ray-chart-height': props.height,
+      }
+
+      return cssVars
+    })
+
+    /**
+     *
+     * 注册 `echart` 组件, 图利, 渲染器等
+     */
+    const registerChartCore = async () => {
+      echarts.use([
+        TitleComponent,
+        TooltipComponent,
+        GridComponent,
+        DatasetComponent,
+        TransformComponent,
+        LegendComponent,
+        ToolboxComponent,
+        AriaComponent,
+      ]) // 注册组件
+
+      echarts.use([
+        BarChart,
+        LineChart,
+        PieChart,
+        CandlestickChart,
+        ScatterChart,
+      ]) // 注册类型
+
+      echarts.use([LabelLayout, UniversalTransition]) // 注册布局, 过度效果
+
+      echarts.use([props.canvasRender ? CanvasRenderer : SVGRenderer]) // 注册渲染器
+    }
+
+    /**
+     *
+     * @returns `chart options`
+     *
+     * 合并配置项
+     *
+     * 如果有需要特殊全局配置的可以在此继续写...
+     */
+    const useMergeOptions = () => {
+      let options = cloneDeep(props.options)
+
+      const merge = (opts: object) => Object.assign(options, opts)
+
+      if (props.showAria) {
+        options = merge({
+          aria: {
+            enabled: true,
+            decal: {
+              show: true,
+            },
+          },
+        })
+      }
+
+      return options
+    }
+
+    /**
+     *
+     * 渲染 `echart`
+     */
+    const renderChart = (theme: ChartTheme) => {
+      const element = rayChartRef.value as HTMLElement
+      const options = useMergeOptions()
+
+      echartInstance.value = echarts.init(element, theme)
+
+      options && echartInstance.value.setOption(options)
+    }
+
+    const renderThemeChart = (bool?: boolean) => {
+      if (props.autoChangeTheme) {
+        bool ? renderChart('dark') : renderChart('')
+
+        return void 0
+      }
+
+      if (!props.theme) {
+        renderChart('')
+      }
+    }
+
+    /**
+     *
+     * 销毁 `chart` 实例, 释放资源
+     */
+    const destroyChart = () => {
+      if (echartInstance.value) {
+        echartInstance.value.clear()
+        echartInstance.value.dispose()
+      }
+    }
+
+    watch(
+      () => [themeValue.value, props.showAria],
+      ([theme]) => {
+        if (props.autoChangeTheme) {
+          destroyChart()
+
+          renderThemeChart(theme)
+        }
+      },
+    )
+
+    onBeforeMount(async () => {
+      await registerChartCore()
+    })
+
+    onMounted(() => {
+      nextTick(() => {
+        if (props.autoChangeTheme) {
+          renderThemeChart(themeValue.value)
+        } else {
+          props.theme ? renderChart('dark') : renderChart('')
+        }
+      })
+    })
+
+    onBeforeUnmount(() => {
+      destroyChart()
+    })
+
+    return {
+      rayChartRef,
+      cssVarsRef,
+      echartInstance,
+    }
+  },
+  render() {
+    return (
+      <div class="ray-chart" style={[this.cssVarsRef]} ref="rayChartRef"></div>
+    )
+  },
+})
+
+export default RayChart
+
+/**
+ *
+ * 基于 `echarts` 的组件. 意在便捷的使用 `chart` 图
+ *
+ * 暂时不支持自动解析导入 `chart` 组件, 如果使用未注册的组件, 需要在顶部手动导入并且再使用 `use` 注册
+ *
+ * 预引入: 柱状图, 折线图, 饼图, k线图, 散点图等
+ *
+ * 预引入: 提示框, 标题, 直角坐标系, 数据集, 内置数据转换器等
+ *
+ * 如果需要大批量数据渲染, 可以通过获取实例后阶段性调用 `setOption` 方法注入数据
+ *
+ * 该组件会在卸载组件时, 自动释放资源
+ *
+ * 注意: 尽量别一次性倒入全部 `chart` 会造成打包体积异常大
+ *
+ */

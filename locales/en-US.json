@@ -3,7 +3,9 @@
     "Dashboard": "Home",
     "Rely": "Rely",
     "RelyAbout": "Rely About",
-    "Error": "Error Page"
+    "Error": "Error Page",
+    "Echart": "Chart",
+    "scrollReveal": "Scroll Reveal"
   },
   "LayoutHeaderTooltipOptions": {
     "Reload": "Reload Current Page",

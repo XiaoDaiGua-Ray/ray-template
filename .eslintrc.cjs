@@ -43,6 +43,12 @@ module.exports = {
       'error',
       { disallowTypeAnnotations: false },
     ], // 强制导入类型显示标注 `import type xxx from 'xxx'`
+    '@typescript-eslint/no-empty-interface': [
+      'error',
+      {
+        allowSingleExtends: true,
+      },
+    ],
     'accessor-pairs': 2, // 强制同时存在 `get` 与 `set`
     'constructor-super': 0, // 强制子类构造函数中使用 `super` 调用父类的构造函数
     curly: [2, 'all'], // `if`、`else` 强制使用 `{}` 包裹

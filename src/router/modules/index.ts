@@ -1,8 +1,10 @@
 import dashboard from './dashboard'
 import reyl from './rely'
 import error from './error'
+import echart from './echart'
+import scrollReveal from './scroll-reveal'
 
-const routes = [dashboard, error, reyl]
+const routes = [dashboard, echart, scrollReveal, error, reyl]
 
 export default routes
 

@@ -1,9 +1,9 @@
 import path from 'node:path'
 
 import viteCompression from 'vite-plugin-compression' // 压缩打包
-import AutoImport from 'unplugin-auto-import/vite' // 自动导入
-import ViteComponents from 'unplugin-vue-components/vite' // 自动按需导入
-import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite' // i18n
+import autoImport from 'unplugin-auto-import/vite' // 自动导入
+import viteComponents from 'unplugin-vue-components/vite' // 自动按需导入
+import vueI18nPlugin from '@intlify/unplugin-vue-i18n/vite' // i18n
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons' // `svg icon`
 
 import type { ComponentResolver, TypeImport } from 'unplugin-vue-components'
@@ -77,7 +77,7 @@ export const useAliasOptions = (
  * 自动导入
  */
 export const useAutoImport = async (imp: (ImportsMap | PresetName)[] = []) =>
-  AutoImport({
+  autoImport({
     include: [
       /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
       /\.vue$/,
@@ -99,7 +99,7 @@ export const useViteComponents = async (
   resolvers: (ComponentResolver | ComponentResolver[])[] = [],
   types: TypeImport[] = [],
 ) =>
-  ViteComponents({
+  viteComponents({
     dts: true,
     resolvers: [...resolvers],
     types: [
@@ -121,7 +121,7 @@ export const useViteCompression = (options?: VitePluginCompression) =>
   viteCompression(Object.assign(options ?? {}))
 
 export const useVueI18nPlugin = () =>
-  VueI18nPlugin({
+  vueI18nPlugin({
     runtimeOnly: true,
     compositionOnly: true,
     forceStringify: true,

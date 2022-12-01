@@ -25,6 +25,7 @@ import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import ViteInspect from 'vite-plugin-inspect'
 import viteSvgLoader from 'vite-svg-loader'
 import viteEslintPlugin from 'vite-plugin-eslint'
+import vitePluginImp from 'vite-plugin-imp' // 按需打包工具
 
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 
@@ -63,6 +64,15 @@ export default defineConfig(async ({ mode }) => {
       }),
       useSVGIcon(),
       viteEslintPlugin,
+      vitePluginImp({
+        libList: [
+          {
+            libName: 'lodash-es',
+            libDirectory: '',
+            camel2DashComponentName: false,
+          },
+        ],
+      }),
       {
         include: [
           'src/**/*.ts',

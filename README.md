@@ -12,6 +12,10 @@
 
 > 项目采用 `Vue 3` `TypeScript` `TSX` `Vite` 进行开发, 已经集成了一些常用的开发库, 进行了一些 `Vite` 相关配置, 例如全局自动引入、`GZ` 打包、按需引入打包、[reactivityTransform](https://vuejs.org/guide/extras/reactivity-transform.html)等, 解放你的双手. 国际化插件, 按照项目需求自己取舍. 引入了比较火的 `hook` 库 [@vueuse](https://vueuse.org/), 极大提高你的搬砖效率. `小提醒: 为了避免使用 @vueuse 时出现奇奇怪怪的错误(例如: useDraggable 在使用的时候, TSX 形式开发会失效), 建议采用 <script setup /> 形式进行开发`. 可以根据自己项目实际需求进行配置 `px` 与 'rem' 转换比例(使用 `postcss-pxtorem` 与 `autoprefixer` 实现).
 
+> 项目已经预设了一些打包优化, 例如: 压缩, `base64` 转换, 按需打包. 但是值得注意的是, 禁止全局导入使用 `lodash-es` 这样会破坏按需打包.
+
+> 项目暂时没有揉合乱七八糟的库, 仅仅是为了作为一个顺手的工具, 意在提供一个干净, 简单的脚手架.
+
 ## 启动项目
 
 `yarn dev` / `npm run dev`
@@ -27,16 +31,22 @@
 - [vue-router](https://router.vuejs.org/zh/) `router`
 - [axios](http://axios-js.com/zh-cn/docs/index.html) `ajax request`
 - [vue-i18n](https://kazupon.github.io/vue-i18n/zh/introduction.html) `国际化`
-- [scrollreveal.js](https://scrollrevealjs.org/) `滚动加载动画`
+- [scrollreveal.js](https://scrollrevealjs.org/) `滚动加载动画`(暂时移除)
 - [crypto-js](https://github.com/brix/crypto-js) `加密`
 - [vite-svg-loader](https://github.com/jpkleemans/vite-svg-loader) `svg组件化`
 - [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons/blob/main/README.zh_CN.md) `svg雪碧图`
+- [echarts5](https://echarts.apache.org/examples/zh/index.html#chart-type-line) `可视化`
+- [lodash](https://www.lodashjs.com/) `拓展方法`
 
-## 组件说明
+## 基础组件
 
-`RayScrollReveal` 基于 `ScrollReveal` 进行开发, 可以实现滚动加载动画
+`RayScrollReveal` 基于 `ScrollReveal` 进行开发, 可以实现滚动加载动画(暂时移除)
 
 `RayTransitionComponent` 路由过渡动画组件, 可根据自己喜好更改 `src/styles/animate.scss` 文件过渡效果
+
+`RayChart` 基于 `echarts5` 封装, 可根据自己实际需求进行拓展
+
+`RayIcon` `svg` 小图标组件
 
 ## 项目结构
 
@@ -51,6 +61,8 @@
 - icons: 项目svg图标资源，需要配合 RayIcon 组件使用
 
 - language: 国际化
+
+- layout: 全局页面结构入口
 
 - router: 路由表
 
@@ -67,6 +79,8 @@
   - crypto: 常用的加密方法
   - element: dom 相关操作方法
   - hook: 常用 hook 方法
+
+- views: 页面入口
 
 - vite-plugin: 插件注册
 ```
