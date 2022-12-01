@@ -21,6 +21,7 @@ import { LabelLayout, UniversalTransition } from 'echarts/features' // 标签自
 import { CanvasRenderer, SVGRenderer } from 'echarts/renderers' // `echarts` 渲染器
 import { useSetting } from '@/store'
 import { cloneDeep } from 'lodash-es'
+import { on, off } from '@/utils/element'
 
 import type { PropType } from 'vue'
 
@@ -245,6 +246,12 @@ const RayChart = defineComponent({
       }
     }
 
+    const resizeChart = () => {
+      if (echartInstance) {
+        echartInstance.resize()
+      }
+    }
+
     watch(
       () => themeValue.value,
       (theme) => {
@@ -276,11 +283,16 @@ const RayChart = defineComponent({
         } else {
           props.theme ? renderChart('dark') : renderChart('')
         }
+
+        if (props.autoResize) {
+          on(window, 'resize', resizeChart)
+        }
       })
     })
 
     onBeforeUnmount(() => {
       destroyChart()
+      off(window, 'resize', resizeChart)
     })
 
     return {
@@ -313,5 +325,4 @@ export default RayChart
  * 该组件会在卸载组件时, 自动释放资源
  *
  * 注意: 尽量别一次性倒入全部 `chart` 会造成打包体积异常大
- *
  */
