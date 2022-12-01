@@ -11,7 +11,7 @@ const Echart = defineComponent({
 
     const baseOptions = {
       legend: {
-        data: ['日期'],
+        // data: ['日期'],
       },
       tooltip: {},
       xAxis: {

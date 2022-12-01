@@ -140,7 +140,8 @@ const RayChart = defineComponent({
     const settingStore = useSetting()
     const { themeValue } = storeToRefs(settingStore)
     const rayChartRef = ref<HTMLElement>() // `echart` 容器实例
-    const echartInstance = ref<EChartsInstance>() // `echart` 实例
+    const echartInstanceRef = ref<EChartsInstance>() // `echart` 拷贝实例, 解决直接使用响应式实例带来的问题
+    let echartInstance: EChartsInstance // `echart` 实例
 
     const cssVarsRef = computed(() => {
       const cssVars = {
@@ -215,9 +216,10 @@ const RayChart = defineComponent({
       const element = rayChartRef.value as HTMLElement
       const options = useMergeOptions()
 
-      echartInstance.value = echarts.init(element, theme)
+      echartInstance = echarts.init(element, theme)
+      echartInstanceRef.value = echartInstance
 
-      options && echartInstance.value.setOption(options)
+      options && echartInstance.setOption(options)
     }
 
     const renderThemeChart = (bool?: boolean) => {
@@ -237,20 +239,29 @@ const RayChart = defineComponent({
      * 销毁 `chart` 实例, 释放资源
      */
     const destroyChart = () => {
-      if (echartInstance.value) {
-        echartInstance.value.clear()
-        echartInstance.value.dispose()
+      if (echartInstance) {
+        echartInstance.clear()
+        echartInstance.dispose()
       }
     }
 
     watch(
-      () => [themeValue.value, props.showAria],
-      ([theme]) => {
+      () => themeValue.value,
+      (theme) => {
         if (props.autoChangeTheme) {
           destroyChart()
 
           renderThemeChart(theme)
         }
+      },
+    )
+
+    watch(
+      () => props.showAria,
+      () => {
+        destroyChart()
+
+        renderThemeChart()
       },
     )
 
@@ -275,7 +286,7 @@ const RayChart = defineComponent({
     return {
       rayChartRef,
       cssVarsRef,
-      echartInstance,
+      echartInstance: echartInstanceRef,
     }
   },
   render() {
