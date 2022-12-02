@@ -116,8 +116,22 @@ const RayChart = defineComponent({
       type: Object,
       default: () => ({}),
     },
-    renderSuccess: {
-      type: Function as PropType<AnyFunc>,
+    success: {
+      /**
+       *
+       * @param `chart` 实例
+       *
+       * 渲染成功回调函数
+       */
+      type: Function,
+      default: () => ({}),
+    },
+    error: {
+      /**
+       *
+       * 渲染失败回调函数
+       */
+      type: Function,
       default: () => ({}),
     },
     theme: {
@@ -212,17 +226,34 @@ const RayChart = defineComponent({
     /**
      *
      * 渲染 `echart`
+     *
+     * 缓存两个实例
+     *
+     * 直接使用响应式代理实例会出现诡异的问题, 例如 `legend` 点击时报错
      */
     const renderChart = (theme: ChartTheme) => {
       const element = rayChartRef.value as HTMLElement
       const options = useMergeOptions()
 
-      echartInstance = echarts.init(element, theme)
-      echartInstanceRef.value = echartInstance
+      try {
+        echartInstance = echarts.init(element, theme)
+        echartInstanceRef.value = echartInstance
 
-      options && echartInstance.setOption(options)
+        options && echartInstance.setOption(options)
+
+        props.success?.(echartInstance)
+      } catch (e) {
+        props.error?.()
+      }
     }
 
+    /**
+     *
+     * @param bool 渲染带有主题色的可视化图
+     * @returns void 0
+     *
+     * 区别自动跟随模板主题切换与指定主题切换
+     */
     const renderThemeChart = (bool?: boolean) => {
       if (props.autoChangeTheme) {
         bool ? renderChart('dark') : renderChart('')
@@ -253,8 +284,8 @@ const RayChart = defineComponent({
     }
 
     watch(
-      () => themeValue.value,
-      (theme) => {
+      () => [themeValue.value],
+      ([theme]) => {
         if (props.autoChangeTheme) {
           destroyChart()
 
@@ -268,7 +299,15 @@ const RayChart = defineComponent({
       () => {
         destroyChart()
 
-        renderThemeChart()
+        /**
+         *
+         * 贴花跟随主题渲染
+         *
+         * 自动跟随模板主题或者指定主题皆可
+         */
+        props.autoChangeTheme || props.theme
+          ? renderChart('dark')
+          : renderChart('')
       },
     )
 
