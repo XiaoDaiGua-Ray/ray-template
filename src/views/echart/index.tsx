@@ -202,7 +202,7 @@ const Echart = defineComponent({
       <div class="echart">
         <NCard title="RayChart组件使用">
           在使用该组件时, 一定要注意根组件的高度初始化问题,
-          如果需要使用其余的图利, 需要自己手动去注册.
+          如果需要使用其余的图例, 需要自己手动去注册.
           该组件实现了自动跟随模板主题切换功能, 但是动态切换损耗较大,
           所以默认不启用
         </NCard>

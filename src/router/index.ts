@@ -1,7 +1,8 @@
-import type { App } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { constantRoutes } from './routes'
 import { getCache } from '@/utils/cache'
+
+import type { App } from 'vue'
 
 export const router = createRouter({
   history: createWebHashHistory(),

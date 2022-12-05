@@ -5,7 +5,8 @@
     "RelyAbout": "Rely About",
     "Error": "Error Page",
     "Echart": "Chart",
-    "scrollReveal": "Scroll Reveal"
+    "scrollReveal": "Scroll Reveal",
+    "Axios": "Axios Request"
   },
   "LayoutHeaderTooltipOptions": {
     "Reload": "Reload Current Page",

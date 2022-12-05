@@ -305,9 +305,11 @@ const RayChart = defineComponent({
          *
          * 自动跟随模板主题或者指定主题皆可
          */
-        props.autoChangeTheme || props.theme
-          ? renderChart('dark')
-          : renderChart('')
+        if (props.autoChangeTheme || props.theme) {
+          themeValue.value ? renderChart('dark') : renderChart('')
+        } else {
+          renderChart('')
+        }
       },
     )
 

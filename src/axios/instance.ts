@@ -1,6 +1,27 @@
 import axios from 'axios'
-
 import { useDetermineEnv } from '@use-utils/hook'
+
+import type { RawAxiosRequestHeaders, AxiosRequestConfig } from 'axios'
+import type { RequestHeaderOptions } from './type'
+
+/**
+ *
+ * @param instance axios instance
+ * @param options axios headers options
+ *
+ * @note
+ * 自定义 `axios` 请求头配置
+ */
+const appendRequestHeaders = (
+  instance: AxiosRequestConfig<unknown>,
+  options: RequestHeaderOptions[],
+) => {
+  const requestHeaders = instance.headers as RawAxiosRequestHeaders
+
+  options.forEach((curr) => {
+    requestHeaders[curr.key] = curr.value
+  })
+}
 
 const server = axios.create({
   baseURL: '', // `import.meta.env`,
@@ -19,6 +40,8 @@ server.interceptors.request.use(
     } else if (MODE === 'test') {
       // TODO: 测试环境
     }
+
+    appendRequestHeaders(request, [{ key: 'X-TOKEN', value: 'token' }]) // 自定义请求头
 
     return request
   },
@@ -39,3 +62,10 @@ server.interceptors.response.use(
 )
 
 export default server
+
+/**
+ *
+ * 请求, 响应拦截器
+ *
+ * 可在此实现共享的基础配置
+ */
