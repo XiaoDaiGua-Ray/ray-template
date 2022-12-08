@@ -12,12 +12,12 @@ const Layout = defineComponent({
   setup() {
     const menuStore = useSetting()
     const { height: windowHeight } = useWindowSize()
-    const modelReloadRoute = computed(() => menuStore.reloadRouteLog)
-    const modelMenuTagLog = computed(() => menuStore.menuTagLog)
+    const modelReloadRoute = computed(() => menuStore.reloadRouteSwitch)
+    const modelMenuTagSwitch = computed(() => menuStore.menuTagSwitch)
     const cssVarsRef = computed(() => {
       let cssVar = {}
 
-      if (menuStore.menuTagLog) {
+      if (menuStore.menuTagSwitch) {
         cssVar = {
           '--layout-content-height': 'calc(100% - 110px)',
         }
@@ -33,7 +33,7 @@ const Layout = defineComponent({
     return {
       windowHeight,
       modelReloadRoute,
-      modelMenuTagLog,
+      modelMenuTagSwitch,
       cssVarsRef,
     }
   },
@@ -47,7 +47,7 @@ const Layout = defineComponent({
           <LayoutMenu />
           <NLayout>
             <SiderBar />
-            {this.modelMenuTagLog ? <MenuTag /> : ''}
+            {this.modelMenuTagSwitch ? <MenuTag /> : ''}
             <NLayoutContent
               class="layout-content__router-view"
               nativeScrollbar={false}

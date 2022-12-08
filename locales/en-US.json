@@ -6,7 +6,8 @@
     "Error": "Error Page",
     "Echart": "Chart",
     "scrollReveal": "Scroll Reveal",
-    "Axios": "Axios Request"
+    "Axios": "Axios Request",
+    "Table": "Table"
   },
   "LayoutHeaderTooltipOptions": {
     "Reload": "Reload Current Page",

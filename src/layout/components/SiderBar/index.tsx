@@ -95,9 +95,9 @@ const SiderBar = defineComponent({
     ]
     const iconEventMap: IconEventMapOptions = {
       reload: () => {
-        changeSwitcher(false, 'reloadRouteLog')
+        changeSwitcher(false, 'reloadRouteSwitch')
 
-        setTimeout(() => changeSwitcher(true, 'reloadRouteLog'))
+        setTimeout(() => changeSwitcher(true, 'reloadRouteSwitch'))
       },
       setting: () => {
         showSettings.value = true

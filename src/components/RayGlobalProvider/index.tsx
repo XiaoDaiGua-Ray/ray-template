@@ -21,6 +21,7 @@ const GlobalProvider = defineComponent({
     const modelThemeValue = computed(() =>
       settingStore.themeValue ? darkTheme : null,
     )
+    const modelLocal = computed(() => settingStore.naiveLocal)
 
     const { message, notification, dialog, loadingBar } = createDiscreteApi(
       ['message', 'dialog', 'notification', 'loadingBar'],
@@ -39,6 +40,7 @@ const GlobalProvider = defineComponent({
     return {
       modelPrimaryColorOverride,
       modelThemeValue,
+      modelLocal,
     }
   },
   render() {
@@ -46,6 +48,8 @@ const GlobalProvider = defineComponent({
       <NConfigProvider
         themeOverrides={this.modelPrimaryColorOverride}
         theme={this.modelThemeValue}
+        locale={this.modelLocal.local}
+        dateLocal={this.modelLocal.dateLocal}
       >
         <NLoadingBarProvider>
           <NMessageProvider>

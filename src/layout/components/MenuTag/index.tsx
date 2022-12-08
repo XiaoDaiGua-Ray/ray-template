@@ -1,3 +1,14 @@
+/**
+ *
+ * @author Ray <https://github.com/XiaoDaiGua-Ray>
+ *
+ * @date 2022-12-08
+ *
+ * @workspace ray-template
+ *
+ * @remark 今天也是元气满满撸代码的一天
+ */
+
 import './index.scss'
 import { NScrollbar, NTag, NSpace } from 'naive-ui'
 import { useMenu } from '@/store'
@@ -11,6 +22,12 @@ const MenuTag = defineComponent({
     const { menuTagOptions, menuKey } = storeToRefs(menuStore)
     const { menuModelValueChange, spliceMenTagOptions } = menuStore
 
+    /**
+     *
+     * @param idx 索引
+     *
+     * @remark 关闭 `tag` 菜单, 如果仅有一个则不能关闭
+     */
     const handleCloseTag = (idx: number) => {
       spliceMenTagOptions(idx)
 
@@ -24,6 +41,10 @@ const MenuTag = defineComponent({
       }
     }
 
+    /**
+     *
+     * @param item 当前菜单值
+     */
     const handleTagClick = (item: MenuOption) => {
       menuModelValueChange(item.key as string, item)
     }
@@ -46,8 +67,9 @@ const MenuTag = defineComponent({
                 curr.key !== '/dashboard' && this.menuTagOptions.length > 1
               }
               onClose={() => this.handleCloseTag(idx)}
-              type={curr.key === this.menuKey ? 'success' : 'default'}
+              type={curr.key === this.menuKey ? 'success' : 'info'}
               onClick={this.handleTagClick.bind(this, curr)}
+              bordered={false}
             >
               {typeof curr.label === 'function' ? curr.label() : curr.label}
             </NTag>

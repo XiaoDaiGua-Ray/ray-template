@@ -38,7 +38,7 @@ const SettingDrawer = defineComponent({
     const settingStore = useSetting()
 
     const { changePrimaryColor, changeSwitcher } = settingStore
-    const { themeValue, primaryColorOverride, menuTagLog } =
+    const { themeValue, primaryColorOverride, menuTagSwitch } =
       storeToRefs(settingStore)
 
     const modelShow = computed({
@@ -59,7 +59,7 @@ const SettingDrawer = defineComponent({
       changePrimaryColor,
       themeValue,
       primaryColorOverride,
-      menuTagLog,
+      menuTagSwitch,
       changeSwitcher,
     }
   },
@@ -129,9 +129,9 @@ const SettingDrawer = defineComponent({
             <NDescriptions labelPlacement="left" column={1}>
               <NDescriptionsItem label="显示多标签">
                 <NSwitch
-                  v-model:value={this.menuTagLog}
+                  v-model:value={this.menuTagSwitch}
                   onUpdateValue={(bool: boolean) =>
-                    this.changeSwitcher(bool, 'menuTagLog')
+                    this.changeSwitcher(bool, 'menuTagSwitch')
                   }
                 />
               </NDescriptionsItem>

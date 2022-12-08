@@ -24,6 +24,8 @@ import { setupI18n } from './language/index'
 const setupTemplate = () => {
   const app = createApp(App)
 
+  setupI18n(app)
+
   setupStore(app)
 
   setupRouter(app)
@@ -31,8 +33,6 @@ const setupTemplate = () => {
   setupRouterLoadingBar()
 
   permissionRouter()
-
-  setupI18n(app)
 
   app.mount('#app')
 }
@@ -48,6 +48,8 @@ const setupWujieTemplate = () => {
   window.__WUJIE_MOUNT = () => {
     instance = createApp(App)
 
+    setupI18n(instance)
+
     setupStore(instance)
 
     setupRouter(instance)
@@ -55,8 +57,6 @@ const setupWujieTemplate = () => {
     setupRouterLoadingBar()
 
     permissionRouter()
-
-    setupI18n(instance)
 
     instance.mount('#app')
   }
