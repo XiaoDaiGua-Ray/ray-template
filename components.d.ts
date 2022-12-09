@@ -10,5 +10,6 @@ declare module '@vue/runtime-core' {
     RayTransitionComponent: typeof import('./src/components/RayTransitionComponent/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TableSetting: typeof import('./src/components/RayTable/src/components/TableSetting/index.vue')['default']
   }
 }

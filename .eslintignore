@@ -5,3 +5,4 @@ components.d.ts
 .gitignore
 .vscode
 public
+yarn.*

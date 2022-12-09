@@ -1,0 +1,51 @@
+$iconSpace: 5px;
+$width: 140px;
+$activedColor: #2080f0;
+
+.ray-table__setting-option--draggable {
+  display: grid;
+  grid-template-columns: repeat(1, $width);
+  grid-gap: 10px 0;
+  justify-items: center;
+  align-items: center;
+  justify-content: center;
+
+  & .draggable-item {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    &:hover {
+      & .draggable-item__d--icon {
+        opacity: 1;
+      }
+    }
+
+    & .draggable-item__d--icon {
+      transition: opacity 0.3s var(--r-bezier), transform 0.3s var(--r-bezier);
+      opacity: 0;
+    }
+
+    & .draggable-item__d--icon,
+    & .draggable-item__icon {
+      padding: $iconSpace;
+      outline: none;
+      border: none;
+    }
+
+    & .draggable-item__icon {
+      cursor: pointer;
+    }
+
+    & .draggable-item__icon {
+      &.draggable-item__icon--actived {
+        color: $activedColor;
+      }
+    }
+
+    & .n-ellipsis {
+      max-width: 71px;
+      min-width: 71px;
+    }
+  }
+}

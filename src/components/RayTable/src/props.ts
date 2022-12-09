@@ -58,6 +58,16 @@ const rayTableProps = {
     type: Object as PropType<VNode>,
     default: () => ({}),
   },
+  showMenu: {
+    /**
+     *
+     * 是否展示右键菜单
+     *
+     * 默认启用
+     */
+    type: Boolean,
+    default: true,
+  },
 } as const
 
 export default rayTableProps
@@ -66,5 +76,5 @@ export default rayTableProps
  *
  * `Ray Table Props`
  *
- * 继承 `naive ui Data Table`
+ * 继承 `Naive UI Data Table`
  */
