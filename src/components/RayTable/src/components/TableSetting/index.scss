@@ -2,10 +2,15 @@ $iconSpace: 5px;
 $width: 140px;
 $activedColor: #2080f0;
 
+.ray-table__setting:hover {
+  transform: rotate(180deg);
+  transition: transform 0.3s var(--r-bezier);
+}
+
 .ray-table__setting-option--draggable {
   display: grid;
   grid-template-columns: repeat(1, $width);
-  grid-gap: 10px 0;
+  grid-row-gap: 10px;
   justify-items: center;
   align-items: center;
   justify-content: center;

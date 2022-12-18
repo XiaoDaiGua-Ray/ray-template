@@ -152,10 +152,12 @@ const TableView = defineComponent({
             header: () => (
               <div>
                 <p>
-                  使用响应式方法代理 columns 并且打开 action 则可以启用操作栏
+                  使用响应式方法代理 columns 并且打开 action
+                  则可以启用操作栏(v-model:columns)
                 </p>
                 <p>拖拽操作栏动态切换表格列</p>
                 <p>点击左右固定按钮, 即可动态固定列</p>
+                <p>点击修改列宽度, 即可拖动列修改宽度</p>
               </div>
             ),
             default: () => (
