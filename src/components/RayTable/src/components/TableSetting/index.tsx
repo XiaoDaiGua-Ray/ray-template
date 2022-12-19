@@ -10,13 +10,14 @@
  */
 
 import './index.scss'
-import { NCard, NPopover, NEllipsis, NCheckbox } from 'naive-ui'
+import { NCard, NPopover, NEllipsis, NButton } from 'naive-ui'
 import RayIcon from '@/components/RayIcon/index'
 import VueDraggable from 'vuedraggable'
 import { setupSettingOptions } from './hook'
+import { useSetting } from '@/store'
 
 import type {
-  RayTableProvider,
+  TableSettingProvider,
   ActionOptions,
   FixedType,
   TableSettingFixedPopoverIcon,
@@ -26,11 +27,16 @@ const TableSetting = defineComponent({
   name: 'TableSetting',
   emits: ['columnsUpdate'],
   setup(_, { emit }) {
-    const rayTableProvider = inject('rayTableProvider', {} as RayTableProvider)
+    const settingStore = useSetting()
+    const tableSettingProvider = inject(
+      'tableSettingProvider',
+      {} as TableSettingProvider,
+    )
     const settingOptions = ref(
-      setupSettingOptions(rayTableProvider.modelColumns.value),
+      setupSettingOptions(tableSettingProvider.modelColumns.value),
     ) // 表格表头
-    const disableDraggable = ref(true) // 拖拽开关
+    const disableDraggable = ref(true) // 拖拽开关(暂时弃用)
+    const { themeValue } = storeToRefs(settingStore)
 
     const handleDraggableEnd = () => {
       emit('columnsUpdate', settingOptions.value)
@@ -57,6 +63,7 @@ const TableSetting = defineComponent({
         </NPopover>
       )
     }
+
     /**
      *
      * @param type 列所需固定方向
@@ -111,6 +118,7 @@ const TableSetting = defineComponent({
       disableDraggable,
       FixedPopoverIcon,
       handleResizeColumnClick,
+      themeValue,
     }
   },
   render() {
@@ -125,7 +133,7 @@ const TableSetting = defineComponent({
             />
           ),
           default: () => (
-            <NCard bordered={false} segmented={{ content: 'soft' }}>
+            <NCard bordered={false} class="table-setting__card">
               {{
                 default: () => (
                   <VueDraggable
@@ -143,7 +151,12 @@ const TableSetting = defineComponent({
                         element: ActionOptions
                         index: number
                       }) => (
-                        <div class={['draggable-item']}>
+                        <div
+                          class={[
+                            'draggable-item',
+                            this.themeValue ? 'draggable-item--dark' : '',
+                          ]}
+                        >
                           <RayIcon
                             customClassName={`draggable-item__d--icon`}
                             name="draggable"
@@ -194,11 +207,6 @@ const TableSetting = defineComponent({
                       ),
                     }}
                   </VueDraggable>
-                ),
-                header: () => (
-                  <NCheckbox v-model:checked={this.disableDraggable}>
-                    拖拽
-                  </NCheckbox>
                 ),
               }}
             </NCard>

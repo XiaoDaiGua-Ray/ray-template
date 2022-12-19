@@ -10,18 +10,22 @@
  */
 
 import './index.scss'
-import { NDataTable, NCard, NDropdown } from 'naive-ui'
+import { NDataTable, NCard, NDropdown, NSpace } from 'naive-ui'
 import props from './props'
 import TableSetting from './components/TableSetting/index'
+import ExportExcel from './components/ExportExcel/index'
+import { utils, writeFileXLSX } from 'xlsx'
+import dayjs from 'dayjs'
+import { setupExportHeader } from './hook'
 
-import type { ActionOptions } from './type'
+import type { ActionOptions, ExportExcelHeader } from './type'
 import type { WritableComputedRef } from 'vue'
 import type { DropdownOption } from 'naive-ui'
 
 const RayTable = defineComponent({
   name: 'RayTable',
   props: props,
-  emits: ['update:columns', 'menuSelect'],
+  emits: ['update:columns', 'menuSelect', 'exportSuccess', 'exportError'],
   setup(props, { emit }) {
     const modelRightClickMenu = computed(() => props.rightClickMenu)
     const modelColumns = computed({
@@ -37,9 +41,16 @@ const RayTable = defineComponent({
     })
     let prevRightClickIndex = -1
 
-    provide('rayTableProvider', {
+    provide('tableSettingProvider', {
       modelRightClickMenu,
       modelColumns,
+    })
+    provide('exportExcelProvider', {
+      exportTip: props.exportTip,
+      exportType: props.exportType,
+      exportPositiveText: props.exportPositiveText,
+      exportNegativeText: props.exportNegativeText,
+      exportFilename: props.exportFilename,
     })
 
     const handleColumnsUpdate = (arr: ActionOptions[]) => {
@@ -92,11 +103,48 @@ const RayTable = defineComponent({
       }
     }
 
+    const handleExportPositive = () => {
+      if (props.data.length && props.columns.length) {
+        try {
+          const exportHeader = setupExportHeader(
+            props.columns as ExportExcelHeader[],
+          ) // 获取所有列(设置为 `excel` 表头)
+          const sheetData = utils.json_to_sheet(props.data)
+          const workBook = utils.book_new()
+          const filename = props.exportFilename
+            ? props.exportFilename + '.xlsx'
+            : dayjs(new Date()).format('YYYY-MM-DD') + '.xlsx'
+
+          utils.book_append_sheet(workBook, sheetData, 'Data')
+
+          const range = utils.decode_range(sheetData['!ref'] as string) // 获取所有单元格
+
+          /**
+           *
+           * 替换表头
+           *
+           * 方法有点蠢, 凑合凑合用吧
+           */
+          for (let c = range.s.c; c <= range.e.c; c++) {
+            const header = utils.encode_col(c) + '1'
+            sheetData[header].v = exportHeader[sheetData[header].v]
+          }
+
+          writeFileXLSX(workBook, filename) // 输出表格
+
+          emit('exportSuccess')
+        } catch (e) {
+          emit('exportError')
+        }
+      }
+    }
+
     return {
       handleColumnsUpdate,
       ...toRefs(menuConfig),
       handleRowProps,
       handleRightMenuSelect,
+      handleExportPositive,
     }
   },
   render() {
@@ -133,9 +181,14 @@ const RayTable = defineComponent({
           header: () => this.title,
           'header-extra': () =>
             this.action ? (
-              <TableSetting
-                onColumnsUpdate={this.handleColumnsUpdate.bind(this)}
-              />
+              <NSpace align="center">
+                <ExportExcel
+                  onExportPositive={this.handleExportPositive.bind(this)}
+                />
+                <TableSetting
+                  onColumnsUpdate={this.handleColumnsUpdate.bind(this)}
+                />
+              </NSpace>
             ) : (
               ''
             ),

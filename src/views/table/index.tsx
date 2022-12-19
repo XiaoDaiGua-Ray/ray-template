@@ -131,7 +131,7 @@ const TableView = defineComponent({
         <NCard title="RayTable">
           <p>
             该组件基于 Naive UI DataTable 组件封装. 实现右键菜单, 表格标题,
-            操作栏等功能
+            导出为 excel 操作栏等功能
           </p>
           <p>RayTable 完全继承 DataTable 的所有属性与方法</p>
           <p>
@@ -158,6 +158,7 @@ const TableView = defineComponent({
                 <p>拖拽操作栏动态切换表格列</p>
                 <p>点击左右固定按钮, 即可动态固定列</p>
                 <p>点击修改列宽度, 即可拖动列修改宽度</p>
+                <p>点击导出按钮即可导出 excel 表格, 默认以列为表头输出</p>
               </div>
             ),
             default: () => (

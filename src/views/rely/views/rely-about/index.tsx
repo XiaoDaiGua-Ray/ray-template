@@ -33,7 +33,9 @@ const RelyAbout = defineComponent({
         key: 'relyAddress',
       },
     ]
-    const relyData = ref<RelyDataOptions[]>([])
+    const dependenciesOptions = ref<RelyDataOptions[]>([])
+    const devDependenciesOptions = ref<RelyDataOptions[]>([])
+
     const templateOptions = [
       {
         name: '项目名称',
@@ -62,10 +64,8 @@ const RelyAbout = defineComponent({
           return pre
         }, [] as RelyDataOptions[])
 
-      const arrDependencies = _arrayFrom(dependencies)
-      const arrDevDependencies = _arrayFrom(devDependencies)
-
-      relyData.value = [...arrDependencies, ...arrDevDependencies]
+      dependenciesOptions.value = _arrayFrom(dependencies)
+      devDependenciesOptions.value = _arrayFrom(devDependencies)
     }
 
     const handleTagClick = (item: TemplateOptions) => {
@@ -80,7 +80,8 @@ const RelyAbout = defineComponent({
 
     return {
       columns,
-      relyData,
+      dependenciesOptions,
+      devDependenciesOptions,
       templateOptions,
       handleTagClick,
     }
@@ -110,9 +111,18 @@ const RelyAbout = defineComponent({
             ))}
           </NDescriptions>
         </NCard>
-        <NCard title="项目依赖">
+        <NCard title="生产依赖">
           <NDescriptions bordered labelPlacement="left">
-            {this.relyData.map((curr) => (
+            {this.dependenciesOptions.map((curr) => (
+              <NDescriptionsItem key={curr.name} label={curr.name}>
+                {curr.relyVersion}
+              </NDescriptionsItem>
+            ))}
+          </NDescriptions>
+        </NCard>
+        <NCard title="开发依赖">
+          <NDescriptions bordered labelPlacement="left">
+            {this.devDependenciesOptions.map((curr) => (
               <NDescriptionsItem key={curr.name} label={curr.name}>
                 {curr.relyVersion}
               </NDescriptionsItem>

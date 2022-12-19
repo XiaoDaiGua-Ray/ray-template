@@ -1,30 +1,67 @@
-# Ray template
+# `Ray Template`
 
 ## 前言
 
-> 模板按照个人习惯进行搭建, 可以根据个人喜好进行更改. 预设了一些组件库、国际化库的东西. 建议使用 `naive-ui` 作为组件库.
+> 该项目模板采用 `vue3.x` `vite3.2` `tsx` 进行开发，使用 `naive ui` 作为组件库。意在提供一个简洁、快速上手的模板。
 
-## 在线预览
+## 版本说明
 
-[在线预览](https://xiaodaigua-ray.github.io/#/)
+> 做了一些大的改动升级，让模板更加好用了一点，默认主题色也做了变更更好看了一点。啰嗦两句，好像也没啥其他的了...
 
-## 项目说明
+## 功能
 
-> 项目采用 `Vue 3` `TypeScript` `TSX` `Vite` 进行开发, 已经集成了一些常用的开发库, 进行了一些 `Vite` 相关配置, 例如全局自动引入、`GZ` 打包、按需引入打包、[reactivityTransform](https://vuejs.org/guide/extras/reactivity-transform.html)等, 解放你的双手. 国际化插件, 按照项目需求自己取舍. 引入了比较火的 `hook` 库 [@vueuse](https://vueuse.org/), 极大提高你的搬砖效率. `小提醒: 为了避免使用 @vueuse 时出现奇奇怪怪的错误(例如: useDraggable 在使用的时候, TSX 形式开发会失效), 建议采用 <script setup /> 形式进行开发`. 可以根据自己项目实际需求进行配置 `px` 与 'rem' 转换比例(使用 `postcss-pxtorem` 与 `autoprefixer` 实现).
+- 主题切换
+- 错误页
+- 封装了一些小组件
+- 还有一些不值一提的小东西...
 
-> 项目已经预设了一些打包优化, 例如: 压缩, `base64` 转换, 按需打包. 但是值得注意的是, 禁止全局导入使用 `lodash-es` 这样会破坏按需打包.
+## 预览地址
 
-> 项目暂时没有揉合乱七八糟的库, 仅仅是为了作为一个顺手的工具, 意在提供一个干净, 简单的脚手架.
+[**`点击预览`**](https://xiaodaigua-ray.github.io/#/)
+
+## 拉取依赖
+
+```
+# yarn
+
+yarn
+```
+
+```
+# npm
+
+npm install
+```
 
 ## 启动项目
 
-`yarn dev` / `npm run dev`
+```
+# yarn
+
+yarn dev
+```
+
+```
+# npm
+
+npm run dev
+```
 
 ## 项目打包
 
-`yarn build` / `npm run build`
+```
+# yarn
 
-## 使用开源库
+yarn build
+```
+
+```
+# npm
+
+npm run build
+```
+
+## 项目依赖
 
 - [pinia](https://pinia.vuejs.org/) `全局状态管理器`
 - [@vueuse](https://vueuse.org/) `vue3 hooks`
@@ -36,25 +73,21 @@
 - [vite-svg-loader](https://github.com/jpkleemans/vite-svg-loader) `svg组件化`
 - [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons/blob/main/README.zh_CN.md) `svg雪碧图`
 - [echarts5](https://echarts.apache.org/examples/zh/index.html#chart-type-line) `可视化`
-- [lodash](https://www.lodashjs.com/) `拓展方法`
+- [lodash-es](https://www.lodashjs.com/) `拓展方法`
 
 ## 基础组件
 
-`RayScrollReveal` 基于 `ScrollReveal` 进行开发, 可以实现滚动加载动画(暂时移除)
-
-`RayTransitionComponent` 路由过渡动画组件, 可根据自己喜好更改 `src/styles/animate.scss` 文件过渡效果
-
-`RayChart` 基于 `echarts5` 封装, 可根据自己实际需求进行拓展
-
-`RayIcon` `svg` 小图标组件
+- `RayIcon` `svg icon`
+- `RayChart` 基于 `echarts5.x` 封装可视化组件
+- `RayTransitionComponent` 带过渡动画路由组件，效果与 `RouterView` 相同
+- `RayTable` 基于 `Naive UI DataTable` 组件封装，实现了一些小功能
 
 ## 项目结构
 
 ```
-- locales: 国际化多语言入口(本项目采用 `json` 格式)
+- locales: 国际化多语言入口(本项目采用 json 格式)
 
 - assets: 项目静态资源入口
-  - images: 项目图片资源
 
 - component: 全局共用组件
 
@@ -67,32 +100,20 @@
 - router: 路由表
 
 - store: 全局状态管理入口
-  - modules
-    - setting: demo
 
 - styles: 全局公共样式入口
 
 - types: 全局 type
 
 - utils: 工具包
-  - cache: 缓存方法
-  - crypto: 常用的加密方法
-  - element: dom 相关操作方法
-  - hook: 常用 hook 方法
 
 - views: 页面入口
 
 - vite-plugin: 插件注册
 ```
 
-## 如果你采用的 `naive-ui` 作为组件库, 可能需要它
+## 浏览器支持
 
-```
-# 如何在项目内使用提示组件
-window.$dialog
-window.$message
-window.$loadingBar
-window.$notification
-```
+> 仅支持现代浏览器，不支持 `IE`
 
-### 祝大家搬砖愉快, 希望这个模板能帮你省很多时间
+## 最后，希望大家搬砖愉快

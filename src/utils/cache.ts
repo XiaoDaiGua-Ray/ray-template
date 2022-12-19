@@ -38,16 +38,26 @@ export const removeCache = (
   key: string | 'all' | 'all-sessionStorage' | 'all-localStorage',
   type: CacheType = 'sessionStorage',
 ) => {
-  if (key === 'all') {
-    window.window.localStorage.clear()
-    window.sessionStorage.clear()
-  } else if (key === 'all-sessionStorage') {
-    window.sessionStorage.clear()
-  } else if (key === 'all-localStorage') {
-    window.localStorage.clear()
-  } else {
-    type === 'localStorage'
-      ? window.localStorage.removeItem(key)
-      : window.sessionStorage.removeItem(key)
+  switch (key) {
+    case 'all':
+      window.window.localStorage.clear()
+      window.sessionStorage.clear()
+
+      break
+
+    case 'all-sessionStorage':
+      window.sessionStorage.clear()
+
+      break
+
+    case 'all-localStorage':
+      window.localStorage.clear()
+
+      break
+
+    default:
+      type === 'localStorage'
+        ? window.localStorage.removeItem(key)
+        : window.sessionStorage.removeItem(key)
   }
 }

@@ -7,9 +7,17 @@ $activedColor: #2080f0;
   transition: transform 0.3s var(--r-bezier);
 }
 
+.table-setting__card {
+  padding: 12px 8px;
+
+  & .n-card__content {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
+
 .ray-table__setting-option--draggable {
   display: grid;
-  grid-template-columns: repeat(1, $width);
   grid-row-gap: 10px;
   justify-items: center;
   align-items: center;
@@ -19,8 +27,19 @@ $activedColor: #2080f0;
     display: flex;
     align-items: center;
     cursor: pointer;
+    padding: 8px 10px;
+    border-radius: 2px;
+    transition: background-color 0.3s var(--r-bezier);
+
+    &.draggable-item--dark {
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.08);
+      }
+    }
 
     &:hover {
+      background-color: #e8f2fd;
+
       & .draggable-item__d--icon {
         opacity: 1;
       }
@@ -49,8 +68,8 @@ $activedColor: #2080f0;
     }
 
     & .n-ellipsis {
-      max-width: 71px;
-      min-width: 71px;
+      max-width: 80px;
+      min-width: 80px;
     }
   }
 }

@@ -7,7 +7,7 @@ export const useSetting = defineStore(
       drawerPlacement: 'right' as NaiveDrawerPlacement,
       primaryColorOverride: {
         common: {
-          primaryColor: '#18A058', // 主题色
+          primaryColor: '#2d8cf0', // 主题色
         },
       },
       themeValue: false, // `true` 为黑夜主题, `false` 为白色主题

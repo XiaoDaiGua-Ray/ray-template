@@ -69,7 +69,7 @@ export const useMenu = defineStore('menu', () => {
       }
     }
 
-    matchMenuItem(menuState.options)
+    matchMenuItem(menuState.options as MenuOption[])
   }
 
   /**

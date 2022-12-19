@@ -68,6 +68,54 @@ const rayTableProps = {
     type: Boolean,
     default: true,
   },
+  exportTip: {
+    /**
+     *
+     * 导出表格提示
+     */
+    type: String,
+    default: '是否导出为excel？',
+  },
+  exportType: {
+    /**
+     *
+     * 导出类型
+     *
+     * 默认为 `xlsx`
+     *
+     * 暂时只支持导出为 `xlsx`
+     */
+    type: String,
+    default: 'xlsx',
+  },
+  exportPositiveText: {
+    /**
+     *
+     * 导出确认按钮文字
+     *
+     * 默认为 `确认`
+     */
+    type: String,
+    default: '确认',
+  },
+  exportNegativeText: {
+    /**
+     *
+     * 导出取消按钮文字
+     *
+     * 默认为 `取消`
+     */
+    type: String,
+    default: '取消',
+  },
+  exportFilename: {
+    /**
+     *
+     * 导出表格名称
+     */
+    type: String,
+    default: '',
+  },
 } as const
 
 export default rayTableProps
