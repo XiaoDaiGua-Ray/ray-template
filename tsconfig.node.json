@@ -5,5 +5,10 @@
     "moduleResolution": "Node",
     "allowSyntheticDefaultImports": true
   },
-  "include": ["vite.config.ts", "vite-plugin/index.ts", "vite-plugin/type.ts"]
+  "include": [
+    "vite.config.ts",
+    "vite-plugin/index.ts",
+    "vite-plugin/type.ts",
+    "package.ts"
+  ]
 }

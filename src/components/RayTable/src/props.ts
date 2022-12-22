@@ -13,6 +13,7 @@ import { dataTableProps } from 'naive-ui'
 
 import type { PropType, VNode } from 'vue'
 import type { DropdownMixedOption } from './type'
+import type PrintConfiguration from 'print-js'
 
 const rayTableProps = {
   ...dataTableProps, // 继承 `data table props`
@@ -68,13 +69,13 @@ const rayTableProps = {
     type: Boolean,
     default: true,
   },
-  exportTip: {
+  exportTooltip: {
     /**
      *
      * 导出表格提示
      */
     type: String,
-    default: '是否导出为excel？',
+    default: '是否导出为Excel表格?',
   },
   exportType: {
     /**
@@ -115,6 +116,56 @@ const rayTableProps = {
      */
     type: String,
     default: '',
+  },
+  printPositiveText: {
+    /**
+     *
+     * 打印确认按钮文字
+     *
+     * 默认为 `确认`
+     */
+    type: String,
+    default: '确认',
+  },
+  printNegativeText: {
+    /**
+     *
+     * 打印取消按钮文字
+     *
+     * 默认为 `取消`
+     */
+    type: String,
+    default: '取消',
+  },
+  printTooltip: {
+    /**
+     *
+     * 打印表格提示
+     */
+    type: String,
+    default: '是否打印该表格?',
+  },
+  printType: {
+    /**
+     *
+     * 打印输出类型: 'pdf' | 'html' | 'image' | 'json'
+     *
+     * 默认为 `html`
+     */
+    type: String as PropType<PrintConfiguration.PrintTypes>,
+    default: 'html',
+  },
+  printOptions: {
+    /**
+     *
+     * `print-js` 打印配置项
+     *
+     * 会自动过滤: `printable`, 'type'
+     */
+    type: Object as PropType<
+      Omit<PrintConfiguration.Configuration, 'printable' | 'type'>
+    >,
+    default: () => ({}),
   },
 } as const
 

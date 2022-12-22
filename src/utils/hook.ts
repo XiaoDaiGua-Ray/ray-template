@@ -39,3 +39,39 @@ export const validteValueType = <T>(value: T, type: ValidteValueType) => {
 
   return _v.includes(type)
 }
+
+/**
+ *
+ * @param length `uuid` 长度
+ * @param radix `uuid` 基数
+ * @returns `uuid`
+ */
+export const uuid = (length = 16, radix?: number) => {
+  const sad =
+    '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('')
+  const arr: string[] = []
+  let i = 0
+
+  radix = radix || sad.length
+
+  if (length) {
+    for (i = 0; i < length; i++) {
+      arr[i] = sad[0 | (Math.random() * radix)]
+    }
+  } else {
+    let r
+
+    arr[8] = arr[13] = arr[18] = arr[23] = '-'
+
+    arr[14] = '4'
+    for (i = 0; i < 36; i++) {
+      if (!arr[i]) {
+        r = 0 | (Math.random() * 16)
+
+        arr[i] = sad[i === 19 ? (r & 0x3) | 0x8 : r]
+      }
+    }
+  }
+
+  return arr.join('')
+}

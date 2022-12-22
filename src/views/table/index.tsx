@@ -159,6 +159,7 @@ const TableView = defineComponent({
                 <p>点击左右固定按钮, 即可动态固定列</p>
                 <p>点击修改列宽度, 即可拖动列修改宽度</p>
                 <p>点击导出按钮即可导出 excel 表格, 默认以列为表头输出</p>
+                <p>点击打印按钮即可打印该表格</p>
               </div>
             ),
             default: () => (

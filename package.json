@@ -1,7 +1,7 @@
 {
   "name": "ray-template",
   "private": true,
-  "version": "0.0.0",
+  "version": "3.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -21,6 +21,7 @@
     "naive-ui": "^2.34.0",
     "pinia": "^2.0.17",
     "pinia-plugin-persistedstate": "^2.4.0",
+    "print-js": "^1.6.0",
     "sass": "^1.54.3",
     "screenfull": "^6.0.2",
     "vue": "^3.2.37",
@@ -40,6 +41,7 @@
     "@vitejs/plugin-vue": "^3.0.0",
     "@vitejs/plugin-vue-jsx": "^2.0.0",
     "autoprefixer": "^10.4.8",
+    "depcheck": "^1.4.3",
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard-with-typescript": "^23.0.0",

@@ -27,13 +27,13 @@ const RayLink = defineComponent({
         key: 'ray-js-note',
         src: 'https://note.youdao.com/s/ObWEe2BB',
         tooltip: 'Ray的前端学习笔记',
-        icon: 'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
+        icon: 'https://avatars.githubusercontent.com/u/51957438?v=4',
       },
       {
         key: 'ray-js-cover',
         src: 'https://note.youdao.com/s/IC8xKPdB',
         tooltip: 'Ray的面试题总结',
-        icon: 'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
+        icon: 'https://avatars.githubusercontent.com/u/51957438?v=4',
       },
     ]
 

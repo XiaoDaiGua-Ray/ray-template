@@ -6,3 +6,6 @@ components.d.ts
 .vscode
 public
 yarn.*
+vite-env.*
+.prettierrc.*
+.eslintrc

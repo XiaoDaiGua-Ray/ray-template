@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /// <reference types="vite/client" />
 /// <reference types="vue/macros-global" />
 /// <reference types="vite-svg-loader" />
@@ -16,11 +15,6 @@ declare module 'vue-router' {
     i18nKey: string
     icon?: string
   }
-}
-
-declare module '*.json' {
-  const jsonValue: any
-  export default jsonValue
 }
 
 declare module 'virtual:*' {

@@ -41,7 +41,7 @@ export interface TableSettingProvider {
 }
 
 export interface ExportExcelProvider {
-  exportTip: string
+  exportTooltip: string
   exportType: string
   exportPositiveText: string
   exportNegativeText: string

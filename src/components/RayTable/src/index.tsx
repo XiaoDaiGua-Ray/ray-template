@@ -11,12 +11,15 @@
 
 import './index.scss'
 import { NDataTable, NCard, NDropdown, NSpace } from 'naive-ui'
-import props from './props'
 import TableSetting from './components/TableSetting/index'
-import ExportExcel from './components/ExportExcel/index'
-import { utils, writeFileXLSX } from 'xlsx'
+import TableAction from './components/TableAction/index'
+
 import dayjs from 'dayjs'
+import { utils, writeFileXLSX } from 'xlsx'
 import { setupExportHeader } from './hook'
+import props from './props'
+import print from 'print-js'
+import { uuid } from '@use-utils/hook'
 
 import type { ActionOptions, ExportExcelHeader } from './type'
 import type { WritableComputedRef } from 'vue'
@@ -27,6 +30,7 @@ const RayTable = defineComponent({
   props: props,
   emits: ['update:columns', 'menuSelect', 'exportSuccess', 'exportError'],
   setup(props, { emit }) {
+    const tableUUID = uuid()
     const modelRightClickMenu = computed(() => props.rightClickMenu)
     const modelColumns = computed({
       get: () => props.columns,
@@ -41,16 +45,13 @@ const RayTable = defineComponent({
     })
     let prevRightClickIndex = -1
 
+    /**
+     *
+     * 右键菜单注入
+     */
     provide('tableSettingProvider', {
       modelRightClickMenu,
       modelColumns,
-    })
-    provide('exportExcelProvider', {
-      exportTip: props.exportTip,
-      exportType: props.exportType,
-      exportPositiveText: props.exportPositiveText,
-      exportNegativeText: props.exportNegativeText,
-      exportFilename: props.exportFilename,
     })
 
     const handleColumnsUpdate = (arr: ActionOptions[]) => {
@@ -103,17 +104,25 @@ const RayTable = defineComponent({
       }
     }
 
+    /**
+     *
+     * 导出表格数据为 `excel`
+     *
+     * 基于 `xlsx`
+     *
+     * 按需导入 `xlsx` 减少体积, 不依赖传统 `file save` 插件导出方式
+     */
     const handleExportPositive = () => {
       if (props.data.length && props.columns.length) {
         try {
           const exportHeader = setupExportHeader(
             props.columns as ExportExcelHeader[],
           ) // 获取所有列(设置为 `excel` 表头)
-          const sheetData = utils.json_to_sheet(props.data)
+          const sheetData = utils.json_to_sheet(props.data) // 将所有数据转换为表格数据类型
           const workBook = utils.book_new()
           const filename = props.exportFilename
             ? props.exportFilename + '.xlsx'
-            : dayjs(new Date()).format('YYYY-MM-DD') + '.xlsx'
+            : dayjs(new Date()).format('YYYY-MM-DD') + '导出表格的.xlsx'
 
           utils.book_append_sheet(workBook, sheetData, 'Data')
 
@@ -127,6 +136,7 @@ const RayTable = defineComponent({
            */
           for (let c = range.s.c; c <= range.e.c; c++) {
             const header = utils.encode_col(c) + '1'
+
             sheetData[header].v = exportHeader[sheetData[header].v]
           }
 
@@ -139,12 +149,36 @@ const RayTable = defineComponent({
       }
     }
 
+    /**
+     *
+     * 打印输出表格内容
+     *
+     * 默认配置按照 `print-js` 配置
+     *
+     * 会自动合并自定义配置项
+     *
+     * 受到 `print-js` 限制有些样式是无法打印输出的
+     */
+    const handlePrintPositive = () => {
+      const options = Object.assign(
+        {
+          printable: tableUUID,
+          type: props.printType,
+        },
+        props.printOptions,
+      )
+
+      print(options)
+    }
+
     return {
+      tableUUID,
       handleColumnsUpdate,
       ...toRefs(menuConfig),
       handleRowProps,
       handleRightMenuSelect,
       handleExportPositive,
+      handlePrintPositive,
     }
   },
   render() {
@@ -154,15 +188,17 @@ const RayTable = defineComponent({
           default: () => (
             <div>
               <NDataTable
+                id={this.tableUUID}
                 {...this.$props}
                 rowProps={this.handleRowProps.bind(this)}
               >
                 {{
-                  empty: () => this.$slots?.empty,
-                  loading: () => this.$slots?.loading,
+                  empty: () => this.$slots?.empty?.(),
+                  loading: () => this.$slots?.loading?.(),
                 }}
               </NDataTable>
               {this.showMenu ? (
+                // 右键菜单
                 <NDropdown
                   show={this.showMenu}
                   placement="bottom-start"
@@ -182,9 +218,23 @@ const RayTable = defineComponent({
           'header-extra': () =>
             this.action ? (
               <NSpace align="center">
-                <ExportExcel
-                  onExportPositive={this.handleExportPositive.bind(this)}
+                {/* 打印输出操作 */}
+                <TableAction
+                  icon="print"
+                  tooltip={this.printTooltip}
+                  positiveText={this.printPositiveText}
+                  negativeText={this.printNegativeText}
+                  onPositive={this.handlePrintPositive.bind(this)}
                 />
+                {/* 输出为Excel表格 */}
+                <TableAction
+                  icon="export_excel"
+                  tooltip={this.exportTooltip}
+                  positiveText={this.exportPositiveText}
+                  negativeText={this.exportNegativeText}
+                  onPositive={this.handleExportPositive.bind(this)}
+                />
+                {/* 表格列操作 */}
                 <TableSetting
                   onColumnsUpdate={this.handleColumnsUpdate.bind(this)}
                 />
@@ -202,13 +252,15 @@ export default RayTable
 
 /**
  *
- * 完全继承 `NDataTable`
+ * 完全继承 `NDataTable`, 所以该组件可以使用所有 `NDataTable Props`
  *
- * 以实现抬头, 操作栏, 右键菜单功能拓展
+ * 实现: 抬头, 操作栏, 右键菜单功能拓展, 输出 `excel`
  *
  * 右键菜单功能, 需要同时启用 `showMenu` 与配置菜单选项才能正常使用
  *
  * 可以通过设置 `action` 为 `false` 隐藏操作栏
  *
  * 具体拓展 `props` 方法, 可以查看 `props.ts` 中相关注释与代码
+ *
+ * 基于 `xlsx.js` 实现输出 `excel`
  */
