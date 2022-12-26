@@ -24,7 +24,7 @@ import type { App } from 'vue'
  *
  * @remak 未避免出现加载语言错误问题, 故而在 `main.ts` 注册时, 应优先加载 `i18n` 避免出现该问题
  */
-export const useDefaultLocal = () => {
+export const getDefaultLocal = () => {
   const locale: string =
     getCache('localeLanguage', 'localStorage') !== 'no'
       ? getCache('localeLanguage', 'localStorage')
@@ -34,7 +34,7 @@ export const useDefaultLocal = () => {
 }
 
 export const setupI18n = (app: App<Element>) => {
-  const locale = useDefaultLocal()
+  const locale = getDefaultLocal()
 
   const i18n = createI18n({
     locale,
@@ -63,7 +63,7 @@ export const useLanguageOptions = () => [
  *
  * @remark 受打包体积影响. 如果有新的语言添加, 则需要手动引入对应语言包(https://www.naiveui.com/zh-CN/dark/docs/i18n)
  */
-export const useNaiveLocal = (key: string) => {
+export const getNaiveLocal = (key: string) => {
   switch (key) {
     case 'zh-CN':
       return {
@@ -91,10 +91,10 @@ export const useNaiveLocal = (key: string) => {
  *
  * @remark 获取默认语言包
  */
-export const useDefaultNaiveLocal = () => {
-  const local = useDefaultLocal()
+export const getDefaultNaiveLocal = () => {
+  const local = getDefaultLocal()
 
-  return useNaiveLocal(local)
+  return getNaiveLocal(local)
 }
 
 /**

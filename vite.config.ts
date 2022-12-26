@@ -63,7 +63,12 @@ export default defineConfig(async ({ mode }) => {
         defaultImport: 'component', // 默认以 `componetn` 形式导入 `svg`
       }),
       useSVGIcon(),
-      viteEslintPlugin,
+      viteEslintPlugin({
+        failOnWarning: true, // 如果含有警告则构建失败
+        failOnError: true, // 如果有错误则构建失败
+        cache: true, // 缓存, 减少构建时间
+        exclude: ['**/node_modules/**', 'vite-env.d.ts'],
+      }),
       vitePluginImp({
         libList: [
           {

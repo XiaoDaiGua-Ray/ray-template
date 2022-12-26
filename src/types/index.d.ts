@@ -13,7 +13,9 @@ import type {
 import type { ECharts } from 'echarts/core'
 
 export global {
-  const __APP_INFO__: {
+  declare type Recordable<T = unknown> = Record<string, T>
+
+  declare const __APP_INFO__: {
     pkg: {
       name: string
       version: string

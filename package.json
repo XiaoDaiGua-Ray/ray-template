@@ -18,7 +18,7 @@
     "dayjs": "^1.11.7",
     "echarts": "^5.4.0",
     "lodash-es": "^4.17.21",
-    "naive-ui": "^2.34.0",
+    "naive-ui": "^2.34.3",
     "pinia": "^2.0.17",
     "pinia-plugin-persistedstate": "^2.4.0",
     "print-js": "^1.6.0",

@@ -19,9 +19,8 @@ $activedColor: #2080f0;
 .ray-table__setting-option--draggable {
   display: grid;
   grid-row-gap: 10px;
-  justify-items: center;
-  align-items: center;
-  justify-content: center;
+  justify-self: center;
+  align-self: center;
 
   & .draggable-item {
     display: flex;

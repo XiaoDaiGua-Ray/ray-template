@@ -1,4 +1,4 @@
-import { useNaiveLocal, useDefaultNaiveLocal } from '@/language/index'
+import { getNaiveLocal, getDefaultNaiveLocal } from '@/language/index'
 
 export const useSetting = defineStore(
   'setting',
@@ -13,14 +13,14 @@ export const useSetting = defineStore(
       themeValue: false, // `true` 为黑夜主题, `false` 为白色主题
       reloadRouteSwitch: true, // 刷新路由开关
       menuTagSwitch: true, // 多标签页开关
-      naiveLocal: useDefaultNaiveLocal(), // `naive ui` 语言包
+      naiveLocal: getDefaultNaiveLocal(), // `naive ui` 语言包
     })
     const { locale } = useI18n()
 
     const updateLocale = (key: string) => {
       // TODO: 修改语言
       locale.value = key
-      settingState.naiveLocal = useNaiveLocal(key)
+      settingState.naiveLocal = getNaiveLocal(key)
     }
 
     const changePrimaryColor = (value: string) => {
