@@ -61,7 +61,7 @@ const MenuTag = defineComponent({
     return (
       <NScrollbar class="menu-tag" xScrollable>
         <NSpace class="menu-tag-sapce" wrap={false} align="center">
-          {this.menuTagOptions.map((curr: MenuOption, idx) => (
+          {this.menuTagOptions.map((curr, idx) => (
             <NTag
               closable={
                 curr.key !== '/dashboard' && this.menuTagOptions.length > 1

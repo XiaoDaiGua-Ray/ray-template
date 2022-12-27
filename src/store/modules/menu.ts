@@ -15,12 +15,12 @@ export const useMenu = defineStore('menu', () => {
 
   const menuState = reactive({
     menuKey: cacheMenuKey as string | null, // 当前菜单 `key`
-    options: [] as RouteRecordRaw[], // 菜单列表
+    options: [] as IMenuOptions[], // 菜单列表
     collapsed: false, // 是否折叠菜单
-    menuTagOptions: [] as RouteRecordRaw[],
+    menuTagOptions: [] as TagMenuOptions[],
   })
 
-  const handleMenuTagOptions = (item: RouteRecordRaw) => {
+  const handleMenuTagOptions = (item: IMenuOptions) => {
     if (item.path !== menuState.menuKey) {
       const tag = menuState.menuTagOptions.find(
         (curr) => curr.path === item.path,
@@ -40,7 +40,7 @@ export const useMenu = defineStore('menu', () => {
    * 修改 `menu key` 后的回调函数
    */
   const menuModelValueChange = (key: string, item: MenuOption) => {
-    handleMenuTagOptions(item as unknown as RouteRecordRaw)
+    handleMenuTagOptions(item as unknown as TagMenuOptions)
 
     menuState.menuKey = key
 
