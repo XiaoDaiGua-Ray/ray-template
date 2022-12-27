@@ -9,8 +9,20 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { NLayout, NCard, NTag, NButton } from 'naive-ui'
+import {
+  NLayout,
+  NCard,
+  NTag,
+  NButton,
+  NGridItem,
+  NSelect,
+  NInput,
+  NDatePicker,
+  NInputNumber,
+  NSpace,
+} from 'naive-ui'
 import RayTable from '@/components/RayTable/index'
+import RayCollapseGrid from '@/components/RayCollapseGrid/index'
 
 import type { DataTableColumns } from 'naive-ui'
 
@@ -110,6 +122,8 @@ const TableView = defineComponent({
         key: 'delete',
       },
     ]
+    const gridItemCount = ref(4)
+    const gridCollapsedRows = ref(1)
 
     const handleMenuSelect = (key: string | number, idx: number) => {
       if (key === 'delete') {
@@ -123,6 +137,8 @@ const TableView = defineComponent({
       baseColumns,
       tableMenuOptions,
       handleMenuSelect,
+      gridItemCount,
+      gridCollapsedRows,
     }
   },
   render() {
@@ -138,7 +154,60 @@ const TableView = defineComponent({
             相关拓展 props 属性, 可以在源码位置
             src/components/RayTable/src/props.ts 中查看相关代码与注释
           </p>
+          <p>该组件可以配合 RayCollapseGird 组件使用实现可折叠搜索栏</p>
         </NCard>
+        <NSpace vertical>
+          <NSpace style={['margin-top: 18px']}>
+            该组件基于 NGird 实现, 但是由于 css grid 限制, 不能对于 NGridItem
+            组件进行二次封装, 所以使用时必须配合 NGirdItem
+            使用才能实现示例效果(使用 NGirdItem 包裹元素即可).
+          </NSpace>
+          <NSpace style={['margin-top: 18px']}>
+            <NSpace align="center">
+              数量 <NInputNumber v-model:value={this.gridItemCount} />
+            </NSpace>
+            <NSpace align="center">
+              行数 <NInputNumber v-model:value={this.gridCollapsedRows} />
+            </NSpace>
+          </NSpace>
+          <RayCollapseGrid
+            collapsedRows={this.gridCollapsedRows}
+            cols={this.gridItemCount}
+            onUpdateValue={(value: boolean) =>
+              window.$message.info(
+                `我是 RayCollapseGrid 组件${value ? '收起' : '展开'}的回调函数`,
+              )
+            }
+          >
+            {{
+              action: () => (
+                <>
+                  <NButton>搜索</NButton>
+                  <NButton>重置</NButton>
+                </>
+              ),
+              default: () => (
+                <>
+                  <NGridItem>
+                    <NSelect />
+                  </NGridItem>
+                  <NGridItem>
+                    <NInput />
+                  </NGridItem>
+                  <NGridItem>
+                    <NDatePicker type="datetimerange" clearable />
+                  </NGridItem>
+                  <NGridItem>
+                    <NInput />
+                  </NGridItem>
+                  <NGridItem>
+                    <NInput />
+                  </NGridItem>
+                </>
+              ),
+            }}
+          </RayCollapseGrid>
+        </NSpace>
         <NCard title="基础使用" style={['margin-top: 18px']}>
           <RayTable
             title="基础表格"

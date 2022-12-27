@@ -175,5 +175,5 @@ export default rayTableProps
  *
  * `Ray Table Props`
  *
- * 继承 `Naive UI Data Table`
+ * 继承 `Naive UI Data Table` <https://www.naiveui.com/zh-CN/dark/components/data-table>
  */

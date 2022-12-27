@@ -18,7 +18,7 @@
 
 ## 预览地址
 
-[**`点击预览`**](https://xiaodaigua-ray.github.io/#/)
+[**<h3>`点击预览`</h3>**](https://xiaodaigua-ray.github.io/#/)
 
 ## 拉取依赖
 
@@ -82,6 +82,7 @@ npm run build
 - `RayChart` 基于 `echarts5.x` 封装可视化组件
 - `RayTransitionComponent` 带过渡动画路由组件，效果与 `RouterView` 相同
 - `RayTable` 基于 `Naive UI DataTable` 组件封装，实现了一些小功能
+- `RayCollapseGrid` 基于 `Naive UI NGrid` 组件封装的可折叠操作栏
 
 ## 项目结构
 

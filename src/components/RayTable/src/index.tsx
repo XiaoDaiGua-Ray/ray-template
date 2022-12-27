@@ -186,7 +186,7 @@ const RayTable = defineComponent({
       <NCard bordered={false}>
         {{
           default: () => (
-            <div>
+            <>
               <NDataTable
                 id={this.tableUUID}
                 {...this.$props}
@@ -212,7 +212,7 @@ const RayTable = defineComponent({
               ) : (
                 ''
               )}
-            </div>
+            </>
           ),
           header: () => this.title,
           'header-extra': () =>
@@ -252,7 +252,9 @@ export default RayTable
 
 /**
  *
- * 完全继承 `NDataTable`, 所以该组件可以使用所有 `NDataTable Props`
+ * <https://www.naiveui.com/zh-CN/dark/components/data-table>
+ *
+ * 完全继承 `NDataTable`, 该组件继承 `NDataTable Props` 属性和方法
  *
  * 实现: 抬头, 操作栏, 右键菜单功能拓展, 输出 `excel`
  *
