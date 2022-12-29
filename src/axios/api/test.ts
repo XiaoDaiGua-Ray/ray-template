@@ -1,4 +1,4 @@
-import useRequest from '../index'
+import useRequest from '@/axios/index'
 
 /**
  *

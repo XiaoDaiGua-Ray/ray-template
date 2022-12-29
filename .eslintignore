@@ -9,3 +9,4 @@ yarn.*
 vite-env.*
 .prettierrc.*
 .eslintrc
+visualizer.*

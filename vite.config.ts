@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import config from './cfg'
 const pkg = require('./package.json')
 
 const { dependencies, devDependencies, name, version } = pkg
@@ -9,15 +10,10 @@ const __APP_INFO__ = {
 }
 
 import {
-  useAliasOptions,
-  useViteBuildPlugin,
-  useViteServerPlugin,
-  useEnvBuildOutput,
   useAutoImport,
   useViteComponents,
   useViteCompression,
   useVueI18nPlugin,
-  useHTMLTitlePlugin,
   useSVGIcon,
 } from './vite-plugin/index'
 import vueJsx from '@vitejs/plugin-vue-jsx'
@@ -26,23 +22,25 @@ import ViteInspect from 'vite-plugin-inspect'
 import viteSvgLoader from 'vite-svg-loader'
 import viteEslintPlugin from 'vite-plugin-eslint'
 import vitePluginImp from 'vite-plugin-imp' // 按需打包工具
+import { visualizer } from 'rollup-plugin-visualizer' // 打包体积分析工具
 
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 
 // https://vitejs.dev/config/
 export default defineConfig(async ({ mode }) => {
-  const { buildOptions } = useEnvBuildOutput(mode)
+  const { server, buildOptions, alias, title } = config
 
   return {
     define: {
       __APP_INFO__: JSON.stringify(__APP_INFO__),
     },
     resolve: {
-      alias: useAliasOptions(),
+      alias: alias,
     },
     plugins: [
       vue({ reactivityTransform: true }),
       vueJsx(),
+      title,
       ViteInspect(), // 仅适用于开发模式(检查 `Vite` 插件的中间状态)
       VueI18nPlugin(),
       await useAutoImport([
@@ -58,7 +56,6 @@ export default defineConfig(async ({ mode }) => {
       await useViteComponents([NaiveUiResolver()]),
       useViteCompression(),
       useVueI18nPlugin(),
-      useHTMLTitlePlugin(),
       viteSvgLoader({
         defaultImport: 'component', // 默认以 `componetn` 形式导入 `svg`
       }),
@@ -76,6 +73,11 @@ export default defineConfig(async ({ mode }) => {
             libDirectory: '',
             camel2DashComponentName: false,
           },
+          {
+            libName: '@vueuse',
+            libDirectory: '',
+            camel2DashComponentName: false,
+          },
         ],
       }),
       {
@@ -88,12 +90,19 @@ export default defineConfig(async ({ mode }) => {
           'src/*.vue',
         ],
       },
+      visualizer({
+        gzipSize: true, // 搜集 `gzip` 压缩包
+        brotliSize: true, // 搜集 `brotli` 压缩包
+        emitFile: false, // 生成文件在根目录下
+        filename: 'visualizer.html',
+        open: true, // 以默认服务器代理打开文件
+      }),
     ],
     optimizeDeps: {
       include: ['vue', 'vue-router', 'pinia', 'vue-i18n', '@vueuse/core'],
     },
     build: {
-      ...useViteBuildPlugin(buildOptions),
+      ...buildOptions(mode),
     },
     css: {
       preprocessorOptions: {
@@ -104,7 +113,7 @@ export default defineConfig(async ({ mode }) => {
       },
     },
     server: {
-      ...useViteServerPlugin(),
+      ...server,
     },
   }
 })

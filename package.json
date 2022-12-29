@@ -8,7 +8,8 @@
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "test": "vue-tsc --noEmit && vite build --mode test",
-    "dev-build": "vue-tsc --noEmit && vite build --mode development"
+    "dev-build": "vue-tsc --noEmit && vite build --mode development",
+    "report": "vue-tsc --noEmit && vite build"
   },
   "dependencies": {
     "@vueuse/core": "^9.1.0",
@@ -54,6 +55,7 @@
     "postcss": "^8.1.0",
     "postcss-pxtorem": "^6.0.0",
     "prettier": "^2.7.1",
+    "rollup-plugin-visualizer": "^5.8.3",
     "svg-sprite-loader": "^6.0.11",
     "typescript": "*",
     "unplugin-auto-import": "^0.11.0",

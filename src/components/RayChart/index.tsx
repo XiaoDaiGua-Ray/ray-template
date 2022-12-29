@@ -24,6 +24,7 @@ import { cloneDeep } from 'lodash-es'
 import { on, off } from '@/utils/element'
 
 import type { PropType } from 'vue'
+import type {} from 'echarts'
 
 export type AutoResize =
   | boolean
@@ -150,6 +151,16 @@ const RayChart = defineComponent({
       type: Boolean,
       default: false,
     },
+    use: {
+      /**
+       *
+       * 拓展 `echarts` 图表
+       *
+       * 由于官方并没有提供该类型, 手动去复刻成本过高, 故而采用 `any`
+       */
+      type: Array,
+      default: () => [],
+    },
   },
   setup(props) {
     const settingStore = useSetting()
@@ -194,6 +205,15 @@ const RayChart = defineComponent({
       echarts.use([LabelLayout, UniversalTransition]) // 注册布局, 过度效果
 
       echarts.use([props.canvasRender ? CanvasRenderer : SVGRenderer]) // 注册渲染器
+
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        echarts.use(props.use as any[])
+      } catch (e) {
+        console.error(
+          'Error: wrong property and method passed in extend attribute',
+        )
+      }
     }
 
     /**

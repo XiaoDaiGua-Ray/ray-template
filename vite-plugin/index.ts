@@ -31,46 +31,6 @@ export const useSVGIcon = (options?: ViteSvgIconsPlugin) => {
 
 /**
  *
- * @param options 别名
- *
- * 使用别名
- * 使用时, 必须以 `vite-plugin` 作为起始位置
- * 配置后, 需要在 `tsconfig.json` 中配置对应的 `paths`
- */
-export const useAliasOptions = (
-  options?: { find: string; replacement: string }[],
-) => {
-  const alias = [
-    {
-      find: '@',
-      replacement: path.resolve(__dirname, '../src'),
-    },
-    {
-      find: '@use-utils',
-      replacement: path.resolve(__dirname, '../src/utils'),
-    },
-    {
-      find: '@use-api',
-      replacement: path.resolve(__dirname, '../src/axios/api'),
-    },
-    {
-      find: '@use-images',
-      replacement: path.resolve(__dirname, '../src/assets/images'),
-    },
-  ]
-
-  options?.forEach((curr) =>
-    alias.push({
-      find: curr.find,
-      replacement: path.resolve(__dirname, curr.replacement),
-    }),
-  )
-
-  return alias
-}
-
-/**
- *
  * @param imp 自动导入依赖
  * @returns auto import plugin
  *
@@ -133,12 +93,82 @@ export const useVueI18nPlugin = () =>
  *
  * @param title 浏览器 title 名称
  */
-export const useHTMLTitlePlugin = (title = 'ray template') => {
+export const HTMLTitlePlugin = (title = 'ray template') => {
   return {
     name: 'html-transform',
     transformIndexHtml: (html: string) => {
       return html.replace(/<title>(.*?)<\/title>/, `<title>${title}</title>`)
     },
+  }
+}
+
+/**
+ *
+ * @param mode 打包环境
+ *
+ * @remark 打包输出文件配置
+ */
+export const buildOptions = (mode: string): BuildOptions => {
+  switch (mode) {
+    case 'test':
+      return {
+        outDir: 'dist/test-dist',
+        sourcemap: true,
+        terserOptions: {
+          compress: {
+            drop_console: false,
+            drop_debugger: false,
+          },
+        },
+      }
+
+    case 'development':
+      return {
+        outDir: 'dist/development-dist',
+        sourcemap: true,
+        terserOptions: {
+          compress: {
+            drop_console: false,
+            drop_debugger: false,
+          },
+        },
+      }
+
+    case 'production':
+      return {
+        outDir: 'dist/production-dist',
+        sourcemap: false,
+        terserOptions: {
+          compress: {
+            drop_console: true,
+            drop_debugger: true,
+          },
+        },
+      }
+
+    case 'report':
+      return {
+        outDir: 'dist/report-dist',
+        sourcemap: true,
+        terserOptions: {
+          compress: {
+            drop_console: false,
+            drop_debugger: false,
+          },
+        },
+      }
+
+    default:
+      return {
+        outDir: 'dist/test-dist',
+        sourcemap: false,
+        terserOptions: {
+          compress: {
+            drop_console: true, // 打包后移除 `console`
+            drop_debugger: true, // 打包后移除 `debugger`
+          },
+        },
+      }
   }
 }
 
@@ -163,94 +193,4 @@ export const useViteBuildPlugin = (options?: BuildOptions) => {
   }
 
   return Object.assign(defaultPlugin, options)
-}
-
-/**
- *
- * @param options 自定义项目启动参数
- */
-export const useViteServerPlugin = (options?: ServerOptions) => {
-  const server: ServerOptions = {
-    host: '0.0.0.0',
-    port: 9527,
-    open: false,
-    https: false,
-    strictPort: false,
-    fs: {
-      strict: false,
-      allow: [],
-    },
-    proxy: {
-      '/api': {
-        target: 'url',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-      },
-    },
-  }
-
-  return Object.assign(server, options)
-}
-
-export const useEnvBuildOutput = (mode: string) => {
-  const buildOptions: BuildOptions = {
-    outDir: 'dist/test-dist',
-    sourcemap: false,
-    terserOptions: {
-      compress: {
-        drop_console: true, // 打包后移除 `console`
-        drop_debugger: true, // 打包后移除 `debugger`
-      },
-    },
-  }
-
-  switch (mode) {
-    case 'test':
-      Object.assign(buildOptions, {
-        outDir: 'dist/test-dist',
-        sourcemap: true,
-        terserOptions: {
-          compress: {
-            drop_console: false,
-            drop_debugger: false,
-          },
-        },
-      })
-
-      break
-
-    case 'development':
-      Object.assign(buildOptions, {
-        outDir: 'dist/development-dist',
-        sourcemap: true,
-        terserOptions: {
-          compress: {
-            drop_console: false,
-            drop_debugger: false,
-          },
-        },
-      })
-
-      break
-
-    case 'production':
-      Object.assign(buildOptions, {
-        outDir: 'dist/production-dist',
-        sourcemap: false,
-        terserOptions: {
-          compress: {
-            drop_console: true,
-            drop_debugger: true,
-          },
-        },
-      })
-      break
-
-    default:
-      break
-  }
-
-  return {
-    buildOptions,
-  }
 }

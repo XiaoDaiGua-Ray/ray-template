@@ -12,13 +12,15 @@
   </router-view>
 </template>
 <script lang="ts" setup>
+import type { PropType } from 'vue'
+
 defineProps({
   transitionPropName: {
     type: String,
     default: 'fade',
   },
   transitionMode: {
-    type: String,
+    type: String as PropType<'default' | 'out-in' | 'in-out' | undefined>,
     default: 'out-in',
   },
   transitionAppear: {
