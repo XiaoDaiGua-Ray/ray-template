@@ -95,7 +95,7 @@ export default defineConfig(async ({ mode }) => {
         brotliSize: true, // 搜集 `brotli` 压缩包
         emitFile: false, // 生成文件在根目录下
         filename: 'visualizer.html',
-        open: true, // 以默认服务器代理打开文件
+        open: mode === 'report' ? true : false, // 以默认服务器代理打开文件
       }),
     ],
     optimizeDeps: {

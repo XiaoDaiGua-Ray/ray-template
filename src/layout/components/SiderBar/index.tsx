@@ -1,9 +1,12 @@
 import './index.scss'
+
 import { NLayoutHeader, NSpace, NTooltip, NDropdown } from 'naive-ui'
 import RayIcon from '@/components/RayIcon/index'
+import RayTooltipIcon from '@/components/RayTooltipIcon/index'
+import SettingDrawer from './components/SettingDrawer/index'
+
 import { useSetting } from '@/store'
 import { useLanguageOptions } from '@/language/index'
-import SettingDrawer from './Components/SettingDrawer/index'
 import { useAvatarOptions } from './hook'
 import { removeCache } from '@/utils/cache'
 import screenfull from 'screenfull'
@@ -26,6 +29,10 @@ const SiderBar = defineComponent({
     const modelDrawerPlacement = ref(settingStore.drawerPlacement)
     const showSettings = ref(false)
 
+    /**
+     *
+     * 顶部左边操作栏
+     */
     const leftIconOptions = [
       {
         name: 'reload',
@@ -33,23 +40,16 @@ const SiderBar = defineComponent({
         tooltip: 'LayoutHeaderTooltipOptions.Reload',
       },
     ]
-    const rightIconOptions = [
+    /**
+     *
+     * 顶部右边提示框操作栏
+     */
+    const rightTooltipIconOptions = [
       {
         name: 'fullscreen',
         size: 18,
-        tooltip: '',
+        tooltip: 'LayoutHeaderTooltipOptions.FullScreen',
         eventKey: 'screen',
-      },
-      {
-        name: 'language',
-        size: 18,
-        tooltip: '',
-        dropdown: {
-          eventKey: 'handleSelect', // 默认为 `handleSelect`
-          switch: true,
-          options: useLanguageOptions(),
-          handleSelect: (key: string | number) => updateLocale(String(key)),
-        },
       },
       {
         name: 'github',
@@ -63,9 +63,26 @@ const SiderBar = defineComponent({
         tooltip: 'LayoutHeaderTooltipOptions.Setting',
         eventKey: 'setting',
       },
+    ]
+    /**
+     *
+     * 顶部右边下拉框操作栏
+     */
+    const rightDropdownIconOptions = [
+      {
+        name: 'language',
+        size: 18,
+        tooltip: '',
+        dropdown: {
+          eventKey: 'handleSelect', // 默认为 `handleSelect`
+          switch: true,
+          options: useLanguageOptions(),
+          handleSelect: (key: string | number) => updateLocale(String(key)),
+        },
+      },
       {
         name: 'ray',
-        size: 22,
+        size: 18,
         tooltip: '',
         dropdown: {
           eventKey: 'handleSelect', // 默认为 `handleSelect`
@@ -80,9 +97,7 @@ const SiderBar = defineComponent({
                 negativeText: '不确定',
                 onPositiveClick: () => {
                   window.$message.info('账号退出中...')
-
                   removeCache('all-sessionStorage')
-
                   setTimeout(() => window.location.reload(), 2 * 1000)
                 },
               })
@@ -105,7 +120,7 @@ const SiderBar = defineComponent({
       github: () => {
         window.open('https://github.com/XiaoDaiGua-Ray/ray-template')
       },
-      screen: () => {
+      fullscreen: () => {
         if (screenfull.isEnabled) {
           screenfull.toggle()
         } else {
@@ -118,36 +133,14 @@ const SiderBar = defineComponent({
       iconEventMap[key]?.()
     }
 
-    const Icon = (curr: IconOptions) => (
-      <RayIcon
-        customClassName="layout-header__method--icon"
-        name={curr.name}
-        size={curr.size}
-        onClick={handleIconClick.bind(this, curr.eventKey ?? '')}
-      />
-    )
-
-    const TooltipIcon = (curr: IconOptions) =>
-      curr.tooltip ? (
-        <NTooltip>
-          {{
-            trigger: () => Icon(curr),
-            default: () => t(curr.tooltip ?? ''),
-          }}
-        </NTooltip>
-      ) : (
-        Icon(curr)
-      )
-
     return {
       leftIconOptions,
-      rightIconOptions,
+      rightTooltipIconOptions,
       t,
       handleIconClick,
       modelDrawerPlacement,
       showSettings,
-      TooltipIcon,
-      Icon,
+      rightDropdownIconOptions,
     }
   },
   render() {
@@ -176,20 +169,27 @@ const SiderBar = defineComponent({
             ))}
           </NSpace>
           <NSpace align="center">
-            {this.rightIconOptions.map((curr) =>
-              curr.dropdown?.switch ? (
-                <NDropdown
-                  options={curr.dropdown.options}
-                  onSelect={
-                    curr.dropdown[curr.dropdown.eventKey ?? 'handleSelect']
-                  }
-                >
-                  {this.Icon(curr)}
-                </NDropdown>
-              ) : (
-                this.TooltipIcon(curr)
-              ),
-            )}
+            {this.rightTooltipIconOptions.map((curr) => (
+              <RayTooltipIcon
+                iconName={curr.name}
+                tooltipText={this.t(curr.tooltip)}
+                onClick={this.handleIconClick.bind(this, curr.name)}
+              />
+            ))}
+            {this.rightDropdownIconOptions.map((curr) => (
+              <NDropdown
+                options={curr.dropdown.options}
+                onSelect={
+                  curr.dropdown[curr.dropdown.eventKey ?? 'handleSelect']
+                }
+              >
+                <RayIcon
+                  customClassName="layout-header__method--icon"
+                  name={curr.name}
+                  size={curr.size}
+                />
+              </NDropdown>
+            ))}
           </NSpace>
         </NSpace>
         <SettingDrawer

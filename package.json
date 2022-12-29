@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "test": "vue-tsc --noEmit && vite build --mode test",
     "dev-build": "vue-tsc --noEmit && vite build --mode development",
-    "report": "vue-tsc --noEmit && vite build"
+    "report": "vue-tsc --noEmit && vite build --mode report"
   },
   "dependencies": {
     "@vueuse/core": "^9.1.0",
