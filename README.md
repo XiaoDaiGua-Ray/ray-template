@@ -18,11 +18,11 @@
 
 ## 预览地址
 
-[**<h3>`点击预览`</h3>**](https://xiaodaigua-ray.github.io/#/)
+[点击预览](https://xiaodaigua-ray.github.io/#/)
 
 ## 文档地址
 
-[**<h3>`点击预览`</h3>**](https://xiaodaigua-ray.github.io/ray-template-doc/)
+[点击查看](https://xiaodaigua-ray.github.io/ray-template-doc/)
 
 ## 拉取依赖
 
