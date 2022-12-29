@@ -7,7 +7,8 @@
     "Echart": "可视化",
     "scrollReveal": "滚动动画",
     "Axios": "请求",
-    "Table": "表格"
+    "Table": "表格",
+    "Doc": "文档"
   },
   "LayoutHeaderTooltipOptions": {
     "Reload": "刷新当前页面",

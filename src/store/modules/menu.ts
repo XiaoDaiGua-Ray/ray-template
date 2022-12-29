@@ -3,7 +3,7 @@ import { NEllipsis } from 'naive-ui'
 import RayIcon from '@/components/RayIcon/index'
 
 import type { MenuOption } from 'naive-ui'
-import type { RouteRecordRaw } from 'vue-router'
+import type { RouteRecordRaw, RouteMeta } from 'vue-router'
 
 export const useMenu = defineStore('menu', () => {
   const router = useRouter()
@@ -40,12 +40,18 @@ export const useMenu = defineStore('menu', () => {
    * 修改 `menu key` 后的回调函数
    */
   const menuModelValueChange = (key: string, item: MenuOption) => {
-    handleMenuTagOptions(item as unknown as TagMenuOptions)
+    const meta = item.meta as RouteMeta
 
-    menuState.menuKey = key
+    if (meta.windowOpen) {
+      window.open(meta.windowOpen)
+    } else {
+      handleMenuTagOptions(item as unknown as TagMenuOptions)
 
-    router.push(`${item.path}`)
-    setCache('menuKey', key)
+      menuState.menuKey = key
+
+      router.push(`${item.path}`)
+      setCache('menuKey', key)
+    }
   }
 
   /**

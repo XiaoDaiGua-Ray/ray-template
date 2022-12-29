@@ -14,6 +14,7 @@ declare module 'vue-router' {
   interface RouteMeta {
     i18nKey: string
     icon?: string
+    windowOpen?: string
   }
 }
 

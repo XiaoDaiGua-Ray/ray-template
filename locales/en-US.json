@@ -7,7 +7,8 @@
     "Echart": "Chart",
     "scrollReveal": "Scroll Reveal",
     "Axios": "Axios Request",
-    "Table": "Table"
+    "Table": "Table",
+    "Doc": "Doc"
   },
   "LayoutHeaderTooltipOptions": {
     "Reload": "Reload Current Page",

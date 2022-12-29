@@ -5,8 +5,9 @@ import echart from './echart'
 import scrollReveal from './scroll-reveal'
 import axios from './axios'
 import table from './table'
+import doc from './doc'
 
-const routes = [dashboard, echart, table, axios, scrollReveal, error, reyl]
+const routes = [dashboard, echart, table, axios, scrollReveal, error, doc, reyl]
 
 export default routes
 
