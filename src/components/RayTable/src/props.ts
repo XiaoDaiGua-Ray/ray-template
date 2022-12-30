@@ -11,7 +11,7 @@
 
 import { dataTableProps } from 'naive-ui'
 
-import type { PropType, VNode } from 'vue'
+import type { PropType, VNode, VNodeChild } from 'vue'
 import type { DropdownMixedOption } from './type'
 import type PrintConfiguration from 'print-js'
 
@@ -36,7 +36,7 @@ const rayTableProps = {
      *
      * 可以自定义渲染
      */
-    type: String,
+    type: [String, Object] as PropType<string | VNodeChild>,
     default: '',
   },
   action: {
@@ -166,6 +166,46 @@ const rayTableProps = {
       Omit<PrintConfiguration.Configuration, 'printable' | 'type'>
     >,
     default: () => ({}),
+  },
+  printIcon: {
+    /**
+     *
+     * 打印按钮自定义图标名称
+     *
+     * 需要结合 `RayIcon` 组件使用
+     *
+     * 如果需要自定义图标, 则需要在 `src/icons` 中添加后使用
+     */
+    type: String,
+    default: 'print',
+  },
+  exportExcelIcon: {
+    /**
+     *
+     * 导出为表格按钮自定义图标名称
+     *
+     * 需要结合 `RayIcon` 组件使用
+     *
+     * 如果需要自定义图标, 则需要在 `src/icons` 中添加后使用
+     */
+    type: String,
+    default: 'export_excel',
+  },
+  tableHeaderSpace: {
+    /**
+     *
+     * 表格头部操作栏, 主要操作栏与额外操作栏之间间隔
+     */
+    type: String,
+    default: '10px',
+  },
+  bordered: {
+    /**
+     *
+     * 表格边框
+     */
+    type: Boolean,
+    default: true,
   },
 } as const
 

@@ -44,6 +44,13 @@ const RayTable = defineComponent({
       showMenu: false,
     })
     let prevRightClickIndex = -1
+    const cssVars = computed(() => {
+      const cssVar = {
+        '--ray-table-header-space': props.tableHeaderSpace,
+      }
+
+      return cssVar
+    })
 
     /**
      *
@@ -179,11 +186,12 @@ const RayTable = defineComponent({
       handleRightMenuSelect,
       handleExportPositive,
       handlePrintPositive,
+      cssVars,
     }
   },
   render() {
     return (
-      <NCard bordered={false}>
+      <NCard class="ray-table" bordered={this.bordered} style={[this.cssVars]}>
         {{
           default: () => (
             <>
@@ -220,7 +228,7 @@ const RayTable = defineComponent({
               <NSpace align="center">
                 {/* 打印输出操作 */}
                 <TableAction
-                  icon="print"
+                  icon={this.printIcon}
                   tooltip={this.printTooltip}
                   positiveText={this.printPositiveText}
                   negativeText={this.printNegativeText}
@@ -228,7 +236,7 @@ const RayTable = defineComponent({
                 />
                 {/* 输出为Excel表格 */}
                 <TableAction
-                  icon="export_excel"
+                  icon={this.exportExcelIcon}
                   tooltip={this.exportTooltip}
                   positiveText={this.exportPositiveText}
                   negativeText={this.exportNegativeText}
@@ -242,6 +250,7 @@ const RayTable = defineComponent({
             ) : (
               ''
             ),
+          footer: () => this.$slots.tableFooter?.(),
         }}
       </NCard>
     )

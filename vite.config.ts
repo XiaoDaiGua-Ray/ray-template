@@ -4,9 +4,13 @@ import config from './cfg'
 const pkg = require('./package.json')
 
 const { dependencies, devDependencies, name, version } = pkg
+const { server, buildOptions, alias, title, copyright } = config
 
-const __APP_INFO__ = {
+const __APP_CFG__ = {
   pkg: { dependencies, devDependencies, name, version },
+  layout: {
+    copyright,
+  },
 }
 
 import {
@@ -28,11 +32,9 @@ import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 
 // https://vitejs.dev/config/
 export default defineConfig(async ({ mode }) => {
-  const { server, buildOptions, alias, title } = config
-
   return {
     define: {
-      __APP_INFO__: JSON.stringify(__APP_INFO__),
+      __APP_CFG__: JSON.stringify(__APP_CFG__),
     },
     resolve: {
       alias: alias,

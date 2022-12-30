@@ -11,16 +11,20 @@ import type {
   MenuGroupOption,
 } from 'naive-ui'
 import type { ECharts } from 'echarts/core'
+import type { VNodeChild } from 'vue'
 
 export global {
   declare type Recordable<T = unknown> = Record<string, T>
 
-  declare const __APP_INFO__: {
+  declare const __APP_CFG__: {
     pkg: {
       name: string
       version: string
       dependencies: Recordable<string>
       devDependencies: Recordable<string>
+    }
+    layout: {
+      copyright: string | number | VNodeChild
     }
   }
 

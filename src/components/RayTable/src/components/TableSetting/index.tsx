@@ -96,7 +96,7 @@ const TableSetting = defineComponent({
 
     /**
      *
-     * @param idx 索隐
+     * @param idx 索引
      *
      * @remark 动态设置列宽度
      */

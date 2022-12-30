@@ -218,11 +218,18 @@ const TableView = defineComponent({
         </NCard>
         <NCard title="基础使用" style={['margin-top: 18px']}>
           <RayTable
-            title="基础表格"
+            title="基础使用"
             data={this.tableData}
             columns={this.baseColumns}
             action={false}
-          />
+            pagination={{
+              pageSize: 10,
+            }}
+          >
+            {{
+              tableFooter: () => '表格的底部内容区域，有时候你可能会用上',
+            }}
+          </RayTable>
         </NCard>
         <NCard style={['margin-top: 18px']}>
           {{
@@ -241,7 +248,10 @@ const TableView = defineComponent({
             ),
             default: () => (
               <RayTable
-                title="带有拓展功能的表格"
+                title={h(NInput, {
+                  placeholder: '请输入检索条件',
+                  style: ['width: 200px'],
+                })}
                 data={this.tableData}
                 v-model:columns={this.actionColumns}
               />

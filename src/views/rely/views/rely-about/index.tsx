@@ -16,7 +16,7 @@ interface TemplateOptions {
 const RelyAbout = defineComponent({
   name: 'RelyAbout',
   setup() {
-    const { pkg } = __APP_INFO__
+    const { pkg } = __APP_CFG__
     const { dependencies, devDependencies, name, version } = pkg
 
     const columns = [

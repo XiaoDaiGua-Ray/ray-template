@@ -9,4 +9,9 @@
     height: var(--layout-content-height);
     padding: calc($layoutRouterViewContainer / 2);
   }
+
+  & .layout-footer {
+    padding: 24px;
+    text-align: center;
+  }
 }

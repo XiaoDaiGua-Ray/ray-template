@@ -3,6 +3,7 @@ import path from 'node:path'
 import { HTMLTitlePlugin, buildOptions } from './vite-plugin/index'
 
 import type { ServerOptions, BuildOptions, AliasOptions } from 'vite'
+import type { VNodeChild } from 'vue'
 
 export interface HTMLTitle {
   name: string
@@ -14,9 +15,17 @@ export interface Config {
   buildOptions: (mode: string) => BuildOptions
   alias: AliasOptions
   title: HTMLTitle
+  copyright?: string | number | VNodeChild
 }
 
 const config: Config = {
+  /**
+   *
+   * 版权信息
+   *
+   * 也可以当作页底设置, 看实际业务需求
+   */
+  copyright: 'Copyright © 2022-present Ray',
   /**
    *
    * 浏览器标题

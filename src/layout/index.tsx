@@ -1,14 +1,15 @@
 import './index.scss'
-import { NLayout, NLayoutContent } from 'naive-ui'
+
+import { NLayout, NLayoutContent, NLayoutFooter } from 'naive-ui'
 import RayTransitionComponent from '@/components/RayTransitionComponent/index.vue'
 import LayoutMenu from './components/Menu/index'
 import SiderBar from './components/SiderBar/index'
 import MenuTag from './components/MenuTag/index'
+
 import { useSetting } from '@/store'
 
 const Layout = defineComponent({
   name: 'Layout',
-  props: {},
   setup() {
     const menuStore = useSetting()
     const { height: windowHeight } = useWindowSize()
@@ -29,12 +30,16 @@ const Layout = defineComponent({
 
       return cssVar
     })
+    const {
+      layout: { copyright },
+    } = __APP_CFG__
 
     return {
       windowHeight,
       modelReloadRoute,
       modelMenuTagSwitch,
       cssVarsRef,
+      copyright,
     }
   },
   render() {
@@ -53,6 +58,11 @@ const Layout = defineComponent({
               nativeScrollbar={false}
             >
               {this.modelReloadRoute ? <RayTransitionComponent /> : ''}
+              {this.copyright ? (
+                <div class="layout-footer">{this.copyright}</div>
+              ) : (
+                ''
+              )}
             </NLayoutContent>
           </NLayout>
         </NLayout>
