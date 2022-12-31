@@ -1,0 +1,27 @@
+.ray-menu__logo {
+  height: 50px;
+  padding: 0 18px 0 24px;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px 12px;
+  font-weight: 600;
+  overflow: hidden;
+
+  &.ray-menu__logo-url {
+    cursor: pointer;
+  }
+
+  & .ray-menu__logo-title {
+    opacity: 0;
+    display: none;
+    flex: 1;
+    white-space: nowrap;
+
+    &.ray-menu__logo-title--open {
+      opacity: 1;
+      display: inline-block;
+    }
+  }
+}

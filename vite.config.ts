@@ -4,12 +4,13 @@ import config from './cfg'
 const pkg = require('./package.json')
 
 const { dependencies, devDependencies, name, version } = pkg
-const { server, buildOptions, alias, title, copyright } = config
+const { server, buildOptions, alias, title, copyright, sideBarLogo } = config
 
 const __APP_CFG__ = {
   pkg: { dependencies, devDependencies, name, version },
   layout: {
     copyright,
+    sideBarLogo,
   },
 }
 

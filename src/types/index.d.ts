@@ -16,6 +16,13 @@ import type { VNodeChild } from 'vue'
 export global {
   declare type Recordable<T = unknown> = Record<string, T>
 
+  export declare interface SideBarLogo {
+    icon?: string
+    title?: string
+    url?: string
+    jumpType?: 'station' | 'outsideStation'
+  }
+
   declare const __APP_CFG__: {
     pkg: {
       name: string
@@ -24,7 +31,8 @@ export global {
       devDependencies: Recordable<string>
     }
     layout: {
-      copyright: string | number | VNodeChild
+      copyright?: string | number | VNodeChild
+      sideBarLogo?: SideBarLogo
     }
   }
 

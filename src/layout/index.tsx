@@ -1,6 +1,6 @@
 import './index.scss'
 
-import { NLayout, NLayoutContent, NLayoutFooter } from 'naive-ui'
+import { NLayout, NLayoutContent } from 'naive-ui'
 import RayTransitionComponent from '@/components/RayTransitionComponent/index.vue'
 import LayoutMenu from './components/Menu/index'
 import SiderBar from './components/SiderBar/index'
@@ -20,7 +20,7 @@ const Layout = defineComponent({
 
       if (menuStore.menuTagSwitch) {
         cssVar = {
-          '--layout-content-height': 'calc(100% - 110px)',
+          '--layout-content-height': 'calc(100% - 109px)',
         }
       } else {
         cssVar = {

@@ -93,7 +93,7 @@ export const useVueI18nPlugin = () =>
  *
  * @param title 浏览器 title 名称
  */
-export const HTMLTitlePlugin = (title = 'ray template') => {
+export const HTMLTitlePlugin = (title: string) => {
   return {
     name: 'html-transform',
     transformIndexHtml: (html: string) => {

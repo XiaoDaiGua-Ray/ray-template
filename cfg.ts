@@ -10,15 +10,38 @@ export interface HTMLTitle {
   transformIndexHtml: (title: string) => string
 }
 
+export interface SideBarLogo {
+  icon?: string
+  title?: string
+  url?: string
+  jumpType?: 'station' | 'outsideStation'
+}
+
 export interface Config {
   server: ServerOptions
   buildOptions: (mode: string) => BuildOptions
   alias: AliasOptions
   title: HTMLTitle
   copyright?: string | number | VNodeChild
+  sideBarLogo: SideBarLogo
 }
 
 const config: Config = {
+  /**
+   *
+   * icon: LOGO 图标, 依赖 `RayIcon` 实现
+   * title: LOGO 标题
+   * url: 点击跳转地址, 如果不配置该属性, 则不会触发跳转
+   * jumpType: 跳转类型（station: 项目内跳转, outsideStation: 新页面打开）
+   *
+   * 如果不设置该属性或者为空, 则不会渲染 LOGO
+   */
+  sideBarLogo: {
+    icon: 'ray',
+    title: 'Ray Template',
+    url: '/dashboard',
+    jumpType: 'station',
+  },
   /**
    *
    * 版权信息

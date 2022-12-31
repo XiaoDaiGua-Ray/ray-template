@@ -98,7 +98,7 @@ const SiderBar = defineComponent({
                 onPositiveClick: () => {
                   window.$message.info('账号退出中...')
                   removeCache('all-sessionStorage')
-                  setTimeout(() => window.location.reload(), 2 * 1000)
+                  setTimeout(() => window.location.reload(), 300)
                 },
               })
             } else {
@@ -112,7 +112,7 @@ const SiderBar = defineComponent({
       reload: () => {
         changeSwitcher(false, 'reloadRouteSwitch')
 
-        setTimeout(() => changeSwitcher(true, 'reloadRouteSwitch'))
+        setTimeout(() => changeSwitcher(true, 'reloadRouteSwitch'), 1.5 * 1000)
       },
       setting: () => {
         showSettings.value = true
