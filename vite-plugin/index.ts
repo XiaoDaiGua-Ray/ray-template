@@ -9,7 +9,7 @@ import { createSvgIconsPlugin } from 'vite-plugin-svg-icons' // `svg icon`
 import type { ComponentResolver, TypeImport } from 'unplugin-vue-components'
 import type { VitePluginCompression } from './type'
 import type { ImportsMap, PresetName } from 'unplugin-auto-import/types'
-import type { ServerOptions, BuildOptions } from 'vite'
+import type { BuildOptions } from 'vite'
 import type { ViteSvgIconsPlugin } from 'vite-plugin-svg-icons'
 
 /**

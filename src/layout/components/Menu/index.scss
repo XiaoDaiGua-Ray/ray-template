@@ -17,7 +17,7 @@
     opacity: 0;
     display: none;
     flex: 1;
-    white-space: nowrap;
+    @include overflowEllipsis;
 
     &.ray-menu__logo-title--open {
       opacity: 1;

@@ -9,6 +9,7 @@
     "vite.config.ts",
     "vite-plugin/index.ts",
     "vite-plugin/type.ts",
-    "cfg.ts"
+    "cfg.ts",
+    "src/types/cfg.ts"
   ]
 }

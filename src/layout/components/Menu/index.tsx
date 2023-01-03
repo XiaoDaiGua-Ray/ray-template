@@ -1,6 +1,6 @@
 import './index.scss'
 
-import { NMenu, NLayoutSider } from 'naive-ui'
+import { NMenu, NLayoutSider, NEllipsis } from 'naive-ui'
 import RayIcon from '@/components/RayIcon/index'
 
 import { useMenu } from '@/store'
@@ -53,6 +53,7 @@ const LayoutMenu = defineComponent({
         collapseMode="width"
         collapsedWidth={this.collapsedWidth}
         onUpdateCollapsed={this.collapsedMenu.bind(this)}
+        nativeScrollbar={false}
       >
         {this.sideBarLogo ? (
           <div
@@ -69,7 +70,7 @@ const LayoutMenu = defineComponent({
                 'ray-menu__logo-title',
               ]}
             >
-              {this.sideBarLogo.title}
+              <NEllipsis>{this.sideBarLogo.title}</NEllipsis>
             </h1>
           </div>
         ) : (

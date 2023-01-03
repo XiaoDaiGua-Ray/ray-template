@@ -2,31 +2,9 @@ import path from 'node:path'
 
 import { HTMLTitlePlugin, buildOptions } from './vite-plugin/index'
 
-import type { ServerOptions, BuildOptions, AliasOptions } from 'vite'
-import type { VNodeChild } from 'vue'
+import type { AppConfigExport } from './src/types/cfg'
 
-export interface HTMLTitle {
-  name: string
-  transformIndexHtml: (title: string) => string
-}
-
-export interface SideBarLogo {
-  icon?: string
-  title?: string
-  url?: string
-  jumpType?: 'station' | 'outsideStation'
-}
-
-export interface Config {
-  server: ServerOptions
-  buildOptions: (mode: string) => BuildOptions
-  alias: AliasOptions
-  title: HTMLTitle
-  copyright?: string | number | VNodeChild
-  sideBarLogo: SideBarLogo
-}
-
-const config: Config = {
+const config: AppConfigExport = {
   /**
    *
    * icon: LOGO 图标, 依赖 `RayIcon` 实现

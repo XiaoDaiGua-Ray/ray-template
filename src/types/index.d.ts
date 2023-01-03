@@ -12,29 +12,10 @@ import type {
 } from 'naive-ui'
 import type { ECharts } from 'echarts/core'
 import type { VNodeChild } from 'vue'
+import type { LayoutSideBarLogo, LayoutCopyright, AppConfig } from './cfg'
 
 export global {
-  declare type Recordable<T = unknown> = Record<string, T>
-
-  export declare interface SideBarLogo {
-    icon?: string
-    title?: string
-    url?: string
-    jumpType?: 'station' | 'outsideStation'
-  }
-
-  declare const __APP_CFG__: {
-    pkg: {
-      name: string
-      version: string
-      dependencies: Recordable<string>
-      devDependencies: Recordable<string>
-    }
-    layout: {
-      copyright?: string | number | VNodeChild
-      sideBarLogo?: SideBarLogo
-    }
-  }
+  declare const __APP_CFG__: AppConfig
 
   declare type NaiveMenuOptions =
     | MenuOption
