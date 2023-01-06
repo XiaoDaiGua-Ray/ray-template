@@ -1,6 +1,17 @@
+/**
+ *
+ * @author Ray <https://github.com/XiaoDaiGua-Ray>
+ *
+ * @date 2023-01-04
+ *
+ * @workspace ray-template
+ *
+ * @remark 今天也是元气满满撸代码的一天
+ */
+
 import './index.scss'
 
-import { NLayoutHeader, NSpace, NTooltip, NDropdown } from 'naive-ui'
+import { NLayoutHeader, NSpace, NTooltip, NDropdown, NTag } from 'naive-ui'
 import RayIcon from '@/components/RayIcon/index'
 import RayTooltipIcon from '@/components/RayTooltipIcon/index'
 import SettingDrawer from './components/SettingDrawer/index'
@@ -8,14 +19,15 @@ import SettingDrawer from './components/SettingDrawer/index'
 import { useSetting } from '@/store'
 import { useLanguageOptions } from '@/language/index'
 import { useAvatarOptions } from './hook'
-import { removeCache } from '@/utils/cache'
+import { removeCache, getCache } from '@/utils/cache'
 import screenfull from 'screenfull'
 
-import type { IconEventMapOptions, IconEventMap, IconOptions } from './type'
+import type { IconEventMapOptions, IconEventMap } from './type'
 
 /**
  *
  * 本来想通过写数据配置化的方式实现顶部的功能小按钮, 结果事实发现...
+ *
  * 但是我又不想改, 就这样吧
  */
 
@@ -28,6 +40,7 @@ const SiderBar = defineComponent({
     const { updateLocale, changeSwitcher } = settingStore
     const modelDrawerPlacement = ref(settingStore.drawerPlacement)
     const showSettings = ref(false)
+    const person = getCache('person')
 
     /**
      *
@@ -64,50 +77,6 @@ const SiderBar = defineComponent({
         eventKey: 'setting',
       },
     ]
-    /**
-     *
-     * 顶部右边下拉框操作栏
-     */
-    const rightDropdownIconOptions = [
-      {
-        name: 'language',
-        size: 18,
-        tooltip: '',
-        dropdown: {
-          eventKey: 'handleSelect', // 默认为 `handleSelect`
-          switch: true,
-          options: useLanguageOptions(),
-          handleSelect: (key: string | number) => updateLocale(String(key)),
-        },
-      },
-      {
-        name: 'ray',
-        size: 18,
-        tooltip: '',
-        dropdown: {
-          eventKey: 'handleSelect', // 默认为 `handleSelect`
-          switch: true,
-          options: useAvatarOptions(),
-          handleSelect: (key: string | number) => {
-            if (key === 'logout') {
-              window.$dialog.warning({
-                title: '提示',
-                content: '您确定要退出登录吗',
-                positiveText: '确定',
-                negativeText: '不确定',
-                onPositiveClick: () => {
-                  window.$message.info('账号退出中...')
-                  removeCache('all-sessionStorage')
-                  setTimeout(() => window.location.reload(), 300)
-                },
-              })
-            } else {
-              window.$message.info('这个人很懒, 没做这个功能~')
-            }
-          },
-        },
-      },
-    ]
     const iconEventMap: IconEventMapOptions = {
       reload: () => {
         changeSwitcher(false, 'reloadRouteSwitch')
@@ -133,6 +102,24 @@ const SiderBar = defineComponent({
       iconEventMap[key]?.()
     }
 
+    const handlePersonSelect = (key: string | number) => {
+      if (key === 'logout') {
+        window.$dialog.warning({
+          title: '提示',
+          content: '您确定要退出登录吗',
+          positiveText: '确定',
+          negativeText: '不确定',
+          onPositiveClick: () => {
+            window.$message.info('账号退出中...')
+            removeCache('all-sessionStorage')
+            setTimeout(() => window.location.reload(), 300)
+          },
+        })
+      } else {
+        window.$message.info('这个人很懒, 没做这个功能~')
+      }
+    }
+
     return {
       leftIconOptions,
       rightTooltipIconOptions,
@@ -140,7 +127,9 @@ const SiderBar = defineComponent({
       handleIconClick,
       modelDrawerPlacement,
       showSettings,
-      rightDropdownIconOptions,
+      updateLocale,
+      handlePersonSelect,
+      person,
     }
   },
   render() {
@@ -176,20 +165,37 @@ const SiderBar = defineComponent({
                 onClick={this.handleIconClick.bind(this, curr.name)}
               />
             ))}
-            {this.rightDropdownIconOptions.map((curr) => (
-              <NDropdown
-                options={curr.dropdown.options}
-                onSelect={
-                  curr.dropdown[curr.dropdown.eventKey ?? 'handleSelect']
-                }
-              >
-                <RayIcon
-                  customClassName="layout-header__method--icon"
-                  name={curr.name}
-                  size={curr.size}
-                />
-              </NDropdown>
-            ))}
+            <NDropdown
+              options={useLanguageOptions()}
+              onSelect={(key: string | number) =>
+                this.updateLocale(String(key))
+              }
+              trigger="click"
+            >
+              <RayIcon
+                customClassName="layout-header__method--icon"
+                name="language"
+                size="18"
+              />
+            </NDropdown>
+            <NDropdown
+              options={useAvatarOptions()}
+              onSelect={this.handlePersonSelect.bind(this)}
+              trigger="click"
+            >
+              <NTag checkable size="large">
+                {{
+                  icon: () => (
+                    <RayIcon
+                      customClassName="layout-header__method--icon"
+                      name="ray"
+                      size="18"
+                    />
+                  ),
+                  default: () => this.person.name,
+                }}
+              </NTag>
+            </NDropdown>
           </NSpace>
         </NSpace>
         <SettingDrawer

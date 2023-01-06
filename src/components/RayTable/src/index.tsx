@@ -10,7 +10,7 @@
  */
 
 import './index.scss'
-import { NDataTable, NCard, NDropdown, NSpace } from 'naive-ui'
+import { NDataTable, NCard, NDropdown, NDivider } from 'naive-ui'
 import TableSetting from './components/TableSetting/index'
 import TableAction from './components/TableAction/index'
 
@@ -167,13 +167,13 @@ const RayTable = defineComponent({
      * 受到 `print-js` 限制有些样式是无法打印输出的
      */
     const handlePrintPositive = () => {
-      const options = Object.assign(
-        {
-          printable: tableUUID,
-          type: props.printType,
-        },
-        props.printOptions,
-      )
+      const options = Object.assign({}, props.printOptions, {
+        printable: tableUUID,
+        type: props.printType,
+        documentTitle: props.printOptions.documentTitle
+          ? props.printOptions.documentTitle
+          : '表格',
+      })
 
       print(options)
     }
@@ -225,7 +225,7 @@ const RayTable = defineComponent({
           header: () => this.title,
           'header-extra': () =>
             this.action ? (
-              <NSpace align="center">
+              <div class="ray-table-header-extra__space">
                 {/* 打印输出操作 */}
                 <TableAction
                   icon={this.printIcon}
@@ -234,6 +234,7 @@ const RayTable = defineComponent({
                   negativeText={this.printNegativeText}
                   onPositive={this.handlePrintPositive.bind(this)}
                 />
+                <NDivider vertical />
                 {/* 输出为Excel表格 */}
                 <TableAction
                   icon={this.exportExcelIcon}
@@ -242,11 +243,12 @@ const RayTable = defineComponent({
                   negativeText={this.exportNegativeText}
                   onPositive={this.handleExportPositive.bind(this)}
                 />
+                <NDivider vertical />
                 {/* 表格列操作 */}
                 <TableSetting
                   onColumnsUpdate={this.handleColumnsUpdate.bind(this)}
                 />
-              </NSpace>
+              </div>
             ) : (
               ''
             ),

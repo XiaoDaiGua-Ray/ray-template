@@ -9,7 +9,7 @@ const Signin = defineComponent({
     const { t } = useI18n()
 
     const useSigninForm = () => ({
-      name: 'admin',
+      name: 'ray',
       pwd: '123456',
     })
 
@@ -30,7 +30,6 @@ const Signin = defineComponent({
         trigger: ['blur', 'input'],
       },
     }
-
     const handleLogin = () => {
       loginFormRef.value?.validate((valid) => {
         if (!valid) {
@@ -42,6 +41,7 @@ const Signin = defineComponent({
             router.push('/dashboard')
 
             setCache('token', 'tokenValue')
+            setCache('person', signinForm.value)
           }, 2 * 1000)
         } else {
           window.$message.error('不可以这样哟, 不可以哟')

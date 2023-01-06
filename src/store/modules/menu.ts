@@ -115,7 +115,9 @@ export const useMenu = defineStore('menu', () => {
             ),
         }
 
-        const attr = curr.meta?.icon ? Object.assign(route, expandIcon) : route
+        const attr = curr.meta?.icon
+          ? Object.assign({}, route, expandIcon)
+          : route
 
         // 初始化 `menu tag`
         if (curr.path === cacheMenuKey) {

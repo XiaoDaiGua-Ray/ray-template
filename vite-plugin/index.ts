@@ -1,13 +1,11 @@
 import path from 'node:path'
 
-import viteCompression from 'vite-plugin-compression' // 压缩打包
 import autoImport from 'unplugin-auto-import/vite' // 自动导入
 import viteComponents from 'unplugin-vue-components/vite' // 自动按需导入
 import vueI18nPlugin from '@intlify/unplugin-vue-i18n/vite' // i18n
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons' // `svg icon`
 
 import type { ComponentResolver, TypeImport } from 'unplugin-vue-components'
-import type { VitePluginCompression } from './type'
 import type { ImportsMap, PresetName } from 'unplugin-auto-import/types'
 import type { BuildOptions } from 'vite'
 import type { ViteSvgIconsPlugin } from 'vite-plugin-svg-icons'
@@ -26,7 +24,7 @@ export const useSVGIcon = (options?: ViteSvgIconsPlugin) => {
     customDomId: '__svg__icons__dom__',
   }
 
-  return createSvgIconsPlugin(Object.assign(defaultOptions, options))
+  return createSvgIconsPlugin(Object.assign({}, defaultOptions, options))
 }
 
 /**
@@ -70,15 +68,6 @@ export const useViteComponents = async (
       ...types,
     ],
   })
-
-/**
- *
- * @param options
- *
- * 压缩打包
- */
-export const useViteCompression = (options?: VitePluginCompression) =>
-  viteCompression(Object.assign(options ?? {}))
 
 export const useVueI18nPlugin = () =>
   vueI18nPlugin({
@@ -192,5 +181,5 @@ export const useViteBuildPlugin = (options?: BuildOptions) => {
     },
   }
 
-  return Object.assign(defaultPlugin, options)
+  return Object.assign({}, defaultPlugin, options)
 }

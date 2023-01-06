@@ -1,26 +1,13 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import config from './cfg'
-const pkg = require('./package.json')
-
-const { dependencies, devDependencies, name, version } = pkg
-const { server, buildOptions, alias, title, copyright, sideBarLogo } = config
-
-const __APP_CFG__ = {
-  pkg: { dependencies, devDependencies, name, version },
-  layout: {
-    copyright,
-    sideBarLogo,
-  },
-}
 
 import {
   useAutoImport,
   useViteComponents,
-  useViteCompression,
   useVueI18nPlugin,
   useSVGIcon,
 } from './vite-plugin/index'
+
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import ViteInspect from 'vite-plugin-inspect'
@@ -28,8 +15,33 @@ import viteSvgLoader from 'vite-svg-loader'
 import viteEslintPlugin from 'vite-plugin-eslint'
 import vitePluginImp from 'vite-plugin-imp' // 按需打包工具
 import { visualizer } from 'rollup-plugin-visualizer' // 打包体积分析工具
+import viteCompression from 'vite-plugin-compression' // 压缩打包
 
-import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
+import { NaiveUiResolver } from 'unplugin-vue-components/resolvers' // 模板自动导入组件并且按需打包
+
+import config from './cfg'
+const pkg = require('./package.json')
+
+const { dependencies, devDependencies, name, version } = pkg
+const { server, buildOptions, alias, title, copyright, sideBarLogo } = config
+
+/**
+ *
+ * 全局注入 `__APP_CFG__` 变量
+ *
+ * 可以在 `views` 页面使用
+ *
+ * 使用方法 `const { pkg, layout } = __APP_CFG__`
+ *
+ * 如果有新的补充, 需要自己手动补充类型 `src/types/cfg.ts AppConfig`
+ */
+const __APP_CFG__ = {
+  pkg: { dependencies, devDependencies, name, version },
+  layout: {
+    copyright,
+    sideBarLogo,
+  },
+}
 
 // https://vitejs.dev/config/
 export default defineConfig(async ({ mode }) => {
@@ -57,7 +69,7 @@ export default defineConfig(async ({ mode }) => {
         },
       ]),
       await useViteComponents([NaiveUiResolver()]),
-      useViteCompression(),
+      viteCompression(),
       useVueI18nPlugin(),
       viteSvgLoader({
         defaultImport: 'component', // 默认以 `componetn` 形式导入 `svg`
@@ -106,6 +118,19 @@ export default defineConfig(async ({ mode }) => {
     },
     build: {
       ...buildOptions(mode),
+      rollupOptions: {
+        output: {
+          manualChunks: (id) => {
+            if (id.includes('node_modules')) {
+              return id
+                .toString()
+                .split('node_modules/')[1]
+                .split('/')[0]
+                .toString()
+            }
+          },
+        },
+      },
     },
     css: {
       preprocessorOptions: {
@@ -113,6 +138,9 @@ export default defineConfig(async ({ mode }) => {
           additionalData:
             '@import "./src/styles/mixins.scss"; @import "./src/styles/setting.scss";', // 全局 `mixin`
         },
+      },
+      modules: {
+        localsConvention: 'camelCaseOnly',
       },
     },
     server: {

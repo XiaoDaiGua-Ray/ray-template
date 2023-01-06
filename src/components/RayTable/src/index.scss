@@ -9,4 +9,10 @@
   & .n-card-header .n-card-header__main {
     padding-right: var(--ray-table-header-space);
   }
+
+  & .ray-table-header-extra__space {
+    display: flex;
+    gap: 0 1px;
+    align-items: center;
+  }
 }

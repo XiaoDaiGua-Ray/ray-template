@@ -1,3 +1,14 @@
+/**
+ *
+ * @author Ray <https://github.com/XiaoDaiGua-Ray>
+ *
+ * @date 2023-01-06
+ *
+ * @workspace ray-template
+ *
+ * @remark 今天也是元气满满撸代码的一天
+ */
+
 .ray-menu__logo {
   height: 50px;
   padding: 0 18px 0 24px;
@@ -10,7 +21,11 @@
   overflow: hidden;
 
   &.ray-menu__logo-url {
+    position: sticky;
+    top: 0;
     cursor: pointer;
+    background-color: var(--n-color);
+    z-index: 20;
   }
 
   & .ray-menu__logo-title {

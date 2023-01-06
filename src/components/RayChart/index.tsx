@@ -1,4 +1,5 @@
 import './index.scss'
+
 import * as echarts from 'echarts/core' // `echarts` 核心模块
 import {
   TitleComponent,
@@ -18,13 +19,13 @@ import {
   ScatterChart,
 } from 'echarts/charts' // 系列类型(后缀都为 `SeriesOption`)
 import { LabelLayout, UniversalTransition } from 'echarts/features' // 标签自动布局, 全局过渡动画等特性
-import { CanvasRenderer, SVGRenderer } from 'echarts/renderers' // `echarts` 渲染器
+import { CanvasRenderer } from 'echarts/renderers' // `echarts` 渲染器
+
 import { useSetting } from '@/store'
 import { cloneDeep } from 'lodash-es'
-import { on, off } from '@/utils/element'
+import { on, off, addStyle } from '@/utils/element'
 
 import type { PropType } from 'vue'
-import type {} from 'echarts'
 
 export type AutoResize =
   | boolean
@@ -58,6 +59,7 @@ export type ChartTheme = 'dark' | '' | object
  */
 export const loadingOptions = (options: LoadingOptions) =>
   Object.assign(
+    {},
     {
       text: 'loading',
       color: '#c23531',
@@ -99,7 +101,12 @@ const RayChart = defineComponent({
       default: true,
     },
     canvasRender: {
-      /* `chart` 渲染器, 默认使用 `canvas` */
+      /**
+       *
+       * `chart` 渲染器, 默认使用 `canvas`
+       *
+       * 考虑到打包体积与大多数业务场景缘故, 暂时移除 `SVGRenderer` 渲染器的默认导入
+       */
       type: Boolean,
       default: true,
     },
@@ -181,6 +188,10 @@ const RayChart = defineComponent({
     /**
      *
      * 注册 `echart` 组件, 图利, 渲染器等
+     *
+     * 会自动合并拓展 `echart` 组件
+     *
+     * 该方法必须在注册图表之前调用
      */
     const registerChartCore = async () => {
       echarts.use([
@@ -204,7 +215,9 @@ const RayChart = defineComponent({
 
       echarts.use([LabelLayout, UniversalTransition]) // 注册布局, 过度效果
 
-      echarts.use([props.canvasRender ? CanvasRenderer : SVGRenderer]) // 注册渲染器
+      // 如果业务场景中需要 `svg` 渲染器, 手动导入渲染器后使用该行代码即可
+      // echarts.use([props.canvasRender ? CanvasRenderer : SVGRenderer])
+      echarts.use([CanvasRenderer]) // 注册渲染器
 
       try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -227,7 +240,7 @@ const RayChart = defineComponent({
     const useMergeOptions = () => {
       let options = cloneDeep(props.options)
 
-      const merge = (opts: object) => Object.assign(options, opts)
+      const merge = (opts: object) => Object.assign({}, options, opts)
 
       if (props.showAria) {
         options = merge({
@@ -254,6 +267,19 @@ const RayChart = defineComponent({
     const renderChart = (theme: ChartTheme) => {
       const element = rayChartRef.value as HTMLElement
       const options = useMergeOptions()
+      const { height, width } = element.getBoundingClientRect()
+
+      if (height === 0) {
+        addStyle(element, {
+          height: '200px',
+        })
+      }
+
+      if (width === 0) {
+        addStyle(element, {
+          width: '200px',
+        })
+      }
 
       try {
         echartInstance = echarts.init(element, theme)

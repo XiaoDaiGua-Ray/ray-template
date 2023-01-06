@@ -9,7 +9,7 @@ const useRequest = (config: AxiosRequestConfig) => {
 
   controller = new AbortController() // 实例化控制器对象(可以中止一个或多个 `Web` 请求)
 
-  const cfg = Object.assign(config, {
+  const cfg = Object.assign({}, config, {
     signal: controller.signal, // 取消请求信号
   })
 
