@@ -22,3 +22,8 @@ declare module 'virtual:*' {
   const result: any
   export default result
 }
+
+declare module '*.json' {
+  const jsonContent: any
+  export default jsonContent
+}

@@ -3,6 +3,7 @@
     "composite": true,
     "module": "ESNext",
     "moduleResolution": "Node",
+    "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true
   },
   "include": [
@@ -10,6 +11,7 @@
     "vite-plugin/index.ts",
     "vite-plugin/type.ts",
     "cfg.ts",
-    "src/types/cfg.ts"
+    "src/types/cfg.ts",
+    "package.json"
   ]
 }

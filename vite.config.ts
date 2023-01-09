@@ -20,7 +20,7 @@ import viteCompression from 'vite-plugin-compression' // 压缩打包
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers' // 模板自动导入组件并且按需打包
 
 import config from './cfg'
-const pkg = require('./package.json')
+import pkg from './package.json'
 
 const { dependencies, devDependencies, name, version } = pkg
 const { server, buildOptions, alias, title, copyright, sideBarLogo } = config
