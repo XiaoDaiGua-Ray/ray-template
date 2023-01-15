@@ -76,10 +76,12 @@ export default defineConfig(async ({ mode }) => {
       }),
       useSVGIcon(),
       viteEslintPlugin({
+        lintOnStart: true, // 构建时自动检查
         failOnWarning: true, // 如果含有警告则构建失败
         failOnError: true, // 如果有错误则构建失败
         cache: true, // 缓存, 减少构建时间
         exclude: ['**/node_modules/**', 'vite-env.d.ts'],
+        include: ['src/**/*.ts', 'src/**/*.vue', 'src/**/*.tsx'],
       }),
       vitePluginImp({
         libList: [

@@ -14,16 +14,15 @@ import { NDataTable, NCard, NDropdown, NDivider } from 'naive-ui'
 import TableSetting from './components/TableSetting/index'
 import TableAction from './components/TableAction/index'
 
-import dayjs from 'dayjs'
-import { utils, writeFileXLSX } from 'xlsx'
-import { setupExportHeader } from './hook'
 import props from './props'
 import print from 'print-js'
 import { uuid } from '@use-utils/hook'
+import { exportFileToXLSX } from '@use-utils/xlsx'
 
-import type { ActionOptions, ExportExcelHeader } from './type'
+import type { ActionOptions } from './type'
 import type { WritableComputedRef } from 'vue'
 import type { DropdownOption } from 'naive-ui'
+import type { ExportExcelHeader } from '@use-utils/xlsx'
 
 const RayTable = defineComponent({
   name: 'RayTable',
@@ -119,35 +118,16 @@ const RayTable = defineComponent({
      *
      * 按需导入 `xlsx` 减少体积, 不依赖传统 `file save` 插件导出方式
      */
-    const handleExportPositive = () => {
+    const handleExportPositive = async () => {
       if (props.data.length && props.columns.length) {
         try {
-          const exportHeader = setupExportHeader(
+          await exportFileToXLSX(
+            props.data,
             props.columns as ExportExcelHeader[],
-          ) // 获取所有列(设置为 `excel` 表头)
-          const sheetData = utils.json_to_sheet(props.data) // 将所有数据转换为表格数据类型
-          const workBook = utils.book_new()
-          const filename = props.exportFilename
-            ? props.exportFilename + '.xlsx'
-            : dayjs(new Date()).format('YYYY-MM-DD') + '导出表格的.xlsx'
-
-          utils.book_append_sheet(workBook, sheetData, 'Data')
-
-          const range = utils.decode_range(sheetData['!ref'] as string) // 获取所有单元格
-
-          /**
-           *
-           * 替换表头
-           *
-           * 方法有点蠢, 凑合凑合用吧
-           */
-          for (let c = range.s.c; c <= range.e.c; c++) {
-            const header = utils.encode_col(c) + '1'
-
-            sheetData[header].v = exportHeader[sheetData[header].v]
-          }
-
-          writeFileXLSX(workBook, filename) // 输出表格
+            {
+              filename: props.exportFilename,
+            },
+          )
 
           emit('exportSuccess')
         } catch (e) {

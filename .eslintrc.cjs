@@ -105,6 +105,9 @@ module.exports = {
     'no-var': 'error', // 禁用 `var`
     'no-with': 2, // 禁用 `with`
     'no-undef': 0,
+    'use-isnan': 2, // 强制使用 isNaN 判断 NaN
+    'no-multi-assign': 2, // 禁止连续声明变量
+    'prefer-arrow-callback': 2, // 强制使用箭头函数作为回调
     'vue/multi-word-component-names': [
       'off',
       {

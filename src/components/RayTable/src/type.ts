@@ -68,5 +68,3 @@ export declare type VNodeChild = VNodeChildAtom | VNodeArrayChildren
 export declare type TableColumnTitle =
   | string
   | ((column: DataTableBaseColumn) => VNodeChild)
-
-export interface ExportExcelHeader extends DataTableBaseColumn {}

@@ -30,7 +30,7 @@ export const getElementChildNodes = (
  * @param event 绑定事件类型
  * @param handler 事件触发方法
  *
- * @handle 给元素绑定某个事件柄方法
+ * @remark 给元素绑定某个事件柄方法
  */
 export const on = (
   element: HTMLElement | Document | Window,
@@ -49,7 +49,7 @@ export const on = (
  * @param event 卸载事件类型
  * @param handler 所需卸载方法
  *
- * @handle 卸载元素上某个事件柄方法
+ * @remark 卸载元素上某个事件柄方法
  */
 export const off = (
   element: HTMLElement | Document | Window,
@@ -67,7 +67,7 @@ export const off = (
  * @param element Target element dom
  * @param className 所需添加className，可: 'xxx xxx' | 'xxx'格式添加
  *
- * @handle 添加元素className(可: 'xxx xxx' | 'xxx'格式添加)
+ * @remark 添加元素className(可: 'xxx xxx' | 'xxx'格式添加)
  */
 export const addClass = (element: HTMLElement, className: string) => {
   if (element) {
@@ -86,7 +86,7 @@ export const addClass = (element: HTMLElement, className: string) => {
  * @param element Target element dom
  * @param className 所需删除className，可: 'xxx xxx' | 'xxx'格式删除
  *
- * @handle 删除元素className(可: 'xxx xxx' | 'xxx'格式删除)
+ * @remark 删除元素className(可: 'xxx xxx' | 'xxx'格式删除)
  */
 export const removeClass = (element: HTMLElement, className: string) => {
   if (element) {
@@ -107,7 +107,7 @@ export const removeClass = (element: HTMLElement, className: string) => {
  *
  * @returns 返回boolean
  *
- * @handle 元素是否含有某个className(可: 'xxx xxx' | 'xxx'格式查询)
+ * @remark 元素是否含有某个className(可: 'xxx xxx' | 'xxx'格式查询)
  */
 export const hasClass = (element: HTMLElement, className: string) => {
   const elementClassName = element.className

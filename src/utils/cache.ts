@@ -3,7 +3,7 @@
  * @param key 需要设置的key
  * @param value 需要缓存的值
  */
-export const setCache = <T>(
+export const setCache = <T = unknown>(
   key: string,
   value: T,
   type: CacheType = 'sessionStorage',

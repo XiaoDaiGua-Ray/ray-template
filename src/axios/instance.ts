@@ -9,8 +9,7 @@ import type { RequestHeaderOptions } from './type'
  * @param instance axios instance
  * @param options axios headers options
  *
- * @note
- * 自定义 `axios` 请求头配置
+ * @remark 自定义 `axios` 请求头配置
  */
 const appendRequestHeaders = (
   instance: AxiosRequestConfig<unknown>,
@@ -41,7 +40,12 @@ server.interceptors.request.use(
       // TODO: 测试环境
     }
 
-    appendRequestHeaders(request, [{ key: 'X-TOKEN', value: 'token' }]) // 自定义请求头
+    appendRequestHeaders(request, [
+      {
+        key: 'X-TOKEN',
+        value: 'token',
+      },
+    ]) // 自定义请求头
 
     return request
   },

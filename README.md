@@ -1,5 +1,10 @@
 # `Ray Template`
 
+## 提示
+
+> 项目默认启用严格模式 `eslint`，但是由于 `vite-plugin-eslint` 插件优先级最高，所以如果出现自动导入类型错误提示，请优先解决其他问题。
+> 建议开启 `vscode` 保存自动修复功能。
+
 ## 前言
 
 > 该项目模板采用 `vue3.x` `vite3.2` `tsx` 进行开发，使用 `naive ui` 作为组件库。意在提供一个简洁、快速上手的模板。
@@ -26,13 +31,13 @@
 
 ## 拉取依赖
 
-```
+```sh
 # yarn
 
 yarn
 ```
 
-```
+```sh
 # npm
 
 npm install
@@ -40,13 +45,13 @@ npm install
 
 ## 启动项目
 
-```
+```sh
 # yarn
 
 yarn dev
 ```
 
-```
+```sh
 # npm
 
 npm run dev
@@ -54,16 +59,30 @@ npm run dev
 
 ## 项目打包
 
-```
+```sh
 # yarn
 
 yarn build
 ```
 
-```
+```sh
 # npm
 
 npm run build
+```
+
+## 预览项目
+
+```sh
+# yarn
+
+yarn preview
+```
+
+```sh
+# npm
+
+npm run preview
 ```
 
 ## 项目依赖
@@ -79,6 +98,7 @@ npm run build
 - [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons/blob/main/README.zh_CN.md) `svg雪碧图`
 - [echarts5](https://echarts.apache.org/examples/zh/index.html#chart-type-line) `可视化`
 - [lodash-es](https://www.lodashjs.com/) `拓展方法`
+- 还有一些后续补充的，懒得写了。。。自己看项目依赖页面
 
 ## 基础组件
 

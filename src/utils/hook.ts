@@ -17,7 +17,7 @@ export const useDetermineEnv = () => {
 export const useImagebufferToBase64 = (
   data: ArrayBufferLike | ArrayLike<number>,
 ) => {
-  const _base64 =
+  const base64 =
     'data:image/png;base64,' +
     window.btoa(
       new Uint8Array(data).reduce(
@@ -26,7 +26,7 @@ export const useImagebufferToBase64 = (
       ),
     )
 
-  return _base64
+  return base64
 }
 
 /**
@@ -34,10 +34,13 @@ export const useImagebufferToBase64 = (
  * @param value 目标值
  * @param type 类型
  */
-export const validteValueType = <T>(value: T, type: ValidteValueType) => {
-  const _v = Object.prototype.toString.call(value)
+export const validteValueType = <T = unknown>(
+  value: T,
+  type: ValidteValueType,
+) => {
+  const valid = Object.prototype.toString.call(value)
 
-  return _v.includes(type)
+  return valid.includes(type)
 }
 
 /**
@@ -61,9 +64,12 @@ export const uuid = (length = 16, radix?: number) => {
   } else {
     let r
 
-    arr[8] = arr[13] = arr[18] = arr[23] = '-'
-
+    arr[23] = '-'
+    arr[18] = arr[23]
+    arr[13] = arr[18]
+    arr[8] = arr[13]
     arr[14] = '4'
+
     for (i = 0; i < 36; i++) {
       if (!arr[i]) {
         r = 0 | (Math.random() * 16)

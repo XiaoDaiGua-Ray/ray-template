@@ -9,7 +9,7 @@ import BASE64 from 'crypto-js/enc-base64'
  * @param message 待加密信息
  * @param key 加密key
  *
- * HmacSHA256 加密
+ * @remark HmacSHA256 加密
  */
 export const useHmacSHA256 = (
   message: WordArray | string,
@@ -26,7 +26,7 @@ export const useHmacSHA256 = (
  *
  * @param message 待加密信息
  *
- * SHA256 加密
+ * @remark SHA256 加密
  */
 export const useSHA256 = (message: WordArray | string) => {
   return new Promise((resolve) => {
@@ -42,7 +42,7 @@ export const useSHA256 = (message: WordArray | string) => {
  * @param key 加密key
  * @param cfg 加密配置信息
  *
- * AES 加密
+ * @remark AES 加密
  */
 export const useAESEncrypt = (
   message: WordArray | string,
@@ -62,7 +62,7 @@ export const useAESEncrypt = (
  * @param key 解密key
  * @param cfg 解密配置信息
  *
- * AES 解密
+ * @remark AES 解密
  */
 export const useAESDecrypt = (
   ciphertext: CipherParams | string,
@@ -81,7 +81,7 @@ export const useAESDecrypt = (
  * @param message 待加密信息
  * @param cfg md5 加密配置
  *
- * md5 加密
+ * @remark md5 加密
  */
 export const useMD5 = (message: WordArray | string, cfg?: object) => {
   return new Promise((resolve) => {
@@ -95,7 +95,7 @@ export const useMD5 = (message: WordArray | string, cfg?: object) => {
  *
  * @param wordArray 待转为 base64 信息
  *
- * base64 加密
+ * @remark base64 加密
  */
 export const useBase64Stringify = (wordArray: WordArray) => {
   return new Promise((resolve) => {
@@ -109,7 +109,7 @@ export const useBase64Stringify = (wordArray: WordArray) => {
  *
  * @param str 待转为 base64 信息
  *
- * base64 解密
+ * @remark base64 解密
  */
 export const useBase64Parse = (str: string) => {
   return new Promise((resolve) => {
