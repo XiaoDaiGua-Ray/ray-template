@@ -1,5 +1,6 @@
 import { NForm, NFormItem, NInput, NButton } from 'naive-ui'
 import { setCache } from '@/utils/cache'
+import { useSpin } from '@/spin'
 
 import type { FormInst } from 'naive-ui'
 
@@ -16,7 +17,6 @@ const Signin = defineComponent({
     const router = useRouter()
     const signinForm = ref(useSigninForm())
     const loginFormRef = ref<FormInst>()
-    const loading = ref(false)
 
     const rules = {
       name: {
@@ -33,12 +33,14 @@ const Signin = defineComponent({
     const handleLogin = () => {
       loginFormRef.value?.validate((valid) => {
         if (!valid) {
-          window.$message.info('登陆中...')
-
-          loading.value = true
+          useSpin(true)
 
           setTimeout(() => {
             router.push('/dashboard')
+
+            useSpin(false)
+
+            window.$message.success(`欢迎${signinForm.value.name}登陆~`)
 
             setCache('token', 'tokenValue')
             setCache('person', signinForm.value)
@@ -54,7 +56,6 @@ const Signin = defineComponent({
       loginFormRef,
       handleLogin,
       rules,
-      loading,
       t,
     }
   },
@@ -78,7 +79,6 @@ const Signin = defineComponent({
           style={['width: 100%', 'margin-to: 18px']}
           type="primary"
           onClick={this.handleLogin.bind(this)}
-          loading={this.loading}
         >
           {this.t('LoginModule.Login')}
         </NButton>

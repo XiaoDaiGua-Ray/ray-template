@@ -20,6 +20,7 @@ import {
   NDatePicker,
   NInputNumber,
   NSpace,
+  NSwitch,
 } from 'naive-ui'
 import RayTable from '@/components/RayTable/index'
 import RayCollapseGrid from '@/components/RayCollapseGrid/index'
@@ -122,8 +123,11 @@ const TableView = defineComponent({
         key: 'delete',
       },
     ]
-    const gridItemCount = ref(4)
-    const gridCollapsedRows = ref(1)
+    const state = reactive({
+      gridItemCount: 4,
+      gridCollapsedRows: 1,
+      tableLoading: false,
+    })
 
     const handleMenuSelect = (key: string | number, idx: number) => {
       if (key === 'delete') {
@@ -132,13 +136,12 @@ const TableView = defineComponent({
     }
 
     return {
+      ...toRefs(state),
       tableData,
       actionColumns,
       baseColumns,
       tableMenuOptions,
       handleMenuSelect,
-      gridItemCount,
-      gridCollapsedRows,
     }
   },
   render() {
@@ -218,13 +221,20 @@ const TableView = defineComponent({
         </NCard>
         <NCard title="基础使用" style={['margin-top: 18px']}>
           <RayTable
-            title="基础使用"
+            title={h(
+              NSwitch,
+              {
+                onUpdateValue: (value: boolean) => (this.tableLoading = value),
+              },
+              {},
+            )}
             data={this.tableData}
             columns={this.baseColumns}
             action={false}
             pagination={{
               pageSize: 10,
             }}
+            loading={this.tableLoading}
           >
             {{
               tableFooter: () => '表格的底部内容区域，有时候你可能会用上',

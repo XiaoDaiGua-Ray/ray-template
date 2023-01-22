@@ -14,6 +14,7 @@ export const useSetting = defineStore(
       reloadRouteSwitch: true, // 刷新路由开关
       menuTagSwitch: true, // 多标签页开关
       naiveLocal: getDefaultNaiveLocal(), // `naive ui` 语言包
+      spinSwitch: false, // 全屏加载
     })
     const { locale } = useI18n()
 
@@ -33,9 +34,15 @@ export const useSetting = defineStore(
      * @param key `settingState` 对应开关属性值
      *
      * @remark 仅适用于值为 `boolean` 的切换
+     * @remark 不知道如何写: 返回属性中所有指定类型值... 如果有知道的一定要私信告知一下
      */
     const changeSwitcher = (bool: boolean, key: keyof typeof settingState) => {
-      ;(settingState[key] as unknown) = bool
+      if (
+        Object.hasOwn(settingState, key) &&
+        typeof settingState[key] === 'boolean'
+      ) {
+        ;(settingState[key] as unknown) = bool
+      }
     }
 
     return {

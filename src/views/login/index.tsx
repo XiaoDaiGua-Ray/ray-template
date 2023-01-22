@@ -25,6 +25,7 @@ const Login = defineComponent({
     const { height: windowHeight } = useWindowSize()
     const settingStore = useSetting()
     const { updateLocale } = settingStore
+
     return {
       ...toRefs(state),
       windowHeight,

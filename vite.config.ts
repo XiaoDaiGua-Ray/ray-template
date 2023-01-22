@@ -8,7 +8,7 @@ import {
   useSVGIcon,
 } from './vite-plugin/index'
 
-import vueJsx from '@vitejs/plugin-vue-jsx'
+import ViteVueJSX from '@vitejs/plugin-vue-jsx'
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import ViteInspect from 'vite-plugin-inspect'
 import viteSvgLoader from 'vite-svg-loader'
@@ -54,7 +54,7 @@ export default defineConfig(async ({ mode }) => {
     },
     plugins: [
       vue({ reactivityTransform: true }),
-      vueJsx(),
+      ViteVueJSX(),
       title,
       ViteInspect(), // 仅适用于开发模式(检查 `Vite` 插件的中间状态)
       VueI18nPlugin(),

@@ -11,14 +11,18 @@ import { useSetting } from '@/store'
 const Layout = defineComponent({
   name: 'Layout',
   setup() {
-    const menuStore = useSetting()
+    const settingStore = useSetting()
+
     const { height: windowHeight } = useWindowSize()
-    const modelReloadRoute = computed(() => menuStore.reloadRouteSwitch)
-    const modelMenuTagSwitch = computed(() => menuStore.menuTagSwitch)
+    const {
+      themeValue,
+      reloadRouteSwitch: modelReloadRoute,
+      menuTagSwitch: modelMenuTagSwitch,
+    } = storeToRefs(settingStore)
     const cssVarsRef = computed(() => {
       let cssVar = {}
 
-      if (menuStore.menuTagSwitch) {
+      if (settingStore.menuTagSwitch) {
         cssVar = {
           '--layout-content-height': 'calc(100% - 110px)',
         }
@@ -40,12 +44,13 @@ const Layout = defineComponent({
       modelMenuTagSwitch,
       cssVarsRef,
       copyright,
+      themeValue,
     }
   },
   render() {
     return (
       <div
-        class="layout"
+        class={['layout', this.themeValue ? 'layout--dark' : '']}
         style={[`height: ${this.windowHeight}px`, this.cssVarsRef]}
       >
         <NLayout class="layout-full" hasSider>
