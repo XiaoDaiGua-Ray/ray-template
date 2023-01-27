@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { constantRoutes } from './routes'
-import { getCache } from '@/utils/cache'
+import { getCache, setCache } from '@/utils/cache'
 
 import type { App } from 'vue'
 
@@ -42,10 +42,18 @@ export const permissionRouter = () => {
   router.beforeEach((to, from, next) => {
     const token = getCache('token')
     const route = getCache('menuKey')
+    console.log('route', route)
+    console.log('token', token)
 
     if (token !== 'no') {
       if (to.path === '/' || from.path === '/login') {
-        next(route)
+        if (route !== 'no') {
+          next(route)
+        } else {
+          next('/dashboard')
+
+          setCache('menuKey', '/dashboard')
+        }
       } else {
         next()
       }

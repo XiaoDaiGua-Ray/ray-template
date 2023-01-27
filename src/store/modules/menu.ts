@@ -1,6 +1,7 @@
-import { getCache, setCache } from '@/utils/cache'
 import { NEllipsis } from 'naive-ui'
 import RayIcon from '@/components/RayIcon/index'
+
+import { getCache, setCache } from '@/utils/cache'
 
 import type { MenuOption } from 'naive-ui'
 import type { RouteRecordRaw, RouteMeta } from 'vue-router'
@@ -145,6 +146,9 @@ export const useMenu = defineStore('menu', () => {
     () => route.fullPath,
     (newData) => {
       updateMenuKeyWhenRouteUpdate(newData)
+    },
+    {
+      immediate: true,
     },
   )
 
