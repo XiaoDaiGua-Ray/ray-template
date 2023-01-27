@@ -164,6 +164,9 @@ export const buildOptions = (mode: string): BuildOptions => {
 /**
  *
  * @param options 自定义打包配置参数
+ *
+ * @remark 移除 console debugger 会有严重的副作用, 如果 console 语句中含有变量输出, 则会阻止移除
+ * @remark console 可能会导致内存泄漏, 请注意使用
  */
 export const useViteBuildPlugin = (options?: BuildOptions) => {
   const defaultPlugin: BuildOptions = {
@@ -171,7 +174,7 @@ export const useViteBuildPlugin = (options?: BuildOptions) => {
     assetsDir: 'assets', // 指定静态资源存放路径
     assetsInlineLimit: 4096, // 小于这个数字(字节)的静态资产文件将被内联为(base64)
     cssCodeSplit: true, // 拆分css代码
-    minify: 'esbuild', // 指定使用混淆器(terser|esbuild)
+    minify: 'esbuild', // 指定使用混淆器 (terser | esbuild)
     sourcemap: false,
     terserOptions: {
       compress: {

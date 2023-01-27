@@ -42,8 +42,6 @@ export const permissionRouter = () => {
   router.beforeEach((to, from, next) => {
     const token = getCache('token')
     const route = getCache('menuKey')
-    console.log('route', route)
-    console.log('token', token)
 
     if (token !== 'no') {
       if (to.path === '/' || from.path === '/login') {
