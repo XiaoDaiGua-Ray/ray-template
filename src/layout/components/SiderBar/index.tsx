@@ -19,8 +19,9 @@ import SettingDrawer from './components/SettingDrawer/index'
 import { useSetting } from '@/store'
 import { useLanguageOptions } from '@/language/index'
 import { useAvatarOptions } from './hook'
-import { removeCache, getCache } from '@/utils/cache'
+import { getCache } from '@/utils/cache'
 import screenfull from 'screenfull'
+import { logout } from '@/utils/user'
 
 import type { IconEventMapOptions, IconEventMap } from './type'
 
@@ -110,9 +111,7 @@ const SiderBar = defineComponent({
           positiveText: '确定',
           negativeText: '不确定',
           onPositiveClick: () => {
-            window.$message.info('账号退出中...')
-            removeCache('all-sessionStorage')
-            setTimeout(() => window.location.reload(), 300)
+            logout()
           },
         })
       } else {

@@ -1,6 +1,7 @@
 import { NForm, NFormItem, NInput, NButton } from 'naive-ui'
 import { setCache } from '@/utils/cache'
 import { useSpin } from '@/spin'
+import { useSignin } from '@/store'
 
 import type { FormInst } from 'naive-ui'
 
@@ -8,6 +9,9 @@ const Signin = defineComponent({
   name: 'Signin',
   setup() {
     const { t } = useI18n()
+    const signinStore = useSignin()
+
+    const { signin } = signinStore
 
     const useSigninForm = () => ({
       name: 'ray',
@@ -35,16 +39,18 @@ const Signin = defineComponent({
         if (!valid) {
           useSpin(true)
 
-          setTimeout(() => {
-            router.push('/dashboard')
+          if (signin(signinForm.value) === 0) {
+            setTimeout(() => {
+              router.push('/dashboard')
 
-            useSpin(false)
+              useSpin(false)
 
-            window.$message.success(`欢迎${signinForm.value.name}登陆~`)
+              window.$message.success(`欢迎${signinForm.value.name}登陆~`)
 
-            setCache('token', 'tokenValue')
-            setCache('person', signinForm.value)
-          }, 2 * 1000)
+              setCache('token', 'tokenValue')
+              setCache('person', signinForm.value)
+            }, 2 * 1000)
+          }
         } else {
           window.$message.error('不可以这样哟, 不可以哟')
         }

@@ -15,6 +15,8 @@ declare module 'vue-router' {
     i18nKey: string
     icon?: string
     windowOpen?: string
+    role?: string[]
+    hidden?: boolean
   }
 }
 

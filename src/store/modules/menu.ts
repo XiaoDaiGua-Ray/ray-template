@@ -2,9 +2,10 @@ import { NEllipsis } from 'naive-ui'
 import RayIcon from '@/components/RayIcon/index'
 
 import { getCache, setCache } from '@/utils/cache'
+import { validRole } from '@/router/basic'
 
 import type { MenuOption } from 'naive-ui'
-import type { RouteRecordRaw, RouteMeta } from 'vue-router'
+import type { RouteMeta } from 'vue-router'
 
 export const useMenu = defineStore('menu', () => {
   const router = useRouter()
@@ -51,6 +52,7 @@ export const useMenu = defineStore('menu', () => {
       menuState.menuKey = key
 
       router.push(`${item.path}`)
+
       setCache('menuKey', key)
     }
   }
@@ -81,55 +83,56 @@ export const useMenu = defineStore('menu', () => {
 
   /**
    *
-   * 获取菜单列表
-   * 缓存菜单
+   * @remark 初始化菜单列表, 并且按照权限过滤
+   * @remark 如果权限发生变动, 则会触发强制弹出页面并且重新登陆
    */
   const setupAppRoutes = () => {
     const layout = router.getRoutes().find((route) => route.name === 'layout')
 
-    const resolveRoutes = (routes: RouteRecordRaw[], index: number) => {
+    const resolveRoutes = (routes: IMenuOptions[], index: number) => {
       return routes.map((curr) => {
         if (curr.children?.length) {
-          curr.children = resolveRoutes(
-            curr.children as RouteRecordRaw[],
-            index++,
-          )
+          curr.children = resolveRoutes(curr.children, index++)
         }
+
+        const { meta } = curr
 
         const route = {
           ...curr,
           key: curr.path,
           label: () =>
             h(NEllipsis, null, {
-              default: () => t(`GlobalMenuOptions.${curr!.meta!.i18nKey}`),
+              default: () => t(`GlobalMenuOptions.${meta!.i18nKey}`),
             }),
         }
+
         const expandIcon = {
           icon: () =>
             h(
               RayIcon,
               {
-                name: curr?.meta?.icon as string,
+                name: meta!.icon as string,
                 size: 20,
               },
               {},
             ),
         }
 
-        const attr = curr.meta?.icon
+        const attr: IMenuOptions = meta?.icon
           ? Object.assign({}, route, expandIcon)
           : route
 
-        // 初始化 `menu tag`
         if (curr.path === cacheMenuKey) {
           menuState.menuTagOptions.push(attr)
         }
+
+        attr.show = validRole(curr)
 
         return attr
       })
     }
 
-    menuState.options = resolveRoutes(layout?.children as RouteRecordRaw[], 0)
+    menuState.options = resolveRoutes(layout?.children as IMenuOptions[], 0)
   }
 
   /**
