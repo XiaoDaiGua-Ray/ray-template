@@ -41,14 +41,14 @@ const Signin = defineComponent({
 
           if (signin(signinForm.value) === 0) {
             setTimeout(() => {
-              router.push('/dashboard')
-
               useSpin(false)
 
               window.$message.success(`欢迎${signinForm.value.name}登陆~`)
 
               setCache('token', 'tokenValue')
               setCache('person', signinForm.value)
+
+              router.push('/dashboard')
             }, 2 * 1000)
           }
         } else {

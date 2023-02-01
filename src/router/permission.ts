@@ -42,8 +42,20 @@ export const permissionRouter = (router: Router) => {
     const { role } = storeToRefs(useSignin())
     const { meta } = to
 
+    const hasRole = () => {
+      if (meta.role) {
+        if (meta.role.length === 0) {
+          return true
+        } else {
+          return meta.role.includes(role.value)
+        }
+      } else {
+        return true
+      }
+    }
+
     if (token !== 'no') {
-      if (meta?.role?.includes(role.value)) {
+      if (hasRole()) {
         if (to.path === '/' || from.path === '/login') {
           if (route !== 'no') {
             next(route)
