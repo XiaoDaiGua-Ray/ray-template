@@ -23,27 +23,38 @@
  */
 
 import { getCache, setCache } from '@/utils/cache'
+import { useSignin } from '@/store'
 
-import type { Router } from 'vue-router'
+import type { Router, NavigationGuardNext } from 'vue-router'
 
 export const permissionRouter = (router: Router) => {
   const { beforeEach } = router
 
+  const redirectToDashboard = (next: NavigationGuardNext) => {
+    next('/dashboard')
+
+    setCache('menuKey', '/dashboard')
+  }
+
   beforeEach((to, from, next) => {
     const token = getCache('token')
     const route = getCache('menuKey')
+    const { role } = storeToRefs(useSignin())
+    const { meta } = to
 
     if (token !== 'no') {
-      if (to.path === '/' || from.path === '/login') {
-        if (route !== 'no') {
-          next(route)
+      if (meta?.role?.includes(role.value)) {
+        if (to.path === '/' || from.path === '/login') {
+          if (route !== 'no') {
+            next(route)
+          } else {
+            redirectToDashboard(next)
+          }
         } else {
-          next('/dashboard')
-
-          setCache('menuKey', '/dashboard')
+          next()
         }
       } else {
-        next()
+        redirectToDashboard(next)
       }
     } else {
       if (to.path === '/' || from.path === '/login') {

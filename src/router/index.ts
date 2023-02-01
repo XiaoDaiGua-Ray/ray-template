@@ -1,6 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { constantRoutes } from './routes'
-import { getCache, setCache } from '@/utils/cache'
 
 import { permissionRouter as _permissionRouter } from './permission'
 
