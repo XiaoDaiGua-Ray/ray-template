@@ -147,3 +147,15 @@ npm run preview
 > 仅支持现代浏览器，不支持 `IE`
 
 ## 最后，希望大家搬砖愉快
+
+## 贡献者
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
