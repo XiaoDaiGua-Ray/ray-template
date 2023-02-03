@@ -1,0 +1,25 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "commitConvention": "angular",
+  "contributors": [
+    {
+      "login": "yunkuangao",
+      "name": "Cloud",
+      "avatar_url": "https://avatars.githubusercontent.com/u/40163747?v=4",
+      "profile": "https://heartofyun.com",
+      "contributions": [
+        "tool"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "skipCi": true,
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "projectName": "xiaodaigua-ray.github.io",
+  "projectOwner": "XiaoDaiGua-Ray"
+}
