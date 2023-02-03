@@ -1,5 +1,9 @@
 # `Ray Template`
 
+## 感谢
+
+> 感谢 <https://yunkuangao.me/> 对于本人的支持。
+
 ## 提示
 
 > 项目默认启用严格模式 `eslint`，但是由于 `vite-plugin-eslint` 插件优先级最高，所以如果出现自动导入类型错误提示，请优先解决其他问题。
