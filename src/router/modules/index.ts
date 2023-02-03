@@ -6,8 +6,19 @@ import scrollReveal from './scroll-reveal'
 import axios from './axios'
 import table from './table'
 import doc from './doc'
+import docLocal from './doc-local'
 
-const routes = [dashboard, echart, table, axios, scrollReveal, error, doc, reyl]
+const routes = [
+  dashboard,
+  echart,
+  table,
+  axios,
+  scrollReveal,
+  error,
+  doc,
+  docLocal,
+  reyl,
+]
 
 export default routes
 

@@ -27,13 +27,25 @@ const RayLink = defineComponent({
         key: 'ray-js-note',
         src: 'https://note.youdao.com/s/ObWEe2BB',
         tooltip: 'Ray的前端学习笔记',
-        icon: 'https://avatars.githubusercontent.com/u/51957438?v=4',
+        icon: 'https://yunkuangao.com/images/longmao.jpeg',
       },
       {
         key: 'ray-js-cover',
         src: 'https://note.youdao.com/s/IC8xKPdB',
         tooltip: 'Ray的面试题总结',
-        icon: 'https://avatars.githubusercontent.com/u/51957438?v=4',
+        icon: 'https://yunkuangao.com/images/longmao.jpeg',
+      },
+      {
+        key: 'ray-template-doc',
+        src: 'https://xiaodaigua-ray.github.io/ray-template-doc/',
+        tooltip: 'Ray Template Doc',
+        icon: 'https://yunkuangao.com/images/longmao.jpeg',
+      },
+      {
+        key: 'ray-template-doc-out',
+        src: 'https://ray.yunkuangao.com/ray-template-doc/',
+        tooltip: 'Ray Template Doc (国内地址)',
+        icon: 'https://yunkuangao.com/images/longmao.jpeg',
       },
     ]
 

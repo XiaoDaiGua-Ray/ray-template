@@ -8,7 +8,8 @@
     "scrollReveal": "Scroll Reveal",
     "Axios": "Axios Request",
     "Table": "Table",
-    "Doc": "Doc"
+    "Doc": "Doc",
+    "DocLocal": "Doc (China)"
   },
   "LayoutHeaderTooltipOptions": {
     "Reload": "Reload Current Page",
