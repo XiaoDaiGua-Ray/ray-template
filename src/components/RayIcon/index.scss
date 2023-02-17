@@ -1,5 +1,16 @@
 .ray-icon {
+  width: var(--ray-icon-width);
+  height: var(--ray-icon-height);
   border: none;
   outline: none;
-  @include flexCenter;
+  text-align: center;
+  display: inline-block;
+  position: relative;
+  fill: currentColor;
+  transform: translateZ(0);
+
+  & svg[rayIconAttribute="ray-icon"] {
+    width: var(--ray-icon-width);
+    height: var(--ray-icon-height);
+  }
 }

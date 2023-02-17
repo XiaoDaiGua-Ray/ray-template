@@ -43,7 +43,7 @@ const RayLink = defineComponent({
       },
       {
         key: 'ray-template-doc-out',
-        src: 'https://ray.yunkuangao.com/ray-template-doc/',
+        src: 'https://ray-template.yunkuangao.com/',
         tooltip: 'Ray Template Doc (国内地址)',
         icon: 'https://yunkuangao.com/images/longmao.jpeg',
       },

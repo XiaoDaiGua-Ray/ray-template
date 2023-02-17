@@ -16,7 +16,7 @@ const RayIcon = defineComponent({
   props: {
     color: {
       type: String,
-      default: '',
+      default: 'currentColor',
     },
     prefix: {
       type: String,
@@ -46,25 +46,32 @@ const RayIcon = defineComponent({
   setup(props) {
     const modelColor = computed(() => props.color)
     const symbolId = computed(() => `#${props.prefix}-${props.name}`)
+    const cssVars = computed(() => {
+      const cssVar = {
+        '--ray-icon-width': props.width
+          ? props.width + 'px'
+          : props.size + 'px',
+        '--ray-icon-height': props.width
+          ? props.height + 'px'
+          : props.size + 'px',
+      }
+
+      return cssVar
+    })
 
     return {
       modelColor,
       symbolId,
+      cssVars,
     }
   },
   render() {
     return (
-      <div class={`ray-icon ${this.customClassName}`}>
-        <svg
-          ariaHidden={true}
-          style={{
-            width: `${this.width ? this.width : this.size}px`,
-            height: `${this.height ? this.height : this.size}px`,
-          }}
-        >
+      <span class={['ray-icon', this.customClassName]} style={[this.cssVars]}>
+        <svg rayIconAttribute="ray-icon" ariaHidden={true}>
           <use xlink:href={this.symbolId} fill={this.modelColor} />
         </svg>
-      </div>
+      </span>
     )
   },
 })
