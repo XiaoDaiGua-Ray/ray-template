@@ -81,12 +81,22 @@ const RayChart = defineComponent({
   name: 'RayChart',
   props: {
     width: {
-      /* `chart` 容器宽度, 默认撑满 */
+      /**
+       *
+       * chart 容器初始化宽度
+       *
+       * 如果未能继承宽度, 则会以 200px 宽度填充
+       */
       type: String,
       default: '100%',
     },
     height: {
-      /* `chart` 容器高度, 默认撑满 */
+      /**
+       *
+       * chart 容器初始化高度
+       *
+       * 如果未能继承高度, 则会以 200px 宽度填充
+       */
       type: String,
       default: '100%',
     },
