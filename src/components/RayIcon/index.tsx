@@ -39,8 +39,14 @@ const RayIcon = defineComponent({
       default: 0,
     },
     customClassName: {
+      /** 自定义 class name */
       type: String,
       default: '',
+    },
+    depth: {
+      /** 图标深度 */
+      type: Number,
+      default: 1,
     },
   },
   setup(props) {
@@ -51,9 +57,10 @@ const RayIcon = defineComponent({
         '--ray-icon-width': props.width
           ? props.width + 'px'
           : props.size + 'px',
-        '--ray-icon-height': props.width
+        '--ray-icon-height': props.height
           ? props.height + 'px'
           : props.size + 'px',
+        '--ray-icon-depth': props.depth,
       }
 
       return cssVar

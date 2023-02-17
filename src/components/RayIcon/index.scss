@@ -1,13 +1,14 @@
 .ray-icon {
+  position: relative;
   width: var(--ray-icon-width);
   height: var(--ray-icon-height);
   border: none;
   outline: none;
   text-align: center;
   display: inline-block;
-  position: relative;
   fill: currentColor;
   transform: translateZ(0);
+  opacity: var(--ray-icon-depth);
 
   & svg[rayIconAttribute="ray-icon"] {
     width: var(--ray-icon-width);
