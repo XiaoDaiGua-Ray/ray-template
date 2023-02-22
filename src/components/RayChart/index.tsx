@@ -17,6 +17,7 @@ import {
   PieChart,
   CandlestickChart,
   ScatterChart,
+  PictorialBarChart,
 } from 'echarts/charts' // 系列类型(后缀都为 `SeriesOption`)
 import { LabelLayout, UniversalTransition } from 'echarts/features' // 标签自动布局, 全局过渡动画等特性
 import { CanvasRenderer } from 'echarts/renderers' // `echarts` 渲染器
@@ -131,15 +132,17 @@ const RayChart = defineComponent({
       default: false,
     },
     options: {
-      type: Object,
+      type: Object as PropType<echarts.EChartsCoreOption>,
       default: () => ({}),
     },
     success: {
       /**
        *
-       * @param `chart` 实例
+       * 返回 chart 实例
        *
        * 渲染成功回调函数
+       *
+       * () => EChartsInstance
        */
       type: Function,
       default: () => ({}),
@@ -148,6 +151,8 @@ const RayChart = defineComponent({
       /**
        *
        * 渲染失败回调函数
+       *
+       * () => void
        */
       type: Function,
       default: () => ({}),
@@ -177,6 +182,11 @@ const RayChart = defineComponent({
        */
       type: Array,
       default: () => [],
+    },
+    watchOptions: {
+      /** 主动监听 options 变化 */
+      type: Boolean,
+      default: true,
     },
   },
   setup(props) {
@@ -221,11 +231,12 @@ const RayChart = defineComponent({
         PieChart,
         CandlestickChart,
         ScatterChart,
+        PictorialBarChart,
       ]) // 注册类型
 
       echarts.use([LabelLayout, UniversalTransition]) // 注册布局, 过度效果
 
-      // 如果业务场景中需要 `svg` 渲染器, 手动导入渲染器后使用该行代码即可
+      // 如果业务场景中需要 `svg` 渲染器, 手动导入渲染器后使用该行代码即可(不过为了体积考虑, 移除了 SVG 渲染器)
       // echarts.use([props.canvasRender ? CanvasRenderer : SVGRenderer])
       echarts.use([CanvasRenderer]) // 注册渲染器
 
@@ -300,6 +311,8 @@ const RayChart = defineComponent({
         props.success?.(echartInstance)
       } catch (e) {
         props.error?.()
+
+        console.error(e)
       }
     }
 
@@ -368,6 +381,17 @@ const RayChart = defineComponent({
         }
       },
     )
+
+    if (props.watchOptions) {
+      watch(
+        () => props.watchOptions,
+        () => {
+          const options = useMergeOptions()
+
+          echartInstance?.setOption(options)
+        },
+      )
+    }
 
     onBeforeMount(async () => {
       await registerChartCore()
