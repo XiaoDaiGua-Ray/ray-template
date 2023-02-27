@@ -63,7 +63,6 @@ const Axios = defineComponent({
         <NLayoutHeader bordered>
           <NCard title="请求函数">
             基于 axios 封装, 能够自动取消连续请求, 避免重复渲染造成问题.
-            可在该示例中测试, 并且打开控制台的网络选项卡查看
           </NCard>
         </NLayoutHeader>
         <NLayoutHeader bordered>

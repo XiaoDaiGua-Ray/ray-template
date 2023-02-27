@@ -1,28 +1,30 @@
+/**
+ *
+ * @author Ray <https://github.com/XiaoDaiGua-Ray>
+ *
+ * @date 2023-02-27
+ *
+ * @workspace ray-template
+ *
+ * @remark 今天也是元气满满撸代码的一天
+ */
+
+/**
+ *
+ * 为什么要写这个文件在这儿多此一举呢:
+ *   - 考虑到可能需要什么特殊操作, 所以提前写在这儿了
+ *   - 可以个性化配置一些东西, 所有配置都会合并到 axios instance config 中
+ *   - 当然, 你也可以直接使用 instance
+ */
+
 import request from './instance'
 
 import type { AxiosRequestConfig } from 'axios'
 
-let controller: AbortController
-
 const useRequest = (config: AxiosRequestConfig) => {
-  controller && controller.abort() // 调用控制器, 取消请求
-
-  controller = new AbortController() // 实例化控制器对象(可以中止一个或多个 `Web` 请求)
-
-  const cfg = Object.assign({}, config, {
-    signal: controller.signal, // 取消请求信号
-  })
+  const cfg = Object.assign({}, config, {})
 
   return request(cfg)
 }
 
 export default useRequest
-
-/**
- *
- * 使用 `axios` 实例
- *
- * 可以自动取消重复请求部分
- *
- * 使用该方法进行二次的请求封装, 然后可以使用 `import { xxx } from '@use-api/xxx' 导入
- */

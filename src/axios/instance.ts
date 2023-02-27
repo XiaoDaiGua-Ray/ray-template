@@ -1,8 +1,22 @@
+/**
+ *
+ * @author Ray <https://github.com/XiaoDaiGua-Ray>
+ *
+ * @date 2022-11-18
+ *
+ * @workspace ray-template
+ *
+ * @remark 今天也是元气满满撸代码的一天
+ */
+
 import axios from 'axios'
 import { useDetermineEnv } from '@use-utils/hook'
+import RequestCanceler from './canceler'
 
 import type { RawAxiosRequestHeaders, AxiosRequestConfig } from 'axios'
 import type { RequestHeaderOptions } from './type'
+
+const canceler = new RequestCanceler()
 
 /**
  *
@@ -26,6 +40,9 @@ const server = axios.create({
   baseURL: '', // `import.meta.env`,
   withCredentials: false, // 是否允许跨域携带 `cookie`
   timeout: 5 * 1000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 })
 
 server.interceptors.request.use(
@@ -47,6 +64,9 @@ server.interceptors.request.use(
       },
     ]) // 自定义请求头
 
+    canceler.removePendingRequest(request) // 检查是否存在重复请求, 若存在则取消已发的请求
+    canceler.addPendingRequest(request) // 把当前的请求信息添加到 pendingRequest 表中
+
     return request
   },
   (error) => {
@@ -56,11 +76,15 @@ server.interceptors.request.use(
 
 server.interceptors.response.use(
   (response) => {
+    canceler.removePendingRequest(response.config)
+
     const { data } = response
 
     return Promise.resolve(data)
   },
   (error) => {
+    canceler.removePendingRequest(error.config || {})
+
     return Promise.reject(error)
   },
 )
