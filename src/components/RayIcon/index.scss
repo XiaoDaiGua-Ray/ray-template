@@ -5,7 +5,9 @@
   border: none;
   outline: none;
   text-align: center;
-  display: inline-block;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
   fill: currentColor;
   transform: translateZ(0);
   opacity: var(--ray-icon-depth);

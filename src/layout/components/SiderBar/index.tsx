@@ -42,6 +42,9 @@ const SiderBar = defineComponent({
     const modelDrawerPlacement = ref(settingStore.drawerPlacement)
     const showSettings = ref(false)
     const person = getCache('person')
+    const spaceItemStyle = {
+      display: 'flex',
+    }
 
     /**
      *
@@ -129,6 +132,7 @@ const SiderBar = defineComponent({
       updateLocale,
       handlePersonSelect,
       person,
+      spaceItemStyle,
     }
   },
   render() {
@@ -139,7 +143,7 @@ const SiderBar = defineComponent({
           align="center"
           justify="space-between"
         >
-          <NSpace align="center">
+          <NSpace align="center" itemStyle={this.spaceItemStyle}>
             {this.leftIconOptions.map((curr) => (
               <NTooltip>
                 {{
@@ -156,7 +160,7 @@ const SiderBar = defineComponent({
               </NTooltip>
             ))}
           </NSpace>
-          <NSpace align="center">
+          <NSpace align="center" itemStyle={this.spaceItemStyle}>
             {this.rightTooltipIconOptions.map((curr) => (
               <RayTooltipIcon
                 iconName={curr.name}
