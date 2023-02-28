@@ -50,7 +50,7 @@ export default class RequestCanceler {
    * @remark 给请求体添加 signal 属性, 用于取消请求
    */
   addPendingRequest(config: AxiosRequestConfig) {
-    const requestKey: string = this.generateRequestKey(config)
+    const requestKey = this.generateRequestKey(config)
 
     if (!this.pendingRequest.has(requestKey)) {
       const controller = new AbortController()
@@ -75,7 +75,7 @@ export default class RequestCanceler {
     const requestKey = this.generateRequestKey(config)
 
     if (this.pendingRequest.has(requestKey)) {
-      ;(this.pendingRequest.get(requestKey) as AbortController).abort()
+      this.pendingRequest.get(requestKey)!.abort()
 
       this.pendingRequest.delete(requestKey)
     }
