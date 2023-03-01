@@ -1,4 +1,4 @@
-import { getNaiveLocal, getDefaultNaiveLocal } from '@/language/index'
+import { naiveLocales, getDefaultNaiveLocal } from '@/language/index'
 
 export const useSetting = defineStore(
   'setting',
@@ -21,7 +21,7 @@ export const useSetting = defineStore(
     const updateLocale = (key: string) => {
       // TODO: 修改语言
       locale.value = key
-      settingState.naiveLocal = getNaiveLocal(key)
+      settingState.naiveLocal = naiveLocales(key)
     }
 
     const changePrimaryColor = (value: string) => {

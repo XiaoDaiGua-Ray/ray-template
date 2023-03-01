@@ -9,14 +9,59 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { createI18n } from 'vue-i18n'
-import messages from '@intlify/unplugin-vue-i18n/messages' // 导入所有语言包
-import { zhCN, dateZhCN } from 'naive-ui' // 导入 `naive ui` 中文包
-import { enUS, dateEnUS } from 'naive-ui' // 导入 `naive ui` 英文包
+/**
+ *
+ * 注册 `vue-i18n`
+ *
+ * 预设 `localeLanguage` 作为缓存 `key`
+ *
+ * 预设中文作为基础语言
+ *
+ * `naive ui` 语言包切换
+ *
+ * 注意:
+ *   - 因使用 `i18n` 提供虚拟文件注入缘故, 每次修改 `locales` 中的文件后, 需要重启项目
+ *   - 建议按照主流约定语言包命名
+ */
 
+import { createI18n } from 'vue-i18n'
+
+import { naiveLocales } from './language'
 import { getCache } from '@use-utils/cache'
 
+export { naiveLocales, localOptions } from './language'
+
 import type { App } from 'vue'
+
+/**
+ *
+ * @returns 整合后的语言包
+ *
+ * @remark 自动归并 locales 下所有 json 语言包, 需要注意语言包名称问题(必须统一)
+ * @remark 注意 key 的重复问题, 如果需要多模块区分语言包, 则需要保证 key 的唯一性, 否则会被覆盖
+ */
+export const getMatchLanguageModule = () => {
+  const msg = {}
+  const reg = /([^\\/]+)\.json$/i
+
+  try {
+    const modules = import.meta.glob('../../locales/**', {
+      eager: true,
+      as: 'raw',
+    })
+
+    const moduleKeys = Object.keys(modules)
+    moduleKeys.forEach((curr) => {
+      const k = curr.match(reg)?.[1] as string
+
+      msg[k] = Object.assign({}, JSON.parse(modules[curr]))
+    })
+  } catch (e) {
+    console.error(e)
+  }
+
+  return msg
+}
 
 /**
  *
@@ -25,10 +70,9 @@ import type { App } from 'vue'
  * @remak 未避免出现加载语言错误问题, 故而在 `main.ts` 注册时, 应优先加载 `i18n` 避免出现该问题
  */
 export const getDefaultLocal = () => {
-  const locale: string =
-    getCache('localeLanguage', 'localStorage') !== 'no'
-      ? getCache('localeLanguage', 'localStorage')
-      : 'zh-CN'
+  const catchLanguage = getCache('localeLanguage', 'localStorage')
+
+  const locale: string = catchLanguage !== 'no' ? catchLanguage : 'zh-CN'
 
   return locale
 }
@@ -39,50 +83,10 @@ export const setupI18n = (app: App<Element>) => {
   const i18n = createI18n({
     locale,
     allowComposition: true,
-    messages,
+    messages: getMatchLanguageModule(),
   })
 
   app.use(i18n)
-}
-
-export const useLanguageOptions = () => [
-  {
-    key: 'zh-CN',
-    label: '中文(简体)',
-  },
-  {
-    key: 'en-US',
-    label: 'English(US)',
-  },
-]
-
-/**
- *
- * @param key 切换对应语言
- * @returns 组件库对应语言包
- *
- * @remark 受打包体积影响. 如果有新的语言添加, 则需要手动引入对应语言包(https://www.naiveui.com/zh-CN/dark/docs/i18n)
- */
-export const getNaiveLocal = (key: string) => {
-  switch (key) {
-    case 'zh-CN':
-      return {
-        local: zhCN,
-        dateLocal: dateZhCN,
-      }
-
-    case 'en-US':
-      return {
-        local: enUS,
-        dateLocal: dateEnUS,
-      }
-
-    default:
-      return {
-        local: zhCN,
-        dateLocal: dateZhCN,
-      }
-  }
 }
 
 /**
@@ -94,18 +98,5 @@ export const getNaiveLocal = (key: string) => {
 export const getDefaultNaiveLocal = () => {
   const local = getDefaultLocal()
 
-  return getNaiveLocal(local)
+  return naiveLocales(local)
 }
-
-/**
- *
- * 注册 `vue-i18n`
- *
- * 注意: 因使用 `i18n` 提供虚拟文件注入缘故, 每次修改 `locales` 中的文件后, 需要重启项目
- *
- * 预设 `localeLanguage` 作为缓存 `key`
- *
- * 预设中文作为基础语言
- *
- * `naive ui` 语言包切换
- */

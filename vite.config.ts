@@ -118,6 +118,9 @@ export default defineConfig(async ({ mode }) => {
     optimizeDeps: {
       include: ['vue', 'vue-router', 'pinia', 'vue-i18n', '@vueuse/core'],
     },
+    esbuild: {
+      pure: ['console.log'],
+    },
     build: {
       ...buildOptions(mode),
       rollupOptions: {

@@ -98,66 +98,36 @@ export const HTMLTitlePlugin = (title: string) => {
  * @remark 打包输出文件配置
  */
 export const buildOptions = (mode: string): BuildOptions => {
-  switch (mode) {
-    case 'test':
-      return {
-        outDir: 'dist/test-dist',
-        sourcemap: true,
-        terserOptions: {
-          compress: {
-            drop_console: false,
-            drop_debugger: false,
-          },
-        },
-      }
+  const outDirMap = {
+    test: 'dist/test-dist',
+    development: 'dist/development-dist',
+    production: 'dist/production-dist',
+    report: 'dist/report-dist',
+  }
+  const dirPath = outDirMap[mode] || 'dist/test-dist'
 
-    case 'development':
-      return {
-        outDir: 'dist/development-dist',
-        sourcemap: true,
-        terserOptions: {
-          compress: {
-            drop_console: false,
-            drop_debugger: false,
-          },
+  if (mode === 'production') {
+    return {
+      outDir: dirPath,
+      sourcemap: false,
+      terserOptions: {
+        compress: {
+          drop_console: true,
+          drop_debugger: true,
         },
-      }
-
-    case 'production':
-      return {
-        outDir: 'dist/production-dist',
-        sourcemap: false,
-        terserOptions: {
-          compress: {
-            drop_console: true,
-            drop_debugger: true,
-          },
+      },
+    }
+  } else {
+    return {
+      outDir: dirPath,
+      sourcemap: true,
+      terserOptions: {
+        compress: {
+          drop_console: false,
+          drop_debugger: false,
         },
-      }
-
-    case 'report':
-      return {
-        outDir: 'dist/report-dist',
-        sourcemap: true,
-        terserOptions: {
-          compress: {
-            drop_console: false,
-            drop_debugger: false,
-          },
-        },
-      }
-
-    default:
-      return {
-        outDir: 'dist/test-dist',
-        sourcemap: false,
-        terserOptions: {
-          compress: {
-            drop_console: true, // 打包后移除 `console`
-            drop_debugger: true, // 打包后移除 `debugger`
-          },
-        },
-      }
+      },
+    }
   }
 }
 

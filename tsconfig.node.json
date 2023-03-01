@@ -12,6 +12,7 @@
     "vite-plugin/type.ts",
     "cfg.ts",
     "src/types/cfg.ts",
-    "package.json"
+    "package.json",
+    "vite-env.d.ts"
   ]
 }

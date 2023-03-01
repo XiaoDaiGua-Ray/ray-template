@@ -12,7 +12,7 @@ import Signin from './components/Signin/index'
 import Register from './components/Register/index'
 import { useSetting } from '@/store'
 import RayIcon from '@/components/RayIcon'
-import { useLanguageOptions } from '@/language/index'
+import { localOptions } from '@/language/index'
 import RayLink from '@/components/RayLink/index'
 
 const Login = defineComponent({
@@ -41,7 +41,7 @@ const Login = defineComponent({
             Ray Template
           </NGradientText>
           <NDropdown
-            options={useLanguageOptions()}
+            options={localOptions}
             onSelect={(key) => this.updateLocale(key)}
           >
             <RayIcon customClassName="login-icon" name="language" size="18" />

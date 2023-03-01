@@ -17,7 +17,7 @@ import RayTooltipIcon from '@/components/RayTooltipIcon/index'
 import SettingDrawer from './components/SettingDrawer/index'
 
 import { useSetting } from '@/store'
-import { useLanguageOptions } from '@/language/index'
+import { localOptions } from '@/language/index'
 import { useAvatarOptions } from './hook'
 import { getCache } from '@/utils/cache'
 import screenfull from 'screenfull'
@@ -169,7 +169,7 @@ const SiderBar = defineComponent({
               />
             ))}
             <NDropdown
-              options={useLanguageOptions()}
+              options={localOptions}
               onSelect={(key: string | number) =>
                 this.updateLocale(String(key))
               }
