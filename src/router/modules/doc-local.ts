@@ -5,6 +5,6 @@ export default {
   meta: {
     i18nKey: 'DocLocal',
     icon: 'doc',
-    windowOpen: 'https://ray-template.yunkuangao.com/',
+    windowOpen: 'https://ray-template.yunkuangao.com/ray-template-doc/',
   },
 }

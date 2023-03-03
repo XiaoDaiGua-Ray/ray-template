@@ -10,6 +10,15 @@
 
 > 感谢 <https://yunkuangao.me/> 对于本人的支持。
 
+## 预览地址
+
+[点击预览](https://xiaodaigua-ray.github.io/#/)
+[点击预览(加速地址)](https://ray-template.yunkuangao.com/#/)
+
+## 文档地址
+
+[点击查看](https://xiaodaigua-ray.github.io/ray-template-doc/)
+
 ## 提示
 
 > 项目默认启用严格模式 `eslint`，但是由于 `vite-plugin-eslint` 插件优先级最高，所以如果出现自动导入类型错误提示，请优先解决其他问题。
@@ -30,14 +39,6 @@
 - 动态切换主题、贴花的 `EChart` 图
 - 带有拓展功能的表格
 - 还有一些不值一提的小东西...
-
-## 预览地址
-
-[点击预览](https://xiaodaigua-ray.github.io/#/)
-
-## 文档地址
-
-[点击查看](https://xiaodaigua-ray.github.io/ray-template-doc/)
 
 ## 拉取依赖
 
