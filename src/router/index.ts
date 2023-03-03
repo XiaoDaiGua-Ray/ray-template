@@ -4,10 +4,11 @@ import { constantRoutes } from './routes'
 import { permissionRouter as _permissionRouter } from './permission'
 
 import type { App } from 'vue'
+import type { RouteRecordRaw } from 'vue-router'
 
 export const router = createRouter({
   history: createWebHashHistory(),
-  routes: constantRoutes,
+  routes: constantRoutes as unknown as RouteRecordRaw[],
   scrollBehavior: () => ({ left: 0, top: 0 }),
 })
 

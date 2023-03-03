@@ -13,7 +13,11 @@ declare global {
     show?: boolean
     children?: IMenuOptions[]
     meta?: RouteMeta
+    breadcrumbLabel?: string
+    noLocalTitle?: string | number
   }
 
   declare interface TagMenuOptions extends IMenuOptions {}
+
+  declare type MenuKey = null | string | number
 }

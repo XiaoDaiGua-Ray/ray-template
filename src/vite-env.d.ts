@@ -17,6 +17,7 @@ declare module 'vue-router' {
     windowOpen?: string
     role?: string[]
     hidden?: boolean
+    noLocalTitle?: string | number
   }
 }
 

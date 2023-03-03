@@ -19,8 +19,10 @@ const MenuTag = defineComponent({
   name: 'MenuTag',
   setup() {
     const menuStore = useMenu()
-    const { menuTagOptions, menuKey } = storeToRefs(menuStore)
+    const { menuKey } = storeToRefs(menuStore)
     const { menuModelValueChange, spliceMenTagOptions } = menuStore
+
+    const modelMenuTagOptions = computed(() => menuStore.menuTagOptions)
 
     /**
      *
@@ -32,7 +34,7 @@ const MenuTag = defineComponent({
       spliceMenTagOptions(idx)
 
       if (menuKey.value !== '/dashboard') {
-        const options = menuTagOptions.value as MenuOption[]
+        const options = modelMenuTagOptions.value
         const length = options.length
 
         const tag = options[length - 1]
@@ -50,7 +52,7 @@ const MenuTag = defineComponent({
     }
 
     return {
-      menuTagOptions,
+      modelMenuTagOptions,
       menuModelValueChange,
       handleCloseTag,
       menuKey,
@@ -61,10 +63,10 @@ const MenuTag = defineComponent({
     return (
       <NScrollbar class="menu-tag" xScrollable>
         <NSpace class="menu-tag-sapce" wrap={false} align="center">
-          {this.menuTagOptions.map((curr, idx) => (
+          {this.modelMenuTagOptions.map((curr, idx) => (
             <NTag
               closable={
-                curr.key !== '/dashboard' && this.menuTagOptions.length > 1
+                curr.key !== '/dashboard' && this.modelMenuTagOptions.length > 1
               }
               onClose={() => this.handleCloseTag(idx)}
               type={curr.key === this.menuKey ? 'success' : 'info'}

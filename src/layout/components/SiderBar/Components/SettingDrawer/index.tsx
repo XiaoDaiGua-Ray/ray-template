@@ -38,8 +38,12 @@ const SettingDrawer = defineComponent({
     const settingStore = useSetting()
 
     const { changePrimaryColor, changeSwitcher } = settingStore
-    const { themeValue, primaryColorOverride, menuTagSwitch } =
-      storeToRefs(settingStore)
+    const {
+      themeValue,
+      primaryColorOverride,
+      menuTagSwitch,
+      breadcrumbSwitch,
+    } = storeToRefs(settingStore)
 
     const modelShow = computed({
       get: () => props.show,
@@ -61,6 +65,7 @@ const SettingDrawer = defineComponent({
       primaryColorOverride,
       menuTagSwitch,
       changeSwitcher,
+      breadcrumbSwitch,
     }
   },
   render() {
@@ -132,6 +137,14 @@ const SettingDrawer = defineComponent({
                   v-model:value={this.menuTagSwitch}
                   onUpdateValue={(bool: boolean) =>
                     this.changeSwitcher(bool, 'menuTagSwitch')
+                  }
+                />
+              </NDescriptionsItem>
+              <NDescriptionsItem label="显示面包屑">
+                <NSwitch
+                  v-model:value={this.breadcrumbSwitch}
+                  onUpdateValue={(bool: boolean) =>
+                    this.changeSwitcher(bool, 'breadcrumbSwitch')
                   }
                 />
               </NDescriptionsItem>

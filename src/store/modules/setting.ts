@@ -1,4 +1,5 @@
 import { naiveLocales, getDefaultNaiveLocal } from '@/language/index'
+import { setCache } from '@use-utils/cache'
 
 export const useSetting = defineStore(
   'setting',
@@ -15,6 +16,7 @@ export const useSetting = defineStore(
       menuTagSwitch: true, // 多标签页开关
       naiveLocal: getDefaultNaiveLocal(), // `naive ui` 语言包
       spinSwitch: false, // 全屏加载
+      breadcrumbSwitch: true, // 面包屑开关
     })
     const { locale } = useI18n()
 
@@ -22,6 +24,8 @@ export const useSetting = defineStore(
       // TODO: 修改语言
       locale.value = key
       settingState.naiveLocal = naiveLocales(key)
+
+      setCache('localeLanguage', key, 'localStorage')
     }
 
     const changePrimaryColor = (value: string) => {

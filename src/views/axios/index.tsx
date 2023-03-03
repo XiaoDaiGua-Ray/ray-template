@@ -7,6 +7,7 @@ import {
   NLayoutHeader,
   NSpace,
   NInput,
+  NButton,
 } from 'naive-ui'
 import { onAxiosTest } from '@use-api/test'
 
@@ -41,9 +42,13 @@ const Axios = defineComponent({
     ]
 
     const handleInputCityValue = async (value: string) => {
-      const cb = await onAxiosTest(value)
+      try {
+        const cb = await onAxiosTest(value)
 
-      state.weatherData = cb.data as unknown as IUnknownObjectKey[]
+        state.weatherData = cb.data as unknown as IUnknownObjectKey[]
+      } catch (e) {
+        window.$message.error('请求已被取消')
+      }
     }
 
     onBeforeMount(async () => {
@@ -62,20 +67,23 @@ const Axios = defineComponent({
       <NLayout>
         <NLayoutHeader bordered>
           <NCard title="请求函数">
-            基于 axios 封装, 能够自动取消连续请求, 避免重复渲染造成问题.
+            基于 axios 封装，能够自动取消连续请求，避免重复渲染造成问题
+            <p>
+              打开控制台 =&gt; 网络 =&gt; 使用低速3g网络 =&gt;
+              查看控制台被取消的请求
+            </p>
           </NCard>
         </NLayoutHeader>
         <NLayoutHeader bordered>
-          <NSpace
-            class="axios-header__btn"
-            align="center"
-            justify="space-between"
-          >
+          <NSpace class="axios-header__btn" align="center">
             <NInput
               v-model:value={this.inputCityValue}
               onInput={this.handleInputCityValue.bind(this)}
               placeholder="请输入城市"
             />
+            <NButton onClick={this.handleInputCityValue.bind(this, '')}>
+              搜索
+            </NButton>
           </NSpace>
         </NLayoutHeader>
         <NLayoutContent>

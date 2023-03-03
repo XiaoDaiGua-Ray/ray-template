@@ -6,6 +6,7 @@ import scrollReveal from './scroll-reveal'
 import axios from './axios'
 import table from './table'
 import doc from './doc'
+import multiMenu from './multi-menu'
 import docLocal from './doc-local'
 
 const routes = [
@@ -15,6 +16,7 @@ const routes = [
   axios,
   scrollReveal,
   error,
+  multiMenu,
   doc,
   docLocal,
   reyl,

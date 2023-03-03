@@ -15,6 +15,7 @@ import { NLayoutHeader, NSpace, NTooltip, NDropdown, NTag } from 'naive-ui'
 import RayIcon from '@/components/RayIcon/index'
 import RayTooltipIcon from '@/components/RayTooltipIcon/index'
 import SettingDrawer from './components/SettingDrawer/index'
+import Breadcrumb from './components/Breadcrumb/index'
 
 import { useSetting } from '@/store'
 import { localOptions } from '@/language/index'
@@ -39,7 +40,7 @@ const SiderBar = defineComponent({
 
     const { t } = useI18n()
     const { updateLocale, changeSwitcher } = settingStore
-    const modelDrawerPlacement = ref(settingStore.drawerPlacement)
+    const { drawerPlacement, breadcrumbSwitch } = storeToRefs(settingStore)
     const showSettings = ref(false)
     const person = getCache('person')
     const spaceItemStyle = {
@@ -127,12 +128,13 @@ const SiderBar = defineComponent({
       rightTooltipIconOptions,
       t,
       handleIconClick,
-      modelDrawerPlacement,
       showSettings,
       updateLocale,
       handlePersonSelect,
       person,
       spaceItemStyle,
+      drawerPlacement,
+      breadcrumbSwitch,
     }
   },
   render() {
@@ -159,6 +161,7 @@ const SiderBar = defineComponent({
                 }}
               </NTooltip>
             ))}
+            {this.breadcrumbSwitch ? <Breadcrumb /> : ''}
           </NSpace>
           <NSpace align="center" itemStyle={this.spaceItemStyle}>
             {this.rightTooltipIconOptions.map((curr) => (
@@ -203,7 +206,7 @@ const SiderBar = defineComponent({
         </NSpace>
         <SettingDrawer
           v-model:show={this.showSettings}
-          placement={this.modelDrawerPlacement}
+          placement={this.drawerPlacement}
         />
       </NLayoutHeader>
     )

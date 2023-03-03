@@ -28,6 +28,7 @@ import { createI18n } from 'vue-i18n'
 
 import { naiveLocales } from './language'
 import { getCache } from '@use-utils/cache'
+import { forIn, merge } from 'lodash-es'
 
 export { naiveLocales, localOptions } from './language'
 
@@ -51,10 +52,16 @@ export const getMatchLanguageModule = () => {
     })
 
     const moduleKeys = Object.keys(modules)
-    moduleKeys.forEach((curr) => {
-      const k = curr.match(reg)?.[1] as string
 
-      msg[k] = Object.assign({}, JSON.parse(modules[curr]))
+    moduleKeys.forEach((curr) => {
+      const k = curr.match(reg)?.[1] as string // 当前语言包类型(zh-CN, en-US...)
+      const content = JSON.parse(modules[curr]) // 当前语言包内容
+
+      msg[k] = merge({}, msg[k])
+
+      forIn(content, (value, ckey) => {
+        msg[k][ckey] = merge(msg[k][ckey], value)
+      })
     })
   } catch (e) {
     console.error(e)

@@ -3,7 +3,7 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import type { App } from 'vue'
 
 export { useSetting } from './modules/setting' // import { useSetting } from '@/store' 即可使用
-export { useMenu } from './modules/menu'
+export { useMenu } from './modules/menu/index'
 export { useSignin } from './modules/signin'
 
 const store = createPinia()
