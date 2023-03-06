@@ -12,12 +12,13 @@
 
 ## 预览地址
 
-[点击预览](https://xiaodaigua-ray.github.io/#/)
-[点击预览(加速地址)](https://ray-template.yunkuangao.com/#/)
+- [点击预览](https://xiaodaigua-ray.github.io/#/)
+- [点击预览(加速地址)](https://ray-template.yunkuangao.com/#/)
 
 ## 文档地址
 
-[点击查看](https://xiaodaigua-ray.github.io/ray-template-doc/)
+- [文档](https://xiaodaigua-ray.github.io/ray-template-doc/)
+- [文档(加速地址)](https://ray-template.yunkuangao.com/ray-template-doc/)
 
 ## 提示
 
@@ -36,6 +37,8 @@
 
 - 主题切换
 - 错误页
+- 面包屑
+- 标签页
 - 动态切换主题、贴花的 `EChart` 图
 - 带有拓展功能的表格
 - 还有一些不值一提的小东西...
