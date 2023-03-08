@@ -32,19 +32,22 @@ export const validRole = (options: IMenuOptions) => {
 
   const { meta, name } = options
   const hidden =
-    meta?.hidden === undefined || meta?.hidden === false ? meta?.hidden : true
+    meta?.hidden === undefined || meta?.hidden === false ? false : meta?.hidden
 
+  // 如果是超级管理员(预设为 admin), 则根据其菜单栏(hidden)字段判断是否显示
   if (BASE_ROLES.includes(role.value)) {
-    return true && hidden
+    return true && !hidden
   } else {
+    // 如果为基础路由, 不进行鉴权则根据其菜单栏(hidden)字段判断是否显示
     if (BASIC_ROUTER.includes(name)) {
-      return true && hidden
+      return true && !hidden
     }
 
+    // 判断权限是否匹配和菜单栏(hidden)字段判断是否显示
     if (meta?.role) {
-      return meta.role.includes(role.value) && hidden
+      return meta.role.includes(role.value) && !hidden
     }
 
-    return true && hidden
+    return true && !hidden
   }
 }

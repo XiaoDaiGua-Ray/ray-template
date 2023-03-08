@@ -5,6 +5,6 @@ export default {
   meta: {
     i18nKey: 'scrollReveal',
     icon: 'scroll_reveal',
-    hidden: false,
+    hidden: true,
   },
 }
