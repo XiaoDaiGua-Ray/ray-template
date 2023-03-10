@@ -21,6 +21,15 @@ import {
   NInputNumber,
   NSpace,
   NSwitch,
+  NDescriptions,
+  NDescriptionsItem,
+  NP,
+  NH6,
+  NH2,
+  NH3,
+  NUl,
+  NLi,
+  NOl,
 } from 'naive-ui'
 import RayTable from '@/components/RayTable/index'
 import RayCollapseGrid from '@/components/RayCollapseGrid/index'
@@ -147,137 +156,107 @@ const TableView = defineComponent({
   render() {
     return (
       <NLayout>
-        <NCard title="RayTable">
-          <p>
-            该组件基于 Naive UI DataTable 组件封装. 实现右键菜单, 表格标题,
-            导出为 excel 操作栏等功能
-          </p>
-          <p>RayTable 完全继承 DataTable 的所有属性与方法</p>
-          <p>
-            相关拓展 props 属性, 可以在源码位置
+        <NH2>RayTable 组件使用</NH2>
+        <NUl alignText>
+          <NLi>
+            该组件基于 Naive UI DataTable
+            组件封装。实现右键菜单、表格标题、导出为 excel 操作栏等功能
+          </NLi>
+          <NLi>RayTable 完全继承 DataTable 的所有属性与方法</NLi>
+          <NLi>
+            相关拓展 props 属性，可以在源码位置
             src/components/RayTable/src/props.ts 中查看相关代码与注释
-          </p>
-          <p>该组件可以配合 RayCollapseGird 组件使用实现可折叠搜索栏</p>
-        </NCard>
-        <NCard style={['margin-top: 18px']}>
+          </NLi>
+          <NLi>该组件可以配合 RayCollapseGird 组件使用实现可折叠搜索栏</NLi>
+        </NUl>
+        <NH2>配合 RayCollapseGird 组件使用</NH2>
+        <RayCollapseGrid
+          bordered={false}
+          collapsedRows={this.gridCollapsedRows}
+          cols={this.gridItemCount}
+          onUpdateValue={(value: boolean) =>
+            window.$message.info(
+              `我是 RayCollapseGrid 组件${value ? '收起' : '展开'}的回调函数`,
+            )
+          }
+        >
           {{
-            default: () => (
-              <NSpace vertical>
-                <NSpace style={['margin-top: 18px']}>
-                  该组件基于 NGird 实现, 但是由于 css grid 限制, 不能对于
-                  NGridItem 组件进行二次封装, 所以使用时必须配合 NGridItem
-                  使用才能实现示例效果(使用 NGridItem 包裹元素即可).
-                </NSpace>
-                <NSpace style={['margin-top: 18px']}>
-                  <NSpace align="center">
-                    数量 <NInputNumber v-model:value={this.gridItemCount} />
-                  </NSpace>
-                  <NSpace align="center">
-                    行数 <NInputNumber v-model:value={this.gridCollapsedRows} />
-                  </NSpace>
-                </NSpace>
-                <RayCollapseGrid
-                  collapsedRows={this.gridCollapsedRows}
-                  cols={this.gridItemCount}
-                  onUpdateValue={(value: boolean) =>
-                    window.$message.info(
-                      `我是 RayCollapseGrid 组件${
-                        value ? '收起' : '展开'
-                      }的回调函数`,
-                    )
-                  }
-                >
-                  {{
-                    action: () => (
-                      <>
-                        <NButton>搜索</NButton>
-                        <NButton>重置</NButton>
-                      </>
-                    ),
-                    default: () => (
-                      <>
-                        <NGridItem>
-                          <NSelect />
-                        </NGridItem>
-                        <NGridItem>
-                          <NInput />
-                        </NGridItem>
-                        <NGridItem>
-                          <NDatePicker type="datetimerange" clearable />
-                        </NGridItem>
-                        <NGridItem>
-                          <NInput />
-                        </NGridItem>
-                        <NGridItem>
-                          <NInput />
-                        </NGridItem>
-                      </>
-                    ),
-                  }}
-                </RayCollapseGrid>
-              </NSpace>
-            ),
-          }}
-        </NCard>
-        <NCard title="基础使用" style={['margin-top: 18px']}>
-          <RayTable
-            title={h(
-              NSwitch,
-              {
-                onUpdateValue: (value: boolean) => (this.tableLoading = value),
-              },
-              {},
-            )}
-            data={this.tableData}
-            columns={this.baseColumns}
-            action={false}
-            pagination={{
-              pageSize: 10,
-            }}
-            loading={this.tableLoading}
-          >
-            {{
-              tableFooter: () => '表格的底部内容区域，有时候你可能会用上',
-            }}
-          </RayTable>
-        </NCard>
-        <NCard style={['margin-top: 18px']}>
-          {{
-            header: () => (
-              <div>
-                <p>
-                  使用响应式方法代理 columns 并且打开 action
-                  则可以启用操作栏(v-model:columns)
-                </p>
-                <p>拖拽操作栏动态切换表格列</p>
-                <p>点击左右固定按钮, 即可动态固定列</p>
-                <p>点击修改列宽度, 即可拖动列修改宽度</p>
-                <p>点击导出按钮即可导出 excel 表格, 默认以列为表头输出</p>
-                <p>点击打印按钮即可打印该表格</p>
-              </div>
+            action: () => (
+              <>
+                <NButton>搜索</NButton>
+                <NButton>重置</NButton>
+              </>
             ),
             default: () => (
-              <RayTable
-                title={h(NInput, {
-                  placeholder: '请输入检索条件',
-                  style: ['width: 200px'],
-                })}
-                data={this.tableData}
-                v-model:columns={this.actionColumns}
-              />
+              <>
+                <NGridItem>
+                  <NSelect />
+                </NGridItem>
+                <NGridItem>
+                  <NInput />
+                </NGridItem>
+                <NGridItem>
+                  <NDatePicker type="datetimerange" clearable />
+                </NGridItem>
+                <NGridItem>
+                  <NInput />
+                </NGridItem>
+                <NGridItem>
+                  <NInput />
+                </NGridItem>
+              </>
             ),
           }}
-        </NCard>
-        <NCard title="右键菜单" style={['margin-top: 18px']}>
-          <RayTable
-            title="右键菜单表格"
-            action={false}
-            data={this.tableData}
-            columns={this.baseColumns}
-            rightClickMenu={this.tableMenuOptions}
-            onMenuSelect={this.handleMenuSelect.bind(this)}
-          />
-        </NCard>
+        </RayCollapseGrid>
+        <RayTable
+          style="margin-top: 18px"
+          title={h(
+            NSwitch,
+            {
+              onUpdateValue: (value: boolean) => (this.tableLoading = value),
+            },
+            {},
+          )}
+          data={this.tableData}
+          columns={this.baseColumns}
+          action={false}
+          pagination={{
+            pageSize: 10,
+          }}
+          loading={this.tableLoading}
+        >
+          {{
+            tableFooter: () => '表格的底部内容区域，有时候你可能会用上',
+          }}
+        </RayTable>
+        <NH2>RayTable 拓展功能</NH2>
+        <NP>
+          使用响应式方法代理 columns 并且打开 action
+          则可以启用操作栏(v-model:columns)
+        </NP>
+        <NP>拖拽操作栏动态切换表格列</NP>
+        <NP>点击左右固定按钮，即可动态固定列</NP>
+        <NP>点击修改列宽度，即可拖动列修改宽度</NP>
+        <NP>点击导出按钮即可导出 excel 表格，默认以列为表头输出</NP>
+        <NP>点击打印按钮即可打印该表格</NP>
+        <RayTable
+          title={h(NInput, {
+            placeholder: '请输入检索条件',
+            style: ['width: 200px'],
+          })}
+          data={this.tableData}
+          v-model:columns={this.actionColumns}
+          bordered={false}
+        />
+        <NH2>右键菜单</NH2>
+        <RayTable
+          title="右键菜单表格"
+          action={false}
+          data={this.tableData}
+          columns={this.baseColumns}
+          rightClickMenu={this.tableMenuOptions}
+          onMenuSelect={this.handleMenuSelect.bind(this)}
+        />
       </NLayout>
     )
   },

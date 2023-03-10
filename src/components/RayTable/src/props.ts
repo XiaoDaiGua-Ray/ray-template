@@ -205,7 +205,7 @@ const rayTableProps = {
      * 表格边框
      */
     type: Boolean,
-    default: true,
+    default: false,
   },
 } as const
 

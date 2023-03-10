@@ -6,6 +6,8 @@ import {
   NDescriptionsItem,
   NTag,
   NSpace,
+  NP,
+  NH6,
 } from 'naive-ui'
 import RayIcon from '@/components/RayIcon/index'
 import RayLink from '@/components/RayLink/index'
@@ -58,9 +60,28 @@ const Dashboard = defineComponent({
         span: 2,
       },
     ]
+    const technologyTagOptions = [
+      {
+        label: 'Vue3.x',
+        value: 'Vue3.x',
+      },
+      {
+        label: 'Vite4.0',
+        value: 'Vite4.0',
+      },
+      {
+        label: 'Pinia',
+        value: 'Pinia',
+      },
+      {
+        label: 'TSX',
+        value: 'TSX',
+      },
+    ]
 
     return {
       coverLetterOptions,
+      technologyTagOptions,
     }
   },
   render() {
@@ -92,6 +113,22 @@ const Dashboard = defineComponent({
               </NDescriptionsItem>
             ))}
           </NDescriptions>
+        </NCard>
+        <NCard title="项目介绍">
+          <NH6>技术栈</NH6>
+          <NP>
+            <NSpace>
+              {this.technologyTagOptions.map((curr) => (
+                <NTag key={curr.value} type="info">
+                  {curr.label}
+                </NTag>
+              ))}
+            </NSpace>
+          </NP>
+          <NH6>项目介绍</NH6>
+          <NP>
+            预设了最佳构建体验的配置与常用搬砖工具。意在提供一个简洁、快速上手的模板。
+          </NP>
         </NCard>
         <NCard title="友情链接">
           <RayLink />

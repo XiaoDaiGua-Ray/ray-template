@@ -33,10 +33,10 @@ export const collapseGridProps = {
      *
      * 卡片边框
      *
-     * 默认 `true`
+     * 默认 `false`
      */
     type: Boolean,
-    default: true,
+    default: false,
   },
   ...gridProps,
 } as const

@@ -9,6 +9,23 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
+/**
+ *
+ * <https://www.naiveui.com/zh-CN/dark/components/data-table>
+ *
+ * 完全继承 `NDataTable`, 该组件继承 `NDataTable Props` 属性和方法
+ *
+ * 实现: 抬头, 操作栏, 右键菜单功能拓展, 输出 `excel`
+ *
+ * 右键菜单功能, 需要同时启用 `showMenu` 与配置菜单选项才能正常使用
+ *
+ * 可以通过设置 `action` 为 `false` 隐藏操作栏
+ *
+ * 具体拓展 `props` 方法, 可以查看 `props.ts` 中相关注释与代码
+ *
+ * 基于 `xlsx.js` 实现输出 `excel`
+ */
+
 import './index.scss'
 import { NDataTable, NCard, NDropdown, NDivider } from 'naive-ui'
 import TableSetting from './components/TableSetting/index'
@@ -240,20 +257,3 @@ const RayTable = defineComponent({
 })
 
 export default RayTable
-
-/**
- *
- * <https://www.naiveui.com/zh-CN/dark/components/data-table>
- *
- * 完全继承 `NDataTable`, 该组件继承 `NDataTable Props` 属性和方法
- *
- * 实现: 抬头, 操作栏, 右键菜单功能拓展, 输出 `excel`
- *
- * 右键菜单功能, 需要同时启用 `showMenu` 与配置菜单选项才能正常使用
- *
- * 可以通过设置 `action` 为 `false` 隐藏操作栏
- *
- * 具体拓展 `props` 方法, 可以查看 `props.ts` 中相关注释与代码
- *
- * 基于 `xlsx.js` 实现输出 `excel`
- */

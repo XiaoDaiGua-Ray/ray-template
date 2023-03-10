@@ -1,6 +1,19 @@
 import './index.scss'
+
+import {
+  NCard,
+  NSwitch,
+  NLayout,
+  NDescriptions,
+  NDescriptionsItem,
+  NTag,
+  NSpace,
+  NP,
+  NH6,
+  NH2,
+  NH3,
+} from 'naive-ui'
 import RayChart from '@/components/RayChart/index'
-import { NCard, NSwitch } from 'naive-ui'
 
 const Echart = defineComponent({
   name: 'Echart',
@@ -200,69 +213,63 @@ const Echart = defineComponent({
   render() {
     return (
       <div class="echart">
-        <NCard title="RayChart组件使用">
-          在使用该组件时, 一定要注意根组件的高度初始化问题,
-          如果需要使用其余的图例, 只需要从 echarts 中导入对应组件, 并且使用 use
-          方法注册. 该组件实现了自动跟随模板主题切换功能, 但是动态切换损耗较大,
-          所以默认不启用
-        </NCard>
-        <NCard title="基础使用">
-          <div class="chart--container">
-            <RayChart options={this.baseOptions} />
-          </div>
-        </NCard>
-        <NCard title="渲染成功后运行回调函数">
-          <div class="chart--container">
-            <RayChart
-              options={this.basePieOptions}
-              success={this.handleChartRenderSuccess.bind(this)}
-            />
-          </div>
-        </NCard>
-        <NCard title="能跟随主题切换的可视化图">
-          <div class="chart--container">
-            <RayChart
-              autoChangeTheme
-              options={this.baseLineOptions}
-              showAria={this.chartAria}
-            />
-          </div>
-        </NCard>
-        <NCard title="不跟随主题切换的暗色主题可视化图">
-          <div class="chart--container">
-            <RayChart theme="dark" options={this.baseOptions} />
-          </div>
-        </NCard>
-        <NCard title="加载动画">
-          <NSwitch
-            v-model:value={this.chartLoading}
-            onUpdateValue={this.handleLoadingShow.bind(this)}
-            style={['padding: 18px 0']}
-          >
-            {{
-              checked: () => '隐藏加载动画',
-              unchecked: () => '显示加载动画',
-            }}
-          </NSwitch>
-          <div class="chart--container">
-            <RayChart ref="baseChartRef" options={this.baseOptions} />
-          </div>
-        </NCard>
-        <NCard title="贴画可视化图">
-          <NSwitch
-            v-model:value={this.chartAria}
-            onUpdateValue={this.handleAriaShow.bind(this)}
-            style={['padding: 18px 0']}
-          >
-            {{
-              checked: () => '隐藏贴花',
-              unchecked: () => '显示贴花',
-            }}
-          </NSwitch>
-          <div class="chart--container">
-            <RayChart options={this.baseOptions} showAria={this.chartAria} />
-          </div>
-        </NCard>
+        <NH2>RayChart 组件使用</NH2>
+        <NP>
+          该组件会默认以 200*200
+          宽高进行填充。预设了常用的图、方法组件，如果不满足需求，需要用 use
+          方法进行手动拓展。该组件实现了自动跟随模板主题切换功能，但是动态切换损耗较大，所以默认不启用
+        </NP>
+        <NH2>基础使用</NH2>
+        <div class="chart--container">
+          <RayChart options={this.baseOptions} />
+        </div>
+        <NH2>渲染成功后运行回调函数</NH2>
+        <div class="chart--container">
+          <RayChart
+            options={this.basePieOptions}
+            success={this.handleChartRenderSuccess.bind(this)}
+          />
+        </div>
+        <NH2>能跟随主题切换的可视化图</NH2>
+        <div class="chart--container">
+          <RayChart
+            autoChangeTheme
+            options={this.baseLineOptions}
+            showAria={this.chartAria}
+          />
+        </div>
+        <NH2>不跟随主题切换的暗色主题可视化图</NH2>
+        <div class="chart--container">
+          <RayChart theme="dark" options={this.baseOptions} />
+        </div>
+        <NH2>加载动画</NH2>
+        <NSwitch
+          v-model:value={this.chartLoading}
+          onUpdateValue={this.handleLoadingShow.bind(this)}
+          style={['padding: 18px 0']}
+        >
+          {{
+            checked: () => '隐藏加载动画',
+            unchecked: () => '显示加载动画',
+          }}
+        </NSwitch>
+        <div class="chart--container">
+          <RayChart ref="baseChartRef" options={this.baseOptions} />
+        </div>
+        <NH2>贴画可视化图</NH2>
+        <NSwitch
+          v-model:value={this.chartAria}
+          onUpdateValue={this.handleAriaShow.bind(this)}
+          style={['padding: 18px 0']}
+        >
+          {{
+            checked: () => '隐藏贴花',
+            unchecked: () => '显示贴花',
+          }}
+        </NSwitch>
+        <div class="chart--container">
+          <RayChart options={this.baseOptions} showAria={this.chartAria} />
+        </div>
       </div>
     )
   },
