@@ -169,7 +169,17 @@ const TableView = defineComponent({
           </NLi>
           <NLi>该组件可以配合 RayCollapseGird 组件使用实现可折叠搜索栏</NLi>
         </NUl>
-        <NH2>配合 RayCollapseGird 组件使用</NH2>
+        <NH2>配合 RayCollapseGird 组件使用与 RayTable 拓展功能</NH2>
+        <NP>
+          使用响应式方法代理 columns 并且打开 action
+          则可以启用操作栏(v-model:columns)
+        </NP>
+        <NP>拖拽操作栏动态切换表格列</NP>
+        <NP>点击左右固定按钮，即可动态固定列</NP>
+        <NP>点击修改列宽度，即可拖动列修改宽度</NP>
+        <NP>点击导出按钮即可导出 excel 表格，默认以列为表头输出</NP>
+        <NP>点击打印按钮即可打印该表格</NP>
+        <NP>右键菜单</NP>
         <RayCollapseGrid
           bordered={false}
           collapsedRows={this.gridCollapsedRows}
@@ -219,26 +229,17 @@ const TableView = defineComponent({
           )}
           data={this.tableData}
           columns={this.baseColumns}
-          action={false}
           pagination={{
             pageSize: 10,
           }}
           loading={this.tableLoading}
+          rightClickMenu={this.tableMenuOptions}
+          onMenuSelect={this.handleMenuSelect.bind(this)}
         >
           {{
             tableFooter: () => '表格的底部内容区域，有时候你可能会用上',
           }}
         </RayTable>
-        <NH2>RayTable 拓展功能</NH2>
-        <NP>
-          使用响应式方法代理 columns 并且打开 action
-          则可以启用操作栏(v-model:columns)
-        </NP>
-        <NP>拖拽操作栏动态切换表格列</NP>
-        <NP>点击左右固定按钮，即可动态固定列</NP>
-        <NP>点击修改列宽度，即可拖动列修改宽度</NP>
-        <NP>点击导出按钮即可导出 excel 表格，默认以列为表头输出</NP>
-        <NP>点击打印按钮即可打印该表格</NP>
         <RayTable
           title={h(NInput, {
             placeholder: '请输入检索条件',
@@ -247,13 +248,6 @@ const TableView = defineComponent({
           data={this.tableData}
           v-model:columns={this.actionColumns}
           bordered={false}
-        />
-        <NH2>右键菜单</NH2>
-        <RayTable
-          title="右键菜单表格"
-          action={false}
-          data={this.tableData}
-          columns={this.baseColumns}
           rightClickMenu={this.tableMenuOptions}
           onMenuSelect={this.handleMenuSelect.bind(this)}
         />

@@ -9,7 +9,7 @@ import {
   NGlobalStyle,
 } from 'naive-ui'
 import { useSetting } from '@/store'
-
+import { naiveLocales } from '@/language/index'
 const GlobalProvider = defineComponent({
   name: 'GlobalProvider',
   setup() {
@@ -21,7 +21,11 @@ const GlobalProvider = defineComponent({
     const modelThemeValue = computed(() =>
       settingStore.themeValue ? darkTheme : null,
     )
-    const modelLocal = computed(() => settingStore.naiveLocal)
+    const localePackage = computed(() => {
+      const key = settingStore.localeLanguage
+
+      return naiveLocales(key)
+    })
 
     const { message, notification, dialog, loadingBar } = createDiscreteApi(
       ['message', 'dialog', 'notification', 'loadingBar'],
@@ -40,7 +44,7 @@ const GlobalProvider = defineComponent({
     return {
       modelPrimaryColorOverride,
       modelThemeValue,
-      modelLocal,
+      localePackage,
     }
   },
   render() {
@@ -48,8 +52,8 @@ const GlobalProvider = defineComponent({
       <NConfigProvider
         themeOverrides={this.modelPrimaryColorOverride}
         theme={this.modelThemeValue}
-        locale={this.modelLocal.local}
-        dateLocal={this.modelLocal.dateLocal}
+        locale={this.localePackage.locale}
+        dateLocale={this.localePackage.dateLocal}
       >
         <NLoadingBarProvider>
           <NMessageProvider>

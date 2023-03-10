@@ -15,6 +15,10 @@
 
 ## 3.1.2
 
+### Fixes
+
+- 修复 DatePicker 组件国际化部分失效问题
+
 ### Feats
 
 - 修改 demo 页面展示
