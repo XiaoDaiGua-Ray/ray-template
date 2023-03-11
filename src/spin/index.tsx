@@ -40,7 +40,7 @@ const GlobalSpin = defineComponent({
       >
         {{
           default: () => this.$slots.default?.(),
-          description: () => this.$slots.description?.(),
+          description: () => 'loading...',
         }}
       </NSpin>
     )

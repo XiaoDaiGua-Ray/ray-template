@@ -1,0 +1,45 @@
+.ray-table__table-size {
+  padding: 0 !important;
+
+  & .n-card__content {
+    padding: 0 !important;
+    margin: 0 !important;
+
+    & .table-size__dropdown {
+      box-sizing: border-box;
+      padding: 4px 0;
+      background-color: transparent;
+
+      & .table-size__dropdown-wrapper {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+
+        & .dropdown-item {
+          height: 34px;
+          line-height: 34px;
+          text-align: center;
+          cursor: pointer;
+          padding: 0 16px;
+          transition: background-color 0.3s var(--r-bezier), color 0.3s var(--r-bezier);
+
+          &.dropdown-item--active,
+          &:hover {
+            background-color: $hoverLightBackgroundColor;
+            color: $activedColor;
+          }
+        }
+      }
+    }
+  }
+}
+
+.ray-template--dark {
+  & .table-size__dropdown-wrapper {
+    & .dropdown-item:hover {
+      background-color: $hoverDarkBackgroundColor;
+      color: $activedColor;
+    }
+  }
+}

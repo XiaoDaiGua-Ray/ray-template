@@ -23,7 +23,8 @@ import config from './cfg'
 import pkg from './package.json'
 
 const { dependencies, devDependencies, name, version } = pkg
-const { server, buildOptions, alias, title, copyright, sideBarLogo } = config
+const { server, buildOptions, alias, title, copyright, sideBarLogo, mixinCSS } =
+  config
 
 /**
  *
@@ -140,8 +141,7 @@ export default defineConfig(async ({ mode }) => {
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData:
-            '@import "./src/styles/mixins.scss"; @import "./src/styles/setting.scss";', // 全局 `mixin`
+          additionalData: mixinCSS,
         },
       },
       modules: {

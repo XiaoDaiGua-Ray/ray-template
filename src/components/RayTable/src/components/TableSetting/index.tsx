@@ -10,7 +10,8 @@
  */
 
 import './index.scss'
-import { NCard, NPopover, NEllipsis, NButton } from 'naive-ui'
+
+import { NCard, NPopover, NEllipsis } from 'naive-ui'
 import RayIcon from '@/components/RayIcon/index'
 import VueDraggable from 'vuedraggable'
 import { setupSettingOptions } from './hook'

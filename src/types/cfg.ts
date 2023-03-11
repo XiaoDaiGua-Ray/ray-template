@@ -27,6 +27,7 @@ export interface Config {
   title: HTMLTitle
   copyright?: LayoutCopyright
   sideBarLogo?: LayoutSideBarLogo
+  mixinCSS?: string
 }
 
 export type Recordable<T = unknown> = Record<string, T>

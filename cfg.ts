@@ -1,6 +1,10 @@
 import path from 'node:path'
 
-import { HTMLTitlePlugin, buildOptions } from './vite-plugin/index'
+import {
+  HTMLTitlePlugin,
+  buildOptions,
+  mixinCSSPlugin,
+} from './vite-plugin/index'
 
 import type { AppConfigExport } from './src/types/cfg'
 
@@ -20,6 +24,22 @@ const config: AppConfigExport = {
     url: '/dashboard',
     jumpType: 'station',
   },
+  /**
+   *
+   * 预处理全局需要注入的 css 文件
+   *
+   * 预设:
+   *   - ./src/styles/mixins.scss
+   *   - ./src/styles/setting.scss
+   *   - ./src/styles/theme.scss
+   *
+   * 如果需要删除或者修改, 需要同步修改目录下的 css 文件
+   */
+  mixinCSS: mixinCSSPlugin([
+    './src/styles/mixins.scss',
+    './src/styles/setting.scss',
+    './src/styles/theme.scss',
+  ]),
   /**
    *
    * 版权信息

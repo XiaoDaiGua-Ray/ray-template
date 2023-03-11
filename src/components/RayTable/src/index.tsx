@@ -15,7 +15,7 @@
  *
  * 完全继承 `NDataTable`, 该组件继承 `NDataTable Props` 属性和方法
  *
- * 实现: 抬头, 操作栏, 右键菜单功能拓展, 输出 `excel`
+ * 实现: 抬头, 操作栏, 右键菜单功能拓展, 输出 `excel`, 表格尺寸调整
  *
  * 右键菜单功能, 需要同时启用 `showMenu` 与配置菜单选项才能正常使用
  *
@@ -27,9 +27,12 @@
  */
 
 import './index.scss'
+
 import { NDataTable, NCard, NDropdown, NDivider } from 'naive-ui'
 import TableSetting from './components/TableSetting/index'
 import TableAction from './components/TableAction/index'
+import TableSize from './components/TableSize/index'
+import TableScreenfull from './components/TableScreenfull/index'
 
 import props from './props'
 import print from 'print-js'
@@ -47,6 +50,7 @@ const RayTable = defineComponent({
   emits: ['update:columns', 'menuSelect', 'exportSuccess', 'exportError'],
   setup(props, { emit }) {
     const tableUUID = uuid()
+    const rayTableUUID = uuid()
     const modelRightClickMenu = computed(() => props.rightClickMenu)
     const modelColumns = computed({
       get: () => props.columns,
@@ -59,7 +63,7 @@ const RayTable = defineComponent({
       y: 0,
       showMenu: false,
     })
-    let prevRightClickIndex = -1
+    let prevRightClickIndex = -1 // 缓存上次点击索引位置
     const cssVars = computed(() => {
       const cssVar = {
         '--ray-table-header-space': props.tableHeaderSpace,
@@ -67,6 +71,7 @@ const RayTable = defineComponent({
 
       return cssVar
     })
+    const tableSize = ref(props.size)
 
     /**
      *
@@ -75,6 +80,8 @@ const RayTable = defineComponent({
     provide('tableSettingProvider', {
       modelRightClickMenu,
       modelColumns,
+      size: props.size,
+      rayTableUUID,
     })
 
     const handleColumnsUpdate = (arr: ActionOptions[]) => {
@@ -175,8 +182,13 @@ const RayTable = defineComponent({
       print(options)
     }
 
+    const handleChangeTableSize = (size: ComponentSize) => {
+      tableSize.value = size
+    }
+
     return {
       tableUUID,
+      rayTableUUID,
       handleColumnsUpdate,
       ...toRefs(menuConfig),
       handleRowProps,
@@ -184,11 +196,18 @@ const RayTable = defineComponent({
       handleExportPositive,
       handlePrintPositive,
       cssVars,
+      handleChangeTableSize,
+      tableSize,
     }
   },
   render() {
     return (
-      <NCard class="ray-table" bordered={this.bordered} style={[this.cssVars]}>
+      <NCard
+        class="ray-table"
+        bordered={this.bordered}
+        style={[this.cssVars]}
+        id={this.rayTableUUID}
+      >
         {{
           default: () => (
             <>
@@ -196,6 +215,7 @@ const RayTable = defineComponent({
                 id={this.tableUUID}
                 {...this.$props}
                 rowProps={this.handleRowProps.bind(this)}
+                size={this.tableSize}
               >
                 {{
                   empty: () => this.$slots?.empty?.(),
@@ -227,6 +247,7 @@ const RayTable = defineComponent({
                 <TableAction
                   icon={this.printIcon}
                   tooltip={this.printTooltip}
+                  popoverContent="打印表格"
                   positiveText={this.printPositiveText}
                   negativeText={this.printNegativeText}
                   onPositive={this.handlePrintPositive.bind(this)}
@@ -236,10 +257,19 @@ const RayTable = defineComponent({
                 <TableAction
                   icon={this.exportExcelIcon}
                   tooltip={this.exportTooltip}
+                  popoverContent="导出表格"
                   positiveText={this.exportPositiveText}
                   negativeText={this.exportNegativeText}
                   onPositive={this.handleExportPositive.bind(this)}
                 />
+                <NDivider vertical />
+                {/* 表格尺寸调整 */}
+                <TableSize
+                  onChangeSize={this.handleChangeTableSize.bind(this)}
+                />
+                <NDivider vertical />
+                {/* 全屏表格 */}
+                <TableScreenfull />
                 <NDivider vertical />
                 {/* 表格列操作 */}
                 <TableSetting

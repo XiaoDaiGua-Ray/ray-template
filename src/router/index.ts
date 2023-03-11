@@ -22,6 +22,7 @@ export const setupRouter = (app: App<Element>) => {
 /**
  *
  * @remark 路由切换启用顶部加载条
+ * @remark 路由切换启用加载动画
  */
 export const setupRouterLoadingBar = () => {
   router.beforeEach(() => {

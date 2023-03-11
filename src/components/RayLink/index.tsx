@@ -21,31 +21,31 @@ const RayLink = defineComponent({
         key: 'yun-cloud-images',
         src: 'https://yunkuangao.com/',
         tooltip: '云图床',
-        icon: 'https://yunkuangao.com/images/20170801_005902048_iOS.md.jpg',
+        icon: 'https://yunkuangao.me/wp-content/uploads/2022/05/cropped-cropped-QQ%E5%9B%BE%E7%89%8720220511113928.jpg',
       },
       {
         key: 'ray-js-note',
         src: 'https://note.youdao.com/s/ObWEe2BB',
         tooltip: 'Ray的前端学习笔记',
-        icon: 'https://yunkuangao.com/images/longmao.jpeg',
+        icon: 'https://usc1.contabostorage.com/c2e495d7890844d392e8ec0c6e5d77eb:image/longmao.jpeg',
       },
       {
         key: 'ray-js-cover',
         src: 'https://note.youdao.com/s/IC8xKPdB',
         tooltip: 'Ray的面试题总结',
-        icon: 'https://yunkuangao.com/images/longmao.jpeg',
+        icon: 'https://usc1.contabostorage.com/c2e495d7890844d392e8ec0c6e5d77eb:image/longmao.jpeg',
       },
       {
         key: 'ray-template-doc',
         src: 'https://xiaodaigua-ray.github.io/ray-template-doc/',
         tooltip: 'Ray Template Doc',
-        icon: 'https://yunkuangao.com/images/longmao.jpeg',
+        icon: 'https://usc1.contabostorage.com/c2e495d7890844d392e8ec0c6e5d77eb:image/longmao.jpeg',
       },
       {
         key: 'ray-template-doc-out',
         src: 'https://ray-template.yunkuangao.com/',
         tooltip: 'Ray Template Doc (国内地址)',
-        icon: 'https://yunkuangao.com/images/longmao.jpeg',
+        icon: 'https://usc1.contabostorage.com/c2e495d7890844d392e8ec0c6e5d77eb:image/longmao.jpeg',
       },
     ]
 

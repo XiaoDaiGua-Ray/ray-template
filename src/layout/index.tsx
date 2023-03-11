@@ -1,12 +1,13 @@
 import './index.scss'
 
-import { NLayout, NLayoutContent } from 'naive-ui'
+import { NLayout, NLayoutContent, NSpin } from 'naive-ui'
 import RayTransitionComponent from '@/components/RayTransitionComponent/index.vue'
 import LayoutMenu from './components/Menu/index'
 import SiderBar from './components/SiderBar/index'
 import MenuTag from './components/MenuTag/index'
 
 import { useSetting } from '@/store'
+import { addClass, removeClass } from '@/utils/element'
 
 const Layout = defineComponent({
   name: 'Layout',
@@ -38,19 +39,42 @@ const Layout = defineComponent({
       layout: { copyright },
     } = __APP_CFG__
 
+    watch(
+      () => themeValue.value,
+      (newData) => {
+        /**
+         *
+         * 初始化时根据当前主题色进行初始化 body 的 class 属性
+         *
+         * 根据 themeValue 进行初始化
+         */
+        const body = document.body
+        const darkClassName = 'ray-template--dark'
+        const lightClassName = 'ray-template--light'
+
+        newData
+          ? removeClass(body, lightClassName)
+          : removeClass(body, darkClassName)
+
+        addClass(body, newData ? darkClassName : lightClassName)
+      },
+      {
+        immediate: true,
+      },
+    )
+
     return {
       windowHeight,
       modelReloadRoute,
       modelMenuTagSwitch,
       cssVarsRef,
       copyright,
-      themeValue,
     }
   },
   render() {
     return (
       <div
-        class={['layout', this.themeValue ? 'layout--dark' : '']}
+        class={['layout']}
         style={[`height: ${this.windowHeight}px`, this.cssVarsRef]}
       >
         <NLayout class="layout-full" hasSider>

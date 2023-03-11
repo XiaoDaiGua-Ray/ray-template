@@ -180,6 +180,7 @@ const TableView = defineComponent({
         <NP>点击导出按钮即可导出 excel 表格，默认以列为表头输出</NP>
         <NP>点击打印按钮即可打印该表格</NP>
         <NP>右键菜单</NP>
+        <NP>全屏表格</NP>
         <RayCollapseGrid
           bordered={false}
           collapsedRows={this.gridCollapsedRows}
@@ -193,7 +194,7 @@ const TableView = defineComponent({
           {{
             action: () => (
               <>
-                <NButton>搜索</NButton>
+                <NButton type="primary">搜索</NButton>
                 <NButton>重置</NButton>
               </>
             ),
@@ -240,17 +241,6 @@ const TableView = defineComponent({
             tableFooter: () => '表格的底部内容区域，有时候你可能会用上',
           }}
         </RayTable>
-        <RayTable
-          title={h(NInput, {
-            placeholder: '请输入检索条件',
-            style: ['width: 200px'],
-          })}
-          data={this.tableData}
-          v-model:columns={this.actionColumns}
-          bordered={false}
-          rightClickMenu={this.tableMenuOptions}
-          onMenuSelect={this.handleMenuSelect.bind(this)}
-        />
       </NLayout>
     )
   },

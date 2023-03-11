@@ -38,6 +38,8 @@ export type RightClickMenu = ComputedRef<DropdownMixedOption[]>
 export interface TableSettingProvider {
   modelRightClickMenu: RightClickMenu
   modelColumns: SettingOptions
+  size: ComponentSize
+  rayTableUUID: string
 }
 
 export interface ExportExcelProvider {

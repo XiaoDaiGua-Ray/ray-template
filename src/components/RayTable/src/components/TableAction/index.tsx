@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { NPopconfirm, NSpace, NButton } from 'naive-ui'
+import { NPopconfirm, NSpace, NButton, NPopover } from 'naive-ui'
 import RayIcon from '@/components/RayIcon/index'
 
 export type EmitterType = 'positive' | 'negative'
@@ -65,6 +65,10 @@ const TableAction = defineComponent({
       type: Number,
       default: 18,
     },
+    popoverContent: {
+      type: String,
+      required: true,
+    },
   },
   emits: ['positive', 'negative'],
   setup(_, { emit }) {
@@ -83,37 +87,44 @@ const TableAction = defineComponent({
   },
   render() {
     return (
-      <NPopconfirm v-model:show={this.showPopoconfirm} showArrow={true}>
+      <NPopover>
         {{
           trigger: () => (
-            <RayIcon
-              name={this.icon}
-              size={this.iconSize}
-              customClassName="ray-table-icon"
-            />
+            <NPopconfirm v-model:show={this.showPopoconfirm} showArrow={true}>
+              {{
+                trigger: () => (
+                  <RayIcon
+                    name={this.icon}
+                    size={this.iconSize}
+                    customClassName="ray-table-icon"
+                  />
+                ),
+                default: () => this.tooltip,
+                action: () => (
+                  <NSpace>
+                    <NButton
+                      size="small"
+                      ghost
+                      onClick={this.handleEmit.bind(this, 'negative')}
+                    >
+                      {this.negativeText}
+                    </NButton>
+                    <NButton
+                      size="small"
+                      ghost
+                      type="info"
+                      onClick={this.handleEmit.bind(this, 'positive')}
+                    >
+                      {this.positiveText}
+                    </NButton>
+                  </NSpace>
+                ),
+              }}
+            </NPopconfirm>
           ),
-          default: () => this.tooltip,
-          action: () => (
-            <NSpace>
-              <NButton
-                size="small"
-                ghost
-                onClick={this.handleEmit.bind(this, 'negative')}
-              >
-                {this.negativeText}
-              </NButton>
-              <NButton
-                size="small"
-                ghost
-                type="info"
-                onClick={this.handleEmit.bind(this, 'positive')}
-              >
-                {this.positiveText}
-              </NButton>
-            </NSpace>
-          ),
+          default: () => this.popoverContent,
         }}
-      </NPopconfirm>
+      </NPopover>
     )
   },
 })

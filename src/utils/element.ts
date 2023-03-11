@@ -87,16 +87,26 @@ export const addClass = (element: HTMLElement, className: string) => {
  * @param className 所需删除className，可: 'xxx xxx' | 'xxx'格式删除
  *
  * @remark 删除元素className(可: 'xxx xxx' | 'xxx'格式删除)
+ * @remark 如果输入值为 removeAllClass 则会删除该元素所有 class name
  */
-export const removeClass = (element: HTMLElement, className: string) => {
+export const removeClass = (
+  element: HTMLElement,
+  className: string | 'removeAllClass',
+) => {
   if (element) {
-    const classes = className.trim().split(' ')
+    if (className === 'removeAllClass') {
+      const classList = element.classList
 
-    classes.forEach((item) => {
-      if (item) {
-        element.classList.remove(item)
-      }
-    })
+      classList.forEach((curr) => classList.remove(curr))
+    } else {
+      const classes = className.trim().split(' ')
+
+      classes.forEach((item) => {
+        if (item) {
+          element.classList.remove(item)
+        }
+      })
+    }
   }
 }
 
