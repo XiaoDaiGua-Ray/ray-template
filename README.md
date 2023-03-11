@@ -20,6 +20,10 @@
 - [文档](https://xiaodaigua-ray.github.io/ray-template-doc/)
 - [文档(加速地址)](https://ray-template.yunkuangao.com/ray-template-doc/)
 
+## 更新日志
+
+- [日志](https://github.com/XiaoDaiGua-Ray/xiaodaigua-ray.github.io/blob/main/CHANGELOG.md)
+
 ## 功能
 
 - 主题切换
