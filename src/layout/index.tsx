@@ -25,7 +25,7 @@ const Layout = defineComponent({
 
       if (settingStore.menuTagSwitch) {
         cssVar = {
-          '--layout-content-height': 'calc(100% - 110px)',
+          '--layout-content-height': 'calc(100% - 111px)',
         }
       } else {
         cssVar = {

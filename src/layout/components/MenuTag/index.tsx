@@ -10,7 +10,7 @@
  */
 
 import './index.scss'
-import { NScrollbar, NTag, NSpace } from 'naive-ui'
+import { NScrollbar, NTag, NSpace, NLayoutHeader } from 'naive-ui'
 import { useMenu } from '@/store'
 
 import type { MenuOption } from 'naive-ui'
@@ -61,23 +61,26 @@ const MenuTag = defineComponent({
   },
   render() {
     return (
-      <NScrollbar class="menu-tag" xScrollable>
-        <NSpace class="menu-tag-sapce" wrap={false} align="center">
-          {this.modelMenuTagOptions.map((curr, idx) => (
-            <NTag
-              closable={
-                curr.key !== '/dashboard' && this.modelMenuTagOptions.length > 1
-              }
-              onClose={() => this.handleCloseTag(idx)}
-              type={curr.key === this.menuKey ? 'success' : 'info'}
-              onClick={this.handleTagClick.bind(this, curr)}
-              bordered={false}
-            >
-              {typeof curr.label === 'function' ? curr.label() : curr.label}
-            </NTag>
-          ))}
-        </NSpace>
-      </NScrollbar>
+      <NLayoutHeader>
+        <NScrollbar class="menu-tag" xScrollable>
+          <NSpace class="menu-tag-sapce" wrap={false} align="center">
+            {this.modelMenuTagOptions.map((curr, idx) => (
+              <NTag
+                closable={
+                  curr.key !== '/dashboard' &&
+                  this.modelMenuTagOptions.length > 1
+                }
+                onClose={() => this.handleCloseTag(idx)}
+                type={curr.key === this.menuKey ? 'success' : 'info'}
+                onClick={this.handleTagClick.bind(this, curr)}
+                bordered={false}
+              >
+                {typeof curr.label === 'function' ? curr.label() : curr.label}
+              </NTag>
+            ))}
+          </NSpace>
+        </NScrollbar>
+      </NLayoutHeader>
     )
   },
 })

@@ -2,6 +2,7 @@ $space: calc($layoutRouterViewContainer / 2);
 
 .menu-tag {
   height: $layoutMenuHeight;
+  border-bottom: solid 1px var(--n-border-color);
 
   & .menu-tag-sapce {
     width: calc(100% - $space * 2);
