@@ -22,4 +22,12 @@
 ### Feats
 
 - 修改 demo 页面展示
-- 修改 RayCollapseGrid, RayTable 组件为默认不展示 border
+- 修改 RayCollapseGrid、RayTable 组件为默认不展示 border
+
+## 3.1.3
+
+### Feats
+
+- RayTable 组件新增全屏、尺寸调整功能
+- 新增 css 预处理全局注入辅助函数。详情看 [mixinCSS](https://github.com/XiaoDaiGua-Ray/xiaodaigua-ray.github.io/blob/main/cfg.ts)
+- RayTable 组件部分提示文案修改
