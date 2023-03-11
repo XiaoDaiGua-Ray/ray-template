@@ -26,6 +26,14 @@
  * 基于 `xlsx.js` 实现输出 `excel`
  */
 
+/**
+ *
+ * 为什么有些拓展功能是写在该组件内, 有些则是完全抽离出去呢...
+ * 好问题, 因为我一开始没想到而且我又想偷懒
+ *
+ * 凑合凑合看吧, 等我啥时候有空再抽离出去
+ */
+
 import './index.scss'
 
 import { NDataTable, NCard, NDropdown, NDivider } from 'naive-ui'
@@ -49,8 +57,8 @@ const RayTable = defineComponent({
   props: props,
   emits: ['update:columns', 'menuSelect', 'exportSuccess', 'exportError'],
   setup(props, { emit }) {
-    const tableUUID = uuid()
-    const rayTableUUID = uuid()
+    const tableUUID = uuid() // 表格 id, 用于打印表格
+    const rayTableUUID = uuid() // RayTable id, 用于全屏表格
     const modelRightClickMenu = computed(() => props.rightClickMenu)
     const modelColumns = computed({
       get: () => props.columns,
@@ -73,10 +81,7 @@ const RayTable = defineComponent({
     })
     const tableSize = ref(props.size)
 
-    /**
-     *
-     * 右键菜单注入
-     */
+    /** 注入相关属性 */
     provide('tableSettingProvider', {
       modelRightClickMenu,
       modelColumns,
@@ -84,6 +89,7 @@ const RayTable = defineComponent({
       rayTableUUID,
     })
 
+    /** 拖拽更新后的表格列 */
     const handleColumnsUpdate = (arr: ActionOptions[]) => {
       modelColumns.value = arr
     }
@@ -182,6 +188,7 @@ const RayTable = defineComponent({
       print(options)
     }
 
+    /** 更新后的表格尺寸 */
     const handleChangeTableSize = (size: ComponentSize) => {
       tableSize.value = size
     }
@@ -252,7 +259,6 @@ const RayTable = defineComponent({
                   negativeText={this.printNegativeText}
                   onPositive={this.handlePrintPositive.bind(this)}
                 />
-                <NDivider vertical />
                 {/* 输出为Excel表格 */}
                 <TableAction
                   icon={this.exportExcelIcon}
@@ -262,15 +268,12 @@ const RayTable = defineComponent({
                   negativeText={this.exportNegativeText}
                   onPositive={this.handleExportPositive.bind(this)}
                 />
-                <NDivider vertical />
                 {/* 表格尺寸调整 */}
                 <TableSize
                   onChangeSize={this.handleChangeTableSize.bind(this)}
                 />
-                <NDivider vertical />
                 {/* 全屏表格 */}
                 <TableScreenfull />
-                <NDivider vertical />
                 {/* 表格列操作 */}
                 <TableSetting
                   onColumnsUpdate={this.handleColumnsUpdate.bind(this)}

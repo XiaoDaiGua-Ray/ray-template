@@ -9,11 +9,19 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
+/**
+ *
+ * 依赖 table columns 属性操作
+ *
+ * 支持拖拽修改列顺序、动态修改列宽度、固定(锁列)
+ */
+
 import './index.scss'
 
 import { NCard, NPopover, NEllipsis } from 'naive-ui'
 import RayIcon from '@/components/RayIcon/index'
 import VueDraggable from 'vuedraggable'
+
 import { setupSettingOptions } from './hook'
 import { useSetting } from '@/store'
 
@@ -28,17 +36,19 @@ const TableSetting = defineComponent({
   name: 'TableSetting',
   emits: ['columnsUpdate'],
   setup(_, { emit }) {
-    const settingStore = useSetting()
     const tableSettingProvider = inject(
       'tableSettingProvider',
       {} as TableSettingProvider,
     )
+    const settingStore = useSetting()
+
     const settingOptions = ref(
       setupSettingOptions(tableSettingProvider.modelColumns.value),
     ) // 表格表头
     const disableDraggable = ref(true) // 拖拽开关(暂时弃用)
     const { themeValue } = storeToRefs(settingStore)
 
+    /** 拖拽结束后 */
     const handleDraggableEnd = () => {
       emit('columnsUpdate', settingOptions.value)
     }
@@ -99,7 +109,7 @@ const TableSetting = defineComponent({
      *
      * @param idx 索引
      *
-     * @remark 动态设置列宽度
+     * @remark 动态设置列宽度, 如果表格并未出现横向滚动条则不会启用拖拽修改列按钮
      */
     const handleResizeColumnClick = (idx: number) => {
       const value = settingOptions.value[idx]

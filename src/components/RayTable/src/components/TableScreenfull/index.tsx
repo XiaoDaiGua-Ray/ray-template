@@ -9,6 +9,8 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
+import './index.scss'
+
 import { NPopover } from 'naive-ui'
 import RayIcon from '@/components/RayIcon/index'
 
@@ -51,7 +53,7 @@ const TableScreenfull = defineComponent({
             <RayIcon
               name="fullscreen"
               size="18"
-              customClassName="ray-table-icon"
+              customClassName="ray-table-icon tay-table-icon__screenfull"
               onClick={this.handleScreenfull.bind(this)}
             />
           ),
