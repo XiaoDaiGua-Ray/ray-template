@@ -23,10 +23,11 @@ import { LabelLayout, UniversalTransition } from 'echarts/features' // 标签自
 import { CanvasRenderer } from 'echarts/renderers' // `echarts` 渲染器
 
 import { useSetting } from '@/store'
-import { cloneDeep } from 'lodash-es'
+import { cloneDeep, debounce } from 'lodash-es'
 import { on, off, addStyle } from '@/utils/element'
 
 import type { PropType } from 'vue'
+// import type { DebouncedFuncLeading } from 'lodash-es'
 
 export type AutoResize =
   | boolean
@@ -195,6 +196,7 @@ const RayChart = defineComponent({
     const rayChartRef = ref<HTMLElement>() // `echart` 容器实例
     const echartInstanceRef = ref<EChartsInstance>() // `echart` 拷贝实例, 解决直接使用响应式实例带来的问题
     let echartInstance: EChartsInstance // `echart` 实例
+    let resizeDebounce: AnyFunc // resize 防抖方法示例
 
     const cssVarsRef = computed(() => {
       const cssVars = {
@@ -349,6 +351,7 @@ const RayChart = defineComponent({
     const resizeChart = () => {
       if (echartInstance) {
         echartInstance.resize()
+        console.log('resize')
       }
     }
 
@@ -406,14 +409,16 @@ const RayChart = defineComponent({
         }
 
         if (props.autoResize) {
-          on(window, 'resize', resizeChart)
+          resizeDebounce = debounce(resizeChart, 500)
+
+          on(window, 'resize', resizeDebounce)
         }
       })
     })
 
     onBeforeUnmount(() => {
       destroyChart()
-      off(window, 'resize', resizeChart)
+      off(window, 'resize', resizeDebounce)
     })
 
     return {

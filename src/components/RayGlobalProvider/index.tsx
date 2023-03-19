@@ -8,8 +8,10 @@ import {
   darkTheme,
   NGlobalStyle,
 } from 'naive-ui'
+
 import { useSetting } from '@/store'
 import { naiveLocales } from '@/language/index'
+
 const GlobalProvider = defineComponent({
   name: 'GlobalProvider',
   setup() {

@@ -1,10 +1,24 @@
 import { getDefaultLocal } from '@/language/index'
 import { setCache } from '@use-utils/cache'
 
+import type { ConditionalPick } from '@/types/type-utils'
+import type { ConfigProviderProps, GlobalThemeOverrides } from 'naive-ui'
+
+interface SettingState {
+  drawerPlacement: NaiveDrawerPlacement
+  primaryColorOverride: GlobalThemeOverrides
+  themeValue: boolean
+  reloadRouteSwitch: boolean
+  menuTagSwitch: boolean
+  spinSwitch: boolean
+  breadcrumbSwitch: boolean
+  localeLanguage: string
+}
+
 export const useSetting = defineStore(
   'setting',
   () => {
-    const settingState = reactive({
+    const settingState = reactive<SettingState>({
       drawerPlacement: 'right' as NaiveDrawerPlacement,
       primaryColorOverride: {
         common: {
@@ -29,7 +43,7 @@ export const useSetting = defineStore(
     }
 
     const changePrimaryColor = (value: string) => {
-      settingState.primaryColorOverride.common.primaryColor = value
+      settingState.primaryColorOverride.common!.primaryColor = value
     }
 
     /**
@@ -40,12 +54,15 @@ export const useSetting = defineStore(
      * @remark 仅适用于值为 `boolean` 的切换
      * @remark 不知道如何写: 返回属性中所有指定类型值... 如果有知道的一定要私信告知一下
      */
-    const changeSwitcher = (bool: boolean, key: keyof typeof settingState) => {
+    const changeSwitcher = (
+      bool: boolean,
+      key: keyof ConditionalPick<SettingState, boolean>,
+    ) => {
       if (
         Object.hasOwn(settingState, key) &&
         typeof settingState[key] === 'boolean'
       ) {
-        ;(settingState[key] as unknown) = bool
+        settingState[key] = bool
       }
     }
 
