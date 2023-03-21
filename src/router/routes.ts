@@ -1,6 +1,10 @@
 import Layout from '@/layout/index'
 import childrenRoutes from './modules/index'
 
+const {
+  rootRoute: { path },
+} = __APP_CFG__
+
 export const constantRoutes = [
   {
     path: '/',
@@ -10,7 +14,7 @@ export const constantRoutes = [
   {
     path: '/',
     name: 'layout',
-    redirect: '/dashboard',
+    redirect: path,
     component: Layout,
     children: childrenRoutes,
   },

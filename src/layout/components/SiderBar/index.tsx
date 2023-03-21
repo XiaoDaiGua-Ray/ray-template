@@ -86,7 +86,7 @@ const SiderBar = defineComponent({
       reload: () => {
         changeSwitcher(false, 'reloadRouteSwitch')
 
-        setTimeout(() => changeSwitcher(true, 'reloadRouteSwitch'), 1.5 * 1000)
+        setTimeout(() => changeSwitcher(true, 'reloadRouteSwitch'))
       },
       setting: () => {
         showSettings.value = true

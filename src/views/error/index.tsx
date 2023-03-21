@@ -6,8 +6,12 @@ const ErrorPage = defineComponent({
   setup() {
     const router = useRouter()
 
+    const {
+      rootRoute: { path },
+    } = __APP_CFG__
+
     const handleBack = () => {
-      router.push('/dashboard')
+      router.push(path)
     }
 
     return {

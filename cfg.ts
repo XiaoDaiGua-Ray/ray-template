@@ -11,6 +11,17 @@ import type { AppConfigExport } from './src/types/cfg'
 const config: AppConfigExport = {
   /**
    *
+   * 配置根页面
+   * 该项目所有重定向至首页, 都依赖该配置项
+   *
+   * 如果修改了该项目的首页路由配置, 需要更改该配置项, 以免重定向首页操作出现错误
+   */
+  rootRoute: {
+    name: 'dashboard',
+    path: '/dashboard',
+  },
+  /**
+   *
    * icon: LOGO 图标, 依赖 `RayIcon` 实现
    * title: LOGO 标题
    * url: 点击跳转地址, 如果不配置该属性, 则不会触发跳转

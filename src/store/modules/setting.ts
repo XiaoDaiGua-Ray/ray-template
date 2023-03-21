@@ -23,6 +23,7 @@ export const useSetting = defineStore(
       primaryColorOverride: {
         common: {
           primaryColor: '#2d8cf0', // 主题色
+          primaryColorHover: '#2d8cf0',
         },
       },
       themeValue: false, // `true` 为黑夜主题, `false` 为白色主题
@@ -44,6 +45,7 @@ export const useSetting = defineStore(
 
     const changePrimaryColor = (value: string) => {
       settingState.primaryColorOverride.common!.primaryColor = value
+      settingState.primaryColorOverride.common!.primaryColorHover = value
     }
 
     /**

@@ -15,6 +15,11 @@ export interface LayoutSideBarLogo {
 
 export type LayoutCopyright = string | number | VNodeChild
 
+export interface RootRoute {
+  name: string
+  path: string
+}
+
 export interface HTMLTitle {
   name: string
   transformIndexHtml: (title: string) => string
@@ -28,6 +33,7 @@ export interface Config {
   copyright?: LayoutCopyright
   sideBarLogo?: LayoutSideBarLogo
   mixinCSS?: string
+  rootRoute?: RootRoute
 }
 
 export type Recordable<T = unknown> = Record<string, T>
@@ -43,6 +49,7 @@ export interface AppConfig {
     copyright?: LayoutCopyright
     sideBarLogo?: LayoutSideBarLogo
   }
+  rootRoute: RootRoute
 }
 
 export type AppConfigExport = Config & UserConfigExport

@@ -1,5 +1,18 @@
 # CHANGE LOG
 
+## 3.1.4
+
+### Fixes
+
+- 修复主题色切换后，点击、鼠标滑入主题未被修改问题
+- 修复 menu store 菜单切换可能会重复执行问题
+
+### Feats
+
+- 补充 MenuTag 标签页功能，现在支持丰富的关闭操作与右键菜单激活操作菜单功能
+- 新增配置全局重定向地址配置（详情见：[cfg](https://github.com/XiaoDaiGua-Ray/xiaodaigua-ray.github.io/blob/main/cfg.ts)）
+- 补充了一些不值一提的小东西
+
 ## 3.1.3
 
 ### Fixes

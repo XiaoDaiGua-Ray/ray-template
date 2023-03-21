@@ -30,10 +30,14 @@ import type { Router, NavigationGuardNext } from 'vue-router'
 export const permissionRouter = (router: Router) => {
   const { beforeEach } = router
 
-  const redirectToDashboard = (next: NavigationGuardNext) => {
-    next('/dashboard')
+  const {
+    rootRoute: { path },
+  } = __APP_CFG__
 
-    setCache('menuKey', '/dashboard')
+  const redirectToDashboard = (next: NavigationGuardNext) => {
+    next(path)
+
+    setCache('menuKey', path)
   }
 
   beforeEach((to, from, next) => {

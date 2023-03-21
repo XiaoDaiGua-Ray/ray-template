@@ -92,13 +92,15 @@ export const parse = (
 /**
  *
  * @param item menu options
+ * @param key current menu key
+ * @param menuTagOptions menu tag options
  *
  * @remark 查找当前菜单项
  */
 export const matchMenuOption = (
   item: IMenuOptions,
   key: MenuKey,
-  menuTagOptions: TagMenuOptions[],
+  menuTagOptions: MenuTagOptions[],
 ) => {
   if (item.path !== key) {
     const tag = menuTagOptions.find((curr) => curr.path === item.path)

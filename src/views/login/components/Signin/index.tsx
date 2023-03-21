@@ -12,6 +12,9 @@ const Signin = defineComponent({
     const signinStore = useSignin()
 
     const { signin } = signinStore
+    const {
+      rootRoute: { path },
+    } = __APP_CFG__
 
     const useSigninForm = () => ({
       name: 'ray',
@@ -48,7 +51,7 @@ const Signin = defineComponent({
               setCache('token', 'tokenValue')
               setCache('person', signinForm.value)
 
-              router.push('/dashboard')
+              router.push(path)
             }, 2 * 1000)
           }
         } else {

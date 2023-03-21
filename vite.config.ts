@@ -23,8 +23,16 @@ import config from './cfg'
 import pkg from './package.json'
 
 const { dependencies, devDependencies, name, version } = pkg
-const { server, buildOptions, alias, title, copyright, sideBarLogo, mixinCSS } =
-  config
+const {
+  server,
+  buildOptions,
+  alias,
+  title,
+  copyright,
+  sideBarLogo,
+  mixinCSS,
+  rootRoute,
+} = config
 
 /**
  *
@@ -42,6 +50,7 @@ const __APP_CFG__ = {
     copyright,
     sideBarLogo,
   },
+  rootRoute,
 }
 
 // https://vitejs.dev/config/

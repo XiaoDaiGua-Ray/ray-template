@@ -100,7 +100,6 @@ module.exports = {
         allowTaggedTemplates: true,
       },
     ], // 禁止无用的表达式
-    'no-use-before-define': 2, // 禁止定义前使用
     'no-useless-call': 2, // 禁止不必要的 `call` 和 `apply`
     'no-var': 'error', // 禁用 `var`
     'no-with': 2, // 禁用 `with`
@@ -122,5 +121,14 @@ module.exports = {
     ],
     'vue/require-v-for-key': ['error'],
     'vue/require-valid-default-prop': ['error'],
+    'no-use-before-define': [
+      'error',
+      {
+        functions: true,
+        classes: true,
+        variables: false,
+        allowNamedExports: false,
+      },
+    ],
   },
 }

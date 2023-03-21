@@ -23,9 +23,7 @@
  */
 
 import { useSignin } from '@/store'
-
-const BASIC_ROUTER = ['login', 'error-page', 'doc']
-const BASE_ROLES = ['admin']
+import { whiteRoutes, superAdmin } from './configuration'
 
 export const validRole = (options: IMenuOptions) => {
   const { role } = storeToRefs(useSignin())
@@ -35,11 +33,11 @@ export const validRole = (options: IMenuOptions) => {
     meta?.hidden === undefined || meta?.hidden === false ? false : meta?.hidden
 
   // 如果是超级管理员(预设为 admin), 则根据其菜单栏(hidden)字段判断是否显示
-  if (BASE_ROLES.includes(role.value)) {
+  if (superAdmin.length && superAdmin.includes(role.value)) {
     return true && !hidden
   } else {
     // 如果为基础路由, 不进行鉴权则根据其菜单栏(hidden)字段判断是否显示
-    if (BASIC_ROUTER.includes(name)) {
+    if (whiteRoutes.includes(name)) {
       return true && !hidden
     }
 

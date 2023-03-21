@@ -127,7 +127,7 @@ const SettingDrawer = defineComponent({
             </NDivider>
             <NColorPicker
               swatches={useSwatchesColorOptions()}
-              v-model:value={this.primaryColorOverride.common.primaryColor}
+              v-model:value={this.primaryColorOverride.common!.primaryColor}
               onUpdateValue={this.changePrimaryColor.bind(this)}
             />
             <NDivider titlePlacement="center">界面显示</NDivider>

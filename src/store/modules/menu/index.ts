@@ -35,23 +35,44 @@ export const useMenu = defineStore(
     const route = useRoute()
     const { t } = useI18n()
 
+    const {
+      rootRoute: { path },
+    } = __APP_CFG__
+
     const cacheMenuKey =
-      getCache('menuKey') === 'no' ? '/dashboard' : getCache('menuKey')
+      getCache('menuKey') === 'no' ? path : getCache('menuKey')
 
     const menuState = reactive({
       menuKey: cacheMenuKey as MenuKey, // 当前菜单 `key`
       options: [] as IMenuOptions[], // 菜单列表
       collapsed: false, // 是否折叠菜单
-      menuTagOptions: [] as TagMenuOptions[], // tag 标签菜单
+      menuTagOptions: [] as MenuTagOptions[], // tag 标签菜单
       breadcrumbOptions: [] as IMenuOptions[], // 面包屑菜单
     })
+
+    /**
+     *
+     * @param options menu options
+     * @param key target key
+     *
+     * @remark 获取完整菜单项
+     */
+    const getCompleteRoutePath = (
+      options: IMenuOptions[],
+      key: string | number,
+    ) => {
+      const ops = parse(options, 'key', key)
+
+      return ops
+    }
 
     /**
      *
      * @param key 菜单更新后的 `key`
      * @param item 菜单当前 `item`
      *
-     * 修改 `menu key` 后的回调函数
+     * @remark 修改 `menu key` 后的回调函数
+     * @remark 修改后, 缓存当前选择 key 并且存储标签页与跳转页面(router push 操作)
      */
     const menuModelValueChange = (key: string | number, item: MenuOption) => {
       const meta = item.meta as RouteMeta
@@ -62,7 +83,7 @@ export const useMenu = defineStore(
         // 防止重复点击做重复操作处理
         if (menuState.menuKey !== key) {
           matchMenuOption(
-            item as unknown as TagMenuOptions,
+            item as unknown as MenuTagOptions,
             menuState.menuKey,
             menuState.menuTagOptions,
           )
@@ -70,16 +91,17 @@ export const useMenu = defineStore(
           menuState.breadcrumbOptions = parse(menuState.options, 'key', key) // 获取面包屑
 
           if (key[0] !== '/') {
-            const p = menuState.breadcrumbOptions
+            const path = getCompleteRoutePath(menuState.options, key)
               .map((curr) => curr.key)
               .join('/')
 
-            router.push(p)
+            router.push(path)
           } else {
             router.push(item.path as string)
           }
 
           menuState.menuKey = key
+
           setCache('menuKey', key)
         }
       }
@@ -107,6 +129,28 @@ export const useMenu = defineStore(
       }
 
       matchMenuItem(menuState.options as MenuOption[])
+    }
+
+    /**
+     *
+     * @param optins menu tag option(s)
+     * @param isAppend true: 追加操作(push), false: 覆盖操作
+     */
+    const setMenuTagOptions = (
+      optins: MenuTagOptions | MenuTagOptions[],
+      isAppend = true,
+    ) => {
+      const isArray = Array.isArray(optins)
+
+      if (isAppend) {
+        isArray
+          ? menuState.menuTagOptions.push(...optins)
+          : menuState.menuTagOptions.push(optins)
+      } else {
+        isArray
+          ? (menuState.menuTagOptions = optins)
+          : (menuState.menuTagOptions = [optins])
+      }
     }
 
     /**
@@ -159,7 +203,7 @@ export const useMenu = defineStore(
             : route
 
           if (curr.path === cacheMenuKey) {
-            menuState.menuTagOptions.push(attr)
+            setMenuTagOptions(attr)
           }
 
           attr.show = validRole(curr)
@@ -187,8 +231,23 @@ export const useMenu = defineStore(
     const collapsedMenu = (collapsed: boolean) =>
       (menuState.collapsed = collapsed)
 
-    const spliceMenTagOptions = (idx: number) =>
-      menuState.menuTagOptions.splice(idx, 1)
+    /**
+     *
+     * @param idx 当前关闭标签索引
+     * @param length 裁剪标签页长度
+     *
+     * @returns 被关闭标签项
+     */
+    const spliceMenTagOptions = (idx: number, length = 1) =>
+      menuState.menuTagOptions.splice(idx, length)
+
+    /**
+     *
+     * @remark 置空 menuTagOptions
+     */
+    const emptyMenuTagOptions = () => {
+      menuState.menuTagOptions = []
+    }
 
     watch(
       () => route.fullPath,
@@ -206,6 +265,8 @@ export const useMenu = defineStore(
       setupAppRoutes,
       collapsedMenu,
       spliceMenTagOptions,
+      emptyMenuTagOptions,
+      setMenuTagOptions,
     }
   },
   {
