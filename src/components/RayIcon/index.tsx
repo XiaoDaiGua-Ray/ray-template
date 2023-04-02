@@ -48,6 +48,11 @@ const RayIcon = defineComponent({
       type: Number,
       default: 1,
     },
+    cursorPointer: {
+      /** 是否启用小手鼠标类型 */
+      type: Boolean,
+      default: false,
+    },
   },
   setup(props) {
     const modelColor = computed(() => props.color)
@@ -61,6 +66,10 @@ const RayIcon = defineComponent({
           ? props.height + 'px'
           : props.size + 'px',
         '--ray-icon-depth': props.depth,
+      }
+
+      if (props.cursorPointer) {
+        cssVar['cursor'] = 'pointer'
       }
 
       return cssVar

@@ -9,12 +9,19 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
+/**
+ *
+ * 请求, 响应拦截器
+ *
+ * 可在此实现共享的基础配置
+ */
+
 import axios from 'axios'
-import { useDetermineEnv } from '@use-utils/hook'
+import { getDetermineEnv } from '@use-utils/hook'
 import RequestCanceler from './canceler'
 
 import type { RawAxiosRequestHeaders, AxiosRequestConfig } from 'axios'
-import type { RequestHeaderOptions } from './type'
+import type { RequestHeaderOptions, AxiosInstanceExpand } from './type'
 
 const canceler = new RequestCanceler()
 
@@ -36,7 +43,7 @@ const appendRequestHeaders = (
   })
 }
 
-const server = axios.create({
+const server: AxiosInstanceExpand = axios.create({
   baseURL: '', // `import.meta.env`,
   withCredentials: false, // 是否允许跨域携带 `cookie`
   timeout: 5 * 1000,
@@ -47,7 +54,7 @@ const server = axios.create({
 
 server.interceptors.request.use(
   (request) => {
-    const { MODE } = useDetermineEnv()
+    const { MODE } = getDetermineEnv()
 
     if (MODE === 'development') {
       // TODO: 开发环境
@@ -90,10 +97,3 @@ server.interceptors.response.use(
 )
 
 export default server
-
-/**
- *
- * 请求, 响应拦截器
- *
- * 可在此实现共享的基础配置
- */

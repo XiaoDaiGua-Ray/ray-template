@@ -10,7 +10,11 @@
     "Table": "Table",
     "MultiMenu": "MultiMenu",
     "Doc": "Doc",
-    "DocLocal": "Doc (China)"
+    "DocLocal": "Doc (China)",
+    "Office": "Office",
+    "Office_Document": "Document",
+    "Office_Presentation": "Presentation",
+    "Office_Spreadsheet": "Spreadsheet"
   },
   "LayoutHeaderTooltipOptions": {
     "Reload": "Reload Current Page",
@@ -32,6 +36,7 @@
   "LoginModule": {
     "Register": "Register",
     "Signin": "Signin",
+    "QRCodeSignin": "QRCode Signin",
     "NamePlaceholder": "please enter user name",
     "PasswordPlaceholder": "please enter password",
     "Login": "Login",

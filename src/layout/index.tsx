@@ -7,7 +7,6 @@ import SiderBar from './components/SiderBar/index'
 import MenuTag from './components/MenuTag/index'
 
 import { useSetting } from '@/store'
-import { addClass, removeClass } from '@/utils/element'
 
 const Layout = defineComponent({
   name: 'Layout',
@@ -38,30 +37,6 @@ const Layout = defineComponent({
     const {
       layout: { copyright },
     } = __APP_CFG__
-
-    watch(
-      () => themeValue.value,
-      (newData) => {
-        /**
-         *
-         * 初始化时根据当前主题色进行初始化 body 的 class 属性
-         *
-         * 根据 themeValue 进行初始化
-         */
-        const body = document.body
-        const darkClassName = 'ray-template--dark'
-        const lightClassName = 'ray-template--light'
-
-        newData
-          ? removeClass(body, lightClassName)
-          : removeClass(body, darkClassName)
-
-        addClass(body, newData ? darkClassName : lightClassName)
-      },
-      {
-        immediate: true,
-      },
-    )
 
     return {
       windowHeight,

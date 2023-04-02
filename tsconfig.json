@@ -25,7 +25,8 @@
       "@use-micro/*": ["src/micro/*"]
     },
     "suppressImplicitAnyIndexErrors": true,
-    "types": ["@intlify/unplugin-vue-i18n/messages", "naive-ui/volar"]
+    "types": ["@intlify/unplugin-vue-i18n/messages", "naive-ui/volar"],
+    "ignoreDeprecations": "5.0"
   },
   "include": [
     "src/**/*.ts",

@@ -2,7 +2,7 @@ import { getDefaultLocal } from '@/language/index'
 import { setCache } from '@use-utils/cache'
 
 import type { ConditionalPick } from '@/types/type-utils'
-import type { ConfigProviderProps, GlobalThemeOverrides } from 'naive-ui'
+import type { GlobalThemeOverrides } from 'naive-ui'
 
 interface SettingState {
   drawerPlacement: NaiveDrawerPlacement
@@ -18,12 +18,14 @@ interface SettingState {
 export const useSetting = defineStore(
   'setting',
   () => {
+    const { primaryColor } = __APP_CFG__
+
     const settingState = reactive<SettingState>({
       drawerPlacement: 'right' as NaiveDrawerPlacement,
       primaryColorOverride: {
         common: {
-          primaryColor: '#2d8cf0', // 主题色
-          primaryColorHover: '#2d8cf0',
+          primaryColor: primaryColor, // 主题色
+          primaryColorHover: primaryColor,
         },
       },
       themeValue: false, // `true` 为黑夜主题, `false` 为白色主题
@@ -35,17 +37,23 @@ export const useSetting = defineStore(
     })
     const { locale } = useI18n()
 
+    /** 修改当前语言 */
     const updateLocale = (key: string) => {
-      // TODO: 修改语言
       locale.value = key
       settingState.localeLanguage = key
 
       setCache('localeLanguage', key, 'localStorage')
     }
 
+    /** 切换主题色 */
     const changePrimaryColor = (value: string) => {
       settingState.primaryColorOverride.common!.primaryColor = value
       settingState.primaryColorOverride.common!.primaryColorHover = value
+
+      const body = document.body
+
+      /** 设置主题色变量 */
+      body.style.setProperty('--ray-theme-primary-color', value)
     }
 
     /**

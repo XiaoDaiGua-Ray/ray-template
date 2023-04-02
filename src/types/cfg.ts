@@ -34,6 +34,7 @@ export interface Config {
   sideBarLogo?: LayoutSideBarLogo
   mixinCSS?: string
   rootRoute?: RootRoute
+  primaryColor?: string
 }
 
 export type Recordable<T = unknown> = Record<string, T>
@@ -50,6 +51,7 @@ export interface AppConfig {
     sideBarLogo?: LayoutSideBarLogo
   }
   rootRoute: RootRoute
+  primaryColor: string
 }
 
 export type AppConfigExport = Config & UserConfigExport

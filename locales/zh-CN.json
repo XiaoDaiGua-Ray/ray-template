@@ -10,7 +10,11 @@
     "Table": "表格",
     "MultiMenu": "多级菜单",
     "Doc": "文档",
-    "DocLocal": "文档 (国内地址)"
+    "DocLocal": "文档 (国内地址)",
+    "Office": "办公",
+    "Office_Document": "文档",
+    "Office_Presentation": "演示",
+    "Office_Spreadsheet": "表格"
   },
   "LayoutHeaderTooltipOptions": {
     "Reload": "刷新当前页面",
@@ -32,6 +36,7 @@
   "LoginModule": {
     "Register": "注册",
     "Signin": "登陆",
+    "QRCodeSignin": "扫码登陆",
     "NamePlaceholder": "请输入用户名",
     "PasswordPlaceholder": "请输入密码",
     "Login": "登 陆",

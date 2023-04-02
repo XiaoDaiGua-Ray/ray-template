@@ -1,4 +1,5 @@
 import './index.scss'
+
 import {
   NSpace,
   NCard,
@@ -7,22 +8,33 @@ import {
   NGradientText,
   NDropdown,
   NDivider,
+  NGrid,
+  NGridItem,
 } from 'naive-ui'
 import Signin from './components/Signin/index'
 import Register from './components/Register/index'
-import { useSetting } from '@/store'
+import QRCodeSignin from './components/QRCodeSignin/index'
+import SSOSignin from './components/SSOSignin/index'
 import RayIcon from '@/components/RayIcon'
-import { localOptions } from '@/language/index'
 import RayLink from '@/components/RayLink/index'
+import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch/index'
+
+import { useSetting } from '@/store'
+import { localOptions } from '@/language/index'
 
 const Login = defineComponent({
   name: 'Login',
   setup() {
+    const { t } = useI18n()
+    const {
+      layout: { copyright },
+    } = __APP_CFG__
+
     const state = reactive({
       tabsValue: 'signin',
     })
-    const { t } = useI18n()
-    const { height: windowHeight } = useWindowSize()
+
+    const { height: windowHeight, width: windowWidth } = useWindowSize()
     const settingStore = useSetting()
     const { updateLocale } = settingStore
 
@@ -30,35 +42,115 @@ const Login = defineComponent({
       ...toRefs(state),
       windowHeight,
       updateLocale,
-      ray: t,
+      t,
+      copyright,
+      windowWidth,
     }
   },
   render() {
+    const { t } = this
+
     return (
       <div class={['login']} style={[`height: ${this.windowHeight}px`]}>
-        <NSpace>
-          <NGradientText class="login-title" type="info">
-            Ray Template
-          </NGradientText>
-          <NDropdown
-            options={localOptions}
-            onSelect={(key) => this.updateLocale(key)}
-          >
-            <RayIcon customClassName="login-icon" name="language" size="18" />
-          </NDropdown>
-        </NSpace>
-        <NCard>
-          <NTabs v-model:value={this.tabsValue}>
-            <NTabPane tab={this.ray('LoginModule.Signin')} name="signin">
-              <Signin />
-            </NTabPane>
-            <NTabPane tab={this.ray('LoginModule.Register')} name="register">
-              <Register />
-            </NTabPane>
-          </NTabs>
-          <NDivider>友情链接</NDivider>
-          <RayLink />
-        </NCard>
+        <div
+          class={[
+            'login-wrapper',
+            this.windowWidth >= 1200 ? 'login-wrapper--divider' : '',
+          ]}
+        >
+          <div class={['login-wrapper__content']}>
+            <NSpace align="center" class="login-title__wrapper">
+              <RayIcon name="ray" size="48" />
+              <NGradientText class="login-title" type="info" size={28}>
+                Ray Template
+              </NGradientText>
+            </NSpace>
+            <NSpace
+              align="center"
+              class="login-action__wrapper"
+              itemStyle={{
+                display: 'flex',
+              }}
+            >
+              <ThemeSwitch />
+              <NDropdown
+                options={localOptions}
+                onSelect={(key) => this.updateLocale(key)}
+              >
+                <RayIcon
+                  customClassName="login-icon"
+                  name="language"
+                  size="18"
+                />
+              </NDropdown>
+            </NSpace>
+            <NGrid
+              cols={'s:1 m:1 l:2 xl:2 2xl:2'}
+              itemResponsive={false}
+              responsive="screen"
+            >
+              <NGridItem
+                span={'s:0 m:0 l:1 xl:1 2xl:1'}
+                class="login__left-wrapper"
+              >
+                <NSpace align="center" vertical>
+                  <RayIcon name="login_bg" width="368" height="368" />
+                  <NGradientText class="login-title" type="info" size={36}>
+                    开箱即用的中后台管理系统
+                  </NGradientText>
+                </NSpace>
+              </NGridItem>
+              <NGridItem span={1} class="login__right-wrapper">
+                <NCard
+                  class="login__right-wrapper__content"
+                  embedded
+                  bordered={false}
+                >
+                  <NTabs
+                    v-model:value={this.tabsValue}
+                    type="line"
+                    animated
+                    size="large"
+                  >
+                    {{
+                      default: () => (
+                        <>
+                          <NTabPane tab={t('LoginModule.Signin')} name="signin">
+                            <Signin />
+                          </NTabPane>
+                          <NTabPane
+                            tab={t('LoginModule.Register')}
+                            name="register"
+                          >
+                            <Register />
+                          </NTabPane>
+                          <NTabPane
+                            tab={t('LoginModule.QRCodeSignin')}
+                            name="qrcodeSignin"
+                          >
+                            <QRCodeSignin />
+                          </NTabPane>
+                        </>
+                      ),
+                    }}
+                  </NTabs>
+                  <NDivider>其他登陆方式</NDivider>
+                  <SSOSignin />
+                  <NDivider>友情链接</NDivider>
+                  <RayLink />
+                </NCard>
+              </NGridItem>
+            </NGrid>
+            <NSpace
+              align="center"
+              justify="center"
+              class="login-copyright__wrapper"
+              wrapItem={false}
+            >
+              {this.copyright}
+            </NSpace>
+          </div>
+        </div>
       </div>
     )
   },

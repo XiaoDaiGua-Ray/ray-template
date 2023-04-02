@@ -6,11 +6,11 @@ import {
   NSpace,
   NSwitch,
   NColorPicker,
-  NTooltip,
   NDescriptions,
   NDescriptionsItem,
 } from 'naive-ui'
-import RayIcon from '@/components/RayIcon/index'
+import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch/index'
+
 import { useSwatchesColorOptions } from './hook'
 import { useSetting } from '@/store'
 
@@ -58,7 +58,7 @@ const SettingDrawer = defineComponent({
 
     return {
       modelShow,
-      ray: t,
+      t,
       handleRailStyle,
       changePrimaryColor,
       themeValue,
@@ -69,61 +69,22 @@ const SettingDrawer = defineComponent({
     }
   },
   render() {
+    const { t } = this
+
     return (
       <NDrawer
         v-model:show={this.modelShow}
         placement={this.placement}
         width={this.width}
       >
-        <NDrawerContent title={this.ray('LayoutHeaderSettingOptions.Title')}>
+        <NDrawerContent title={t('LayoutHeaderSettingOptions.Title')}>
           <NSpace class="setting-drawer__space" vertical>
             <NDivider titlePlacement="center">
-              {this.ray('LayoutHeaderSettingOptions.ThemeOptions.Title')}
+              {t('LayoutHeaderSettingOptions.ThemeOptions.Title')}
             </NDivider>
-            <NSpace justify="center">
-              <NTooltip>
-                {{
-                  trigger: () => (
-                    <NSwitch
-                      v-model:value={this.themeValue}
-                      railStyle={this.handleRailStyle.bind(this)}
-                      onUpdateValue={(bool: boolean) =>
-                        this.changeSwitcher(bool, 'themeValue')
-                      }
-                    >
-                      {{
-                        'checked-icon': () =>
-                          h(
-                            RayIcon,
-                            {
-                              name: 'dark',
-                            },
-                            {},
-                          ),
-                        'unchecked-icon': () =>
-                          h(
-                            RayIcon,
-                            {
-                              name: 'light',
-                            },
-                            {},
-                          ),
-                      }}
-                    </NSwitch>
-                  ),
-                  default: () =>
-                    this.themeValue
-                      ? this.ray('LayoutHeaderSettingOptions.ThemeOptions.Dark')
-                      : this.ray(
-                          'LayoutHeaderSettingOptions.ThemeOptions.Light',
-                        ),
-                }}
-              </NTooltip>
-            </NSpace>
+            <ThemeSwitch />
             <NDivider titlePlacement="center">
-              {this.ray(
-                'LayoutHeaderSettingOptions.ThemeOptions.PrimaryColorConfig',
-              )}
+              {t('LayoutHeaderSettingOptions.ThemeOptions.PrimaryColorConfig')}
             </NDivider>
             <NColorPicker
               swatches={useSwatchesColorOptions()}

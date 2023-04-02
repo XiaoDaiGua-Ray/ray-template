@@ -45,7 +45,7 @@ const Axios = defineComponent({
       try {
         const cb = await onAxiosTest(value)
 
-        state.weatherData = cb.data as unknown as IUnknownObjectKey[]
+        state.weatherData = cb.data
       } catch (e) {
         window.$message.error('请求已被取消')
       }
@@ -53,7 +53,8 @@ const Axios = defineComponent({
 
     onBeforeMount(async () => {
       const cb = await onAxiosTest('成都')
-      state.weatherData = cb.data as unknown as IUnknownObjectKey[]
+
+      state.weatherData = cb.data
     })
 
     return {

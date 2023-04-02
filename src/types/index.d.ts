@@ -1,26 +1,15 @@
 export {}
 
-import type CryptoJS from 'crypto-js'
 import type {
   MessageApi,
   DialogApi,
   LoadingBarApi,
   NotificationApi,
-  MenuOption,
-  MenuDividerOption,
-  MenuGroupOption,
 } from 'naive-ui'
-import type { ECharts } from 'echarts/core'
-import type { VNodeChild } from 'vue'
-import type { LayoutSideBarLogo, LayoutCopyright, AppConfig } from './cfg'
+import type { AppConfig } from './cfg'
 
 export global {
   declare const __APP_CFG__: AppConfig
-
-  declare type NaiveMenuOptions =
-    | MenuOption
-    | MenuDividerOption
-    | MenuGroupOption
 
   declare interface Window {
     // 是否存在无界
@@ -51,41 +40,10 @@ export global {
     $dialog: DialogApi
     $loadingBar: LoadingBarApi
     $notification: NotificationApi
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    DocsAPI?: any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    DocEditor?: any
   }
-
-  declare interface IUnknownObjectKey {
-    [propName: string]: unknown
-  }
-
-  declare type EventListenerOrEventListenerObject =
-    | EventListener
-    | EventListenerObject
-
-  declare type ValidteValueType =
-    | 'Number'
-    | 'String'
-    | 'Boolean'
-    | 'Object'
-    | 'Function'
-    | 'Null'
-    | 'Undefined'
-    | 'Array'
-    | 'Date'
-    | 'Math'
-    | 'RegExp'
-    | 'Error'
-
-  declare type WordArray = CryptoJS.lib.WordArray
-
-  declare type CipherOption = CryptoJS.lib.CipherOption
-
-  declare type CipherParams = CryptoJS.lib.CipherParams
-
-  declare type VoidFunc = (...args: unknown[]) => void
-
-  declare type NaiveDrawerPlacement = 'top' | 'right' | 'bottom' | 'left'
-
-  declare type AnyFunc = (...args: unknown[]) => unknown
-
-  declare type EChartsInstance = ECharts
 }

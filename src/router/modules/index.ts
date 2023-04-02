@@ -8,9 +8,11 @@ import table from './table'
 import doc from './doc'
 import multiMenu from './multi-menu'
 import docLocal from './doc-local'
+import office from './office'
 
 const routes = [
   dashboard,
+  office,
   echart,
   table,
   axios,

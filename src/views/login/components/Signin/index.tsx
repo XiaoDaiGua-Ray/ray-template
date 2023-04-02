@@ -1,4 +1,5 @@
-import { NForm, NFormItem, NInput, NButton } from 'naive-ui'
+import { NForm, NFormItem, NInput, NButton, NSpace, NDivider } from 'naive-ui'
+
 import { setCache } from '@/utils/cache'
 import { useSpin } from '@/spin'
 import { useSignin } from '@/store'
@@ -8,6 +9,8 @@ import type { FormInst } from 'naive-ui'
 const Signin = defineComponent({
   name: 'Signin',
   setup() {
+    const loginFormRef = ref<FormInst>()
+
     const { t } = useI18n()
     const signinStore = useSignin()
 
@@ -23,7 +26,6 @@ const Signin = defineComponent({
 
     const router = useRouter()
     const signinForm = ref(useSigninForm())
-    const loginFormRef = ref<FormInst>()
 
     const rules = {
       name: {
@@ -37,6 +39,8 @@ const Signin = defineComponent({
         trigger: ['blur', 'input'],
       },
     }
+
+    /** 普通登陆形式 */
     const handleLogin = () => {
       loginFormRef.value?.validate((valid) => {
         if (!valid) {
@@ -69,19 +73,21 @@ const Signin = defineComponent({
     }
   },
   render() {
+    const { t } = this
+
     return (
       <NForm model={this.signinForm} ref="loginFormRef" rules={this.rules}>
-        <NFormItem label={this.t('LoginModule.Name')} path="name">
+        <NFormItem label={t('LoginModule.Name')} path="name">
           <NInput
             v-model:value={this.signinForm.name}
-            placeholder={this.t('LoginModule.NamePlaceholder')}
+            placeholder={t('LoginModule.NamePlaceholder')}
           />
         </NFormItem>
-        <NFormItem label={this.t('LoginModule.Password')} path="pwd">
+        <NFormItem label={t('LoginModule.Password')} path="pwd">
           <NInput
             v-model:value={this.signinForm.pwd}
             type="password"
-            placeholder={this.t('LoginModule.PasswordPlaceholder')}
+            placeholder={t('LoginModule.PasswordPlaceholder')}
           />
         </NFormItem>
         <NButton
@@ -89,7 +95,7 @@ const Signin = defineComponent({
           type="primary"
           onClick={this.handleLogin.bind(this)}
         >
-          {this.t('LoginModule.Login')}
+          {t('LoginModule.Login')}
         </NButton>
       </NForm>
     )

@@ -351,7 +351,6 @@ const RayChart = defineComponent({
     const resizeChart = () => {
       if (echartInstance) {
         echartInstance.resize()
-        console.log('resize')
       }
     }
 

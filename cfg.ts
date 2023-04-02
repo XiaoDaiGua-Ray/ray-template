@@ -9,6 +9,8 @@ import {
 import type { AppConfigExport } from './src/types/cfg'
 
 const config: AppConfigExport = {
+  /** 默认主题色 */
+  primaryColor: '#2d8cf0',
   /**
    *
    * 配置根页面
@@ -82,6 +84,11 @@ const config: AppConfigExport = {
         target: 'url',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+      '/office': {
+        target: 'https://office.yka.one/',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/office/, ''),
       },
     },
   },

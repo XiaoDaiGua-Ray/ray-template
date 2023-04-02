@@ -32,6 +32,7 @@ const {
   sideBarLogo,
   mixinCSS,
   rootRoute,
+  primaryColor,
 } = config
 
 /**
@@ -51,6 +52,7 @@ const __APP_CFG__ = {
     sideBarLogo,
   },
   rootRoute,
+  primaryColor,
 }
 
 // https://vitejs.dev/config/

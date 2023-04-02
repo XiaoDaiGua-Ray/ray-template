@@ -1,5 +1,21 @@
 # CHANGE LOG
 
+## 3.1.5
+
+### Fixes
+
+- 配置 `tsconfig.json` 中 `ignoreDeprecations` 属性，消除 `ts5.0` 破坏性配置更新警告
+
+### Feats
+
+- 基于 `onlyoffice` 新增 `Office` 功能(待完成...)
+- 重写 `AxiosInstance` 类型
+- `src/types` 分包更加清晰
+- 将主色调同步至 `body`，默认同步 `cfg.primaryColor` 值
+- 登陆页一些修改
+- 将一些设置型功能抽离为组件
+- 调整同步主题色执行时机
+
 ## 3.1.4
 
 ### Fixes

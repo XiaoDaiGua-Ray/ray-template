@@ -71,6 +71,7 @@ const RayLink = defineComponent({
                   style={['cursor: pointer']}
                   onClick={this.handleLinkClick.bind(this, curr)}
                   objectFit="cover"
+                  size={24}
                 />
               ),
               default: () => curr.tooltip,
