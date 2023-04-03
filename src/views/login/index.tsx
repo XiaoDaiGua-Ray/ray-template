@@ -55,7 +55,7 @@ const Login = defineComponent({
         <div
           class={[
             'login-wrapper',
-            this.windowWidth >= 1200 ? 'login-wrapper--divider' : '',
+            this.windowWidth >= 1440 ? 'login-wrapper--divider' : '',
           ]}
         >
           <div class={['login-wrapper__content']}>

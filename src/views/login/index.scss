@@ -92,3 +92,21 @@ $positionY: 24px;
     background-color: #2a3146;
   }
 }
+
+@media screen and (max-width: 1200px) {
+  .login__left-wrapper {
+    display: none !important;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 992px) {
+  .login__right-wrapper .login__right-wrapper__content {
+    width: 55% !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .login__right-wrapper .login__right-wrapper__content {
+    width: 100% !important;
+  }
+}
