@@ -7,6 +7,11 @@
     <title>Vite + Vue + TS</title>
   </head>
   <style>
+    :root {
+      --preloading-tag-color: <%= preloadingConfig.tagColor %>;
+      --preloading-title-color: <%= preloadingConfig.titleColor %>;
+    }
+
     #pre-loading-animation {
       position: fixed;
       left: 0;
@@ -14,7 +19,7 @@
       top: 0;
       bottom: 0;
       background-color: #ffffff;
-      color: #2d8cf0;
+      color: var(--preloading-title-color);
       text-align: center;
     }
 
@@ -46,7 +51,7 @@
 
       animation: rectangle infinite 1s ease-in-out -0.2s;
 
-      background-color: #ff6700;
+      background-color: var(--preloading-tag-color);
     }
 
     .pre-loading-animation__wrapper-loading:before,
@@ -55,7 +60,7 @@
       width: 6px;
       height: 10px;
       content: '';
-      background-color: #ff6700;
+      background-color: var(--preloading-tag-color);
     }
 
     .pre-loading-animation__wrapper-loading:before {
@@ -75,12 +80,12 @@
       80%,
       100% {
         height: 20px;
-        box-shadow: 0 0 #ff6700;
+        box-shadow: 0 0 var(--preloading-tag-color);
       }
 
       40% {
         height: 30px;
-        box-shadow: 0 -20px #ff6700;
+        box-shadow: 0 -20px var(--preloading-tag-color);
       }
     }
   </style>
@@ -88,7 +93,9 @@
     <div id="app"></div>
     <div id="pre-loading-animation">
       <div class="pre-loading-animation__wrapper">
-        <div class="pre-loading-animation__wrapper-title">Ray Template</div>
+        <div class="pre-loading-animation__wrapper-title">
+          <%= preloadingConfig.title %>
+        </div>
         <div class="pre-loading-animation__wrapper-loading"></div>
       </div>
     </div>

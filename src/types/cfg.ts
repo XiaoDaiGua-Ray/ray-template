@@ -25,6 +25,12 @@ export interface HTMLTitle {
   transformIndexHtml: (title: string) => string
 }
 
+export interface PreloadingConfig {
+  title?: string
+  tagColor?: string
+  titleColor?: string
+}
+
 export interface Config {
   server: ServerOptions
   buildOptions: (mode: string) => BuildOptions
@@ -35,10 +41,18 @@ export interface Config {
   mixinCSS?: string
   rootRoute?: RootRoute
   primaryColor?: string
+  preloadingConfig?: PreloadingConfig
 }
 
 export type Recordable<T = unknown> = Record<string, T>
 
+/**
+ *
+ * 全局注入配置
+ *
+ * 使用示例:
+ * const { layout } = __APP_CFG__
+ */
 export interface AppConfig {
   pkg: {
     name: string

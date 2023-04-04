@@ -9,6 +9,12 @@ import {
 import type { AppConfigExport } from './src/types/cfg'
 
 const config: AppConfigExport = {
+  /** 配置首屏加载信息 */
+  preloadingConfig: {
+    title: 'Ray Template',
+    tagColor: '#ff6700',
+    titleColor: '#2d8cf0',
+  },
   /** 默认主题色 */
   primaryColor: '#2d8cf0',
   /**
@@ -64,7 +70,7 @@ const config: AppConfigExport = {
    *
    * 浏览器标题
    */
-  title: HTMLTitlePlugin('ray template'),
+  title: HTMLTitlePlugin('Ray Template'),
   /**
    *
    * 配置 HMR 特定选项（端口、主机、路径和协议）

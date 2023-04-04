@@ -16,6 +16,7 @@ import viteEslintPlugin from 'vite-plugin-eslint'
 import vitePluginImp from 'vite-plugin-imp' // 按需打包工具
 import { visualizer } from 'rollup-plugin-visualizer' // 打包体积分析工具
 import viteCompression from 'vite-plugin-compression' // 压缩打包
+import { ViteEjsPlugin } from 'vite-plugin-ejs'
 
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers' // 模板自动导入组件并且按需打包
 
@@ -33,6 +34,7 @@ const {
   mixinCSS,
   rootRoute,
   primaryColor,
+  preloadingConfig,
 } = config
 
 /**
@@ -125,6 +127,9 @@ export default defineConfig(async ({ mode }) => {
         emitFile: false, // 生成文件在根目录下
         filename: 'visualizer.html',
         open: mode === 'report' ? true : false, // 以默认服务器代理打开文件
+      }),
+      ViteEjsPlugin({
+        preloadingConfig,
       }),
     ],
     optimizeDeps: {
