@@ -1,6 +1,6 @@
 import './index.scss'
 
-import { NLayout, NLayoutContent, NSpin } from 'naive-ui'
+import { NLayout, NLayoutContent } from 'naive-ui'
 import RayTransitionComponent from '@/components/RayTransitionComponent/index.vue'
 import LayoutMenu from './components/Menu/index'
 import SiderBar from './components/SiderBar/index'
@@ -15,7 +15,6 @@ const Layout = defineComponent({
 
     const { height: windowHeight } = useWindowSize()
     const {
-      themeValue,
       reloadRouteSwitch: modelReloadRoute,
       menuTagSwitch: modelMenuTagSwitch,
     } = storeToRefs(settingStore)

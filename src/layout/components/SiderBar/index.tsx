@@ -18,11 +18,11 @@ import SettingDrawer from './components/SettingDrawer/index'
 import Breadcrumb from './components/Breadcrumb/index'
 
 import { useSetting } from '@/store'
+import { useSignin } from '@/store'
 import { localOptions } from '@/language/index'
 import { useAvatarOptions } from './hook'
 import { getCache } from '@/utils/cache'
 import screenfull from 'screenfull'
-import { logout } from '@/utils/user'
 
 import type { IconEventMapOptions, IconEventMap } from './type'
 
@@ -37,9 +37,11 @@ const SiderBar = defineComponent({
   name: 'SiderBar',
   setup() {
     const settingStore = useSetting()
+    const signinStore = useSignin()
 
     const { t } = useI18n()
     const { updateLocale, changeSwitcher } = settingStore
+    const { logout } = signinStore
     const { drawerPlacement, breadcrumbSwitch } = storeToRefs(settingStore)
     const showSettings = ref(false)
     const person = getCache('person')
@@ -145,7 +147,11 @@ const SiderBar = defineComponent({
           align="center"
           justify="space-between"
         >
-          <NSpace align="center" itemStyle={this.spaceItemStyle}>
+          <NSpace
+            align="center"
+            wrapItem={false}
+            itemStyle={this.spaceItemStyle}
+          >
             {this.leftIconOptions.map((curr) => (
               <NTooltip>
                 {{
@@ -163,7 +169,11 @@ const SiderBar = defineComponent({
             ))}
             {this.breadcrumbSwitch ? <Breadcrumb /> : ''}
           </NSpace>
-          <NSpace align="center" itemStyle={this.spaceItemStyle}>
+          <NSpace
+            align="center"
+            wrapItem={false}
+            itemStyle={this.spaceItemStyle}
+          >
             {this.rightTooltipIconOptions.map((curr) => (
               <RayTooltipIcon
                 iconName={curr.name}

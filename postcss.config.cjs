@@ -11,11 +11,21 @@ module.exports = {
       ],
       grid: true,
     },
-    'postcss-pxtorem': {
-      rootValue: 16, // 根元素字体大小或根据 `input` 参数返回根元素字体大小
-      unitPrecision: 5,
-      propList: ['font', 'font-size', 'line-height', 'letter-spacing'], // 可以从 `px` 更改为 `rem` 的属性
-      selectorBlackList: [], // 要忽略并保留为 `px` 的选择器
-    },
+    // 'postcss-px-to-viewport': {
+    //   /** 视窗的宽度(设计稿的宽度) */
+    //   viewportWidth: 1920,
+    //   /** 视窗的高度(设计稿高度, 一般无需指定) */
+    //   viewportHeight: 1080,
+    //   /** 指定 px 转换为视窗单位值的小数位数 */
+    //   unitPrecision: 3,
+    //   /** 指定需要转换成的视窗单位 */
+    //   viewportUnit: 'vw',
+    //   /** 指定不转换为视窗单位的类 */
+    //   selectorBlackList: ['.ignore'],
+    //   /** 小于或等于 1px 不转换为视窗单位 */
+    //   minPixelValue: 1,
+    //   /** 允许在媒体查询中转换 px */
+    //   mediaQuery: false,
+    // },
   },
 }

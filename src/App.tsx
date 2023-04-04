@@ -5,7 +5,7 @@ import GlobalSpin from '@/spin/index'
 import { getCache } from '@/utils/cache'
 import { get } from 'lodash-es'
 import { useSetting } from '@/store'
-import { addClass, removeClass } from '@/utils/element'
+import { addClass, removeClass, addStyle } from '@/utils/element'
 
 const App = defineComponent({
   name: 'App',
@@ -29,7 +29,19 @@ const App = defineComponent({
       body.style.setProperty('--ray-theme-primary-color', _p || primaryColor)
     }
 
+    /** 隐藏加载动画 */
+    const hiddenLoadingAnimation = () => {
+      const el = document.getElementById('pre-loading-animation')
+
+      if (el) {
+        addStyle(el, {
+          display: 'none',
+        })
+      }
+    }
+
     syncPrimaryColorToBody()
+    hiddenLoadingAnimation()
 
     watch(
       () => themeValue.value,

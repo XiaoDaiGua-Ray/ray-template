@@ -6,6 +6,14 @@ import BASE64 from 'crypto-js/enc-base64'
 
 /**
  *
+ * 这个玩意儿实际使用意义不大, 建议自己参考官网 demo 使用
+ * 我又不想删除, 所以留在这儿了
+ *
+ * 手动补上官网地址: http://github.com/brix/crypto-js
+ */
+
+/**
+ *
  * @param message 待加密信息
  * @param key 加密key
  *

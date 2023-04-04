@@ -72,7 +72,7 @@ export const uuid = (length = 16, radix?: number) => {
 
     for (i = 0; i < 36; i++) {
       if (!arr[i]) {
-        r = 0 | (Math.random() * 16)
+        r = 0 | (Math.random() * radix)
 
         arr[i] = sad[i === 19 ? (r & 0x3) | 0x8 : r]
       }

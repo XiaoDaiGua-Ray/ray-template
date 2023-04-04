@@ -11,17 +11,21 @@ export const getElementChildNodes = (
   el: HTMLElement,
   target?: string[] | string,
 ) => {
-  let nodes = Array.from(el.childNodes)
+  if (el) {
+    let nodes = Array.from(el.childNodes)
 
-  if (Array.isArray(target)) {
-    nodes = nodes.filter((el) => target.includes(el.nodeName))
-  } else {
-    if (target) {
-      nodes = nodes.filter((el) => el.nodeName === target)
+    if (Array.isArray(target)) {
+      nodes = nodes.filter((el) => target.includes(el.nodeName))
+    } else {
+      if (target) {
+        nodes = nodes.filter((el) => el.nodeName === target)
+      }
     }
-  }
 
-  return nodes
+    return nodes
+  } else {
+    return []
+  }
 }
 
 /**
@@ -65,7 +69,7 @@ export const off = (
 /**
  *
  * @param element Target element dom
- * @param className 所需添加className，可: 'xxx xxx' | 'xxx'格式添加
+ * @param className 所需添加className，可: 'xxx xxx' | 'xxx' 格式添加(参考向元素绑定 css 语法)
  *
  * @remark 添加元素className(可: 'xxx xxx' | 'xxx'格式添加)
  */
@@ -84,7 +88,7 @@ export const addClass = (element: HTMLElement, className: string) => {
 /**
  *
  * @param element Target element dom
- * @param className 所需删除className，可: 'xxx xxx' | 'xxx'格式删除
+ * @param className 所需删除className，可: 'xxx xxx' | 'xxx' 格式删除(参考向元素绑定 css 语法)
  *
  * @remark 删除元素className(可: 'xxx xxx' | 'xxx'格式删除)
  * @remark 如果输入值为 removeAllClass 则会删除该元素所有 class name
@@ -113,11 +117,11 @@ export const removeClass = (
 /**
  *
  * @param element Target element dom
- * @param className 查询元素是否含有此className，可: 'xxx xxx' | 'xxx'格式查询
+ * @param className 查询元素是否含有此className，可: 'xxx xxx' | 'xxx' 格式查询(参考向元素绑定 css 语法)
  *
  * @returns 返回boolean
  *
- * @remark 元素是否含有某个className(可: 'xxx xxx' | 'xxx'格式查询)
+ * @remark 元素是否含有某个className(可: 'xxx xxx' | 'xxx' 格式查询)
  */
 export const hasClass = (element: HTMLElement, className: string) => {
   const elementClassName = element.className

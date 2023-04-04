@@ -18,8 +18,9 @@ export const setCache = <T = unknown>(
 /**
  *
  * @param key 需要获取目标缓存的key
- *
  * @returns 获取缓存值
+ *
+ * @remark 如果未匹配到目标值则返回字符串 'no'
  */
 export const getCache = (key: string, type: CacheType = 'sessionStorage') => {
   const data =
@@ -33,6 +34,11 @@ export const getCache = (key: string, type: CacheType = 'sessionStorage') => {
 /**
  *
  * @param key 需要删除的缓存值key
+ *
+ * key:
+ *   - all: 删除所有缓存值
+ *   - all-sessionStorage: 删除所有 sessionStorage 缓存值
+ *   - all-localStorage: 删除所有 localStorage 缓存值
  */
 export const removeCache = (
   key: string | 'all' | 'all-sessionStorage' | 'all-localStorage',

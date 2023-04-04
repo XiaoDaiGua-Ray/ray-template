@@ -74,25 +74,29 @@ export const exportFileToXLSX = async (
   config: ExportXLSXConfig = {},
 ) => {
   await new Promise<void>((resolve, reject) => {
-    if (dataSource?.length) {
-      const sheetHeader = setupSheetHeader(columns ?? []) // 获取所有列(设置为 `excel` 表头)
-      const sheetData = utils.json_to_sheet(dataSource) // 将所有数据转换为表格数据类型
-      const workBook = utils.book_new()
-      const filename = config.filename
-        ? config.filename + '.xlsx'
-        : dayjs().format('YYYY-MM-DD') + '导出表格.xlsx'
+    if (Array.isArray(dataSource)) {
+      if (dataSource.length) {
+        const sheetHeader = setupSheetHeader(columns ?? []) // 获取所有列(设置为 `excel` 表头)
+        const sheetData = utils.json_to_sheet(dataSource) // 将所有数据转换为表格数据类型
+        const workBook = utils.book_new()
+        const filename = config.filename
+          ? config.filename + '.xlsx'
+          : dayjs().format('YYYY-MM-DD') + '导出表格.xlsx'
 
-      utils.book_append_sheet(workBook, sheetData, 'Data')
+        utils.book_append_sheet(workBook, sheetData, 'Data')
 
-      const range = utils.decode_range(sheetData['!ref'] as string) // 获取所有单元格
+        const range = utils.decode_range(sheetData['!ref'] as string) // 获取所有单元格
 
-      if (columns?.length) {
-        transformSheetHeader(range, sheetData, sheetHeader)
+        if (columns?.length) {
+          transformSheetHeader(range, sheetData, sheetHeader)
+        }
+
+        writeFileXLSX(workBook, filename) // 输出表格
+
+        resolve()
+      } else {
+        resolve()
       }
-
-      writeFileXLSX(workBook, filename) // 输出表格
-
-      resolve()
     } else {
       reject()
     }

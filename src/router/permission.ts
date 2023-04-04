@@ -34,6 +34,7 @@ export const permissionRouter = (router: Router) => {
     rootRoute: { path },
   } = __APP_CFG__
 
+  /** 如果没有权限, 则重定向至首页 */
   const redirectToDashboard = (next: NavigationGuardNext) => {
     next(path)
 
@@ -43,7 +44,8 @@ export const permissionRouter = (router: Router) => {
   beforeEach((to, from, next) => {
     const token = getCache('token')
     const route = getCache('menuKey')
-    const { role } = storeToRefs(useSignin())
+    const { signinCallback } = storeToRefs(useSignin())
+    const role = computed(() => signinCallback.value.role)
     const { meta } = to
 
     const hasRole = () => {

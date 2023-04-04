@@ -26,7 +26,8 @@ import { useSignin } from '@/store'
 import { whiteRoutes, superAdmin } from './configuration'
 
 export const validRole = (options: IMenuOptions) => {
-  const { role } = storeToRefs(useSignin())
+  const { signinCallback } = storeToRefs(useSignin())
+  const role = computed(() => signinCallback.value.role)
 
   const { meta, name } = options
   const hidden =
