@@ -5,35 +5,169 @@
     <link rel="icon" type="image/svg+xml" href="/ray.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ray template</title>
-    <script type="module" crossorigin src="/assets/index-d84b3024.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/@vue-a5f4faa6.js">
+    <script type="module" crossorigin src="/assets/index-0495e18e.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/@vue-6996c4b6.js">
     <link rel="modulepreload" crossorigin href="/assets/vue-demi-71ba0ef2.js">
-    <link rel="modulepreload" crossorigin href="/assets/pinia-15a322aa.js">
+    <link rel="modulepreload" crossorigin href="/assets/pinia-c02b34e2.js">
     <link rel="modulepreload" crossorigin href="/assets/lodash-es-1a3ec8cd.js">
-    <link rel="modulepreload" crossorigin href="/assets/pinia-plugin-persistedstate-d93b4f94.js">
     <link rel="modulepreload" crossorigin href="/assets/@intlify-bd5dfa46.js">
-    <link rel="modulepreload" crossorigin href="/assets/vue-i18n-1b078a41.js">
-    <link rel="modulepreload" crossorigin href="/assets/vue-router-dc1ee7d4.js">
+    <link rel="modulepreload" crossorigin href="/assets/vue-i18n-a041e1ab.js">
+    <link rel="modulepreload" crossorigin href="/assets/vue-router-5661a2ac.js">
     <link rel="modulepreload" crossorigin href="/assets/date-fns-7f923de7.js">
     <link rel="modulepreload" crossorigin href="/assets/evtd-b614532e.js">
     <link rel="modulepreload" crossorigin href="/assets/seemly-dc6f1e91.js">
-    <link rel="modulepreload" crossorigin href="/assets/@css-render-379872f5.js">
-    <link rel="modulepreload" crossorigin href="/assets/vooks-a21d2fcd.js">
+    <link rel="modulepreload" crossorigin href="/assets/@css-render-f42a4f8d.js">
+    <link rel="modulepreload" crossorigin href="/assets/vooks-18ea31ef.js">
     <link rel="modulepreload" crossorigin href="/assets/vdirs-b0483831.js">
     <link rel="modulepreload" crossorigin href="/assets/@juggle-41516555.js">
     <link rel="modulepreload" crossorigin href="/assets/@emotion-8a8e73f6.js">
     <link rel="modulepreload" crossorigin href="/assets/css-render-57962bc1.js">
-    <link rel="modulepreload" crossorigin href="/assets/vueuc-b41d756f.js">
+    <link rel="modulepreload" crossorigin href="/assets/vueuc-48cc3a88.js">
     <link rel="modulepreload" crossorigin href="/assets/treemate-25c27bff.js">
     <link rel="modulepreload" crossorigin href="/assets/date-fns-tz-230e778e.js">
     <link rel="modulepreload" crossorigin href="/assets/async-validator-dee29e8b.js">
-    <link rel="modulepreload" crossorigin href="/assets/naive-ui-54973a8c.js">
-    <link rel="modulepreload" crossorigin href="/assets/@vueuse-a5326c57.js">
+    <link rel="modulepreload" crossorigin href="/assets/naive-ui-20917164.js">
+    <link rel="modulepreload" crossorigin href="/assets/@vueuse-e2eab0ec.js">
     <link rel="modulepreload" crossorigin href="/assets/screenfull-578bfdd4.js">
+    <link rel="modulepreload" crossorigin href="/assets/pinia-plugin-persistedstate-d93b4f94.js">
     <link rel="stylesheet" href="/assets/index-59cf6455.css">
   </head>
+  <style>
+    #pre-loading-animation {
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background-color: #ffffff;
+      color: #2d8cf0;
+      text-align: center;
+    }
+
+    .ray-template--dark #pre-loading-animation {
+      background-color: #2a3146;
+    }
+
+    #pre-loading-animation .pre-loading-animation__wrapper {
+      width: 100%;
+      height: 100%;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+      -webkit-flex-direction: column;
+          -ms-flex-direction: column;
+              flex-direction: column;
+      -webkit-box-pack: center;
+      -webkit-justify-content: center;
+          -ms-flex-pack: center;
+              justify-content: center;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+          -ms-flex-align: center;
+              align-items: center;
+    }
+
+    #pre-loading-animation
+      .pre-loading-animation__wrapper
+      .pre-loading-animation__wrapper-title {
+      font-size: 30px;
+      padding-bottom: 48px;
+    }
+
+    #pre-loading-animation
+      .pre-loading-animation__wrapper
+      .pre-loading-animation__wrapper-loader {
+      margin: 0 0 2em;
+      height: 100px;
+      width: 20%;
+      text-align: center;
+      padding: 1em;
+      margin: 0 auto 1em;
+      display: inline-block;
+      vertical-align: top;
+    }
+
+    #pre-loading-animation
+      .pre-loading-animation__wrapper
+      .pre-loading-animation__wrapper-loader
+      svg
+      path,
+    #pre-loading-animation
+      .pre-loading-animation__wrapper
+      .pre-loading-animation__wrapper-loader
+      svg
+      rect {
+      fill: #ff6700;
+    }
+
+    #pre-loading-animation
+      .pre-loading-animation__wrapper
+      .pre-loading-animation__wrapper-loader
+      svg {
+      -webkit-transform: scale(2);
+          -ms-transform: scale(2);
+              transform: scale(2);
+    }
+  </style>
   <body>
     <div id="app"></div>
+    <div id="pre-loading-animation">
+      <div class="pre-loading-animation__wrapper">
+        <div class="pre-loading-animation__wrapper-title">Ray Template</div>
+        <div class="pre-loading-animation__wrapper-loader">
+          <svg
+            version="1.1"
+            id="Layer_1"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px"
+            y="0px"
+            width="24px"
+            height="30px"
+            viewBox="0 0 24 30"
+            style="enable-background: new 0 0 50 50"
+            xml:space="preserve"
+          >
+            <rect x="0" y="0" width="4" height="10" fill="#333">
+              <animateTransform
+                attributeType="xml"
+                attributeName="transform"
+                type="translate"
+                values="0 0; 0 20; 0 0"
+                begin="0"
+                dur="0.6s"
+                repeatCount="indefinite"
+              />
+            </rect>
+            <rect x="10" y="0" width="4" height="10" fill="#333">
+              <animateTransform
+                attributeType="xml"
+                attributeName="transform"
+                type="translate"
+                values="0 0; 0 20; 0 0"
+                begin="0.2s"
+                dur="0.6s"
+                repeatCount="indefinite"
+              />
+            </rect>
+            <rect x="20" y="0" width="4" height="10" fill="#333">
+              <animateTransform
+                attributeType="xml"
+                attributeName="transform"
+                type="translate"
+                values="0 0; 0 20; 0 0"
+                begin="0.4s"
+                dur="0.6s"
+                repeatCount="indefinite"
+              />
+            </rect>
+          </svg>
+        </div>
+      </div>
+    </div>
     
   </body>
 </html>
