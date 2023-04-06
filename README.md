@@ -12,7 +12,7 @@
 
 ## 预览地址
 
-- [点击预览](https://xiaodaigua-ray.github.io/#/)
+- [点击预览](https://xiaodaigua-ray.github.io/ray-template/#/)
 - [点击预览(加速地址)](https://ray-template.yunkuangao.com/#/)
 
 ## 文档地址

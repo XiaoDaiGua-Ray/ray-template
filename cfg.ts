@@ -47,6 +47,7 @@ import {
 import type { AppConfigExport } from './src/types/cfg'
 
 const config: AppConfigExport = {
+  base: '/ray-template/',
   /** 配置首屏加载信息 */
   preloadingConfig: {
     title: 'Ray Template',

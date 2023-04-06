@@ -42,6 +42,7 @@ export interface Config {
   rootRoute?: RootRoute
   primaryColor?: string
   preloadingConfig?: PreloadingConfig
+  base?: string
 }
 
 export type Recordable<T = unknown> = Record<string, T>
@@ -66,6 +67,7 @@ export interface AppConfig {
   }
   rootRoute: RootRoute
   primaryColor: string
+  base?: string
 }
 
 export type AppConfigExport = Config & UserConfigExport
