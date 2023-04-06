@@ -63,7 +63,11 @@ const LayoutMenu = defineComponent({
             ]}
             onClick={this.handleSideBarLogoClick.bind(this)}
           >
-            <RayIcon name={this.sideBarLogo.icon as string} size="30" />
+            {this.sideBarLogo.icon ? (
+              <RayIcon name={this.sideBarLogo.icon} size="30" />
+            ) : (
+              ''
+            )}
             <h1
               class={[
                 !this.modelCollapsed ? 'ray-menu__logo-title--open' : '',

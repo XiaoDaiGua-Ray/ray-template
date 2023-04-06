@@ -30,10 +30,10 @@ const config: AppConfigExport = {
   },
   /**
    *
-   * icon: LOGO 图标, 依赖 `RayIcon` 实现
+   * icon: LOGO 图标, 依赖 `RayIcon` 实现(如果为空则不会渲染图标)
    * title: LOGO 标题
    * url: 点击跳转地址, 如果不配置该属性, 则不会触发跳转
-   * jumpType: 跳转类型（station: 项目内跳转, outsideStation: 新页面打开）
+   * jumpType: 跳转类型(station: 项目内跳转, outsideStation: 新页面打开)
    *
    * 如果不设置该属性或者为空, 则不会渲染 LOGO
    */
@@ -73,7 +73,7 @@ const config: AppConfigExport = {
   title: HTMLTitlePlugin('Ray Template'),
   /**
    *
-   * 配置 HMR 特定选项（端口、主机、路径和协议）
+   * 配置 HMR 特定选项(端口、主机、路径和协议)
    */
   server: {
     host: '0.0.0.0',
