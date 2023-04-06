@@ -1,5 +1,6 @@
 import { getDefaultLocal } from '@/language/index'
 import { setCache } from '@use-utils/cache'
+import { set } from 'lodash-es'
 
 import type { ConditionalPick } from '@/types/type-utils'
 import type { GlobalThemeOverrides } from 'naive-ui'
@@ -19,6 +20,7 @@ export const useSetting = defineStore(
   'setting',
   () => {
     const { primaryColor } = __APP_CFG__
+    const { locale } = useI18n()
 
     const settingState = reactive<SettingState>({
       drawerPlacement: 'right' as NaiveDrawerPlacement,
@@ -35,7 +37,6 @@ export const useSetting = defineStore(
       breadcrumbSwitch: true, // 面包屑开关
       localeLanguage: getDefaultLocal(),
     })
-    const { locale } = useI18n()
 
     /** 修改当前语言 */
     const updateLocale = (key: string) => {
@@ -47,8 +48,11 @@ export const useSetting = defineStore(
 
     /** 切换主题色 */
     const changePrimaryColor = (value: string) => {
-      settingState.primaryColorOverride.common!.primaryColor = value
-      settingState.primaryColorOverride.common!.primaryColorHover = value
+      set(
+        settingState,
+        'settingState.primaryColorOverride.common.primaryColorHover',
+        value,
+      )
 
       const body = document.body
 
@@ -62,7 +66,6 @@ export const useSetting = defineStore(
      * @param key `settingState` 对应开关属性值
      *
      * @remark 仅适用于值为 `boolean` 的切换
-     * @remark 不知道如何写: 返回属性中所有指定类型值... 如果有知道的一定要私信告知一下
      */
     const changeSwitcher = (
       bool: boolean,

@@ -36,7 +36,7 @@
 
 import './index.scss'
 
-import { NDataTable, NCard, NDropdown, NDivider } from 'naive-ui'
+import { NDataTable, NCard, NDropdown } from 'naive-ui'
 import TableSetting from './components/TableSetting/index'
 import TableAction from './components/TableAction/index'
 import TableSize from './components/TableSize/index'
@@ -51,12 +51,15 @@ import type { ActionOptions } from './type'
 import type { WritableComputedRef } from 'vue'
 import type { DropdownOption } from 'naive-ui'
 import type { ExportExcelHeader } from '@use-utils/xlsx'
+import type { DataTableInst } from 'naive-ui'
 
 const RayTable = defineComponent({
   name: 'RayTable',
   props: props,
   emits: ['update:columns', 'menuSelect', 'exportSuccess', 'exportError'],
   setup(props, { emit }) {
+    const rayTableInstance = ref<DataTableInst>()
+
     const tableUUID = uuid() // 表格 id, 用于打印表格
     const rayTableUUID = uuid() // RayTable id, 用于全屏表格
     const modelRightClickMenu = computed(() => props.rightClickMenu)
@@ -205,6 +208,7 @@ const RayTable = defineComponent({
       cssVars,
       handleChangeTableSize,
       tableSize,
+      rayTableInstance,
     }
   },
   render() {
@@ -219,14 +223,14 @@ const RayTable = defineComponent({
           default: () => (
             <>
               <NDataTable
+                ref="rayTableInstance"
                 id={this.tableUUID}
                 {...this.$props}
                 rowProps={this.handleRowProps.bind(this)}
                 size={this.tableSize}
               >
                 {{
-                  empty: () => this.$slots?.empty?.(),
-                  loading: () => this.$slots?.loading?.(),
+                  ...this.$slots,
                 }}
               </NDataTable>
               {this.showMenu ? (

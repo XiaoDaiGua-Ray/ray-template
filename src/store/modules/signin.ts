@@ -15,6 +15,8 @@
  * 可以存储: 头像, 权限, 以及基于你项目实际情况的一些附带信息
  *
  * 使用 sessionStorage 缓存部分用户信息
+ *
+ * 默认仅缓存 signinCallback 属性
  */
 
 import { isEmpty } from 'lodash-es'

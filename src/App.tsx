@@ -16,8 +16,7 @@ const App = defineComponent({
 
     /** 同步主题色变量至 body, 如果未获取到缓存值则已默认值填充 */
     const syncPrimaryColorToBody = () => {
-      /** 默认值 */
-      const { primaryColor } = __APP_CFG__
+      const { primaryColor } = __APP_CFG__ // 默认主题色
       const body = document.body
 
       const primaryColorOverride = getCache('piniaSettingStore', 'localStorage')
@@ -26,11 +25,13 @@ const App = defineComponent({
         'primaryColorOverride.common.primaryColor',
       )
 
+      /** 设置全局主题色 css 变量 */
       body.style.setProperty('--ray-theme-primary-color', _p || primaryColor)
     }
 
     /** 隐藏加载动画 */
     const hiddenLoadingAnimation = () => {
+      /** pre-loading-animation 是默认 id */
       const el = document.getElementById('pre-loading-animation')
 
       if (el) {
@@ -43,6 +44,7 @@ const App = defineComponent({
     syncPrimaryColorToBody()
     hiddenLoadingAnimation()
 
+    /** 切换主题时, 同步更新 body class 以便于进行自定义 css 配置 */
     watch(
       () => themeValue.value,
       (newData) => {

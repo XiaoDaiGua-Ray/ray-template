@@ -1,3 +1,41 @@
+/**
+ *
+ * @author Ray <https://github.com/XiaoDaiGua-Ray>
+ *
+ * @date 2023-04-06
+ *
+ * @workspace ray-template
+ *
+ * @remark 今天也是元气满满撸代码的一天
+ */
+
+/**
+ *
+ * 系统配置文件入口
+ *
+ * 配置范围:
+ *   - 构建: 开发构建、打包构建、预览构建、体积分析构建等
+ *   - 系统: 根路由、标题、浏览器标题、别名等
+ *   - 请求: 代理配置
+ *
+ * 如果需要新增相关内容, 需要在 src/types/cfg.ts 中进行类型配置
+ * ```
+ * interface Config // config 内容类型配置
+ *
+ * interface AppConfig // __APP_CFG__ 内容配置
+ * ```
+ *
+ * __APP_CFG__ 说明
+ * ```
+ * 该属性是用于全局注入的配置方法
+ *
+ * const { rootRoute } = __APP_CFG__
+ *
+ * 以上例子展示, 从 __APP_CFG__ 中解构取出 rootRoute 根路由配置信息
+ * __APP_CFG__ 会被挂载于全局变量 `window` 下(vite define 默认是挂载于 window 下)
+ * ```
+ */
+
 import path from 'node:path'
 
 import {

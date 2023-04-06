@@ -4,6 +4,7 @@ import type {
   DropdownDividerOption,
   DropdownRenderOption,
   DataTableBaseColumn,
+  DataTableInst,
 } from 'naive-ui'
 import type { ComputedRef, WritableComputedRef, VNode } from 'vue'
 
@@ -70,3 +71,7 @@ export declare type VNodeChild = VNodeChildAtom | VNodeArrayChildren
 export declare type TableColumnTitle =
   | string
   | ((column: DataTableBaseColumn) => VNodeChild)
+
+export declare interface RayTableInst {
+  rayTableInstance: DataTableInst
+}

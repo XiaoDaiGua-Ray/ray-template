@@ -40,6 +40,7 @@ import type { App } from 'vue'
  *
  * @remark 自动归并 locales 下所有 json 语言包, 需要注意语言包名称问题(必须统一)
  * @remark 注意 key 的重复问题, 如果需要多模块区分语言包, 则需要保证 key 的唯一性, 否则会被覆盖
+ * @remark 使用该方法会导致子包中的路径不能使用 i18n ally 语法提示
  */
 export const getMatchLanguageModule = () => {
   const msg = {}

@@ -244,11 +244,15 @@ export const useMenu = defineStore(
     /**
      *
      * @remark 置空 menuTagOptions
+     *
+     * Q: 为什么不直接使用 spliceMenTagOptions 方法置空菜单标签?
+     * A: 因为直接将 menuTagOptions 指向新的地址会快一点
      */
     const emptyMenuTagOptions = () => {
       menuState.menuTagOptions = []
     }
 
+    /** 监听路由变化并且更新路由菜单与菜单标签 */
     watch(
       () => route.fullPath,
       (newData) => {

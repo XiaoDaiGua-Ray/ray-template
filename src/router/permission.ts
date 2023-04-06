@@ -48,8 +48,15 @@ export const permissionRouter = (router: Router) => {
     const role = computed(() => signinCallback.value.role)
     const { meta } = to
 
+    /**
+     *
+     * 检查是否有权限, 如果权限不匹配则重定向至首页(默认为 dashboard)
+     * 权限匹配使用严格比对, 对大小写、空格等敏感
+     */
     const hasRole = () => {
+      /** 如果未设置权限则默认无需鉴权 */
       if (meta.role) {
+        /** 空权限列表默认无需鉴权 */
         if (meta.role.length === 0) {
           return true
         } else {

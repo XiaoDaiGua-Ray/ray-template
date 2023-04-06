@@ -11,30 +11,23 @@
 
 import {
   NLayout,
-  NCard,
   NTag,
   NButton,
   NGridItem,
   NSelect,
   NInput,
   NDatePicker,
-  NInputNumber,
-  NSpace,
   NSwitch,
-  NDescriptions,
-  NDescriptionsItem,
   NP,
-  NH6,
   NH2,
-  NH3,
   NUl,
   NLi,
-  NOl,
 } from 'naive-ui'
 import RayTable from '@/components/RayTable/index'
 import RayCollapseGrid from '@/components/RayCollapseGrid/index'
 
 import type { DataTableColumns } from 'naive-ui'
+import type { RayTableInst } from '@/components/RayTable/index'
 
 type RowData = {
   key: number
@@ -47,6 +40,8 @@ type RowData = {
 const TableView = defineComponent({
   name: 'TableView',
   setup() {
+    const tableRef = ref<RayTableInst>()
+
     const baseColumns = [
       {
         title: 'Name',
@@ -84,6 +79,11 @@ const TableView = defineComponent({
         },
       },
       {
+        title: 'Remark',
+        key: 'remark',
+        width: 300,
+      },
+      {
         title: 'Action',
         key: 'actions',
         render: (row: RowData) =>
@@ -106,6 +106,7 @@ const TableView = defineComponent({
         age: 32,
         address: 'New York No. 1 Lake Park',
         tags: ['nice', 'developer'],
+        remark: '我是一条很长很长的备注',
       },
       {
         key: 1,
@@ -113,6 +114,7 @@ const TableView = defineComponent({
         age: 42,
         address: 'London No. 1 Lake Park',
         tags: ['wow'],
+        remark: '我是一条很长很长的备注',
       },
       {
         key: 2,
@@ -120,6 +122,7 @@ const TableView = defineComponent({
         age: 32,
         address: 'Sidney No. 1 Lake Park',
         tags: ['cool', 'teacher'],
+        remark: '我是一条很长很长的备注',
       },
     ])
     const tableMenuOptions = [
@@ -144,6 +147,10 @@ const TableView = defineComponent({
       }
     }
 
+    onMounted(() => {
+      console.log(tableRef.value?.rayTableInstance)
+    })
+
     return {
       ...toRefs(state),
       tableData,
@@ -151,6 +158,7 @@ const TableView = defineComponent({
       baseColumns,
       tableMenuOptions,
       handleMenuSelect,
+      tableRef,
     }
   },
   render() {
@@ -221,6 +229,8 @@ const TableView = defineComponent({
         </RayCollapseGrid>
         <RayTable
           style="margin-top: 18px"
+          ref="tableRef"
+          scrollX={2000}
           title={h(
             NSwitch,
             {
@@ -229,7 +239,7 @@ const TableView = defineComponent({
             {},
           )}
           data={this.tableData}
-          columns={this.baseColumns}
+          v-model:columns={this.actionColumns}
           pagination={{
             pageSize: 10,
           }}
@@ -238,7 +248,7 @@ const TableView = defineComponent({
           onMenuSelect={this.handleMenuSelect.bind(this)}
         >
           {{
-            tableFooter: () => '表格的底部内容区域，有时候你可能会用上',
+            tableFooter: () => '表格的底部内容区域插槽，有时候你可能会用上',
           }}
         </RayTable>
       </NLayout>
