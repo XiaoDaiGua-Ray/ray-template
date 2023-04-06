@@ -47,6 +47,7 @@ import {
 import type { AppConfigExport } from './src/types/cfg'
 
 const config: AppConfigExport = {
+  /** 公共基础路径配置, 如果为空则会默认以 '/' 填充 */
   base: '/ray-template/',
   /** 配置首屏加载信息 */
   preloadingConfig: {

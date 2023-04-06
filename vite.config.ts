@@ -61,7 +61,7 @@ const __APP_CFG__ = {
 // https://vitejs.dev/config/
 export default defineConfig(async ({ mode }) => {
   return {
-    base,
+    base: base || '/',
     define: {
       __APP_CFG__: JSON.stringify(__APP_CFG__),
     },
