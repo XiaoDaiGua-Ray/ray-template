@@ -16,6 +16,10 @@
  * 说明:
  *   - BreadcrumbMenu、TagMenu、Menu 统一管理
  *   - BreadcrumbMenu、TagMenu、Menu 属性值重度依赖 vue-router routers, 所以需要按照该项目约定方法进行配置
+ *
+ * 缓存(sessionStorage):
+ *   - breadcrumbOptions
+ *   - menuKey
  */
 
 import { NEllipsis } from 'naive-ui'
@@ -23,7 +27,7 @@ import RayIcon from '@/components/RayIcon/index'
 
 import { getCache, setCache } from '@/utils/cache'
 import { validRole } from '@/router/basic'
-import { parse, matchMenuOption } from './helper'
+import { parse, matchMenuOption, updateDocumentTitle } from './helper'
 
 import type { MenuOption } from 'naive-ui'
 import type { RouteMeta } from 'vue-router'
@@ -87,21 +91,26 @@ export const useMenu = defineStore(
             menuState.menuKey,
             menuState.menuTagOptions,
           )
+          updateDocumentTitle(item as unknown as IMenuOptions)
 
           menuState.breadcrumbOptions = parse(menuState.options, 'key', key) // 获取面包屑
 
+          /** 是否为根路由 */
           if (key[0] !== '/') {
+            /** 如果不是根路由, 则拼接完整路由并跳转 */
             const path = getCompleteRoutePath(menuState.options, key)
               .map((curr) => curr.key)
               .join('/')
 
             router.push(path)
           } else {
+            /** 根路由直接跳转 */
             router.push(item.path as string)
           }
 
           menuState.menuKey = key
 
+          /** 缓存菜单 key(sessionStorage) */
           setCache('menuKey', key)
         }
       }
@@ -111,7 +120,8 @@ export const useMenu = defineStore(
      *
      * @param path 路由地址
      *
-     * 监听路由地址变化更新菜单状态
+     * @remark 监听路由地址变化更新菜单状态
+     * @remark 递归查找匹配项
      */
     const updateMenuKeyWhenRouteUpdate = (path: string) => {
       const matchMenuItem = (options: MenuOption[]) => {
@@ -141,16 +151,11 @@ export const useMenu = defineStore(
       isAppend = true,
     ) => {
       const isArray = Array.isArray(optins)
+      const arr = isArray ? [...optins] : [optins]
 
-      if (isAppend) {
-        isArray
-          ? menuState.menuTagOptions.push(...optins)
-          : menuState.menuTagOptions.push(optins)
-      } else {
-        isArray
-          ? (menuState.menuTagOptions = optins)
-          : (menuState.menuTagOptions = [optins])
-      }
+      isAppend
+        ? menuState.menuTagOptions.push(...arr)
+        : (menuState.menuTagOptions = arr)
     }
 
     /**
@@ -159,6 +164,7 @@ export const useMenu = defineStore(
      * @remark 如果权限发生变动, 则会触发强制弹出页面并且重新登陆
      */
     const setupAppRoutes = () => {
+      /** 取出所有 layout 下子路由 */
       const layout = router.getRoutes().find((route) => route.name === 'layout')
 
       const resolveRoutes = (routes: IMenuOptions[], index: number) => {
@@ -168,6 +174,7 @@ export const useMenu = defineStore(
           }
 
           const { meta } = curr
+          /** 设置 label, i18nKey 优先级最高 */
           const label = computed(() =>
             meta?.i18nKey
               ? t(`GlobalMenuOptions.${meta!.i18nKey}`)
@@ -203,7 +210,10 @@ export const useMenu = defineStore(
             : route
 
           if (curr.path === cacheMenuKey) {
+            /** 设置菜单标签 */
             setMenuTagOptions(attr)
+            /** 设置浏览器标题 */
+            updateDocumentTitle(attr)
           }
 
           attr.show = validRole(curr)
@@ -212,6 +222,7 @@ export const useMenu = defineStore(
         })
       }
 
+      /** 缓存菜单列表 */
       menuState.options = resolveRoutes(layout?.children as IMenuOptions[], 0)
 
       /** 初始化后渲染面包屑 */

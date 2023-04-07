@@ -288,16 +288,21 @@ const RayChart = defineComponent({
      * 直接使用响应式代理实例会出现诡异的问题, 例如 `legend` 点击时报错
      */
     const renderChart = (theme: ChartTheme) => {
+      /** 获取 dom 容器 */
       const element = rayChartRef.value as HTMLElement
+      /** 获取配置项 */
       const options = useMergeOptions()
+      /** 获取 dom 容器实际宽高 */
       const { height, width } = element.getBoundingClientRect()
 
+      /** 如果高度为 0, 则以 200px 填充 */
       if (height === 0) {
         addStyle(element, {
           height: '200px',
         })
       }
 
+      /** 如果款度为 0, 则以 200px 填充 */
       if (width === 0) {
         addStyle(element, {
           width: '200px',
@@ -305,13 +310,17 @@ const RayChart = defineComponent({
       }
 
       try {
+        /** 注册 chart */
         echartInstance = echarts.init(element, theme)
         echartInstanceRef.value = echartInstance
 
+        /** 设置 options 配置项 */
         options && echartInstance.setOption(options)
 
+        /** 渲染成功回调 */
         props.success?.(echartInstance)
       } catch (e) {
+        /** 渲染失败回调 */
         props.error?.()
 
         console.error(e)
@@ -321,7 +330,6 @@ const RayChart = defineComponent({
     /**
      *
      * @param bool 渲染带有主题色的可视化图
-     * @returns void 0
      *
      * 区别自动跟随模板主题切换与指定主题切换
      */
@@ -348,15 +356,23 @@ const RayChart = defineComponent({
       }
     }
 
+    /** 重置 echarts 尺寸 */
     const resizeChart = () => {
       if (echartInstance) {
         echartInstance.resize()
       }
     }
 
+    /** 监听全局主题变化, 然后重新渲染对应主题 echarts */
     watch(
       () => [themeValue.value],
       ([theme]) => {
+        /**
+         *
+         * Q: 为什么需要重新卸载再渲染
+         * A: 因为 echarts 官方文档并未提供动态渲染方法
+         * A: 虽然原型上有 setTheme 方法, 但是官方标记是仅限于在类 ECharts 中访问
+         */
         if (props.autoChangeTheme) {
           destroyChart()
 
@@ -384,29 +400,35 @@ const RayChart = defineComponent({
       },
     )
 
+    /** 监听 options 变化 */
     if (props.watchOptions) {
       watch(
         () => props.watchOptions,
         () => {
+          /** 重新组合 options */
           const options = useMergeOptions()
 
+          /** 如果 options 发生变动更新 echarts */
           echartInstance?.setOption(options)
         },
       )
     }
 
     onBeforeMount(async () => {
+      /** 注册 echarts 组件与渲染器 */
       await registerChartCore()
     })
 
     onMounted(() => {
       nextTick(() => {
+        /** 注册 echarts */
         if (props.autoChangeTheme) {
           renderThemeChart(themeValue.value)
         } else {
           props.theme ? renderChart('dark') : renderChart('')
         }
 
+        /** 注册事件 */
         if (props.autoResize) {
           resizeDebounce = debounce(resizeChart, 500)
 
@@ -416,7 +438,9 @@ const RayChart = defineComponent({
     })
 
     onBeforeUnmount(() => {
+      /** 卸载 echarts */
       destroyChart()
+      /** 卸载事件柄 */
       off(window, 'resize', resizeDebounce)
     })
 

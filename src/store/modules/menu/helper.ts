@@ -110,3 +110,20 @@ export const matchMenuOption = (
     }
   }
 }
+
+/**
+ *
+ * @param option menu option
+ *
+ * @remark 动态修改浏览器标题
+ * @remark 会自动拼接 sideBarLogo.title
+ */
+export const updateDocumentTitle = (option: IMenuOptions) => {
+  const { breadcrumbLabel } = option
+  const {
+    layout: { sideBarLogo },
+  } = __APP_CFG__
+  const spliceTitle = sideBarLogo ? sideBarLogo.title : ''
+
+  document.title = breadcrumbLabel + ' - ' + spliceTitle
+}
