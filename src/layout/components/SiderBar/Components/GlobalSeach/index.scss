@@ -4,7 +4,7 @@ $globalSearchWidth: 650px;
   position: fixed;
   width: $globalSearchWidth;
   left: 50%;
-  margin-left: -$globalSearchWidth / 2;
+  margin-left: calc(0px - $globalSearchWidth / 2);
   top: 60px;
 
   & .global-seach__wrapper {
