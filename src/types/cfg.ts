@@ -71,7 +71,6 @@ export interface AppConfig {
     sideBarLogo?: LayoutSideBarLogo
   }
   rootRoute: RootRoute
-  primaryColor: string
   base?: string
   appPrimaryColor: AppPrimaryColor
 }

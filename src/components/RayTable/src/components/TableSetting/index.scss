@@ -28,12 +28,12 @@
 
     &.draggable-item--dark {
       &:hover {
-        background-color: $hoverDarkBackgroundColor;
+        background-color: var(--ray-theme-primary-fade-color);
       }
     }
 
     &:hover {
-      background-color: $hoverLightBackgroundColor;
+      background-color: var(--ray-theme-primary-fade-color);
 
       & .draggable-item__d--icon {
         opacity: 1;

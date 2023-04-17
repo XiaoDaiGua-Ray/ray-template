@@ -184,7 +184,7 @@ export const removeStyle = (el: HTMLElement, styles: string[]) => {
  * @remark 将任意颜色值转为 rgba
  */
 export const colorToRgba = (color: string, alpha = 1) => {
-  const hexPattern = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i
+  const hexPattern = /^#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i
   const rgbPattern = /^rgb\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)$/i
   const rgbaPattern =
     /^rgba\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3}),\s*(\d*(?:\.\d+)?)\)$/i
@@ -205,7 +205,7 @@ export const colorToRgba = (color: string, alpha = 1) => {
   } else if (rgbaPattern.test(color)) {
     result = color
   } else {
-    result = ''
+    result = color
   }
 
   if (result && !result.startsWith('rgba')) {

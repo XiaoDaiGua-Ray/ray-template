@@ -5,7 +5,7 @@ import GlobalSpin from '@/spin/index'
 import { getCache } from '@/utils/cache'
 import { get } from 'lodash-es'
 import { useSetting } from '@/store'
-import { addClass, removeClass, addStyle } from '@/utils/element'
+import { addClass, removeClass, addStyle, colorToRgba } from '@/utils/element'
 
 const App = defineComponent({
   name: 'App',
@@ -13,6 +13,28 @@ const App = defineComponent({
     const settingStore = useSetting()
 
     const { themeValue } = storeToRefs(settingStore)
+
+    /** 同步主题色变量至 body, 如果未获取到缓存值则已默认值填充 */
+    const syncPrimaryColorToBody = () => {
+      const {
+        appPrimaryColor: { primaryColor, primaryFadeColor },
+      } = __APP_CFG__ // 默认主题色
+      const body = document.body
+
+      const primaryColorOverride = getCache('piniaSettingStore', 'localStorage')
+      const _p = get(
+        primaryColorOverride,
+        'primaryColorOverride.common.primaryColor',
+      )
+      const _fp = colorToRgba(_p, 0.3)
+
+      /** 设置全局主题色 css 变量 */
+      body.style.setProperty('--ray-theme-primary-color', _p || primaryColor)
+      body.style.setProperty(
+        '--ray-theme-primary-fade-color',
+        _fp || primaryFadeColor,
+      )
+    }
 
     /** 隐藏加载动画 */
     const hiddenLoadingAnimation = () => {
@@ -26,6 +48,7 @@ const App = defineComponent({
       }
     }
 
+    syncPrimaryColorToBody()
     hiddenLoadingAnimation()
 
     /** 切换主题时, 同步更新 body class 以便于进行自定义 css 配置 */

@@ -26,7 +26,7 @@
 
           &.dropdown-item--active,
           &:hover {
-            background-color: $hoverLightBackgroundColor;
+            background-color: var(--ray-theme-primary-fade-color);
             color: var(--ray-theme-primary-color);
           }
         }
@@ -38,7 +38,7 @@
 .ray-template--dark {
   & .table-size__dropdown-wrapper {
     & .dropdown-item:hover {
-      background-color: $hoverDarkBackgroundColor;
+      background-color: var(--ray-theme-primary-fade-color);
       color: var(--ray-theme-primary-color);
     }
   }

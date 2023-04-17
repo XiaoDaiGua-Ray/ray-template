@@ -60,7 +60,7 @@ const config: AppConfigExport = {
     /** 主题色 */
     primaryColor: '#2d8cf0',
     /** 主题辅助色(用于整体 hover、active 等之类颜色) */
-    primaryFadeColor: 'rgba(45, 140, 240, 0.25)',
+    primaryFadeColor: 'rgba(45, 140, 240, 0.3)',
   },
   /**
    *

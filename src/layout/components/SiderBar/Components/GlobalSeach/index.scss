@@ -67,7 +67,6 @@
       background-color: #2f2f2f;
 
       &:hover {
-        // background-color: $hoverDarkBackgroundColor;
         background-color: var(--ray-theme-primary-fade-color);
       }
     }
@@ -82,7 +81,7 @@
       background-color: #ffffff;
 
       &:hover {
-        background-color: $hoverLightBackgroundColor;
+        background-color: var(--ray-theme-primary-fade-color);
       }
     }
   }

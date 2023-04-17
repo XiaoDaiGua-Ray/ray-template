@@ -65,7 +65,7 @@ export const useSetting = defineStore(
       body.style.setProperty('--ray-theme-primary-color', value)
       body.style.setProperty(
         '--ray-theme-primary-fade-color',
-        colorToRgba(value, 0.25),
+        colorToRgba(value, 0.3),
       )
     }
 
