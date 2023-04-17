@@ -1,10 +1,17 @@
+$globalSearchWidth: 650px;
+
 .global-seach {
+  position: fixed;
+  width: $globalSearchWidth;
+  left: 50%;
+  margin-left: -$globalSearchWidth / 2;
+  top: 60px;
+
   & .global-seach__wrapper {
     box-sizing: border-box;
 
     & .global-seach__card {
-      width: 650px;
-      height: 600px;
+      width: $globalSearchWidth;
       border-radius: 6px;
       padding: 12px;
 
@@ -17,7 +24,8 @@
       }
 
       & .global-seach__card-content {
-        height: calc(100% - 98px);
+        height: auto;
+        max-height: calc(100% - 98px);
 
         & .content-item {
           padding: 12px;

@@ -11,7 +11,7 @@
 
 import './index.scss'
 
-import { NInput, NModal, NScrollbar, NSpace } from 'naive-ui'
+import { NInput, NModal, NResult, NScrollbar, NSpace } from 'naive-ui'
 import RayIcon from '@/components/RayIcon/index'
 
 import { on, off } from '@/utils/element'
@@ -146,6 +146,7 @@ const GlobalSeach = defineComponent({
                 <NInput
                   size="large"
                   v-model:value={this.searchValue}
+                  clearable
                   onInput={this.handleSearchMenuOptions.bind(this)}
                 >
                   {{
@@ -154,27 +155,35 @@ const GlobalSeach = defineComponent({
                 </NInput>
               </div>
               <NScrollbar class="global-seach__card-content">
-                <NSpace vertical wrapItem={false} size={[8, 8]}>
-                  {this.searchOptions.map((curr) => (
-                    <NSpace
-                      align="center"
-                      wrapItem={false}
-                      class="content-item"
-                      onClick={this.handleSearchItemClick.bind(this, curr)}
-                    >
-                      <div class="content-item-icon">
-                        {curr?.meta?.icon ? (
-                          <RayIcon name={curr.meta.icon} size="24" />
-                        ) : (
-                          <RayIcon name="table" size="24" />
-                        )}
-                      </div>
-                      <div class="content-item-label">
-                        {curr.breadcrumbLabel}
-                      </div>
-                    </NSpace>
-                  ))}
-                </NSpace>
+                {this.searchOptions.length ? (
+                  <NSpace vertical wrapItem={false} size={[8, 8]}>
+                    {this.searchOptions.map((curr) => (
+                      <NSpace
+                        align="center"
+                        wrapItem={false}
+                        class="content-item"
+                        onClick={this.handleSearchItemClick.bind(this, curr)}
+                      >
+                        <div class="content-item-icon">
+                          {curr?.meta?.icon ? (
+                            <RayIcon name={curr.meta.icon} size="24" />
+                          ) : (
+                            <RayIcon name="table" size="24" />
+                          )}
+                        </div>
+                        <div class="content-item-label">
+                          {curr.breadcrumbLabel}
+                        </div>
+                      </NSpace>
+                    ))}
+                  </NSpace>
+                ) : (
+                  <NResult size="large" description="暂无搜索结果">
+                    {{
+                      icon: () => '',
+                    }}
+                  </NResult>
+                )}
               </NScrollbar>
               <div class="global-seach__card-footer">
                 <NSpace

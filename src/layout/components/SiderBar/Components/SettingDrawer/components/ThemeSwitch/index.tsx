@@ -39,7 +39,9 @@ const ThemeSwitch = defineComponent({
         ? {
             backgroundColor: '#000000',
           }
-        : {}
+        : {
+            color: '#000000',
+          }
     }
 
     return {

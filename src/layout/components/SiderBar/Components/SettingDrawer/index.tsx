@@ -53,14 +53,9 @@ const SettingDrawer = defineComponent({
       },
     })
 
-    const handleRailStyle = () => ({
-      backgroundColor: '#000000',
-    })
-
     return {
       modelShow,
       t,
-      handleRailStyle,
       changePrimaryColor,
       themeValue,
       primaryColorOverride,
