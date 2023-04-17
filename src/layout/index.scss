@@ -8,6 +8,14 @@
   & .layout-content__router-view {
     height: var(--layout-content-height);
     padding: calc($layoutRouterViewContainer / 2);
+
+    & .n-scrollbar-container {
+      height: 100%;
+
+      & .n-scrollbar-content {
+        height: 100%;
+      }
+    }
   }
 
   & .layout-footer {

@@ -22,7 +22,8 @@
     "Setting": "Setting",
     "Github": "Github",
     "FullScreen": "Full Screen",
-    "CancelFullScreen": "Cancel Full Screen"
+    "CancelFullScreen": "Cancel Full Screen",
+    "Search": "Search"
   },
   "LayoutHeaderSettingOptions": {
     "Title": "Configuration",
@@ -31,7 +32,8 @@
       "Dark": "Dark",
       "Light": "Light",
       "PrimaryColorConfig": "Primary Color"
-    }
+    },
+    "InterfaceDisplay": "Interface Display"
   },
   "LoginModule": {
     "Register": "Register",

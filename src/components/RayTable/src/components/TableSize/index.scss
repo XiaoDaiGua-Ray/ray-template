@@ -27,7 +27,7 @@
           &.dropdown-item--active,
           &:hover {
             background-color: $hoverLightBackgroundColor;
-            color: $activedColor;
+            color: var(--ray-theme-primary-color);
           }
         }
       }
@@ -39,7 +39,7 @@
   & .table-size__dropdown-wrapper {
     & .dropdown-item:hover {
       background-color: $hoverDarkBackgroundColor;
-      color: $activedColor;
+      color: var(--ray-theme-primary-color);
     }
   }
 }

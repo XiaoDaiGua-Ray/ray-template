@@ -174,3 +174,43 @@ export const removeStyle = (el: HTMLElement, styles: string[]) => {
     })
   }
 }
+
+/**
+ *
+ * @param color 颜色格式
+ * @param alpha 透明度
+ * @returns 转换后的 rgba 颜色值
+ *
+ * @remark 将任意颜色值转为 rgba
+ */
+export const colorToRgba = (color: string, alpha = 1) => {
+  const hexPattern = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i
+  const rgbPattern = /^rgb\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)$/i
+  const rgbaPattern =
+    /^rgba\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3}),\s*(\d*(?:\.\d+)?)\)$/i
+
+  let result: string
+
+  if (hexPattern.test(color)) {
+    const hex = color.substring(1)
+    const rgb = [
+      parseInt(hex.substring(0, 2), 16),
+      parseInt(hex.substring(2, 4), 16),
+      parseInt(hex.substring(4, 6), 16),
+    ]
+
+    result = 'rgb(' + rgb.join(', ') + ')'
+  } else if (rgbPattern.test(color)) {
+    result = color
+  } else if (rgbaPattern.test(color)) {
+    result = color
+  } else {
+    result = ''
+  }
+
+  if (result && !result.startsWith('rgba')) {
+    result = result.replace('rgb', 'rgba').replace(')', `, ${alpha})`)
+  }
+
+  return result
+}

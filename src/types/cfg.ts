@@ -31,6 +31,11 @@ export interface PreloadingConfig {
   titleColor?: string
 }
 
+export interface AppPrimaryColor {
+  primaryColor: string
+  primaryFadeColor: string
+}
+
 export interface Config {
   server: ServerOptions
   buildOptions: (mode: string) => BuildOptions
@@ -40,9 +45,9 @@ export interface Config {
   sideBarLogo?: LayoutSideBarLogo
   mixinCSS?: string
   rootRoute?: RootRoute
-  primaryColor?: string
   preloadingConfig?: PreloadingConfig
   base?: string
+  appPrimaryColor?: AppPrimaryColor
 }
 
 export type Recordable<T = unknown> = Record<string, T>
@@ -68,6 +73,7 @@ export interface AppConfig {
   rootRoute: RootRoute
   primaryColor: string
   base?: string
+  appPrimaryColor: AppPrimaryColor
 }
 
 export type AppConfigExport = Config & UserConfigExport

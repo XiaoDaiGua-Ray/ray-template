@@ -1,0 +1,89 @@
+.global-seach {
+  & .global-seach__wrapper {
+    box-sizing: border-box;
+
+    & .global-seach__card {
+      width: 650px;
+      height: 600px;
+      border-radius: 6px;
+      padding: 12px;
+
+      & .ray-icon {
+        color: var(--ray-theme-primary-color);
+      }
+
+      & .global-seach__card-header {
+        margin-bottom: 12px;
+      }
+
+      & .global-seach__card-content {
+        height: calc(100% - 98px);
+
+        & .content-item {
+          padding: 12px;
+          border-radius: 6px;
+          cursor: pointer;
+          transition: background-color 0.3s var(--r-bezier);
+
+          & .content-item-icon {
+            @include flexCenter;
+          }
+        }
+      }
+
+      & .global-seach__card-footer {
+        width: 100%;
+
+        & .card-footer__tip-wrapper {
+          display: flex;
+          align-items: center;
+          margin-top: 24px;
+
+          & .tip-wrapper-item {
+            display: flex;
+            align-items: center;
+
+            & .item-icon {
+              display: flex;
+              align-items: center;
+              margin-right: 4px;
+
+              & span {
+                color: var(--ray-theme-primary-color);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.ray-template--dark {
+  & .global-seach__card {
+    background-color: #242424;
+
+    & .global-seach__card-content .content-item {
+      background-color: #2f2f2f;
+
+      &:hover {
+        // background-color: $hoverDarkBackgroundColor;
+        background-color: var(--ray-theme-primary-fade-color);
+      }
+    }
+  }
+}
+
+.ray-template--light {
+  & .global-seach__card {
+    background-color: #f9f9f9;
+
+    & .global-seach__card-content .content-item {
+      background-color: #ffffff;
+
+      &:hover {
+        background-color: $hoverLightBackgroundColor;
+      }
+    }
+  }
+}

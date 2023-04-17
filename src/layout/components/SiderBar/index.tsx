@@ -16,6 +16,7 @@ import RayIcon from '@/components/RayIcon/index'
 import RayTooltipIcon from '@/components/RayTooltipIcon/index'
 import SettingDrawer from './components/SettingDrawer/index'
 import Breadcrumb from './components/Breadcrumb/index'
+import GlobalSeach from './components/GlobalSeach/index'
 
 import { useSetting } from '@/store'
 import { useSignin } from '@/store'
@@ -42,12 +43,14 @@ const SiderBar = defineComponent({
     const { t } = useI18n()
     const { updateLocale, changeSwitcher } = settingStore
     const { logout } = signinStore
+
     const { drawerPlacement, breadcrumbSwitch } = storeToRefs(settingStore)
     const showSettings = ref(false)
     const person = getCache('person')
     const spaceItemStyle = {
       display: 'flex',
     }
+    const globalSearchShown = ref(false)
 
     /**
      *
@@ -65,6 +68,12 @@ const SiderBar = defineComponent({
      * 顶部右边提示框操作栏
      */
     const rightTooltipIconOptions = [
+      {
+        name: 'search',
+        size: 18,
+        tooltip: 'LayoutHeaderTooltipOptions.Search',
+        eventKey: 'search',
+      },
       {
         name: 'fullscreen',
         size: 18,
@@ -103,6 +112,9 @@ const SiderBar = defineComponent({
           window.$message.warning('您的浏览器不支持全屏~')
         }
       },
+      search: () => {
+        globalSearchShown.value = true
+      },
     }
 
     const handleIconClick = (key: IconEventMap) => {
@@ -137,11 +149,13 @@ const SiderBar = defineComponent({
       spaceItemStyle,
       drawerPlacement,
       breadcrumbSwitch,
+      globalSearchShown,
     }
   },
   render() {
     return (
       <NLayoutHeader class="layout-header" bordered>
+        <GlobalSeach v-model:show={this.globalSearchShown} />
         <NSpace
           class="layout-header__method"
           align="center"

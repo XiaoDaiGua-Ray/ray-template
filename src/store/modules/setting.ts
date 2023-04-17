@@ -1,6 +1,7 @@
 import { getDefaultLocal } from '@/language/index'
 import { setCache } from '@use-utils/cache'
 import { set } from 'lodash-es'
+import { addClass, removeClass, colorToRgba } from '@/utils/element'
 
 import type { ConditionalPick } from '@/types/type-utils'
 import type { GlobalThemeOverrides } from 'naive-ui'
@@ -14,12 +15,15 @@ interface SettingState {
   spinSwitch: boolean
   breadcrumbSwitch: boolean
   localeLanguage: string
+  invertSwitch: boolean
 }
 
 export const useSetting = defineStore(
   'setting',
   () => {
-    const { primaryColor } = __APP_CFG__
+    const {
+      appPrimaryColor: { primaryColor },
+    } = __APP_CFG__ // 默认主题色
     const { locale } = useI18n()
 
     const settingState = reactive<SettingState>({
@@ -34,6 +38,7 @@ export const useSetting = defineStore(
       reloadRouteSwitch: true, // 刷新路由开关
       menuTagSwitch: true, // 多标签页开关
       spinSwitch: false, // 全屏加载
+      invertSwitch: false, // 反转色模式
       breadcrumbSwitch: true, // 面包屑开关
       localeLanguage: getDefaultLocal(),
     })
@@ -58,6 +63,10 @@ export const useSetting = defineStore(
 
       /** 设置主题色变量 */
       body.style.setProperty('--ray-theme-primary-color', value)
+      body.style.setProperty(
+        '--ray-theme-primary-fade-color',
+        colorToRgba(value, 0.25),
+      )
     }
 
     /**
@@ -78,6 +87,17 @@ export const useSetting = defineStore(
         settingState[key] = bool
       }
     }
+
+    /** 动态添加反转色 class name */
+    watch(
+      () => settingState.invertSwitch,
+      (newData) => {
+        const body = document.body
+        const className = 'ray-template--invert'
+
+        newData ? addClass(body, className) : removeClass(body, className)
+      },
+    )
 
     return {
       ...toRefs(settingState),

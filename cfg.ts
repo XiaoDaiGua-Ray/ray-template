@@ -55,8 +55,13 @@ const config: AppConfigExport = {
     tagColor: '#ff6700',
     titleColor: '#2d8cf0',
   },
-  /** 默认主题色 */
-  primaryColor: '#2d8cf0',
+  /** 默认主题色(不可省略, 必填), 也用于 ejs 注入 */
+  appPrimaryColor: {
+    /** 主题色 */
+    primaryColor: '#2d8cf0',
+    /** 主题辅助色(用于整体 hover、active 等之类颜色) */
+    primaryFadeColor: 'rgba(45, 140, 240, 0.25)',
+  },
   /**
    *
    * 配置根页面

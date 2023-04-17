@@ -58,7 +58,7 @@
 
     & .draggable-item__icon {
       &.draggable-item__icon--actived {
-        color: $activedColor;
+        color: var(--ray-theme-primary-color);
       }
     }
 

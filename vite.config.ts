@@ -33,7 +33,7 @@ const {
   sideBarLogo,
   mixinCSS,
   rootRoute,
-  primaryColor,
+  appPrimaryColor,
   preloadingConfig,
   base,
 } = config
@@ -55,7 +55,7 @@ const __APP_CFG__ = {
     sideBarLogo,
   },
   rootRoute,
-  primaryColor,
+  appPrimaryColor,
 }
 
 // https://vitejs.dev/config/
@@ -132,6 +132,7 @@ export default defineConfig(async ({ mode }) => {
       }),
       ViteEjsPlugin({
         preloadingConfig,
+        appPrimaryColor,
       }),
     ],
     optimizeDeps: {

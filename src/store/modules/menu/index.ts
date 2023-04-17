@@ -167,59 +167,67 @@ export const useMenu = defineStore(
       /** 取出所有 layout 下子路由 */
       const layout = router.getRoutes().find((route) => route.name === 'layout')
 
+      const resolveOption = (option: IMenuOptions) => {
+        const { meta } = option
+
+        /** 设置 label, i18nKey 优先级最高 */
+        const label = computed(() =>
+          meta?.i18nKey
+            ? t(`GlobalMenuOptions.${meta!.i18nKey}`)
+            : meta?.noLocalTitle,
+        )
+        /** 拼装菜单项 */
+        const route = {
+          ...option,
+          key: option.path,
+          label: () =>
+            h(NEllipsis, null, {
+              default: () => label.value,
+            }),
+          breadcrumbLabel: label.value,
+        } as IMenuOptions
+        /** 是否有 icon */
+        const expandIcon = {
+          icon: () =>
+            h(
+              RayIcon,
+              {
+                name: meta!.icon as string,
+                size: 20,
+              },
+              {},
+            ),
+        }
+        const attr: IMenuOptions = meta?.icon
+          ? Object.assign({}, route, expandIcon)
+          : route
+
+        if (option.path === cacheMenuKey) {
+          /** 设置菜单标签 */
+          setMenuTagOptions(attr)
+          /** 设置浏览器标题 */
+          updateDocumentTitle(attr)
+        }
+
+        attr.show = validRole(option)
+
+        return attr
+      }
+
       const resolveRoutes = (routes: IMenuOptions[], index: number) => {
-        return routes.map((curr) => {
-          if (curr.children?.length) {
+        const catchArr: IMenuOptions[] = []
+
+        for (const curr of routes) {
+          if (curr.children?.length && validRole(curr)) {
             curr.children = resolveRoutes(curr.children, index++)
+          } else if (!validRole(curr)) {
+            continue
           }
 
-          const { meta } = curr
-          /** 设置 label, i18nKey 优先级最高 */
-          const label = computed(() =>
-            meta?.i18nKey
-              ? t(`GlobalMenuOptions.${meta!.i18nKey}`)
-              : meta?.noLocalTitle,
-          )
+          catchArr.push(resolveOption(curr))
+        }
 
-          /** 拼装菜单项 */
-          const route = {
-            ...curr,
-            key: curr.path,
-            label: () =>
-              h(NEllipsis, null, {
-                default: () => label.value,
-              }),
-            breadcrumbLabel: label.value,
-          } as IMenuOptions
-
-          /** 是否有 icon */
-          const expandIcon = {
-            icon: () =>
-              h(
-                RayIcon,
-                {
-                  name: meta!.icon as string,
-                  size: 20,
-                },
-                {},
-              ),
-          }
-
-          const attr: IMenuOptions = meta?.icon
-            ? Object.assign({}, route, expandIcon)
-            : route
-
-          if (curr.path === cacheMenuKey) {
-            /** 设置菜单标签 */
-            setMenuTagOptions(attr)
-            /** 设置浏览器标题 */
-            updateDocumentTitle(attr)
-          }
-
-          attr.show = validRole(curr)
-
-          return attr
-        })
+        return catchArr
       }
 
       /** 缓存菜单列表 */

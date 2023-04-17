@@ -9,6 +9,15 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
+/**
+ *
+ * 操作说明:
+ *   - 关闭全部: 关闭所有标签页, 并且重定向至根页面 rootRoute.path
+ *   - 关闭右侧: 关闭右侧所有标签, 如果选中标签页与当前激活页不一致并且激活页在右侧, 则会重定向至当前选中标签页
+ *   - 关闭左侧: 关闭左侧所有标签, 如果选中标签页与当前激活页不一致并且激活页在左侧, 则会重定向至当前选中标签页
+ *   - 关闭其他: 关闭其他所有标签, 如果选中标签页与当前激活页不一致并且激活页在其中, 则会重定向至当前选中标签页
+ */
+
 import './index.scss'
 
 import { NScrollbar, NTag, NSpace, NLayoutHeader, NDropdown } from 'naive-ui'
@@ -391,7 +400,7 @@ const MenuTag = defineComponent({
                       this.modelMenuTagOptions.length > 1
                     }
                     onClose={() => this.closeCurrentMenuTag(idx)}
-                    type={curr.key === this.menuKey ? 'success' : 'info'}
+                    type={curr.key === this.menuKey ? 'primary' : 'default'}
                     onClick={this.handleTagClick.bind(this, curr)}
                     bordered={false}
                     onContextmenu={this.handleContextMenu.bind(this, idx)}

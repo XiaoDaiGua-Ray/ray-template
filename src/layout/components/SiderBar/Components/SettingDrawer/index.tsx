@@ -43,6 +43,7 @@ const SettingDrawer = defineComponent({
       primaryColorOverride,
       menuTagSwitch,
       breadcrumbSwitch,
+      invertSwitch,
     } = storeToRefs(settingStore)
 
     const modelShow = computed({
@@ -66,6 +67,7 @@ const SettingDrawer = defineComponent({
       menuTagSwitch,
       changeSwitcher,
       breadcrumbSwitch,
+      invertSwitch,
     }
   },
   render() {
@@ -91,9 +93,11 @@ const SettingDrawer = defineComponent({
               v-model:value={this.primaryColorOverride.common!.primaryColor}
               onUpdateValue={this.changePrimaryColor.bind(this)}
             />
-            <NDivider titlePlacement="center">界面显示</NDivider>
+            <NDivider titlePlacement="center">
+              {t('LayoutHeaderSettingOptions.InterfaceDisplay')}
+            </NDivider>
             <NDescriptions labelPlacement="left" column={1}>
-              <NDescriptionsItem label="显示多标签">
+              <NDescriptionsItem label="多标签">
                 <NSwitch
                   v-model:value={this.menuTagSwitch}
                   onUpdateValue={(bool: boolean) =>
@@ -101,11 +105,19 @@ const SettingDrawer = defineComponent({
                   }
                 />
               </NDescriptionsItem>
-              <NDescriptionsItem label="显示面包屑">
+              <NDescriptionsItem label="面包屑">
                 <NSwitch
                   v-model:value={this.breadcrumbSwitch}
                   onUpdateValue={(bool: boolean) =>
                     this.changeSwitcher(bool, 'breadcrumbSwitch')
+                  }
+                />
+              </NDescriptionsItem>
+              <NDescriptionsItem label="反转色">
+                <NSwitch
+                  v-model:value={this.invertSwitch}
+                  onUpdateValue={(bool: boolean) =>
+                    this.changeSwitcher(bool, 'invertSwitch')
                   }
                 />
               </NDescriptionsItem>

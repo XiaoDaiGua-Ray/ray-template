@@ -1,5 +1,19 @@
 # CHANGE LOG
 
+## 3.1.7
+
+### Fixes
+
+- 修复默认获取容器可视区域高度问题
+
+### Feats
+
+- 修改 Menu 菜单过滤逻辑，现在如果权限不匹配或者设置了 hidden 属性，则会被过滤掉
+- 移除 $activedColor 全局 sass 变量，使用 --ray-theme-primary-color 替代
+- 新增路由菜单检索功能
+- 移除 App.tsx 中同步主题方法，改为使用 cfg 配置并且使用 ejs 注入
+- 移除 MenuTag 默认主题色，现在会以当前主题色为主色
+
 ## 3.1.6
 
 ### Fixes
@@ -17,6 +31,9 @@
 - 现在可以直接配置首屏加载动画一些信息(cfg.ts)
 - 新增对于 ejs 支持
 - 补充一些细节注释
+- 新增 RayChart 组件 loading、loadingOptions 属性配置
+- 新增反转色模式
+- 修改 Menu 菜单过滤逻辑，现在如果权限不匹配或者设置了 hidden 属性，则会被过滤掉
 
 ## 3.1.5
 

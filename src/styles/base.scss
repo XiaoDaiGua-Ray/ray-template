@@ -49,3 +49,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+body.ray-template--invert {
+  filter: invert(1);
+}

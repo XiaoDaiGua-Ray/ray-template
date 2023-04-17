@@ -27,7 +27,6 @@ import { cloneDeep, debounce } from 'lodash-es'
 import { on, off, addStyle } from '@/utils/element'
 
 import type { PropType } from 'vue'
-// import type { DebouncedFuncLeading } from 'lodash-es'
 
 export type AutoResize =
   | boolean
@@ -59,7 +58,7 @@ export type ChartTheme = 'dark' | '' | object
  *
  * 为了方便使用加载动画, 写了此方法, 虽然没啥用
  */
-export const loadingOptions = (options: LoadingOptions) =>
+export const loadingOptions = (options?: LoadingOptions) =>
   Object.assign(
     {},
     {
@@ -189,6 +188,16 @@ const RayChart = defineComponent({
       type: Boolean,
       default: true,
     },
+    loading: {
+      /** 加载动画 */
+      type: Boolean,
+      default: false,
+    },
+    loadingOptions: {
+      /** 配置加载动画样式 */
+      type: Object as PropType<LoadingOptions>,
+      default: () => loadingOptions(),
+    },
   },
   setup(props) {
     const settingStore = useSetting()
@@ -196,7 +205,7 @@ const RayChart = defineComponent({
     const rayChartRef = ref<HTMLElement>() // `echart` 容器实例
     const echartInstanceRef = ref<EChartsInstance>() // `echart` 拷贝实例, 解决直接使用响应式实例带来的问题
     let echartInstance: EChartsInstance // `echart` 实例
-    let resizeDebounce: AnyFunc // resize 防抖方法示例
+    let resizeDebounce: AnyFunc // resize 防抖方法实例
 
     const cssVarsRef = computed(() => {
       const cssVars = {
@@ -206,13 +215,15 @@ const RayChart = defineComponent({
 
       return cssVars
     })
+    const modelLoadingOptions = computed(() =>
+      loadingOptions(props.loadingOptions),
+    )
 
     /**
      *
      * 注册 `echart` 组件, 图利, 渲染器等
      *
      * 会自动合并拓展 `echart` 组件
-     *
      * 该方法必须在注册图表之前调用
      */
     const registerChartCore = async () => {
@@ -400,6 +411,16 @@ const RayChart = defineComponent({
       },
     )
 
+    /** 显示/隐藏加载动画 */
+    watch(
+      () => props.loading,
+      (newData) => {
+        newData
+          ? echartInstance?.showLoading(modelLoadingOptions.value)
+          : echartInstance?.hideLoading()
+      },
+    )
+
     /** 监听 options 变化 */
     if (props.watchOptions) {
       watch(
@@ -466,7 +487,6 @@ export default RayChart
  * 暂时不支持自动解析导入 `chart` 组件, 如果使用未注册的组件, 需要在顶部手动导入并且再使用 `use` 注册
  *
  * 预引入: 柱状图, 折线图, 饼图, k线图, 散点图等
- *
  * 预引入: 提示框, 标题, 直角坐标系, 数据集, 内置数据转换器等
  *
  * 如果需要大批量数据渲染, 可以通过获取实例后阶段性调用 `setOption` 方法注入数据

@@ -1,18 +1,6 @@
 import './index.scss'
 
-import {
-  NCard,
-  NSwitch,
-  NLayout,
-  NDescriptions,
-  NDescriptionsItem,
-  NTag,
-  NSpace,
-  NP,
-  NH6,
-  NH2,
-  NH3,
-} from 'naive-ui'
+import { NCard, NSwitch, NSpace, NP, NH6, NH2, NH3 } from 'naive-ui'
 import RayChart from '@/components/RayChart/index'
 
 const Echart = defineComponent({
@@ -21,6 +9,9 @@ const Echart = defineComponent({
     const baseChartRef = ref()
     const chartLoading = ref(false)
     const chartAria = ref(false)
+    const state = reactive({
+      loading: false,
+    })
 
     const baseOptions = {
       legend: {},
@@ -177,11 +168,7 @@ const Echart = defineComponent({
     }
 
     const handleLoadingShow = (bool: boolean) => {
-      if (baseChartRef.value) {
-        const { echartInstance } = baseChartRef.value
-
-        bool ? echartInstance.showLoading() : echartInstance.hideLoading()
-      }
+      state.loading = bool
     }
 
     const handleAriaShow = (bool: boolean) => {
@@ -208,6 +195,7 @@ const Echart = defineComponent({
       handleChartRenderSuccess,
       basePieOptions,
       baseLineOptions,
+      ...toRefs(state),
     }
   },
   render() {
@@ -254,7 +242,7 @@ const Echart = defineComponent({
           }}
         </NSwitch>
         <div class="chart--container">
-          <RayChart ref="baseChartRef" options={this.baseOptions} />
+          <RayChart loading={this.loading} options={this.baseOptions} />
         </div>
         <NH2>贴画可视化图</NH2>
         <NSwitch
