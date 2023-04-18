@@ -51,7 +51,13 @@ const Login = defineComponent({
     const { t } = this
 
     return (
-      <div class={['login']} style={[`height: ${this.windowHeight}px`]}>
+      <div
+        class={['login']}
+        style={[
+          `height: ${this.windowHeight}px`,
+          `--login-height: ${this.windowHeight}px`,
+        ]}
+      >
         <div
           class={[
             'login-wrapper',
