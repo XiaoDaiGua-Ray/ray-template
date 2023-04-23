@@ -24,6 +24,7 @@ import { localOptions } from '@/language/index'
 import { useAvatarOptions } from './hook'
 import { getCache } from '@/utils/cache'
 import screenfull from 'screenfull'
+import { useI18n } from '@/language/useI18n'
 
 import type { IconEventMapOptions, IconEventMap } from './type'
 

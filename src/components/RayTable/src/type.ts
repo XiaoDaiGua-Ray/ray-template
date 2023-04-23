@@ -72,6 +72,6 @@ export declare type TableColumnTitle =
   | string
   | ((column: DataTableBaseColumn) => VNodeChild)
 
-export declare interface RayTableInst {
-  rayTableInstance: DataTableInst
+export declare type RayTableInst = {
+  tableMethods: Omit<DataTableInst, 'clearFilter'>
 }

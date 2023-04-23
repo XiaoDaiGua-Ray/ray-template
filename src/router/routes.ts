@@ -1,5 +1,5 @@
 import Layout from '@/layout/index'
-import childrenRoutes from './modules/index'
+import childrenRoutes from './route-module'
 
 const {
   rootRoute: { path },
@@ -22,7 +22,8 @@ export const constantRoutes = [
     /** 错误页面(404) */
     path: '/:catchAll(.*)',
     name: 'error-page',
-    component: () => import('@/views/error/index'),
+    component: Layout,
+    redirect: '/error',
   },
 ]
 

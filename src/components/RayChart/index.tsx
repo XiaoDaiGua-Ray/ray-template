@@ -199,7 +199,7 @@ const RayChart = defineComponent({
       default: () => loadingOptions(),
     },
   },
-  setup(props) {
+  setup(props, { expose }) {
     const settingStore = useSetting()
     const { themeValue } = storeToRefs(settingStore)
     const rayChartRef = ref<HTMLElement>() // `echart` 容器实例
@@ -463,6 +463,10 @@ const RayChart = defineComponent({
       destroyChart()
       /** 卸载事件柄 */
       off(window, 'resize', resizeDebounce)
+    })
+
+    expose({
+      echart: echartInstanceRef,
     })
 
     return {

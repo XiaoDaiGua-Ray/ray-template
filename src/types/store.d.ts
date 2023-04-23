@@ -3,9 +3,10 @@ export {}
 import type { RouteRecordRaw, RouteMeta } from 'vue-router'
 import type { MenuOption } from 'naive-ui'
 import type { VNode } from 'vue'
+import type { AppRouteRecordRaw } from '@/router/type'
 
 declare global {
-  declare interface IMenuOptions extends RouteRecordRaw, MenuOption {
+  declare interface IMenuOptions extends AppRouteRecordRaw, MenuOption {
     name: string
     key: string | number
     path: string

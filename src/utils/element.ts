@@ -1,33 +1,4 @@
 import { validteValueType } from '@use-utils/hook'
-
-/**
- *
- * @param el 父节点对象
- * @param target 是否需要过滤，可按照数组或单个字符过滤
- *
- * @returns 目标节点下所有子节点
- */
-export const getElementChildNodes = (
-  el: HTMLElement,
-  target?: string[] | string,
-) => {
-  if (el) {
-    let nodes = Array.from(el.childNodes)
-
-    if (Array.isArray(target)) {
-      nodes = nodes.filter((el) => target.includes(el.nodeName))
-    } else {
-      if (target) {
-        nodes = nodes.filter((el) => el.nodeName === target)
-      }
-    }
-
-    return nodes
-  } else {
-    return []
-  }
-}
-
 /**
  *
  * @param element Target element dom
@@ -213,4 +184,45 @@ export const colorToRgba = (color: string, alpha = 1) => {
   }
 
   return result
+}
+
+/**
+ *
+ * @param element 需要匹配元素参数名称
+ * @returns 匹配元素列表
+ *
+ * @remark 使用 querySelectorAll 作为检索方法
+ * @remark 如果希望按照 attribute 匹配, 仅需要 'attr:xxx'传递参数即可
+ *
+ * 示例:
+ *
+ * class:
+ * const el = getElement('.demo')
+ * id:
+ * const el = getElement('#demo')
+ * attribute:
+ * const el = getElement('attr:type=button')
+ * 或者可以这样写
+ * const el = getElement('attr:type')
+ */
+export const getElement = (element: string) => {
+  if (!element) {
+    return
+  }
+
+  let queryParam: string
+
+  if (element.startsWith('attr:')) {
+    queryParam = '[' + element.replace('attr:', '') + ']'
+  } else {
+    queryParam = element
+  }
+
+  try {
+    const el = Array.from(document.querySelectorAll(queryParam))
+
+    return el
+  } catch (e) {
+    return []
+  }
 }

@@ -1,5 +1,18 @@
 # CHANGE LOG
 
+## 3.1.8
+
+### Fixes
+
+- 修复路由切换不能复位容器位置问题（让可视区域置顶）
+
+### Feats
+
+- 新增 useI18n hook 方法
+- 手动补充 AppRouteRecordRaw、AppRouteMeta 类型
+- 重新拆分 Layout 入口文件
+- 重新指定组件暴露方法、属性
+
 ## 3.1.7
 
 ### Fixes

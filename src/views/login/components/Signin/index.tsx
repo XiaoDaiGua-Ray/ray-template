@@ -3,6 +3,7 @@ import { NForm, NFormItem, NInput, NButton, NSpace, NDivider } from 'naive-ui'
 import { setCache } from '@/utils/cache'
 import { useSpin } from '@/spin'
 import { useSignin } from '@/store'
+import { useI18n } from '@/language/useI18n'
 
 import type { FormInst } from 'naive-ui'
 

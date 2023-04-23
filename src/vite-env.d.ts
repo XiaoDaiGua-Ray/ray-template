@@ -3,6 +3,7 @@
 /// <reference types="vite-svg-loader" />
 
 import 'vue-router'
+import { AppRouteMeta } from '@/router/type'
 
 declare module '*.vue' {
   import type { DefineComponent } from 'vue'
@@ -11,14 +12,7 @@ declare module '*.vue' {
 }
 
 declare module 'vue-router' {
-  interface RouteMeta {
-    i18nKey: string
-    icon?: string
-    windowOpen?: string
-    role?: string[]
-    hidden?: boolean
-    noLocalTitle?: string | number
-  }
+  interface RouteMeta extends AppRouteMeta {}
 }
 
 declare module 'virtual:*' {

@@ -28,6 +28,7 @@ import RayIcon from '@/components/RayIcon/index'
 import { getCache, setCache } from '@/utils/cache'
 import { validRole } from '@/router/basic'
 import { parse, matchMenuOption, updateDocumentTitle } from './helper'
+import { useI18n } from '@/language/useI18n'
 
 import type { MenuOption } from 'naive-ui'
 import type { RouteMeta } from 'vue-router'

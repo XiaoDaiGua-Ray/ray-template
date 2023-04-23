@@ -1,6 +1,8 @@
-export default {
+import type { AppRouteRecordRaw } from '@/router/type'
+
+const doc: AppRouteRecordRaw = {
   path: '/doc',
-  name: 'doc',
+  name: 'Doc',
   component: () => import('@/views/doc/index'),
   meta: {
     i18nKey: 'Doc',
@@ -8,3 +10,5 @@ export default {
     windowOpen: 'https://xiaodaigua-ray.github.io/ray-template-doc/',
   },
 }
+
+export default doc
