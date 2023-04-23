@@ -1,6 +1,8 @@
-export default {
+import type { AppRouteRecordRaw } from '@/router/type'
+
+const scrollReveal: AppRouteRecordRaw = {
   path: '/scroll-reveal',
-  name: 'scroll-reveal',
+  name: 'ScrollReveal',
   component: () => import('@/views/scroll-reveal/index'),
   meta: {
     i18nKey: 'scrollReveal',
@@ -8,3 +10,5 @@ export default {
     hidden: true,
   },
 }
+
+export default scrollReveal

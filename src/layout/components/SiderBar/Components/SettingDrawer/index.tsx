@@ -13,6 +13,7 @@ import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/c
 
 import { useSwatchesColorOptions } from './hook'
 import { useSetting } from '@/store'
+import { useI18n } from '@/language/useI18n'
 
 import type { PropType } from 'vue'
 

@@ -1,10 +1,19 @@
+/**
+ *
+ * 页面布局入口文件
+ *
+ * 说明:
+ *   - rayLayoutContentWrapperScopeSelector: 页面切换时重置滚动条注入 id
+ */
+
 import './index.scss'
 
 import { NLayout, NLayoutContent } from 'naive-ui'
-import RayTransitionComponent from '@/components/RayTransitionComponent/index.vue'
-import LayoutMenu from './components/Menu/index'
+import Menu from './components/Menu/index'
 import SiderBar from './components/SiderBar/index'
 import MenuTag from './components/MenuTag/index'
+import ContentWrapper from '@/layout/default/ContentWrapper'
+import FooterWrapper from '@/layout/default/FooterWrapper'
 
 import { useSetting } from '@/store'
 
@@ -14,10 +23,7 @@ const Layout = defineComponent({
     const settingStore = useSetting()
 
     const { height: windowHeight } = useWindowSize()
-    const {
-      reloadRouteSwitch: modelReloadRoute,
-      menuTagSwitch: modelMenuTagSwitch,
-    } = storeToRefs(settingStore)
+    const { menuTagSwitch: modelMenuTagSwitch } = storeToRefs(settingStore)
     const cssVarsRef = computed(() => {
       let cssVar = {}
 
@@ -33,16 +39,11 @@ const Layout = defineComponent({
 
       return cssVar
     })
-    const {
-      layout: { copyright },
-    } = __APP_CFG__
 
     return {
       windowHeight,
-      modelReloadRoute,
       modelMenuTagSwitch,
       cssVarsRef,
-      copyright,
     }
   },
   render() {
@@ -52,20 +53,17 @@ const Layout = defineComponent({
         style={[`height: ${this.windowHeight}px`, this.cssVarsRef]}
       >
         <NLayout class="layout-full" hasSider>
-          <LayoutMenu />
+          <Menu />
           <NLayout>
             <SiderBar />
             {this.modelMenuTagSwitch ? <MenuTag /> : ''}
             <NLayoutContent
               class="layout-content__router-view"
               nativeScrollbar={false}
+              {...{ id: 'rayLayoutContentWrapperScopeSelector' }}
             >
-              {this.modelReloadRoute ? <RayTransitionComponent /> : ''}
-              {this.copyright ? (
-                <div class="layout-footer">{this.copyright}</div>
-              ) : (
-                ''
-              )}
+              <ContentWrapper />
+              <FooterWrapper />
             </NLayoutContent>
           </NLayout>
         </NLayout>

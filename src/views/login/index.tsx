@@ -21,6 +21,7 @@ import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/c
 
 import { useSetting } from '@/store'
 import { localOptions } from '@/language/index'
+import { useI18n } from '@/language/useI18n'
 
 const Login = defineComponent({
   name: 'Login',

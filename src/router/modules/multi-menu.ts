@@ -1,6 +1,8 @@
-export default {
+import type { AppRouteRecordRaw } from '@/router/type'
+
+const multiMenu: AppRouteRecordRaw = {
   path: '/multi-menu',
-  name: 'multi-menu',
+  name: 'MultiMenu',
   component: () => import('@/views/multi-menu/index'),
   meta: {
     i18nKey: 'MultiMenu',
@@ -9,7 +11,7 @@ export default {
   children: [
     {
       path: 'multi-menu-one',
-      name: 'multi-menu-one',
+      name: 'MultiMenuOne',
       component: () => import('@/views/multi-menu/views/multi-menu-one/index'),
       meta: {
         noLocalTitle: '多级菜单-1',
@@ -17,7 +19,7 @@ export default {
     },
     {
       path: 'multi-menu-two',
-      name: 'multi-menu-two',
+      name: 'MultiMenuTwo',
       component: () => import('@/views/multi-menu/views/multi-menu-two/index'),
       meta: {
         noLocalTitle: '多级菜单-2',
@@ -25,7 +27,7 @@ export default {
       children: [
         {
           path: 'sub-menu',
-          name: 'sub-menu',
+          name: 'SubMenu',
           component: () =>
             import(
               '@/views/multi-menu/views/multi-menu-two/views/sub-menu/index'
@@ -38,3 +40,5 @@ export default {
     },
   ],
 }
+
+export default multiMenu

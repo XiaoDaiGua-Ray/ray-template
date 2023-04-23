@@ -33,6 +33,9 @@ import { forIn, merge } from 'lodash-es'
 export { naiveLocales, localOptions } from './language'
 
 import type { App } from 'vue'
+import type { I18n } from 'vue-i18n'
+
+export let i18n: I18n
 
 /**
  *
@@ -88,13 +91,17 @@ export const getDefaultLocal = () => {
 export const setupI18n = (app: App<Element>) => {
   const locale = getDefaultLocal()
 
-  const i18n = createI18n({
+  const i18nInstance = createI18n({
     locale,
     allowComposition: true,
     messages: getMatchLanguageModule(),
+    legacy: false,
+    sync: true,
   })
 
-  app.use(i18n)
+  i18n = i18nInstance
+
+  app.use(i18nInstance)
 }
 
 /**

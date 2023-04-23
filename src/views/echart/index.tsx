@@ -182,7 +182,7 @@ const Echart = defineComponent({
         duration: 5 * 1000,
       })
 
-      console.log(chart)
+      console.log(baseChartRef.value, chart)
     }
 
     return {
@@ -214,6 +214,7 @@ const Echart = defineComponent({
         <NH2>渲染成功后运行回调函数</NH2>
         <div class="chart--container">
           <RayChart
+            ref="baseChartRef"
             options={this.basePieOptions}
             success={this.handleChartRenderSuccess.bind(this)}
           />

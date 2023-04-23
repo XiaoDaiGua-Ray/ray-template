@@ -148,7 +148,7 @@ const TableView = defineComponent({
     }
 
     onMounted(() => {
-      console.log(tableRef.value?.rayTableInstance)
+      console.log(tableRef.value?.tableMethods)
     })
 
     return {

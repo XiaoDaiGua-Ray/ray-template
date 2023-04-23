@@ -1,9 +1,13 @@
-export default {
+import type { AppRouteRecordRaw } from '@/router/type'
+
+const axios: AppRouteRecordRaw = {
   path: '/axios',
-  name: 'axios',
+  name: 'Axios',
   component: () => import('@/views/axios/index'),
   meta: {
     i18nKey: 'Axios',
     icon: 'axios',
   },
 }
+
+export default axios

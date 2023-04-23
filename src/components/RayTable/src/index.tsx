@@ -57,7 +57,7 @@ const RayTable = defineComponent({
   name: 'RayTable',
   props: props,
   emits: ['update:columns', 'menuSelect', 'exportSuccess', 'exportError'],
-  setup(props, { emit }) {
+  setup(props, { emit, expose }) {
     const rayTableInstance = ref<DataTableInst>()
 
     const tableUUID = uuid() // 表格 id, 用于打印表格
@@ -83,6 +83,7 @@ const RayTable = defineComponent({
       return cssVar
     })
     const tableSize = ref(props.size)
+    const tableMethods = ref<Omit<DataTableInst, 'clearFilter'>>()
 
     /** 注入相关属性 */
     provide('tableSettingProvider', {
@@ -196,6 +197,40 @@ const RayTable = defineComponent({
       tableSize.value = size
     }
 
+    const registerRayTableMethods = (ins: DataTableInst) => {
+      const {
+        clearFilters,
+        clearSorter,
+        filters,
+        page,
+        scrollTo,
+        sort,
+        filter,
+      } = ins
+
+      tableMethods.value = {
+        clearFilters,
+        clearSorter,
+        filters,
+        page,
+        scrollTo,
+        sort,
+        filter,
+      }
+    }
+
+    expose({
+      tableMethods: computed(() => tableMethods.value),
+    })
+
+    onMounted(() => {
+      registerRayTableMethods(rayTableInstance.value as DataTableInst)
+    })
+
+    // expose({
+    //   tableMethods: tableMethods.value,
+    // })
+
     return {
       tableUUID,
       rayTableUUID,
@@ -217,14 +252,14 @@ const RayTable = defineComponent({
         class="ray-table"
         bordered={this.bordered}
         style={[this.cssVars]}
-        id={this.rayTableUUID}
+        {...{ id: this.rayTableUUID }}
       >
         {{
           default: () => (
             <>
               <NDataTable
                 ref="rayTableInstance"
-                id={this.tableUUID}
+                {...{ id: this.tableUUID }}
                 {...this.$props}
                 rowProps={this.handleRowProps.bind(this)}
                 size={this.tableSize}
