@@ -13,7 +13,7 @@ import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/c
 
 import { useSwatchesColorOptions } from './hook'
 import { useSetting } from '@/store'
-import { useI18n } from '@/language/useI18n'
+import { useI18n } from '@/locales/useI18n'
 
 import type { PropType } from 'vue'
 
@@ -75,14 +75,14 @@ const SettingDrawer = defineComponent({
         placement={this.placement}
         width={this.width}
       >
-        <NDrawerContent title={t('LayoutHeaderSettingOptions.Title')}>
+        <NDrawerContent title={t('headerSettingOptions.Title')}>
           <NSpace class="setting-drawer__space" vertical>
             <NDivider titlePlacement="center">
-              {t('LayoutHeaderSettingOptions.ThemeOptions.Title')}
+              {t('headerSettingOptions.ThemeOptions.Title')}
             </NDivider>
             <ThemeSwitch />
             <NDivider titlePlacement="center">
-              {t('LayoutHeaderSettingOptions.ThemeOptions.PrimaryColorConfig')}
+              {t('headerSettingOptions.ThemeOptions.PrimaryColorConfig')}
             </NDivider>
             <NColorPicker
               swatches={useSwatchesColorOptions()}
@@ -90,7 +90,7 @@ const SettingDrawer = defineComponent({
               onUpdateValue={this.changePrimaryColor.bind(this)}
             />
             <NDivider titlePlacement="center">
-              {t('LayoutHeaderSettingOptions.InterfaceDisplay')}
+              {t('headerSettingOptions.InterfaceDisplay')}
             </NDivider>
             <NDescriptions labelPlacement="left" column={1}>
               <NDescriptionsItem label="多标签">

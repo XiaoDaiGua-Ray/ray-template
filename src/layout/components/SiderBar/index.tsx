@@ -20,11 +20,11 @@ import GlobalSeach from './components/GlobalSeach/index'
 
 import { useSetting } from '@/store'
 import { useSignin } from '@/store'
-import { localOptions } from '@/language/index'
+import { localOptions } from '@/locales/index'
 import { useAvatarOptions } from './hook'
 import { getCache } from '@/utils/cache'
 import screenfull from 'screenfull'
-import { useI18n } from '@/language/useI18n'
+import { useI18n } from '@/locales/useI18n'
 
 import type { IconEventMapOptions, IconEventMap } from './type'
 
@@ -57,43 +57,43 @@ const SiderBar = defineComponent({
      *
      * 顶部左边操作栏
      */
-    const leftIconOptions = [
+    const leftIconOptions = computed(() => [
       {
         name: 'reload',
         size: 18,
-        tooltip: 'LayoutHeaderTooltipOptions.Reload',
+        tooltip: t('headerTooltip.Reload'),
       },
-    ]
+    ])
     /**
      *
      * 顶部右边提示框操作栏
      */
-    const rightTooltipIconOptions = [
+    const rightTooltipIconOptions = computed(() => [
       {
         name: 'search',
         size: 18,
-        tooltip: 'LayoutHeaderTooltipOptions.Search',
+        tooltip: t('headerTooltip.Search'),
         eventKey: 'search',
       },
       {
         name: 'fullscreen',
         size: 18,
-        tooltip: 'LayoutHeaderTooltipOptions.FullScreen',
+        tooltip: t('headerTooltip.FullScreen'),
         eventKey: 'screen',
       },
       {
         name: 'github',
         size: 18,
-        tooltip: 'LayoutHeaderTooltipOptions.Github',
+        tooltip: t('headerTooltip.Github'),
         eventKey: 'github',
       },
       {
         name: 'setting',
         size: 18,
-        tooltip: 'LayoutHeaderTooltipOptions.Setting',
+        tooltip: t('headerTooltip.Setting'),
         eventKey: 'setting',
       },
-    ]
+    ])
     const iconEventMap: IconEventMapOptions = {
       reload: () => {
         changeSwitcher(false, 'reloadRouteSwitch')
@@ -178,7 +178,7 @@ const SiderBar = defineComponent({
                       onClick={this.handleIconClick.bind(this, curr.name)}
                     />
                   ),
-                  default: () => this.t(curr.tooltip),
+                  default: () => curr.tooltip,
                 }}
               </NTooltip>
             ))}
@@ -192,7 +192,7 @@ const SiderBar = defineComponent({
             {this.rightTooltipIconOptions.map((curr) => (
               <RayTooltipIcon
                 iconName={curr.name}
-                tooltipText={this.t(curr.tooltip)}
+                tooltipText={curr.tooltip}
                 onClick={this.handleIconClick.bind(this, curr.name)}
               />
             ))}

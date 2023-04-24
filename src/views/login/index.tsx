@@ -20,8 +20,8 @@ import RayLink from '@/components/RayLink/index'
 import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch/index'
 
 import { useSetting } from '@/store'
-import { localOptions } from '@/language/index'
-import { useI18n } from '@/language/useI18n'
+import { localOptions } from '@/locales/index'
+import { useI18n } from '@/locales/useI18n'
 
 const Login = defineComponent({
   name: 'Login',
@@ -122,17 +122,20 @@ const Login = defineComponent({
                     {{
                       default: () => (
                         <>
-                          <NTabPane tab={t('LoginModule.Signin')} name="signin">
+                          <NTabPane
+                            tab={t('views.login.index.Signin')}
+                            name="signin"
+                          >
                             <Signin />
                           </NTabPane>
                           <NTabPane
-                            tab={t('LoginModule.Register')}
+                            tab={t('views.login.index.Register')}
                             name="register"
                           >
                             <Register />
                           </NTabPane>
                           <NTabPane
-                            tab={t('LoginModule.QRCodeSignin')}
+                            tab={t('views.login.index.QRCodeSignin')}
                             name="qrcodeSignin"
                           >
                             <QRCodeSignin />

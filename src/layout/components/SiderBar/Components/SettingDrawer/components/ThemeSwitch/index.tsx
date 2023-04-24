@@ -90,8 +90,8 @@ const ThemeSwitch = defineComponent({
             ),
             default: () =>
               this.themeValue
-                ? t('LayoutHeaderSettingOptions.ThemeOptions.Dark')
-                : t('LayoutHeaderSettingOptions.ThemeOptions.Light'),
+                ? t('headerSettingOptions.ThemeOptions.Dark')
+                : t('headerSettingOptions.ThemeOptions.Light'),
           }}
         </NTooltip>
       </NSpace>

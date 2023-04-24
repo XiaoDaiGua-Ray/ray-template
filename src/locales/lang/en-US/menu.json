@@ -1,0 +1,17 @@
+{
+  "Dashboard": "Home",
+  "Rely": "Rely",
+  "RelyAbout": "Rely About",
+  "Error": "Error Page",
+  "Echart": "Chart",
+  "scrollReveal": "Scroll Reveal",
+  "Axios": "Axios Request",
+  "Table": "Table",
+  "MultiMenu": "MultiMenu",
+  "Doc": "Doc",
+  "DocLocal": "Doc (China)",
+  "Office": "Office",
+  "Office_Document": "Document",
+  "Office_Presentation": "Presentation",
+  "Office_Spreadsheet": "Spreadsheet"
+}

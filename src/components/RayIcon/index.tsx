@@ -54,7 +54,10 @@ const RayIcon = defineComponent({
       default: false,
     },
   },
-  setup(props) {
+  emits: ['click'],
+  setup(props, ctx) {
+    const emit = ctx.emit
+
     const modelColor = computed(() => props.color)
     const symbolId = computed(() => `#${props.prefix}-${props.name}`)
     const cssVars = computed(() => {
@@ -75,17 +78,28 @@ const RayIcon = defineComponent({
       return cssVar
     })
 
+    const handleClick = () => {
+      emit('click')
+    }
+
     return {
       modelColor,
       symbolId,
       cssVars,
+      handleClick,
     }
   },
   render() {
     return (
-      <span class={['ray-icon', this.customClassName]} style={[this.cssVars]}>
-        <svg rayIconAttribute="ray-icon" ariaHidden={true}>
-          <use xlink:href={this.symbolId} fill={this.modelColor} />
+      <span
+        class={['ray-icon', this.customClassName]}
+        style={[this.cssVars]}
+        onClick={this.handleClick.bind(this)}
+      >
+        <svg
+          {...({ rayIconAttribute: 'ray-icon', ariaHidden: true } as object)}
+        >
+          <use {...{ 'xlink:href': this.symbolId }} fill={this.modelColor} />
         </svg>
       </span>
     )

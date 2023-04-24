@@ -10,7 +10,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "lib": ["ESNext", "DOM", "es5", "es6", "dom.iterable"],
+    "lib": ["ESNext", "DOM", "es5", "es6", "dom.iterable", "es2022"],
     "skipLibCheck": true,
     "baseUrl": "./",
     "paths": {

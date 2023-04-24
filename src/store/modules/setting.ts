@@ -1,7 +1,8 @@
-import { getDefaultLocal } from '@/language/index'
+import { getDefaultLocal } from '@/locales/index'
 import { setCache } from '@use-utils/cache'
 import { set } from 'lodash-es'
 import { addClass, removeClass, colorToRgba } from '@/utils/element'
+import { useI18n } from '@/locales/useI18n'
 
 import type { ConditionalPick } from '@/types/type-utils'
 import type { GlobalThemeOverrides } from 'naive-ui'
@@ -24,7 +25,7 @@ export const useSetting = defineStore(
     const {
       appPrimaryColor: { primaryColor },
     } = __APP_CFG__ // 默认主题色
-    const { locale } = useI18n()
+    const { t, locale } = useI18n()
 
     const settingState = reactive<SettingState>({
       drawerPlacement: 'right' as NaiveDrawerPlacement,
@@ -45,7 +46,8 @@ export const useSetting = defineStore(
 
     /** 修改当前语言 */
     const updateLocale = (key: string) => {
-      locale.value = key
+      locale(key)
+
       settingState.localeLanguage = key
 
       setCache('localeLanguage', key, 'localStorage')

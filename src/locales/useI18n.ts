@@ -1,5 +1,8 @@
 import { i18n } from './index'
 
+import type { WritableComputedRef } from 'vue'
+import type { useI18n as _useI18n } from 'vue-i18n'
+
 const getI18nKey = (namespace: string | undefined, key: string) => {
   if (!namespace) {
     return key
@@ -13,17 +16,7 @@ const getI18nKey = (namespace: string | undefined, key: string) => {
 }
 
 export const useI18n = (namespace?: string) => {
-  const normalFunc = {
-    t: (key: string) => {
-      return getI18nKey(namespace, key)
-    },
-  }
-
-  if (!i18n) {
-    return normalFunc
-  }
-
-  const { t, ...methods } = i18n.global
+  const { t, locale, ...methods } = i18n.global
 
   const overridesTFunc = (key: string, ...args: any[]) => {
     if (!key) {
@@ -38,11 +31,15 @@ export const useI18n = (namespace?: string) => {
     return (t as any)(getI18nKey(namespace, key), ...args)
   }
 
+  const overrideLocaleFunc = (lang: string) => {
+    const localeRef = locale as WritableComputedRef<string>
+
+    localeRef.value = lang
+  }
+
   return {
     ...methods,
     t: overridesTFunc,
+    locale: overrideLocaleFunc,
   }
 }
-
-/** 配合 i18n ally 插件提示使用 */
-export const t = (key: string) => key

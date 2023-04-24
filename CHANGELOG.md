@@ -12,6 +12,7 @@
 - 手动补充 AppRouteRecordRaw、AppRouteMeta 类型
 - 重新拆分 Layout 入口文件
 - 重新指定组件暴露方法、属性
+- 修改国际化管理方式，现在支持自动合并管理与结合 i18n-ally 使用。并且支持 unplugin-vue-i18n 构建，提高性能
 
 ## 3.1.7
 

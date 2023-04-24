@@ -28,7 +28,7 @@ import RayIcon from '@/components/RayIcon/index'
 import { getCache, setCache } from '@/utils/cache'
 import { validRole } from '@/router/basic'
 import { parse, matchMenuOption, updateDocumentTitle } from './helper'
-import { useI18n } from '@/language/useI18n'
+import { useI18n } from '@/locales/useI18n'
 
 import type { MenuOption } from 'naive-ui'
 import type { RouteMeta } from 'vue-router'
@@ -173,9 +173,7 @@ export const useMenu = defineStore(
 
         /** 设置 label, i18nKey 优先级最高 */
         const label = computed(() =>
-          meta?.i18nKey
-            ? t(`GlobalMenuOptions.${meta!.i18nKey}`)
-            : meta?.noLocalTitle,
+          meta?.i18nKey ? t(`menu.${meta!.i18nKey}`) : meta?.noLocalTitle,
         )
         /** 拼装菜单项 */
         const route = {

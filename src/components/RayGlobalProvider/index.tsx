@@ -10,7 +10,7 @@ import {
 } from 'naive-ui'
 
 import { useSetting } from '@/store'
-import { naiveLocales } from '@/language/index'
+import { naiveLocales } from '@/locales/index'
 
 const GlobalProvider = defineComponent({
   name: 'GlobalProvider',

@@ -3,7 +3,7 @@ import { NForm, NFormItem, NInput, NButton, NSpace, NDivider } from 'naive-ui'
 import { setCache } from '@/utils/cache'
 import { useSpin } from '@/spin'
 import { useSignin } from '@/store'
-import { useI18n } from '@/language/useI18n'
+import { useI18n } from '@/locales/useI18n'
 
 import type { FormInst } from 'naive-ui'
 
@@ -31,12 +31,12 @@ const Signin = defineComponent({
     const rules = {
       name: {
         required: true,
-        message: t('LoginModule.NamePlaceholder'),
+        message: t('views.login.index.NamePlaceholder'),
         trigger: ['blur', 'input'],
       },
       pwd: {
         required: true,
-        message: t('LoginModule.PasswordPlaceholder'),
+        message: t('views.login.index.PasswordPlaceholder'),
         trigger: ['blur', 'input'],
       },
     }
@@ -78,17 +78,17 @@ const Signin = defineComponent({
 
     return (
       <NForm model={this.signinForm} ref="loginFormRef" rules={this.rules}>
-        <NFormItem label={t('LoginModule.Name')} path="name">
+        <NFormItem label={t('views.login.index.Name')} path="name">
           <NInput
             v-model:value={this.signinForm.name}
-            placeholder={t('LoginModule.NamePlaceholder')}
+            placeholder={t('views.login.index.NamePlaceholder')}
           />
         </NFormItem>
-        <NFormItem label={t('LoginModule.Password')} path="pwd">
+        <NFormItem label={t('views.login.index.Password')} path="pwd">
           <NInput
             v-model:value={this.signinForm.pwd}
             type="password"
-            placeholder={t('LoginModule.PasswordPlaceholder')}
+            placeholder={t('views.login.index.PasswordPlaceholder')}
           />
         </NFormItem>
         <NButton
@@ -96,7 +96,7 @@ const Signin = defineComponent({
           type="primary"
           onClick={this.handleLogin.bind(this)}
         >
-          {t('LoginModule.Login')}
+          {t('views.login.index.Login')}
         </NButton>
       </NForm>
     )

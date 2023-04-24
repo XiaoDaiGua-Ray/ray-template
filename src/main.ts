@@ -15,16 +15,16 @@ import {
   permissionRouter,
 } from './router/index'
 import { setupStore } from './store/index'
-import { setupI18n } from './language/index'
+import { setupI18n } from './locales/index'
 
 /**
  *
  * 普通应用注册方法
  */
-const setupTemplate = () => {
+const setupTemplate = async () => {
   const app = createApp(App)
 
-  setupI18n(app)
+  await setupI18n(app)
 
   setupStore(app)
 
@@ -42,13 +42,13 @@ const setupTemplate = () => {
  * 作为 `wujie-micro` 子应用注册应用方法
  * 注意: 此处的 `instance` 名称不可以写为 `app`
  */
-const setupWujieTemplate = () => {
+const setupWujieTemplate = async () => {
   let instance: AppType<Element>
 
-  window.__WUJIE_MOUNT = () => {
+  window.__WUJIE_MOUNT = async () => {
     instance = createApp(App)
 
-    setupI18n(instance)
+    await setupI18n(instance)
 
     setupStore(instance)
 

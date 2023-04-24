@@ -1,0 +1,10 @@
+{
+  "Title": "项目配置",
+  "ThemeOptions": {
+    "Title": "主题",
+    "Dark": "暗色",
+    "Light": "明亮",
+    "PrimaryColorConfig": "主题色"
+  },
+  "InterfaceDisplay": "界面显示"
+}
