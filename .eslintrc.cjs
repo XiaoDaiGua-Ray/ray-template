@@ -103,6 +103,7 @@ module.exports = {
         allowShortCircuit: true,
         allowTernary: true,
         allowTaggedTemplates: true,
+        enforceForJSX: true,
       },
     ], // 禁止无用的表达式
     'no-useless-call': 2, // 禁止不必要的 `call` 和 `apply`

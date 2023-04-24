@@ -12,3 +12,4 @@ vite-env.*
 visualizer.*
 visualizer.html
 .env.*
+src/locales/lang
