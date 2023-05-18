@@ -151,8 +151,10 @@ const TableSetting = defineComponent({
                     class={['ray-table__setting-option--draggable']}
                     v-model={this.settingOptions}
                     itemKey="key"
-                    disabled={!this.disableDraggable}
-                    onEnd={this.handleDraggableEnd.bind(this)}
+                    {...{
+                      disabled: !this.disableDraggable,
+                      onEnd: this.handleDraggableEnd.bind(this),
+                    }}
                   >
                     {{
                       item: ({

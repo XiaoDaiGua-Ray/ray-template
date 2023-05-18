@@ -102,7 +102,9 @@ const RelyAbout = defineComponent({
                 <NTag
                   bordered={false}
                   type="info"
-                  onClick={this.handleTagClick.bind(this, curr)}
+                  {...{
+                    onClick: this.handleTagClick.bind(this, curr),
+                  }}
                   style={[curr.url ? 'cursor: pointer' : '']}
                 >
                   {curr.label}

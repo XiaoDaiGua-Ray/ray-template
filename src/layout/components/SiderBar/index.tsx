@@ -17,9 +17,9 @@ import RayTooltipIcon from '@/components/RayTooltipIcon/index'
 import SettingDrawer from './components/SettingDrawer/index'
 import Breadcrumb from './components/Breadcrumb/index'
 import GlobalSeach from './components/GlobalSeach/index'
+import LockScreen from './components/LockScreen/index'
 
-import { useSetting } from '@/store'
-import { useSignin } from '@/store'
+import { useSetting, useSignin } from '@/store'
 import { localOptions } from '@/locales/index'
 import { useAvatarOptions } from './hook'
 import { getCache } from '@/utils/cache'
@@ -76,6 +76,12 @@ const SiderBar = defineComponent({
         eventKey: 'search',
       },
       {
+        name: 'lock',
+        size: 18,
+        tooltip: t('headerTooltip.Lock'),
+        eventKey: 'lock',
+      },
+      {
         name: 'fullscreen',
         size: 18,
         tooltip: t('headerTooltip.FullScreen'),
@@ -115,6 +121,9 @@ const SiderBar = defineComponent({
       },
       search: () => {
         globalSearchShown.value = true
+      },
+      lock: () => {
+        changeSwitcher(true, 'lockScreenSwitch')
       },
     }
 
@@ -157,6 +166,7 @@ const SiderBar = defineComponent({
     return (
       <NLayoutHeader class="layout-header" bordered>
         <GlobalSeach v-model:show={this.globalSearchShown} />
+        {/* <LockScreen /> */}
         <NSpace
           class="layout-header__method"
           align="center"

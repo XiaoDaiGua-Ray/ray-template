@@ -1,7 +1,6 @@
 import { i18n } from './index'
 
 import type { WritableComputedRef } from 'vue'
-import type { useI18n as _useI18n } from 'vue-i18n'
 
 const getI18nKey = (namespace: string | undefined, key: string) => {
   if (!namespace) {

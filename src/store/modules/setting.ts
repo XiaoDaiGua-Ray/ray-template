@@ -17,6 +17,8 @@ interface SettingState {
   breadcrumbSwitch: boolean
   localeLanguage: string
   invertSwitch: boolean
+  lockScreenSwitch: boolean
+  lockScreenInputSwitch: boolean
 }
 
 export const useSetting = defineStore(
@@ -42,6 +44,8 @@ export const useSetting = defineStore(
       invertSwitch: false, // 反转色模式
       breadcrumbSwitch: true, // 面包屑开关
       localeLanguage: getDefaultLocal(),
+      lockScreenSwitch: false, // 锁屏开关
+      lockScreenInputSwitch: false, // 锁屏输入状态开关
     })
 
     /** 修改当前语言 */

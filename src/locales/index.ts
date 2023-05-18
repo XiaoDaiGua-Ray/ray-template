@@ -34,6 +34,7 @@ export { naiveLocales, localOptions } from './language'
 import type { App } from 'vue'
 import type { I18n } from 'vue-i18n'
 
+/** i18n 实例 */
 export let i18n: I18n
 
 /**

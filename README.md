@@ -8,7 +8,7 @@
 
 ## 感谢
 
-> 感谢 <https://yunkuangao.me/> 对于本人的支持。
+> 感谢 <https://me.yka.moe/> 对于本人的支持。
 
 ## 预览地址
 

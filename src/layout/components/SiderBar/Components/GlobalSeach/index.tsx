@@ -162,7 +162,9 @@ const GlobalSeach = defineComponent({
                         align="center"
                         wrapItem={false}
                         class="content-item"
-                        onClick={this.handleSearchItemClick.bind(this, curr)}
+                        {...{
+                          onClick: this.handleSearchItemClick.bind(this, curr),
+                        }}
                       >
                         <div class="content-item-icon">
                           {curr?.meta?.icon ? (

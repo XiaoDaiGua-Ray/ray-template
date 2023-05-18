@@ -386,7 +386,13 @@ const MenuTag = defineComponent({
               customClassName="menu-tag__left-arrow"
               onClick={this.handleScrollX.bind(this, 'left')}
             />
-            <NScrollbar xScrollable ref="scrollRef" id={this.scrollBarUUID}>
+            <NScrollbar
+              xScrollable
+              ref="scrollRef"
+              {...{
+                id: this.scrollBarUUID,
+              }}
+            >
               <NSpace
                 class="menu-tag-wrapper"
                 wrap={false}
@@ -399,11 +405,13 @@ const MenuTag = defineComponent({
                       curr.key !== this.rootPath &&
                       this.modelMenuTagOptions.length > 1
                     }
-                    onClose={() => this.closeCurrentMenuTag(idx)}
+                    onClose={this.closeCurrentMenuTag.bind(this, idx)}
                     type={curr.key === this.menuKey ? 'primary' : 'default'}
-                    onClick={this.handleTagClick.bind(this, curr)}
                     bordered={false}
-                    onContextmenu={this.handleContextMenu.bind(this, idx)}
+                    {...{
+                      onClick: this.handleTagClick.bind(this, curr),
+                      onContextmenu: this.handleContextMenu.bind(this, idx),
+                    }}
                   >
                     {typeof curr.label === 'function'
                       ? curr.label()
