@@ -25,11 +25,10 @@
  */
 
 import { createI18n } from 'vue-i18n'
-import { localOptions } from './language'
+import { localOptions } from '@/appConfig/localConfig'
 
 import { getCache } from '@use-utils/cache'
-
-export { naiveLocales, localOptions } from './language'
+import { getAppLocales } from '@/locales/helper'
 
 import type { App } from 'vue'
 import type { I18n } from 'vue-i18n'
@@ -51,23 +50,10 @@ export const getDefaultLocal = () => {
   return locale
 }
 
-/** 获取所有语言 */
-const getAppLocales = async () => {
-  const message = {}
-
-  for (const curr of localOptions) {
-    const msg = await import(`./lang/${curr.key}.ts`)
-
-    message[curr.key] = msg.default?.message ?? {}
-  }
-
-  return message
-}
-
 /** 创建 i18n 实例 */
 const createI18nOptions = async () => {
   const locale = getDefaultLocal()
-  const message = await getAppLocales()
+  const message = await getAppLocales(localOptions)
 
   const i18nInstance = createI18n({
     legacy: false,

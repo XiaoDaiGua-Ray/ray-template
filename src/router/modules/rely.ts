@@ -1,9 +1,11 @@
 import type { AppRouteRecordRaw } from '@/router/type'
 
+import { LAYOUT } from '@/router/constant/index'
+
 const rely: AppRouteRecordRaw = {
   path: '/rely',
   name: 'Rely',
-  component: () => import('@/views/rely/index'),
+  component: LAYOUT,
   meta: {
     i18nKey: 'Rely',
     icon: 'rely',

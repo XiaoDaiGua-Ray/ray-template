@@ -20,7 +20,7 @@ import GlobalSeach from './components/GlobalSeach/index'
 import LockScreen from './components/LockScreen/index'
 
 import { useSetting, useSignin } from '@/store'
-import { localOptions } from '@/locales/index'
+import { localOptions } from '@/appConfig/localConfig'
 import { useAvatarOptions } from './hook'
 import { getCache } from '@/utils/cache'
 import screenfull from 'screenfull'
@@ -166,7 +166,7 @@ const SiderBar = defineComponent({
     return (
       <NLayoutHeader class="layout-header" bordered>
         <GlobalSeach v-model:show={this.globalSearchShown} />
-        {/* <LockScreen /> */}
+        <LockScreen />
         <NSpace
           class="layout-header__method"
           align="center"

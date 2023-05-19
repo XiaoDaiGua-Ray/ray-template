@@ -9,22 +9,11 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import {
-  NSpace,
-  NCard,
-  NTabs,
-  NTabPane,
-  NGradientText,
-  NDropdown,
-  NDivider,
-  NGrid,
-  NGridItem,
-  NSwitch,
-  NTooltip,
-} from 'naive-ui'
+import { NSpace, NSwitch, NTooltip } from 'naive-ui'
 import RayIcon from '@/components/RayIcon'
 
 import { useSetting } from '@/store'
+import { useI18n } from '@/locales/useI18n'
 
 const ThemeSwitch = defineComponent({
   name: 'ThemeSwitch',

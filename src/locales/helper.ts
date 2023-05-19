@@ -1,3 +1,21 @@
+/**
+ *
+ * @author Ray <https://github.com/XiaoDaiGua-Ray>
+ *
+ * @date 2023-05-19
+ *
+ * @workspace ray-template
+ *
+ * @remark 今天也是元气满满撸代码的一天
+ */
+
+/**
+ *
+ * 国际化辅助方法:
+ *   - mergeMessage: 合并对应文件下语言包
+ *   - getAppLocales: 获取所有语言
+ */
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { set } from 'lodash-es'
 
@@ -29,4 +47,22 @@ export const mergeMessage = (langs: Record<string, any>, prefix = 'lang') => {
   })
 
   return langsGather
+}
+
+/** 获取所有语言 */
+export const getAppLocales = async (
+  localOptions: {
+    key: string
+    label: string
+  }[],
+) => {
+  const message = {}
+
+  for (const curr of localOptions) {
+    const msg = await import(`./lang/${curr.key}.ts`)
+
+    message[curr.key] = msg.default?.message ?? {}
+  }
+
+  return message
 }

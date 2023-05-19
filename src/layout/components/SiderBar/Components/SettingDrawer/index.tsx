@@ -11,7 +11,7 @@ import {
 } from 'naive-ui'
 import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch/index'
 
-import { useSwatchesColorOptions } from './hook'
+import { APP_THEME_COLOR } from '@/appConfig/designConfig'
 import { useSetting } from '@/store'
 import { useI18n } from '@/locales/useI18n'
 
@@ -85,7 +85,7 @@ const SettingDrawer = defineComponent({
               {t('headerSettingOptions.ThemeOptions.PrimaryColorConfig')}
             </NDivider>
             <NColorPicker
-              swatches={useSwatchesColorOptions()}
+              swatches={APP_THEME_COLOR}
               v-model:value={this.primaryColorOverride.common!.primaryColor}
               onUpdateValue={this.changePrimaryColor.bind(this)}
             />

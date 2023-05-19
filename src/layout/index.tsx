@@ -16,6 +16,7 @@ import ContentWrapper from '@/layout/default/ContentWrapper'
 import FooterWrapper from '@/layout/default/FooterWrapper'
 
 import { useSetting } from '@/store'
+import { viewScrollContainerId } from '@/appConfig/routerConfig'
 
 const Layout = defineComponent({
   name: 'Layout',
@@ -60,7 +61,7 @@ const Layout = defineComponent({
             <NLayoutContent
               class="layout-content__router-view"
               nativeScrollbar={false}
-              {...{ id: 'rayLayoutContentWrapperScopeSelector' }}
+              {...{ id: viewScrollContainerId }}
             >
               <ContentWrapper />
               <FooterWrapper />

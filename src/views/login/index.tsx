@@ -20,7 +20,7 @@ import RayLink from '@/components/RayLink/index'
 import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch/index'
 
 import { useSetting } from '@/store'
-import { localOptions } from '@/locales/index'
+import { localOptions } from '@/appConfig/localConfig'
 import { useI18n } from '@/locales/useI18n'
 
 const Login = defineComponent({
