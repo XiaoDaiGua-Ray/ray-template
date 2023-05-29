@@ -2,9 +2,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { RouteRecordRaw } from 'vue-router'
 import type { Recordable } from '@/types/type-utils'
+import type { DefineComponent } from 'vue'
 
 export type Component<T = any> =
-  | ReturnType<typeof defineComponent>
+  | DefineComponent<{}, {}, any>
   | (() => Promise<typeof import('*.vue')>)
   | (() => Promise<T>)
 

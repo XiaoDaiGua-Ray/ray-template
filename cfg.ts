@@ -43,6 +43,12 @@ import {
   buildOptions,
   mixinCSSPlugin,
 } from './vite-plugin/index'
+import { APP_PRIMARY_COLOR } from './src/appConfig/designConfig'
+import {
+  PRE_LOADING_CONFIG,
+  ROOT_ROUTE,
+  SIDE_BAR_LOGO,
+} from './src/appConfig/appConfig'
 
 import type { AppConfigExport } from './src/types/cfg'
 
@@ -50,44 +56,11 @@ const config: AppConfigExport = {
   /** 公共基础路径配置, 如果为空则会默认以 '/' 填充 */
   base: '/ray-template/',
   /** 配置首屏加载信息 */
-  preloadingConfig: {
-    title: 'Ray Template',
-    tagColor: '#ff6700',
-    titleColor: '#2d8cf0',
-  },
+  preloadingConfig: PRE_LOADING_CONFIG,
   /** 默认主题色(不可省略, 必填), 也用于 ejs 注入 */
-  appPrimaryColor: {
-    /** 主题色 */
-    primaryColor: '#2d8cf0',
-    /** 主题辅助色(用于整体 hover、active 等之类颜色) */
-    primaryFadeColor: 'rgba(45, 140, 240, 0.3)',
-  },
-  /**
-   *
-   * 配置根页面
-   * 该项目所有重定向至首页, 都依赖该配置项
-   *
-   * 如果修改了该项目的首页路由配置, 需要更改该配置项, 以免重定向首页操作出现错误
-   */
-  rootRoute: {
-    name: 'dashboard',
-    path: '/dashboard',
-  },
-  /**
-   *
-   * icon: LOGO 图标, 依赖 `RayIcon` 实现(如果为空则不会渲染图标)
-   * title: LOGO 标题
-   * url: 点击跳转地址, 如果不配置该属性, 则不会触发跳转
-   * jumpType: 跳转类型(station: 项目内跳转, outsideStation: 新页面打开)
-   *
-   * 如果不设置该属性或者为空, 则不会渲染 LOGO
-   */
-  sideBarLogo: {
-    icon: 'ray',
-    title: 'Ray Template',
-    url: '/dashboard',
-    jumpType: 'station',
-  },
+  appPrimaryColor: APP_PRIMARY_COLOR,
+  rootRoute: ROOT_ROUTE,
+  sideBarLogo: SIDE_BAR_LOGO,
   /**
    *
    * 预处理全局需要注入的 css 文件

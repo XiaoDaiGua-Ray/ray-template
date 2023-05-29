@@ -11,8 +11,9 @@
     "vite-plugin/index.ts",
     "vite-plugin/type.ts",
     "cfg.ts",
-    "src/types/cfg.ts",
+    "src/types/*.ts",
     "package.json",
-    "vite-env.d.ts"
+    "vite-env.d.ts",
+    "src/appConfig/*.ts"
   ]
 }
