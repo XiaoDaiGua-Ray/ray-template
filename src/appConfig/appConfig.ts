@@ -15,7 +15,8 @@ import type {
   LayoutSideBarLogo,
   PreloadingConfig,
   RootRoute,
-} from '../types/cfg'
+} from '@/types/cfg'
+import type { MenuCollapsedConfig } from '@/types/appConfig'
 
 /** 首屏加载信息配置 */
 export const PRE_LOADING_CONFIG: PreloadingConfig = {
@@ -51,3 +52,27 @@ export const SIDE_BAR_LOGO: LayoutSideBarLogo = {
   url: '/dashboard',
   jumpType: 'station',
 }
+
+/**
+ *
+ * 系统菜单折叠配置
+ *
+ * MENU_COLLAPSED_WIDTH 配置仅当 MENU_COLLAPSED_MODE 为 width 风格时才有效
+ *
+ * MENU_COLLAPSED_MODE:
+ *   - transform: 边栏将只会移动它的位置而不会改变宽度
+ *   - width: Sider 的内容宽度将会被实际改变
+ *
+ * MENU_COLLAPSED_ICON_SIZE 配置菜单未折叠时图标的大小
+ *
+ * MENU_COLLAPSED_INDENT 配置菜单每级的缩进
+ */
+export const MENU_COLLAPSED_CONFIG: MenuCollapsedConfig = {
+  MENU_COLLAPSED_WIDTH: 64,
+  MENU_COLLAPSED_MODE: 'width',
+  MENU_COLLAPSED_ICON_SIZE: 22,
+  MENU_COLLAPSED_INDENT: 24,
+}
+
+/** 是否启用菜单手风琴模式 */
+export const MENU_ACCORDION = false

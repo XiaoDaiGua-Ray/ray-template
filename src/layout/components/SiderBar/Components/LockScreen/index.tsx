@@ -69,7 +69,14 @@ const LockScreen = defineComponent({
                 />
               </NFormItem>
               <NFormItem>
-                <NButton type="primary">锁屏</NButton>
+                <NButton
+                  type="primary"
+                  onClick={() => {
+                    window.$message.info('功能开发中...')
+                  }}
+                >
+                  锁屏
+                </NButton>
               </NFormItem>
             </NForm>
           </div>

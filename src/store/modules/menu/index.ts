@@ -29,6 +29,7 @@ import { getCache, setCache } from '@/utils/cache'
 import { validRole } from '@/router/basic'
 import { parse, matchMenuOption, updateDocumentTitle } from './helper'
 import { useI18n } from '@/locales/useI18n'
+import { MENU_COLLAPSED_CONFIG } from '@/appConfig/appConfig'
 
 import type { MenuOption } from 'naive-ui'
 import type { RouteMeta } from 'vue-router'
@@ -192,7 +193,7 @@ export const useMenu = defineStore(
               RayIcon,
               {
                 name: meta!.icon as string,
-                size: 20,
+                size: MENU_COLLAPSED_CONFIG.MENU_COLLAPSED_ICON_SIZE,
               },
               {},
             ),

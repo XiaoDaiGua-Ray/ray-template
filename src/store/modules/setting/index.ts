@@ -1,25 +1,12 @@
-import { getDefaultLocal } from '@/locales/index'
+import { getDefaultLocal } from '@/locales/helper'
 import { setCache } from '@use-utils/cache'
 import { set } from 'lodash-es'
 import { addClass, removeClass, colorToRgba } from '@/utils/element'
 import { useI18n } from '@/locales/useI18n'
+import { APP_NAIVE_UI_THEME_OVERRIDES } from '@/appConfig/designConfig'
 
 import type { ConditionalPick } from '@/types/type-utils'
-import type { GlobalThemeOverrides } from 'naive-ui'
-
-interface SettingState {
-  drawerPlacement: NaiveDrawerPlacement
-  primaryColorOverride: GlobalThemeOverrides
-  themeValue: boolean
-  reloadRouteSwitch: boolean
-  menuTagSwitch: boolean
-  spinSwitch: boolean
-  breadcrumbSwitch: boolean
-  localeLanguage: string
-  invertSwitch: boolean
-  lockScreenSwitch: boolean
-  lockScreenInputSwitch: boolean
-}
+import type { SettingState } from '@/store/modules/setting/type'
 
 export const useSetting = defineStore(
   'setting',
@@ -32,6 +19,7 @@ export const useSetting = defineStore(
     const settingState = reactive<SettingState>({
       drawerPlacement: 'right' as NaiveDrawerPlacement,
       primaryColorOverride: {
+        ...APP_NAIVE_UI_THEME_OVERRIDES,
         common: {
           primaryColor: primaryColor, // 主题色
           primaryColorHover: primaryColor,

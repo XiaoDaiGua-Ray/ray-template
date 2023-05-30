@@ -21,7 +21,6 @@
   },
   "dependencies": {
     "@vueuse/core": "^9.1.0",
-    "amfe-flexible": "^2.2.1",
     "axios": "^1.2.0",
     "crypto-js": "^4.1.1",
     "dayjs": "^1.11.7",

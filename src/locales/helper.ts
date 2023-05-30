@@ -18,6 +18,9 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { set } from 'lodash-es'
+import { zhCN, dateZhCN } from 'naive-ui' // 导入 `naive ui` 中文包
+import { getCache } from '@use-utils/cache'
+import { SYSTEM_DEFAULT_LOCAL } from '@/appConfig/localConfig'
 
 import type { Recordable } from '@/types/type-utils'
 
@@ -51,18 +54,65 @@ export const mergeMessage = (langs: Record<string, any>, prefix = 'lang') => {
 
 /** 获取所有语言 */
 export const getAppLocales = async (
-  localOptions: {
+  LOCAL_OPTIONS: {
     key: string
     label: string
   }[],
 ) => {
   const message = {}
 
-  for (const curr of localOptions) {
+  for (const curr of LOCAL_OPTIONS) {
     const msg = await import(`./lang/${curr.key}.ts`)
 
     message[curr.key] = msg.default?.message ?? {}
   }
 
   return message
+}
+
+/**
+ *
+ * @param key 切换对应语言
+ * @returns 组件库对应语言包
+ *
+ * @remark 受打包体积影响. 如果有新的语言添加, 则需要手动引入对应语言包(https://www.naiveui.com/zh-CN/dark/docs/i18n)
+ * @remark naive ui 默认为英文
+ *
+ * 该方法的比对 key 必须与 LOCAL_OPTIONS 一一对应
+ */
+export const naiveLocales = (key: string) => {
+  switch (key) {
+    case 'zh-CN':
+      return {
+        locale: zhCN,
+        dateLocal: dateZhCN,
+      }
+
+    case 'en-US':
+      return {
+        locale: null,
+        dateLocal: null,
+      }
+
+    default:
+      return {
+        locale: zhCN,
+        dateLocal: dateZhCN,
+      }
+  }
+}
+
+/**
+ *
+ * @returns 获取当前环境默认语言
+ *
+ * @remak 未避免出现加载语言错误问题, 故而在 `main.ts` 注册时, 应优先加载 `i18n` 避免出现该问题
+ */
+export const getDefaultLocal = () => {
+  const catchLanguage = getCache('localeLanguage', 'localStorage')
+
+  const locale: string =
+    catchLanguage !== 'no' ? catchLanguage : SYSTEM_DEFAULT_LOCAL
+
+  return locale
 }

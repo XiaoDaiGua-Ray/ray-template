@@ -1,5 +1,12 @@
 # CHANGE LOG
 
+## 3.2.2
+
+### 特征
+
+- 移除 amfe-flexible 插件，改用为 postcss-px-to-viewport 作为适配插件
+- 支持更多 appConfig 配置
+
 ## 3.2.1
 
 ### 特征

@@ -25,9 +25,9 @@
  */
 
 import { createI18n } from 'vue-i18n'
-import { localOptions } from '@/appConfig/localConfig'
+import { LOCAL_OPTIONS } from '@/appConfig/localConfig'
+import { getDefaultLocal } from '@/locales/helper'
 
-import { getCache } from '@use-utils/cache'
 import { getAppLocales } from '@/locales/helper'
 
 import type { App } from 'vue'
@@ -36,24 +36,10 @@ import type { I18n } from 'vue-i18n'
 /** i18n 实例 */
 export let i18n: I18n
 
-/**
- *
- * @returns 获取当前环境默认语言
- *
- * @remak 未避免出现加载语言错误问题, 故而在 `main.ts` 注册时, 应优先加载 `i18n` 避免出现该问题
- */
-export const getDefaultLocal = () => {
-  const catchLanguage = getCache('localeLanguage', 'localStorage')
-
-  const locale: string = catchLanguage !== 'no' ? catchLanguage : 'zh-CN'
-
-  return locale
-}
-
 /** 创建 i18n 实例 */
 const createI18nOptions = async () => {
   const locale = getDefaultLocal()
-  const message = await getAppLocales(localOptions)
+  const message = await getAppLocales(LOCAL_OPTIONS)
 
   const i18nInstance = createI18n({
     legacy: false,

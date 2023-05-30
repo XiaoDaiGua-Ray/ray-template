@@ -20,7 +20,7 @@ import GlobalSeach from './components/GlobalSeach/index'
 import LockScreen from './components/LockScreen/index'
 
 import { useSetting, useSignin } from '@/store'
-import { localOptions } from '@/appConfig/localConfig'
+import { LOCAL_OPTIONS } from '@/appConfig/localConfig'
 import { useAvatarOptions } from './hook'
 import { getCache } from '@/utils/cache'
 import screenfull from 'screenfull'
@@ -207,7 +207,7 @@ const SiderBar = defineComponent({
               />
             ))}
             <NDropdown
-              options={localOptions}
+              options={LOCAL_OPTIONS}
               onSelect={(key: string | number) =>
                 this.updateLocale(String(key))
               }

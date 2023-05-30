@@ -13,6 +13,7 @@
     "lib": ["ESNext", "DOM", "es5", "es6", "dom.iterable", "es2022"],
     "skipLibCheck": true,
     "baseUrl": "./",
+    "rootDir": "./",
     "paths": {
       "@": ["src"],
       "@/*": ["src/*"],
@@ -29,6 +30,14 @@
     "ignoreDeprecations": "5.0"
   },
   "include": [
+    "vite.config.ts",
+    "vite-plugin/index.ts",
+    "vite-plugin/type.ts",
+    "cfg.ts",
+    "package.json",
+    "vite-env.d.ts",
+    "src/appConfig/*.ts",
+    "src/types/cfg.ts",
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
@@ -39,6 +48,5 @@
     "src/*",
     "components.d.ts",
     "auto-imports.d.ts"
-  ],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  ]
 }

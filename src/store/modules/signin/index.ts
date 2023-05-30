@@ -22,15 +22,7 @@
 import { isEmpty } from 'lodash-es'
 import { removeCache } from '@/utils/cache'
 
-export interface SigninForm extends IUnknownObjectKey {
-  name: string
-  pwd: string
-}
-
-export interface SigninCallback extends IUnknownObjectKey {
-  role: string
-  name: string
-}
+import type { SigninForm, SigninCallback } from '@/store/modules/signin/type'
 
 export const useSignin = defineStore(
   'signin',

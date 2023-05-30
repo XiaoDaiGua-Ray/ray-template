@@ -4,7 +4,6 @@ import type { App as AppType } from 'vue'
 
 import '@/styles/base.scss'
 
-// import 'amfe-flexible' // 如果为移动端项目, 解开该注释即可
 import 'virtual:svg-icons-register' // `vite-plugin-svg-icons` 脚本, 如果不使用此插件注释即可
 
 import App from './App'
@@ -71,6 +70,7 @@ const setupWujieTemplate = async () => {
 /**
  *
  * 如果此处需要作为微服务主应用使用, 则只需要执行 `setupTemplate` 方法即可
+ * 如果项目启用无界微服务, 会自动识别并且启动以无界微服务方法启动该项目
  *
  * 作为主应用
  * ----------------------------------------------------------------
@@ -83,5 +83,4 @@ const setupWujieTemplate = async () => {
  * setupTemplate()
  * ----------------------------------------------------------------
  */
-
 window.__POWERED_BY_WUJIE__ ? setupWujieTemplate() : setupTemplate()

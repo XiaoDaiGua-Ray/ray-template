@@ -4,6 +4,7 @@ import { NMenu, NLayoutSider, NEllipsis } from 'naive-ui'
 import RayIcon from '@/components/RayIcon/index'
 
 import { useMenu } from '@/store'
+import { MENU_COLLAPSED_CONFIG, MENU_ACCORDION } from '@/appConfig/appConfig'
 
 const LayoutMenu = defineComponent({
   name: 'LayoutMenu',
@@ -19,7 +20,6 @@ const LayoutMenu = defineComponent({
     })
     const modelMenuOptions = computed(() => menuStore.options)
     const modelCollapsed = computed(() => menuStore.collapsed)
-    const collapsedWidth = 64
     const {
       layout: { sideBarLogo },
     } = __APP_CFG__
@@ -40,7 +40,6 @@ const LayoutMenu = defineComponent({
       modelMenuOptions,
       modelCollapsed,
       collapsedMenu,
-      collapsedWidth,
       sideBarLogo,
       handleSideBarLogoClick,
     }
@@ -50,8 +49,8 @@ const LayoutMenu = defineComponent({
       <NLayoutSider
         bordered
         showTrigger
-        collapseMode="width"
-        collapsedWidth={this.collapsedWidth}
+        collapseMode={MENU_COLLAPSED_CONFIG.MENU_COLLAPSED_MODE}
+        collapsedWidth={MENU_COLLAPSED_CONFIG.MENU_COLLAPSED_WIDTH}
         onUpdateCollapsed={this.collapsedMenu.bind(this)}
         nativeScrollbar={false}
       >
@@ -83,11 +82,12 @@ const LayoutMenu = defineComponent({
         <NMenu
           v-model:value={this.modelMenuKey}
           options={this.modelMenuOptions as NaiveMenuOptions[]}
-          indent={24}
+          indent={MENU_COLLAPSED_CONFIG.MENU_COLLAPSED_INDENT}
           collapsed={this.modelCollapsed}
-          collapsedIconSize={22}
-          collapsedWidth={this.collapsedWidth}
+          collapsedIconSize={MENU_COLLAPSED_CONFIG.MENU_COLLAPSED_ICON_SIZE}
+          collapsedWidth={MENU_COLLAPSED_CONFIG.MENU_COLLAPSED_WIDTH}
           onUpdateValue={this.menuModelValueChange.bind(this)}
+          accordion={MENU_ACCORDION}
         />
       </NLayoutSider>
     )
