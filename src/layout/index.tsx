@@ -16,7 +16,10 @@ import ContentWrapper from '@/layout/default/ContentWrapper'
 import FooterWrapper from '@/layout/default/FooterWrapper'
 
 import { useSetting, useMenu } from '@/store'
-import { viewScrollContainerId } from '@/appConfig/routerConfig'
+import {
+  viewScrollContainerId,
+  LAYOUT_CONTENT_REF,
+} from '@/appConfig/routerConfig'
 
 const Layout = defineComponent({
   name: 'Layout',
@@ -53,6 +56,7 @@ const Layout = defineComponent({
       modelMenuTagSwitch,
       cssVarsRef,
       isLock,
+      LAYOUT_CONTENT_REF,
     }
   },
   render() {
@@ -68,6 +72,7 @@ const Layout = defineComponent({
               <SiderBar />
               {this.modelMenuTagSwitch ? <MenuTag /> : ''}
               <NLayoutContent
+                ref="LAYOUT_CONTENT_REF"
                 class="layout-content__router-view"
                 nativeScrollbar={false}
                 {...{ id: viewScrollContainerId }}

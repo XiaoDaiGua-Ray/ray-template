@@ -9,14 +9,14 @@ export type Component<T = any> =
   | (() => Promise<typeof import('*.vue')>)
   | (() => Promise<T>)
 
-export interface AppRouteMeta extends IUnknownObjectKey {
+export interface AppRouteMeta {
   i18nKey?: string
   icon?: string
   windowOpen?: string
   role?: string[]
   hidden?: boolean
   noLocalTitle?: string | number
-  ignoreResetScroll?: boolean
+  ignoreAutoResetScroll?: boolean
 }
 
 // @ts-ignore
