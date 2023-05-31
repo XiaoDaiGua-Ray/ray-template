@@ -11,6 +11,8 @@
 
 /** 国际化相关配置 */
 
+import type { DayjsLocal, DayjsLocalMap } from '@/dayjs/type'
+
 /**
  *
  * 语言包语种添加后, 需要在此文件配置语言包
@@ -34,3 +36,24 @@ export const LOCAL_OPTIONS = [
  * 配置时应该与 LOCAL_OPTIONS 的 key 一致
  */
 export const SYSTEM_DEFAULT_LOCAL = 'zh-CN'
+
+/**
+ *
+ * dayjs 默认语言格式
+ * 默认为英文(en)
+ *
+ * 系统默认设置为中文(大陆-简体)
+ */
+export const DEFAULT_DAYJS_LOCAL: DayjsLocal = 'zh-cn'
+
+/**
+ *
+ * i18n 国际化配置与 dayjs 配置的映射入口
+ *
+ * key 应该与 LOCAL_OPTIONS key 一致
+ * 配置时请仔细检查
+ */
+export const DAYJS_LOCAL_MAP: DayjsLocalMap = {
+  'zh-CN': 'zh-cn',
+  'en-US': 'en',
+}

@@ -1,0 +1,63 @@
+.lock-screen {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: black;
+
+  & .lock-screen__content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    @include flexCenter;
+    flex-direction: column;
+
+    & .lock-screen__content-bg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      @include flexCenter;
+      font-size: 220px;
+      gap: 80px;
+      z-index: 0;
+
+      & .left,
+      & .right {
+        @include flexCenter;
+        border-radius: 30px;
+        background-color: #141313;
+        font-weight: 700;
+        padding: 80px;
+        filter: blur(4px);
+      }
+    }
+
+    & .lock-screen__content-avatar {
+      margin-top: 5px;
+      color: #bababa;
+      font-weight: 500;
+      z-index: 1;
+    }
+
+    & .lock-screen__content-input {
+      width: 260px;
+      z-index: 1;
+    }
+
+    & .lock-screen__content-date {
+      position: fixed;
+      width: 100%;
+      font-size: 3rem;
+      text-align: center;
+      font-weight: 500;
+      bottom: 24px;
+      z-index: 1;
+
+      & .current-year,
+      & .current-date span {
+        font-size: 1.5rem;
+      }
+    }
+  }
+}

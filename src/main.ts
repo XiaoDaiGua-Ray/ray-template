@@ -5,6 +5,8 @@ import type { App as AppType } from 'vue'
 import '@/styles/base.scss'
 
 import 'virtual:svg-icons-register' // `vite-plugin-svg-icons` 脚本, 如果不使用此插件注释即可
+import 'dayjs/locale/zh-cn'
+import dayjs from 'dayjs'
 
 import App from './App'
 
@@ -33,6 +35,8 @@ const setupTemplate = async () => {
 
   permissionRouter()
 
+  dayjs.locale('zh-cn')
+
   app.mount('#app')
 }
 
@@ -56,6 +60,8 @@ const setupWujieTemplate = async () => {
     setupRouterLoadingBar()
 
     permissionRouter()
+
+    dayjs.locale('zh-cn')
 
     instance.mount('#app')
   }

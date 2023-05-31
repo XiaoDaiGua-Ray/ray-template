@@ -76,3 +76,19 @@ export const MENU_COLLAPSED_CONFIG: MenuCollapsedConfig = {
 
 /** 是否启用菜单手风琴模式 */
 export const MENU_ACCORDION = false
+
+/**
+ *
+ * 系统默认缓存 key 配置
+ * 仅暴露部分系统获取缓存配置, 其余 key 暂不开放
+ *
+ * 说明:
+ *   - signin: 登陆信息缓存 key
+ *   - localeLanguage: 国际化默认缓存 key
+ *   - token: token key
+ */
+export const APP_CATCH_KEY = {
+  signin: 'signin',
+  localeLanguage: 'localeLanguage',
+  token: 'token',
+}

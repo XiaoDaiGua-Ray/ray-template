@@ -1,6 +1,7 @@
 import RayGlobalProvider from '@/components/RayGlobalProvider/index'
 import { RouterView } from 'vue-router'
 import GlobalSpin from '@/spin/index'
+import LockScreen from '@/components/AppComponents/AppLockScreen/index'
 
 import { getCache } from '@/utils/cache'
 import { get } from 'lodash-es'
@@ -79,6 +80,8 @@ const App = defineComponent({
   render() {
     return (
       <RayGlobalProvider>
+        <LockScreen />
+
         <GlobalSpin>
           {{
             default: () => <RouterView />,

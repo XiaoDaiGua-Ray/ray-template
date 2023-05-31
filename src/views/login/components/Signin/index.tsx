@@ -4,6 +4,7 @@ import { setCache } from '@/utils/cache'
 import { useSpin } from '@/spin'
 import { useSignin } from '@/store'
 import { useI18n } from '@/locales/useI18n'
+import { APP_CATCH_KEY } from '@/appConfig/appConfig'
 
 import type { FormInst } from 'naive-ui'
 
@@ -21,7 +22,7 @@ const Signin = defineComponent({
     } = __APP_CFG__
 
     const useSigninForm = () => ({
-      name: 'ray',
+      name: 'Ray Admin',
       pwd: '123456',
     })
 
@@ -47,20 +48,24 @@ const Signin = defineComponent({
         if (!valid) {
           useSpin(true)
 
-          if (signin(signinForm.value) === 0) {
-            setTimeout(() => {
-              useSpin(false)
+          signin(signinForm.value)
+            .then((res) => {
+              if (res.code === 0) {
+                setTimeout(() => {
+                  useSpin(false)
 
-              window.$message.success(`欢迎${signinForm.value.name}登陆~`)
+                  window.$message.success(`欢迎${signinForm.value.name}登陆~`)
 
-              setCache('token', 'tokenValue')
-              setCache('person', signinForm.value)
+                  setCache(APP_CATCH_KEY.token, 'tokenValue')
+                  setCache(APP_CATCH_KEY.signin, res.data)
 
-              router.push(path)
-            }, 2 * 1000)
-          }
-        } else {
-          window.$message.error('不可以这样哟, 不可以哟')
+                  router.push(path)
+                }, 2 * 1000)
+              }
+            })
+            .catch(() => {
+              window.$message.error('不可以这样哟, 不可以哟')
+            })
         }
       })
     }

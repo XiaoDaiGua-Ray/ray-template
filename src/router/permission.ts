@@ -24,6 +24,7 @@
 
 import { getCache, setCache } from '@/utils/cache'
 import { useSignin } from '@/store'
+import { APP_CATCH_KEY } from '@/appConfig/appConfig'
 
 import type { Router, NavigationGuardNext } from 'vue-router'
 
@@ -42,7 +43,7 @@ export const permissionRouter = (router: Router) => {
   }
 
   beforeEach((to, from, next) => {
-    const token = getCache('token')
+    const token = getCache(APP_CATCH_KEY.token)
     const route = getCache('menuKey')
     const { signinCallback } = storeToRefs(useSignin())
     const role = computed(() => signinCallback.value.role)

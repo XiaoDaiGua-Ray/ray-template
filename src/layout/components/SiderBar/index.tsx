@@ -11,20 +11,21 @@
 
 import './index.scss'
 
-import { NLayoutHeader, NSpace, NTooltip, NDropdown, NTag } from 'naive-ui'
+import { NLayoutHeader, NSpace, NTooltip, NDropdown } from 'naive-ui'
 import RayIcon from '@/components/RayIcon/index'
 import RayTooltipIcon from '@/components/RayTooltipIcon/index'
 import SettingDrawer from './components/SettingDrawer/index'
 import Breadcrumb from './components/Breadcrumb/index'
 import GlobalSeach from './components/GlobalSeach/index'
-import LockScreen from './components/LockScreen/index'
+import AppAvatar from '@/components/AppComponents/AppAvatar/index'
 
 import { useSetting, useSignin } from '@/store'
 import { LOCAL_OPTIONS } from '@/appConfig/localConfig'
-import { useAvatarOptions } from './hook'
+import { useAvatarOptions, avatarDropdownClick } from './hook'
 import { getCache } from '@/utils/cache'
 import screenfull from 'screenfull'
 import { useI18n } from '@/locales/useI18n'
+import { APP_CATCH_KEY } from '@/appConfig/appConfig'
 
 import type { IconEventMapOptions, IconEventMap } from './type'
 
@@ -47,7 +48,7 @@ const SiderBar = defineComponent({
 
     const { drawerPlacement, breadcrumbSwitch } = storeToRefs(settingStore)
     const showSettings = ref(false)
-    const person = getCache('person')
+    const signin = getCache(APP_CATCH_KEY.signin)
     const spaceItemStyle = {
       display: 'flex',
     }
@@ -74,12 +75,6 @@ const SiderBar = defineComponent({
         size: 18,
         tooltip: t('headerTooltip.Search'),
         eventKey: 'search',
-      },
-      {
-        name: 'lock',
-        size: 18,
-        tooltip: t('headerTooltip.Lock'),
-        eventKey: 'lock',
       },
       {
         name: 'fullscreen',
@@ -131,22 +126,6 @@ const SiderBar = defineComponent({
       iconEventMap[key]?.()
     }
 
-    const handlePersonSelect = (key: string | number) => {
-      if (key === 'logout') {
-        window.$dialog.warning({
-          title: '提示',
-          content: '您确定要退出登录吗',
-          positiveText: '确定',
-          negativeText: '不确定',
-          onPositiveClick: () => {
-            logout()
-          },
-        })
-      } else {
-        window.$message.info('这个人很懒, 没做这个功能~')
-      }
-    }
-
     return {
       leftIconOptions,
       rightTooltipIconOptions,
@@ -154,8 +133,7 @@ const SiderBar = defineComponent({
       handleIconClick,
       showSettings,
       updateLocale,
-      handlePersonSelect,
-      person,
+      signin,
       spaceItemStyle,
       drawerPlacement,
       breadcrumbSwitch,
@@ -166,7 +144,6 @@ const SiderBar = defineComponent({
     return (
       <NLayoutHeader class="layout-header" bordered>
         <GlobalSeach v-model:show={this.globalSearchShown} />
-        <LockScreen />
         <NSpace
           class="layout-header__method"
           align="center"
@@ -221,21 +198,10 @@ const SiderBar = defineComponent({
             </NDropdown>
             <NDropdown
               options={useAvatarOptions()}
-              onSelect={this.handlePersonSelect.bind(this)}
+              onSelect={avatarDropdownClick.bind(this)}
               trigger="click"
             >
-              <NTag checkable size="large">
-                {{
-                  icon: () => (
-                    <RayIcon
-                      customClassName="layout-header__method--icon"
-                      name="ray"
-                      size="18"
-                    />
-                  ),
-                  default: () => this.person.name,
-                }}
-              </NTag>
+              <AppAvatar avatarSize="small" align="center" cursor="pointer" />
             </NDropdown>
           </NSpace>
         </NSpace>

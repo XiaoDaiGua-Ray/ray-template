@@ -21,8 +21,13 @@
 
 import { isEmpty } from 'lodash-es'
 import { removeCache } from '@/utils/cache'
+import { useMenu } from '@/store'
 
-import type { SigninForm, SigninCallback } from '@/store/modules/signin/type'
+import type {
+  SigninForm,
+  SigninCallback,
+  SigninResponse,
+} from '@/store/modules/signin/type'
 
 export const useSignin = defineStore(
   'signin',
@@ -43,17 +48,29 @@ export const useSignin = defineStore(
      *
      * @remark 0: 登陆成功, 1: 登陆失败
      */
-    const signin = (signinForm: SigninForm) => {
-      if (!isEmpty(signinForm)) {
-        state.signinCallback = {
-          role: 'admin',
-          name: signinForm.name,
-        }
+    const signin = (signinForm: SigninForm): Promise<SigninResponse> => {
+      return new Promise((resolve, reject) => {
+        if (!isEmpty(signinForm)) {
+          state.signinCallback = {
+            role: 'admin',
+            name: signinForm.name,
+            avatar:
+              'https://usc1.contabostorage.com/c2e495d7890844d392e8ec0c6e5d77eb:image/longmao.jpeg',
+          }
 
-        return 0
-      } else {
-        return 1
-      }
+          resolve({
+            code: 0,
+            message: '登陆成功',
+            data: state.signinCallback,
+          })
+        } else {
+          reject({
+            code: 1,
+            message: '登陆失败',
+            data: null,
+          })
+        }
+      })
     }
 
     /**
@@ -65,7 +82,7 @@ export const useSignin = defineStore(
       window.$message.info('账号退出中...')
       removeCache('all-sessionStorage')
 
-      setTimeout(() => window.location.reload(), 300)
+      setTimeout(() => window.location.reload())
     }
 
     return {

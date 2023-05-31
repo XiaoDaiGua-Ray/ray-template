@@ -12,7 +12,7 @@ const LayoutMenu = defineComponent({
     const menuStore = useMenu()
     const router = useRouter()
 
-    const { menuModelValueChange, setupAppRoutes, collapsedMenu } = menuStore
+    const { menuModelValueChange, collapsedMenu } = menuStore
     const modelMenuKey = computed({
       get: () => menuStore.menuKey,
       // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -31,8 +31,6 @@ const LayoutMenu = defineComponent({
           : window.open(sideBarLogo.url)
       }
     }
-
-    setupAppRoutes()
 
     return {
       modelMenuKey,

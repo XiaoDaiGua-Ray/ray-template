@@ -15,16 +15,18 @@ import MenuTag from './components/MenuTag/index'
 import ContentWrapper from '@/layout/default/ContentWrapper'
 import FooterWrapper from '@/layout/default/FooterWrapper'
 
-import { useSetting } from '@/store'
+import { useSetting, useMenu } from '@/store'
 import { viewScrollContainerId } from '@/appConfig/routerConfig'
 
 const Layout = defineComponent({
   name: 'Layout',
   setup() {
     const settingStore = useSetting()
+    const menuStore = useMenu()
 
     const { height: windowHeight } = useWindowSize()
     const { menuTagSwitch: modelMenuTagSwitch } = storeToRefs(settingStore)
+    const { setupAppRoutes } = menuStore
     const cssVarsRef = computed(() => {
       let cssVar = {}
 
@@ -40,11 +42,17 @@ const Layout = defineComponent({
 
       return cssVar
     })
+    const isLock = useStorage('isLockScreen', false, sessionStorage, {
+      mergeDefaults: true,
+    })
+
+    setupAppRoutes()
 
     return {
       windowHeight,
       modelMenuTagSwitch,
       cssVarsRef,
+      isLock,
     }
   },
   render() {
@@ -53,21 +61,25 @@ const Layout = defineComponent({
         class={['layout']}
         style={[`height: ${this.windowHeight}px`, this.cssVarsRef]}
       >
-        <NLayout class="layout-full" hasSider>
-          <Menu />
-          <NLayout>
-            <SiderBar />
-            {this.modelMenuTagSwitch ? <MenuTag /> : ''}
-            <NLayoutContent
-              class="layout-content__router-view"
-              nativeScrollbar={false}
-              {...{ id: viewScrollContainerId }}
-            >
-              <ContentWrapper />
-              <FooterWrapper />
-            </NLayoutContent>
+        {!this.isLock ? (
+          <NLayout class="layout-full" hasSider>
+            <Menu />
+            <NLayout>
+              <SiderBar />
+              {this.modelMenuTagSwitch ? <MenuTag /> : ''}
+              <NLayoutContent
+                class="layout-content__router-view"
+                nativeScrollbar={false}
+                {...{ id: viewScrollContainerId }}
+              >
+                <ContentWrapper />
+                <FooterWrapper />
+              </NLayoutContent>
+            </NLayout>
           </NLayout>
-        </NLayout>
+        ) : (
+          ''
+        )}
       </div>
     )
   },

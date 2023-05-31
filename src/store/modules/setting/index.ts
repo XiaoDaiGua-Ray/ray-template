@@ -4,9 +4,11 @@ import { set } from 'lodash-es'
 import { addClass, removeClass, colorToRgba } from '@/utils/element'
 import { useI18n } from '@/locales/useI18n'
 import { APP_NAIVE_UI_THEME_OVERRIDES } from '@/appConfig/designConfig'
+import { useDayjs } from '@/dayjs/index'
 
 import type { ConditionalPick } from '@/types/type-utils'
 import type { SettingState } from '@/store/modules/setting/type'
+import type { DayjsLocal } from '@/dayjs/type'
 
 export const useSetting = defineStore(
   'setting',
@@ -15,6 +17,7 @@ export const useSetting = defineStore(
       appPrimaryColor: { primaryColor },
     } = __APP_CFG__ // 默认主题色
     const { t, locale } = useI18n()
+    const { locale: dayjsLocal } = useDayjs()
 
     const settingState = reactive<SettingState>({
       drawerPlacement: 'right' as NaiveDrawerPlacement,
@@ -39,6 +42,7 @@ export const useSetting = defineStore(
     /** 修改当前语言 */
     const updateLocale = (key: string) => {
       locale(key)
+      dayjsLocal(key as DayjsLocal)
 
       settingState.localeLanguage = key
 
