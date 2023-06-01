@@ -3,7 +3,7 @@ export {}
 import type { RouteRecordRaw, RouteMeta } from 'vue-router'
 import type { MenuOption } from 'naive-ui'
 import type { VNode } from 'vue'
-import type { AppRouteRecordRaw } from '@/router/type'
+import type { AppRouteRecordRaw, AppRouteMeta } from '@/router/type'
 
 declare global {
   declare interface IMenuOptions extends AppRouteRecordRaw, MenuOption {
@@ -13,7 +13,7 @@ declare global {
     label: string | Function
     show?: boolean
     children?: IMenuOptions[]
-    meta?: RouteMeta
+    meta: AppRouteMeta
     breadcrumbLabel?: string
     noLocalTitle?: string | number
   }

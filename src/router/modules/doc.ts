@@ -8,6 +8,7 @@ const doc: AppRouteRecordRaw = {
     i18nKey: 'Doc',
     icon: 'doc',
     windowOpen: 'https://xiaodaigua-ray.github.io/ray-template-doc/',
+    order: 5,
   },
 }
 

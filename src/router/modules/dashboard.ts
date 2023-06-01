@@ -7,6 +7,7 @@ const dashboard: AppRouteRecordRaw = {
   meta: {
     i18nKey: 'Dashboard',
     icon: 'dashboard',
+    order: 0,
   },
 }
 

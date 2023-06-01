@@ -17,6 +17,8 @@ export interface AppRouteMeta {
   hidden?: boolean
   noLocalTitle?: string | number
   ignoreAutoResetScroll?: boolean
+  order?: number
+  keepAlive?: boolean
 }
 
 // @ts-ignore
@@ -28,4 +30,8 @@ export interface AppRouteRecordRaw extends Omit<RouteRecordRaw, 'meta'> {
   children?: AppRouteRecordRaw[]
   props?: Recordable
   fullPath?: string
+}
+
+export interface AutoImportRouteModule extends Object {
+  default: AppRouteRecordRaw
 }

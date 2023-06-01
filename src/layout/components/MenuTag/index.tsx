@@ -26,6 +26,7 @@ import RayIcon from '@/components/RayIcon/index'
 import { useMenu, useSetting } from '@/store'
 import { uuid } from '@/utils/hook'
 import { hasClass } from '@/utils/element'
+import { ROOT_ROUTE } from '@/appConfig/appConfig'
 
 import type { MenuOption, ScrollbarInst } from 'naive-ui'
 
@@ -46,9 +47,7 @@ const MenuTag = defineComponent({
       setMenuTagOptions,
     } = menuStore
     const { changeSwitcher } = settingStore
-    const {
-      rootRoute: { path },
-    } = __APP_CFG__
+    const { path } = ROOT_ROUTE
 
     const exclude = ['closeAll', 'closeRight', 'closeLeft', 'closeOther']
     let currentContentmenuIndex = -1 // 当前右键标签页索引位置

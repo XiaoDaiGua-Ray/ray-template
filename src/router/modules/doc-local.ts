@@ -8,6 +8,7 @@ const docLocal: AppRouteRecordRaw = {
     i18nKey: 'DocLocal',
     icon: 'doc',
     windowOpen: 'https://ray-template.yunkuangao.com/ray-template-doc/',
+    order: 6,
   },
 }
 

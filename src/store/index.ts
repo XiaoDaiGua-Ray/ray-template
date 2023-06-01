@@ -21,6 +21,7 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 export { useSetting } from './modules/setting/index' // import { useSetting } from '@/store' 即可使用
 export { useMenu } from './modules/menu/index'
 export { useSignin } from './modules/signin/index'
+export { useKeepAlive } from './modules/keep-alive/index'
 
 import type { App } from 'vue'
 

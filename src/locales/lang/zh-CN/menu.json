@@ -7,7 +7,7 @@
   "scrollReveal": "滚动动画",
   "Axios": "请求",
   "Table": "表格",
-  "MultiMenu": "多级菜单",
+  "MultiMenu": "多级菜单(缓存)",
   "Doc": "文档",
   "DocLocal": "文档 (国内地址)",
   "Office": "办公",

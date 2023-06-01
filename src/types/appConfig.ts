@@ -6,3 +6,9 @@ export interface MenuCollapsedConfig {
   MENU_COLLAPSED_ICON_SIZE: number
   MENU_COLLAPSED_INDENT: number
 }
+
+export interface AppKeepAlive {
+  setupKeepAlive: boolean
+  keepAliveExclude?: string[]
+  maxKeepAliveLength: number
+}

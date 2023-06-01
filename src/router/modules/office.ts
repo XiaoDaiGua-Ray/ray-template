@@ -11,7 +11,7 @@ const office: AppRouteRecordRaw = {
   },
   children: [
     {
-      path: '/document',
+      path: 'document',
       name: 'Document',
       component: () => import('@/views/office/views/document/index'),
       meta: {
@@ -19,7 +19,7 @@ const office: AppRouteRecordRaw = {
       },
     },
     {
-      path: '/presentation',
+      path: 'presentation',
       name: 'Presentation',
       component: () => import('@/views/office/views/presentation/index'),
       meta: {
@@ -27,7 +27,7 @@ const office: AppRouteRecordRaw = {
       },
     },
     {
-      path: '/spreadsheet',
+      path: 'spreadsheet',
       name: 'Spreadsheet',
       component: () => import('@/views/office/views/spreadsheet/index'),
       meta: {

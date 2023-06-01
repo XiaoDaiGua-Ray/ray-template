@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import { constantRoutes } from './routes'
+import constantRoutes from './routes'
 
 import { permissionRouter as _permissionRouter } from './permission'
 import scrollViewToTop from '@/router/utils/viewScrollTop'

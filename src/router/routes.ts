@@ -1,11 +1,11 @@
 import Layout from '@/layout/index'
-import childrenRoutes from './route-module'
+import childrenRoutes from './routeModules'
+import { ROOT_ROUTE } from '@/appConfig/appConfig'
+import { expandRoutes } from '@/router/helper/expandRoutes'
 
-const {
-  rootRoute: { path },
-} = __APP_CFG__
+const { path } = ROOT_ROUTE
 
-export const constantRoutes = [
+export default [
   {
     path: '/',
     name: 'login',
@@ -16,7 +16,7 @@ export const constantRoutes = [
     name: 'layout',
     redirect: path,
     component: Layout,
-    children: childrenRoutes,
+    children: expandRoutes(childrenRoutes),
   },
   {
     /** 错误页面(404) */
@@ -26,9 +26,3 @@ export const constantRoutes = [
     redirect: '/error',
   },
 ]
-
-/**
- *
- * 主路由表配置
- * 例如: `login` `layout` 等
- */

@@ -1,14 +1,15 @@
 import './index.scss'
+
 import { NResult, NButton } from 'naive-ui'
+
+import { ROOT_ROUTE } from '@/appConfig/appConfig'
 
 const ErrorPage = defineComponent({
   name: 'ErrorPage',
   setup() {
     const router = useRouter()
 
-    const {
-      rootRoute: { path },
-    } = __APP_CFG__
+    const { path } = ROOT_ROUTE
 
     const handleBack = () => {
       router.push(path)

@@ -7,6 +7,7 @@ const table: AppRouteRecordRaw = {
   meta: {
     i18nKey: 'Table',
     icon: 'table',
+    order: 2,
   },
 }
 

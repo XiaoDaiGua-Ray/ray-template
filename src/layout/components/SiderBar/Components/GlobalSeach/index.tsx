@@ -20,7 +20,7 @@ import { useMenu } from '@/store'
 import { validRole } from '@/router/basic'
 
 import type { MenuOption } from 'naive-ui'
-import type { RouteMeta } from 'vue-router'
+import type { AppRouteMeta } from '@/router/type'
 
 const GlobalSeach = defineComponent({
   name: 'GlobalSeach',
@@ -108,7 +108,7 @@ const GlobalSeach = defineComponent({
     }
 
     const handleSearchItemClick = (option: MenuOption) => {
-      const meta = option.meta as RouteMeta
+      const meta = option.meta as AppRouteMeta
 
       /** 如果配置站外跳转则不会关闭搜索框 */
       if (meta.windowOpen) {

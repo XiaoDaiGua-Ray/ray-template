@@ -32,7 +32,6 @@ const {
   copyright,
   sideBarLogo,
   mixinCSS,
-  rootRoute,
   appPrimaryColor,
   preloadingConfig,
   base,
@@ -54,7 +53,6 @@ const __APP_CFG__ = {
     copyright,
     sideBarLogo,
   },
-  rootRoute,
   appPrimaryColor,
 }
 

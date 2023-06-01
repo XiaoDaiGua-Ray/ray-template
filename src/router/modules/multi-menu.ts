@@ -9,6 +9,7 @@ const multiMenu: AppRouteRecordRaw = {
   meta: {
     i18nKey: 'MultiMenu',
     icon: 'table',
+    order: 4,
   },
   children: [
     {
@@ -17,6 +18,7 @@ const multiMenu: AppRouteRecordRaw = {
       component: () => import('@/views/multi/views/multi-menu-one/index'),
       meta: {
         noLocalTitle: '多级菜单-1',
+        keepAlive: true,
       },
     },
     {
@@ -34,7 +36,22 @@ const multiMenu: AppRouteRecordRaw = {
             import('@/views/multi/views/multi-menu-two/views/sub-menu/index'),
           meta: {
             noLocalTitle: '多级菜单-2-1',
+            keepAlive: true,
           },
+          children: [
+            {
+              path: 'sub-menu-one',
+              name: 'MultiMenuTwoOne',
+              component: () =>
+                import(
+                  '@/views/multi/views/multi-menu-two/views/sub-menu/views/multi-menu-two-one/index'
+                ),
+              meta: {
+                noLocalTitle: '多级菜单-2-1-1',
+                keepAlive: true,
+              },
+            },
+          ],
         },
       ],
     },

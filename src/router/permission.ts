@@ -24,16 +24,14 @@
 
 import { getCache, setCache } from '@/utils/cache'
 import { useSignin } from '@/store'
-import { APP_CATCH_KEY } from '@/appConfig/appConfig'
+import { APP_CATCH_KEY, ROOT_ROUTE } from '@/appConfig/appConfig'
 
 import type { Router, NavigationGuardNext } from 'vue-router'
 
 export const permissionRouter = (router: Router) => {
   const { beforeEach } = router
 
-  const {
-    rootRoute: { path },
-  } = __APP_CFG__
+  const { path } = ROOT_ROUTE
 
   /** 如果没有权限, 则重定向至首页 */
   const redirectToDashboard = (next: NavigationGuardNext) => {

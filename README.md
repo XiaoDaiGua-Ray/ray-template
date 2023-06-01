@@ -24,6 +24,10 @@
 
 - [日志](https://github.com/XiaoDaiGua-Ray/xiaodaigua-ray.github.io/blob/main/CHANGELOG.md)
 
+## 常见问题
+
+- [常见问题](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/COMMONPROBLEM.md)
+
 ## 功能
 
 - 主题切换

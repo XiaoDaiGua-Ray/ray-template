@@ -7,6 +7,8 @@ const axios: AppRouteRecordRaw = {
   meta: {
     i18nKey: 'Axios',
     icon: 'axios',
+    order: 3,
+    keepAlive: true,
   },
 }
 

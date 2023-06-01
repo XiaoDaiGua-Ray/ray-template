@@ -4,7 +4,7 @@ import { setCache } from '@/utils/cache'
 import { useSpin } from '@/spin'
 import { useSignin } from '@/store'
 import { useI18n } from '@/locales/useI18n'
-import { APP_CATCH_KEY } from '@/appConfig/appConfig'
+import { APP_CATCH_KEY, ROOT_ROUTE } from '@/appConfig/appConfig'
 
 import type { FormInst } from 'naive-ui'
 
@@ -17,9 +17,7 @@ const Signin = defineComponent({
     const signinStore = useSignin()
 
     const { signin } = signinStore
-    const {
-      rootRoute: { path },
-    } = __APP_CFG__
+    const { path } = ROOT_ROUTE
 
     const useSigninForm = () => ({
       name: 'Ray Admin',

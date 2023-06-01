@@ -9,10 +9,11 @@ const rely: AppRouteRecordRaw = {
   meta: {
     i18nKey: 'Rely',
     icon: 'rely',
+    order: 7,
   },
   children: [
     {
-      path: '/rely-about',
+      path: 'rely-about',
       name: 'RelyAbout',
       component: () => import('@/views/rely/views/rely-about/index'),
       meta: {

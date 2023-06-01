@@ -16,7 +16,22 @@ import type {
   PreloadingConfig,
   RootRoute,
 } from '@/types/cfg'
-import type { MenuCollapsedConfig } from '@/types/appConfig'
+import type { MenuCollapsedConfig, AppKeepAlive } from '@/types/appConfig'
+
+/**
+ *
+ * 系统缓存
+ *
+ * 说明:
+ *   - setupKeepAlive: 是否启用系统页面缓存, 设置为 false 则关闭系统页面缓存
+ *   - keepAliveExclude: 排除哪些页面不缓存
+ *   - maxKeepAliveLength: 最大缓存页面数量
+ */
+export const APP_KEEP_ALIVE: Readonly<AppKeepAlive> = {
+  setupKeepAlive: true,
+  keepAliveExclude: [],
+  maxKeepAliveLength: 5,
+}
 
 /** 首屏加载信息配置 */
 export const PRE_LOADING_CONFIG: PreloadingConfig = {
@@ -32,7 +47,7 @@ export const PRE_LOADING_CONFIG: PreloadingConfig = {
  *
  * 如果修改了该项目的首页路由配置, 需要更改该配置项, 以免重定向首页操作出现错误
  */
-export const ROOT_ROUTE: RootRoute = {
+export const ROOT_ROUTE: Readonly<RootRoute> = {
   name: 'Dashboard',
   path: '/dashboard',
 }
@@ -67,7 +82,7 @@ export const SIDE_BAR_LOGO: LayoutSideBarLogo = {
  *
  * MENU_COLLAPSED_INDENT 配置菜单每级的缩进
  */
-export const MENU_COLLAPSED_CONFIG: MenuCollapsedConfig = {
+export const MENU_COLLAPSED_CONFIG: Readonly<MenuCollapsedConfig> = {
   MENU_COLLAPSED_WIDTH: 64,
   MENU_COLLAPSED_MODE: 'width',
   MENU_COLLAPSED_ICON_SIZE: 22,
@@ -91,4 +106,4 @@ export const APP_CATCH_KEY = {
   signin: 'signin',
   localeLanguage: 'localeLanguage',
   token: 'token',
-}
+} as const

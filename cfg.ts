@@ -29,9 +29,9 @@
  * ```
  * 该属性是用于全局注入的配置方法
  *
- * const { rootRoute } = __APP_CFG__
+ * const { appPrimaryColor } = __APP_CFG__
  *
- * 以上例子展示, 从 __APP_CFG__ 中解构取出 rootRoute 根路由配置信息
+ * 以上例子展示, 从 __APP_CFG__ 中解构取出 appPrimaryColor 根路由配置信息
  * __APP_CFG__ 会被挂载于全局变量 `window` 下(vite define 默认是挂载于 window 下)
  * ```
  */
@@ -59,7 +59,6 @@ const config: AppConfigExport = {
   preloadingConfig: PRE_LOADING_CONFIG,
   /** 默认主题色(不可省略, 必填), 也用于 ejs 注入 */
   appPrimaryColor: APP_PRIMARY_COLOR,
-  rootRoute: ROOT_ROUTE,
   sideBarLogo: SIDE_BAR_LOGO,
   /**
    *

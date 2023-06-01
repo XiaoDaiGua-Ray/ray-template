@@ -11,8 +11,8 @@
 
 import { NInput } from 'naive-ui'
 
-const SubMenu = defineComponent({
-  name: 'SubMenu',
+const MultiMenuTwoOne = defineComponent({
+  name: 'MultiMenuTwoOne',
   setup() {
     const inputValue = ref(null)
 
@@ -23,11 +23,11 @@ const SubMenu = defineComponent({
   render() {
     return (
       <div>
-        多级菜单-2-1
+        多级菜单2-1-1
         <NInput v-model={this.inputValue} />
       </div>
     )
   },
 })
 
-export default SubMenu
+export default MultiMenuTwoOne

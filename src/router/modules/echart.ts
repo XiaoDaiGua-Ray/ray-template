@@ -7,6 +7,7 @@ const echart: AppRouteRecordRaw = {
   meta: {
     i18nKey: 'Echart',
     icon: 'echart',
+    order: 1,
   },
 }
 

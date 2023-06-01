@@ -9,13 +9,24 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
+import { NInput } from 'naive-ui'
+
 const MultiMenuOne = defineComponent({
   name: 'MultiMenuOne',
   setup() {
-    return {}
+    const inputValue = ref(null)
+
+    return {
+      inputValue,
+    }
   },
   render() {
-    return <div>多级菜单-1</div>
+    return (
+      <div>
+        多级菜单-1
+        <NInput v-model={this.inputValue} />
+      </div>
+    )
   },
 })
 

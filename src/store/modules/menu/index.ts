@@ -29,10 +29,12 @@ import { getCache, setCache } from '@/utils/cache'
 import { validRole } from '@/router/basic'
 import { parse, matchMenuOption, updateDocumentTitle } from './helper'
 import { useI18n } from '@/locales/useI18n'
-import { MENU_COLLAPSED_CONFIG } from '@/appConfig/appConfig'
+import { MENU_COLLAPSED_CONFIG, ROOT_ROUTE } from '@/appConfig/appConfig'
+import routeModules from '@/router/routeModules'
+import { useKeepAlive } from '@/store'
 
 import type { MenuOption } from 'naive-ui'
-import type { RouteMeta } from 'vue-router'
+import type { AppRouteMeta } from '@/router/type'
 
 export const useMenu = defineStore(
   'menu',
@@ -40,10 +42,9 @@ export const useMenu = defineStore(
     const router = useRouter()
     const route = useRoute()
     const { t } = useI18n()
+    const { setKeepAliveInclude } = useKeepAlive()
 
-    const {
-      rootRoute: { path },
-    } = __APP_CFG__
+    const { path } = ROOT_ROUTE
 
     const cacheMenuKey =
       getCache('menuKey') === 'no' ? path : getCache('menuKey')
@@ -81,7 +82,7 @@ export const useMenu = defineStore(
      * @remark 修改后, 缓存当前选择 key 并且存储标签页与跳转页面(router push 操作)
      */
     const menuModelValueChange = (key: string | number, item: MenuOption) => {
-      const meta = item.meta as RouteMeta
+      const meta = item.meta as AppRouteMeta
 
       if (meta.windowOpen) {
         window.open(meta.windowOpen)
@@ -94,6 +95,7 @@ export const useMenu = defineStore(
             menuState.menuTagOptions,
           )
           updateDocumentTitle(item as unknown as IMenuOptions)
+          setKeepAliveInclude(item as unknown as IMenuOptions)
 
           menuState.breadcrumbOptions = parse(menuState.options, 'key', key) // 获取面包屑
 
@@ -166,9 +168,6 @@ export const useMenu = defineStore(
      * @remark 如果权限发生变动, 则会触发强制弹出页面并且重新登陆
      */
     const setupAppRoutes = () => {
-      /** 取出所有 layout 下子路由 */
-      const layout = router.getRoutes().find((route) => route.name === 'layout')
-
       const resolveOption = (option: IMenuOptions) => {
         const { meta } = option
 
@@ -231,7 +230,7 @@ export const useMenu = defineStore(
       }
 
       /** 缓存菜单列表 */
-      menuState.options = resolveRoutes(layout?.children as IMenuOptions[], 0)
+      menuState.options = resolveRoutes(routeModules as IMenuOptions[], 0)
 
       /** 初始化后渲染面包屑 */
       nextTick(() => {

@@ -44,7 +44,6 @@ export interface Config {
   copyright?: LayoutCopyright
   sideBarLogo?: LayoutSideBarLogo
   mixinCSS?: string
-  rootRoute?: RootRoute
   preloadingConfig?: PreloadingConfig
   base?: string
   appPrimaryColor?: AppPrimaryColor
@@ -70,7 +69,6 @@ export interface AppConfig {
     copyright?: LayoutCopyright
     sideBarLogo?: LayoutSideBarLogo
   }
-  rootRoute: RootRoute
   base?: string
   appPrimaryColor: AppPrimaryColor
 }
