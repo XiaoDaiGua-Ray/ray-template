@@ -1,5 +1,5 @@
 <template>
-  <router-view>
+  <RouterView>
     <template #default="{ Component, route }">
       <transition
         :name="transitionPropName"
@@ -17,7 +17,7 @@
         <component :is="Component" v-else :key="route.fullPath" />
       </transition>
     </template>
-  </router-view>
+  </RouterView>
 </template>
 <script lang="ts" setup>
 import { useKeepAlive } from '@/store'

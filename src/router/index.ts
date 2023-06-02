@@ -1,47 +1,36 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import scrollViewToTop from '@/router/utils/viewScrollTop'
+import { vueRouterRegister } from '@/router/helper/routerCopilot'
+import { useVueRouter } from '@/router/helper/useVueRouter'
+
 import constantRoutes from './routes'
 
-import { permissionRouter as _permissionRouter } from './permission'
-import scrollViewToTop from '@/router/utils/viewScrollTop'
-
 import type { App } from 'vue'
-import type { RouteRecordRaw } from 'vue-router'
+import type { RouteRecordRaw, Router } from 'vue-router'
 
-export const router = createRouter({
-  history: createWebHashHistory(),
-  routes: constantRoutes as unknown as RouteRecordRaw[],
-  scrollBehavior: (to) => {
-    scrollViewToTop(to)
+export let router: Router
 
-    return {
-      top: 0,
-      left: 0,
-    }
-  },
-})
+const createVueRouter = () => {
+  return createRouter({
+    history: createWebHashHistory(),
+    routes: constantRoutes as unknown as RouteRecordRaw[],
+    scrollBehavior: (to) => {
+      scrollViewToTop(to)
 
-export const permissionRouter = () => _permissionRouter(router)
+      return {
+        top: 0,
+        left: 0,
+      }
+    },
+  })
+}
 
 // setup router
 export const setupRouter = (app: App<Element>) => {
+  router = createVueRouter()
+
+  vueRouterRegister(router)
+  useVueRouter()
+
   app.use(router)
-}
-
-/**
- *
- * @remark 路由切换启用顶部加载条
- * @remark 路由切换启用加载动画
- */
-export const setupRouterLoadingBar = () => {
-  router.beforeEach(() => {
-    window?.$loadingBar?.start()
-  })
-
-  router.afterEach(() => {
-    window?.$loadingBar?.finish()
-  })
-
-  router.onError(() => {
-    window?.$loadingBar?.error()
-  })
 }

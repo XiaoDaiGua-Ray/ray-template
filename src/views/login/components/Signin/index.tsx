@@ -1,15 +1,16 @@
 import { NForm, NFormItem, NInput, NButton, NSpace, NDivider } from 'naive-ui'
 
 import { setCache } from '@/utils/cache'
-import { useSpin } from '@/spin'
+import { setSpin } from '@/spin'
 import { useSignin } from '@/store'
 import { useI18n } from '@/locales/useI18n'
 import { APP_CATCH_KEY, ROOT_ROUTE } from '@/appConfig/appConfig'
+import { useVueRouter } from '@/router/helper/useVueRouter'
 
 import type { FormInst } from 'naive-ui'
 
 const Signin = defineComponent({
-  name: 'Signin',
+  name: 'RSignin',
   setup() {
     const loginFormRef = ref<FormInst>()
 
@@ -24,7 +25,7 @@ const Signin = defineComponent({
       pwd: '123456',
     })
 
-    const router = useRouter()
+    const { router } = useVueRouter()
     const signinForm = ref(useSigninForm())
 
     const rules = {
@@ -44,13 +45,13 @@ const Signin = defineComponent({
     const handleLogin = () => {
       loginFormRef.value?.validate((valid) => {
         if (!valid) {
-          useSpin(true)
+          setSpin(true)
 
           signin(signinForm.value)
             .then((res) => {
               if (res.code === 0) {
                 setTimeout(() => {
-                  useSpin(false)
+                  setSpin(false)
 
                   window.$message.success(`欢迎${signinForm.value.name}登陆~`)
 

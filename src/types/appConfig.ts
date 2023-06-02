@@ -1,3 +1,5 @@
+import type { CreateAxiosDefaults } from 'axios'
+
 export type CollapsedMode = 'transform' | 'width'
 
 export interface MenuCollapsedConfig {
@@ -12,3 +14,5 @@ export interface AppKeepAlive {
   keepAliveExclude?: string[]
   maxKeepAliveLength: number
 }
+
+export interface AxiosConfig extends Omit<CreateAxiosDefaults, 'cancelToken'> {}

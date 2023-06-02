@@ -114,7 +114,7 @@ module.exports = {
     'no-multi-assign': 2, // 禁止连续声明变量
     'prefer-arrow-callback': 2, // 强制使用箭头函数作为回调
     'vue/multi-word-component-names': [
-      'off',
+      'error',
       {
         ignores: [],
       },
@@ -136,5 +136,35 @@ module.exports = {
         allowNamedExports: false,
       },
     ],
+    'vue/component-definition-name-casing': ['error', 'PascalCase'],
+    'vue/html-closing-bracket-newline': [
+      'error',
+      {
+        singleline: 'never',
+        multiline: 'always',
+      },
+    ],
+    'vue/v-on-event-hyphenation': ['error', 'never'],
+    'vue/component-tags-order': [
+      'error',
+      {
+        order: ['template', 'script', 'style'],
+      },
+    ],
+    'vue/no-v-html': ['error'],
+    'vue/no-v-text': ['error'],
+    'vue/component-api-style': [
+      'error',
+      ['script-setup', 'composition', 'composition-vue2'],
+    ],
+    'vue/component-name-in-template-casing': [
+      'error',
+      'PascalCase',
+      {
+        registeredComponentsOnly: true,
+        globals: ['RouterView'],
+      },
+    ],
+    'vue/no-unused-refs': ['error'],
   },
 }

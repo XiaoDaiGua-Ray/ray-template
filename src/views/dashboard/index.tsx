@@ -13,7 +13,7 @@ import RayIcon from '@/components/RayIcon/index'
 import RayLink from '@/components/RayLink/index'
 
 const Dashboard = defineComponent({
-  name: 'Dashboard',
+  name: 'RDashboard',
   setup() {
     const coverLetterOptions = [
       {

@@ -26,6 +26,7 @@ import RayIcon from '@/components/RayIcon/index'
 import { useMenu, useSetting } from '@/store'
 import { uuid } from '@/utils/hook'
 import { hasClass } from '@/utils/element'
+import { redirectRouterToDashboard } from '@/router/helper/routerCopilot'
 import { ROOT_ROUTE } from '@/appConfig/appConfig'
 
 import type { MenuOption, ScrollbarInst } from 'naive-ui'
@@ -37,7 +38,6 @@ const MenuTag = defineComponent({
 
     const menuStore = useMenu()
     const settingStore = useSetting()
-    const router = useRouter()
 
     const { menuKey, menuTagOptions } = storeToRefs(menuStore)
     const {
@@ -139,9 +139,7 @@ const MenuTag = defineComponent({
          */
         if (moreOptions.value.length > 1) {
           emptyMenuTagOptions()
-          router.replace({
-            path: path,
-          })
+          redirectRouterToDashboard(true)
         }
       },
       closeRight: () => {

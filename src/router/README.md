@@ -1,3 +1,13 @@
+## router 拓展
+
+### routerCopilot
+
+> 该文件提供了一些辅助方法，让你更方便的做一些事情。系统其他地方引用了该方法，所以删除需谨慎。
+
+### useVueRouter
+
+> 二次封装了一个 router hook 方法，让你能够在 setup 环境之外使用 router。建议都使用该方法（useVueRouter）而不是 useRouter。
+
 ## 路由添加规则
 
 - modules 中每一个 ts 文件视为一个路由模块

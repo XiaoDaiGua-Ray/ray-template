@@ -12,7 +12,7 @@
 import { RouterView } from 'vue-router'
 
 const Office = defineComponent({
-  name: 'Office',
+  name: 'ROffice',
   render() {
     return <RouterView />
   },

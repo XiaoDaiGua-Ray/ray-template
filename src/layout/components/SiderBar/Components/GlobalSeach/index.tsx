@@ -17,7 +17,7 @@ import RayIcon from '@/components/RayIcon/index'
 import { on, off } from '@/utils/element'
 import { debounce } from 'lodash-es'
 import { useMenu } from '@/store'
-import { validRole } from '@/router/basic'
+import { validRole } from '@/router/helper/routerCopilot'
 
 import type { MenuOption } from 'naive-ui'
 import type { AppRouteMeta } from '@/router/type'

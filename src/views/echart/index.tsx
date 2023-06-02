@@ -4,7 +4,7 @@ import { NCard, NSwitch, NSpace, NP, NH6, NH2, NH3 } from 'naive-ui'
 import RayChart from '@/components/RayChart/index'
 
 const Echart = defineComponent({
-  name: 'Echart',
+  name: 'REchart',
   setup() {
     const baseChartRef = ref()
     const chartLoading = ref(false)

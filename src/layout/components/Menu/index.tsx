@@ -5,12 +5,13 @@ import RayIcon from '@/components/RayIcon/index'
 
 import { useMenu } from '@/store'
 import { MENU_COLLAPSED_CONFIG, MENU_ACCORDION } from '@/appConfig/appConfig'
+import { useVueRouter } from '@/router/helper/useVueRouter'
 
 const LayoutMenu = defineComponent({
   name: 'LayoutMenu',
   setup() {
     const menuStore = useMenu()
-    const router = useRouter()
+    const { router } = useVueRouter()
 
     const { menuModelValueChange, collapsedMenu } = menuStore
     const modelMenuKey = computed({

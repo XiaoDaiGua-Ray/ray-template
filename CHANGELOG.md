@@ -8,6 +8,8 @@
 - 新增 Route Meta keepAlive 配置开启页面缓存（可以在 AppConfig APP_KEEP_ALIVE 中进行缓存的配置管理）
 - 回退使用自动导入路由模块方式，具体使用方法查看 [路由配置](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/src/router/README.md)
 - 新增 Route Meta order 配置，配置菜单顺序
+- 新增 useVueRouter 方法，让你在 setup 环境之外使用 router hook
+- 补充引入了一些 eslint 规则
 - 支持更多 appConfig 配置
 
 ### 补充

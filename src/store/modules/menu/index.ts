@@ -26,12 +26,13 @@ import { NEllipsis } from 'naive-ui'
 import RayIcon from '@/components/RayIcon/index'
 
 import { getCache, setCache } from '@/utils/cache'
-import { validRole } from '@/router/basic'
+import { validRole } from '@/router/helper/routerCopilot'
 import { parse, matchMenuOption, updateDocumentTitle } from './helper'
 import { useI18n } from '@/locales/useI18n'
 import { MENU_COLLAPSED_CONFIG, ROOT_ROUTE } from '@/appConfig/appConfig'
 import routeModules from '@/router/routeModules'
 import { useKeepAlive } from '@/store'
+import { useVueRouter } from '@/router/helper/useVueRouter'
 
 import type { MenuOption } from 'naive-ui'
 import type { AppRouteMeta } from '@/router/type'
@@ -39,7 +40,7 @@ import type { AppRouteMeta } from '@/router/type'
 export const useMenu = defineStore(
   'menu',
   () => {
-    const router = useRouter()
+    const { router } = useVueRouter()
     const route = useRoute()
     const { t } = useI18n()
     const { setKeepAliveInclude } = useKeepAlive()

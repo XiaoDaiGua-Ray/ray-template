@@ -75,7 +75,7 @@ export interface AxiosInstanceExpand extends Axios {
     config?: AxiosRequestConfig<D>,
   ): Promise<R>
 
-  defaults: Omit<AxiosDefaults, 'headers'> & {
+  defaults: Omit<AxiosDefaults, 'headers' | 'cancelToken'> & {
     headers: HeadersDefaults & {
       [key: string]: AxiosHeaderValue
     }

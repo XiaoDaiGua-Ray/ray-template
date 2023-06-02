@@ -19,9 +19,8 @@ export default [
     children: expandRoutes(childrenRoutes),
   },
   {
-    /** 错误页面(404) */
     path: '/:catchAll(.*)',
-    name: 'error-page',
+    name: 'errorPage',
     component: Layout,
     redirect: '/error',
   },

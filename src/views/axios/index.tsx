@@ -12,7 +12,7 @@ import {
 import { onAxiosTest } from '@use-api/test'
 
 const Axios = defineComponent({
-  name: 'Axios',
+  name: 'RAxios',
   setup() {
     const state = reactive({
       weatherData: [] as IUnknownObjectKey[],

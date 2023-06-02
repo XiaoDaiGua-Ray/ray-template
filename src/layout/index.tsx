@@ -22,7 +22,7 @@ import {
 } from '@/appConfig/routerConfig'
 
 const Layout = defineComponent({
-  name: 'Layout',
+  name: 'RLayout',
   setup() {
     const settingStore = useSetting()
     const menuStore = useMenu()

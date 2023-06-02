@@ -14,7 +14,7 @@ import { uuid } from '@/utils/hook'
 import type { PropType } from 'vue'
 
 const Document = defineComponent({
-  name: 'Document',
+  name: 'RDocument',
   setup() {
     const editorUUID = uuid()
     const state = reactive({})

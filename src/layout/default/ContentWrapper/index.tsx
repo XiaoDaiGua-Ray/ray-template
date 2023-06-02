@@ -11,7 +11,7 @@
 
 import './index.scss'
 
-import RayTransitionComponent from '@/components/RayTransitionComponent/index.vue'
+import RayTransitionComponent from '@/components/RayTransitionComponent/TransitionComponent.vue'
 
 import { useSetting } from '@/store'
 

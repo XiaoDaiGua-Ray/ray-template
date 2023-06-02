@@ -18,39 +18,15 @@
 
 import axios from 'axios'
 import { getDetermineEnv } from '@use-utils/hook'
-import RequestCanceler from './canceler'
+import RequestCanceler from './helper/canceler'
+import { AXIOS_CONFIG } from '@/appConfig/requestConfig'
+import { appendRequestHeaders } from './helper/interceptor'
 
-import type { RawAxiosRequestHeaders, AxiosRequestConfig } from 'axios'
-import type { RequestHeaderOptions, AxiosInstanceExpand } from './type'
+import type { AxiosInstanceExpand } from './type'
 
 const canceler = new RequestCanceler()
 
-/**
- *
- * @param instance axios instance
- * @param options axios headers options
- *
- * @remark 自定义 `axios` 请求头配置
- */
-const appendRequestHeaders = (
-  instance: AxiosRequestConfig<unknown>,
-  options: RequestHeaderOptions[],
-) => {
-  const requestHeaders = instance.headers as RawAxiosRequestHeaders
-
-  options.forEach((curr) => {
-    requestHeaders[curr.key] = curr.value
-  })
-}
-
-const server: AxiosInstanceExpand = axios.create({
-  baseURL: '', // `import.meta.env`,
-  withCredentials: false, // 是否允许跨域携带 `cookie`
-  timeout: 5 * 1000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-})
+const server: AxiosInstanceExpand = axios.create(AXIOS_CONFIG)
 
 server.interceptors.request.use(
   (request) => {

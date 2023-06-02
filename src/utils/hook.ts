@@ -81,10 +81,3 @@ export const uuid = (length = 16, radix?: number) => {
 
   return arr.join('')
 }
-
-// // lodash 将字符串转为大驼峰
-// export const toCamelCase = (str: string) => {
-//   return str.replace(/-(\w)/g, (all, letter) => {
-//     return letter.toUpperCase()
-//   })
-// }

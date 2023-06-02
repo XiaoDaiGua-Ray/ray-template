@@ -24,7 +24,7 @@ import { LOCAL_OPTIONS } from '@/appConfig/localConfig'
 import { useI18n } from '@/locales/useI18n'
 
 const Login = defineComponent({
-  name: 'Login',
+  name: 'RLogin',
   setup() {
     const { t } = useI18n()
     const {

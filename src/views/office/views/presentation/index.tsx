@@ -12,7 +12,7 @@
 import type { PropType } from 'vue'
 
 const Presentation = defineComponent({
-  name: 'Presentation',
+  name: 'RPresentation',
   setup() {
     return {}
   },

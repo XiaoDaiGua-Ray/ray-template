@@ -25,7 +25,7 @@ import { useMenu } from '@/store'
 import type { DropdownOption } from 'naive-ui'
 
 const Breadcrumb = defineComponent({
-  name: 'Breadcrumb',
+  name: 'RBreadcrumb',
   setup() {
     const menuStore = useMenu()
 
