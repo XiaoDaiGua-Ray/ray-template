@@ -45,10 +45,10 @@ export const useMenu = defineStore(
     const { t } = useI18n()
     const { setKeepAliveInclude } = useKeepAlive()
 
-    const { path } = ROOT_ROUTE
+    const { path: rootPath } = ROOT_ROUTE
 
     const cacheMenuKey =
-      getCache('menuKey') === 'no' ? path : getCache('menuKey')
+      getCache('menuKey') === 'no' ? rootPath : getCache('menuKey')
 
     const menuState = reactive({
       menuKey: cacheMenuKey as MenuKey, // 当前菜单 `key`

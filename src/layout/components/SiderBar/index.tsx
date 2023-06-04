@@ -19,7 +19,7 @@ import Breadcrumb from './components/Breadcrumb/index'
 import GlobalSeach from './components/GlobalSeach/index'
 import AppAvatar from '@/components/AppComponents/AppAvatar/index'
 
-import { useSetting, useSignin } from '@/store'
+import { useSetting } from '@/store'
 import { LOCAL_OPTIONS } from '@/appConfig/localConfig'
 import { useAvatarOptions, avatarDropdownClick } from './hook'
 import { getCache } from '@/utils/cache'
@@ -38,13 +38,11 @@ import type { IconEventMapOptions, IconEventMap } from './type'
 
 const SiderBar = defineComponent({
   name: 'SiderBar',
-  setup() {
+  setup(_, { expose }) {
     const settingStore = useSetting()
-    const signinStore = useSignin()
 
     const { t } = useI18n()
     const { updateLocale, changeSwitcher } = settingStore
-    const { logout } = signinStore
 
     const { drawerPlacement, breadcrumbSwitch } = storeToRefs(settingStore)
     const showSettings = ref(false)
@@ -125,6 +123,8 @@ const SiderBar = defineComponent({
     const handleIconClick = (key: IconEventMap) => {
       iconEventMap[key]?.()
     }
+
+    // expose({})
 
     return {
       leftIconOptions,

@@ -4,6 +4,8 @@ $menuTagWrapperWidth: 76px;
 .menu-tag {
   height: $layoutMenuHeight;
   border-bottom: solid 1px var(--n-border-color);
+  display: flex;
+  align-items: center;
 
   & .menu-tag-sapce {
     width: calc(100% - $space * 2);

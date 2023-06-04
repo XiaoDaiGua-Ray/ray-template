@@ -227,10 +227,6 @@ const RayTable = defineComponent({
       registerRayTableMethods(rayTableInstance.value as DataTableInst)
     })
 
-    // expose({
-    //   tableMethods: tableMethods.value,
-    // })
-
     return {
       tableUUID,
       rayTableUUID,

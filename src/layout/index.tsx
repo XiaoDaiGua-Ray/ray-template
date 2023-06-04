@@ -3,7 +3,10 @@
  * 页面布局入口文件
  *
  * 说明:
- *   - rayLayoutContentWrapperScopeSelector: 页面切换时重置滚动条注入 id
+ *   - rayLayoutContentWrapperScopeSelector: 页面切换时重置滚动条注入 id(弃用)
+ *
+ * 该组件入口不做逻辑相关的处理, 仅做功能、组件、方法注入
+ * 提供页面内 Layout 的一些注入(css vars 为主)
  */
 
 import './index.scss'
@@ -20,36 +23,31 @@ import {
   viewScrollContainerId,
   LAYOUT_CONTENT_REF,
 } from '@/appConfig/routerConfig'
+import { layoutHeaderCssVars } from '@/layout/layoutResize'
 
 const Layout = defineComponent({
   name: 'RLayout',
   setup() {
+    const layoutSiderBarRef = ref<HTMLElement>()
+    const layoutMenuTagRef = ref<HTMLElement>()
+
     const settingStore = useSetting()
     const menuStore = useMenu()
 
     const { height: windowHeight } = useWindowSize()
     const { menuTagSwitch: modelMenuTagSwitch } = storeToRefs(settingStore)
     const { setupAppRoutes } = menuStore
-    const cssVarsRef = computed(() => {
-      let cssVar = {}
-
-      if (settingStore.menuTagSwitch) {
-        cssVar = {
-          '--layout-content-height': 'calc(100% - 111px)',
-        }
-      } else {
-        cssVar = {
-          '--layout-content-height': 'calc(100% - 64px)',
-        }
-      }
-
-      return cssVar
-    })
     const isLock = useStorage('isLockScreen', false, sessionStorage, {
       mergeDefaults: true,
     })
+    const cssVarsRef = layoutHeaderCssVars([
+      layoutSiderBarRef,
+      layoutMenuTagRef,
+    ])
 
-    setupAppRoutes()
+    nextTick().then(() => {
+      setupAppRoutes()
+    })
 
     return {
       windowHeight,
@@ -57,6 +55,8 @@ const Layout = defineComponent({
       cssVarsRef,
       isLock,
       LAYOUT_CONTENT_REF,
+      layoutSiderBarRef,
+      layoutMenuTagRef,
     }
   },
   render() {
@@ -68,9 +68,13 @@ const Layout = defineComponent({
         {!this.isLock ? (
           <NLayout class="layout-full" hasSider>
             <Menu />
-            <NLayout>
-              <SiderBar />
-              {this.modelMenuTagSwitch ? <MenuTag /> : ''}
+            <NLayout class="layout__view-container__layout">
+              <SiderBar ref="layoutSiderBarRef" />
+              {this.modelMenuTagSwitch ? (
+                <MenuTag ref="layoutMenuTagRef" />
+              ) : (
+                ''
+              )}
               <NLayoutContent
                 ref="LAYOUT_CONTENT_REF"
                 class="layout-content__router-view"

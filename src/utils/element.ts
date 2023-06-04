@@ -109,6 +109,22 @@ export const hasClass = (element: HTMLElement, className: string) => {
  *
  * @param el Target element dom
  * @param styles 所需绑定样式(如果为字符串, 则必须以分号结尾每个行内样式描述)
+ *
+ * style of string
+ * ```
+ * const styles = 'width: 100px; height: 100px; background: red;'
+ *
+ * addStyle(styles)
+ * ```
+ * style of object
+ * ```
+ * const styles = {
+ *   width: '100px',
+ *   height: '100px',
+ * }
+ *
+ * addStyle(styles)
+ * ```
  */
 export const addStyle = (
   el: HTMLElement,

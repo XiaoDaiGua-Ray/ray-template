@@ -18,7 +18,9 @@ declare global {
     noLocalTitle?: string | number
   }
 
-  declare interface MenuTagOptions extends IMenuOptions {}
+  declare interface MenuTagOptions extends IMenuOptions {
+    closeable?: boolean
+  }
 
   declare type MenuKey = null | string | number
 }

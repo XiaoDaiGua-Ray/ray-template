@@ -16,6 +16,9 @@
  *   - 关闭右侧: 关闭右侧所有标签, 如果选中标签页与当前激活页不一致并且激活页在右侧, 则会重定向至当前选中标签页
  *   - 关闭左侧: 关闭左侧所有标签, 如果选中标签页与当前激活页不一致并且激活页在左侧, 则会重定向至当前选中标签页
  *   - 关闭其他: 关闭其他所有标签, 如果选中标签页与当前激活页不一致并且激活页在其中, 则会重定向至当前选中标签页
+ *
+ * root path 标签不可被关闭, 所以不会显示关闭按钮
+ * 页面刷新后, 仅会保留刷新前激活 key 的 tag 标签
  */
 
 import './index.scss'
@@ -51,7 +54,25 @@ const MenuTag = defineComponent({
 
     const exclude = ['closeAll', 'closeRight', 'closeLeft', 'closeOther']
     let currentContentmenuIndex = -1 // 当前右键标签页索引位置
-    const modelMenuTagOptions = computed(() => menuTagOptions.value)
+    const modelMenuTagOptions = computed(() =>
+      menuTagOptions.value.map((curr, _idx, currentArray) => {
+        if (curr.key === menuKey.value && curr.key !== path) {
+          curr.closeable = true
+        } else {
+          curr.closeable = false
+        }
+
+        if (curr.key === path) {
+          curr.closeable = false
+        }
+
+        if (currentArray.length <= 1) {
+          curr.closeable = false
+        }
+
+        return curr
+      }),
+    )
     const moreOptions = ref([
       {
         label: '重新加载',
@@ -309,6 +330,20 @@ const MenuTag = defineComponent({
       setDisabledAccordionToIndex()
     }
 
+    /** 仅有 modelMenuTagOptions 长度大于 1 并且非 root path 时, 才激活关闭按钮 */
+    const menuTagMouseenter = (option: MenuTagOptions) => {
+      if (modelMenuTagOptions.value.length > 1 && option.key !== path) {
+        option.closeable = true
+      }
+    }
+
+    /** 移出 MenuTag 时, 判断是否为当前已激活 key */
+    const menuTagMouseleave = (option: MenuTagOptions) => {
+      if (option.key !== menuKey.value) {
+        option.closeable = false
+      }
+    }
+
     /** 如果有且只有一个标签页时, 禁止全部关闭操作 */
     watch(
       () => modelMenuTagOptions.value,
@@ -350,6 +385,8 @@ const MenuTag = defineComponent({
       actionState,
       handleContextMenu,
       setCurrentContentmenuIndex,
+      menuTagMouseenter,
+      menuTagMouseleave,
     }
   },
   render() {
@@ -389,6 +426,10 @@ const MenuTag = defineComponent({
               {...{
                 id: this.scrollBarUUID,
               }}
+              themeOverrides={{
+                color: 'rgba(0, 0, 0, 0)',
+                colorHover: 'rgba(0, 0, 0, 0)',
+              }}
             >
               <NSpace
                 class="menu-tag-wrapper"
@@ -398,16 +439,17 @@ const MenuTag = defineComponent({
               >
                 {this.modelMenuTagOptions.map((curr, idx) => (
                   <NTag
-                    closable={
-                      curr.key !== this.rootPath &&
-                      this.modelMenuTagOptions.length > 1
-                    }
+                    size="large"
+                    strong
+                    closable={curr.closeable}
                     onClose={this.closeCurrentMenuTag.bind(this, idx)}
                     type={curr.key === this.menuKey ? 'primary' : 'default'}
                     bordered={false}
                     {...{
                       onClick: this.handleTagClick.bind(this, curr),
                       onContextmenu: this.handleContextMenu.bind(this, idx),
+                      onMouseenter: this.menuTagMouseenter.bind(this, curr),
+                      onMouseleave: this.menuTagMouseleave.bind(this, curr),
                     }}
                   >
                     {typeof curr.label === 'function'

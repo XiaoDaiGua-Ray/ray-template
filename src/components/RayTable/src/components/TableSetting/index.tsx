@@ -61,7 +61,7 @@ const TableSetting = defineComponent({
           {{
             trigger: () => (
               <RayIcon
-                customClassName={`draggable-item__icon ${
+                customClassName={`draggable-item__icon ray-table-icon ${
                   element[key] ? 'draggable-item__icon--actived' : ''
                 }`}
                 name={name}

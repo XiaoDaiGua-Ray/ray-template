@@ -5,6 +5,10 @@
     height: 100%;
   }
 
+  & .layout__view-container__layout .n-layout-scroll-container {
+    overflow: hidden;
+  }
+
   & .layout-content__router-view {
     height: var(--layout-content-height);
     padding: calc($layoutRouterViewContainer / 2);
