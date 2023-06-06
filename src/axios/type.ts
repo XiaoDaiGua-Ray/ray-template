@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type {
   AxiosHeaders,
   AxiosRequestConfig,
   HeadersDefaults,
   AxiosDefaults,
   Axios,
+  InternalAxiosRequestConfig,
+  AxiosResponse,
 } from 'axios'
 
 export type AxiosHeaderValue =
@@ -20,56 +23,50 @@ export interface RequestHeaderOptions {
 }
 
 export interface AxiosInstanceExpand extends Axios {
-  <T = unknown, D = unknown>(config: AxiosRequestConfig<D>): Promise<T>
-  <T = unknown, D = unknown>(
-    url: string,
-    config?: AxiosRequestConfig<D>,
-  ): Promise<T>
+  <T = any, D = any>(config: AxiosRequestConfig<D>): Promise<T>
+  <T = any, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<T>
 
   getUri(config?: AxiosRequestConfig): string
-  request<R = unknown, D = unknown>(config: AxiosRequestConfig<D>): Promise<R>
-  get<R = unknown, D = unknown>(
+  request<R = any, D = any>(config: AxiosRequestConfig<D>): Promise<R>
+  get<R = any, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<R>
+  delete<R = any, D = any>(
     url: string,
     config?: AxiosRequestConfig<D>,
   ): Promise<R>
-  delete<R = unknown, D = unknown>(
+  head<R = any, D = any>(
     url: string,
     config?: AxiosRequestConfig<D>,
   ): Promise<R>
-  head<R = unknown, D = unknown>(
+  options<R = any, D = any>(
     url: string,
     config?: AxiosRequestConfig<D>,
   ): Promise<R>
-  options<R = unknown, D = unknown>(
-    url: string,
-    config?: AxiosRequestConfig<D>,
-  ): Promise<R>
-  post<R = unknown, D = unknown>(
+  post<R = any, D = any>(
     url: string,
     data?: D,
     config?: AxiosRequestConfig<D>,
   ): Promise<R>
-  put<R = unknown, D = unknown>(
+  put<R = any, D = any>(
     url: string,
     data?: D,
     config?: AxiosRequestConfig<D>,
   ): Promise<R>
-  patch<R = unknown, D = unknown>(
+  patch<R = any, D = any>(
     url: string,
     data?: D,
     config?: AxiosRequestConfig<D>,
   ): Promise<R>
-  postForm<R = unknown, D = unknown>(
+  postForm<R = any, D = any>(
     url: string,
     data?: D,
     config?: AxiosRequestConfig<D>,
   ): Promise<R>
-  putForm<R = unknown, D = unknown>(
+  putForm<R = any, D = any>(
     url: string,
     data?: D,
     config?: AxiosRequestConfig<D>,
   ): Promise<R>
-  patchForm<R = unknown, D = unknown>(
+  patchForm<R = any, D = any>(
     url: string,
     data?: D,
     config?: AxiosRequestConfig<D>,
@@ -80,4 +77,15 @@ export interface AxiosInstanceExpand extends Axios {
       [key: string]: AxiosHeaderValue
     }
   }
+}
+
+export type RequestInterceptorConfig<T = any> = InternalAxiosRequestConfig<T>
+
+export type ResponseInterceptorConfig<T = any, K = any> = AxiosResponse<T, K>
+
+export type ImplementKey = 'requestInstance' | 'responseInstance'
+
+export interface ImplementQueue {
+  implementRequestInterceptorArray: AnyFunc[]
+  implementResponseInterceptorArray: AnyFunc[]
 }

@@ -1,5 +1,34 @@
 # CHANGE LOG
 
+## 3.3.1
+
+### Feats
+
+- 新增 useAppTheme sass 方法
+
+```ts
+useAppTheme key 类型: 'dark' | 'light'
+```
+
+```scss
+// 暗色主题
+.demo--dark {
+  @include useAppTheme('dark') {
+    color: #ffffff;
+  }
+}
+// 明亮主题
+.demo--light {
+  @include useAppTheme('light') {
+    color: #000000;
+  }
+}
+```
+
+- 一些细节优化
+- axios 拦截器与 axios instance 进行独立（现在不再 instance.ts 文件中编写拦截器相关逻辑），拦截器逻辑放在 inject 包中
+- 一些 bug 修复
+
 ## 3.3.0
 
 ### 特征

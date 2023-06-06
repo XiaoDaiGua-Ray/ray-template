@@ -12,43 +12,30 @@
 /**
  *
  * 请求, 响应拦截器
- *
- * 可在此实现共享的基础配置
+ * 如果有需要拓展拦截器, 请在 inject 目录下参照示例方法继续拓展
+ * 该页面不做改动与配置
  */
 
 import axios from 'axios'
-import { getDetermineEnv } from '@use-utils/hook'
-import RequestCanceler from './helper/canceler'
 import { AXIOS_CONFIG } from '@/appConfig/requestConfig'
-import { appendRequestHeaders } from './helper/interceptor'
+import { useAxiosInterceptor, axiosCanceler } from '@/axios/helper/interceptor'
+import { setupRequestInterceptor } from '@/axios/inject/requestInject'
+import { setupResponseInterceptor } from '@/axios/inject/responseInject'
 
 import type { AxiosInstanceExpand } from './type'
 
-const canceler = new RequestCanceler()
-
 const server: AxiosInstanceExpand = axios.create(AXIOS_CONFIG)
+const {
+  createRequestAxiosInstance,
+  createResponseAxiosInstance,
+  beforeAxiosFetch,
+} = useAxiosInterceptor()
 
 server.interceptors.request.use(
   (request) => {
-    const { MODE } = getDetermineEnv()
-
-    if (MODE === 'development') {
-      // TODO: 开发环境
-    } else if (MODE === 'production') {
-      // TODO: 生产环境
-    } else if (MODE === 'test') {
-      // TODO: 测试环境
-    }
-
-    appendRequestHeaders(request, [
-      {
-        key: 'X-TOKEN',
-        value: 'token',
-      },
-    ]) // 自定义请求头
-
-    canceler.removePendingRequest(request) // 检查是否存在重复请求, 若存在则取消已发的请求
-    canceler.addPendingRequest(request) // 把当前的请求信息添加到 pendingRequest 表中
+    createRequestAxiosInstance(request)
+    setupRequestInterceptor()
+    beforeAxiosFetch('requestInstance')
 
     return request
   },
@@ -59,14 +46,16 @@ server.interceptors.request.use(
 
 server.interceptors.response.use(
   (response) => {
-    canceler.removePendingRequest(response.config)
+    createResponseAxiosInstance(response)
+    setupResponseInterceptor()
+    beforeAxiosFetch('responseInstance')
 
     const { data } = response
 
     return Promise.resolve(data)
   },
   (error) => {
-    canceler.removePendingRequest(error.config || {})
+    axiosCanceler.removePendingRequest(error.config || {})
 
     return Promise.reject(error)
   },

@@ -35,11 +35,13 @@
   }
 }
 
-.ray-template--dark {
-  & .table-size__dropdown-wrapper {
-    & .dropdown-item:hover {
-      background-color: var(--ray-theme-primary-fade-color);
-      color: var(--ray-theme-primary-color);
+.ray-table__table-size--dark {
+  @include useAppTheme("dark") {
+    & .table-size__dropdown-wrapper {
+      & .dropdown-item:hover {
+        background-color: var(--ray-theme-primary-fade-color);
+        color: var(--ray-theme-primary-color);
+      }
     }
   }
 }

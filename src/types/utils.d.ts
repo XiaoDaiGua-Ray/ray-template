@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export {}
 
 import type CryptoJS from 'crypto-js'
@@ -32,7 +33,7 @@ export global {
 
   declare type CipherParams = CryptoJS.lib.CipherParams
 
-  declare type VoidFunc = (...args: unknown[]) => void
+  declare type VoidFunc = (...args: any[]) => void
 
-  declare type AnyFunc = (...args: unknown[]) => unknown
+  declare type AnyFunc = (...args: any[]) => any
 }

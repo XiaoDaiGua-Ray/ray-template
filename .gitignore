@@ -14,6 +14,8 @@ dist
 dist/
 *.local
 visualizer.*
+components.d.ts
+auto-imports.d.ts
 
 # Editor directories and files
 .idea

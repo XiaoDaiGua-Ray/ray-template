@@ -92,7 +92,10 @@ const TableSize = defineComponent({
             </NPopover>
           ),
           default: () => (
-            <NCard bordered={false} class="ray-table__table-size">
+            <NCard
+              bordered={false}
+              class="ray-table__table-size ray-table__table-size--dark ray-table__table-size--light"
+            >
               <div class="table-size__dropdown">
                 <div class="table-size__dropdown-wrapper">
                   {this.sizeOptions.map((curr) => (

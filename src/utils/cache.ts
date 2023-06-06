@@ -1,5 +1,18 @@
 /**
  *
+ * @author Ray <https://github.com/XiaoDaiGua-Ray>
+ *
+ * @date 2023-06-05
+ *
+ * @workspace ray-template
+ *
+ * @remark 今天也是元气满满撸代码的一天
+ */
+
+/** vue3 项目里建议直接用 vueuse useStorage 方法 */
+
+/**
+ *
  * @param key 需要设置的key
  * @param value 需要缓存的值
  */

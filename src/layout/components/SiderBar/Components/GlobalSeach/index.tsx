@@ -139,7 +139,7 @@ const GlobalSeach = defineComponent({
   render() {
     return (
       <NModal v-model:show={this.modelShow} transform-origin="center" show>
-        <div class="global-seach">
+        <div class="global-seach global-seach--dark global-seach--light">
           <div class="global-seach__wrapper">
             <div class="global-seach__card">
               <div class="global-seach__card-header">

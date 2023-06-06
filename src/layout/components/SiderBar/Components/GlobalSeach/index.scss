@@ -67,29 +67,33 @@ $globalSearchWidth: 650px;
   }
 }
 
-.ray-template--dark {
-  & .global-seach__card {
-    background-color: #242424;
+.global-seach--dark {
+  @include useAppTheme("dark") {
+    & .global-seach__card {
+      background-color: #242424;
 
-    & .global-seach__card-content .content-item {
-      background-color: #2f2f2f;
+      & .global-seach__card-content .content-item {
+        background-color: #2f2f2f;
 
-      &:hover {
-        background-color: var(--ray-theme-primary-fade-color);
+        &:hover {
+          background-color: var(--ray-theme-primary-fade-color);
+        }
       }
     }
   }
 }
 
-.ray-template--light {
-  & .global-seach__card {
-    background-color: #f9f9f9;
+.global-seach--light {
+  @include useAppTheme("light") {
+    & .global-seach__card {
+      background-color: #f9f9f9;
 
-    & .global-seach__card-content .content-item {
-      background-color: #ffffff;
+      & .global-seach__card-content .content-item {
+        background-color: #ffffff;
 
-      &:hover {
-        background-color: var(--ray-theme-primary-fade-color);
+        &:hover {
+          background-color: var(--ray-theme-primary-fade-color);
+        }
       }
     }
   }

@@ -9,6 +9,16 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
+/**
+ *
+ * 这里没有做解锁密码校验, 只要符合校验规则值皆可
+ * 可以根据需求自行更改
+ *
+ * @deprecated
+ * 后期该组件会进行破坏性更新, 请注意版本的更新
+ * 会将该组件的锁屏、解锁操作拆分, 使其更加合理
+ */
+
 import './index.scss'
 
 import { NModal, NInput, NForm, NFormItem, NButton, NSpace } from 'naive-ui'
@@ -35,19 +45,19 @@ const LockScreen = defineComponent({
     const { changeSwitcher } = settingStore
     const { logout } = signinStore
 
-    const TIME_FORMAT = 'HH:mm'
+    const HH_MM_FORMAT = 'HH:mm'
     const AM_PM_FORMAT = 'A'
-    const YEAR_FORMAT = 'YY-MM-DD'
-    const DATE_FORMAT = 'dddd'
+    const YY_MM_DD_FORMAT = 'YY年MM月DD日'
+    const DDD_FORMAT = 'ddd'
 
     const state = reactive({
       lockCondition: {
         pwd: null,
       },
-      time: dayjs().format(TIME_FORMAT),
-      second: dayjs().locale('en').format(AM_PM_FORMAT),
-      year: dayjs().format(YEAR_FORMAT),
-      date: dayjs().format(DATE_FORMAT),
+      HH_MM: dayjs().format(HH_MM_FORMAT),
+      AM_PM: dayjs().locale('en').format(AM_PM_FORMAT),
+      YY_MM_DD: dayjs().format(YY_MM_DD_FORMAT),
+      DDD: dayjs().format(DDD_FORMAT),
     })
     const rules = {
       pwd: {
@@ -77,12 +87,12 @@ const LockScreen = defineComponent({
     }
 
     const dayInterval = setInterval(() => {
-      state.time = dayjs().format(TIME_FORMAT)
-      state.second = dayjs().format(AM_PM_FORMAT)
+      state.HH_MM = dayjs().format(HH_MM_FORMAT)
+      state.AM_PM = dayjs().format(AM_PM_FORMAT)
     }, 60_000)
     const yearInterval = setInterval(() => {
-      state.year = dayjs().format(YEAR_FORMAT)
-      state.date = dayjs().format(DATE_FORMAT)
+      state.YY_MM_DD = dayjs().format(YY_MM_DD_FORMAT)
+      state.DDD = dayjs().format(DDD_FORMAT)
     }, 86_400_000)
 
     const handleBackToSignin = () => {
@@ -190,8 +200,8 @@ const LockScreen = defineComponent({
           <div class="lock-screen">
             <div class="lock-screen__content">
               <div class="lock-screen__content-bg">
-                <div class="left">{this.time?.split(':')[0]}</div>
-                <div class="right">{this.time?.split(':')[1]}</div>
+                <div class="left">{this.HH_MM?.split(':')[0]}</div>
+                <div class="right">{this.HH_MM?.split(':')[1]}</div>
               </div>
               <div class="lock-screen__content-avatar">
                 <AppAvatar vertical align="center" avatarSize={52} />
@@ -233,10 +243,10 @@ const LockScreen = defineComponent({
               </div>
               <div class="lock-screen__content-date">
                 <div class="current-date">
-                  {this.time}&nbsp;<span>{this.second}</span>
+                  {this.HH_MM}&nbsp;<span>{this.AM_PM}</span>
                 </div>
                 <div class="current-year">
-                  {this.year}&nbsp;{this.date}
+                  {this.YY_MM_DD}&nbsp;<span>{this.DDD}</span>
                 </div>
               </div>
             </div>
