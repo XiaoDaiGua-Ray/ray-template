@@ -25,9 +25,11 @@ export const appendRequestHeaders = (
   instance: AxiosRequestConfig<unknown>,
   options: RequestHeaderOptions[],
 ) => {
-  const requestHeaders = instance.headers as RawAxiosRequestHeaders
+  if (instance) {
+    const requestHeaders = instance.headers as RawAxiosRequestHeaders
 
-  options.forEach((curr) => {
-    requestHeaders[curr.key] = curr.value
-  })
+    options.forEach((curr) => {
+      requestHeaders[curr.key] = curr.value
+    })
+  }
 }

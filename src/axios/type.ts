@@ -89,3 +89,7 @@ export interface ImplementQueue {
   implementRequestInterceptorArray: AnyFunc[]
   implementResponseInterceptorArray: AnyFunc[]
 }
+
+export type ImplementFunction<
+  T = RequestInterceptorConfig | ResponseInterceptorConfig,
+> = <K extends T>(ins: K, mode: string) => void

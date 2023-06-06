@@ -2,7 +2,7 @@
  *
  * @returns 获取当前项目环境
  */
-export const getDetermineEnv = () => {
+export const getAppEnvironment = () => {
   const env = import.meta.env
 
   return env

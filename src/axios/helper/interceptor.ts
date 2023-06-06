@@ -20,6 +20,7 @@
  */
 
 import RequestCanceler from '@/axios/helper/canceler'
+import { getAppEnvironment } from '@use-utils/hook'
 
 import type {
   RequestInterceptorConfig,
@@ -53,15 +54,24 @@ export const useAxiosInterceptor = () => {
     axiosFetchInstance['responseInstance'] = instance
   }
 
+  /** 获取请求实例或者响应实例 */
+  const getAxiosFetchInstance = (key: ImplementKey) => {
+    return axiosFetchInstance[key]
+  }
+
   /** 请求前, 执行队列所有方法 */
   const beforeAxiosFetch = (key: ImplementKey) => {
     const funcArr = implement[getImplementKey(key)]
+    const instance = getAxiosFetchInstance(key)
+    const { MODE } = getAppEnvironment()
 
-    funcArr?.forEach((curr) => {
-      if (typeof curr === 'function') {
-        curr()
-      }
-    })
+    if (instance) {
+      funcArr?.forEach((curr) => {
+        if (typeof curr === 'function') {
+          curr(instance, MODE)
+        }
+      })
+    }
   }
 
   /** 设置拦截器队列 */
@@ -74,11 +84,6 @@ export const useAxiosInterceptor = () => {
   /** 获取拦截器队列 */
   const getImplementQueue = (key: ImplementKey) => {
     return implement[getImplementKey(key)]
-  }
-
-  /** 获取请求实例或者响应实例 */
-  const getAxiosFetchInstance = (key: ImplementKey) => {
-    return axiosFetchInstance[key]
   }
 
   return {
