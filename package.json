@@ -23,6 +23,7 @@
     "@vueuse/core": "^9.1.0",
     "axios": "^1.2.0",
     "crypto-js": "^4.1.1",
+    "currency.js": "^2.0.4",
     "dayjs": "^1.11.7",
     "echarts": "^5.4.0",
     "lodash-es": "^4.17.21",

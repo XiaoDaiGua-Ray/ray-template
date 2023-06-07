@@ -13,5 +13,6 @@
   "Office": "办公",
   "Office_Document": "文档",
   "Office_Presentation": "演示",
-  "Office_Spreadsheet": "表格"
+  "Office_Spreadsheet": "表格",
+  "CalculatePrecision": "数字精度"
 }

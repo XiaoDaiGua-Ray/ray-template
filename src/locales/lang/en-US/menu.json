@@ -13,5 +13,6 @@
   "Office": "Office",
   "Office_Document": "Document",
   "Office_Presentation": "Presentation",
-  "Office_Spreadsheet": "Spreadsheet"
+  "Office_Spreadsheet": "Spreadsheet",
+  "CalculatePrecision": "Precision"
 }
