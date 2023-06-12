@@ -1,4 +1,6 @@
 import { validteValueType } from '@use-utils/hook'
+import { ELEMENT_UNIT } from '@/appConfig/regConfig'
+
 /**
  *
  * @param element Target element dom
@@ -240,5 +242,21 @@ export const getElement = (element: string) => {
     return el
   } catch (e) {
     return []
+  }
+}
+
+/**
+ *
+ * @param size css size
+ *
+ * @remark 自动补全尺寸
+ */
+export const completeSize = (size: number | string) => {
+  if (typeof size === 'number') {
+    return size.toString() + 'px'
+  } else if (ELEMENT_UNIT.test(size)) {
+    return size
+  } else {
+    return size + 'px'
   }
 }

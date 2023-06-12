@@ -23,6 +23,7 @@
 import { getCache, setCache } from '@/utils/cache'
 import { useSignin } from '@/store'
 import { APP_CATCH_KEY, ROOT_ROUTE } from '@/appConfig/appConfig'
+import { redirectRouterToDashboard } from '@/router/helper/routerCopilot'
 
 import type { Router, NavigationGuardNext } from 'vue-router'
 
@@ -30,13 +31,6 @@ export const permissionRouter = (router: Router) => {
   const { beforeEach } = router
 
   const { path } = ROOT_ROUTE
-
-  /** 如果没有权限, 则重定向至首页 */
-  const redirectToDashboard = (next: NavigationGuardNext) => {
-    next(path)
-
-    setCache('menuKey', path)
-  }
 
   beforeEach((to, from, next) => {
     const token = getCache(APP_CATCH_KEY.token)
@@ -70,13 +64,13 @@ export const permissionRouter = (router: Router) => {
           if (route !== 'no') {
             next(route)
           } else {
-            redirectToDashboard(next)
+            redirectRouterToDashboard(true)
           }
         } else {
           next()
         }
       } else {
-        redirectToDashboard(next)
+        redirectRouterToDashboard(true)
       }
     } else {
       if (to.path === '/' || from.path === '/login') {

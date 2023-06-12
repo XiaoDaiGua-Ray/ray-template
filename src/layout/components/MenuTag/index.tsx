@@ -36,7 +36,7 @@ import type { MenuOption, ScrollbarInst } from 'naive-ui'
 
 const MenuTag = defineComponent({
   name: 'MenuTag',
-  setup() {
+  setup(_, { expose }) {
     const scrollRef = ref<ScrollbarInst | null>(null)
 
     const menuStore = useMenu()
@@ -246,22 +246,33 @@ const MenuTag = defineComponent({
       menuModelValueChange(item.key as string, item)
     }
 
-    const handleScrollX = (type: 'left' | 'right') => {
+    const getScrollElement = () => {
       const scroll = document.getElementById(scrollBarUUID) // 获取滚动条容器
 
       if (scroll) {
-        /**
-         *
-         * 找到实际横向滚动元素(class: n-scrollbar-container)
-         * 获取 scrollLeft 属性后, 用于左右滚动边界值进行处理
-         */
         const scrollContentElement = Array.from(
           scroll.childNodes,
         ) as HTMLElement[]
         const findElement = scrollContentElement.find((el) =>
           hasClass(el, 'n-scrollbar-container'),
         )
-        const scrollX = findElement!.scrollLeft || 0
+
+        return findElement
+      }
+
+      return undefined
+    }
+
+    const handleScrollX = (type: 'left' | 'right') => {
+      const el = getScrollElement()
+
+      if (el) {
+        /**
+         *
+         * 找到实际横向滚动元素(class: n-scrollbar-container)
+         * 获取 scrollLeft 属性后, 用于左右滚动边界值进行处理
+         */
+        const scrollX = el!.scrollLeft || 0
         const rolling =
           type === 'left' ? Math.max(0, scrollX - 200) : scrollX + 200
 
@@ -344,10 +355,28 @@ const MenuTag = defineComponent({
       }
     }
 
+    /**
+     *
+     * 每当新的页面打开后, 将滚动条横向滚到至底部
+     * 使用 nextTick 避免元素未渲染挂载至页面
+     */
+    const updateScrollBarPosition = () => {
+      const el = getScrollElement()
+
+      if (el) {
+        nextTick().then(() => {
+          scrollRef.value?.scrollTo({
+            left: 99999,
+            behavior: 'smooth',
+          })
+        })
+      }
+    }
+
     /** 如果有且只有一个标签页时, 禁止全部关闭操作 */
     watch(
       () => modelMenuTagOptions.value,
-      (newData) => {
+      (newData, oldData) => {
         moreOptions.value.forEach((curr) => {
           if (exclude.includes(curr.key)) {
             newData.length > 1
@@ -355,10 +384,15 @@ const MenuTag = defineComponent({
               : (curr.disabled = true)
           }
         })
+
+        if (oldData?.length) {
+          if (newData.length > oldData?.length) {
+            updateScrollBarPosition()
+          }
+        }
       },
       {
         immediate: true,
-        deep: true,
       },
     )
 
@@ -369,6 +403,8 @@ const MenuTag = defineComponent({
         setDisabledAccordionToIndex()
       },
     )
+
+    expose({})
 
     return {
       modelMenuTagOptions,
@@ -426,10 +462,6 @@ const MenuTag = defineComponent({
               {...{
                 id: this.scrollBarUUID,
               }}
-              themeOverrides={{
-                color: 'rgba(0, 0, 0, 0)',
-                colorHover: 'rgba(0, 0, 0, 0)',
-              }}
             >
               <NSpace
                 class="menu-tag-wrapper"
@@ -450,6 +482,7 @@ const MenuTag = defineComponent({
                       onContextmenu: this.handleContextMenu.bind(this, idx),
                       onMouseenter: this.menuTagMouseenter.bind(this, curr),
                       onMouseleave: this.menuTagMouseleave.bind(this, curr),
+                      tag_data: curr.path,
                     }}
                   >
                     {typeof curr.label === 'function'

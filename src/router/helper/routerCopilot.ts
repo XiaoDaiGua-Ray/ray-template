@@ -20,6 +20,7 @@ import {
 import { useSignin } from '@/store'
 import { useVueRouter } from '@/router/helper/useVueRouter'
 import { ROOT_ROUTE } from '@/appConfig/appConfig'
+import { setCache } from '@/utils/cache'
 
 import type { Router } from 'vue-router'
 
@@ -92,13 +93,15 @@ export const vueRouterRegister = (router: Router) => {
  *
  * @param replace 是否使用
  *
- * @remark 重定向路由至首页
+ * @remark 重定向路由至首页, 默认采用替换方法重定向
  */
-export const redirectRouterToDashboard = (isReplace?: boolean) => {
+export const redirectRouterToDashboard = (isReplace = true) => {
   const { router } = useVueRouter()
 
   const { push, replace } = router
   const { path } = ROOT_ROUTE
 
   isReplace ? push(path) : replace(path)
+
+  setCache('menuKey', path)
 }

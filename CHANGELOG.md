@@ -1,5 +1,17 @@
 # CHANGE LOG
 
+## 3.3.4
+
+### Feats
+
+- 新增 RayIframe 组件
+- 同步更新 `naive-ui` 版本至最新版本(2.34.3 => 2.34.4)
+- 支持更多 appConfig 配置
+
+### TODO
+
+- MenuTag: 切换页面时, 同步更新该标签的所在位置
+
 ## 3.3.3
 
 ### Feats
