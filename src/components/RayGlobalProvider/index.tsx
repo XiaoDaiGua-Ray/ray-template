@@ -1,3 +1,22 @@
+/**
+ *
+ * @author Ray <https://github.com/XiaoDaiGua-Ray>
+ *
+ * @date 2023-06-14
+ *
+ * @workspace ray-template
+ *
+ * @remark 今天也是元气满满撸代码的一天
+ */
+
+/**
+ *
+ * 全局注入 naive ui 提示性组件
+ * 使用该组件注册后, 可以直接通过 window.$message、window.$notification、window.$dialog、window.$loadingBar 访问
+ * 但是, 使用该组件注册后, 使用 window.$notification 组件时不能更改 placement 位置(只能默认右上角弹出)
+ * 如果需要更改弹出位置, 需要在需要地方重新定义组件注册
+ */
+
 import {
   NDialogProvider,
   NLoadingBarProvider,

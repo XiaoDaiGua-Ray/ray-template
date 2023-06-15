@@ -29,7 +29,7 @@ const RayIframe = defineComponent({
     iframeWrapperClass: {
       /** 自定义类名 */
       type: String,
-      default: '',
+      default: null,
     },
     frameborder: {
       /** 边框尺寸, 0 则不显示 */
@@ -94,7 +94,7 @@ const RayIframe = defineComponent({
       default: () => ({}),
     },
   },
-  setup(props) {
+  setup(props, { expose }) {
     const cssVars = computed(() => {
       const cssVar = {
         '--ray-iframe-frameborder': completeSize(props.frameborder),
@@ -124,6 +124,8 @@ const RayIframe = defineComponent({
 
       return iframeEl
     }
+
+    expose()
 
     onMounted(() => {
       on(getIframeRef(), 'load', iframeLoadSuccess.bind(this))

@@ -26,8 +26,13 @@ import { NEllipsis } from 'naive-ui'
 import RayIcon from '@/components/RayIcon/index'
 
 import { getCache, setCache } from '@/utils/cache'
-import { validRole } from '@/router/helper/routerCopilot'
-import { parse, matchMenuOption, updateDocumentTitle } from './helper'
+import { validMenuItemShow } from '@/router/helper/routerCopilot'
+import {
+  parse,
+  matchMenuOption,
+  updateDocumentTitle,
+  hasMenuIcon,
+} from './helper'
 import { useI18n } from '@/locales/useI18n'
 import { MENU_COLLAPSED_CONFIG, ROOT_ROUTE } from '@/appConfig/appConfig'
 import routeModules from '@/router/routeModules'
@@ -186,21 +191,10 @@ export const useMenu = defineStore(
             }),
           breadcrumbLabel: label.value,
         } as IMenuOptions
-        /** 是否有 icon */
-        const expandIcon = {
-          icon: () =>
-            h(
-              RayIcon,
-              {
-                name: meta!.icon as string,
-                size: MENU_COLLAPSED_CONFIG.MENU_COLLAPSED_ICON_SIZE,
-              },
-              {},
-            ),
-        }
-        const attr: IMenuOptions = meta?.icon
-          ? Object.assign({}, route, expandIcon)
-          : route
+        /** 合并 icon */
+        const attr: IMenuOptions = Object.assign({}, route, {
+          icon: hasMenuIcon(option),
+        })
 
         if (option.path === cacheMenuKey) {
           /** 设置菜单标签 */
@@ -209,7 +203,8 @@ export const useMenu = defineStore(
           updateDocumentTitle(attr)
         }
 
-        attr.show = validRole(option)
+        /** 检查该菜单项是否展示 */
+        attr.show = validMenuItemShow(option)
 
         return attr
       }
@@ -218,9 +213,10 @@ export const useMenu = defineStore(
         const catchArr: IMenuOptions[] = []
 
         for (const curr of routes) {
-          if (curr.children?.length && validRole(curr)) {
+          if (curr.children?.length && validMenuItemShow(curr)) {
             curr.children = resolveRoutes(curr.children, index++)
-          } else if (!validRole(curr)) {
+          } else if (!validMenuItemShow(curr)) {
+            /** 如果校验失败, 则不会添加进 menu options */
             continue
           }
 

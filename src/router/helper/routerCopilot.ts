@@ -26,18 +26,44 @@ import type { Router } from 'vue-router'
 
 /**
  *
- * @remark 校验当前路由
+ * 校验当前菜单项是否与权限匹配
+ * 仅做对于 Meta Role 配置是否匹配做校验, 不关心 Meta Hidden 属性
+ *
+ * 如果为超级管理员, 则会默认获取所有权限
  */
 export const validRole = (option: IMenuOptions) => {
   const { signinCallback } = storeToRefs(useSignin())
   const role = computed(() => signinCallback.value.role)
 
+  const { meta } = option
+
+  if (SUPER_ADMIN?.length && SUPER_ADMIN.includes(role.value)) {
+    return true
+  } else {
+    if (meta?.role) {
+      return meta.role.includes(role.value)
+    }
+
+    return true
+  }
+}
+
+/**
+ *
+ * @remark 校验当前路由
+ *
+ * 该方法进行校验时, 会将 hidden 与 role 一起进行校验
+ * 如果有一条不满足校验, 则视为校验失败
+ *
+ * 如果你仅仅是希望校验是否满足权限, 应该使用另一个方法 validRole
+ */
+export const validMenuItemShow = (option: IMenuOptions) => {
   const { meta, name } = option
   const hidden =
     meta?.hidden === undefined || meta?.hidden === false ? false : meta?.hidden
 
   // 如果是超级管理员(预设为 admin), 则根据其菜单栏(hidden)字段判断是否显示
-  if (SUPER_ADMIN.length && SUPER_ADMIN.includes(role.value)) {
+  if (validRole(option)) {
     return true && !hidden
   } else {
     // 如果为基础路由, 不进行鉴权则根据其菜单栏(hidden)字段判断是否显示
@@ -47,7 +73,7 @@ export const validRole = (option: IMenuOptions) => {
 
     // 判断权限是否匹配和菜单栏(hidden)字段判断是否显示
     if (meta?.role) {
-      return meta.role.includes(role.value) && !hidden
+      return validRole(option) && !hidden
     }
 
     return true && !hidden

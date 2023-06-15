@@ -17,7 +17,7 @@ import RayIcon from '@/components/RayIcon/index'
 import { on, off } from '@/utils/element'
 import { debounce } from 'lodash-es'
 import { useMenu } from '@/store'
-import { validRole } from '@/router/helper/routerCopilot'
+import { validMenuItemShow } from '@/router/helper/routerCopilot'
 
 import type { MenuOption } from 'naive-ui'
 import type { AppRouteMeta } from '@/router/type'
@@ -90,7 +90,7 @@ const GlobalSeach = defineComponent({
 
           if (
             _breadcrumbLabel?.includes(_value) &&
-            validRole(curr) &&
+            validMenuItemShow(curr) &&
             !curr.children?.length
           ) {
             arr.push(curr)

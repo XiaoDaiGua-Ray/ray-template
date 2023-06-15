@@ -51,4 +51,4 @@ export const WHITE_ROUTES = ['login', 'error-page', 'doc']
  * 超级管理员
  * 配置默认超级管理员, 默认拥有全部最高权限
  */
-export const SUPER_ADMIN = ['admin']
+export const SUPER_ADMIN: (string | number)[] = ['admin']

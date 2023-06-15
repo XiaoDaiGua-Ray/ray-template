@@ -41,7 +41,7 @@ const RayIcon = defineComponent({
     customClassName: {
       /** 自定义 class name */
       type: String,
-      default: '',
+      default: null,
     },
     depth: {
       /** 图标深度 */

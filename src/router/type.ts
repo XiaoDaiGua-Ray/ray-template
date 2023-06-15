@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { RouteRecordRaw } from 'vue-router'
 import type { Recordable } from '@/types/type-utils'
-import type { DefineComponent } from 'vue'
+import type { DefineComponent, VNode } from 'vue'
 
 export type Component<T = any> =
   | DefineComponent<{}, {}, any>
@@ -11,7 +11,7 @@ export type Component<T = any> =
 
 export interface AppRouteMeta {
   i18nKey?: string
-  icon?: string
+  icon?: string | VNode
   windowOpen?: string
   role?: string[]
   hidden?: boolean

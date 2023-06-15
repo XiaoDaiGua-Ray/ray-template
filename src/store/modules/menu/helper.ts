@@ -11,6 +11,12 @@
 
 /** 本方法感谢 <https://yunkuangao.me/> 的支持 */
 
+import { MENU_COLLAPSED_CONFIG, ROOT_ROUTE } from '@/appConfig/appConfig'
+import RayIcon from '@/components/RayIcon/index'
+import { validteValueType } from '@/utils/hook'
+
+import type { VNode } from 'vue'
+
 /**
  *
  * @param node 当前节点
@@ -126,4 +132,27 @@ export const updateDocumentTitle = (option: IMenuOptions) => {
   const spliceTitle = sideBarLogo ? sideBarLogo.title : ''
 
   document.title = breadcrumbLabel + ' - ' + spliceTitle
+}
+
+export const hasMenuIcon = (option: IMenuOptions) => {
+  const { meta } = option
+
+  if (!meta.icon) {
+    return
+  }
+
+  if (validteValueType(meta.icon, 'Object')) {
+    return () => meta.icon
+  }
+
+  const icon = h(
+    RayIcon,
+    {
+      name: meta!.icon as string,
+      size: MENU_COLLAPSED_CONFIG.MENU_COLLAPSED_ICON_SIZE,
+    },
+    {},
+  )
+
+  return () => icon
 }
