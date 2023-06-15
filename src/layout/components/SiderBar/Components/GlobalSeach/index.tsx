@@ -167,11 +167,7 @@ const GlobalSeach = defineComponent({
                         }}
                       >
                         <div class="content-item-icon">
-                          {curr?.meta?.icon ? (
-                            <RayIcon name={curr.meta.icon} size="24" />
-                          ) : (
-                            <RayIcon name="table" size="24" />
-                          )}
+                          <RayIcon name="table" size="24" />
                         </div>
                         <div class="content-item-label">
                           {curr.breadcrumbLabel}
