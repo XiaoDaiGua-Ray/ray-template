@@ -1,3 +1,5 @@
+import { t } from '@/locales/useI18n'
+
 import type { AppRouteRecordRaw } from '@/router/type'
 
 import { LAYOUT } from '@/router/constant/index'
@@ -7,7 +9,7 @@ const multiMenu: AppRouteRecordRaw = {
   name: 'MultiMenu',
   component: LAYOUT,
   meta: {
-    i18nKey: 'MultiMenu',
+    i18nKey: t('menu.MultiMenu'),
     icon: 'table',
     order: 4,
   },

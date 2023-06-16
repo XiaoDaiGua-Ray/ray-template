@@ -1,3 +1,5 @@
+import { t } from '@/locales/useI18n'
+
 import type { AppRouteRecordRaw } from '@/router/type'
 
 const table: AppRouteRecordRaw = {
@@ -5,7 +7,7 @@ const table: AppRouteRecordRaw = {
   name: 'TableView',
   component: () => import('@/views/table/index'),
   meta: {
-    i18nKey: 'Table',
+    i18nKey: t('menu.Table'),
     icon: 'table',
     order: 2,
   },

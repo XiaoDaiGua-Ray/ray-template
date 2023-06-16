@@ -1,3 +1,5 @@
+import { t } from '@/locales/useI18n'
+
 import type { AppRouteRecordRaw } from '@/router/type'
 
 const precision: AppRouteRecordRaw = {
@@ -5,7 +7,7 @@ const precision: AppRouteRecordRaw = {
   name: 'CalculatePrecision',
   component: () => import('@/views/precision/index'),
   meta: {
-    i18nKey: 'CalculatePrecision',
+    i18nKey: t('menu.CalculatePrecision'),
     icon: 'rely',
     order: 2,
   },

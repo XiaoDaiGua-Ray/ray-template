@@ -1,3 +1,5 @@
+import { t } from '@/locales/useI18n'
+
 import type { AppRouteRecordRaw } from '@/router/type'
 
 const axios: AppRouteRecordRaw = {
@@ -5,7 +7,7 @@ const axios: AppRouteRecordRaw = {
   name: 'Axios',
   component: () => import('@/views/axios/index'),
   meta: {
-    i18nKey: 'Axios',
+    i18nKey: t('menu.Axios'),
     icon: 'axios',
     order: 3,
     keepAlive: true,

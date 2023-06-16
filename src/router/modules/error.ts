@@ -1,3 +1,5 @@
+import { t } from '@/locales/useI18n'
+
 import type { AppRouteRecordRaw } from '@/router/type'
 
 const error: AppRouteRecordRaw = {
@@ -5,7 +7,7 @@ const error: AppRouteRecordRaw = {
   name: 'ErrorPage',
   component: () => import('@/error/views/Error404/index'),
   meta: {
-    i18nKey: 'Error',
+    i18nKey: t('menu.Error'),
     icon: 'error',
     hidden: true,
   },

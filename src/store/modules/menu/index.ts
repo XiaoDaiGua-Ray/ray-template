@@ -179,7 +179,7 @@ export const useMenu = defineStore(
 
         /** 设置 label, i18nKey 优先级最高 */
         const label = computed(() =>
-          meta?.i18nKey ? t(`menu.${meta!.i18nKey}`) : meta?.noLocalTitle,
+          meta?.i18nKey ? t(`${meta!.i18nKey}`) : meta?.noLocalTitle,
         )
         /** 拼装菜单项 */
         const route = {

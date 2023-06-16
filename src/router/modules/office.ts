@@ -1,3 +1,5 @@
+import { t } from '@/locales/useI18n'
+
 import type { AppRouteRecordRaw } from '@/router/type'
 
 const office: AppRouteRecordRaw = {
@@ -5,7 +7,7 @@ const office: AppRouteRecordRaw = {
   name: 'Office',
   component: () => import('@/views/office/index'),
   meta: {
-    i18nKey: 'Office',
+    i18nKey: t('menu.Office'),
     icon: 'office',
     hidden: true,
   },

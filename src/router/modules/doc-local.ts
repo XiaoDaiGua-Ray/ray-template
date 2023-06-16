@@ -1,3 +1,5 @@
+import { t } from '@/locales/useI18n'
+
 import type { AppRouteRecordRaw } from '@/router/type'
 
 const docLocal: AppRouteRecordRaw = {
@@ -5,7 +7,7 @@ const docLocal: AppRouteRecordRaw = {
   name: 'DocLocal',
   component: () => import('@/views/doc/index'),
   meta: {
-    i18nKey: 'DocLocal',
+    i18nKey: t('menu.DocLocal'),
     icon: 'doc',
     windowOpen: 'https://ray-template.yunkuangao.com/ray-template-doc/',
     order: 6,

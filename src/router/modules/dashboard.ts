@@ -1,3 +1,5 @@
+import { t } from '@/locales/useI18n'
+
 import type { AppRouteRecordRaw } from '@/router/type'
 
 const dashboard: AppRouteRecordRaw = {
@@ -5,7 +7,7 @@ const dashboard: AppRouteRecordRaw = {
   name: 'Dashboard',
   component: () => import('@/views/dashboard/index'),
   meta: {
-    i18nKey: 'Dashboard',
+    i18nKey: t('menu.Dashboard'),
     icon: 'dashboard',
     order: 0,
   },

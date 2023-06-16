@@ -1,3 +1,19 @@
+/**
+ *
+ * 基于 `echarts` 的组件. 意在便捷的使用 `chart` 图
+ *
+ * 暂时不支持自动解析导入 `chart` 组件, 如果使用未注册的组件, 需要在顶部手动导入并且再使用 `use` 注册
+ *
+ * 预引入: 柱状图, 折线图, 饼图, k线图, 散点图等
+ * 预引入: 提示框, 标题, 直角坐标系, 数据集, 内置数据转换器等
+ *
+ * 如果需要大批量数据渲染, 可以通过获取实例后阶段性调用 `setOption` 方法注入数据
+ *
+ * 该组件会在卸载组件时, 自动释放资源
+ *
+ * 注意: 尽量别一次性倒入全部 `chart` 会造成打包体积异常大
+ */
+
 import './index.scss'
 
 import * as echarts from 'echarts/core' // `echarts` 核心模块
@@ -24,7 +40,7 @@ import { CanvasRenderer } from 'echarts/renderers' // `echarts` 渲染器
 
 import { useSetting } from '@/store'
 import { cloneDeep, debounce } from 'lodash-es'
-import { on, off, addStyle } from '@/utils/element'
+import { on, off, addStyle, completeSize } from '@/utils/element'
 
 import type { PropType } from 'vue'
 
@@ -209,8 +225,8 @@ const RayChart = defineComponent({
 
     const cssVarsRef = computed(() => {
       const cssVars = {
-        '--ray-chart-width': props.width,
-        '--ray-chart-height': props.height,
+        '--ray-chart-width': completeSize(props.width),
+        '--ray-chart-height': completeSize(props.height),
       }
 
       return cssVars
@@ -483,19 +499,3 @@ const RayChart = defineComponent({
 })
 
 export default RayChart
-
-/**
- *
- * 基于 `echarts` 的组件. 意在便捷的使用 `chart` 图
- *
- * 暂时不支持自动解析导入 `chart` 组件, 如果使用未注册的组件, 需要在顶部手动导入并且再使用 `use` 注册
- *
- * 预引入: 柱状图, 折线图, 饼图, k线图, 散点图等
- * 预引入: 提示框, 标题, 直角坐标系, 数据集, 内置数据转换器等
- *
- * 如果需要大批量数据渲染, 可以通过获取实例后阶段性调用 `setOption` 方法注入数据
- *
- * 该组件会在卸载组件时, 自动释放资源
- *
- * 注意: 尽量别一次性倒入全部 `chart` 会造成打包体积异常大
- */

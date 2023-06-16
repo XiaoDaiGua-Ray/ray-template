@@ -1,3 +1,5 @@
+import { t } from '@/locales/useI18n'
+
 import type { AppRouteRecordRaw } from '@/router/type'
 
 const echart: AppRouteRecordRaw = {
@@ -5,7 +7,7 @@ const echart: AppRouteRecordRaw = {
   name: 'Echart',
   component: () => import('@/views/echart/index'),
   meta: {
-    i18nKey: 'Echart',
+    i18nKey: t('menu.Echart'),
     icon: 'echart',
     order: 1,
   },
