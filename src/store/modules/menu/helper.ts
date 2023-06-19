@@ -14,6 +14,7 @@
 import { MENU_COLLAPSED_CONFIG, ROOT_ROUTE } from '@/appConfig/appConfig'
 import RayIcon from '@/components/RayIcon/index'
 import { validteValueType } from '@/utils/hook'
+import { getCache, setCache } from '@/utils/cache'
 
 import type { VNode } from 'vue'
 
@@ -155,4 +156,13 @@ export const hasMenuIcon = (option: IMenuOptions) => {
   )
 
   return () => icon
+}
+
+/** 获取缓存的 menu key, 如果未获取到则使用 ROOTROUTE path 当作默认激活路由菜单 */
+export const getCatchMenuKey = () => {
+  const { path: rootPath } = ROOT_ROUTE
+  const cacheMenuKey: MenuKey =
+    getCache('menuKey') === 'no' ? rootPath : getCache('menuKey')
+
+  return cacheMenuKey
 }

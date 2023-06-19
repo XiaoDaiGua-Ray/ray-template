@@ -21,7 +21,6 @@
 
 import { isEmpty } from 'lodash-es'
 import { removeCache } from '@/utils/cache'
-import { useMenu } from '@/store'
 
 import type {
   SigninForm,

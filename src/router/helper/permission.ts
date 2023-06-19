@@ -24,42 +24,23 @@ import { getCache, setCache } from '@/utils/cache'
 import { useSignin } from '@/store'
 import { APP_CATCH_KEY, ROOT_ROUTE } from '@/appConfig/appConfig'
 import { redirectRouterToDashboard } from '@/router/helper/routerCopilot'
+import { validRole, validMenuItemShow } from '@/router/helper/routerCopilot'
 
-import type { Router, NavigationGuardNext } from 'vue-router'
+import type {
+  Router,
+  NavigationGuardNext,
+  RouteLocationNormalized,
+} from 'vue-router'
 
 export const permissionRouter = (router: Router) => {
   const { beforeEach } = router
 
-  const { path } = ROOT_ROUTE
-
   beforeEach((to, from, next) => {
     const token = getCache(APP_CATCH_KEY.token)
     const route = getCache('menuKey')
-    const { signinCallback } = storeToRefs(useSignin())
-    const role = computed(() => signinCallback.value.role)
-    const { meta } = to
-
-    /**
-     *
-     * 检查是否有权限, 如果权限不匹配则重定向至首页(默认为 dashboard)
-     * 权限匹配使用严格比对, 对大小写、空格等敏感
-     */
-    const hasRole = () => {
-      /** 如果未设置权限则默认无需鉴权 */
-      if (meta.role) {
-        /** 空权限列表默认无需鉴权 */
-        if (meta.role.length === 0) {
-          return true
-        } else {
-          return meta.role.includes(role.value)
-        }
-      } else {
-        return true
-      }
-    }
 
     if (token !== 'no') {
-      if (hasRole()) {
+      if (validMenuItemShow(to as unknown as IMenuOptions)) {
         if (to.path === '/' || from.path === '/login') {
           if (route !== 'no') {
             next(route)

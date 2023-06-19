@@ -23,6 +23,7 @@ import { ROOT_ROUTE } from '@/appConfig/appConfig'
 import { setCache } from '@/utils/cache'
 
 import type { Router } from 'vue-router'
+import type { AppRouteMeta } from '@/router/type'
 
 /**
  *
@@ -31,17 +32,23 @@ import type { Router } from 'vue-router'
  *
  * 如果为超级管理员, 则会默认获取所有权限
  */
-export const validRole = (option: IMenuOptions) => {
+export const validRole = (meta: AppRouteMeta) => {
   const { signinCallback } = storeToRefs(useSignin())
   const role = computed(() => signinCallback.value.role)
 
-  const { meta } = option
+  const { role: metaRole } = meta
 
   if (SUPER_ADMIN?.length && SUPER_ADMIN.includes(role.value)) {
     return true
   } else {
-    if (meta?.role) {
-      return meta.role.includes(role.value)
+    // 如果 role 为 undefind 或者空数组, 则认为该路由不做权限过滤
+    if (!metaRole || !metaRole?.length) {
+      return true
+    }
+
+    // 判断是否含有该权限
+    if (metaRole) {
+      return metaRole.includes(role.value)
     }
 
     return true
@@ -63,7 +70,7 @@ export const validMenuItemShow = (option: IMenuOptions) => {
     meta?.hidden === undefined || meta?.hidden === false ? false : meta?.hidden
 
   // 如果是超级管理员(预设为 admin), 则根据其菜单栏(hidden)字段判断是否显示
-  if (validRole(option)) {
+  if (validRole(meta)) {
     return true && !hidden
   } else {
     // 如果为基础路由, 不进行鉴权则根据其菜单栏(hidden)字段判断是否显示
@@ -71,9 +78,14 @@ export const validMenuItemShow = (option: IMenuOptions) => {
       return true && !hidden
     }
 
+    // 如果 role 为 undefind 或者空数组, 则认为该路由不做权限过滤
+    if (!meta?.role || !meta.role?.length) {
+      return true && !hidden
+    }
+
     // 判断权限是否匹配和菜单栏(hidden)字段判断是否显示
-    if (meta?.role) {
-      return validRole(option) && !hidden
+    if (meta?.role && meta.role.length) {
+      return validRole(meta) && !hidden
     }
 
     return true && !hidden
@@ -127,7 +139,8 @@ export const redirectRouterToDashboard = (isReplace = true) => {
   const { push, replace } = router
   const { path } = ROOT_ROUTE
 
-  isReplace ? push(path) : replace(path)
-
   setCache('menuKey', path)
+  console.log('path', path)
+
+  isReplace ? push(path) : replace(path)
 }

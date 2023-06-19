@@ -23,7 +23,6 @@
  */
 
 import { NEllipsis } from 'naive-ui'
-import RayIcon from '@/components/RayIcon/index'
 
 import { getCache, setCache } from '@/utils/cache'
 import { validMenuItemShow } from '@/router/helper/routerCopilot'
@@ -32,9 +31,9 @@ import {
   matchMenuOption,
   updateDocumentTitle,
   hasMenuIcon,
+  getCatchMenuKey,
 } from './helper'
 import { useI18n } from '@/locales/useI18n'
-import { MENU_COLLAPSED_CONFIG, ROOT_ROUTE } from '@/appConfig/appConfig'
 import routeModules from '@/router/routeModules'
 import { useKeepAlive } from '@/store'
 import { useVueRouter } from '@/router/helper/useVueRouter'
@@ -50,13 +49,8 @@ export const useMenu = defineStore(
     const { t } = useI18n()
     const { setKeepAliveInclude } = useKeepAlive()
 
-    const { path: rootPath } = ROOT_ROUTE
-
-    const cacheMenuKey =
-      getCache('menuKey') === 'no' ? rootPath : getCache('menuKey')
-
     const menuState = reactive({
-      menuKey: cacheMenuKey as MenuKey, // 当前菜单 `key`
+      menuKey: getCatchMenuKey(), // 当前菜单 `key`
       options: [] as IMenuOptions[], // 菜单列表
       collapsed: false, // 是否折叠菜单
       menuTagOptions: [] as MenuTagOptions[], // tag 标签菜单
@@ -196,7 +190,7 @@ export const useMenu = defineStore(
           icon: hasMenuIcon(option),
         })
 
-        if (option.path === cacheMenuKey) {
+        if (option.path === getCatchMenuKey()) {
           /** 设置菜单标签 */
           setMenuTagOptions(attr)
           /** 设置浏览器标题 */

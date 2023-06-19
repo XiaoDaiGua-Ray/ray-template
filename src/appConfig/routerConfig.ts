@@ -44,7 +44,7 @@ export const SETUP_ROUTER_GUARD = true
  * 可以根据权限与白名单进行过滤, 但是 meta hidden 属性拥有最高的控制权限
  * 如果 mete hidden 设置为 false 则永远不会显示菜单选项
  */
-export const WHITE_ROUTES = ['login', 'error-page', 'doc']
+export const WHITE_ROUTES = ['RLogin', 'ErrorPage', 'RayTemplateDoc']
 
 /**
  *
