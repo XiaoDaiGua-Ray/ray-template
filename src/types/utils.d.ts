@@ -6,7 +6,7 @@ import type { VNodeChild } from 'vue'
 
 export global {
   declare interface IUnknownObjectKey {
-    [propName: string]: unknown
+    [propName: string]: any
   }
 
   declare type EventListenerOrEventListenerObject =

@@ -36,7 +36,7 @@ export const useSetting = defineStore(
       breadcrumbSwitch: true, // 面包屑开关
       localeLanguage: getDefaultLocal(),
       lockScreenSwitch: false, // 锁屏开关
-      lockScreenInputSwitch: false, // 锁屏输入状态开关
+      lockScreenInputSwitch: false, // 锁屏输入状态开关(预留该字段是为了方便拓展用, 但是舍弃了该字段, 改为使用 useAppLockScreen 方法)
     })
 
     /** 修改当前语言 */

@@ -9,6 +9,12 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
+/**
+ *
+ * 该页面使用了 RayTooltipIcon 组件, 这个组件其实并不合理
+ * 所以在后续的小版本中会舍弃这个组件
+ */
+
 import './index.scss'
 
 import { NLayoutHeader, NSpace, NTooltip, NDropdown } from 'naive-ui'

@@ -47,6 +47,14 @@ const UnlockScreen = defineComponent({
       YY_MM_DD: dayjs().format(YY_MM_DD_FORMAT),
       DDD: dayjs().format(DDD_FORMAT),
     })
+    const dayInterval = setInterval(() => {
+      state.HH_MM = dayjs().format(HH_MM_FORMAT)
+      state.AM_PM = dayjs().format(AM_PM_FORMAT)
+    }, 6_000)
+    const yearInterval = setInterval(() => {
+      state.YY_MM_DD = dayjs().format(YY_MM_DD_FORMAT)
+      state.DDD = dayjs().format(DDD_FORMAT)
+    }, 86_400_000)
 
     /** 退出登陆并且回到登陆页 */
     const backToSignin = () => {
@@ -77,6 +85,11 @@ const UnlockScreen = defineComponent({
     }
 
     autoFouceInput(inputInstRef)
+
+    onBeforeUnmount(() => {
+      clearInterval(dayInterval)
+      clearInterval(yearInterval)
+    })
 
     return {
       ...toRefs(state),
