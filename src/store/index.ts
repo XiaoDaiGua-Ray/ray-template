@@ -26,7 +26,7 @@ export { useKeepAlive } from './modules/keep-alive/index'
 import type { App } from 'vue'
 
 /** 设置并且注册 pinia */
-export const setupStore = (app: App<Element>) => {
+export const setupStore = async (app: App<Element>) => {
   const store = createPinia()
 
   app.use(store)

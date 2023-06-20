@@ -38,7 +38,7 @@ import type { IconEventMapOptions, IconEventMap } from './type'
 
 const SiderBar = defineComponent({
   name: 'SiderBar',
-  setup(_, { expose }) {
+  setup() {
     const settingStore = useSetting()
 
     const { t } = useI18n()

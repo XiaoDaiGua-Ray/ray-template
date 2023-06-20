@@ -21,7 +21,7 @@ const setupTemplate = async () => {
 
   await setupI18n(app)
 
-  setupStore(app)
+  await setupStore(app)
 
   setupRouter(app)
 
@@ -43,7 +43,7 @@ const setupWujieTemplate = async () => {
 
     await setupI18n(instance)
 
-    setupStore(instance)
+    await setupStore(instance)
 
     setupRouter(instance)
 

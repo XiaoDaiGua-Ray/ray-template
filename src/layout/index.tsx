@@ -24,6 +24,7 @@ import {
   LAYOUT_CONTENT_REF,
 } from '@/appConfig/routerConfig'
 import { layoutHeaderCssVars } from '@/layout/layoutResize'
+import useAppLockScreen from '@/components/AppComponents/AppLockScreen/appLockVar'
 
 const Layout = defineComponent({
   name: 'RLayout',
@@ -37,9 +38,7 @@ const Layout = defineComponent({
     const { height: windowHeight } = useWindowSize()
     const { menuTagSwitch: modelMenuTagSwitch } = storeToRefs(settingStore)
     const { setupAppRoutes } = menuStore
-    const isLock = useStorage('isLockScreen', false, sessionStorage, {
-      mergeDefaults: true,
-    })
+    const { getLockAppScreen } = useAppLockScreen()
     const cssVarsRef = layoutHeaderCssVars([
       layoutSiderBarRef,
       layoutMenuTagRef,
@@ -53,7 +52,7 @@ const Layout = defineComponent({
       windowHeight,
       modelMenuTagSwitch,
       cssVarsRef,
-      isLock,
+      getLockAppScreen,
       LAYOUT_CONTENT_REF,
       layoutSiderBarRef,
       layoutMenuTagRef,
@@ -65,7 +64,7 @@ const Layout = defineComponent({
         class={['layout']}
         style={[`height: ${this.windowHeight}px`, this.cssVarsRef]}
       >
-        {!this.isLock ? (
+        {!this.getLockAppScreen() ? (
           <NLayout class="layout-full" hasSider>
             <Menu />
             <NLayout class="layout__view-container__layout">
