@@ -19,6 +19,8 @@
  *
  * root path 标签不可被关闭, 所以不会显示关闭按钮
  * 页面刷新后, 仅会保留刷新前激活 key 的 tag 标签
+ *
+ * 注入 MENU_TAG_DATA 属性, 用于动态更新 MenuTag 标签所在的位置
  */
 
 import './index.scss'
@@ -31,6 +33,7 @@ import { uuid } from '@/utils/hook'
 import { hasClass } from '@/utils/element'
 import { redirectRouterToDashboard } from '@/router/helper/routerCopilot'
 import { ROOT_ROUTE } from '@/appConfig/appConfig'
+import { getElement } from '@use-utils/element'
 
 import type { MenuOption, ScrollbarInst } from 'naive-ui'
 
@@ -205,6 +208,7 @@ const MenuTag = defineComponent({
       y: 0,
       actionDropdownShow: false,
     })
+    const MENU_TAG_DATA = 'menu_tag_data'
 
     /**
      *
@@ -373,6 +377,19 @@ const MenuTag = defineComponent({
       }
     }
 
+    /** 动态更新 menu tag 所在位置 */
+    const positionMenuTag = () => {
+      nextTick().then(() => {
+        const tags = getElement(`attr:${MENU_TAG_DATA}="${menuKey.value}"`)
+
+        if (tags?.length) {
+          const [menuTag] = tags
+
+          menuTag.scrollIntoView?.()
+        }
+      })
+    }
+
     /** 如果有且只有一个标签页时, 禁止全部关闭操作 */
     watch(
       () => modelMenuTagOptions.value,
@@ -388,6 +405,8 @@ const MenuTag = defineComponent({
         if (oldData?.length) {
           if (newData.length > oldData?.length) {
             updateScrollBarPosition()
+          } else if (newData.length === oldData?.length) {
+            positionMenuTag()
           }
         }
       },
@@ -423,6 +442,7 @@ const MenuTag = defineComponent({
       setCurrentContentmenuIndex,
       menuTagMouseenter,
       menuTagMouseleave,
+      MENU_TAG_DATA,
     }
   },
   render() {
@@ -482,7 +502,7 @@ const MenuTag = defineComponent({
                       onContextmenu: this.handleContextMenu.bind(this, idx),
                       onMouseenter: this.menuTagMouseenter.bind(this, curr),
                       onMouseleave: this.menuTagMouseleave.bind(this, curr),
-                      tag_data: curr.path,
+                      [this.MENU_TAG_DATA]: curr.path,
                     }}
                   >
                     {typeof curr.label === 'function'

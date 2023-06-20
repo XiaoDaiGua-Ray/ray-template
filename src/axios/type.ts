@@ -83,13 +83,23 @@ export type RequestInterceptorConfig<T = any> = InternalAxiosRequestConfig<T>
 
 export type ResponseInterceptorConfig<T = any, K = any> = AxiosResponse<T, K>
 
-export type ImplementKey = 'requestInstance' | 'responseInstance'
-
 export interface ImplementQueue {
   implementRequestInterceptorArray: AnyFunc[]
   implementResponseInterceptorArray: AnyFunc[]
 }
 
-export type ImplementFunction<
+export interface ErrorImplementQueue {
+  implementRequestInterceptorErrorArray: AnyFunc[]
+  implementResponseInterceptorErrorArray: AnyFunc[]
+}
+
+export type BeforeFetchFunction<
   T = RequestInterceptorConfig | ResponseInterceptorConfig,
 > = <K extends T>(ins: K, mode: string) => void
+
+export type FetchType = 'ok' | 'error'
+
+export type FetchErrorFunction<T = any> = <K extends T>(
+  error: K,
+  mode: string,
+) => void

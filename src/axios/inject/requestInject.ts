@@ -14,6 +14,8 @@
  * 请求拦截器入口
  * 被注册方法执行时其实例能够保证获取到, 所以不需要做额外空判断
  * 在内部执行方法中, 已经做了边界处理
+ *
+ * 提供两个工具方法, 方便类型推导
  */
 
 import { useAxiosInterceptor, axiosCanceler } from '@/axios/helper/interceptor'
@@ -21,8 +23,12 @@ import { appendRequestHeaders } from '@/axios/helper/axiosCopilot'
 import { APP_CATCH_KEY } from '@/appConfig/appConfig'
 import { getCache } from '@/utils/cache'
 
-import type { RequestInterceptorConfig, ImplementFunction } from '@/axios/type'
-const { setImplementQueue } = useAxiosInterceptor()
+import type {
+  RequestInterceptorConfig,
+  BeforeFetchFunction,
+  FetchErrorFunction,
+} from '@/axios/type'
+const { setImplement } = useAxiosInterceptor()
 
 /**
  *
@@ -46,7 +52,7 @@ const requestHeaderToken = (ins: RequestInterceptorConfig, mode: string) => {
 }
 
 /** 注入请求头信息 */
-const injectRequestHeaders: ImplementFunction<RequestInterceptorConfig> = (
+const injectRequestHeaders: BeforeFetchFunction<RequestInterceptorConfig> = (
   ins,
   mode,
 ) => {
@@ -60,7 +66,7 @@ const injectRequestHeaders: ImplementFunction<RequestInterceptorConfig> = (
 }
 
 /** 注入重复请求拦截器 */
-const injectCanceler: ImplementFunction<RequestInterceptorConfig> = (
+const injectCanceler: BeforeFetchFunction<RequestInterceptorConfig> = (
   ins,
   mode,
 ) => {
@@ -68,11 +74,28 @@ const injectCanceler: ImplementFunction<RequestInterceptorConfig> = (
   axiosCanceler.addPendingRequest(ins) // 把当前的请求信息添加到 pendingRequest 表中
 }
 
+const requestError: FetchErrorFunction<unknown> = (error, mode) => {
+  console.log(error, mode)
+}
+
 /**
  *
  * 注册请求拦截器
- * 请注意执行顺序, setImplementQueue 方法按照注册顺序执行
+ * 请注意执行顺序
  */
 export const setupRequestInterceptor = () => {
-  setImplementQueue([injectRequestHeaders, injectCanceler], 'requestInstance')
+  setImplement(
+    'implementRequestInterceptorArray',
+    [injectRequestHeaders, injectCanceler],
+    'ok',
+  )
+}
+
+/**
+ *
+ * 注册请求错误拦截器
+ * 请注意执行顺序
+ */
+export const setupRequestErrorInterceptor = () => {
+  setImplement('implementRequestInterceptorErrorArray', [requestError], 'error')
 }

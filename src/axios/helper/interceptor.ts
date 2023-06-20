@@ -16,7 +16,8 @@
  * 请求拦截器、响应拦截器
  * 暴露启动方法调用所有已注册方法
  *
- * 为什么要把 create 方法拆成两个, emmmmmm 我也不知道
+ * 该拦截器仅适合放置公共的 axios 拦截器操作, 并且采用队列形式管理请求拦截器的注入
+ * 所以在使用的时候, 需要按照约定格式进行参数传递
  */
 
 import RequestCanceler from '@/axios/helper/canceler'
@@ -25,73 +26,116 @@ import { getAppEnvironment } from '@use-utils/hook'
 import type {
   RequestInterceptorConfig,
   ResponseInterceptorConfig,
-  ImplementKey,
   ImplementQueue,
+  ErrorImplementQueue,
+  FetchType,
 } from '@/axios/type'
 
+/** 当前请求的实例 */
 const axiosFetchInstance = {
   requestInstance: null as RequestInterceptorConfig | null,
   responseInstance: null as ResponseInterceptorConfig | null,
 }
+const axiosFetchError = {
+  requestError: null as null | unknown,
+  responseError: null as null | unknown,
+}
+/** 请求队列(区分 reslove 与 reject 状态) */
 const implement: ImplementQueue = {
   implementRequestInterceptorArray: [],
   implementResponseInterceptorArray: [],
 }
+const errorImplement: ErrorImplementQueue = {
+  implementRequestInterceptorErrorArray: [],
+  implementResponseInterceptorErrorArray: [],
+}
+/** 取消器实例 */
 export const axiosCanceler = new RequestCanceler()
 
 export const useAxiosInterceptor = () => {
-  const getImplementKey = (key: ImplementKey) => {
-    return key === 'requestInstance'
-      ? 'implementRequestInterceptorArray'
-      : 'implementResponseInterceptorArray'
+  /** 创建拦截器实例 */
+  const createAxiosInstance = (
+    instance: RequestInterceptorConfig | ResponseInterceptorConfig,
+    instanceKey: keyof typeof axiosFetchInstance,
+  ) => {
+    instanceKey === 'requestInstance'
+      ? (axiosFetchInstance['requestInstance'] =
+          instance as RequestInterceptorConfig)
+      : (axiosFetchInstance['responseInstance'] =
+          instance as ResponseInterceptorConfig)
   }
 
-  const createRequestAxiosInstance = (instance: RequestInterceptorConfig) => {
-    axiosFetchInstance['requestInstance'] = instance
+  /** 获取当前实例 */
+  const getAxiosInstance = (instanceKey: keyof typeof axiosFetchInstance) => {
+    return axiosFetchInstance[instanceKey]
   }
 
-  const createResponseAxiosInstance = (instance: ResponseInterceptorConfig) => {
-    axiosFetchInstance['responseInstance'] = instance
+  /** 设置注入方法队列 */
+  const setImplement = (
+    key: keyof ImplementQueue | keyof ErrorImplementQueue,
+    func: AnyFunc[],
+    fetchType: FetchType,
+  ) => {
+    fetchType === 'ok' ? (implement[key] = func) : (errorImplement[key] = func)
   }
 
-  /** 获取请求实例或者响应实例 */
-  const getAxiosFetchInstance = (key: ImplementKey) => {
-    return axiosFetchInstance[key]
+  /** 获取队列中所有的所有拦截器方法 */
+  const getImplement = (
+    key: keyof ImplementQueue | keyof ErrorImplementQueue,
+    fetchType: FetchType,
+  ): AnyFunc[] => {
+    return fetchType === 'ok' ? implement[key] : errorImplement[key]
   }
 
-  /** 请求前, 执行队列所有方法 */
-  const beforeAxiosFetch = (key: ImplementKey) => {
-    const funcArr = implement[getImplementKey(key)]
-    const instance = getAxiosFetchInstance(key)
-    const { MODE } = getAppEnvironment()
-
-    if (instance) {
-      funcArr?.forEach((curr) => {
+  /** 队列执行器 */
+  const implementer = (funcs: AnyFunc[], ...args: any[]) => {
+    if (Array.isArray(funcs)) {
+      funcs?.forEach((curr) => {
         if (typeof curr === 'function') {
-          curr(instance, MODE)
+          curr(...args)
         }
       })
     }
   }
 
-  /** 设置拦截器队列 */
-  const setImplementQueue = (func: AnyFunc[], key: ImplementKey) => {
-    if (func && key) {
-      implement[getImplementKey(key)] = func
+  /** 请求、响应前执行拦截器队列中的所有方法 */
+  const beforeFetch = (
+    key: keyof typeof axiosFetchInstance,
+    implementKey: keyof ImplementQueue | keyof ErrorImplementQueue,
+    fetchType: FetchType,
+  ) => {
+    const funcArr =
+      fetchType === 'ok'
+        ? implement[implementKey]
+        : errorImplement[implementKey]
+    const instance = getAxiosInstance(key)
+    const { MODE } = getAppEnvironment()
+
+    if (instance) {
+      implementer(funcArr, instance, MODE)
     }
   }
 
-  /** 获取拦截器队列 */
-  const getImplementQueue = (key: ImplementKey) => {
-    return implement[getImplementKey(key)]
+  /** 请求、响应错误时执行队列中所有方法 */
+  const fetchError = (
+    key: keyof typeof axiosFetchError,
+    error: unknown,
+    errorImplementKey: keyof ErrorImplementQueue,
+  ) => {
+    axiosFetchError[key] = error
+
+    const funcArr = errorImplement[errorImplementKey]
+    const { MODE } = getAppEnvironment()
+
+    implementer(funcArr, error, MODE)
   }
 
   return {
-    createRequestAxiosInstance,
-    createResponseAxiosInstance,
-    beforeAxiosFetch,
-    setImplementQueue,
-    getImplementQueue,
-    getAxiosFetchInstance,
+    createAxiosInstance,
+    setImplement,
+    getImplement,
+    getAxiosInstance,
+    beforeFetch,
+    fetchError,
   }
 }
