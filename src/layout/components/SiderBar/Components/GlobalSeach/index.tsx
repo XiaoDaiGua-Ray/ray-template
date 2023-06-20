@@ -120,6 +120,19 @@ const GlobalSeach = defineComponent({
       }
     }
 
+    /** 渲染搜索菜单前缀图标, 如果没有则用 icon table 代替 */
+    const RenderPreIcon = (meta: AppRouteMeta) => {
+      const { icon } = meta
+
+      if (typeof icon === 'string') {
+        return <RayIcon name={icon} size="24" />
+      } else if (typeof icon === 'function') {
+        return () => icon
+      } else {
+        return <RayIcon name="table" size="24" />
+      }
+    }
+
     onMounted(() => {
       on(window, 'keydown', registerKeyboard)
     })
@@ -134,6 +147,7 @@ const GlobalSeach = defineComponent({
       tiptextOptions,
       handleSearchMenuOptions: debounce(handleSearchMenuOptions, 300),
       handleSearchItemClick,
+      RenderPreIcon,
     }
   },
   render() {
@@ -167,7 +181,7 @@ const GlobalSeach = defineComponent({
                         }}
                       >
                         <div class="content-item-icon">
-                          <RayIcon name="table" size="24" />
+                          {this.RenderPreIcon(curr.meta)}
                         </div>
                         <div class="content-item-label">
                           {curr.breadcrumbLabel}

@@ -16,7 +16,6 @@
  *   - getAppLocales: 获取所有语言
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { set } from 'lodash-es'
 import { zhCN, dateZhCN } from 'naive-ui' // 导入 `naive ui` 中文包
 import { getCache } from '@use-utils/cache'
@@ -25,7 +24,19 @@ import { APP_CATCH_KEY } from '@/appConfig/appConfig'
 
 import type { Recordable } from '@/types/type-utils'
 
-export const mergeMessage = (langs: Record<string, any>, prefix = 'lang') => {
+/**
+ *
+ * @param langs 语言包
+ * @param prefix 语言包前缀
+ *
+ * @remark 合并处理语言包内容, prefix 必填
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const mergeMessage = (langs: Record<string, any>, prefix: string) => {
+  if (!prefix) {
+    throw new Error('Expected prefix to be string, got undefined instead')
+  }
+
   const langsGather: Recordable = {}
 
   Object.keys(langs).forEach((key) => {

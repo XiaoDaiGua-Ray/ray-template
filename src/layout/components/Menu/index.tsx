@@ -7,15 +7,25 @@ import { useMenu } from '@/store'
 import { MENU_COLLAPSED_CONFIG, MENU_ACCORDION } from '@/appConfig/appConfig'
 import { useVueRouter } from '@/router/helper/useVueRouter'
 
+import type { MenuInst } from 'naive-ui'
+
 const LayoutMenu = defineComponent({
   name: 'LayoutMenu',
   setup() {
+    const menuRef = ref<MenuInst | null>(null)
+
     const menuStore = useMenu()
     const { router } = useVueRouter()
 
     const { menuModelValueChange, collapsedMenu } = menuStore
     const modelMenuKey = computed({
-      get: () => menuStore.menuKey,
+      get: () => {
+        nextTick().then(() => {
+          menuRef.value?.showOption?.(menuStore.menuKey as string)
+        })
+
+        return menuStore.menuKey
+      },
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       set: () => {},
     })
@@ -41,6 +51,7 @@ const LayoutMenu = defineComponent({
       collapsedMenu,
       sideBarLogo,
       handleSideBarLogoClick,
+      menuRef,
     }
   },
   render() {
@@ -79,6 +90,7 @@ const LayoutMenu = defineComponent({
           ''
         )}
         <NMenu
+          ref="menuRef"
           v-model:value={this.modelMenuKey}
           options={this.modelMenuOptions as NaiveMenuOptions[]}
           indent={MENU_COLLAPSED_CONFIG.MENU_COLLAPSED_INDENT}
