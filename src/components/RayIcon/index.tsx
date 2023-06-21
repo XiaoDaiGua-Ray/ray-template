@@ -48,10 +48,10 @@ const RayIcon = defineComponent({
       type: Number,
       default: 1,
     },
-    cursorPointer: {
-      /** 是否启用小手鼠标类型 */
-      type: Boolean,
-      default: false,
+    cursor: {
+      /** 鼠标指针样式 */
+      type: String,
+      default: 'default',
     },
   },
   emits: ['click'],
@@ -69,10 +69,7 @@ const RayIcon = defineComponent({
           ? props.height + 'px'
           : props.size + 'px',
         '--ray-icon-depth': props.depth,
-      }
-
-      if (props.cursorPointer) {
-        cssVar['cursor'] = 'pointer'
+        '--ray-icon-cursor': props.cursor,
       }
 
       return cssVar
@@ -97,7 +94,7 @@ const RayIcon = defineComponent({
         onClick={this.handleClick.bind(this)}
       >
         <svg
-          {...({ rayIconAttribute: 'ray-icon', ariaHidden: true } as object)}
+          {...({ RayIconAttribute: 'ray-icon', ariaHidden: true } as object)}
         >
           <use {...{ 'xlink:href': this.symbolId }} fill={this.modelColor} />
         </svg>

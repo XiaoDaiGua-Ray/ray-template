@@ -84,8 +84,6 @@ const UnlockScreen = defineComponent({
       })
     }
 
-    autoFouceInput(inputInstRef)
-
     onBeforeUnmount(() => {
       clearInterval(dayInterval)
       clearInterval(yearInterval)

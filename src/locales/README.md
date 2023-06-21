@@ -12,7 +12,7 @@
 
 #### 注意
 
-> 该项目语言包使用 json 格式作为语言包管理格式
+> 该项目语言包使用 json 格式作为语言包管理格式，为了配合 `@intlify/unplugin-vue-i18n/vite` 插件，故而采用 json。
 
 #### 拓展方法
 
@@ -22,7 +22,7 @@
 
 ### helper 文件说明
 
-- `getAppLocales` 获取系统所有语言包
+- `getAppLocales` 获取系统所有语言包（该方法强制依赖 LOCAL_OPTIONS key 配置，意味着你在配置语言包的时候，key 必须与 `src/locales/lang/xxx.ts` 一一对应匹配）
 - `naiveLocales` 获取 `naive-ui` 组件库对应语言包文件
 - `getDefaultLocal` 获取系统当前默认语言包
 

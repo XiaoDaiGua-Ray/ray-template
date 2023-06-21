@@ -41,7 +41,7 @@ const AppLockScreen = defineComponent({
     return (
       <NModal
         v-model:show={this.lockScreenSwitch}
-        transform-origin="center"
+        transformOrigin="center"
         show
         maskClosable={false}
         closeOnEsc={false}

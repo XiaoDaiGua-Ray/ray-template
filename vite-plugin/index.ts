@@ -16,7 +16,7 @@ import type { ViteSvgIconsPlugin } from 'vite-plugin-svg-icons'
  *
  * 使用 `svg` 作为图标
  */
-export const useSVGIcon = (options?: ViteSvgIconsPlugin) => {
+export const viteSVGIcon = (options?: ViteSvgIconsPlugin) => {
   const defaultOptions = {
     iconDirs: [path.resolve(process.cwd(), 'src/icons')],
     symbolId: 'icon-[dir]-[name]',
@@ -34,7 +34,7 @@ export const useSVGIcon = (options?: ViteSvgIconsPlugin) => {
  *
  * 自动导入
  */
-export const useAutoImport = async (imp: (ImportsMap | PresetName)[] = []) =>
+export const viteAutoImport = async (imp: (ImportsMap | PresetName)[] = []) =>
   autoImport({
     include: [
       /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
@@ -53,7 +53,7 @@ export const useAutoImport = async (imp: (ImportsMap | PresetName)[] = []) =>
  *
  * 按需加载
  */
-export const useViteComponents = async (
+export const viteComponents = async (
   resolvers: (ComponentResolver | ComponentResolver[])[] = [],
   types: TypeImport[] = [],
 ) =>
@@ -69,7 +69,7 @@ export const useViteComponents = async (
     ],
   })
 
-export const useVueI18nPlugin = () =>
+export const viteVueI18nPlugin = () =>
   vueI18nPlugin({
     runtimeOnly: true,
     compositionOnly: true,

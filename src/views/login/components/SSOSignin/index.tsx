@@ -67,7 +67,7 @@ const SSOSignin = defineComponent({
                 <RayIcon
                   name={curr.icon}
                   size="24"
-                  cursorPointer
+                  cursor="pointer"
                   onClick={this.handleSSOSigninClick.bind(this, curr)}
                 />
               ),

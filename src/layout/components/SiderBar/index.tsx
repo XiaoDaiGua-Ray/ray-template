@@ -11,15 +11,16 @@
 
 /**
  *
- * 该页面使用了 RayTooltipIcon 组件, 这个组件其实并不合理
- * 所以在后续的小版本中会舍弃这个组件
+ * 本来想通过写数据配置化的方式实现顶部的功能小按钮, 结果事实发现...
+ *
+ * 但是我又不想改, 就这样吧
  */
 
 import './index.scss'
 
 import { NLayoutHeader, NSpace, NTooltip, NDropdown } from 'naive-ui'
 import RayIcon from '@/components/RayIcon/index'
-import RayTooltipIcon from '@/components/RayTooltipIcon/index'
+import TootipIcon from '@/layout/components/SiderBar/components/TooltipIcon/index'
 import SettingDrawer from './components/SettingDrawer/index'
 import Breadcrumb from './components/Breadcrumb/index'
 import GlobalSeach from './components/GlobalSeach/index'
@@ -34,13 +35,6 @@ import { useI18n } from '@/locales/useI18n'
 import { APP_CATCH_KEY } from '@/appConfig/appConfig'
 
 import type { IconEventMapOptions, IconEventMap } from './type'
-
-/**
- *
- * 本来想通过写数据配置化的方式实现顶部的功能小按钮, 结果事实发现...
- *
- * 但是我又不想改, 就这样吧
- */
 
 const SiderBar = defineComponent({
   name: 'SiderBar',
@@ -130,8 +124,6 @@ const SiderBar = defineComponent({
       iconEventMap[key]?.()
     }
 
-    // expose({})
-
     return {
       leftIconOptions,
       rightTooltipIconOptions,
@@ -183,7 +175,7 @@ const SiderBar = defineComponent({
             itemStyle={this.spaceItemStyle}
           >
             {this.rightTooltipIconOptions.map((curr) => (
-              <RayTooltipIcon
+              <TootipIcon
                 iconName={curr.name}
                 tooltipText={curr.tooltip}
                 onClick={this.handleIconClick.bind(this, curr.name)}

@@ -2,21 +2,21 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
 import {
-  useAutoImport,
-  useViteComponents,
-  useVueI18nPlugin,
-  useSVGIcon,
+  viteAutoImport,
+  viteComponents,
+  viteVueI18nPlugin,
+  viteSVGIcon,
 } from './vite-plugin/index'
 
-import ViteVueJSX from '@vitejs/plugin-vue-jsx'
-import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
-import ViteInspect from 'vite-plugin-inspect'
+import viteVueJSX from '@vitejs/plugin-vue-jsx'
+import viteVeI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
+import viteInspect from 'vite-plugin-inspect'
 import viteSvgLoader from 'vite-svg-loader'
 import viteEslintPlugin from 'vite-plugin-eslint'
 import vitePluginImp from 'vite-plugin-imp' // 按需打包工具
 import { visualizer } from 'rollup-plugin-visualizer' // 打包体积分析工具
 import viteCompression from 'vite-plugin-compression' // 压缩打包
-import { ViteEjsPlugin } from 'vite-plugin-ejs'
+import { ViteEjsPlugin as viteEjsPlugin } from 'vite-plugin-ejs'
 
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers' // 模板自动导入组件并且按需打包
 
@@ -68,11 +68,11 @@ export default defineConfig(async ({ mode }) => {
     },
     plugins: [
       vue({ reactivityTransform: true }),
-      ViteVueJSX(),
+      viteVueJSX(),
       title,
-      ViteInspect(), // 仅适用于开发模式(检查 `Vite` 插件的中间状态)
-      VueI18nPlugin(),
-      await useAutoImport([
+      viteInspect(), // 仅适用于开发模式(检查 `Vite` 插件的中间状态)
+      viteVeI18nPlugin(),
+      await viteAutoImport([
         {
           'naive-ui': [
             'useDialog',
@@ -82,13 +82,13 @@ export default defineConfig(async ({ mode }) => {
           ],
         },
       ]),
-      await useViteComponents([NaiveUiResolver()]),
+      await viteComponents([NaiveUiResolver()]),
       viteCompression(),
-      useVueI18nPlugin(),
+      viteVueI18nPlugin(),
       viteSvgLoader({
         defaultImport: 'component', // 默认以 `componetn` 形式导入 `svg`
       }),
-      useSVGIcon(),
+      viteSVGIcon(),
       viteEslintPlugin({
         lintOnStart: true, // 构建时自动检查
         failOnWarning: true, // 如果含有警告则构建失败
@@ -128,7 +128,7 @@ export default defineConfig(async ({ mode }) => {
         filename: 'visualizer.html',
         open: mode === 'report' ? true : false, // 以默认服务器代理打开文件
       }),
-      ViteEjsPlugin({
+      viteEjsPlugin({
         preloadingConfig,
         appPrimaryColor,
       }),

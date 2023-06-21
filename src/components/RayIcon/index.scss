@@ -11,8 +11,9 @@
   fill: currentColor;
   transform: translateZ(0);
   opacity: var(--ray-icon-depth);
+  cursor: var(--ray-icon-cursor);
 
-  & svg[rayIconAttribute="ray-icon"] {
+  & svg[RayIconAttribute="ray-icon"] {
     width: var(--ray-icon-width);
     height: var(--ray-icon-height);
   }

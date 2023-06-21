@@ -16,11 +16,11 @@ export const useSetting = defineStore(
     const {
       appPrimaryColor: { primaryColor },
     } = __APP_CFG__ // 默认主题色
-    const { t, locale } = useI18n()
+    const { locale } = useI18n()
     const { locale: dayjsLocal } = useDayjs()
 
     const settingState = reactive<SettingState>({
-      drawerPlacement: 'right' as NaiveDrawerPlacement,
+      drawerPlacement: 'right',
       primaryColorOverride: {
         ...APP_NAIVE_UI_THEME_OVERRIDES,
         common: {

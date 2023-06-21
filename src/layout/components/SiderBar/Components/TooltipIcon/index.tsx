@@ -16,8 +16,8 @@ import RayIcon from '@/components/RayIcon/index'
 
 import { tooltipProps } from 'naive-ui'
 
-const RayTooltipIcon = defineComponent({
-  name: 'RayTooltipIcon',
+const TooltipIcon = defineComponent({
+  name: 'TooltipIcon',
   props: {
     ...tooltipProps,
     iconName: {
@@ -38,7 +38,6 @@ const RayTooltipIcon = defineComponent({
     const handleClick = (e?: MouseEvent) => {
       emit('click', e)
     }
-
     return {
       handleClick,
     }
@@ -51,7 +50,7 @@ const RayTooltipIcon = defineComponent({
             <RayIcon
               name={this.iconName}
               size="18"
-              customClassName={`ray-tooltip-text__icon ${this.customClassName}`}
+              customClassName={`tooltip-text__icon ${this.customClassName}`}
               onClick={this.handleClick.bind(this)}
             />
           ),
@@ -62,4 +61,4 @@ const RayTooltipIcon = defineComponent({
   },
 })
 
-export default RayTooltipIcon
+export default TooltipIcon

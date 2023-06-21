@@ -56,7 +56,6 @@ module.exports = {
     ],
     'accessor-pairs': 2, // 强制同时存在 `get` 与 `set`
     'constructor-super': 0, // 强制子类构造函数中使用 `super` 调用父类的构造函数
-    curly: [2, 'all'], // `if`、`else` 强制使用 `{}` 包裹
     'default-case': 2, // `switch` 中强制含有 `default`
     eqeqeq: [2, 'allow-null'], // 强制使用严格判断 `===`
     'no-alert': 0, // 禁止使用 `alert`、`confirm`
@@ -113,6 +112,7 @@ module.exports = {
     'use-isnan': 2, // 强制使用 isNaN 判断 NaN
     'no-multi-assign': 2, // 禁止连续声明变量
     'prefer-arrow-callback': 2, // 强制使用箭头函数作为回调
+    curly: ['error', 'all'],
     'vue/multi-word-component-names': [
       'error',
       {
@@ -166,5 +166,21 @@ module.exports = {
       },
     ],
     'vue/no-unused-refs': ['error'],
+    'vue/prop-name-casing': ['error', 'camelCase'],
+    'vue/component-options-name-casing': ['error', 'camelCase'],
+    'vue/attribute-hyphenation': [
+      'error',
+      'never',
+      {
+        ignore: [],
+      },
+    ],
+    'vue/no-restricted-static-attribute': [
+      'error',
+      {
+        key: 'key',
+        message: 'Disallow using key as a custom attribute',
+      },
+    ],
   },
 }
