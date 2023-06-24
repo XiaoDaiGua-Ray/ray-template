@@ -6,7 +6,7 @@ import { LAYOUT } from '@/router/constant/index'
 
 const rely: AppRouteRecordRaw = {
   path: '/rely',
-  name: 'Rely',
+  name: 'RelyAbout',
   component: LAYOUT,
   meta: {
     i18nKey: t('menu.Rely'),

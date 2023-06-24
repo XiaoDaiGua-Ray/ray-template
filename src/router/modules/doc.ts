@@ -4,7 +4,7 @@ import type { AppRouteRecordRaw } from '@/router/type'
 
 const doc: AppRouteRecordRaw = {
   path: '/doc',
-  name: 'Doc',
+  name: 'RDoc',
   component: () => import('@/views/doc/index'),
   meta: {
     i18nKey: t('menu.Doc'),

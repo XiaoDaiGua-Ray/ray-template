@@ -59,6 +59,7 @@ const RayCollapseGrid = defineComponent({
           default: () => (
             <NGrid
               class="ray-collapse-grid"
+              {...this.$props}
               collapsed={this.modelCollapsed}
               xGap={this.xGap || 12}
               yGap={this.yGap || 18}

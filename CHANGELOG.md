@@ -1,5 +1,15 @@
 # CHANGE LOG
 
+## 3.3.7
+
+### Feats
+
+- 新增全局指令（目前仅有：v-copy、v-debounce、v-throttle）
+
+### Fixes
+
+- 修复错误的插件命名，导致项目构建失败（viteComponents）
+
 ## 3.3.6
 
 ### Feats

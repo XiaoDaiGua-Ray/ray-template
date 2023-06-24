@@ -1,7 +1,7 @@
 import path from 'node:path'
 
 import autoImport from 'unplugin-auto-import/vite' // 自动导入
-import viteComponents from 'unplugin-vue-components/vite' // 自动按需导入
+import unpluginViteComponents from 'unplugin-vue-components/vite' // 自动按需导入
 import vueI18nPlugin from '@intlify/unplugin-vue-i18n/vite' // i18n
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons' // `svg icon`
 
@@ -57,7 +57,7 @@ export const viteComponents = async (
   resolvers: (ComponentResolver | ComponentResolver[])[] = [],
   types: TypeImport[] = [],
 ) =>
-  viteComponents({
+  unpluginViteComponents({
     dts: true,
     resolvers: [...resolvers],
     types: [
@@ -129,32 +129,6 @@ export const buildOptions = (mode: string): BuildOptions => {
       },
     }
   }
-}
-
-/**
- *
- * @param options 自定义打包配置参数
- *
- * @remark 移除 console debugger 会有严重的副作用, 如果 console 语句中含有变量输出, 则会阻止移除
- * @remark console 可能会导致内存泄漏, 请注意使用
- */
-export const useViteBuildPlugin = (options?: BuildOptions) => {
-  const defaultPlugin: BuildOptions = {
-    outDir: 'dist', // 打包后文件输出路径
-    assetsDir: 'assets', // 指定静态资源存放路径
-    assetsInlineLimit: 4096, // 小于这个数字(字节)的静态资产文件将被内联为(base64)
-    cssCodeSplit: true, // 拆分css代码
-    minify: 'esbuild', // 指定使用混淆器 (terser | esbuild)
-    sourcemap: false,
-    terserOptions: {
-      compress: {
-        drop_console: true, // 打包后移除console
-        drop_debugger: true, // 打包后移除debugger
-      },
-    },
-  }
-
-  return Object.assign({}, defaultPlugin, options)
 }
 
 /**

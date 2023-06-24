@@ -5,7 +5,7 @@ import type CryptoJS from 'crypto-js'
 import type { VNodeChild } from 'vue'
 
 export global {
-  declare interface IUnknownObjectKey {
+  declare interface UnknownObjectKey {
     [propName: string]: any
   }
 

@@ -4,7 +4,7 @@ import type { AppRouteRecordRaw } from '@/router/type'
 
 const docLocal: AppRouteRecordRaw = {
   path: '/doc',
-  name: 'DocLocal',
+  name: 'RDocLocal',
   component: () => import('@/views/doc/index'),
   meta: {
     i18nKey: t('menu.DocLocal'),

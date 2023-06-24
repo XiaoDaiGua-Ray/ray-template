@@ -14,5 +14,6 @@
   "Office_Document": "文档",
   "Office_Presentation": "演示",
   "Office_Spreadsheet": "表格",
-  "CalculatePrecision": "数字精度"
+  "CalculatePrecision": "数字精度",
+  "Directive": "指令"
 }

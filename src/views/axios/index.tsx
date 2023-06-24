@@ -15,7 +15,7 @@ const Axios = defineComponent({
   name: 'RAxios',
   setup() {
     const state = reactive({
-      weatherData: [] as IUnknownObjectKey[],
+      weatherData: [] as UnknownObjectKey[],
       inputCityValue: '',
     })
     const columns = [

@@ -4,7 +4,7 @@ import type { AppRouteRecordRaw } from '@/router/type'
 
 const office: AppRouteRecordRaw = {
   path: '/office',
-  name: 'Office',
+  name: 'ROffice',
   component: () => import('@/views/office/index'),
   meta: {
     i18nKey: t('menu.Office'),

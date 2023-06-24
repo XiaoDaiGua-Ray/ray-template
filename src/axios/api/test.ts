@@ -24,8 +24,8 @@
 
 import useRequest from '@/axios/instance'
 
-interface AxiosTestResponse extends IUnknownObjectKey {
-  data: IUnknownObjectKey[]
+interface AxiosTestResponse extends UnknownObjectKey {
+  data: UnknownObjectKey[]
   city?: string
 }
 

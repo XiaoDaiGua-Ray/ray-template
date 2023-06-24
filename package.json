@@ -22,6 +22,7 @@
   "dependencies": {
     "@vueuse/core": "^9.1.0",
     "axios": "^1.2.0",
+    "clipboard": "^2.0.11",
     "crypto-js": "^4.1.1",
     "currency.js": "^2.0.4",
     "dayjs": "^1.11.7",

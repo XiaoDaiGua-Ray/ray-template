@@ -1,15 +1,15 @@
-export interface SigninForm extends IUnknownObjectKey {
+export interface SigninForm extends UnknownObjectKey {
   name: string
   pwd: string
 }
 
-export interface SigninCallback extends IUnknownObjectKey {
+export interface SigninCallback extends UnknownObjectKey {
   role: string
   name: string
   avatar?: string
 }
 
-export interface SigninResponse extends IUnknownObjectKey {
+export interface SigninResponse extends UnknownObjectKey {
   code: number
   data: SigninCallback
   message: string

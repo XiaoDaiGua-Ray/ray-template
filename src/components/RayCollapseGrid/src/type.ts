@@ -1,1 +1,1 @@
-export type CollapseToggleText = [string, string]
+export type CollapseToggleText = [string | number, string | number]

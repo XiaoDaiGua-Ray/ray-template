@@ -4,7 +4,7 @@ import type { AppRouteRecordRaw } from '@/router/type'
 
 const axios: AppRouteRecordRaw = {
   path: '/axios',
-  name: 'Axios',
+  name: 'RAxios',
   component: () => import('@/views/axios/index'),
   meta: {
     i18nKey: t('menu.Axios'),
