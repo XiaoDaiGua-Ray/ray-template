@@ -54,3 +54,9 @@ body {
 body.ray-template--invert {
   filter: invert(1);
 }
+
+body .ray-template__directive--disabled {
+  opacity: 0.3 !important;
+  pointer-events: none !important;
+  cursor: not-allowed !important;
+}

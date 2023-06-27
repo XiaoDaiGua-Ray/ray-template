@@ -1,4 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+import 'vue-router'
+
+import type { AppRouteMeta } from '@/router/type'
+
+declare module 'vue-router' {
+  interface RouteMeta extends AppRouteMeta {}
+}
+
 declare module '*.vue' {
   import type { DefineComponent } from 'vue'
 
@@ -9,4 +18,9 @@ declare module '*.vue' {
 declare module 'virtual:*' {
   const result: any
   export default result
+}
+
+declare module '*.json' {
+  const jsonContent: Record<string, any>
+  export default jsonContent
 }

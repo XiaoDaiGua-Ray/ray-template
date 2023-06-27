@@ -30,7 +30,7 @@ import { getDefaultLocal } from '@/locales/helper'
 import { getAppLocales } from '@/locales/helper'
 
 import type { App } from 'vue'
-import type { I18n } from 'vue-i18n'
+import type { I18n, I18nOptions } from 'vue-i18n'
 
 /** i18n 实例 */
 export let i18n: I18n
@@ -38,12 +38,12 @@ export let i18n: I18n
 /** 创建 i18n 实例 */
 const createI18nOptions = async () => {
   const locale = getDefaultLocal()
-  const message = await getAppLocales(LOCAL_OPTIONS)
+  const messages = await getAppLocales(LOCAL_OPTIONS)
 
   const i18nInstance = createI18n({
     legacy: false,
     locale,
-    messages: message,
+    messages: messages as unknown as I18nOptions['messages'],
     sync: true,
     missingWarn: false,
     silentFallbackWarn: true,

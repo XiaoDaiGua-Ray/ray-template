@@ -9,19 +9,25 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import type { Directive } from 'vue'
 import type { DirectiveModules } from '@/directives/type'
 
-export const mergerDirective = (
-  directiveModules: Record<string, DirectiveModules>,
+export const mergerDirective = <
+  T extends Record<string, DirectiveModules>,
+  K extends keyof T,
+>(
+  directiveModules: T,
 ) => {
   const directives = Object.keys(directiveModules).reduce((pre, curr) => {
-    const value = directiveModules[curr].default
+    if (directiveModules[curr]?.default) {
+      const value = directiveModules[curr]?.default
 
-    pre[curr] = value
+      pre[curr] = value
 
-    return pre
-  }, {} as Record<string, Directive>)
+      return pre
+    } else {
+      throw new Error('directiveModules[curr]?.default is undefined')
+    }
+  }, {} as Record<K, T[K]['default']>)
 
   return directives
 }

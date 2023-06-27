@@ -40,7 +40,7 @@ const GlobalSpin = defineComponent({
   },
   setup() {
     const overrides = {
-      opacitySpinning: '0',
+      opacitySpinning: '0.3',
     }
 
     return {

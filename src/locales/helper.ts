@@ -23,6 +23,11 @@ import { SYSTEM_DEFAULT_LOCAL } from '@/appConfig/localConfig'
 import { APP_CATCH_KEY } from '@/appConfig/appConfig'
 
 import type { Recordable } from '@/types/type-utils'
+import type {
+  AppLocalesModules,
+  AppLocalesDropdownMixedOption,
+  CurrentAppMessages,
+} from '@/locales/type'
 
 /**
  *
@@ -66,17 +71,17 @@ export const mergeMessage = (langs: Record<string, any>, prefix: string) => {
 
 /** 获取所有语言 */
 export const getAppLocales = async (
-  LOCAL_OPTIONS: {
-    key: string
-    label: string
-  }[],
+  LOCAL_OPTIONS: AppLocalesDropdownMixedOption[],
 ) => {
-  const message = {}
+  const message = {} as CurrentAppMessages
 
   for (const curr of LOCAL_OPTIONS) {
-    const msg = await import(`./lang/${curr.key}.ts`)
+    const msg = (await import(`./lang/${curr.key}.ts`)) as AppLocalesModules
+    const key = curr.key
 
-    message[curr.key] = msg.default?.message ?? {}
+    if (key) {
+      message[key] = msg?.default?.message ?? {}
+    }
   }
 
   return message
