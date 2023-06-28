@@ -11,7 +11,7 @@
 
 /** 系统颜色风格配置入口 */
 
-import type { AppPrimaryColor } from '@/types/cfg'
+import type { AppPrimaryColor } from '@/types/modules/cfg'
 import type { GlobalThemeOverrides } from 'naive-ui'
 
 /**

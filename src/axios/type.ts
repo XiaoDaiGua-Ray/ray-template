@@ -8,6 +8,7 @@ import type {
   InternalAxiosRequestConfig,
   AxiosResponse,
 } from 'axios'
+import type { AnyFunc } from '@/types/modules/utils'
 
 export type AxiosHeaderValue =
   | AxiosHeaders

@@ -6,7 +6,7 @@ import { useI18n } from '@/locales/useI18n'
 import { APP_NAIVE_UI_THEME_OVERRIDES } from '@/appConfig/designConfig'
 import { useDayjs } from '@/dayjs/index'
 
-import type { ConditionalPick } from '@/types/type-utils'
+import type { ConditionalPick } from '@/types/modules/helper'
 import type { SettingState } from '@/store/modules/setting/type'
 import type { DayjsLocal } from '@/dayjs/type'
 

@@ -16,7 +16,7 @@ import type { PropType } from 'vue'
 const Document = defineComponent({
   name: 'RDocument',
   setup() {
-    const editorUUID = uuid()
+    const editorUUID = uuid(16)
     const state = reactive({})
     const config = {
       document: {
@@ -33,16 +33,6 @@ const Document = defineComponent({
         lang: 'zh-cn',
       },
     }
-
-    const registerEdtior = () => {
-      const uid = uuid(12)
-    }
-
-    onMounted(() => {
-      nextTick(() => {
-        registerEdtior()
-      })
-    })
 
     return {
       ...toRefs(state),

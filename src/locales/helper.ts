@@ -22,7 +22,7 @@ import { getCache } from '@use-utils/cache'
 import { SYSTEM_DEFAULT_LOCAL } from '@/appConfig/localConfig'
 import { APP_CATCH_KEY } from '@/appConfig/appConfig'
 
-import type { Recordable } from '@/types/type-utils'
+import type { Recordable } from '@/types/modules/helper'
 import type {
   AppLocalesModules,
   AppLocalesDropdownMixedOption,
@@ -126,10 +126,12 @@ export const naiveLocales = (key: string) => {
  * @remak 未避免出现加载语言错误问题, 故而在 `main.ts` 注册时, 应优先加载 `i18n` 避免出现该问题
  */
 export const getDefaultLocal = () => {
-  const catchLanguage = getCache(APP_CATCH_KEY.localeLanguage, 'localStorage')
+  const catchLanguage = getCache<string>(
+    APP_CATCH_KEY.localeLanguage,
+    'localStorage',
+  )
 
-  const locale: string =
-    catchLanguage !== 'no' ? catchLanguage : SYSTEM_DEFAULT_LOCAL
+  const locale = catchLanguage ? catchLanguage : SYSTEM_DEFAULT_LOCAL
 
   return locale
 }

@@ -93,6 +93,11 @@ const RayIframe = defineComponent({
       type: Object as PropType<SpinProps>,
       default: () => ({}),
     },
+    lazy: {
+      /** 是否延迟加载 iframe */
+      type: Boolean,
+      default: true,
+    },
   },
   setup(props, { expose }) {
     const cssVars = computed(() => {
@@ -160,6 +165,9 @@ const RayIframe = defineComponent({
                 allow={this.allow}
                 name={this.name}
                 title={this.title}
+                {...{
+                  loading: this.lazy ? 'lazy' : null,
+                }}
               ></iframe>
             ),
           }}

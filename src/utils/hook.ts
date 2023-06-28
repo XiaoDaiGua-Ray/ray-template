@@ -1,3 +1,5 @@
+import type { ValidteValueType } from '@/types/modules/utils'
+
 /**
  *
  * @returns 获取当前项目环境
@@ -14,9 +16,11 @@ export const getAppEnvironment = () => {
  *
  * @returns formate binary to base64 of the image
  */
-export const useImagebufferToBase64 = (
-  data: ArrayBufferLike | ArrayLike<number>,
-) => {
+export const arrayBufferToBase64Image = (data: ArrayBuffer): string | null => {
+  if (!data || data.byteLength) {
+    return null
+  }
+
   const base64 =
     'data:image/png;base64,' +
     window.btoa(
@@ -34,10 +38,10 @@ export const useImagebufferToBase64 = (
  * @param value 目标值
  * @param type 类型
  */
-export const validteValueType = <T = unknown>(
-  value: T,
+export const isValueType = <T>(
+  value: unknown,
   type: ValidteValueType,
-) => {
+): value is T => {
   const valid = Object.prototype.toString.call(value)
 
   return valid.includes(type)
@@ -49,35 +53,29 @@ export const validteValueType = <T = unknown>(
  * @param radix `uuid` 基数
  * @returns `uuid`
  */
-export const uuid = (length = 16, radix?: number) => {
-  const sad =
+export const uuid = (length = 16, radix = 62) => {
+  // 定义可用的字符集，即 0-9, A-Z, a-z
+  const availableChars =
     '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('')
+  // 定义存储随机字符串的数组
   const arr: string[] = []
+  // 获取加密对象，兼容 IE11
+  const cryptoObj = window.crypto || window.msCrypto
   let i = 0
 
-  radix = radix || sad.length
+  // 循环 length 次，生成随机字符，并添加到数组中
+  for (i = 0; i < length; i++) {
+    // 生成一个随机数
+    const randomValues = new Uint32Array(1)
 
-  if (length) {
-    for (i = 0; i < length; i++) {
-      arr[i] = sad[0 | (Math.random() * radix)]
-    }
-  } else {
-    let r
+    cryptoObj.getRandomValues(randomValues)
 
-    arr[23] = '-'
-    arr[18] = arr[23]
-    arr[13] = arr[18]
-    arr[8] = arr[13]
-    arr[14] = '4'
+    // 根据随机数生成对应的字符，并添加到数组中
+    const index = randomValues[0] % radix
 
-    for (i = 0; i < 36; i++) {
-      if (!arr[i]) {
-        r = 0 | (Math.random() * radix)
-
-        arr[i] = sad[i === 19 ? (r & 0x3) | 0x8 : r]
-      }
-    }
+    arr.push(availableChars[index])
   }
 
+  // 将数组中的字符连接起来，返回最终的字符串
   return arr.join('')
 }

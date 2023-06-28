@@ -1,14 +1,17 @@
-export {}
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { AppConfig } from './cfg'
 import type {
   MessageApi,
   DialogApi,
   LoadingBarApi,
   NotificationApi,
 } from 'naive-ui'
-import type { AppConfig } from './cfg'
 
-export global {
+declare global {
+  declare interface UnknownObjectKey {
+    [propName: string]: any
+  }
+
   declare const __APP_CFG__: AppConfig
 
   declare interface Window {
@@ -41,9 +44,9 @@ export global {
     $loadingBar: LoadingBarApi
     $notification: NotificationApi
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     DocsAPI?: any
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     DocEditor?: any
+
+    msCrypto: Crypto
   }
 }

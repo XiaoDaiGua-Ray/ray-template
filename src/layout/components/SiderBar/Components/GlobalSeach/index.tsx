@@ -21,6 +21,7 @@ import { validMenuItemShow } from '@/router/helper/routerCopilot'
 
 import type { MenuOption } from 'naive-ui'
 import type { AppRouteMeta } from '@/router/type'
+import type { AppMenuOption } from '@/types/modules/app'
 
 const GlobalSeach = defineComponent({
   name: 'GlobalSeach',
@@ -49,7 +50,7 @@ const GlobalSeach = defineComponent({
     const modelMenuOptions = computed(() => menuStore.options)
     const state = reactive({
       searchValue: null,
-      searchOptions: [] as IMenuOptions[],
+      searchOptions: [] as AppMenuOption[],
     })
 
     const tiptextOptions = [
@@ -76,9 +77,9 @@ const GlobalSeach = defineComponent({
 
     /** 根据输入值模糊检索菜单 */
     const handleSearchMenuOptions = (value: string) => {
-      const arr: IMenuOptions[] = []
+      const arr: AppMenuOption[] = []
 
-      const filterArr = (options: IMenuOptions[]) => {
+      const filterArr = (options: AppMenuOption[]) => {
         options.forEach((curr) => {
           if (curr.children?.length) {
             filterArr(curr.children)

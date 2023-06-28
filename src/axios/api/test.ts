@@ -24,6 +24,8 @@
 
 import useRequest from '@/axios/instance'
 
+import type { AxiosResponseBody } from '@/types/modules/axios'
+
 interface AxiosTestResponse extends UnknownObjectKey {
   data: UnknownObjectKey[]
   city?: string

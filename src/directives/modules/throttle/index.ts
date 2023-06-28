@@ -19,6 +19,7 @@ import { on, off } from '@use-utils/element'
 
 import type { Directive } from 'vue'
 import type { ThrottleBindingOptions } from './type'
+import type { AnyFunc } from '@/types/modules/utils'
 
 let throttleFunction: AnyFunc | null
 

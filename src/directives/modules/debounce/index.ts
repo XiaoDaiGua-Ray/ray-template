@@ -19,6 +19,7 @@ import { on, off } from '@use-utils/element'
 
 import type { Directive } from 'vue'
 import type { DebounceBindingOptions } from './type'
+import type { AnyFunc } from '@/types/modules/utils'
 
 let debounceFunction: AnyFunc | null
 

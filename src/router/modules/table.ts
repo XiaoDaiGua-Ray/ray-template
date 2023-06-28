@@ -8,7 +8,7 @@ const table: AppRouteRecordRaw = {
   component: () => import('@/views/table/index'),
   meta: {
     i18nKey: t('menu.Table'),
-    icon: 'table',
+    icon: 'other',
     order: 2,
   },
 }

@@ -13,10 +13,15 @@
 
 import { MENU_COLLAPSED_CONFIG, ROOT_ROUTE } from '@/appConfig/appConfig'
 import RayIcon from '@/components/RayIcon/index'
-import { validteValueType } from '@/utils/hook'
+import { isValueType } from '@/utils/hook'
 import { getCache, setCache } from '@/utils/cache'
 
 import type { VNode } from 'vue'
+import type {
+  AppMenuOption,
+  MenuTagOptions,
+  AppMenuKey,
+} from '@/types/modules/app'
 
 /**
  *
@@ -27,7 +32,7 @@ import type { VNode } from 'vue'
  * @remark 检查是否为所需项
  */
 const check = (
-  node: IMenuOptions,
+  node: AppMenuOption,
   key: string | number,
   value: string | number,
 ) => {
@@ -43,11 +48,11 @@ const check = (
  * @remark 匹配所有节点
  */
 const process = (
-  options: IMenuOptions,
+  options: AppMenuOption,
   key: string | number,
   value: string | number,
 ) => {
-  const temp: IMenuOptions[] = []
+  const temp: AppMenuOption[] = []
 
   // 检查当前节点是否匹配值
   if (check(options, key, value)) {
@@ -79,7 +84,7 @@ const process = (
  * @param value 匹配值
  */
 export const parse = (
-  options: IMenuOptions[],
+  options: AppMenuOption[],
   key: string | number,
   value: string | number,
 ) => {
@@ -105,8 +110,8 @@ export const parse = (
  * @remark 查找当前菜单项
  */
 export const matchMenuOption = (
-  item: IMenuOptions,
-  key: MenuKey,
+  item: AppMenuOption,
+  key: AppMenuKey,
   menuTagOptions: MenuTagOptions[],
 ) => {
   if (item.path !== key) {
@@ -125,7 +130,7 @@ export const matchMenuOption = (
  * @remark 动态修改浏览器标题
  * @remark 会自动拼接 sideBarLogo.title
  */
-export const updateDocumentTitle = (option: IMenuOptions) => {
+export const updateDocumentTitle = (option: AppMenuOption) => {
   const { breadcrumbLabel } = option
   const {
     layout: { sideBarLogo },
@@ -135,14 +140,14 @@ export const updateDocumentTitle = (option: IMenuOptions) => {
   document.title = breadcrumbLabel + ' - ' + spliceTitle
 }
 
-export const hasMenuIcon = (option: IMenuOptions) => {
+export const hasMenuIcon = (option: AppMenuOption) => {
   const { meta } = option
 
   if (!meta.icon) {
     return
   }
 
-  if (validteValueType(meta.icon, 'Object')) {
+  if (isValueType<object>(meta.icon, 'Object')) {
     return () => meta.icon
   }
 
@@ -161,8 +166,10 @@ export const hasMenuIcon = (option: IMenuOptions) => {
 /** 获取缓存的 menu key, 如果未获取到则使用 ROOTROUTE path 当作默认激活路由菜单 */
 export const getCatchMenuKey = () => {
   const { path: rootPath } = ROOT_ROUTE
-  const cacheMenuKey: MenuKey =
-    getCache('menuKey') === 'no' ? rootPath : getCache('menuKey')
+  const cacheMenuKey =
+    getCache<AppMenuKey>('menuKey') === null
+      ? rootPath
+      : getCache<AppMenuKey>('menuKey')
 
   return cacheMenuKey
 }

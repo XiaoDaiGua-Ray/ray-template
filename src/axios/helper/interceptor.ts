@@ -30,6 +30,7 @@ import type {
   ErrorImplementQueue,
   FetchType,
 } from '@/axios/type'
+import type { AnyFunc } from '@/types/modules/utils'
 
 /** 当前请求的实例 */
 const axiosFetchInstance = {

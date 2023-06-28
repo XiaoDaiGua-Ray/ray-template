@@ -17,7 +17,7 @@
  * 做了简单的一个组件封装, 希望有用
  */
 
-import { NSpace } from 'naive-ui'
+import { NCard, NSpace } from 'naive-ui'
 import RayIframe from '@/components/RayIframe/index'
 
 const IframeDemo = defineComponent({
@@ -28,18 +28,20 @@ const IframeDemo = defineComponent({
   render() {
     return (
       <NSpace vertical size={[20, 20]}>
-        <NSpace vertical size={[20, 20]}>
-          <h2>naive ui</h2>
+        <NCard title="naive ui（延迟加载）">
           <RayIframe
             src="https://www.naiveui.com/zh-CN/dark"
-            height="500"
+            height="300"
             allow="fullscreen"
           />
-        </NSpace>
-        <NSpace vertical size={[20, 20]}>
-          <h2>vueuse</h2>
-          <RayIframe src="https://www.vueusejs.com/" height="500" />
-        </NSpace>
+        </NCard>
+        <NCard title="vueuse（立即加载）">
+          <RayIframe
+            src="https://www.vueusejs.com/"
+            height="300"
+            lazy={false}
+          />
+        </NCard>
       </NSpace>
     )
   },

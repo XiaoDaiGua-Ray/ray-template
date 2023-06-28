@@ -8,6 +8,8 @@ import { get } from 'lodash-es'
 import { useSetting } from '@/store'
 import { addClass, removeClass, addStyle, colorToRgba } from '@/utils/element'
 
+import type { SettingState } from '@/store/modules/setting/type'
+
 const App = defineComponent({
   name: 'App',
   setup() {
@@ -22,12 +24,15 @@ const App = defineComponent({
       } = __APP_CFG__ // 默认主题色
       const body = document.body
 
-      const primaryColorOverride = getCache('piniaSettingStore', 'localStorage')
+      const primaryColorOverride = getCache<SettingState>(
+        'piniaSettingStore',
+        'localStorage',
+      )
       const _p = get(
         primaryColorOverride,
         'primaryColorOverride.common.primaryColor',
       )
-      const _fp = colorToRgba(_p, 0.3)
+      const _fp = colorToRgba(_p || primaryColor, 0.3)
 
       /** 设置全局主题色 css 变量 */
       body.style.setProperty('--ray-theme-primary-color', _p || primaryColor)

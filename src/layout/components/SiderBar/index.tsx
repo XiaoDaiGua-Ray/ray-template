@@ -29,12 +29,11 @@ import AppAvatar from '@/components/AppComponents/AppAvatar/index'
 import { useSetting } from '@/store'
 import { LOCAL_OPTIONS } from '@/appConfig/localConfig'
 import { useAvatarOptions, avatarDropdownClick } from './hook'
-import { getCache } from '@/utils/cache'
 import screenfull from 'screenfull'
 import { useI18n } from '@/locales/useI18n'
-import { APP_CATCH_KEY } from '@/appConfig/appConfig'
 
 import type { IconEventMapOptions, IconEventMap } from './type'
+import type { SigninCallback } from '@/store/modules/signin/type'
 
 const SiderBar = defineComponent({
   name: 'SiderBar',
@@ -46,7 +45,6 @@ const SiderBar = defineComponent({
 
     const { drawerPlacement, breadcrumbSwitch } = storeToRefs(settingStore)
     const showSettings = ref(false)
-    const signin = getCache(APP_CATCH_KEY.signin)
     const spaceItemStyle = {
       display: 'flex',
     }
@@ -131,7 +129,6 @@ const SiderBar = defineComponent({
       handleIconClick,
       showSettings,
       updateLocale,
-      signin,
       spaceItemStyle,
       drawerPlacement,
       breadcrumbSwitch,

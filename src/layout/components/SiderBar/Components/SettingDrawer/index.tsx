@@ -16,6 +16,7 @@ import { useSetting } from '@/store'
 import { useI18n } from '@/locales/useI18n'
 
 import type { PropType } from 'vue'
+import type { Placement } from '@/types/modules/component'
 
 const SettingDrawer = defineComponent({
   name: 'SettingDrawer',
@@ -25,7 +26,7 @@ const SettingDrawer = defineComponent({
       default: false,
     },
     placement: {
-      type: String as PropType<NaiveDrawerPlacement>,
+      type: String as PropType<Placement>,
       default: 'right',
     },
     width: {

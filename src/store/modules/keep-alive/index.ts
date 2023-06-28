@@ -21,6 +21,7 @@
 import { APP_KEEP_ALIVE } from '@/appConfig/appConfig'
 
 import type { KeepAliveStoreState } from './type'
+import type { AppMenuOption } from '@/types/modules/app'
 
 export const useKeepAlive = defineStore(
   'keepAlive',
@@ -40,7 +41,7 @@ export const useKeepAlive = defineStore(
      * @remark 判断当前页面是否配置需要缓存, 并且判断当前缓存数量是否超过最大缓存数设置数量
      * @remark 如果超过最大阈值, 则会按照尾插头删方式维护该队列
      */
-    const setKeepAliveInclude = (option: IMenuOptions) => {
+    const setKeepAliveInclude = (option: AppMenuOption) => {
       const length = getCurrentKeepAliveLength()
       const {
         name,

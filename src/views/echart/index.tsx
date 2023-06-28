@@ -3,6 +3,8 @@ import './index.scss'
 import { NCard, NSwitch, NSpace, NP, NH6, NH2, NH3 } from 'naive-ui'
 import RayChart from '@/components/RayChart/index'
 
+import type { EChartsInstance } from '@/types/modules/component'
+
 const Echart = defineComponent({
   name: 'REchart',
   setup() {

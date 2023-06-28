@@ -5,6 +5,7 @@ import type {
   AliasOptions,
   UserConfigExport,
 } from 'vite'
+import type { Recordable } from '@/types/modules/helper'
 
 export interface LayoutSideBarLogo {
   icon?: string
@@ -48,8 +49,6 @@ export interface Config {
   base?: string
   appPrimaryColor?: AppPrimaryColor
 }
-
-export type Recordable<T = unknown> = Record<string, T>
 
 /**
  *

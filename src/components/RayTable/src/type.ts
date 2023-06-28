@@ -7,6 +7,7 @@ import type {
   DataTableInst,
 } from 'naive-ui'
 import type { ComputedRef, WritableComputedRef, VNode } from 'vue'
+import type { ComponentSize } from '@/types/modules/component'
 
 export interface ActionOptions extends DataTableBaseColumn {
   leftFixedActivated?: boolean // 向左固定

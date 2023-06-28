@@ -7,7 +7,6 @@ import {
   viteVueI18nPlugin,
   viteSVGIcon,
 } from './vite-plugin/index'
-
 import viteVueJSX from '@vitejs/plugin-vue-jsx'
 import viteVeI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import viteInspect from 'vite-plugin-inspect'

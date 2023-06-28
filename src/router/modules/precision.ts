@@ -8,7 +8,7 @@ const precision: AppRouteRecordRaw = {
   component: () => import('@/views/precision/index'),
   meta: {
     i18nKey: t('menu.CalculatePrecision'),
-    icon: 'rely',
+    icon: 'other',
     order: 2,
   },
 }

@@ -1,7 +1,8 @@
 import type { GlobalThemeOverrides } from 'naive-ui'
+import type { Placement } from '@/types/modules/component'
 
 export interface SettingState {
-  drawerPlacement: NaiveDrawerPlacement
+  drawerPlacement: Placement
   primaryColorOverride: GlobalThemeOverrides
   themeValue: boolean
   reloadRouteSwitch: boolean

@@ -15,6 +15,7 @@ import { NPopover, NCard } from 'naive-ui'
 import RayIcon from '@/components/RayIcon/index'
 
 import type { TableSettingProvider } from '@/components/RayTable/src/type'
+import type { ComponentSize } from '@/types/modules/component'
 
 const TableSize = defineComponent({
   name: 'TableSize',

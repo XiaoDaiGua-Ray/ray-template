@@ -11,6 +11,8 @@
 
 /** vue3 项目里建议直接用 vueuse useStorage 方法 */
 
+import type { CacheType } from '@/types/modules/utils'
+
 /**
  *
  * @param key 需要设置的key
@@ -32,16 +34,17 @@ export const setCache = <T = unknown>(
  *
  * @param key 需要获取目标缓存的key
  * @returns 获取缓存值
- *
- * @remark 如果未匹配到目标值则返回字符串 'no'
  */
-export const getCache = (key: string, type: CacheType = 'sessionStorage') => {
+export const getCache = <T>(
+  key: string,
+  type: CacheType = 'sessionStorage',
+): T | null => {
   const data =
     type === 'localStorage'
       ? window.localStorage.getItem(key)
       : window.sessionStorage.getItem(key)
 
-  return Object.is(data, null) ? 'no' : JSON.parse(data as string)
+  return Object.is(data, null) ? null : JSON.parse(data as string)
 }
 
 /**

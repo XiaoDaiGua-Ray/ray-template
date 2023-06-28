@@ -39,7 +39,7 @@ const { setImplement } = useAxiosInterceptor()
  * 当然你也可以根据 request instance 来特殊处理, 这里暂时不做演示
  */
 const requestHeaderToken = (ins: RequestInterceptorConfig, mode: string) => {
-  const token = getCache(APP_CATCH_KEY.token)
+  const token = getCache<string>(APP_CATCH_KEY.token)
 
   if (ins.url) {
     // TODO: 根据 url 不同是否设置 token

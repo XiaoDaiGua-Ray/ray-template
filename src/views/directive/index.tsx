@@ -20,7 +20,7 @@ import {
   NFormItem,
 } from 'naive-ui'
 
-import type { ConditionalPick } from '@/types/type-utils'
+import type { ConditionalPick } from '@/types/modules/helper'
 
 const RDirective = defineComponent({
   name: 'RDirective',

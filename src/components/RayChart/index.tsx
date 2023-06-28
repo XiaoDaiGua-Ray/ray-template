@@ -43,6 +43,8 @@ import { cloneDeep, debounce } from 'lodash-es'
 import { on, off, addStyle, completeSize } from '@/utils/element'
 
 import type { PropType } from 'vue'
+import type { EChartsInstance } from '@/types/modules/component'
+import type { AnyFunc } from '@/types/modules/utils'
 
 export type AutoResize =
   | boolean

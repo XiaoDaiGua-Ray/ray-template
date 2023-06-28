@@ -36,6 +36,7 @@ import { ROOT_ROUTE } from '@/appConfig/appConfig'
 import { getElement } from '@use-utils/element'
 
 import type { MenuOption, ScrollbarInst } from 'naive-ui'
+import type { MenuTagOptions } from '@/types/modules/app'
 
 const MenuTag = defineComponent({
   name: 'MenuTag',
@@ -148,7 +149,7 @@ const MenuTag = defineComponent({
         disabled: false,
       },
     ])
-    const scrollBarUUID = uuid()
+    const scrollBarUUID = uuid(16)
     const actionMap = {
       reloadCurrentPage: () => {
         changeSwitcher(false, 'reloadRouteSwitch')
@@ -380,7 +381,9 @@ const MenuTag = defineComponent({
     /** 动态更新 menu tag 所在位置 */
     const positionMenuTag = () => {
       nextTick().then(() => {
-        const tags = getElement(`attr:${MENU_TAG_DATA}="${menuKey.value}"`)
+        const tags = getElement<HTMLElement>(
+          `attr:${MENU_TAG_DATA}="${menuKey.value}"`,
+        )
 
         if (tags?.length) {
           const [menuTag] = tags
@@ -505,9 +508,9 @@ const MenuTag = defineComponent({
                       [this.MENU_TAG_DATA]: curr.path,
                     }}
                   >
-                    {typeof curr.label === 'function'
-                      ? curr.label()
-                      : curr.label}
+                    {typeof curr.label === 'string'
+                      ? curr.label
+                      : curr.label?.()}
                   </NTag>
                 ))}
               </NSpace>

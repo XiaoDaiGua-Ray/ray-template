@@ -24,6 +24,7 @@ import { setCache } from '@/utils/cache'
 
 import type { Router } from 'vue-router'
 import type { AppRouteMeta } from '@/router/type'
+import type { AppMenuOption } from '@/types/modules/app'
 
 /**
  *
@@ -64,7 +65,7 @@ export const validRole = (meta: AppRouteMeta) => {
  *
  * 如果你仅仅是希望校验是否满足权限, 应该使用另一个方法 validRole
  */
-export const validMenuItemShow = (option: IMenuOptions) => {
+export const validMenuItemShow = (option: AppMenuOption) => {
   const { meta, name } = option
   const hidden =
     meta?.hidden === undefined || meta?.hidden === false ? false : meta?.hidden

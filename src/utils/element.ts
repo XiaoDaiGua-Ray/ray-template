@@ -1,11 +1,14 @@
-import { validteValueType } from '@use-utils/hook'
+import { isValueType } from '@use-utils/hook'
 import { ELEMENT_UNIT } from '@/appConfig/regConfig'
+
+import type { EventListenerOrEventListenerObject } from '@/types/modules/utils'
 
 /**
  *
  * @param element Target element dom
  * @param event 绑定事件类型
  * @param handler 事件触发方法
+ * @param useCapture 是否冒泡
  *
  * @remark 给元素绑定某个事件柄方法
  */
@@ -13,7 +16,7 @@ export const on = (
   element: HTMLElement | Document | Window,
   event: string,
   handler: EventListenerOrEventListenerObject,
-  useCapture = false,
+  useCapture: boolean | AddEventListenerOptions = false,
 ) => {
   if (element && event && handler) {
     element.addEventListener(event, handler, useCapture)
@@ -25,6 +28,7 @@ export const on = (
  * @param element Target element dom
  * @param event 卸载事件类型
  * @param handler 所需卸载方法
+ * @param useCapture 是否冒泡
  *
  * @remark 卸载元素上某个事件柄方法
  */
@@ -32,7 +36,7 @@ export const off = (
   element: HTMLElement | Document | Window,
   event: string,
   handler: EventListenerOrEventListenerObject,
-  useCapture = false,
+  useCapture: boolean | AddEventListenerOptions = false,
 ) => {
   if (element && event && handler) {
     element.removeEventListener(event, handler, useCapture)
@@ -133,12 +137,12 @@ export const addStyle = (
   styles: string | Partial<CSSStyleDeclaration>,
 ) => {
   if (el) {
-    if (validteValueType(styles, 'Object')) {
+    if (isValueType<object>(styles, 'Object')) {
       Object.keys(styles).forEach((item) => {
         el.style[item] = styles[item]
       })
-    } else if (validteValueType(styles, 'String')) {
-      const _styles = styles as string
+    } else if (isValueType<string>(styles, 'String')) {
+      const _styles = styles
 
       _styles.split(';').forEach((item) => {
         const [_k, _v] = item.split(':')
@@ -223,9 +227,9 @@ export const colorToRgba = (color: string, alpha = 1) => {
  * 或者可以这样写
  * const el = getElement('attr:type')
  */
-export const getElement = (element: string) => {
+export const getElement = <T extends Element>(element: string) => {
   if (!element) {
-    return
+    return null
   }
 
   let queryParam: string
@@ -237,7 +241,7 @@ export const getElement = (element: string) => {
   }
 
   try {
-    const el = Array.from(document.querySelectorAll(queryParam))
+    const el = Array.from(document.querySelectorAll<T>(queryParam))
 
     return el
   } catch (e) {
@@ -248,15 +252,16 @@ export const getElement = (element: string) => {
 /**
  *
  * @param size css size
+ * @param unit 自动填充 css 尺寸单位
  *
  * @remark 自动补全尺寸
  */
-export const completeSize = (size: number | string) => {
+export const completeSize = (size: number | string, unit = 'px') => {
   if (typeof size === 'number') {
-    return size.toString() + 'px'
-  } else if (ELEMENT_UNIT.test(size)) {
+    return size.toString() + unit
+  } else if (isValueType<string>(size, 'String') && ELEMENT_UNIT.test(size)) {
     return size
   } else {
-    return size + 'px'
+    return size + unit
   }
 }

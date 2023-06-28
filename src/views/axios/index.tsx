@@ -10,6 +10,7 @@ import {
   NButton,
 } from 'naive-ui'
 import { onAxiosTest } from '@use-api/test'
+import { isArray } from 'lodash-es'
 
 const Axios = defineComponent({
   name: 'RAxios',

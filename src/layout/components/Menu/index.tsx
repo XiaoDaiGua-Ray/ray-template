@@ -8,6 +8,7 @@ import { MENU_COLLAPSED_CONFIG, MENU_ACCORDION } from '@/appConfig/appConfig'
 import { useVueRouter } from '@/router/helper/useVueRouter'
 
 import type { MenuInst } from 'naive-ui'
+import type { NaiveMenuOptions } from '@/types/modules/component'
 
 const LayoutMenu = defineComponent({
   name: 'LayoutMenu',

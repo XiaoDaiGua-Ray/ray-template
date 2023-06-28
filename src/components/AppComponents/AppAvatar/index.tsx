@@ -27,6 +27,7 @@ import { getCache } from '@/utils/cache'
 
 import type { PropType } from 'vue'
 import type { AvatarProps, SpaceProps } from 'naive-ui'
+import type { SigninCallback } from '@/store/modules/signin/type'
 
 const AppAvatar = defineComponent({
   name: 'AppAvatar',
@@ -47,7 +48,7 @@ const AppAvatar = defineComponent({
     },
   },
   setup(props) {
-    const signin = getCache(APP_CATCH_KEY.signin)
+    const signin = getCache<SigninCallback>(APP_CATCH_KEY.signin)
     const cssVars = computed(() => {
       const vars = {
         '--app-avatar-cursor': props.cursor,
@@ -73,12 +74,12 @@ const AppAvatar = defineComponent({
         <NAvatar
           // eslint-disable-next-line prettier/prettier, @typescript-eslint/no-explicit-any
           {...(this.$props as any)}
-          src={this.signin.avatar}
+          src={this.signin?.avatar}
           objectFit="cover"
           round
           size={this.avatarSize}
         />
-        <div class="app-avatar__name">{this.signin.name}</div>
+        <div class="app-avatar__name">{this.signin?.name}</div>
       </NSpace>
     )
   },

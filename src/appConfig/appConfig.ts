@@ -15,8 +15,11 @@ import type {
   LayoutSideBarLogo,
   PreloadingConfig,
   RootRoute,
-} from '@/types/cfg'
-import type { MenuCollapsedConfig, AppKeepAlive } from '@/types/appConfig'
+} from '@/types/modules/cfg'
+import type {
+  MenuCollapsedConfig,
+  AppKeepAlive,
+} from '@/types/modules/appConfig'
 
 /**
  *

@@ -8,8 +8,8 @@ const directive: AppRouteRecordRaw = {
   component: () => import('@/views/directive/index'),
   meta: {
     i18nKey: t('menu.Directive'),
-    icon: 'rely',
-    order: 3,
+    icon: 'other',
+    order: 2,
   },
 }
 

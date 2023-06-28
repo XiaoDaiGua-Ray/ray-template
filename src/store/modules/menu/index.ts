@@ -40,6 +40,7 @@ import { useVueRouter } from '@/router/helper/useVueRouter'
 
 import type { MenuOption } from 'naive-ui'
 import type { AppRouteMeta } from '@/router/type'
+import type { AppMenuOption, MenuTagOptions } from '@/types/modules/app'
 
 export const useMenu = defineStore(
   'menu',
@@ -51,10 +52,10 @@ export const useMenu = defineStore(
 
     const menuState = reactive({
       menuKey: getCatchMenuKey(), // 当前菜单 `key`
-      options: [] as IMenuOptions[], // 菜单列表
+      options: [] as AppMenuOption[], // 菜单列表
       collapsed: false, // 是否折叠菜单
       menuTagOptions: [] as MenuTagOptions[], // tag 标签菜单
-      breadcrumbOptions: [] as IMenuOptions[], // 面包屑菜单
+      breadcrumbOptions: [] as AppMenuOption[], // 面包屑菜单
     })
 
     /**
@@ -65,7 +66,7 @@ export const useMenu = defineStore(
      * @remark 获取完整菜单项
      */
     const getCompleteRoutePath = (
-      options: IMenuOptions[],
+      options: AppMenuOption[],
       key: string | number,
     ) => {
       const ops = parse(options, 'key', key)
@@ -94,8 +95,8 @@ export const useMenu = defineStore(
             menuState.menuKey,
             menuState.menuTagOptions,
           )
-          updateDocumentTitle(item as unknown as IMenuOptions)
-          setKeepAliveInclude(item as unknown as IMenuOptions)
+          updateDocumentTitle(item as unknown as AppMenuOption)
+          setKeepAliveInclude(item as unknown as AppMenuOption)
 
           menuState.breadcrumbOptions = parse(menuState.options, 'key', key) // 获取面包屑
 
@@ -168,7 +169,7 @@ export const useMenu = defineStore(
      * @remark 如果权限发生变动, 则会触发强制弹出页面并且重新登陆
      */
     const setupAppRoutes = () => {
-      const resolveOption = (option: IMenuOptions) => {
+      const resolveOption = (option: AppMenuOption) => {
         const { meta } = option
 
         /** 设置 label, i18nKey 优先级最高 */
@@ -184,9 +185,9 @@ export const useMenu = defineStore(
               default: () => label.value,
             }),
           breadcrumbLabel: label.value,
-        } as IMenuOptions
+        } as AppMenuOption
         /** 合并 icon */
-        const attr: IMenuOptions = Object.assign({}, route, {
+        const attr: AppMenuOption = Object.assign({}, route, {
           icon: hasMenuIcon(option),
         })
 
@@ -203,8 +204,8 @@ export const useMenu = defineStore(
         return attr
       }
 
-      const resolveRoutes = (routes: IMenuOptions[], index: number) => {
-        const catchArr: IMenuOptions[] = []
+      const resolveRoutes = (routes: AppMenuOption[], index: number) => {
+        const catchArr: AppMenuOption[] = []
 
         for (const curr of routes) {
           if (curr.children?.length && validMenuItemShow(curr)) {
@@ -221,7 +222,7 @@ export const useMenu = defineStore(
       }
 
       /** 缓存菜单列表 */
-      menuState.options = resolveRoutes(routeModules as IMenuOptions[], 0)
+      menuState.options = resolveRoutes(routeModules as AppMenuOption[], 0)
 
       /** 初始化后渲染面包屑 */
       nextTick(() => {

@@ -52,6 +52,7 @@ import type { WritableComputedRef } from 'vue'
 import type { DropdownOption } from 'naive-ui'
 import type { ExportExcelHeader } from '@use-utils/xlsx'
 import type { DataTableInst } from 'naive-ui'
+import type { ComponentSize } from '@/types/modules/component'
 
 const RayTable = defineComponent({
   name: 'RayTable',
@@ -60,8 +61,8 @@ const RayTable = defineComponent({
   setup(props, { emit, expose }) {
     const rayTableInstance = ref<DataTableInst>()
 
-    const tableUUID = uuid() // 表格 id, 用于打印表格
-    const rayTableUUID = uuid() // RayTable id, 用于全屏表格
+    const tableUUID = uuid(16) // 表格 id, 用于打印表格
+    const rayTableUUID = uuid(16) // RayTable id, 用于全屏表格
     const modelRightClickMenu = computed(() => props.rightClickMenu)
     const modelColumns = computed({
       get: () => props.columns,

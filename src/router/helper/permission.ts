@@ -31,16 +31,17 @@ import type {
   NavigationGuardNext,
   RouteLocationNormalized,
 } from 'vue-router'
+import type { AppMenuOption } from '@/types/modules/app'
 
 export const permissionRouter = (router: Router) => {
   const { beforeEach } = router
 
   beforeEach((to, from, next) => {
-    const token = getCache(APP_CATCH_KEY.token)
-    const route = getCache('menuKey')
+    const token = getCache<string>(APP_CATCH_KEY.token)
+    const route = getCache<string>('menuKey') || ROOT_ROUTE.path
 
-    if (token !== 'no') {
-      if (validMenuItemShow(to as unknown as IMenuOptions)) {
+    if (token !== null) {
+      if (validMenuItemShow(to as unknown as AppMenuOption)) {
         if (to.path === '/' || from.path === '/login') {
           if (route !== 'no') {
             next(route)
