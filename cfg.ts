@@ -50,7 +50,7 @@ import {
   SIDE_BAR_LOGO,
 } from './src/appConfig/appConfig'
 
-import type { AppConfigExport } from './src/types/cfg'
+import type { AppConfigExport } from '@/types/modules/cfg'
 
 const config: AppConfigExport = {
   /** 公共基础路径配置, 如果为空则会默认以 '/' 填充 */

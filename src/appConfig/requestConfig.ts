@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import type { AxiosConfig } from '@/types/appConfig'
+import type { AxiosConfig } from '@/types/modules/appConfig'
 
 /** axios 相关配置 */
 export const AXIOS_CONFIG: AxiosConfig = {
