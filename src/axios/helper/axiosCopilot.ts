@@ -21,8 +21,8 @@ import type { RequestHeaderOptions } from '../type'
  *
  * @remark 自定义 `axios` 请求头配置
  */
-export const appendRequestHeaders = (
-  instance: AxiosRequestConfig<unknown>,
+export const appendRequestHeaders = <T = unknown>(
+  instance: AxiosRequestConfig<T>,
   options: RequestHeaderOptions[],
 ) => {
   if (instance) {

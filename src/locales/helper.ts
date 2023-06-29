@@ -12,8 +12,8 @@
 /**
  *
  * 国际化辅助方法:
- *   - mergeMessage: 合并对应文件下语言包
- *   - getAppLocales: 获取所有语言
+ *   - combineI18nMessages: 合并对应文件下语言包
+ *   - getAppLocalMessages: 获取所有语言
  */
 
 import { set } from 'lodash-es'
@@ -27,6 +27,7 @@ import type {
   AppLocalesModules,
   AppLocalesDropdownMixedOption,
   CurrentAppMessages,
+  I18nModules,
 } from '@/locales/type'
 
 /**
@@ -36,13 +37,12 @@ import type {
  *
  * @remark 合并处理语言包内容, prefix 必填
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const mergeMessage = (langs: Record<string, any>, prefix: string) => {
-  if (!prefix) {
-    throw new Error('Expected prefix to be string, got undefined instead')
+export const combineI18nMessages = (langs: I18nModules, prefix: string) => {
+  if (typeof prefix !== 'string' || !prefix.trim()) {
+    throw new Error('Expected prefix to be a non-empty string')
   }
 
-  const langsGather: Recordable = {}
+  const langsGather: Record<string, Recordable> = {}
 
   Object.keys(langs).forEach((key) => {
     const langFileModule = langs[key].default
@@ -70,13 +70,13 @@ export const mergeMessage = (langs: Record<string, any>, prefix: string) => {
 }
 
 /** 获取所有语言 */
-export const getAppLocales = async (
+export const getAppLocalMessages = async (
   LOCAL_OPTIONS: AppLocalesDropdownMixedOption[],
 ) => {
   const message = {} as CurrentAppMessages
 
   for (const curr of LOCAL_OPTIONS) {
-    const msg = (await import(`./lang/${curr.key}.ts`)) as AppLocalesModules
+    const msg: AppLocalesModules = await import(`./lang/${curr.key}.ts`)
     const key = curr.key
 
     if (key) {
@@ -125,13 +125,11 @@ export const naiveLocales = (key: string) => {
  *
  * @remak 未避免出现加载语言错误问题, 故而在 `main.ts` 注册时, 应优先加载 `i18n` 避免出现该问题
  */
-export const getDefaultLocal = () => {
-  const catchLanguage = getCache<string>(
+export const getAppDefaultLanguage = () => {
+  const language = getCache<string>(
     APP_CATCH_KEY.localeLanguage,
     'localStorage',
   )
 
-  const locale = catchLanguage ? catchLanguage : SYSTEM_DEFAULT_LOCAL
-
-  return locale
+  return language ? language : SYSTEM_DEFAULT_LOCAL
 }

@@ -1,11 +1,11 @@
 import Layout from '@/layout/index'
-import childrenRoutes from './routeModules'
+import { getAppRawRoutes } from './routeModules'
 import { ROOT_ROUTE } from '@/appConfig/appConfig'
 import { expandRoutes } from '@/router/helper/expandRoutes'
 
 const { path } = ROOT_ROUTE
 
-export default [
+export default () => [
   {
     path: '/',
     name: 'login',
@@ -16,7 +16,7 @@ export default [
     name: 'layout',
     redirect: path,
     component: Layout,
-    children: expandRoutes(childrenRoutes),
+    children: expandRoutes(getAppRawRoutes()),
   },
   {
     path: '/:catchAll(.*)',

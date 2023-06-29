@@ -16,10 +16,7 @@ import type {
   PreloadingConfig,
   RootRoute,
 } from '@/types/modules/cfg'
-import type {
-  MenuCollapsedConfig,
-  AppKeepAlive,
-} from '@/types/modules/appConfig'
+import type { AppMenuConfig, AppKeepAlive } from '@/types/modules/appConfig'
 
 /**
  *
@@ -80,20 +77,17 @@ export const SIDE_BAR_LOGO: LayoutSideBarLogo = {
  * MENU_COLLAPSED_MODE:
  *   - transform: 边栏将只会移动它的位置而不会改变宽度
  *   - width: Sider 的内容宽度将会被实际改变
- *
  * MENU_COLLAPSED_ICON_SIZE 配置菜单未折叠时图标的大小
- *
  * MENU_COLLAPSED_INDENT 配置菜单每级的缩进
+ * MENU_ACCORDION 手风琴模式
  */
-export const MENU_COLLAPSED_CONFIG: Readonly<MenuCollapsedConfig> = {
+export const APP_MENU_CONFIG: Readonly<AppMenuConfig> = {
   MENU_COLLAPSED_WIDTH: 64,
   MENU_COLLAPSED_MODE: 'width',
   MENU_COLLAPSED_ICON_SIZE: 22,
   MENU_COLLAPSED_INDENT: 24,
+  MENU_ACCORDION: false,
 }
-
-/** 是否启用菜单手风琴模式 */
-export const MENU_ACCORDION = false
 
 /**
  *

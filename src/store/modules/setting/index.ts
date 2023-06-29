@@ -1,9 +1,9 @@
-import { getDefaultLocal } from '@/locales/helper'
+import { getAppDefaultLanguage } from '@/locales/helper'
 import { setCache } from '@use-utils/cache'
 import { set } from 'lodash-es'
 import { addClass, removeClass, colorToRgba } from '@/utils/element'
 import { useI18n } from '@/locales/useI18n'
-import { APP_NAIVE_UI_THEME_OVERRIDES } from '@/appConfig/designConfig'
+import { APP_THEME } from '@/appConfig/designConfig'
 import { useDayjs } from '@/dayjs/index'
 
 import type { ConditionalPick } from '@/types/modules/helper'
@@ -22,7 +22,7 @@ export const useSetting = defineStore(
     const settingState = reactive<SettingState>({
       drawerPlacement: 'right',
       primaryColorOverride: {
-        ...APP_NAIVE_UI_THEME_OVERRIDES,
+        ...APP_THEME.APP_NAIVE_UI_THEME_OVERRIDES,
         common: {
           primaryColor: primaryColor, // 主题色
           primaryColorHover: primaryColor,
@@ -34,7 +34,7 @@ export const useSetting = defineStore(
       spinSwitch: false, // 全屏加载
       invertSwitch: false, // 反转色模式
       breadcrumbSwitch: true, // 面包屑开关
-      localeLanguage: getDefaultLocal(),
+      localeLanguage: getAppDefaultLanguage(),
       lockScreenSwitch: false, // 锁屏开关
       lockScreenInputSwitch: false, // 锁屏输入状态开关(预留该字段是为了方便拓展用, 但是舍弃了该字段, 改为使用 useAppLockScreen 方法)
     })

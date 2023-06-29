@@ -28,6 +28,7 @@ import type {
   BeforeFetchFunction,
   FetchErrorFunction,
 } from '@/axios/type'
+
 const { setImplement } = useAxiosInterceptor()
 
 /**
@@ -74,6 +75,7 @@ const injectCanceler: BeforeFetchFunction<RequestInterceptorConfig> = (
   axiosCanceler.addPendingRequest(ins) // 把当前的请求信息添加到 pendingRequest 表中
 }
 
+/** 请求发生错误示例 */
 const requestError: FetchErrorFunction<unknown> = (error, mode) => {
   console.log(error, mode)
 }

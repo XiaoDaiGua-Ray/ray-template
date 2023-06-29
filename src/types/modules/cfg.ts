@@ -6,6 +6,7 @@ import type {
   UserConfigExport,
 } from 'vite'
 import type { Recordable } from '@/types/modules/helper'
+import type { GlobalThemeOverrides } from 'naive-ui'
 
 export interface LayoutSideBarLogo {
   icon?: string
@@ -73,3 +74,9 @@ export interface AppConfig {
 }
 
 export type AppConfigExport = Config & UserConfigExport
+
+export interface AppTheme {
+  APP_THEME_COLOR: string[]
+  APP_PRIMARY_COLOR: AppPrimaryColor
+  APP_NAIVE_UI_THEME_OVERRIDES: GlobalThemeOverrides
+}

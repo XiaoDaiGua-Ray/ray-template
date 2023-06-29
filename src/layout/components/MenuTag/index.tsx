@@ -48,7 +48,7 @@ const MenuTag = defineComponent({
 
     const { menuKey, menuTagOptions } = storeToRefs(menuStore)
     const {
-      menuModelValueChange,
+      changeMenuModelValue,
       spliceMenTagOptions,
       emptyMenuTagOptions,
       setMenuTagOptions,
@@ -180,7 +180,7 @@ const MenuTag = defineComponent({
         spliceMenTagOptions(currentContentmenuIndex + 1, length - 1)
 
         if (menuKey.value !== routeItem.key) {
-          menuModelValueChange(routeItem.key, routeItem)
+          changeMenuModelValue(routeItem.key, routeItem)
         }
       },
       closeLeft: () => {
@@ -197,7 +197,7 @@ const MenuTag = defineComponent({
 
         if (menuKey.value !== routeItem.key) {
           emptyMenuTagOptions()
-          menuModelValueChange(routeItem.key, routeItem)
+          changeMenuModelValue(routeItem.key, routeItem)
         } else {
           setMenuTagOptions(routeItem, false)
         }
@@ -226,7 +226,7 @@ const MenuTag = defineComponent({
 
         const tag = options[length - 1]
 
-        menuModelValueChange(tag.key as string, tag)
+        changeMenuModelValue(tag.key as string, tag)
       }
     }
 
@@ -248,7 +248,7 @@ const MenuTag = defineComponent({
      * @param item 当前菜单值
      */
     const handleTagClick = (item: MenuOption) => {
-      menuModelValueChange(item.key as string, item)
+      changeMenuModelValue(item.key as string, item)
     }
 
     const getScrollElement = () => {
@@ -430,7 +430,7 @@ const MenuTag = defineComponent({
 
     return {
       modelMenuTagOptions,
-      menuModelValueChange,
+      changeMenuModelValue,
       closeCurrentMenuTag,
       menuKey,
       handleTagClick,

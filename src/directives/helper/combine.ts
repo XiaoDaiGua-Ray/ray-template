@@ -11,7 +11,7 @@
 
 import type { DirectiveModules } from '@/directives/type'
 
-export const mergerDirective = <
+export const combineDirective = <
   T extends Record<string, DirectiveModules>,
   K extends keyof T,
 >(

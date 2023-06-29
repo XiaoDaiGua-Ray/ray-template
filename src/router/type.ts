@@ -32,6 +32,8 @@ export interface AppRouteRecordRaw extends Omit<RouteRecordRaw, 'meta'> {
   fullPath?: string
 }
 
-export interface AutoImportRouteModule extends Object {
-  default: AppRouteRecordRaw
+export interface RouteModules {
+  [propName: string]: {
+    default: AppRouteRecordRaw
+  }
 }

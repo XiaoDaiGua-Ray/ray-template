@@ -18,7 +18,7 @@
  *   - 系统: 根路由、标题、浏览器标题、别名等
  *   - 请求: 代理配置
  *
- * 如果需要新增相关内容, 需要在 src/types/cfg.ts 中进行类型配置
+ * 如果需要新增相关内容, 需要在 src/types/modules/cfg.ts 中进行类型配置
  * ```
  * interface Config // config 内容类型配置
  *
@@ -43,7 +43,7 @@ import {
   buildOptions,
   mixinCSSPlugin,
 } from './vite-plugin/index'
-import { APP_PRIMARY_COLOR } from './src/appConfig/designConfig'
+import { APP_THEME } from './src/appConfig/designConfig'
 import {
   PRE_LOADING_CONFIG,
   ROOT_ROUTE,
@@ -58,7 +58,7 @@ const config: AppConfigExport = {
   /** 配置首屏加载信息 */
   preloadingConfig: PRE_LOADING_CONFIG,
   /** 默认主题色(不可省略, 必填), 也用于 ejs 注入 */
-  appPrimaryColor: APP_PRIMARY_COLOR,
+  appPrimaryColor: APP_THEME.APP_PRIMARY_COLOR,
   sideBarLogo: SIDE_BAR_LOGO,
   /**
    *

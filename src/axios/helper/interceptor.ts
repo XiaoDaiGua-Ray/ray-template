@@ -29,17 +29,20 @@ import type {
   ImplementQueue,
   ErrorImplementQueue,
   FetchType,
+  AxiosFetchInstance,
+  AxiosFetchError,
 } from '@/axios/type'
 import type { AnyFunc } from '@/types/modules/utils'
 
 /** 当前请求的实例 */
-const axiosFetchInstance = {
-  requestInstance: null as RequestInterceptorConfig | null,
-  responseInstance: null as ResponseInterceptorConfig | null,
+const axiosFetchInstance: AxiosFetchInstance = {
+  requestInstance: null,
+  responseInstance: null,
 }
-const axiosFetchError = {
-  requestError: null as null | unknown,
-  responseError: null as null | unknown,
+/** 请求失败返回值 */
+const axiosFetchError: AxiosFetchError = {
+  requestError: null,
+  responseError: null,
 }
 /** 请求队列(区分 reslove 与 reject 状态) */
 const implement: ImplementQueue = {
@@ -57,7 +60,7 @@ export const useAxiosInterceptor = () => {
   /** 创建拦截器实例 */
   const createAxiosInstance = (
     instance: RequestInterceptorConfig | ResponseInterceptorConfig,
-    instanceKey: keyof typeof axiosFetchInstance,
+    instanceKey: keyof AxiosFetchInstance,
   ) => {
     instanceKey === 'requestInstance'
       ? (axiosFetchInstance['requestInstance'] =
@@ -67,7 +70,7 @@ export const useAxiosInterceptor = () => {
   }
 
   /** 获取当前实例 */
-  const getAxiosInstance = (instanceKey: keyof typeof axiosFetchInstance) => {
+  const getAxiosInstance = (instanceKey: keyof AxiosFetchInstance) => {
     return axiosFetchInstance[instanceKey]
   }
 
@@ -101,7 +104,7 @@ export const useAxiosInterceptor = () => {
 
   /** 请求、响应前执行拦截器队列中的所有方法 */
   const beforeFetch = (
-    key: keyof typeof axiosFetchInstance,
+    key: keyof AxiosFetchInstance,
     implementKey: keyof ImplementQueue | keyof ErrorImplementQueue,
     fetchType: FetchType,
   ) => {
@@ -119,7 +122,7 @@ export const useAxiosInterceptor = () => {
 
   /** 请求、响应错误时执行队列中所有方法 */
   const fetchError = (
-    key: keyof typeof axiosFetchError,
+    key: keyof AxiosFetchError,
     error: unknown,
     errorImplementKey: keyof ErrorImplementQueue,
   ) => {

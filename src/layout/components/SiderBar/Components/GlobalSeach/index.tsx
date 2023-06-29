@@ -35,7 +35,7 @@ const GlobalSeach = defineComponent({
   setup(props, { emit }) {
     const menuStore = useMenu()
 
-    const { menuModelValueChange } = menuStore
+    const { changeMenuModelValue } = menuStore
     const modelShow = computed({
       get: () => props.show,
       set: (val) => {
@@ -117,7 +117,7 @@ const GlobalSeach = defineComponent({
       } else {
         modelShow.value = false
 
-        menuModelValueChange(option.key as string, option)
+        changeMenuModelValue(option.key as string, option)
       }
     }
 

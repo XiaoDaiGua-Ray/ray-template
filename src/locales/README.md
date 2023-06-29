@@ -17,14 +17,14 @@
 #### 拓展方法
 
 - 配置语言包文件（文件名为语言包名称）
-- 配置文件入口（使用 `mergeMessage` 方法进行自动合并处理）
+- 配置文件入口（使用 `combineI18nMessages` 方法进行自动合并处理）
 - 语言包名称应该全局唯一
 
 ### helper 文件说明
 
-- `getAppLocales` 获取系统所有语言包（该方法强制依赖 LOCAL_OPTIONS key 配置，意味着你在配置语言包的时候，key 必须与 `src/locales/lang/xxx.ts` 一一对应匹配）
+- `getAppLocalMessages` 获取系统所有语言包（该方法强制依赖 LOCAL_OPTIONS key 配置，意味着你在配置语言包的时候，key 必须与 `src/locales/lang/xxx.ts` 一一对应匹配）
 - `naiveLocales` 获取 `naive-ui` 组件库对应语言包文件
-- `getDefaultLocal` 获取系统当前默认语言包
+- `getAppDefaultLanguage` 获取系统当前默认语言包
 
 ### useI18n 文件说明
 

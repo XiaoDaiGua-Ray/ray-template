@@ -1,5 +1,5 @@
 import { isValueType } from '@use-utils/hook'
-import { ELEMENT_UNIT } from '@/appConfig/regConfig'
+import { APP_REGEX } from '@/appConfig/regConfig'
 
 import type { EventListenerOrEventListenerObject } from '@/types/modules/utils'
 
@@ -132,9 +132,9 @@ export const hasClass = (element: HTMLElement, className: string) => {
  * addStyle(styles)
  * ```
  */
-export const addStyle = (
+export const addStyle = <K extends keyof CSSStyleDeclaration & string>(
   el: HTMLElement,
-  styles: string | Partial<CSSStyleDeclaration>,
+  styles: K | Partial<CSSStyleDeclaration>,
 ) => {
   if (el) {
     if (isValueType<object>(styles, 'Object')) {
@@ -160,10 +160,13 @@ export const addStyle = (
  * @param el Target element dom
  * @param styles 所需卸载样式
  */
-export const removeStyle = (el: HTMLElement, styles: string[]) => {
+export const removeStyle = <K extends keyof CSSStyleDeclaration & string>(
+  el: HTMLElement,
+  styles: K[],
+) => {
   if (el) {
-    styles.forEach((item) => {
-      el.style[item] = null
+    styles.forEach((curr) => {
+      el.style.removeProperty(curr)
     })
   }
 }
@@ -259,7 +262,10 @@ export const getElement = <T extends Element>(element: string) => {
 export const completeSize = (size: number | string, unit = 'px') => {
   if (typeof size === 'number') {
     return size.toString() + unit
-  } else if (isValueType<string>(size, 'String') && ELEMENT_UNIT.test(size)) {
+  } else if (
+    isValueType<string>(size, 'String') &&
+    APP_REGEX.validerCSSUnit.test(size)
+  ) {
     return size
   } else {
     return size + unit

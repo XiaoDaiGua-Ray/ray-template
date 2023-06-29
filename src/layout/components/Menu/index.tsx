@@ -4,7 +4,7 @@ import { NMenu, NLayoutSider, NEllipsis } from 'naive-ui'
 import RayIcon from '@/components/RayIcon/index'
 
 import { useMenu } from '@/store'
-import { MENU_COLLAPSED_CONFIG, MENU_ACCORDION } from '@/appConfig/appConfig'
+import { APP_MENU_CONFIG } from '@/appConfig/appConfig'
 import { useVueRouter } from '@/router/helper/useVueRouter'
 
 import type { MenuInst } from 'naive-ui'
@@ -18,7 +18,7 @@ const LayoutMenu = defineComponent({
     const menuStore = useMenu()
     const { router } = useVueRouter()
 
-    const { menuModelValueChange, collapsedMenu } = menuStore
+    const { changeMenuModelValue, collapsedMenu } = menuStore
     const modelMenuKey = computed({
       get: () => {
         nextTick().then(() => {
@@ -46,7 +46,7 @@ const LayoutMenu = defineComponent({
 
     return {
       modelMenuKey,
-      menuModelValueChange,
+      changeMenuModelValue,
       modelMenuOptions,
       modelCollapsed,
       collapsedMenu,
@@ -60,8 +60,8 @@ const LayoutMenu = defineComponent({
       <NLayoutSider
         bordered
         showTrigger
-        collapseMode={MENU_COLLAPSED_CONFIG.MENU_COLLAPSED_MODE}
-        collapsedWidth={MENU_COLLAPSED_CONFIG.MENU_COLLAPSED_WIDTH}
+        collapseMode={APP_MENU_CONFIG.MENU_COLLAPSED_MODE}
+        collapsedWidth={APP_MENU_CONFIG.MENU_COLLAPSED_WIDTH}
         onUpdateCollapsed={this.collapsedMenu.bind(this)}
         nativeScrollbar={false}
       >
@@ -94,12 +94,12 @@ const LayoutMenu = defineComponent({
           ref="menuRef"
           v-model:value={this.modelMenuKey}
           options={this.modelMenuOptions as NaiveMenuOptions[]}
-          indent={MENU_COLLAPSED_CONFIG.MENU_COLLAPSED_INDENT}
+          indent={APP_MENU_CONFIG.MENU_COLLAPSED_INDENT}
           collapsed={this.modelCollapsed}
-          collapsedIconSize={MENU_COLLAPSED_CONFIG.MENU_COLLAPSED_ICON_SIZE}
-          collapsedWidth={MENU_COLLAPSED_CONFIG.MENU_COLLAPSED_WIDTH}
-          onUpdateValue={this.menuModelValueChange.bind(this)}
-          accordion={MENU_ACCORDION}
+          collapsedIconSize={APP_MENU_CONFIG.MENU_COLLAPSED_ICON_SIZE}
+          collapsedWidth={APP_MENU_CONFIG.MENU_COLLAPSED_WIDTH}
+          onUpdateValue={this.changeMenuModelValue.bind(this)}
+          accordion={APP_MENU_CONFIG.MENU_ACCORDION}
         />
       </NLayoutSider>
     )

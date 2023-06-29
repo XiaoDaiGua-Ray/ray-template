@@ -20,11 +20,8 @@
  * 如果不设置 order 属性, 则会默认排在前面
  */
 
-import { autoMergeRoute } from '@/router/helper/merge'
+import { combineRawRouteModules } from '@/router/helper/combine'
 import { orderRoutes } from '@/router/helper/orderRoutes'
 
-import type { AppRouteRecordRaw } from '@/router/type'
-
-const routes: AppRouteRecordRaw[] = orderRoutes(autoMergeRoute())
-
-export default routes
+/** 获取所有被合并与排序的路由 */
+export const getAppRawRoutes = () => orderRoutes(combineRawRouteModules())

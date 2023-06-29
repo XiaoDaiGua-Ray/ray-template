@@ -104,3 +104,13 @@ export type FetchErrorFunction<T = any> = <K extends T>(
   error: K,
   mode: string,
 ) => void
+
+export interface AxiosFetchInstance {
+  requestInstance: RequestInterceptorConfig | null
+  responseInstance: ResponseInterceptorConfig | null
+}
+
+export interface AxiosFetchError<T = unknown> {
+  requestError: T | null
+  responseError: T | null
+}

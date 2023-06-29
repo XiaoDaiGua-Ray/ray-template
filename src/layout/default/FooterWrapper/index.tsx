@@ -26,7 +26,7 @@ const FooterWrapper = defineComponent({
     return this.copyright ? (
       <div class="layout-footer-wrapper">{this.copyright}</div>
     ) : (
-      <></>
+      ''
     )
   },
 })

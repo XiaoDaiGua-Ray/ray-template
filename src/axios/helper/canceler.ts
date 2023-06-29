@@ -56,12 +56,11 @@ export default class RequestCanceler {
       const controller = new AbortController()
 
       config.signal = controller.signal
+
       this.pendingRequest.set(requestKey, controller)
     } else {
       // 如果已经有该 key 则重新挂载 signal
-      config.signal = (
-        this.pendingRequest.get(requestKey) as AbortController
-      ).signal
+      config.signal = this.pendingRequest.get(requestKey)?.signal
     }
   }
 

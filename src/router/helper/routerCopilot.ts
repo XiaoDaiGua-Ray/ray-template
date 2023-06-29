@@ -141,7 +141,6 @@ export const redirectRouterToDashboard = (isReplace = true) => {
   const { path } = ROOT_ROUTE
 
   setCache('menuKey', path)
-  console.log('path', path)
 
   isReplace ? push(path) : replace(path)
 }

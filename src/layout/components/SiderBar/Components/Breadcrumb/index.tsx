@@ -29,14 +29,14 @@ const Breadcrumb = defineComponent({
   setup() {
     const menuStore = useMenu()
 
-    const { menuModelValueChange } = menuStore
+    const { changeMenuModelValue } = menuStore
     const modelBreadcrumbOptions = computed(() => menuStore.breadcrumbOptions)
 
     const handleDropdownSelect = (
       key: string | number,
       option: DropdownOption,
     ) => {
-      menuModelValueChange(key, option)
+      changeMenuModelValue(key, option)
     }
 
     return {

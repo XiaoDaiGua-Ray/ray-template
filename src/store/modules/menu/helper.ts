@@ -11,7 +11,7 @@
 
 /** 本方法感谢 <https://yunkuangao.me/> 的支持 */
 
-import { MENU_COLLAPSED_CONFIG, ROOT_ROUTE } from '@/appConfig/appConfig'
+import { APP_MENU_CONFIG, ROOT_ROUTE } from '@/appConfig/appConfig'
 import RayIcon from '@/components/RayIcon/index'
 import { isValueType } from '@/utils/hook'
 import { getCache, setCache } from '@/utils/cache'
@@ -31,12 +31,20 @@ import type {
  *
  * @remark 检查是否为所需项
  */
-const check = (
+const isMatch = (
   node: AppMenuOption,
   key: string | number,
   value: string | number,
 ) => {
-  return node[key] === value || node.key === value
+  if (!node || typeof node !== 'object') {
+    return false
+  }
+
+  if (node[key] === value) {
+    return true
+  }
+
+  return false
 }
 
 /**
@@ -47,7 +55,7 @@ const check = (
  *
  * @remark 匹配所有节点
  */
-const process = (
+const findMatchingNodes = (
   options: AppMenuOption,
   key: string | number,
   value: string | number,
@@ -55,7 +63,7 @@ const process = (
   const temp: AppMenuOption[] = []
 
   // 检查当前节点是否匹配值
-  if (check(options, key, value)) {
+  if (isMatch(options, key, value)) {
     temp.push(options)
 
     return temp
@@ -65,7 +73,7 @@ const process = (
   if (options.children && options.children.length > 0) {
     for (const it of options.children) {
       // 子节点递归调用
-      const innerTemp = process(it, key, value)
+      const innerTemp = findMatchingNodes(it, key, value)
 
       // 如果子节点匹配到了，则将当前节点加入数组
       if (innerTemp.length > 0) {
@@ -83,7 +91,7 @@ const process = (
  * @param key 动态字段
  * @param value 匹配值
  */
-export const parse = (
+export const parseAndFindMatchingNodes = (
   options: AppMenuOption[],
   key: string | number,
   value: string | number,
@@ -91,7 +99,7 @@ export const parse = (
   const temp = []
 
   for (const it of options) {
-    const innerTemp = process(it, key, value)
+    const innerTemp = findMatchingNodes(it, key, value)
 
     if (innerTemp.length > 0) {
       temp.push(...innerTemp)
@@ -155,7 +163,7 @@ export const hasMenuIcon = (option: AppMenuOption) => {
     RayIcon,
     {
       name: meta!.icon as string,
-      size: MENU_COLLAPSED_CONFIG.MENU_COLLAPSED_ICON_SIZE,
+      size: APP_MENU_CONFIG.MENU_COLLAPSED_ICON_SIZE,
     },
     {},
   )

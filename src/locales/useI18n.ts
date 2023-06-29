@@ -30,6 +30,7 @@ export const useI18n = (namespace?: string) => {
     return (t as any)(getI18nKey(namespace, key), ...args)
   }
 
+  /** 重写 locale 方法 */
   const overrideLocaleFunc = (lang: string) => {
     const localeRef = locale as WritableComputedRef<string>
 
@@ -50,4 +51,4 @@ export const useI18n = (namespace?: string) => {
  *
  * 该插件识别 t 方法包裹 path 进行提示文案内容
  */
-export const t = <T = unknown>(key: T) => key
+export const t = (key: string) => key

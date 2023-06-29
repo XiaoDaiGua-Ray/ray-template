@@ -13,7 +13,7 @@ export let router: Router
 const createVueRouter = () => {
   return createRouter({
     history: createWebHashHistory(),
-    routes: constantRoutes as unknown as RouteRecordRaw[],
+    routes: constantRoutes() as unknown as RouteRecordRaw[],
     scrollBehavior: (to) => {
       scrollViewToTop(to)
 

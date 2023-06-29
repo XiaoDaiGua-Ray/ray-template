@@ -1,11 +1,13 @@
-import { mergeMessage } from '@/locales/helper'
+import { combineI18nMessages } from '@/locales/helper'
 
-const modules = import.meta.glob('./en-US/**/*.json', {
+import type { I18nModules } from '@/locales/type'
+
+const modules: I18nModules = import.meta.glob('./en-US/**/*.json', {
   eager: true,
 })
 
 export default {
   message: {
-    ...mergeMessage(modules, 'en-US'),
+    ...combineI18nMessages(modules, 'en-US'),
   },
 }
