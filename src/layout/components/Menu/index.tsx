@@ -22,7 +22,7 @@ const LayoutMenu = defineComponent({
     const modelMenuKey = computed({
       get: () => {
         nextTick().then(() => {
-          menuRef.value?.showOption?.(menuStore.menuKey as string)
+          showMenuOption()
         })
 
         return menuStore.menuKey
@@ -42,6 +42,14 @@ const LayoutMenu = defineComponent({
           ? router.push(sideBarLogo.url)
           : window.open(sideBarLogo.url)
       }
+    }
+
+    const showMenuOption = () => {
+      const key = modelMenuKey.value as string
+
+      nextTick().then(() => {
+        menuRef.value?.showOption?.(key)
+      })
     }
 
     return {

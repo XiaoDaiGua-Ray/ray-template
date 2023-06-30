@@ -43,9 +43,6 @@
     "src/**/*.tsx",
     "src/**/*.ts",
     "src/**/*.vue",
-    "src/*.ts",
-    "src/*.vue",
-    "src/*",
     "components.d.ts",
     "auto-imports.d.ts",
     "src/types/global.d.ts"

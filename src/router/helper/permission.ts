@@ -32,6 +32,7 @@ import type {
   RouteLocationNormalized,
 } from 'vue-router'
 import type { AppMenuOption } from '@/types/modules/app'
+import type { AppRouteMeta } from '@/router/type'
 
 export const permissionRouter = (router: Router) => {
   const { beforeEach } = router
@@ -39,9 +40,10 @@ export const permissionRouter = (router: Router) => {
   beforeEach((to, from, next) => {
     const token = getCache<string>(APP_CATCH_KEY.token)
     const route = getCache<string>('menuKey') || ROOT_ROUTE.path
+    const { meta } = to
 
     if (token !== null) {
-      if (validMenuItemShow(to as unknown as AppMenuOption)) {
+      if (validRole(meta as AppRouteMeta)) {
         if (to.path === '/' || from.path === '/login') {
           if (route !== 'no') {
             next(route)

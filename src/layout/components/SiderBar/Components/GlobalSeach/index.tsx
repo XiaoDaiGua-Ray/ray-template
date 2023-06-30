@@ -72,6 +72,7 @@ const GlobalSeach = defineComponent({
 
       if ((_e.ctrlKey || _e.metaKey) && _e.key === 'k') {
         modelShow.value = true
+        console.log(modelMenuOptions.value)
       }
     }
 

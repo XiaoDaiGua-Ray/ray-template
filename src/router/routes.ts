@@ -18,10 +18,10 @@ export default () => [
     component: Layout,
     children: expandRoutes(getAppRawRoutes()),
   },
-  {
-    path: '/:catchAll(.*)',
-    name: 'errorPage',
-    component: Layout,
-    redirect: '/error',
-  },
+  // {
+  //   path: '/:catchAll(.*)',
+  //   name: 'errorPage',
+  //   component: Layout,
+  //   redirect: '/error',
+  // },
 ]

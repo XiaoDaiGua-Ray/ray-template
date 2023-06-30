@@ -18,7 +18,7 @@ import MenuTag from './components/MenuTag/index'
 import ContentWrapper from '@/layout/default/ContentWrapper'
 import FooterWrapper from '@/layout/default/FooterWrapper'
 
-import { useSetting, useMenu } from '@/store'
+import { useSetting } from '@/store'
 import { LAYOUT_CONTENT_REF } from '@/appConfig/routerConfig'
 import { layoutHeaderCssVars } from '@/layout/layoutResize'
 import useAppLockScreen from '@/components/AppComponents/AppLockScreen/appLockVar'
@@ -38,11 +38,6 @@ const Layout = defineComponent({
       layoutSiderBarRef,
       layoutMenuTagRef,
     ])
-    const { setupAppMenu } = useMenu()
-
-    nextTick().then(() => {
-      setupAppMenu()
-    })
 
     return {
       windowHeight,

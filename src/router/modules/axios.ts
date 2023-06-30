@@ -11,7 +11,6 @@ const axios: AppRouteRecordRaw = {
     icon: 'axios',
     order: 3,
     keepAlive: true,
-    hidden: false,
   },
 }
 

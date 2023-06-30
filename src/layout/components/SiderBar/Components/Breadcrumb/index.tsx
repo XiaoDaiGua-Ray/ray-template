@@ -22,7 +22,12 @@ import { NDropdown, NBreadcrumb, NBreadcrumbItem } from 'naive-ui'
 
 import { useMenu } from '@/store'
 
-import type { DropdownOption } from 'naive-ui'
+import type { DropdownOption, MenuOption } from 'naive-ui'
+import type {
+  AppMenuOption,
+  MenuTagOptions,
+  AppMenuKey,
+} from '@/types/modules/app'
 
 const Breadcrumb = defineComponent({
   name: 'RBreadcrumb',
@@ -30,7 +35,8 @@ const Breadcrumb = defineComponent({
     const menuStore = useMenu()
 
     const { changeMenuModelValue } = menuStore
-    const modelBreadcrumbOptions = computed(() => menuStore.breadcrumbOptions)
+    const { breadcrumbOptions } = storeToRefs(menuStore)
+    const modelBreadcrumbOptions = computed(() => breadcrumbOptions.value)
 
     const handleDropdownSelect = (
       key: string | number,
@@ -39,16 +45,26 @@ const Breadcrumb = defineComponent({
       changeMenuModelValue(key, option)
     }
 
+    const handleBreadcrumbItemClick = (option: AppMenuOption) => {
+      if (!option.children?.length) {
+        changeMenuModelValue(option.key, option as unknown as MenuOption)
+      }
+    }
+
     return {
       modelBreadcrumbOptions,
       handleDropdownSelect,
+      handleBreadcrumbItemClick,
     }
   },
   render() {
     return (
       <NBreadcrumb>
         {this.modelBreadcrumbOptions.map((curr) => (
-          <NBreadcrumbItem key={curr.key}>
+          <NBreadcrumbItem
+            key={curr.key}
+            onClick={this.handleBreadcrumbItemClick.bind(this, curr)}
+          >
             <NDropdown
               labelField="breadcrumbLabel"
               options={

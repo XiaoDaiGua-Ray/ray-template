@@ -66,31 +66,10 @@ export const validRole = (meta: AppRouteMeta) => {
  * 如果你仅仅是希望校验是否满足权限, 应该使用另一个方法 validRole
  */
 export const validMenuItemShow = (option: AppMenuOption) => {
-  const { meta, name } = option
-  const hidden =
-    meta?.hidden === undefined || meta?.hidden === false ? false : meta?.hidden
+  const { meta = {} } = option
+  const { hidden } = meta
 
-  // 如果是超级管理员(预设为 admin), 则根据其菜单栏(hidden)字段判断是否显示
-  if (validRole(meta)) {
-    return true && !hidden
-  } else {
-    // 如果为基础路由, 不进行鉴权则根据其菜单栏(hidden)字段判断是否显示
-    if (WHITE_ROUTES.includes(name)) {
-      return true && !hidden
-    }
-
-    // 如果 role 为 undefind 或者空数组, 则认为该路由不做权限过滤
-    if (!meta?.role || !meta.role?.length) {
-      return true && !hidden
-    }
-
-    // 判断权限是否匹配和菜单栏(hidden)字段判断是否显示
-    if (meta?.role && meta.role.length) {
-      return validRole(meta) && !hidden
-    }
-
-    return true && !hidden
-  }
+  return hidden === undefined || hidden === false ? true : false
 }
 
 /**

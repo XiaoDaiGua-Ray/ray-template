@@ -19,6 +19,7 @@ export interface AppRouteMeta {
   ignoreAutoResetScroll?: boolean
   order?: number
   keepAlive?: boolean
+  sameLevel?: boolean
 }
 
 // @ts-ignore

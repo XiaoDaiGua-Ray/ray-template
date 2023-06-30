@@ -25,22 +25,26 @@
 import { NEllipsis } from 'naive-ui'
 
 import { getCache, setCache } from '@/utils/cache'
-import { validMenuItemShow } from '@/router/helper/routerCopilot'
+import { validMenuItemShow, validRole } from '@/router/helper/routerCopilot'
 import {
   parseAndFindMatchingNodes,
-  matchMenuOption,
   updateDocumentTitle,
   hasMenuIcon,
   getCatchMenuKey,
 } from './helper'
 import { useI18n } from '@/locales/useI18n'
 import { getAppRawRoutes } from '@/router/routeModules'
+import { expandRoutes } from '@/router/helper/expandRoutes'
 import { useKeepAlive } from '@/store'
 import { useVueRouter } from '@/router/helper/useVueRouter'
 
 import type { MenuOption } from 'naive-ui'
 import type { AppRouteMeta, AppRouteRecordRaw } from '@/router/type'
-import type { AppMenuOption, MenuTagOptions } from '@/types/modules/app'
+import type {
+  AppMenuOption,
+  MenuTagOptions,
+  AppMenuKey,
+} from '@/types/modules/app'
 import type { MenuState } from '@/store/modules/menu/type'
 
 export const useMenu = defineStore(
@@ -58,6 +62,7 @@ export const useMenu = defineStore(
       menuTagOptions: [], // tag 标签菜单
       breadcrumbOptions: [], // 面包屑菜单
     })
+    const isSetupAppMenuLock = ref(true)
 
     /**
      *
@@ -77,78 +82,26 @@ export const useMenu = defineStore(
 
     /**
      *
-     * @param key 菜单更新后的 key
-     * @param option 菜单当前 option 项
+     * 设置面包屑
      *
-     * @remark 修改 `menu key` 后的回调函数
-     * @remark 修改后, 缓存当前选择 key 并且存储标签页与跳转页面(router push 操作)
+     * 如果识别到为平级模式, 则会自动追加一层面包屑
      */
-    const changeMenuModelValue = (key: string | number, option: MenuOption) => {
-      const { meta, path } = option as unknown as AppRouteRecordRaw
+    const setBreadcrumbOptions = (key: string | number, option: MenuOption) => {
+      const { meta } = option as unknown as AppRouteRecordRaw
 
-      if (meta.windowOpen) {
-        window.open(meta.windowOpen)
-      } else {
-        // 防止重复点击做重复操作处理
-        if (menuState.menuKey !== key) {
-          matchMenuOption(
-            option as unknown as MenuTagOptions,
-            menuState.menuKey,
-            menuState.menuTagOptions,
-          )
-          updateDocumentTitle(option as unknown as AppMenuOption)
-          setKeepAliveInclude(option as unknown as AppMenuOption)
+      menuState.breadcrumbOptions = getCompleteRoutePath(menuState.options, key)
 
-          menuState.breadcrumbOptions = parseAndFindMatchingNodes(
-            menuState.options,
-            'key',
-            key,
-          ) // 获取面包屑
+      if (meta.sameLevel) {
+        nextTick().then(() => {
+          const fd = menuState.breadcrumbOptions.find((curr) => {
+            return curr.path === option.path
+          })
 
-          /** 是否为根路由 */
-          if (!String(key).startsWith('/')) {
-            /** 如果不是根路由, 则拼接完整路由并跳转 */
-            const _path = getCompleteRoutePath(menuState.options, key)
-              .map((curr) => curr.key)
-              .join('/')
-
-            router.push(_path)
-          } else {
-            /** 根路由直接跳转 */
-            router.push(path)
+          if (!fd) {
+            menuState.breadcrumbOptions.push(option as unknown as AppMenuOption)
           }
-
-          menuState.menuKey = key
-
-          /** 缓存菜单 key(sessionStorage) */
-          setCache('menuKey', key)
-        }
+        })
       }
-    }
-
-    /**
-     *
-     * @param path 路由地址
-     *
-     * @remark 监听路由地址变化更新菜单状态
-     * @remark 递归查找匹配项
-     */
-    const updateMenuKeyWhenRouteUpdate = (path: string) => {
-      const matchMenuItem = (options: MenuOption[]) => {
-        for (const i of options) {
-          if (i?.children?.length) {
-            matchMenuItem(i.children)
-          }
-
-          if (path === i.path) {
-            changeMenuModelValue(i.path, i)
-
-            break
-          }
-        }
-      }
-
-      matchMenuItem(menuState.options as MenuOption[])
     }
 
     /**
@@ -166,6 +119,98 @@ export const useMenu = defineStore(
       isAppend
         ? menuState.menuTagOptions.push(...arr)
         : (menuState.menuTagOptions = arr)
+    }
+
+    /** 当 url 地址发生变化触发 menuTagOptions 更新 */
+    const setMenuTagOptionsWhenMenuValueChange = (
+      key: string | number,
+      option: MenuOption,
+    ) => {
+      const tag = menuState.menuTagOptions.find((curr) => curr.path === key)
+
+      if (!tag) {
+        menuState.menuTagOptions.push(option as unknown as MenuTagOptions)
+      }
+    }
+
+    /**
+     *
+     * @param key 菜单更新后的 key
+     * @param option 菜单当前 option 项
+     *
+     * @remark 修改 `menu key` 后的回调函数
+     * @remark 修改后, 缓存当前选择 key 并且存储标签页与跳转页面(router push 操作)
+     */
+    const changeMenuModelValue = (key: string | number, option: MenuOption) => {
+      const { meta, path } = option as unknown as AppRouteRecordRaw
+
+      if (meta.windowOpen) {
+        window.open(meta.windowOpen)
+      } else {
+        /**
+         *
+         * key 以 `/` 开头, 则说明为根路由, 直接跳转
+         * key 开头未匹配到 `/`, 则需要获取到完整路由后再进行跳转
+         *
+         * 但是, 缓存 key 都以当前点击 key 为准
+         */
+        if (!String(key).startsWith('/')) {
+          /** 如果不是根路由, 则拼接完整路由并跳转 */
+          const _path = getCompleteRoutePath(menuState.options, key)
+            .map((curr) => curr.key)
+            .join('/')
+
+          router.push(_path)
+        } else {
+          /** 根路由直接跳转 */
+          router.push(path)
+        }
+
+        /** 检查是否为根路由 */
+        const count = (path.match(new RegExp('/', 'g')) || []).length
+
+        /** 更新浏览器标题 */
+        updateDocumentTitle(option as unknown as AppMenuOption)
+        /** 更新缓存队列 */
+        setKeepAliveInclude(option as unknown as AppMenuOption)
+
+        if (!meta.sameLevel || (meta.sameLevel && count === 1)) {
+          /** 更新标签菜单 */
+          setMenuTagOptionsWhenMenuValueChange(key, option)
+          /** 更新面包屑 */
+          setBreadcrumbOptions(key, option)
+
+          menuState.menuKey = key
+          /** 缓存菜单 key(sessionStorage) */
+          setCache('menuKey', key)
+        } else {
+          setBreadcrumbOptions(menuState.menuKey || '', option)
+        }
+      }
+    }
+
+    /**
+     *
+     * @param path 路由地址
+     *
+     * @remark 监听路由地址变化更新菜单状态
+     * @remark 递归查找匹配项
+     */
+    const updateMenuKeyWhenRouteUpdate = (path: string) => {
+      const appRawRoutes = expandRoutes(getAppRawRoutes())
+      const count = (path.match(new RegExp('/', 'g')) || []).length
+      const fd = appRawRoutes.find((curr) => curr.path === path)
+      let combinePath = path
+
+      if (count > 1) {
+        const splitPath = path.split('/').filter((curr) => curr)
+
+        combinePath = splitPath[splitPath.length - 1]
+      }
+
+      if (fd) {
+        changeMenuModelValue(combinePath, fd as unknown as MenuOption)
+      }
     }
 
     /**
@@ -191,6 +236,9 @@ export const useMenu = defineStore(
                 default: () => label.value,
               }),
             breadcrumbLabel: label.value,
+            /** 检查该菜单项是否展示 */
+            show:
+              meta.hidden === false || meta.hidden === undefined ? true : false,
           } as AppMenuOption
           /** 合并 icon */
           const attr: AppMenuOption = Object.assign({}, route, {
@@ -198,14 +246,13 @@ export const useMenu = defineStore(
           })
 
           if (option.path === getCatchMenuKey()) {
-            /** 设置菜单标签 */
-            setMenuTagOptions(attr)
             /** 设置浏览器标题 */
             updateDocumentTitle(attr)
+            setMenuTagOptionsWhenMenuValueChange(
+              option.path,
+              attr as unknown as MenuOption,
+            )
           }
-
-          /** 检查该菜单项是否展示 */
-          attr.show = validMenuItemShow(option)
 
           return attr
         }
@@ -214,9 +261,9 @@ export const useMenu = defineStore(
           const catchArr: AppMenuOption[] = []
 
           for (const curr of routes) {
-            if (curr.children?.length && validMenuItemShow(curr)) {
+            if (curr.children?.length) {
               curr.children = resolveRoutes(curr.children, index++)
-            } else if (!validMenuItemShow(curr)) {
+            } else if (!validRole(curr.meta)) {
               /** 如果校验失败, 则不会添加进 menu options */
               continue
             }
@@ -234,15 +281,6 @@ export const useMenu = defineStore(
         )
 
         resolve()
-
-        /** 初始化后渲染面包屑 */
-        nextTick(() => {
-          menuState.breadcrumbOptions = parseAndFindMatchingNodes(
-            menuState.options,
-            'key',
-            menuState.menuKey as string,
-          )
-        })
       })
     }
 
@@ -274,11 +312,28 @@ export const useMenu = defineStore(
       menuState.menuTagOptions = []
     }
 
+    /**
+     *
+     * 初始化系统菜单列表
+     * 该方法仅执行一次
+     */
+    const setupPiniaMenuStore = async () => {
+      if (isSetupAppMenuLock.value) {
+        await setupAppMenu()
+
+        isSetupAppMenuLock.value = false
+      }
+    }
+
     /** 监听路由变化并且更新路由菜单与菜单标签 */
     watch(
       () => route.fullPath,
-      (newData) => {
-        updateMenuKeyWhenRouteUpdate(newData)
+      async (newData) => {
+        const reg = /^([^?]+)/
+        const match = newData.match(reg)?.[1]
+
+        await setupPiniaMenuStore()
+        updateMenuKeyWhenRouteUpdate(match || '')
       },
       {
         immediate: true,
