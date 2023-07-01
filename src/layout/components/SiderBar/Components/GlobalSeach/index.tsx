@@ -109,7 +109,7 @@ const GlobalSeach = defineComponent({
       }
     }
 
-    const handleSearchItemClick = (option: MenuOption) => {
+    const handleSearchItemClick = (option: AppMenuOption) => {
       const meta = option.meta as AppRouteMeta
 
       /** 如果配置站外跳转则不会关闭搜索框 */
@@ -118,7 +118,7 @@ const GlobalSeach = defineComponent({
       } else {
         modelShow.value = false
 
-        changeMenuModelValue(option.key as string, option)
+        changeMenuModelValue(option.key, option)
       }
     }
 

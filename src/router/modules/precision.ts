@@ -1,4 +1,5 @@
 import { t } from '@/locales/useI18n'
+import { LAYOUT } from '@/router/constant/index'
 
 import type { AppRouteRecordRaw } from '@/router/type'
 

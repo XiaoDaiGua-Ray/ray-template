@@ -42,3 +42,9 @@ export type CipherParams = CryptoJS.lib.CipherParams
 export type AnyFunc = (...args: any[]) => any
 
 export type AnyVoidFunc = (...args: any[]) => void
+
+export type PartialCSSStyleDeclaration = Partial<
+  Record<keyof CSSStyleDeclaration, string>
+>
+
+export type ElementSelector = string | `attr:${string}`

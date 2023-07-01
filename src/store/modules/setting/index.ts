@@ -1,5 +1,5 @@
 import { getAppDefaultLanguage } from '@/locales/helper'
-import { setCache } from '@use-utils/cache'
+import { setStorage } from '@use-utils/cache'
 import { set } from 'lodash-es'
 import { addClass, removeClass, colorToRgba } from '@/utils/element'
 import { useI18n } from '@/locales/useI18n'
@@ -46,7 +46,7 @@ export const useSetting = defineStore(
 
       settingState.localeLanguage = key
 
-      setCache('localeLanguage', key, 'localStorage')
+      setStorage('localeLanguage', key, 'localStorage')
     }
 
     /** 切换主题色 */

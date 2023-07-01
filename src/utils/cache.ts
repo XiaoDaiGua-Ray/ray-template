@@ -18,16 +18,26 @@ import type { CacheType } from '@/types/modules/utils'
  * @param key 需要设置的key
  * @param value 需要缓存的值
  */
-export const setCache = <T = unknown>(
+export const setStorage = <T = unknown>(
   key: string,
   value: T,
   type: CacheType = 'sessionStorage',
 ) => {
-  const waitCacheValue = JSON.stringify(value)
+  if (!key) {
+    console.error('Failed to set stored data: key is empty or undefined')
 
-  type === 'localStorage'
-    ? window.localStorage.setItem(key, waitCacheValue)
-    : window.sessionStorage.setItem(key, waitCacheValue)
+    return
+  }
+
+  try {
+    const waitCacheValue = JSON.stringify(value)
+
+    type === 'localStorage'
+      ? window.localStorage.setItem(key, waitCacheValue)
+      : window.sessionStorage.setItem(key, waitCacheValue)
+  } catch (error) {
+    console.error(`Failed to set stored data for key '${key}'`, error)
+  }
 }
 
 /**
@@ -35,16 +45,27 @@ export const setCache = <T = unknown>(
  * @param key 需要获取目标缓存的key
  * @returns 获取缓存值
  */
-export const getCache = <T>(
+export const getStorage = <T>(
   key: string,
-  type: CacheType = 'sessionStorage',
+  storageType: CacheType = 'sessionStorage',
+  defaultValue?: T,
 ): T | null => {
-  const data =
-    type === 'localStorage'
-      ? window.localStorage.getItem(key)
-      : window.sessionStorage.getItem(key)
+  try {
+    const data =
+      storageType === 'localStorage'
+        ? window.localStorage.getItem(key)
+        : window.sessionStorage.getItem(key)
 
-  return Object.is(data, null) ? null : JSON.parse(data as string)
+    if (data === null) {
+      return defaultValue ?? null
+    }
+
+    return JSON.parse(data) as T
+  } catch (error) {
+    console.error(`Failed to get stored data for key '${key}'`, error)
+
+    return defaultValue ?? null
+  }
 }
 
 /**
@@ -56,7 +77,7 @@ export const getCache = <T>(
  *   - all-sessionStorage: 删除所有 sessionStorage 缓存值
  *   - all-localStorage: 删除所有 localStorage 缓存值
  */
-export const removeCache = (
+export const removeStorage = (
   key: string | 'all' | 'all-sessionStorage' | 'all-localStorage',
   type: CacheType = 'sessionStorage',
 ) => {
@@ -78,6 +99,12 @@ export const removeCache = (
       break
 
     default:
+      if (!key) {
+        console.error('Failed to remove stored data: key is empty or undefined')
+
+        return
+      }
+
       type === 'localStorage'
         ? window.localStorage.removeItem(key)
         : window.sessionStorage.removeItem(key)

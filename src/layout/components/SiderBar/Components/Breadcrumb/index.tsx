@@ -42,12 +42,16 @@ const Breadcrumb = defineComponent({
       key: string | number,
       option: DropdownOption,
     ) => {
-      changeMenuModelValue(key, option)
+      changeMenuModelValue(key, option as unknown as AppMenuOption)
     }
 
     const handleBreadcrumbItemClick = (option: AppMenuOption) => {
       if (!option.children?.length) {
-        changeMenuModelValue(option.key, option as unknown as MenuOption)
+        const { meta = {} } = option
+
+        if (!meta.sameLevel) {
+          changeMenuModelValue(option.key, option)
+        }
       }
     }
 

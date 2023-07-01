@@ -9,6 +9,7 @@ import { useVueRouter } from '@/router/helper/useVueRouter'
 
 import type { MenuInst } from 'naive-ui'
 import type { NaiveMenuOptions } from '@/types/modules/component'
+import type { AppMenuOption } from '@/types/modules/app'
 
 const LayoutMenu = defineComponent({
   name: 'LayoutMenu',
@@ -106,7 +107,9 @@ const LayoutMenu = defineComponent({
           collapsed={this.modelCollapsed}
           collapsedIconSize={APP_MENU_CONFIG.MENU_COLLAPSED_ICON_SIZE}
           collapsedWidth={APP_MENU_CONFIG.MENU_COLLAPSED_WIDTH}
-          onUpdateValue={this.changeMenuModelValue.bind(this)}
+          onUpdateValue={(key, op) => {
+            this.changeMenuModelValue(key, op as unknown as AppMenuOption)
+          }}
           accordion={APP_MENU_CONFIG.MENU_ACCORDION}
         />
       </NLayoutSider>

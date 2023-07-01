@@ -1,6 +1,6 @@
 import { NForm, NFormItem, NInput, NButton, NSpace, NDivider } from 'naive-ui'
 
-import { setCache } from '@/utils/cache'
+import { setStorage } from '@/utils/cache'
 import { setSpin } from '@/spin'
 import { useSignin } from '@/store'
 import { useI18n } from '@/locales/useI18n'
@@ -55,8 +55,8 @@ const Signin = defineComponent({
 
                   window.$message.success(`欢迎${signinForm.value.name}登陆~`)
 
-                  setCache(APP_CATCH_KEY.token, 'tokenValue')
-                  setCache(APP_CATCH_KEY.signin, res.data)
+                  setStorage(APP_CATCH_KEY.token, 'tokenValue')
+                  setStorage(APP_CATCH_KEY.signin, res.data)
 
                   router.push(path)
                 }, 2 * 1000)

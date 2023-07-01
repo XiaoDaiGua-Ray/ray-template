@@ -20,7 +20,7 @@ import {
 import { useSignin } from '@/store'
 import { useVueRouter } from '@/router/helper/useVueRouter'
 import { ROOT_ROUTE } from '@/appConfig/appConfig'
-import { setCache } from '@/utils/cache'
+import { setStorage } from '@/utils/cache'
 
 import type { Router } from 'vue-router'
 import type { AppRouteMeta } from '@/router/type'
@@ -58,18 +58,27 @@ export const validRole = (meta: AppRouteMeta) => {
 
 /**
  *
- * @remark 校验当前路由
+ * @remark 校验当前路由是否显示
  *
- * 该方法进行校验时, 会将 hidden 与 role 一起进行校验
- * 如果有一条不满足校验, 则视为校验失败
+ * 该方法进行校验时, 会将 hidden 与 sameLevel 一起进行校验
+ * sameLevel 的优先级最高
  *
  * 如果你仅仅是希望校验是否满足权限, 应该使用另一个方法 validRole
  */
 export const validMenuItemShow = (option: AppMenuOption) => {
   const { meta = {} } = option
-  const { hidden } = meta
+  const { hidden, sameLevel } = meta
 
-  return hidden === undefined || hidden === false ? true : false
+  // 如果该路由被标记为平级模式, 则会强制不显示在菜单中
+  if (sameLevel) {
+    return false
+  }
+
+  if (!sameLevel && !hidden) {
+    return true
+  }
+
+  return !hidden ? true : false
 }
 
 /**
@@ -119,7 +128,7 @@ export const redirectRouterToDashboard = (isReplace = true) => {
   const { push, replace } = router
   const { path } = ROOT_ROUTE
 
-  setCache('menuKey', path)
+  setStorage('menuKey', path)
 
   isReplace ? push(path) : replace(path)
 }

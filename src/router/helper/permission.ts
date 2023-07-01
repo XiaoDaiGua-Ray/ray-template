@@ -20,11 +20,10 @@
  * 当然, 你可以指定一个超级管理员角色, 默认获取全部路由
  */
 
-import { getCache, setCache } from '@/utils/cache'
-import { useSignin } from '@/store'
+import { getStorage } from '@/utils/cache'
 import { APP_CATCH_KEY, ROOT_ROUTE } from '@/appConfig/appConfig'
 import { redirectRouterToDashboard } from '@/router/helper/routerCopilot'
-import { validRole, validMenuItemShow } from '@/router/helper/routerCopilot'
+import { validRole } from '@/router/helper/routerCopilot'
 
 import type {
   Router,
@@ -38,8 +37,12 @@ export const permissionRouter = (router: Router) => {
   const { beforeEach } = router
 
   beforeEach((to, from, next) => {
-    const token = getCache<string>(APP_CATCH_KEY.token)
-    const route = getCache<string>('menuKey') || ROOT_ROUTE.path
+    const token = getStorage<string>(APP_CATCH_KEY.token)
+    const route = getStorage<string>(
+      'menuKey',
+      'sessionStorage',
+      ROOT_ROUTE.path,
+    ) as string
     const { meta } = to
 
     if (token !== null) {

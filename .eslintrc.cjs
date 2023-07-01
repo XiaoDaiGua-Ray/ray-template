@@ -74,12 +74,22 @@ module.exports = {
     'no-ex-assign': 2, // 禁止给 `catch` 语句中的异常参数赋值
     'no-extend-native': 2, // 禁止扩展 `native` 对象
     'no-extra-bind': 2, // 禁止不必要的函数绑定
-    'no-extra-boolean-cast': 2, // 禁止不必要的 `bool` 转换
+    'no-extra-boolean-cast': [
+      'error',
+      {
+        enforceForLogicalOperands: true,
+      },
+    ], // 禁止不必要的 `bool` 转换
     'no-extra-parens': 0, // 禁止非必要的括号
     semi: ['error', 'never', { beforeStatementContinuationChars: 'always' }],
     'no-fallthrough': 1, // 禁止 `switch` 穿透
     'no-func-assign': 2, // 禁止重复的函数声明
-    'no-implicit-coercion': 1, // 禁止隐式转换
+    'no-implicit-coercion': [
+      'error',
+      {
+        allow: ['!!', '~'],
+      },
+    ], // 禁止隐式转换
     'no-implied-eval': 2, // 禁止使用隐式 `eval`
     'no-invalid-regexp': 2, // 禁止无效的正则表达式
     'no-invalid-this': 2, // 禁止无效的 `this`

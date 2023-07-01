@@ -23,7 +23,7 @@ import { NAvatar, NSpace } from 'naive-ui'
 
 import { avatarProps, spaceProps } from 'naive-ui'
 import { APP_CATCH_KEY } from '@/appConfig/appConfig'
-import { getCache } from '@/utils/cache'
+import { getStorage } from '@/utils/cache'
 
 import type { PropType } from 'vue'
 import type { AvatarProps, SpaceProps } from 'naive-ui'
@@ -48,7 +48,7 @@ const AppAvatar = defineComponent({
     },
   },
   setup(props) {
-    const signin = getCache<SigninCallback>(APP_CATCH_KEY.signin)
+    const signin = getStorage<SigninCallback>(APP_CATCH_KEY.signin)
     const cssVars = computed(() => {
       const vars = {
         '--app-avatar-cursor': props.cursor,

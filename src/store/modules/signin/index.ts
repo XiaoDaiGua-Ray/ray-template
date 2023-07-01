@@ -20,7 +20,7 @@
  */
 
 import { isEmpty } from 'lodash-es'
-import { removeCache } from '@/utils/cache'
+import { removeStorage } from '@/utils/cache'
 
 import type {
   SigninForm,
@@ -79,7 +79,7 @@ export const useSignin = defineStore(
      */
     const logout = () => {
       window.$message.info('账号退出中...')
-      removeCache('all-sessionStorage')
+      removeStorage('all-sessionStorage')
 
       setTimeout(() => window.location.reload())
     }

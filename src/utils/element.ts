@@ -1,7 +1,11 @@
 import { isValueType } from '@use-utils/hook'
 import { APP_REGEX } from '@/appConfig/regConfig'
 
-import type { EventListenerOrEventListenerObject } from '@/types/modules/utils'
+import type {
+  EventListenerOrEventListenerObject,
+  PartialCSSStyleDeclaration,
+  ElementSelector,
+} from '@/types/modules/utils'
 
 /**
  *
@@ -116,6 +120,8 @@ export const hasClass = (element: HTMLElement, className: string) => {
  * @param el Target element dom
  * @param styles 所需绑定样式(如果为字符串, 则必须以分号结尾每个行内样式描述)
  *
+ *
+ * @example
  * style of string
  * ```
  * const styles = 'width: 100px; height: 100px; background: red;'
@@ -132,27 +138,37 @@ export const hasClass = (element: HTMLElement, className: string) => {
  * addStyle(styles)
  * ```
  */
-export const addStyle = <K extends keyof CSSStyleDeclaration & string>(
+export const addStyle = (
   el: HTMLElement,
-  styles: K | Partial<CSSStyleDeclaration>,
+  styles: PartialCSSStyleDeclaration | string,
 ) => {
-  if (el) {
-    if (isValueType<object>(styles, 'Object')) {
-      Object.keys(styles).forEach((item) => {
-        el.style[item] = styles[item]
-      })
-    } else if (isValueType<string>(styles, 'String')) {
-      const _styles = styles
-
-      _styles.split(';').forEach((item) => {
-        const [_k, _v] = item.split(':')
-
-        if (_k && _v) {
-          el.style[_k.trim()] = _v.trim()
-        }
-      })
-    }
+  if (!el) {
+    return
   }
+
+  let styleObj: PartialCSSStyleDeclaration
+
+  if (isValueType<string>(styles, 'String')) {
+    styleObj = styles.split(';').reduce((pre, curr) => {
+      const [key, value] = curr.split(':').map((s) => s.trim())
+
+      if (key && value) {
+        pre[key] = value
+      }
+
+      return pre
+    }, {} as PartialCSSStyleDeclaration)
+  } else {
+    styleObj = styles
+  }
+
+  Object.keys(styleObj).forEach((key) => {
+    const value = styleObj[key]
+
+    if (key in el.style) {
+      el.style[key] = value
+    }
+  })
 }
 
 /**
@@ -160,15 +176,17 @@ export const addStyle = <K extends keyof CSSStyleDeclaration & string>(
  * @param el Target element dom
  * @param styles 所需卸载样式
  */
-export const removeStyle = <K extends keyof CSSStyleDeclaration & string>(
+export const removeStyle = (
   el: HTMLElement,
-  styles: K[],
+  styles: (keyof CSSStyleDeclaration & string)[],
 ) => {
-  if (el) {
-    styles.forEach((curr) => {
-      el.style.removeProperty(curr)
-    })
+  if (!el) {
+    return
   }
+
+  styles.forEach((curr) => {
+    el.style.removeProperty(curr)
+  })
 }
 
 /**
@@ -222,33 +240,33 @@ export const colorToRgba = (color: string, alpha = 1) => {
  * 示例:
  *
  * class:
- * const el = getElement('.demo')
+ * const el = getElements('.demo')
  * id:
- * const el = getElement('#demo')
+ * const el = getElements('#demo')
  * attribute:
- * const el = getElement('attr:type=button')
+ * const el = getElements('attr:type=button')
  * 或者可以这样写
- * const el = getElement('attr:type')
+ * const el = getElements('attr:type')
  */
-export const getElement = <T extends Element>(element: string) => {
-  if (!element) {
+export const getElements = <T extends Element = Element>(
+  selector: ElementSelector,
+) => {
+  if (!selector) {
     return null
   }
 
-  let queryParam: string
-
-  if (element.startsWith('attr:')) {
-    queryParam = '[' + element.replace('attr:', '') + ']'
-  } else {
-    queryParam = element
-  }
+  const queryParam = selector.startsWith('attr:')
+    ? `[${selector.replace('attr:', '')}]`
+    : selector
 
   try {
-    const el = Array.from(document.querySelectorAll<T>(queryParam))
+    const elements = Array.from(document.querySelectorAll<T>(queryParam))
 
-    return el
-  } catch (e) {
-    return []
+    return elements
+  } catch (error) {
+    console.error(`Failed to get elements for selector '${selector}'`, error)
+
+    return null
   }
 }
 

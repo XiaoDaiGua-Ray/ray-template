@@ -33,10 +33,10 @@ import { uuid } from '@/utils/hook'
 import { hasClass } from '@/utils/element'
 import { redirectRouterToDashboard } from '@/router/helper/routerCopilot'
 import { ROOT_ROUTE } from '@/appConfig/appConfig'
-import { getElement } from '@use-utils/element'
+import { getElements } from '@use-utils/element'
 
 import type { MenuOption, ScrollbarInst } from 'naive-ui'
-import type { MenuTagOptions } from '@/types/modules/app'
+import type { MenuTagOptions, AppMenuOption } from '@/types/modules/app'
 
 const MenuTag = defineComponent({
   name: 'MenuTag',
@@ -247,7 +247,7 @@ const MenuTag = defineComponent({
      *
      * @param item 当前菜单值
      */
-    const handleTagClick = (item: MenuOption) => {
+    const handleTagClick = (item: AppMenuOption) => {
       changeMenuModelValue(item.key as string, item)
     }
 
@@ -381,7 +381,7 @@ const MenuTag = defineComponent({
     /** 动态更新 menu tag 所在位置 */
     const positionMenuTag = () => {
       nextTick().then(() => {
-        const tags = getElement<HTMLElement>(
+        const tags = getElements<HTMLElement>(
           `attr:${MENU_TAG_DATA}="${menuKey.value}"`,
         )
 

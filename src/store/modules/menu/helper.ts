@@ -14,7 +14,7 @@
 import { APP_MENU_CONFIG, ROOT_ROUTE } from '@/appConfig/appConfig'
 import RayIcon from '@/components/RayIcon/index'
 import { isValueType } from '@/utils/hook'
-import { getCache, setCache } from '@/utils/cache'
+import { getStorage, setStorage } from '@/utils/cache'
 
 import type { VNode } from 'vue'
 import type {
@@ -174,10 +174,11 @@ export const hasMenuIcon = (option: AppMenuOption) => {
 /** 获取缓存的 menu key, 如果未获取到则使用 ROOTROUTE path 当作默认激活路由菜单 */
 export const getCatchMenuKey = () => {
   const { path: rootPath } = ROOT_ROUTE
-  const cacheMenuKey =
-    getCache<AppMenuKey>('menuKey') === null
-      ? rootPath
-      : getCache<AppMenuKey>('menuKey')
+  const cacheMenuKey = getStorage<AppMenuKey>(
+    'menuKey',
+    'sessionStorage',
+    rootPath,
+  )
 
   return cacheMenuKey
 }

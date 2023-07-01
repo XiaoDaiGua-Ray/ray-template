@@ -3,7 +3,7 @@ import { RouterView } from 'vue-router'
 import GlobalSpin from '@/spin/index'
 import LockScreen from '@/components/AppComponents/AppLockScreen/index'
 
-import { getCache } from '@/utils/cache'
+import { getStorage } from '@/utils/cache'
 import { get } from 'lodash-es'
 import { useSetting } from '@/store'
 import { addClass, removeClass, addStyle, colorToRgba } from '@/utils/element'
@@ -24,18 +24,20 @@ const App = defineComponent({
       } = __APP_CFG__ // 默认主题色
       const body = document.body
 
-      const primaryColorOverride = getCache<SettingState>(
+      const primaryColorOverride = getStorage<SettingState>(
         'piniaSettingStore',
         'localStorage',
+        primaryColor,
       )
       const _p = get(
-        primaryColorOverride,
+        primaryColorOverride as SettingState,
         'primaryColorOverride.common.primaryColor',
+        primaryColor,
       )
-      const _fp = colorToRgba(_p || primaryColor, 0.3)
+      const _fp = colorToRgba(_p, 0.3)
 
       /** 设置全局主题色 css 变量 */
-      body.style.setProperty('--ray-theme-primary-color', _p || primaryColor)
+      body.style.setProperty('--ray-theme-primary-color', _p)
       body.style.setProperty(
         '--ray-theme-primary-fade-color',
         _fp || primaryFadeColor,
