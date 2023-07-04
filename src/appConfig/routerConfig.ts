@@ -17,6 +17,16 @@ import type { LayoutInst } from 'naive-ui'
  *
  * 内容区域 ref 注册
  * 可以控制内容区域当前滚动位置
+ * 如果你需要在切换路由时候配置自定义滚动到某个视图区域时, 可以使用该属性提供的方法(scrollTo)
+ *
+ * 请注意
+ * 如果你动态的添加了某个属性后, 希望控制滚动条滚动到某个区域时, 应该注意 dom 挂载后再执行该方法
+ * @example
+ * ```ts
+ * nextTick().then(() => {
+ *  LAYOUT_CONTENT_REF.value?.scrollTo()
+ * })
+ * ```
  */
 export const LAYOUT_CONTENT_REF = ref<LayoutInst>()
 
@@ -33,15 +43,9 @@ export const SETUP_ROUTER_GUARD = true
  * 路由表单白名单
  *
  * 如果需要启用该功能, 则需要配置路由 name 属性, 并且需要一一对应(对大小写敏感)
- * 如果未设置, 则不会生效
- *
- * 配置该路由白名单列表后, 则不会对配置中的路由列表进行鉴权处理(配合 basic.ts 中的方法进行使用)
- *
- * 配置动态路由菜单
- * 可以根据权限与白名单进行过滤, 但是 meta hidden 属性拥有最高的控制权限
- * 如果 mete hidden 设置为 false 则永远不会显示菜单选项
+ * 并且在配置 route name 属性时, 如果 name 类型为 symbol 的话, 会认为该路由永远不与白名单列表进行匹配
  */
-export const WHITE_ROUTES = ['RLogin', 'ErrorPage', 'RayTemplateDoc']
+export const WHITE_ROUTES: string[] = ['RLogin', 'ErrorPage', 'RayTemplateDoc']
 
 /**
  *

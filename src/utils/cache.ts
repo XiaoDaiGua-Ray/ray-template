@@ -18,11 +18,11 @@ import type { CacheType } from '@/types/modules/utils'
  * @param key 需要设置的key
  * @param value 需要缓存的值
  */
-export const setStorage = <T = unknown>(
+export function setStorage<T = unknown>(
   key: string,
   value: T,
   type: CacheType = 'sessionStorage',
-) => {
+) {
   if (!key) {
     console.error('Failed to set stored data: key is empty or undefined')
 
@@ -40,16 +40,30 @@ export const setStorage = <T = unknown>(
   }
 }
 
+/** 重载函数 getStorage */
+export function getStorage<T>(
+  key: string,
+  storageType: CacheType,
+  defaultValue: T,
+): T
+
+/** 重载函数 getStorage */
+export function getStorage<T>(
+  key: string,
+  storageType?: CacheType,
+  defaultValue?: T,
+): T | null
+
 /**
  *
  * @param key 需要获取目标缓存的key
  * @returns 获取缓存值
  */
-export const getStorage = <T>(
+export function getStorage<T>(
   key: string,
   storageType: CacheType = 'sessionStorage',
   defaultValue?: T,
-): T | null => {
+): T | null {
   try {
     const data =
       storageType === 'localStorage'
@@ -77,10 +91,10 @@ export const getStorage = <T>(
  *   - all-sessionStorage: 删除所有 sessionStorage 缓存值
  *   - all-localStorage: 删除所有 localStorage 缓存值
  */
-export const removeStorage = (
+export function removeStorage(
   key: string | 'all' | 'all-sessionStorage' | 'all-localStorage',
   type: CacheType = 'sessionStorage',
-) => {
+) {
   switch (key) {
     case 'all':
       window.window.localStorage.clear()

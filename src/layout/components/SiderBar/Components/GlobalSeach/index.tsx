@@ -14,12 +14,11 @@ import './index.scss'
 import { NInput, NModal, NResult, NScrollbar, NSpace } from 'naive-ui'
 import RayIcon from '@/components/RayIcon/index'
 
-import { on, off } from '@/utils/element'
+import { on, off, queryElements, addClass, removeClass } from '@/utils/element'
 import { debounce } from 'lodash-es'
 import { useMenu } from '@/store'
 import { validMenuItemShow } from '@/router/helper/routerCopilot'
 
-import type { MenuOption } from 'naive-ui'
 import type { AppRouteMeta } from '@/router/type'
 import type { AppMenuOption } from '@/types/modules/app'
 
@@ -42,8 +41,7 @@ const GlobalSeach = defineComponent({
         emit('update:show', val)
 
         if (!val) {
-          state.searchOptions = []
-          state.searchValue = null
+          resetSearchSomeValue()
         }
       },
     })
@@ -52,11 +50,15 @@ const GlobalSeach = defineComponent({
       searchValue: null,
       searchOptions: [] as AppMenuOption[],
     })
-
     const tiptextOptions = [
       {
         icon: 'cmd / ctrl + k',
         label: '唤起',
+        plain: true,
+      },
+      {
+        icon: '↑ ↓',
+        label: '切换',
         plain: true,
       },
       {
@@ -65,14 +67,27 @@ const GlobalSeach = defineComponent({
         plain: true,
       },
     ]
+    /** 初始化索引 */
+    let searchElementIndex = 0
+    /** 缓存索引 */
+    let preSearchElementIndex = searchElementIndex
+
+    /** 初始化一些值 */
+    const resetSearchSomeValue = () => {
+      state.searchOptions = []
+      state.searchValue = null
+      searchElementIndex = 0
+      preSearchElementIndex = searchElementIndex
+    }
 
     /** 按下 ctrl + k 或者 command + k 激活搜索栏 */
-    const registerKeyboard = (e: Event) => {
-      const _e = e as KeyboardEvent
+    const registerArouseKeyboard = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault()
+        e.stopPropagation()
+        resetSearchSomeValue()
 
-      if ((_e.ctrlKey || _e.metaKey) && _e.key === 'k') {
         modelShow.value = true
-        console.log(modelMenuOptions.value)
       }
     }
 
@@ -107,18 +122,53 @@ const GlobalSeach = defineComponent({
       } else {
         state.searchOptions = []
       }
+
+      nextTick().then(() => {
+        autoFouceSearchItem()
+      })
     }
 
     const handleSearchItemClick = (option: AppMenuOption) => {
-      const meta = option.meta as AppRouteMeta
+      if (option) {
+        const { meta } = option
 
-      /** 如果配置站外跳转则不会关闭搜索框 */
-      if (meta.windowOpen) {
-        window.open(meta.windowOpen)
-      } else {
-        modelShow.value = false
+        /** 如果配置站外跳转则不会关闭搜索框 */
+        if (meta.windowOpen) {
+          window.open(meta.windowOpen)
+        } else {
+          modelShow.value = false
 
-        changeMenuModelValue(option.key, option)
+          changeMenuModelValue(option.key, option)
+        }
+      }
+    }
+
+    /** 自动聚焦检索项 */
+    const autoFouceSearchItem = () => {
+      const currentOption = state.searchOptions[searchElementIndex]
+      const preOption = state.searchOptions[preSearchElementIndex]
+
+      if (currentOption) {
+        nextTick().then(() => {
+          const searchElementOptions = queryElements<HTMLElement>(
+            `attr:data_path="${currentOption.path}"`,
+          )
+          const preSearchElementOptions = preOption
+            ? queryElements<HTMLElement>(`attr:data_path="${preOption?.path}"`)
+            : null
+
+          if (preSearchElementOptions?.length) {
+            const [el] = preSearchElementOptions
+
+            removeClass(el, 'content-item--active')
+          }
+
+          if (searchElementOptions?.length) {
+            const [el] = searchElementOptions
+
+            addClass(el, 'content-item--active')
+          }
+        })
       }
     }
 
@@ -135,12 +185,68 @@ const GlobalSeach = defineComponent({
       }
     }
 
+    /** 注册按键: 上、下、回车 */
+    const registerChangeSearchElementIndex = (e: KeyboardEvent) => {
+      const keyCode = e.key
+
+      if (keyCode === 'ArrowUp' || keyCode === 'ArrowDown') {
+        e.preventDefault()
+        e.stopPropagation()
+      }
+
+      preSearchElementIndex = searchElementIndex <= 0 ? 0 : searchElementIndex
+
+      /** 更新索引 */
+      const updateIndex = (type: 'up' | 'down') => {
+        if (type === 'up') {
+          searchElementIndex =
+            searchElementIndex - 1 < 0 ? 0 : searchElementIndex - 1
+        } else if (type === 'down') {
+          searchElementIndex =
+            searchElementIndex + 1 >= state.searchOptions.length
+              ? state.searchOptions.length - 1
+              : searchElementIndex + 1
+        }
+      }
+
+      switch (keyCode) {
+        case 'ArrowUp':
+          updateIndex('up')
+
+          break
+        case 'ArrowDown':
+          updateIndex('down')
+
+          break
+        case 'Enter':
+          // eslint-disable-next-line no-case-declarations
+          const option = state.searchOptions[searchElementIndex]
+
+          if (option) {
+            handleSearchItemClick(option)
+          }
+
+          break
+
+        default:
+          break
+      }
+
+      autoFouceSearchItem()
+    }
+
     onMounted(() => {
-      on(window, 'keydown', registerKeyboard)
+      on(window, 'keydown', (e: Event) => {
+        registerArouseKeyboard(e as KeyboardEvent)
+        registerChangeSearchElementIndex(e as KeyboardEvent)
+      })
     })
 
     onBeforeUnmount(() => {
-      off(window, 'keydown', registerKeyboard)
+      off(window, 'keydown', (e: Event) => {
+        registerArouseKeyboard(e as KeyboardEvent)
+        registerChangeSearchElementIndex(e as KeyboardEvent)
+      })
     })
 
     return {
@@ -180,6 +286,7 @@ const GlobalSeach = defineComponent({
                         class="content-item"
                         {...{
                           onClick: this.handleSearchItemClick.bind(this, curr),
+                          data_path: curr.path,
                         }}
                       >
                         <div class="content-item-icon">

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { AppConfig } from './cfg'
+import type { AppConfig } from './modules/cfg'
 import type {
   MessageApi,
   DialogApi,
@@ -7,7 +7,7 @@ import type {
   NotificationApi,
 } from 'naive-ui'
 
-declare global {
+export declare global {
   declare interface UnknownObjectKey {
     [propName: string]: any
   }

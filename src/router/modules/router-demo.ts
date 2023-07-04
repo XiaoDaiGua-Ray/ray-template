@@ -18,7 +18,7 @@ const routerDemo: AppRouteRecordRaw = {
       name: 'RouterDemoHome',
       component: () => import('@/views/router-demo/router-demo-home/index'),
       meta: {
-        noLocalTitle: '人员信息',
+        noLocalTitle: '人员信息(平级模式)',
       },
     },
     {

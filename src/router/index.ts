@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import scrollViewToTop from '@/router/utils/viewScrollTop'
+import { scrollViewToTop } from '@/router/helper/helper'
 import { vueRouterRegister } from '@/router/helper/routerCopilot'
 import { useVueRouter } from '@/router/helper/useVueRouter'
 

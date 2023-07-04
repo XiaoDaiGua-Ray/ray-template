@@ -8,7 +8,6 @@ public
 yarn.*
 vite-env.*
 .prettierrc.*
-.eslintrc
 visualizer.*
 visualizer.html
 .env.*

@@ -132,5 +132,5 @@ export const getAppDefaultLanguage = () => {
     SYSTEM_DEFAULT_LOCAL,
   )
 
-  return language || SYSTEM_DEFAULT_LOCAL
+  return language
 }

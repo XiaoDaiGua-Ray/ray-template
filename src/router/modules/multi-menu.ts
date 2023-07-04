@@ -31,12 +31,23 @@ const multiMenu: AppRouteRecordRaw = {
       },
       children: [
         {
-          path: 'sub-menu',
-          name: 'SubMenu',
+          path: 'sub-menu-other',
+          name: 'SubMenuOther',
           component: () =>
-            import('@/views/multi/views/multi-menu-two/views/sub-menu/index'),
+            import(
+              '@/views/multi/views/multi-menu-two/views/sub-menu-other/index'
+            ),
           meta: {
             noLocalTitle: '多级菜单-2-1',
+            keepAlive: true,
+          },
+        },
+        {
+          path: 'sub-menu',
+          name: 'SubMenu',
+          component: LAYOUT,
+          meta: {
+            noLocalTitle: '多级菜单-2-2',
             keepAlive: true,
           },
           children: [
@@ -48,7 +59,7 @@ const multiMenu: AppRouteRecordRaw = {
                   '@/views/multi/views/multi-menu-two/views/sub-menu/views/multi-menu-two-one/index'
                 ),
               meta: {
-                noLocalTitle: '多级菜单-2-1-1',
+                noLocalTitle: '多级菜单-2-2-1',
                 keepAlive: true,
               },
             },

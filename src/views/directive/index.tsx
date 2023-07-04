@@ -64,7 +64,7 @@ const RDirective = defineComponent({
           <NSpace wrapItem={true} vertical>
             <NButton
               v-throttle={{
-                func: this.updateDemoValue.bind(null, 'debounceBtnClickCount'),
+                func: this.updateDemoValue.bind(null, 'throttleBtnClickCount'),
                 trigger: 'click',
                 wait: 1000,
                 options: {},

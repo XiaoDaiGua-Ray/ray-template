@@ -1,5 +1,5 @@
 import { isValueType } from '@use-utils/hook'
-import { APP_REGEX } from '@/appConfig/regConfig'
+import { APP_REGEX } from '@/appConfig/regexConfig'
 
 import type {
   EventListenerOrEventListenerObject,
@@ -240,15 +240,15 @@ export const colorToRgba = (color: string, alpha = 1) => {
  * 示例:
  *
  * class:
- * const el = getElements('.demo')
+ * const el = queryElements('.demo')
  * id:
- * const el = getElements('#demo')
+ * const el = queryElements('#demo')
  * attribute:
- * const el = getElements('attr:type=button')
+ * const el = queryElements('attr:type=button')
  * 或者可以这样写
- * const el = getElements('attr:type')
+ * const el = queryElements('attr:type')
  */
-export const getElements = <T extends Element = Element>(
+export const queryElements = <T extends Element = Element>(
   selector: ElementSelector,
 ) => {
   if (!selector) {

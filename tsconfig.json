@@ -26,7 +26,12 @@
       "@use-micro/*": ["src/micro/*"]
     },
     "suppressImplicitAnyIndexErrors": true,
-    "types": ["@intlify/unplugin-vue-i18n/messages", "naive-ui/volar"],
+    "types": [
+      "@intlify/unplugin-vue-i18n/messages",
+      "naive-ui/volar",
+      "vite/client",
+      "src/types/global.d.ts"
+    ],
     "ignoreDeprecations": "5.0"
   },
   "include": [
@@ -36,15 +41,8 @@
     "cfg.ts",
     "package.json",
     "vite-env.d.ts",
-    "src/appConfig/*.ts",
-    "src/types/cfg.ts",
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "src/**/*.ts",
-    "src/**/*.vue",
     "components.d.ts",
     "auto-imports.d.ts",
-    "src/types/global.d.ts"
+    "src/**/*"
   ]
 }

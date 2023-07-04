@@ -23,7 +23,9 @@
 import { getStorage } from '@/utils/cache'
 import { APP_CATCH_KEY, ROOT_ROUTE } from '@/appConfig/appConfig'
 import { redirectRouterToDashboard } from '@/router/helper/routerCopilot'
+import { WHITE_ROUTES } from '@/appConfig/routerConfig'
 import { validRole } from '@/router/helper/routerCopilot'
+import { isValueType } from '@/utils/hook'
 
 import type {
   Router,
@@ -33,34 +35,58 @@ import type {
 import type { AppMenuOption } from '@/types/modules/app'
 import type { AppRouteMeta } from '@/router/type'
 
+/** 路由守卫 */
 export const permissionRouter = (router: Router) => {
   const { beforeEach } = router
 
+  const isToLogin = (
+    to: RouteLocationNormalized,
+    from: RouteLocationNormalized,
+  ) => to.path === '/' || from.path === '/login'
+
   beforeEach((to, from, next) => {
     const token = getStorage<string>(APP_CATCH_KEY.token)
-    const route = getStorage<string>(
+    const catchRoutePath = getStorage<string>(
       'menuKey',
       'sessionStorage',
       ROOT_ROUTE.path,
-    ) as string
-    const { meta } = to
+    )
+    const { meta, name } = to
 
+    /** 是否含有 token */
     if (token !== null) {
-      if (validRole(meta as AppRouteMeta)) {
-        if (to.path === '/' || from.path === '/login') {
-          if (route !== 'no') {
-            next(route)
+      /** 是否在有 token 时去到登陆页 */
+      if (isToLogin(to, from)) {
+        redirectRouterToDashboard(true)
+      } else {
+        /** 是否为白名单 */
+        if (
+          !isValueType<symbol>(name, 'Symbol') &&
+          name &&
+          WHITE_ROUTES.includes(name)
+        ) {
+          next()
+        } else {
+          /** 是否有权限 */
+          if (validRole(meta as AppRouteMeta)) {
+            /** 是否在有权限时去到登陆页 */
+            if (isToLogin(to, from)) {
+              /** 容错处理, 如果没有预设地址与获取到缓存地址, 则重定向到首页去 */
+              if (catchRoutePath) {
+                next(catchRoutePath)
+              } else {
+                redirectRouterToDashboard(true)
+              }
+            } else {
+              next()
+            }
           } else {
             redirectRouterToDashboard(true)
           }
-        } else {
-          next()
         }
-      } else {
-        redirectRouterToDashboard(true)
       }
     } else {
-      if (to.path === '/' || from.path === '/login') {
+      if (isToLogin(to, from)) {
         next()
       } else {
         next('/')

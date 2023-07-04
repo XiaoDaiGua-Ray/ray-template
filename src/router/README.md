@@ -1,5 +1,37 @@
 ## router 拓展
 
+## 类型
+
+```ts
+interface RouteMeta {
+  order?: number
+  i18nKey: string
+  icon?: string
+  windowOpen?: string
+  role?: string[]
+  hidden?: boolean
+  noLocalTitle?: string | number
+  ignoreAutoResetScroll?: boolean
+  keepAlive?: boolean
+  sameLevel?: boolean
+}
+```
+
+## 说明
+
+```
+order: 菜单顺序，值越大越靠后。仅对顶层有效，子菜单该值无效
+i18nKey: i18n 国际化 key, 会优先使用该字段
+icon: icon 图标， 用于 Menu 菜单(依赖 RayIcon 组件实现)
+windowOpen: 超链接打开（新开窗口打开）
+role: 权限表
+hidden: 是否显示
+noLocalTitle: 不使用国际化渲染 Menu Titile
+ignoreAutoResetScroll: 该页面内容区域自动初始化滚动条位置
+keepAlive: 是否缓存该页面（需要配置 APP_KEEP_ALIVE setupKeepAlive 属性为 true 启用才有效）
+sameLevel: 是否标记该路由为平级模式，如果标记为平级模式，会使路由菜单项隐藏。如果在含有子节点处，设置了该属性，会导致子节点全部被隐藏。并且该模块，在后续的使用 url 地址导航跳转时，如果在非当前路由层级层面跳转的该路由，会在当前的面包屑后面追加该模块的信息，触发跳转时，不会修改面包屑、标签页
+```
+
 ### routerCopilot
 
 > 该文件提供了一些辅助方法，让你更方便的做一些事情。系统其他地方引用了该方法，所以删除需谨慎。
@@ -84,36 +116,4 @@ const transform = [
     show: true,
   },
 ]
-```
-
-## 类型
-
-```ts
-interface RouteMeta {
-  order?: number
-  i18nKey: string
-  icon?: string
-  windowOpen?: string
-  role?: string[]
-  hidden?: boolean
-  noLocalTitle?: string | number
-  ignoreAutoResetScroll?: boolean
-  keepAlive?: boolean
-  sameLevel?: boolean
-}
-```
-
-## 说明
-
-```
-order: 菜单顺序，值越大越靠后。仅对顶层有效，子菜单该值无效
-i18nKey: i18n 国际化 key, 会优先使用该字段
-icon: icon 图标， 用于 Menu 菜单(依赖 RayIcon 组件实现)
-windowOpen: 超链接打开（新开窗口打开）
-role: 权限表
-hidden: 是否显示
-noLocalTitle: 不使用国际化渲染 Menu Titile
-ignoreAutoResetScroll: 该页面内容区域自动初始化滚动条位置
-keepAlive: 是否缓存该页面（需要配置 APP_KEEP_ALIVE setupKeepAlive 属性为 true 启用才有效）
-sameLevel: 是否标记该路由为平级模式，如果标记为平级模式，会使路由菜单项隐藏。如果在含有子节点处，设置了该属性，会导致子节点全部被隐藏
 ```

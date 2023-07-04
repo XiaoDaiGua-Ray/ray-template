@@ -13,7 +13,7 @@ export interface AppRouteMeta {
   i18nKey?: string
   icon?: string | VNode
   windowOpen?: string
-  role?: string[]
+  role?: (string | number)[]
   hidden?: boolean
   noLocalTitle?: string | number
   ignoreAutoResetScroll?: boolean

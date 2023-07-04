@@ -75,6 +75,7 @@ $globalSearchWidth: 650px;
       & .global-seach__card-content .content-item {
         background-color: #2f2f2f;
 
+        &.content-item--active,
         &:hover {
           background-color: var(--ray-theme-primary-fade-color);
         }
@@ -91,6 +92,7 @@ $globalSearchWidth: 650px;
       & .global-seach__card-content .content-item {
         background-color: #ffffff;
 
+        &.content-item--active,
         &:hover {
           background-color: var(--ray-theme-primary-fade-color);
         }

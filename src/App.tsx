@@ -27,21 +27,23 @@ const App = defineComponent({
       const primaryColorOverride = getStorage<SettingState>(
         'piniaSettingStore',
         'localStorage',
-        primaryColor,
       )
-      const _p = get(
-        primaryColorOverride as SettingState,
-        'primaryColorOverride.common.primaryColor',
-        primaryColor,
-      )
-      const _fp = colorToRgba(_p, 0.3)
 
-      /** 设置全局主题色 css 变量 */
-      body.style.setProperty('--ray-theme-primary-color', _p)
-      body.style.setProperty(
-        '--ray-theme-primary-fade-color',
-        _fp || primaryFadeColor,
-      )
+      if (primaryColorOverride) {
+        const _p = get(
+          primaryColorOverride,
+          'primaryColorOverride.common.primaryColor',
+          primaryColor,
+        )
+        const _fp = colorToRgba(_p, 0.3)
+
+        /** 设置全局主题色 css 变量 */
+        body.style.setProperty('--ray-theme-primary-color', _p)
+        body.style.setProperty(
+          '--ray-theme-primary-fade-color',
+          _fp || primaryFadeColor,
+        )
+      }
     }
 
     /** 隐藏加载动画 */

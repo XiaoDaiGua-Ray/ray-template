@@ -1,16 +1,16 @@
-import type { App as AppType } from 'vue'
+import App from './App'
 
 import '@/styles/base.scss'
 
 import 'virtual:svg-icons-register' // `vite-plugin-svg-icons` 脚本, 如果不使用此插件注释即可
-
-import App from './App'
 
 import { setupRouter } from './router/index'
 import { setupStore } from './store/index'
 import { setupI18n } from './locales/index'
 import { setupDayjs } from './dayjs/index'
 import { setupDirective } from './directives/index'
+
+import type { App as AppType } from 'vue'
 
 /**
  *

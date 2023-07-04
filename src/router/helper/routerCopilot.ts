@@ -14,7 +14,6 @@ import { permissionRouter } from './permission'
 import {
   SETUP_ROUTER_LOADING_BAR,
   SETUP_ROUTER_GUARD,
-  WHITE_ROUTES,
   SUPER_ADMIN,
 } from '@/appConfig/routerConfig'
 import { useSignin } from '@/store'
@@ -35,11 +34,10 @@ import type { AppMenuOption } from '@/types/modules/app'
  */
 export const validRole = (meta: AppRouteMeta) => {
   const { signinCallback } = storeToRefs(useSignin())
-  const role = computed(() => signinCallback.value.role)
-
+  const modelRole = computed(() => signinCallback.value.role)
   const { role: metaRole } = meta
 
-  if (SUPER_ADMIN?.length && SUPER_ADMIN.includes(role.value)) {
+  if (SUPER_ADMIN?.length && SUPER_ADMIN.includes(modelRole.value)) {
     return true
   } else {
     // 如果 role 为 undefind 或者空数组, 则认为该路由不做权限过滤
@@ -49,7 +47,7 @@ export const validRole = (meta: AppRouteMeta) => {
 
     // 判断是否含有该权限
     if (metaRole) {
-      return metaRole.includes(role.value)
+      return metaRole.includes(modelRole.value)
     }
 
     return true

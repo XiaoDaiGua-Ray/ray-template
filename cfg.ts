@@ -74,7 +74,6 @@ const config: AppConfigExport = {
   mixinCSS: mixinCSSPlugin([
     './src/styles/mixins.scss',
     './src/styles/setting.scss',
-    './src/styles/theme.scss',
   ]),
   /**
    *

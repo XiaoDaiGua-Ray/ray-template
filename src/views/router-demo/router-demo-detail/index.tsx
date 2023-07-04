@@ -18,6 +18,7 @@ const RouterDemoDetail = defineComponent({
     return (
       <NSpace wrapItem={false}>
         <NCard title="平层路由详情页面">我是平层路由详情页面</NCard>
+        <NCard title="TIP">可以点击面包屑或者菜单返回到主页面</NCard>
       </NSpace>
     )
   },

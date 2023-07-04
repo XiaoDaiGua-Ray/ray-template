@@ -22,11 +22,11 @@ import { useAxiosInterceptor, axiosCanceler } from '@/axios/helper/interceptor'
 import {
   setupResponseInterceptor,
   setupResponseErrorInterceptor,
-} from '@/axios/inject/responseInject'
+} from '@/axios/inject/response/provide'
 import {
   setupRequestInterceptor,
   setupRequestErrorInterceptor,
-} from '@/axios/inject/requestInject'
+} from '@/axios/inject/request/provide'
 
 import type { AxiosInstanceExpand } from './type'
 

@@ -108,6 +108,11 @@ export default defineConfig(async ({ mode }) => {
             libDirectory: '',
             camel2DashComponentName: false,
           },
+          {
+            libName: 'lodash',
+            libDirectory: '',
+            camel2DashComponentName: false,
+          },
         ],
       }),
       {

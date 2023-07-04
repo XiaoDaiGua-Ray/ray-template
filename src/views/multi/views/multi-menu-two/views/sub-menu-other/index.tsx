@@ -11,8 +11,8 @@
 
 import { NInput } from 'naive-ui'
 
-const SubMenu = defineComponent({
-  name: 'SubMenu',
+const SubMenuOther = defineComponent({
+  name: 'SubMenuOther',
   setup() {
     const inputValue = ref(null)
 
@@ -30,4 +30,4 @@ const SubMenu = defineComponent({
   },
 })
 
-export default SubMenu
+export default SubMenuOther

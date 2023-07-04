@@ -49,10 +49,17 @@ export const useKeepAlive = defineStore(
       } = option
 
       if (keepAlive) {
+        if (
+          length < maxKeepAliveLength &&
+          !state.keepAliveInclude.includes(name)
+        ) {
+          state.keepAliveInclude.push(name)
+
+          return
+        }
+
         if (length >= maxKeepAliveLength) {
           state.keepAliveInclude.splice(0, 1)
-          state.keepAliveInclude.push(name)
-        } else {
           state.keepAliveInclude.push(name)
         }
       }
