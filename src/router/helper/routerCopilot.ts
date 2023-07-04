@@ -72,11 +72,11 @@ export const validMenuItemShow = (option: AppMenuOption) => {
     return false
   }
 
-  if (!sameLevel && !hidden) {
-    return true
+  if (hidden) {
+    return false
   }
 
-  return !hidden ? true : false
+  return true
 }
 
 /**

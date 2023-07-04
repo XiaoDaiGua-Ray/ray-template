@@ -97,7 +97,7 @@ const GlobalSeach = defineComponent({
 
       const filterArr = (options: AppMenuOption[]) => {
         options.forEach((curr) => {
-          if (curr.children?.length) {
+          if (curr.children?.length && validMenuItemShow(curr)) {
             filterArr(curr.children)
           }
 
