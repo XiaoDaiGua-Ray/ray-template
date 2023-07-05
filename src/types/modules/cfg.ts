@@ -49,6 +49,7 @@ export interface Config {
   preloadingConfig?: PreloadingConfig
   base?: string
   appPrimaryColor?: AppPrimaryColor
+  chunkSplitVendor: Record<string, (string | RegExp)[]>
 }
 
 /**
