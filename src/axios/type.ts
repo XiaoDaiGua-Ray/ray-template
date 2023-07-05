@@ -5,7 +5,6 @@ import type {
   HeadersDefaults,
   AxiosDefaults,
   Axios,
-  InternalAxiosRequestConfig,
   AxiosResponse,
 } from 'axios'
 import type { AnyFunc } from '@/types/modules/utils'
@@ -80,7 +79,7 @@ export interface AxiosInstanceExpand extends Axios {
   }
 }
 
-export type RequestInterceptorConfig<T = any> = InternalAxiosRequestConfig<T>
+export type RequestInterceptorConfig<T = any> = AxiosRequestConfig<T>
 
 export type ResponseInterceptorConfig<T = any, K = any> = AxiosResponse<T, K>
 

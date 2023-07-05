@@ -98,7 +98,7 @@ export const orderRoutes = (routes: AppRouteRecordRaw[]) => {
 export const scrollViewToTop = (route: RouteLocationNormalized) => {
   const { meta } = route
 
-  /** 这个 id 是注入在 layout 中 */
+  /** LAYOUT_CONTENT_REF */
   if (!meta?.ignoreAutoResetScroll) {
     LAYOUT_CONTENT_REF.value?.scrollTo({
       top: 0,

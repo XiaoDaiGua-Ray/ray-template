@@ -1,5 +1,45 @@
 ## router 拓展
 
+## LAYOUT 说明
+
+> router modules 包中的路由模块会与菜单一一映射，也就是说，路由模块的配置结构会影响菜单的展示。当你有子菜单需要配置时，你需要使用该组件。
+
+```ts
+import { t } from '@/locales/useI18n'
+import { LAYOUT } from '@/router/constant/index'
+
+import type { AppRouteRecordRaw } from '@/router/type'
+
+const demo: AppRouteRecordRaw = {
+  /** 路由路径，如果为根菜单且无有菜单的时候可以配置为空字符串 */
+  path: '/demo',
+  /** views component name，必须与组件 name 属性匹配，否则缓存属性会失效 */
+  name: 'RDemo',
+  /** 这样配置后，就无须在 views 中重复写 <view-router /> 了 */
+  component: LAYOUT,
+  meta: {
+    /** t 方法是一个纯函数，为了配合 i18n ally 插件提示使用 */
+    i18nKey: t('menu.Demo'),
+    icon: 'demo',
+    order: 0,
+  },
+  children: [
+    {
+      path: '/demo-child',
+      name: 'RDemoChild',
+      component: () => import('@/views/demo-child/index'),
+      meta: {
+        i18nKey: t('menu.DemoChild'),
+        icon: 'demo',
+        order: 0,
+      },
+    },
+  ],
+}
+
+export default dashboard
+```
+
 ## 类型
 
 ```ts

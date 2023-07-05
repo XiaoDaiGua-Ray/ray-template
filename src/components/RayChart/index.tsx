@@ -39,12 +39,13 @@ import { LabelLayout, UniversalTransition } from 'echarts/features' // 标签自
 import { CanvasRenderer } from 'echarts/renderers' // `echarts` 渲染器
 
 import { useSetting } from '@/store'
-import { cloneDeep, debounce } from 'lodash-es'
+import { cloneDeep, throttle } from 'lodash-es'
 import { on, off, addStyle, completeSize } from '@/utils/element'
 
 import type { PropType } from 'vue'
 import type { EChartsInstance } from '@/types/modules/component'
 import type { AnyFunc } from '@/types/modules/utils'
+import type { DebouncedFunc } from 'lodash-es'
 
 export type AutoResize =
   | boolean
@@ -125,6 +126,7 @@ const RayChart = defineComponent({
        * `chart` 是否跟随窗口尺寸变化自动变化
        *
        * 如果为对象, 则可以指定其变化尺寸, 实现图表大小不等于容器大小的效果
+       * 默认每秒触发一次的频率
        */
       type: [Boolean, Object] as PropType<AutoResize>,
       default: true,
@@ -195,10 +197,9 @@ const RayChart = defineComponent({
       /**
        *
        * 拓展 `echarts` 图表
-       *
-       * 由于官方并没有提供该类型, 手动去复刻成本过高, 故而采用 `any`
+       * 用于自己手动拓展相关的包
        */
-      type: Array,
+      type: Array as PropType<(typeof CanvasRenderer)[]>,
       default: () => [],
     },
     watchOptions: {
@@ -223,7 +224,7 @@ const RayChart = defineComponent({
     const rayChartRef = ref<HTMLElement>() // `echart` 容器实例
     const echartInstanceRef = ref<EChartsInstance>() // `echart` 拷贝实例, 解决直接使用响应式实例带来的问题
     let echartInstance: EChartsInstance // `echart` 实例
-    let resizeDebounce: AnyFunc // resize 防抖方法实例
+    let resizeThrottle: DebouncedFunc<AnyFunc> // resize 防抖方法实例
 
     const cssVarsRef = computed(() => {
       const cssVars = {
@@ -272,8 +273,7 @@ const RayChart = defineComponent({
       echarts.use([CanvasRenderer]) // 注册渲染器
 
       try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        echarts.use(props.use as any[])
+        echarts.use(props.use)
       } catch (e) {
         console.error(
           'Error: wrong property and method passed in extend attribute',
@@ -469,9 +469,9 @@ const RayChart = defineComponent({
 
         /** 注册事件 */
         if (props.autoResize) {
-          resizeDebounce = debounce(resizeChart, 500)
+          resizeThrottle = throttle(resizeChart, 1000)
 
-          on(window, 'resize', resizeDebounce)
+          on(window, 'resize', resizeThrottle)
         }
       })
     })
@@ -480,7 +480,9 @@ const RayChart = defineComponent({
       /** 卸载 echarts */
       destroyChart()
       /** 卸载事件柄 */
-      off(window, 'resize', resizeDebounce)
+      off(window, 'resize', resizeThrottle)
+      /** 注销防抖 */
+      resizeThrottle.cancel()
     })
 
     expose({

@@ -1,5 +1,10 @@
-node_modules/
-dist/
+node_modules/*
+dist/*
 yarn.lock
 yarn-error.log
+visualizer.html
+pnpm-lock.yaml
+.idea
+auto-imports.d.ts
+components.d.ts
 visualizer.html

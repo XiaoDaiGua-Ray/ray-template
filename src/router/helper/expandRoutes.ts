@@ -11,11 +11,11 @@
 
 /**
  *
- * 该功能基于 <https://me.yka.moe/> 代码改进实现
+ * 该功能基于 <https://me.yka.moe/> 提供代码改进实现
+ *
  * 自动展开所有路由
+ * 把所有路由提升为顶层路由
  */
-
-import { cloneDeep } from 'lodash-es'
 
 import type { AppRouteRecordRaw } from '@/router/type'
 
@@ -35,37 +35,32 @@ const routePromotion = (
   result: AppRouteRecordRaw[] = [],
   path = '',
 ) => {
-  // 如果没有小宝贝进来 则没有小宝贝出去
   if (!Array.isArray(arr)) {
     return []
   }
 
-  // 新来的小宝贝们先洗好澡澡哦
   const sourceArr = arr
 
-  // 来开始我们的循环之旅吧
   sourceArr.forEach((curr) => {
-    // 获取可爱的小宝贝哦
-
     if (curr.children?.length) {
-      // 如果小宝贝有小小宝贝
-
-      // 小宝贝们有孩子了，/(ㄒoㄒ)/~~
       routePromotion(
         curr.children,
         result,
         path + (isRootPath(curr.path) ? curr.path : '/' + curr.path),
       )
     } else {
-      // 小宝贝还是单身哦
-      // 乖乖的小宝贝快快进入口袋
-      curr.path = path + (isRootPath(curr.path) ? curr.path : '/' + curr.path)
+      const newPath =
+        path + (isRootPath(curr.path) ? curr.path : '/' + curr.path)
 
-      result.push(curr)
+      const newCurr: AppRouteRecordRaw = {
+        ...curr,
+        path: newPath,
+      }
+
+      result.push(newCurr)
     }
   })
 
-  // 返回都是根节点的小宝贝们
   return result
 }
 
@@ -74,5 +69,7 @@ export const expandRoutes = (arr: AppRouteRecordRaw[]) => {
     return []
   }
 
-  return routePromotion(cloneDeep(arr))
+  const cloneArr = arr.slice()
+
+  return routePromotion(cloneArr)
 }

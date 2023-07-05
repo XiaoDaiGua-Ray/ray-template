@@ -19,7 +19,6 @@ import useAppLockScreen from '@/components/AppComponents/AppLockScreen/appLockVa
 import {
   rules,
   useCondition,
-  autoFouceInput,
 } from '@/components/AppComponents/AppLockScreen/hook'
 
 import type { FormInst, InputInst } from 'naive-ui'
@@ -49,7 +48,11 @@ const LockScreen = defineComponent({
       })
     }
 
-    autoFouceInput(inputInstRef)
+    onMounted(() => {
+      nextTick(() => {
+        inputInstRef.value?.focus()
+      })
+    })
 
     return {
       ...toRefs(state),

@@ -1,7 +1,7 @@
 {
   "name": "ray-template",
   "private": false,
-  "version": "4.0.3",
+  "version": "4.0.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -101,9 +101,6 @@
     "Ray Template",
     "admin template",
     "中后台模板"
-  ],
-  "files": [
-    "**/*"
   ],
   "author": "Ray",
   "license": "ISC",

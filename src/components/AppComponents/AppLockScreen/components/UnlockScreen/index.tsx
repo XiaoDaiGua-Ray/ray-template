@@ -19,7 +19,6 @@ import { useSetting, useSignin } from '@/store'
 import {
   rules,
   useCondition,
-  autoFouceInput,
 } from '@/components/AppComponents/AppLockScreen/hook'
 import useAppLockScreen from '@/components/AppComponents/AppLockScreen/appLockVar'
 

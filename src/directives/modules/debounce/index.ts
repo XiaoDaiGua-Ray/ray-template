@@ -20,8 +20,9 @@ import { on, off } from '@use-utils/element'
 import type { Directive } from 'vue'
 import type { DebounceBindingOptions } from './type'
 import type { AnyFunc } from '@/types/modules/utils'
+import type { DebouncedFunc } from 'lodash-es'
 
-let debounceFunction: AnyFunc | null
+let debounceFunction: DebouncedFunc<AnyFunc> | null
 
 const debounceDirective: Directive<HTMLElement, DebounceBindingOptions> = {
   beforeMount: (el, binding) => {
@@ -39,6 +40,7 @@ const debounceDirective: Directive<HTMLElement, DebounceBindingOptions> = {
     const { trigger = 'click' } = binding.value
 
     if (debounceFunction) {
+      debounceFunction.cancel()
       off(el, trigger, debounceFunction)
     }
 

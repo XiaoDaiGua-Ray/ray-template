@@ -20,8 +20,9 @@ import { on, off } from '@use-utils/element'
 import type { Directive } from 'vue'
 import type { ThrottleBindingOptions } from './type'
 import type { AnyFunc } from '@/types/modules/utils'
+import type { DebouncedFunc } from 'lodash-es'
 
-let throttleFunction: AnyFunc | null
+let throttleFunction: DebouncedFunc<AnyFunc> | null
 
 const throttleDirective: Directive<HTMLElement, ThrottleBindingOptions> = {
   beforeMount: (el, binding) => {
@@ -39,6 +40,7 @@ const throttleDirective: Directive<HTMLElement, ThrottleBindingOptions> = {
     const { trigger = 'click' } = binding.value
 
     if (throttleFunction) {
+      throttleFunction.cancel()
       off(el, trigger, throttleFunction)
     }
 

@@ -29,10 +29,3 @@ export const useCondition = () => {
     lockPassword: null,
   }
 }
-
-/** 自动获取焦点 */
-export const autoFouceInput = (inputInstRef: Ref<InputInst | null>) => {
-  nextTick(() => {
-    inputInstRef.value?.focus()
-  })
-}
