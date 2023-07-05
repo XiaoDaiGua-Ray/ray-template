@@ -3,7 +3,6 @@ node_modules/*
 auto-imports.d.ts
 components.d.ts
 .gitignore
-.vscode
 public
 yarn.*
 vite-env.*
@@ -11,5 +10,3 @@ vite-env.*
 visualizer.*
 visualizer.html
 .env.*
-src/locales/lang
-.depcheckrc
