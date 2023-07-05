@@ -16,7 +16,6 @@ import vitePluginImp from 'vite-plugin-imp' // 按需打包工具
 import { visualizer } from 'rollup-plugin-visualizer' // 打包体积分析工具
 import viteCompression from 'vite-plugin-compression' // 压缩打包
 import { ViteEjsPlugin as viteEjsPlugin } from 'vite-plugin-ejs'
-import { chunkSplitPlugin as viteChunkSplitPlugin } from 'vite-plugin-chunk-split'
 
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers' // 模板自动导入组件并且按需打包
 
@@ -35,7 +34,6 @@ const {
   appPrimaryColor,
   preloadingConfig,
   base,
-  chunkSplitVendor,
 } = config
 
 /**
@@ -70,10 +68,6 @@ export default defineConfig(async ({ mode }) => {
     plugins: [
       vue({ reactivityTransform: true }),
       viteVueJSX(),
-      viteChunkSplitPlugin({
-        strategy: 'default',
-        customSplitting: chunkSplitVendor,
-      }),
       title,
       viteInspect(), // 仅适用于开发模式(检查 `Vite` 插件的中间状态)
       viteVeI18nPlugin(),
@@ -158,7 +152,7 @@ export default defineConfig(async ({ mode }) => {
               return id
                 .toString()
                 .split('node_modules/')[1]
-                .split('/')[0]
+                .split('/')[1]
                 .toString()
             }
           },

@@ -49,23 +49,6 @@ import { PRE_LOADING_CONFIG, SIDE_BAR_LOGO } from './src/appConfig/appConfig'
 import type { AppConfigExport } from '@/types/modules/cfg'
 
 const config: AppConfigExport = {
-  /** 自定义配置构建(打包)输出 chunk */
-  chunkSplitVendor: {
-    // `vue` `vue-router` `pinia` 会被打包到一个名为`vue-vendor`的 chunk 里面(包括它们的一些依赖)
-    'vue-vendor': ['vue', 'vue-router', 'pinia'],
-    // 源码中 src/utils 目录的代码都会打包进 `utils-vendor` 这个 chunk 中
-    'utils-vendor': [/src\/utils/, 'lodash-es'],
-    /**
-     *
-     * 源码中 src/locales 目录的代码都会打包进 `locales-vendor` 这个 chunk 中
-     * 如果未来语言包过大, 请将 lang 语言独立出去
-     *
-     * Tip
-     * 模板配置了 @intlify/unplugin-vue-i18n/vite 插件, 会自动将 json 语言包转换为 js 文件
-     */
-    'locales-vendor': [/src\/locales/],
-    'css-vendor': [/src\/styles/],
-  },
   /** 公共基础路径配置, 如果为空则会默认以 '/' 填充 */
   base: '/ray-template/',
   /** 配置首屏加载信息 */
