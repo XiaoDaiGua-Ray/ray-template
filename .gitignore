@@ -27,3 +27,5 @@ auto-imports.d.ts
 *.sw?
 yarn-*.*
 yarn.*
+pnpm.*
+pnpm-lock.yaml
