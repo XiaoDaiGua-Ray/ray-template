@@ -1,0 +1,1 @@
+import{l as r}from"./index-c4f56c3c.js";import{f as o,r as a,t as n,h as s,ar as u}from"./.pnpm-8379147f.js";const m=o({name:"RDocument",setup(){const e=r(16),t=a({});return{...n(t),editorUUID:e}},render(){return s("div",null,[u(" ")])}});export{m as default};
