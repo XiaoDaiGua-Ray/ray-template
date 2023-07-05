@@ -1,5 +1,11 @@
 # CHANGE LOG
 
+## 4.0.3
+
+### Feats
+
+- 弃用 yarn 包管理器，使用 pnpm 作为模板包管理器
+
 ## 4.0.2
 
 ### Feats
