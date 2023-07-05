@@ -1,0 +1,114 @@
+$positionX: 24px;
+$positionY: 24px;
+
+.login {
+  display: flex;
+
+  & .login-wrapper {
+    position: relative;
+    flex: auto;
+
+    &.login-wrapper--divider {
+      position: relative;
+
+      &::before {
+        content: "";
+        position: absolute;
+        width: var(--login-height);
+        height: 2px;
+        background: linear-gradient(135deg, transparent, transparent 75%, #2080f0, transparent 80%, transparent 100%),
+          linear-gradient(45deg, transparent, transparent 75%, #2080f0, transparent 80%, transparent 100%);
+        background-size: 1em 1em;
+        background-repeat: repeat-x, repeat-x;
+        transform: rotate(90deg);
+        transform-origin: 0;
+        left: 50%;
+      }
+    }
+
+    & .login-title__wrapper {
+      position: absolute;
+      left: $positionX;
+      top: $positionY;
+    }
+
+    & .login-action__wrapper {
+      position: absolute;
+      height: 54.4px;
+      right: $positionX;
+      top: $positionY;
+    }
+
+    & .login-copyright__wrapper {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      bottom: $positionY;
+      font-size: 14px;
+    }
+
+    & .login-wrapper__content {
+      width: 100%;
+      height: 100%;
+
+      & .n-grid {
+        height: 100%;
+      }
+
+      & .login__left-wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: background-color 0.3s var(--r-bezier);
+      }
+
+      & .login__right-wrapper {
+        @include flexCenter;
+
+        & .login__right-wrapper__content {
+          width: 50%;
+          background-color: transparent;
+        }
+      }
+    }
+  }
+}
+
+.ray-template--light {
+  & .login__left-wrapper {
+    background-color: rgba(32, 128, 240, 0.22);
+  }
+
+  & .login__right-wrapper {
+    background-color: #ffffff;
+  }
+}
+
+.ray-template--dark {
+  & .login__left-wrapper {
+    background-color: #2c354b;
+  }
+
+  & .login__right-wrapper {
+    background-color: #2a3146;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .login__left-wrapper {
+    display: none !important;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 992px) {
+  .login__right-wrapper .login__right-wrapper__content {
+    width: 55% !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .login__right-wrapper .login__right-wrapper__content {
+    width: 100% !important;
+  }
+}

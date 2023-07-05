@@ -1,0 +1,48 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
+    "jsx": "preserve",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "lib": ["ESNext", "DOM", "es5", "es6", "dom.iterable", "es2022"],
+    "skipLibCheck": true,
+    "baseUrl": "./",
+    "rootDir": "./",
+    "paths": {
+      "@": ["src"],
+      "@/*": ["src/*"],
+      "@use-utils": ["src/utils"],
+      "@use-utils/*": ["src/utils/*"],
+      "@use-api": ["src/axios/api"],
+      "@use-api/*": ["src/axios/api/*"],
+      "@use-images": ["src/assets/images"],
+      "@use-images/*": ["src/assets/images"],
+      "@use-micro/*": ["src/micro/*"]
+    },
+    "suppressImplicitAnyIndexErrors": true,
+    "types": [
+      "@intlify/unplugin-vue-i18n/messages",
+      "naive-ui/volar",
+      "vite/client",
+      "./src/types/global.d.ts"
+    ],
+    "ignoreDeprecations": "5.0"
+  },
+  "include": [
+    "vite.config.ts",
+    "vite-plugin/index.ts",
+    "vite-plugin/type.ts",
+    "cfg.ts",
+    "package.json",
+    "vite-env.d.ts",
+    "components.d.ts",
+    "auto-imports.d.ts",
+    "src/**/*"
+  ]
+}

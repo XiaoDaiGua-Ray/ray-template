@@ -1,0 +1,10 @@
+{
+  "Title": "Configuration",
+  "ThemeOptions": {
+    "Title": "Theme",
+    "Dark": "Dark",
+    "Light": "Light",
+    "PrimaryColorConfig": "Primary Color"
+  },
+  "InterfaceDisplay": "Interface Display"
+}

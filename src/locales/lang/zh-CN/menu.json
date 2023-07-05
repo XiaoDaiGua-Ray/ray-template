@@ -1,0 +1,20 @@
+{
+  "Dashboard": "首页",
+  "Rely": "依赖项",
+  "RelyAbout": "关于",
+  "Error": "错误页",
+  "Echart": "可视化",
+  "scrollReveal": "滚动动画",
+  "Axios": "请求",
+  "Table": "表格",
+  "MultiMenu": "多级菜单(缓存)",
+  "Doc": "文档",
+  "DocLocal": "文档 (国内地址)",
+  "Office": "办公",
+  "Office_Document": "文档",
+  "Office_Presentation": "演示",
+  "Office_Spreadsheet": "表格",
+  "CalculatePrecision": "数字精度",
+  "Directive": "指令",
+  "RouterDemo": "页面详情模式"
+}

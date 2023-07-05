@@ -1,0 +1,49 @@
+// 弹性盒子垂直居中
+@mixin flexCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// 文字溢出变为: ......
+@mixin overflowEllipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+// 滚动条样式
+@mixin scrollStyle {
+  ::-webkit-scrollbar {
+    // 改变纵向滚动条宽度
+    width: 5px;
+    height: 5px;
+    transition: background-color 0.2s var(--r-scrollbar-bezier);
+    cursor: pointer;
+  }
+
+  ::-webkit-scrollbar-track {
+    // 改变滚动条轨道颜色
+    border-radius: 5px;
+    background-color: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    // 改变滚动条滑轨相关的样式
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    // 移入鼠标效果
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+  }
+}
+
+// 根据主题切换样式
+@mixin useAppTheme($theme) {
+  body[class="ray-template--#{$theme}"] & {
+    @content;
+  }
+}

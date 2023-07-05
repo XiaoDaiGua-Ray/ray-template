@@ -1,0 +1,13 @@
+.dashboard-layout {
+  & .n-card {
+    margin-top: 18px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  & .dashboard-link {
+    text-decoration: none;
+  }
+}

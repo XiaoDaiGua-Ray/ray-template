@@ -1,0 +1,2 @@
+ignores: [ "eslint", "babel-*", "@use-*/**", "@use-*" ]
+skip-missing: true
