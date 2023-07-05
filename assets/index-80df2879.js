@@ -1,0 +1,1 @@
+import{d as e,K as u,a as r}from"./vue-vendor-0e3aae74.js";import{b3 as a}from"./vendor-89dc2468.js";import"./utils-vendor-b42bf1db.js";import"./css-vendor-a950dfa6.js";const s=e({name:"ScrollReveal",render(){return u("div",{class:"scroll-reveal"},[u(a,{title:"提示"},{default:()=>[r("RayScrollReveal组件有点问题, 暂时移除. 不能正常的实现滚动动画. 很是操蛋!!!")]})])}});export{s as default};
