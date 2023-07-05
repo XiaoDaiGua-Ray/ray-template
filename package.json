@@ -85,7 +85,7 @@
     "vue-tsc": "^1.0.9"
   },
   "description": "<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->",
-  "main": "index.js",
+  "main": "index.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/XiaoDaiGua-Ray/xiaodaigua-ray.github.io.git"
@@ -98,6 +98,9 @@
     "Ray Template",
     "admin template",
     "中后台模板"
+  ],
+  "files": [
+    "**/*"
   ],
   "author": "Ray",
   "license": "ISC",
