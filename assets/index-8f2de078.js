@@ -1,1 +1,0 @@
-import{d as t,r as n,P as u,e as r}from"./vue-vendor-dfef56cd.js";import{H as a}from"./index-1016cc88.js";import"./utils-vendor-532067a6.js";const i=t({name:"SubMenuOther",setup(){return{inputValue:n(null)}},render(){return u("div",null,[r("多级菜单-2-1"),u(a,{modelValue:this.inputValue,"onUpdate:modelValue":e=>this.inputValue=e},null)])}});export{i as default};

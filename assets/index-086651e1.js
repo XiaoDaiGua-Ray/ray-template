@@ -1,1 +1,0 @@
-import{d as a,P as u,e}from"./vue-vendor-dfef56cd.js";import{Y as t,S as r}from"./index-1016cc88.js";import"./utils-vendor-532067a6.js";const m=a({name:"RouterDemoDetail",render(){return u(r,{wrapItem:!1},{default:()=>[u(t,{title:"平层路由详情页面"},{default:()=>[e("我是平层路由详情页面")]}),u(t,{title:"TIP"},{default:()=>[e("可以点击面包屑或者菜单返回到主页面")]})]})}});export{m as default};

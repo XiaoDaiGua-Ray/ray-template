@@ -1,0 +1,1 @@
+import{d as e,a as t}from"./@vue_runtime-core@3.2.47-0e1d4738.js";import"./@vue_reactivity@3.2.47-f5c8a668.js";import"./@vue_shared@3.2.47-7b400ff4.js";const a=e({name:"RPresentation",setup(){return{}},render(){return t("div",null,null)}});export{a as default};
