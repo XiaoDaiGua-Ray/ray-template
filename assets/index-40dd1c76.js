@@ -1,1 +1,0 @@
-import{f as e,h as u,aD as a,ar as l}from"./.pnpm-8379147f.js";const o=e({name:"ScrollReveal",render(){return u("div",{class:"scroll-reveal"},[u(a,{title:"提示"},{default:()=>[l("RayScrollReveal组件有点问题, 暂时移除. 不能正常的实现滚动动画. 很是操蛋!!!")]})])}});export{o as default};

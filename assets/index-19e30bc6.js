@@ -1,0 +1,1 @@
+import{an as o}from"./utils-vendor-2e5c09dc.js";import{d as r,k as a,P as n,K as s,a as m}from"./vue-vendor-0e3aae74.js";import"./vendor-1f51a4af.js";import"./css-vendor-091c6028.js";import"./__commonjsHelpers__-042e6b4d.js";const f=r({name:"RDocument",setup(){const e=o(16),t=a({});return{...n(t),editorUUID:e}},render(){return s("div",null,[m(" ")])}});export{f as default};

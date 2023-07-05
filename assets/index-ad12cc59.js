@@ -1,1 +1,0 @@
-import{f as t,h as u,aD as e,ar as a,u as r}from"./.pnpm-8379147f.js";const E=t({name:"RouterDemoDetail",render(){return u(r,{wrapItem:!1},{default:()=>[u(e,{title:"平层路由详情页面"},{default:()=>[a("我是平层路由详情页面")]}),u(e,{title:"TIP"},{default:()=>[a("可以点击面包屑或者菜单返回到主页面")]})]})}});export{E as default};

@@ -1,1 +1,0 @@
-import{f as t,e as n,h as u,ar as a,K as l}from"./.pnpm-8379147f.js";const o=t({name:"SubMenuOther",setup(){return{inputValue:n(null)}},render(){return u("div",null,[a("多级菜单-2-1"),u(l,{modelValue:this.inputValue,"onUpdate:modelValue":e=>this.inputValue=e},null)])}});export{o as default};

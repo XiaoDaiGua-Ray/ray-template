@@ -1,1 +1,0 @@
-import{f as n,e as t,h as u,ar as a,K as l}from"./.pnpm-8379147f.js";const o=n({name:"MultiMenuOne",setup(){return{inputValue:t(null)}},render(){return u("div",null,[a("多级菜单-1"),u(l,{modelValue:this.inputValue,"onUpdate:modelValue":e=>this.inputValue=e},null)])}});export{o as default};
