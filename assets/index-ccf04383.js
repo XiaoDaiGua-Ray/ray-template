@@ -1,0 +1,1 @@
+import{d as t,r as n,P as u,e as a}from"./vue-vendor-dfef56cd.js";import{H as l}from"./index-1016cc88.js";import"./utils-vendor-532067a6.js";const p=t({name:"MultiMenuTwoOne",setup(){return{inputValue:n(null)}},render(){return u("div",null,[a("多级菜单2-2-1"),u(l,{modelValue:this.inputValue,"onUpdate:modelValue":e=>this.inputValue=e},null)])}});export{p as default};
