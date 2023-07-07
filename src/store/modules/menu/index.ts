@@ -220,7 +220,7 @@ export const useMenu = defineStore(
             findMenuOption(pathKey, curr.children)
           }
 
-          if (pathKey === curr.key) {
+          if (pathKey === curr.key && !curr?.children?.length) {
             changeMenuModelValue(pathKey, curr)
 
             break

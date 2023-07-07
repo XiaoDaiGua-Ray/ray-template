@@ -43,6 +43,7 @@
     "vite-env.d.ts",
     "components.d.ts",
     "auto-imports.d.ts",
-    "src/**/*"
+    "src/**/*",
+    "./src/types/global.d.ts"
   ]
 }

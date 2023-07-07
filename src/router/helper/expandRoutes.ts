@@ -17,6 +17,8 @@
  * 把所有路由提升为顶层路由
  */
 
+import { cloneDeep } from 'lodash-es'
+
 import type { AppRouteRecordRaw } from '@/router/type'
 
 const isRootPath = (path: string) => path.startsWith('/')
@@ -69,7 +71,5 @@ export const expandRoutes = (arr: AppRouteRecordRaw[]) => {
     return []
   }
 
-  const cloneArr = arr.slice()
-
-  return routePromotion(cloneArr)
+  return routePromotion(cloneDeep(arr))
 }
