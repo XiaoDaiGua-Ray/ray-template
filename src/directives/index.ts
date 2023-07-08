@@ -24,7 +24,7 @@ import type { DirectiveModules } from '@/directives/type'
  * 并且会将文件夹名称识别为指令名称
  * 每个文件下的 index.ts 文件视为每个指令的入口(也就是指令的处理逻辑, 需要暴露出一个 Directive 类型的对象)
  */
-export const setupDirective = (app: App<Element>) => {
+export const setupDirectives = (app: App<Element>) => {
   // 获取 modules 包下所有的 index.ts 文件
   const directiveRawModules: Record<string, DirectiveModules> =
     import.meta.glob('./modules/**/index.ts', {
@@ -39,7 +39,7 @@ export const setupDirective = (app: App<Element>) => {
     const dname = key.match(reg)?.[0]
 
     if (isValueType<string>(dname, 'String')) {
-      app.directive(dname, value)
+      app.directive(dname, value?.())
     } else {
       throw new Error(
         'directiveName is not string, please check your directive file name',

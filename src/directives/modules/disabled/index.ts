@@ -17,6 +17,7 @@
 import { addClass, removeClass } from '@/utils/element'
 
 import type { Directive } from 'vue'
+import type { CustomDirectiveFC } from '@/directives/type'
 
 const updateElementDisabledType = (el: HTMLElement, value: boolean) => {
   if (el) {
@@ -27,17 +28,18 @@ const updateElementDisabledType = (el: HTMLElement, value: boolean) => {
   }
 }
 
-const disabledDirective: Directive<HTMLElement, boolean> = {
-  mounted: (el, binding) => {
-    const value = binding.value
+const disabledDirective: CustomDirectiveFC<HTMLElement, boolean> = () => {
+  return {
+    mounted: (el, binding) => {
+      const value = binding.value
 
-    updateElementDisabledType(el, value)
-  },
-  updated: (el, binding) => {
-    const value = binding.value
+      updateElementDisabledType(el, value)
+    },
+    updated: (el, binding) => {
+      const value = binding.value
 
-    updateElementDisabledType(el, value)
-  },
+      updateElementDisabledType(el, value)
+    },
+  }
 }
-
 export default disabledDirective

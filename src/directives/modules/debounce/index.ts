@@ -21,31 +21,34 @@ import type { Directive } from 'vue'
 import type { DebounceBindingOptions } from './type'
 import type { AnyFunc } from '@/types/modules/utils'
 import type { DebouncedFunc } from 'lodash-es'
+import type { CustomDirectiveFC } from '@/directives/type'
 
-let debounceFunction: DebouncedFunc<AnyFunc> | null
+const debounceDirective: CustomDirectiveFC<
+  HTMLElement,
+  DebounceBindingOptions
+> = () => {
+  let debounceFunction: DebouncedFunc<AnyFunc> | null
 
-const debounceDirective: Directive<HTMLElement, DebounceBindingOptions> = {
-  beforeMount: (el, binding) => {
-    const { func, trigger = 'click', wait = 500, options } = binding.value
+  return {
+    beforeMount: (el, binding) => {
+      const { func, trigger = 'click', wait = 500, options } = binding.value
+      if (typeof func !== 'function') {
+        throw new Error('debounce directive value must be a function')
+      }
+      debounceFunction = debounce(func, wait, Object.assign({}, {}, options))
+      on(el, trigger, debounceFunction)
+    },
+    beforeUnmount: (el, binding) => {
+      const { trigger = 'click' } = binding.value
 
-    if (typeof func !== 'function') {
-      throw new Error('debounce directive value must be a function')
-    }
+      if (debounceFunction) {
+        debounceFunction.cancel()
+        off(el, trigger, debounceFunction)
+      }
 
-    debounceFunction = debounce(func, wait, Object.assign({}, {}, options))
-
-    on(el, trigger, debounceFunction)
-  },
-  beforeUnmount: (el, binding) => {
-    const { trigger = 'click' } = binding.value
-
-    if (debounceFunction) {
-      debounceFunction.cancel()
-      off(el, trigger, debounceFunction)
-    }
-
-    debounceFunction = null
-  },
+      debounceFunction = null
+    },
+  }
 }
 
 export default debounceDirective

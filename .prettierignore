@@ -5,7 +5,6 @@ components.d.ts
 .gitignore
 public
 yarn.*
-vite-env.*
 .prettierrc.*
 visualizer.*
 visualizer.html

@@ -25,11 +25,14 @@
 
 import type { Directive } from 'vue'
 import type { RoleBindingValue } from './type'
+import type { CustomDirectiveFC } from '@/directives/type'
 
-const demoDirective: Directive<HTMLElement, RoleBindingValue> = {
-  beforeMount: (el, binding) => {
-    console.log(el, binding)
-  },
+const demoDirective: CustomDirectiveFC<HTMLElement, RoleBindingValue> = () => {
+  return {
+    beforeMount: (el, binding) => {
+      console.log(el, binding)
+    },
+  }
 }
 
 export default demoDirective

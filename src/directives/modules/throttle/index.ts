@@ -21,31 +21,37 @@ import type { Directive } from 'vue'
 import type { ThrottleBindingOptions } from './type'
 import type { AnyFunc } from '@/types/modules/utils'
 import type { DebouncedFunc } from 'lodash-es'
+import type { CustomDirectiveFC } from '@/directives/type'
 
-let throttleFunction: DebouncedFunc<AnyFunc> | null
+const throttleDirective: CustomDirectiveFC<
+  HTMLElement,
+  ThrottleBindingOptions
+> = () => {
+  let throttleFunction: DebouncedFunc<AnyFunc> | null
 
-const throttleDirective: Directive<HTMLElement, ThrottleBindingOptions> = {
-  beforeMount: (el, binding) => {
-    const { func, trigger = 'click', wait = 500, options } = binding.value
+  return {
+    beforeMount: (el, binding) => {
+      const { func, trigger = 'click', wait = 500, options } = binding.value
 
-    if (typeof func !== 'function') {
-      throw new Error('throttle directive value must be a function')
-    }
+      if (typeof func !== 'function') {
+        throw new Error('throttle directive value must be a function')
+      }
 
-    throttleFunction = throttle(func, wait, Object.assign({}, {}, options))
+      throttleFunction = throttle(func, wait, Object.assign({}, {}, options))
 
-    on(el, trigger, throttleFunction)
-  },
-  beforeUnmount: (el, binding) => {
-    const { trigger = 'click' } = binding.value
+      on(el, trigger, throttleFunction)
+    },
+    beforeUnmount: (el, binding) => {
+      const { trigger = 'click' } = binding.value
 
-    if (throttleFunction) {
-      throttleFunction.cancel()
-      off(el, trigger, throttleFunction)
-    }
+      if (throttleFunction) {
+        throttleFunction.cancel()
+        off(el, trigger, throttleFunction)
+      }
 
-    throttleFunction = null
-  },
+      throttleFunction = null
+    },
+  }
 }
 
 export default throttleDirective

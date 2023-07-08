@@ -35,6 +35,7 @@
     "ignoreDeprecations": "5.0"
   },
   "include": [
+    "./src/types/global.d.ts",
     "vite.config.ts",
     "vite-plugin/index.ts",
     "vite-plugin/type.ts",
@@ -44,6 +45,6 @@
     "components.d.ts",
     "auto-imports.d.ts",
     "src/**/*",
-    "./src/types/global.d.ts"
+    "./src/types/app.d.ts"
   ]
 }

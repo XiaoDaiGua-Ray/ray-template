@@ -2,15 +2,30 @@ import App from './App'
 
 import '@/styles/base.scss'
 
-import 'virtual:svg-icons-register' // `vite-plugin-svg-icons` 脚本, 如果不使用此插件注释即可
+import 'virtual:svg-icons-register' // `vite-plugin-svg-icons` 脚本
 
 import { setupRouter } from './router/index'
 import { setupStore } from './store/index'
 import { setupI18n } from './locales/index'
 import { setupDayjs } from './dayjs/index'
-import { setupDirective } from './directives/index'
+import { setupDirectives } from './directives/index'
 
 import type { App as AppType } from 'vue'
+
+/**
+ *
+ * @param inst vue instance
+ *
+ * 该方法注册所有模板插件
+ * 注册时应该注意每个插件的加载顺序
+ */
+const setupPlugins = async (inst: AppType<Element>) => {
+  await setupI18n(inst)
+  await setupStore(inst)
+  setupRouter(inst)
+  setupDayjs()
+  setupDirectives(inst)
+}
 
 /**
  *
@@ -19,12 +34,7 @@ import type { App as AppType } from 'vue'
 const setupTemplate = async () => {
   const app = createApp(App)
 
-  await setupI18n(app)
-  await setupStore(app)
-  setupRouter(app)
-  setupDayjs()
-  setupDirective(app)
-
+  await setupPlugins(app)
   app.mount('#app')
 }
 
@@ -39,11 +49,7 @@ const setupWujieTemplate = async () => {
   window.__WUJIE_MOUNT = async () => {
     instance = createApp(App)
 
-    await setupI18n(instance)
-    await setupStore(instance)
-    setupRouter(instance)
-    setupDayjs()
-
+    await setupPlugins(instance)
     instance.mount('#app')
   }
 
@@ -59,6 +65,7 @@ const setupWujieTemplate = async () => {
  * 如果此处需要作为微服务主应用使用, 则只需要执行 `setupTemplate` 方法即可
  * 如果项目启用无界微服务, 会自动识别并且启动以无界微服务方法启动该项目
  *
+ * @example
  * 作为主应用
  * ----------------------------------------------------------------
  * # 示例

@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import type { DirectiveModules } from '@/directives/type'
+import type { DirectiveModules, CustomDirectiveFC } from '@/directives/type'
 
 export const combineDirective = <
   T extends Record<string, DirectiveModules>,
@@ -18,16 +18,16 @@ export const combineDirective = <
   directiveModules: T,
 ) => {
   const directives = Object.keys(directiveModules).reduce((pre, curr) => {
-    if (directiveModules[curr]?.default) {
-      const value = directiveModules[curr]?.default
+    const fc = directiveModules[curr]?.default
 
-      pre[curr] = value
+    if (typeof fc === 'function') {
+      pre[curr] = fc
 
       return pre
     } else {
-      throw new Error('directiveModules[curr]?.default is undefined')
+      throw new Error('directiveModules[curr] is not function')
     }
-  }, {} as Record<K, T[K]['default']>)
+  }, {} as Record<K, CustomDirectiveFC<unknown, unknown>>)
 
   return directives
 }
