@@ -48,3 +48,5 @@ export type PartialCSSStyleDeclaration = Partial<
 >
 
 export type ElementSelector = string | `attr:${string}`
+
+export type MaybeArray<T> = T | T[]

@@ -1,0 +1,58 @@
+<template>
+  <!-- 这是一个魔法注释，删不的（如果删了会出现一个异常提示，不信你试试） -->
+  <RouterView v-slot="{ Component, route }">
+    <template v-if="Component">
+      <Transition
+        :name="transitionPropName"
+        :mode="transitionMode"
+        :appear="transitionAppear"
+      >
+        <Suspense>
+          <KeepAlive
+            v-if="setupKeepAlive"
+            :max="maxKeepAliveLength"
+            :include="keepAliveInclude"
+            :exclude="keepAliveExclude"
+          >
+            <Component :is="Component" :key="route.fullPath" />
+          </KeepAlive>
+          <Component :is="Component" v-else :key="route.fullPath" />
+        </Suspense>
+      </Transition>
+    </template>
+  </RouterView>
+</template>
+<script lang="ts" setup>
+import { useKeepAlive } from '@/store'
+import { APP_KEEP_ALIVE } from '@/appConfig/appConfig'
+
+import type { PropType } from 'vue'
+
+/**
+ *
+ * 使用宏编译模式时，可以使用 defineOptions 声明组件选项
+ * 常用方法即是声明该组件的 name inheritAttrs 等属性
+ */
+defineOptions({
+  name: 'TransitionComponent',
+})
+
+defineProps({
+  transitionPropName: {
+    type: String,
+    default: 'fade',
+  },
+  transitionMode: {
+    type: String as PropType<'default' | 'out-in' | 'in-out' | undefined>,
+    default: 'out-in',
+  },
+  transitionAppear: {
+    type: Boolean,
+    default: true,
+  },
+})
+
+const keepAliveStore = useKeepAlive()
+const { keepAliveInclude } = storeToRefs(keepAliveStore)
+const { setupKeepAlive, maxKeepAliveLength, keepAliveExclude } = APP_KEEP_ALIVE
+</script>

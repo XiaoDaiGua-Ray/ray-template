@@ -2,7 +2,6 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
 import {
-  viteAutoImport,
   viteComponents,
   viteVueI18nPlugin,
   viteSVGIcon,
@@ -16,8 +15,10 @@ import vitePluginImp from 'vite-plugin-imp' // 按需打包工具
 import { visualizer } from 'rollup-plugin-visualizer' // 打包体积分析工具
 import viteCompression from 'vite-plugin-compression' // 压缩打包
 import { ViteEjsPlugin as viteEjsPlugin } from 'vite-plugin-ejs'
+import viteAutoImport from 'unplugin-auto-import/vite'
 
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers' // 模板自动导入组件并且按需打包
+import { VueHooksPlusResolver } from '@vue-hooks-plus/resolvers'
 
 import config from './cfg'
 import pkg from './package.json'
@@ -70,18 +71,33 @@ export default defineConfig(async ({ mode }) => {
       viteVueJSX(),
       title,
       viteInspect(), // 仅适用于开发模式(检查 `Vite` 插件的中间状态)
-      viteVeI18nPlugin(),
-      await viteAutoImport([
-        {
-          'naive-ui': [
-            'useDialog',
-            'useMessage',
-            'useNotification',
-            'useLoadingBar',
-          ],
-        },
-      ]),
-      await viteComponents([NaiveUiResolver()]),
+      viteVeI18nPlugin({}),
+      viteAutoImport({
+        include: [
+          /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
+          /\.vue$/,
+          /\.vue\?vue/, // .vue
+          /\.md$/, // .md
+        ],
+        dts: true,
+        imports: [
+          'vue',
+          'vue-router',
+          'pinia',
+          '@vueuse/core',
+          'vue-i18n',
+          {
+            'naive-ui': [
+              'useDialog',
+              'useMessage',
+              'useNotification',
+              'useLoadingBar',
+            ],
+          },
+        ],
+        resolvers: [NaiveUiResolver(), VueHooksPlusResolver()],
+      }),
+      await viteComponents([NaiveUiResolver(), VueHooksPlusResolver()]),
       viteCompression(),
       viteVueI18nPlugin(),
       viteSvgLoader({

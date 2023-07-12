@@ -16,5 +16,18 @@
   & svg[RayIconAttribute="ray-icon"] {
     width: var(--ray-icon-width);
     height: var(--ray-icon-height);
+    fill: currentColor;
+  }
+}
+
+.ray-icon-path__animate {
+  stroke-dasharray: var(--ray-icon-path-length);
+  stroke-dashoffset: var(--ray-icon-path-length);
+  animation: rayIconPathAnimate 2s forwards;
+}
+
+@keyframes rayIconPathAnimate {
+  to {
+    stroke-dashoffset: 0;
   }
 }

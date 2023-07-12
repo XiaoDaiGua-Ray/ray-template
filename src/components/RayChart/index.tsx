@@ -41,10 +41,11 @@ import { CanvasRenderer } from 'echarts/renderers' // `echarts` 渲染器
 import { useSetting } from '@/store'
 import { cloneDeep, throttle } from 'lodash-es'
 import { on, off, addStyle, completeSize } from '@/utils/element'
+import { call } from '@/utils/vue/index'
 
 import type { PropType } from 'vue'
 import type { EChartsInstance } from '@/types/modules/component'
-import type { AnyFunc } from '@/types/modules/utils'
+import type { AnyFunc, MaybeArray } from '@/types/modules/utils'
 import type { DebouncedFunc } from 'lodash-es'
 
 export type AutoResize =
@@ -70,6 +71,8 @@ export interface LoadingOptions {
 }
 
 export type ChartTheme = 'dark' | '' | object
+
+export type EChartsExtensionInstallRegisters = typeof CanvasRenderer
 
 /**
  *
@@ -164,8 +167,10 @@ const RayChart = defineComponent({
        *
        * () => EChartsInstance
        */
-      type: Function,
-      default: () => ({}),
+      type: [Function, Array] as PropType<
+        MaybeArray<(e: EChartsInstance) => void>
+      >,
+      default: null,
     },
     error: {
       /**
@@ -174,8 +179,8 @@ const RayChart = defineComponent({
        *
        * () => void
        */
-      type: Function,
-      default: () => ({}),
+      type: [Function, Array] as PropType<MaybeArray<() => void>>,
+      default: null,
     },
     theme: {
       type: [String, Object] as PropType<ChartTheme>,
@@ -199,7 +204,7 @@ const RayChart = defineComponent({
        * 拓展 `echarts` 图表
        * 用于自己手动拓展相关的包
        */
-      type: Array as PropType<(typeof CanvasRenderer)[]>,
+      type: Array as PropType<EChartsExtensionInstallRegisters[]>,
       default: () => [],
     },
     watchOptions: {
@@ -323,6 +328,7 @@ const RayChart = defineComponent({
       const options = useMergeOptions()
       /** 获取 dom 容器实际宽高 */
       const { height, width } = element.getBoundingClientRect()
+      const { success, error } = props
 
       /** 如果高度为 0, 则以 200px 填充 */
       if (height === 0) {
@@ -347,12 +353,15 @@ const RayChart = defineComponent({
         options && echartInstance.setOption(options)
 
         /** 渲染成功回调 */
-        props.success?.(echartInstance)
+        if (success) {
+          call(success, echartInstance)
+        }
       } catch (e) {
         /** 渲染失败回调 */
-        props.error?.()
-
-        console.error(e)
+        if (error) {
+          call(error)
+        }
+        console.error('RayChart render error: ', e)
       }
     }
 

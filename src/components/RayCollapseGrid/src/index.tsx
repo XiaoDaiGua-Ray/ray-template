@@ -16,17 +16,26 @@ import { collapseGridProps } from './props'
 import { NCard, NGrid, NGridItem, NSpace } from 'naive-ui'
 import RayIcon from '@/components/RayIcon'
 
+import { call } from '@/utils/vue/index'
+
 const RayCollapseGrid = defineComponent({
   name: 'RayCollapseGrid',
   props: collapseGridProps,
-  emits: ['updateValue'],
-  setup(props, { emit }) {
+  setup(props) {
     const modelCollapsed = ref(props.value)
 
     const handleCollapse = () => {
       modelCollapsed.value = !modelCollapsed.value
 
-      emit('updateValue', modelCollapsed.value)
+      const { onUpdateValue, 'onUpdate:value': _onUpdateValue } = props
+
+      if (onUpdateValue) {
+        call(onUpdateValue, modelCollapsed.value)
+      }
+
+      if (_onUpdateValue) {
+        call(_onUpdateValue, modelCollapsed.value)
+      }
     }
 
     const CollapseIcon = () => (

@@ -26,6 +26,7 @@
       "@use-micro/*": ["src/micro/*"]
     },
     "suppressImplicitAnyIndexErrors": true,
+    "typeRoots": ["./src/types/app.d.ts", "./src/types/global.d.ts"],
     "types": [
       "@intlify/unplugin-vue-i18n/messages",
       "naive-ui/volar",

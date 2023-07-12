@@ -1,5 +1,51 @@
 # CHANGE LOG
 
+## 4.1.0
+
+### Feats
+
+- 升级 vue 版本为 v3.3.4。并且配套升级了模板的一些插件
+- RayTransitionComponent 组件加入 Suspense 组件的支持（试验性加入，可能会移除）
+- 更新部分组件的事件触发方式，类似 onUpdateValue、onupdate:value 方法改为 props 定义而非 emit（受控、非受控）
+- 更新路由切换动画的透明度，视觉效果更友好
+- App.tsx 组件内部逻辑抽离为 AppStyleProvider。将一些组件存放位置放在 AppComponents 文件包中
+- 新增 useRequest useHookPlusRequest 两个请求 hook，具体使用方法看示例（基于 vue-hook-plus useRequest 实现）
+  - useRequest 支持直接配置请求与配置请求相关的配置（缓存、节流、防抖等）
+  - useHookPlusRequest 支持接收一个 Promise 返回值的方法，可以用来包裹 axios 方法然后进行请求配置
+
+```ts
+import axiosInstance from '@/axios/instance'
+import { useRequest, useHookPlusRequest } from '@/axios/index'
+
+// 使用 useRequest
+const { data, loading, run } = useRequest<{
+  title: string
+}>(
+  {
+    url: 'https://jsonplaceholder.typicode.com/todos/1',
+    method: 'get',
+  },
+  {
+    manual: true,
+  },
+)
+
+// 使用 useHookPlusRequest
+export const getWeather = (city: string) => {
+  return axiosInstance<AxiosTestResponse>({
+    url: `https://www.tianqiapi.com/api?version=v9&appid=23035354&appsecret=8YvlPNrz&city=${city}`,
+    method: 'get',
+  })
+}
+
+const { data, loading, run } = useHookPlusRequest(getWeather, {
+  throttleWait: 1000,
+})
+
+// 手动更新请求参数
+run('some value')
+```
+
 ## 4.0.3
 
 ### Feats

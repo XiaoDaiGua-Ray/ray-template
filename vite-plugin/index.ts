@@ -1,6 +1,5 @@
 import path from 'node:path'
 
-import autoImport from 'unplugin-auto-import/vite' // 自动导入
 import unpluginViteComponents from 'unplugin-vue-components/vite' // 自动按需导入
 import vueI18nPlugin from '@intlify/unplugin-vue-i18n/vite' // i18n
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons' // `svg icon`
@@ -26,25 +25,6 @@ export const viteSVGIcon = (options?: ViteSvgIconsPlugin) => {
 
   return createSvgIconsPlugin(Object.assign({}, defaultOptions, options))
 }
-
-/**
- *
- * @param imp 自动导入依赖
- * @returns auto import plugin
- *
- * 自动导入
- */
-export const viteAutoImport = async (imp: (ImportsMap | PresetName)[] = []) =>
-  autoImport({
-    include: [
-      /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
-      /\.vue$/,
-      /\.vue\?vue/, // .vue
-      /\.md$/, // .md
-    ],
-    dts: true,
-    imports: ['vue', 'vue-router', 'pinia', '@vueuse/core', 'vue-i18n', ...imp],
-  })
 
 /**
  *

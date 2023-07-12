@@ -237,8 +237,7 @@ export const colorToRgba = (color: string, alpha = 1) => {
  * @remark 使用 querySelectorAll 作为检索方法
  * @remark 如果希望按照 attribute 匹配, 仅需要 'attr:xxx'传递参数即可
  *
- * 示例:
- *
+ * @example
  * class:
  * const el = queryElements('.demo')
  * id:

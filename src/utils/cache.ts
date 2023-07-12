@@ -18,7 +18,7 @@ import type { CacheType } from '@/types/modules/utils'
  * @param key 需要设置的key
  * @param value 需要缓存的值
  */
-export function setStorage<T = unknown>(
+function setStorage<T = unknown>(
   key: string,
   value: T,
   type: CacheType = 'sessionStorage',
@@ -41,14 +41,10 @@ export function setStorage<T = unknown>(
 }
 
 /** 重载函数 getStorage */
-export function getStorage<T>(
-  key: string,
-  storageType: CacheType,
-  defaultValue: T,
-): T
+function getStorage<T>(key: string, storageType: CacheType, defaultValue: T): T
 
 /** 重载函数 getStorage */
-export function getStorage<T>(
+function getStorage<T>(
   key: string,
   storageType?: CacheType,
   defaultValue?: T,
@@ -59,7 +55,7 @@ export function getStorage<T>(
  * @param key 需要获取目标缓存的key
  * @returns 获取缓存值
  */
-export function getStorage<T>(
+function getStorage<T>(
   key: string,
   storageType: CacheType = 'sessionStorage',
   defaultValue?: T,
@@ -91,7 +87,7 @@ export function getStorage<T>(
  *   - all-sessionStorage: 删除所有 sessionStorage 缓存值
  *   - all-localStorage: 删除所有 localStorage 缓存值
  */
-export function removeStorage(
+function removeStorage(
   key: string | 'all' | 'all-sessionStorage' | 'all-localStorage',
   type: CacheType = 'sessionStorage',
 ) {
@@ -124,3 +120,5 @@ export function removeStorage(
         : window.sessionStorage.removeItem(key)
   }
 }
+
+export { setStorage, getStorage, removeStorage }

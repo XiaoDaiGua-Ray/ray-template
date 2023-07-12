@@ -11,6 +11,11 @@
 
 import './index.scss'
 
+import { call } from '@/utils/vue/index'
+
+import type { PropType } from 'vue'
+import type { MaybeArray } from '@/types/modules/utils'
+
 const RayIcon = defineComponent({
   name: 'RayIcon',
   props: {
@@ -53,11 +58,12 @@ const RayIcon = defineComponent({
       type: String,
       default: 'default',
     },
+    onClick: {
+      type: [Function, Array] as PropType<MaybeArray<(e: MouseEvent) => void>>,
+      default: null,
+    },
   },
-  emits: ['click'],
-  setup(props, ctx) {
-    const emit = ctx.emit
-
+  setup(props) {
     const modelColor = computed(() => props.color)
     const symbolId = computed(() => `#${props.prefix}-${props.name}`)
     const cssVars = computed(() => {
@@ -75,10 +81,13 @@ const RayIcon = defineComponent({
       return cssVar
     })
 
-    const handleClick = () => {
-      emit('click')
-    }
+    const handleClick = (e: MouseEvent) => {
+      const { onClick } = props
 
+      if (onClick) {
+        call(onClick, e)
+      }
+    }
     return {
       modelColor,
       symbolId,

@@ -11,10 +11,12 @@
 
 import './index.scss'
 
-import RayTransitionComponent from '@/components/RayTransitionComponent/TransitionComponent.vue'
+import RayTransitionComponent from '@/components/RayTransitionComponent/index.vue'
 import { NSpin } from 'naive-ui'
 
 import { useSetting } from '@/store'
+
+import type { GlobalThemeOverrides } from 'naive-ui'
 
 const ContentWrapper = defineComponent({
   name: 'ContentWrapper',
@@ -24,6 +26,9 @@ const ContentWrapper = defineComponent({
 
     const { reloadRouteSwitch } = storeToRefs(settingStore)
     const spinning = ref(false)
+    const thmeOverridesSpin: GlobalThemeOverrides['Spin'] = {
+      opacitySpinning: '0',
+    }
 
     const setupLayoutContentSpin = () => {
       router.beforeEach(() => {
@@ -42,11 +47,17 @@ const ContentWrapper = defineComponent({
     return {
       reloadRouteSwitch,
       spinning,
+      thmeOverridesSpin,
     }
   },
   render() {
     return this.reloadRouteSwitch ? (
-      <NSpin show={this.spinning} description="loading..." size="large">
+      <NSpin
+        show={this.spinning}
+        description="loading..."
+        size="large"
+        themeOverrides={this.thmeOverridesSpin}
+      >
         <RayTransitionComponent class="content-wrapper" />
       </NSpin>
     ) : (

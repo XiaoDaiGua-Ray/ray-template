@@ -30,6 +30,7 @@ module.exports = {
     defineEmits: 'readonly',
     defineExpose: 'readonly',
     withDefaults: 'readonly',
+    defineOptions: 'readonly',
   },
   rules: {
     '@typescript-eslint/no-explicit-any': [
@@ -173,13 +174,12 @@ module.exports = {
       'error',
       'PascalCase',
       {
-        registeredComponentsOnly: true,
-        globals: ['RouterView'],
+        registeredComponentsOnly: false,
       },
     ],
     'vue/no-unused-refs': ['error'],
     'vue/prop-name-casing': ['error', 'camelCase'],
-    'vue/component-options-name-casing': ['error', 'camelCase'],
+    'vue/component-options-name-casing': ['error', 'PascalCase'],
     'vue/attribute-hyphenation': [
       'error',
       'never',

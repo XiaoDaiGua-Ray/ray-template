@@ -14,8 +14,10 @@ import './index.scss'
 import { NSpin } from 'naive-ui'
 
 import { completeSize, on, off } from '@use-utils/element'
+import { call } from '@/utils/vue/index'
 
 import type { PropType } from 'vue'
+import type { MaybeArray } from '@/types/modules/utils'
 import type { SpinProps } from 'naive-ui'
 
 const RayIframe = defineComponent({
@@ -77,7 +79,9 @@ const RayIframe = defineComponent({
        * iframe 加载成功回调
        * 返回值: iframe 对象, Event
        */
-      type: Function,
+      type: [Function, Array] as PropType<
+        MaybeArray<(el: HTMLIFrameElement, e: Event) => void>
+      >,
       default: null,
     },
     error: {
@@ -86,7 +90,7 @@ const RayIframe = defineComponent({
        * iframe 加载失败回调
        * 返回值: iframe 对象, Event
        */
-      type: Function,
+      type: [Function, Array] as PropType<MaybeArray<(e: Event) => void>>,
       default: null,
     },
     customSpinProps: {
@@ -115,13 +119,21 @@ const RayIframe = defineComponent({
     const iframeLoadSuccess = (e: Event) => {
       spinShow.value = false
 
-      props.success?.(iframeRef.value, e)
+      const { success } = props
+
+      if (success) {
+        call(success, iframeRef.value as HTMLIFrameElement, e)
+      }
     }
 
     const iframeLoadError = (e: Event) => {
       spinShow.value = false
 
-      props.error?.(iframeRef.value, e)
+      const { error } = props
+
+      if (error) {
+        call(error, e)
+      }
     }
 
     const getIframeRef = () => {
