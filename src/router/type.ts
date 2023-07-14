@@ -20,6 +20,7 @@ export interface AppRouteMeta {
   order?: number
   keepAlive?: boolean
   sameLevel?: boolean
+  env?: string | string[]
 }
 
 // @ts-ignore

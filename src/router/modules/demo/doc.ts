@@ -4,15 +4,43 @@ import { LAYOUT } from '@/router/constant/index'
 import type { AppRouteRecordRaw } from '@/router/type'
 
 const doc: AppRouteRecordRaw = {
-  path: '/doc',
-  name: 'RDoc',
-  component: () => import('@/views/doc/index'),
+  path: '',
+  name: 'RDocLayout',
+  component: LAYOUT,
   meta: {
     i18nKey: t('menu.Doc'),
     icon: 'doc',
-    windowOpen: 'https://xiaodaigua-ray.github.io/ray-template-doc/',
     order: 5,
+    env: 'development',
   },
+  children: [
+    {
+      path: '/doc',
+      name: 'RDocInside',
+      component: () => import('@/views/doc/index'),
+      meta: {
+        i18nKey: t('menu.DocLocalInside'),
+      },
+    },
+    {
+      path: '',
+      name: 'RDoc',
+      component: LAYOUT,
+      meta: {
+        i18nKey: t('menu.Doc'),
+        windowOpen: 'https://xiaodaigua-ray.github.io/ray-template-doc/',
+      },
+    },
+    {
+      path: '',
+      name: 'RDocLocal',
+      component: LAYOUT,
+      meta: {
+        i18nKey: t('menu.DocLocal'),
+        windowOpen: 'https://ray-template.yunkuangao.com/ray-template-doc/',
+      },
+    },
+  ],
 }
 
 export default doc

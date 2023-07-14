@@ -54,6 +54,7 @@ interface RouteMeta {
   ignoreAutoResetScroll?: boolean
   keepAlive?: boolean
   sameLevel?: boolean
+  dev?: string | string[]
 }
 ```
 
@@ -69,7 +70,8 @@ hidden: 是否显示
 noLocalTitle: 不使用国际化渲染 Menu Titile
 ignoreAutoResetScroll: 该页面内容区域自动初始化滚动条位置
 keepAlive: 是否缓存该页面（需要配置 APP_KEEP_ALIVE setupKeepAlive 属性为 true 启用才有效）
-sameLevel: 是否标记该路由为平级模式，如果标记为平级模式，会使路由菜单项隐藏。如果在含有子节点处，设置了该属性，会导致子节点全部被隐藏。并且该模块，在后续的使用 url 地址导航跳转时，如果在非当前路由层级层面跳转的该路由，会在当前的面包屑后面追加该模块的信息，触发跳转时，不会修改面包屑、标签页
+sameLevel: 是否标记该路由为平级模式，如果标记为平级模式，会使路由菜单项隐藏。如果在含有子节点处，设置了该属性，会导致子节点全部被隐藏。并且该模块，在后续的使用 url 地址导航跳转时，如果在非当前路由层级层面跳转的该路由，会在当前的面包屑后面追加该模块的信息，触发跳转时，不会修改面包屑、标签页（优先级最高）
+dev: 按照当前环境进行匹配（优先级最低）
 ```
 
 ### routerCopilot

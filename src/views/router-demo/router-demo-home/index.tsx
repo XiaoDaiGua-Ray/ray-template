@@ -11,8 +11,6 @@
 
 import { NSpace, NDataTable, NButton } from 'naive-ui'
 
-import { useVueRouter } from '@/router/helper/useVueRouter'
-
 import type { DataTableColumns } from 'naive-ui'
 
 export interface RowData {
@@ -25,7 +23,7 @@ export interface RowData {
 const RouterDemoHome = defineComponent({
   name: 'RouterDemoHome',
   setup() {
-    const { router } = useVueRouter()
+    const router = useRouter()
 
     const columns: DataTableColumns<RowData> = [
       {

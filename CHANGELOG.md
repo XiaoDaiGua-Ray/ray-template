@@ -1,5 +1,17 @@
 # CHANGE LOG
 
+## 4.1.1
+
+### Feats
+
+- 取消模板默认的 Transition loading 动画，采用 NSpin 组件实现
+- 新增 router meta env 属性，可以根据当前构建环境判断显示、隐藏菜单项
+
+### Fixes
+
+- 修复页面切换闪烁问题
+- 修复刷新页面方法执行后抛出 vue 相关的错误
+
 ## 4.1.0
 
 ### Feats

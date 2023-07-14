@@ -10,7 +10,6 @@
  */
 
 import { permissionRouter } from './permission'
-
 import {
   SETUP_ROUTER_LOADING_BAR,
   SETUP_ROUTER_GUARD,
@@ -20,6 +19,7 @@ import { useSignin } from '@/store'
 import { useVueRouter } from '@/router/helper/useVueRouter'
 import { ROOT_ROUTE } from '@/appConfig/appConfig'
 import { setStorage } from '@/utils/cache'
+import { getAppEnvironment } from '@/utils/hook'
 
 import type { Router } from 'vue-router'
 import type { AppRouteMeta } from '@/router/type'
@@ -58,14 +58,13 @@ export const validRole = (meta: AppRouteMeta) => {
  *
  * @remark 校验当前路由是否显示
  *
- * 该方法进行校验时, 会将 hidden 与 sameLevel 一起进行校验
- * sameLevel 的优先级最高
- *
+ * 该方法进行校验时, sameLevel 的优先级最高
  * 如果你仅仅是希望校验是否满足权限, 应该使用另一个方法 validRole
  */
 export const validMenuItemShow = (option: AppMenuOption) => {
   const { meta = {} } = option
-  const { hidden, sameLevel } = meta
+  const { hidden, sameLevel, env } = meta
+  const { MODE } = getAppEnvironment()
 
   // 如果该路由被标记为平级模式, 则会强制不显示在菜单中
   if (sameLevel) {
@@ -73,6 +72,14 @@ export const validMenuItemShow = (option: AppMenuOption) => {
   }
 
   if (hidden) {
+    return false
+  }
+
+  if (env && typeof env === 'string' && env !== MODE) {
+    return false
+  }
+
+  if (env && Array.isArray(env) && !env.includes(MODE)) {
     return false
   }
 

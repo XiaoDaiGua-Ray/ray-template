@@ -95,7 +95,7 @@ const SiderBar = defineComponent({
       reload: () => {
         changeSwitcher(false, 'reloadRouteSwitch')
 
-        setTimeout(() => changeSwitcher(true, 'reloadRouteSwitch'))
+        setTimeout(() => changeSwitcher(true, 'reloadRouteSwitch'), 300)
       },
       setting: () => {
         showSettings.value = true
@@ -104,10 +104,14 @@ const SiderBar = defineComponent({
         window.open('https://github.com/XiaoDaiGua-Ray/ray-template')
       },
       fullscreen: () => {
-        if (screenfull.isEnabled) {
-          screenfull.toggle()
+        if (!screenfull.isEnabled) {
+          return (() => {
+            window.$message.warning('您的浏览器不支持全屏~')
+          })()
         } else {
-          window.$message.warning('您的浏览器不支持全屏~')
+          return (() => {
+            screenfull.toggle()
+          })()
         }
       },
       search: () => {

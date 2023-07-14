@@ -9,6 +9,12 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
+/**
+ *
+ * 使用 NSpin 组件实现 loading 效果
+ * 默认添加 300ms 延迟
+ */
+
 import './index.scss'
 
 import RayTransitionComponent from '@/components/RayTransitionComponent/index.vue'
@@ -51,17 +57,22 @@ const ContentWrapper = defineComponent({
     }
   },
   render() {
-    return this.reloadRouteSwitch ? (
+    return (
       <NSpin
-        show={this.spinning}
+        show={this.spinning || !this.reloadRouteSwitch}
         description="loading..."
         size="large"
         themeOverrides={this.thmeOverridesSpin}
       >
-        <RayTransitionComponent class="content-wrapper" />
+        {this.reloadRouteSwitch ? (
+          <RayTransitionComponent
+            class="content-wrapper"
+            transitionPropName="layout-content"
+          />
+        ) : (
+          ''
+        )}
       </NSpin>
-    ) : (
-      <></>
     )
   },
 })

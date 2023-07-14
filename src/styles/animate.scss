@@ -1,6 +1,23 @@
+// 采用 NSpin 组件进行 loading 效果，移除之前的 Transition 组件的国度
+// 避免闪烁添加此动画
+.layout-content-enter-active,
+.layout-content-leave-active {
+  transition: all 0.35s;
+}
+
+.layout-content-enter-from,
+.layout-content-enter-to {
+  opacity: 0;
+}
+
+.layout-content-leave-from,
+.layout-content-leave-to {
+  opacity: 0;
+}
+
 .fade-enter-active,
 .fade-leave-active {
-  transition: all 0.35s;
+  transition: all 0.35s ease;
 }
 
 .fade-enter-from {
