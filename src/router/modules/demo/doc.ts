@@ -11,7 +11,6 @@ const doc: AppRouteRecordRaw = {
     i18nKey: t('menu.Doc'),
     icon: 'doc',
     order: 5,
-    env: 'development',
   },
   children: [
     {
