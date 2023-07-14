@@ -4,7 +4,7 @@ import { LAYOUT } from '@/router/constant/index'
 import type { AppRouteRecordRaw } from '@/router/type'
 
 const doc: AppRouteRecordRaw = {
-  path: '',
+  path: '/doc',
   name: 'RDocLayout',
   component: LAYOUT,
   meta: {
@@ -14,7 +14,7 @@ const doc: AppRouteRecordRaw = {
   },
   children: [
     {
-      path: '/doc',
+      path: 'doc-inside',
       name: 'RDocInside',
       component: () => import('@/views/doc/index'),
       meta: {
@@ -22,7 +22,7 @@ const doc: AppRouteRecordRaw = {
       },
     },
     {
-      path: '',
+      path: 'doc-outside',
       name: 'RDoc',
       component: LAYOUT,
       meta: {
@@ -31,7 +31,7 @@ const doc: AppRouteRecordRaw = {
       },
     },
     {
-      path: '',
+      path: 'doc-outside-local',
       name: 'RDocLocal',
       component: LAYOUT,
       meta: {
