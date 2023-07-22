@@ -13,3 +13,4 @@ visualizer.html
 .env.*
 src/locales/lang
 .depcheckrc
+src/components/RayChart/theme
