@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type CryptoJS from 'crypto-js'
 
-export type CacheType = 'sessionStorage' | 'localStorage'
+export type StorageLike = 'sessionStorage' | 'localStorage'
+
+export type RemoveStorageKey =
+  | string
+  | 'all'
+  | 'all-sessionStorage'
+  | 'all-localStorage'
 
 export type EventListenerOrEventListenerObject =
   | EventListener
@@ -39,7 +45,7 @@ export type WordArray = CryptoJS.lib.WordArray
 
 export type CipherParams = CryptoJS.lib.CipherParams
 
-export type AnyFunc = (...args: any[]) => any
+export type AnyFC = (...args: any[]) => any
 
 export type AnyVoidFunc = (...args: any[]) => void
 

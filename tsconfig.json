@@ -27,16 +27,10 @@
     },
     "suppressImplicitAnyIndexErrors": true,
     "typeRoots": ["./src/types/app.d.ts", "./src/types/global.d.ts"],
-    "types": [
-      "@intlify/unplugin-vue-i18n/messages",
-      "naive-ui/volar",
-      "vite/client",
-      "./src/types/global.d.ts"
-    ],
+    "types": ["vite/client"],
     "ignoreDeprecations": "5.0"
   },
   "include": [
-    "./src/types/global.d.ts",
     "vite.config.ts",
     "vite-plugin/index.ts",
     "vite-plugin/type.ts",
@@ -45,7 +39,6 @@
     "vite-env.d.ts",
     "components.d.ts",
     "auto-imports.d.ts",
-    "src/**/*",
-    "./src/types/app.d.ts"
+    "src/**/*"
   ]
 }

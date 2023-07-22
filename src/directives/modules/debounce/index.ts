@@ -19,7 +19,7 @@ import { on, off } from '@use-utils/element'
 
 import type { Directive } from 'vue'
 import type { DebounceBindingOptions } from './type'
-import type { AnyFunc } from '@/types/modules/utils'
+import type { AnyFC } from '@/types/modules/utils'
 import type { DebouncedFunc } from 'lodash-es'
 import type { CustomDirectiveFC } from '@/directives/type'
 
@@ -27,7 +27,7 @@ const debounceDirective: CustomDirectiveFC<
   HTMLElement,
   DebounceBindingOptions
 > = () => {
-  let debounceFunction: DebouncedFunc<AnyFunc> | null
+  let debounceFunction: DebouncedFunc<AnyFC> | null
 
   return {
     beforeMount: (el, binding) => {

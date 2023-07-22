@@ -10,7 +10,7 @@ import {
   NH6,
 } from 'naive-ui'
 import RayIcon from '@/components/RayIcon/index'
-import RayLink from '@/components/RayLink/index'
+import RayLink from '@/app-components/app/RayLink/index'
 
 const Dashboard = defineComponent({
   name: 'RDashboard',

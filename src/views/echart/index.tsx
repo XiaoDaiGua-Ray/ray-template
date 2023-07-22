@@ -35,6 +35,15 @@ const Echart = defineComponent({
             color: 'rgba(180, 180, 180, 0.2)',
           },
         },
+        {
+          name: '数量',
+          data: [12, 220, 250, 180, 20, 10, 190],
+          type: 'bar',
+          showBackground: true,
+          backgroundStyle: {
+            color: 'rgba(180, 180, 180, 0.2)',
+          },
+        },
       ],
     }
     const basePieOptions = {

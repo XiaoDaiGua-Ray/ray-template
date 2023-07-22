@@ -88,6 +88,7 @@ const RayIcon = defineComponent({
         call(onClick, e)
       }
     }
+
     return {
       modelColor,
       symbolId,

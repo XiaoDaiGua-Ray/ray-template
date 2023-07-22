@@ -65,9 +65,13 @@ export const useKeepAlive = defineStore(
       }
     }
 
+    /** 获取当前缓存队列 */
+    const getKeepAliveInclude = () => state.keepAliveInclude
+
     return {
       ...toRefs(state),
       setKeepAliveInclude,
+      getKeepAliveInclude,
     }
   },
   {

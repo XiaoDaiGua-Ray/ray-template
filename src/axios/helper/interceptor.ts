@@ -32,7 +32,7 @@ import type {
   AxiosFetchInstance,
   AxiosFetchError,
 } from '@/axios/type'
-import type { AnyFunc } from '@/types/modules/utils'
+import type { AnyFC } from '@/types/modules/utils'
 
 /** 当前请求的实例 */
 const axiosFetchInstance: AxiosFetchInstance = {
@@ -77,7 +77,7 @@ export const useAxiosInterceptor = () => {
   /** 设置注入方法队列 */
   const setImplement = (
     key: keyof ImplementQueue | keyof ErrorImplementQueue,
-    func: AnyFunc[],
+    func: AnyFC[],
     fetchType: FetchType,
   ) => {
     fetchType === 'ok' ? (implement[key] = func) : (errorImplement[key] = func)
@@ -87,12 +87,12 @@ export const useAxiosInterceptor = () => {
   const getImplement = (
     key: keyof ImplementQueue | keyof ErrorImplementQueue,
     fetchType: FetchType,
-  ): AnyFunc[] => {
+  ): AnyFC[] => {
     return fetchType === 'ok' ? implement[key] : errorImplement[key]
   }
 
   /** 队列执行器 */
-  const implementer = (funcs: AnyFunc[], ...args: any[]) => {
+  const implementer = (funcs: AnyFC[], ...args: any[]) => {
     if (Array.isArray(funcs)) {
       funcs?.forEach((curr) => {
         if (typeof curr === 'function') {

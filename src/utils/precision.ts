@@ -32,7 +32,7 @@ import currency from 'currency.js'
 import { cloneDeep } from 'lodash-es'
 
 import type { Options } from 'currency.js'
-import type { AnyFunc } from '@/types/modules/utils'
+import type { AnyFC } from '@/types/modules/utils'
 
 export type CurrencyArguments = string | number | currency
 
@@ -49,7 +49,7 @@ export type OriginalValueType = 'string' | 'number'
 const basic = (
   valueOptions: CurrencyArguments[],
   dividend: CurrencyArguments,
-  cb: AnyFunc,
+  cb: AnyFC,
 ) => {
   if (!valueOptions?.length) {
     return 0

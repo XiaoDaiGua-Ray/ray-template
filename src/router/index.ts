@@ -10,10 +10,10 @@ import type { RouteRecordRaw, Router } from 'vue-router'
 
 export let router: Router
 
-const createVueRouter = () => {
+const createVueRouter = async () => {
   return createRouter({
     history: createWebHashHistory(),
-    routes: constantRoutes() as unknown as RouteRecordRaw[],
+    routes: (await constantRoutes()) as unknown as RouteRecordRaw[],
     scrollBehavior: (to) => {
       scrollViewToTop(to)
 
@@ -26,8 +26,8 @@ const createVueRouter = () => {
 }
 
 // setup router
-export const setupRouter = (app: App<Element>) => {
-  router = createVueRouter()
+export const setupRouter = async (app: App<Element>) => {
+  router = await createVueRouter()
 
   vueRouterRegister(router)
   useVueRouter()

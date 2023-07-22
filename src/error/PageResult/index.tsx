@@ -36,7 +36,7 @@ const PageResult = defineComponent({
           {{
             ...this.$slots,
             footer: () => (
-              <NButton onClick={redirectRouterToDashboard.bind(this, false)}>
+              <NButton onClick={redirectRouterToDashboard.bind(this, true)}>
                 返回首页
               </NButton>
             ),

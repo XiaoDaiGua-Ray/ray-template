@@ -1,8 +1,8 @@
 import type { ThrottleSettings } from 'lodash-es'
-import type { AnyFunc } from '@/types/modules/utils'
+import type { AnyFC } from '@/types/modules/utils'
 
 export interface ThrottleBindingOptions {
-  func: AnyFunc
+  func: AnyFC
   trigger: string
   wait: number
   options: ThrottleSettings

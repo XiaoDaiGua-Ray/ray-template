@@ -22,7 +22,7 @@ import LockScreen from './components/LockScreen'
 import UnlockScreen from './components/UnlockScreen'
 
 import { useSetting } from '@/store'
-import useAppLockScreen from '@/components/AppComponents/AppLockScreen/appLockVar'
+import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
 
 const AppLockScreen = defineComponent({
   name: 'AppLockScreen',

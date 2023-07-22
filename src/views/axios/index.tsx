@@ -21,6 +21,7 @@ const Axios = defineComponent({
       run: throttleDemoRun,
     } = useHookPlusRequest(getTypicode, {
       throttleWait: 1000,
+      manual: true,
     })
     const {
       data: debounceDemoValue,
@@ -28,6 +29,7 @@ const Axios = defineComponent({
       run: debounceDemoRun,
     } = useHookPlusRequest(getTypicode, {
       debounceWait: 1000,
+      manual: true,
     })
     const {
       data: weatherDemoValue,
@@ -35,6 +37,7 @@ const Axios = defineComponent({
       run: weatherDemoRun,
     } = useHookPlusRequest(getWeather, {
       throttleWait: 1000,
+      manual: true,
     })
     const {
       data: demoData,
@@ -46,6 +49,9 @@ const Axios = defineComponent({
       {
         url: 'https://jsonplaceholder.typicode.com/todos/1',
         method: 'get',
+        cancelConfig: {
+          needCancel: true,
+        },
       },
       {
         manual: true,

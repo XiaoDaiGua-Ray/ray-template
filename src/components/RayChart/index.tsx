@@ -40,65 +40,21 @@ import { CanvasRenderer } from 'echarts/renderers' // `echarts` 渲染器
 
 import { useSetting } from '@/store'
 import { cloneDeep, throttle } from 'lodash-es'
-import { on, off, addStyle, completeSize } from '@/utils/element'
+import { on, off, completeSize } from '@/utils/element'
 import { call } from '@/utils/vue/index'
+import { setupChartTheme, loadingOptions } from './helper'
 
 import type { PropType } from 'vue'
 import type { EChartsInstance } from '@/types/modules/component'
-import type { AnyFunc, MaybeArray } from '@/types/modules/utils'
+import type { AnyFC, MaybeArray } from '@/types/modules/utils'
 import type { DebouncedFunc } from 'lodash-es'
-
-export type AutoResize =
-  | boolean
-  | {
-      width: number
-      height: number
-    }
-
-export interface LoadingOptions {
-  text: string // 文本内容
-  color: string // 颜色
-  textColor: string // 字体颜色
-  maskColor: string // 遮罩颜色
-  zlevel: number // 水平
-  fontSize: number // 字体大小
-  showSpinner: boolean // 是否显示旋转动画(`spinner`)
-  spinnerRadius: number // 旋转动画(`spinner`)的半径
-  lineWidth: number // 旋转动画(`spinner`)的线宽
-  fontWeight: string // 字体粗细
-  fontStyle: string // 字体风格
-  fontFamily: string // 字体系列
-}
-
-export type ChartTheme = 'dark' | '' | object
+import type {
+  LoadingOptions,
+  AutoResize,
+  ChartTheme,
+} from '@/components/RayChart/type'
 
 export type EChartsExtensionInstallRegisters = typeof CanvasRenderer
-
-/**
- *
- * @returns LoadingOptions
- *
- * 为了方便使用加载动画, 写了此方法, 虽然没啥用
- */
-export const loadingOptions = (options?: LoadingOptions) =>
-  Object.assign(
-    {},
-    {
-      text: 'loading',
-      color: '#c23531',
-      textColor: '#000',
-      maskColor: 'rgba(255, 255, 255, 0.9)',
-      zlevel: 0,
-      fontSize: 12,
-      showSpinner: true,
-      spinnerRadius: 10,
-      lineWidth: 5,
-      fontWeight: 'normal',
-      fontStyle: 'normal',
-      fontFamily: 'sans-serif',
-    },
-    options,
-  )
 
 const RayChart = defineComponent({
   name: 'RayChart',
@@ -229,7 +185,7 @@ const RayChart = defineComponent({
     const rayChartRef = ref<HTMLElement>() // `echart` 容器实例
     const echartInstanceRef = ref<EChartsInstance>() // `echart` 拷贝实例, 解决直接使用响应式实例带来的问题
     let echartInstance: EChartsInstance // `echart` 实例
-    let resizeThrottle: DebouncedFunc<AnyFunc> // resize 防抖方法实例
+    let resizeThrottle: DebouncedFunc<AnyFC> // resize 防抖方法实例
 
     const cssVarsRef = computed(() => {
       const cssVars = {
@@ -294,13 +250,13 @@ const RayChart = defineComponent({
      *
      * 如果有需要特殊全局配置的可以在此继续写...
      */
-    const useMergeOptions = () => {
+    const combineChartOptions = () => {
       let options = cloneDeep(props.options)
 
-      const merge = (opts: object) => Object.assign({}, options, opts)
+      const assign = (opts: object) => Object.assign({}, options, opts)
 
       if (props.showAria) {
-        options = merge({
+        options = assign({
           aria: {
             enabled: true,
             decal: {
@@ -321,32 +277,28 @@ const RayChart = defineComponent({
      *
      * 直接使用响应式代理实例会出现诡异的问题, 例如 `legend` 点击时报错
      */
-    const renderChart = (theme: ChartTheme) => {
+    const renderChart = (theme: ChartTheme = 'macarons') => {
       /** 获取 dom 容器 */
       const element = rayChartRef.value as HTMLElement
       /** 获取配置项 */
-      const options = useMergeOptions()
+      const options = combineChartOptions()
       /** 获取 dom 容器实际宽高 */
       const { height, width } = element.getBoundingClientRect()
       const { success, error } = props
 
-      /** 如果高度为 0, 则以 200px 填充 */
-      if (height === 0) {
-        addStyle(element, {
-          height: '200px',
-        })
-      }
-
-      /** 如果款度为 0, 则以 200px 填充 */
-      if (width === 0) {
-        addStyle(element, {
-          width: '200px',
-        })
-      }
-
       try {
+        /** 注册主题 */
+        setupChartTheme().forEach((curr) => {
+          echarts.registerTheme(curr.name, curr.theme)
+        })
+
         /** 注册 chart */
-        echartInstance = echarts.init(element, theme)
+        echartInstance = echarts.init(element, theme, {
+          /** 如果款度为 0, 则以 200px 填充 */
+          width: width === 0 ? 200 : undefined,
+          /** 如果高度为 0, 则以 200px 填充 */
+          height: height === 0 ? 200 : undefined,
+        })
         echartInstanceRef.value = echartInstance
 
         /** 设置 options 配置项 */
@@ -373,13 +325,13 @@ const RayChart = defineComponent({
      */
     const renderThemeChart = (bool?: boolean) => {
       if (props.autoChangeTheme) {
-        bool ? renderChart('dark') : renderChart('')
+        bool ? renderChart('dark') : renderChart()
 
         return void 0
       }
 
       if (!props.theme) {
-        renderChart('')
+        renderChart()
       }
     }
 
@@ -431,9 +383,9 @@ const RayChart = defineComponent({
          * 自动跟随模板主题或者指定主题皆可
          */
         if (props.autoChangeTheme || props.theme) {
-          themeValue.value ? renderChart('dark') : renderChart('')
+          themeValue.value ? renderChart('dark') : renderChart()
         } else {
-          renderChart('')
+          renderChart()
         }
       },
     )
@@ -454,7 +406,7 @@ const RayChart = defineComponent({
         () => props.watchOptions,
         () => {
           /** 重新组合 options */
-          const options = useMergeOptions()
+          const options = combineChartOptions()
 
           /** 如果 options 发生变动更新 echarts */
           echartInstance?.setOption(options)
@@ -473,7 +425,7 @@ const RayChart = defineComponent({
         if (props.autoChangeTheme) {
           renderThemeChart(themeValue.value)
         } else {
-          props.theme ? renderChart('dark') : renderChart('')
+          props.theme ? renderChart('dark') : renderChart()
         }
 
         /** 注册事件 */

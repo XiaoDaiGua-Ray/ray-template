@@ -22,7 +22,7 @@ import type { App as AppType } from 'vue'
 const setupPlugins = async (inst: AppType<Element>) => {
   await setupI18n(inst)
   await setupStore(inst)
-  setupRouter(inst)
+  await setupRouter(inst)
   setupDayjs()
   setupDirectives(inst)
 }

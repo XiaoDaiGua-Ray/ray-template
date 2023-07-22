@@ -25,7 +25,7 @@ import useHookPlusRequest from 'vue-hooks-plus/es/useRequest'
 import request from '@/axios/instance'
 
 import type { UseRequestOptions } from 'vue-hooks-plus/es/useRequest/types'
-import type { AxiosRequestConfig } from 'axios'
+import type { AppRawRequestConfig } from '@/axios/type'
 
 /**
  *
@@ -43,7 +43,7 @@ function useRequest<
   HookPlusParams extends unknown[] = unknown[],
   HookPlusPlugin = unknown,
 >(
-  fetchOption: AxiosRequestConfig<Response>,
+  fetchOption: AppRawRequestConfig<Response>,
   option?: UseRequestOptions<Response, HookPlusParams, HookPlusPlugin>,
 ) {
   const fc = () => {
@@ -52,7 +52,10 @@ function useRequest<
     return cb
   }
 
-  const hooks = useHookPlusRequest(fc, Object.assign({}, option))
+  const hooks = useHookPlusRequest<Response, HookPlusParams>(
+    fc,
+    Object.assign({}, option),
+  )
 
   return hooks
 }

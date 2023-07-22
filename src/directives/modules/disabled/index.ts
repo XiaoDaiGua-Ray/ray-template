@@ -42,4 +42,5 @@ const disabledDirective: CustomDirectiveFC<HTMLElement, boolean> = () => {
     },
   }
 }
+
 export default disabledDirective

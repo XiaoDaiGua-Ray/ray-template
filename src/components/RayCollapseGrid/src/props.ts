@@ -2,7 +2,7 @@ import { gridProps } from 'naive-ui'
 
 import type { PropType } from 'vue'
 import type { CollapseToggleText } from './type'
-import type { AnyFunc, MaybeArray } from '@/types/modules/utils'
+import type { AnyFC, MaybeArray } from '@/types/modules/utils'
 
 export const collapseGridProps = {
   value: {

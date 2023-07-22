@@ -24,7 +24,7 @@ import TootipIcon from '@/layout/components/SiderBar/components/TooltipIcon/inde
 import SettingDrawer from './components/SettingDrawer/index'
 import Breadcrumb from './components/Breadcrumb/index'
 import GlobalSeach from './components/GlobalSeach/index'
-import AppAvatar from '@/components/AppComponents/AppAvatar/index'
+import AppAvatar from '@/app-components/app/AppAvatar/index'
 
 import { useSetting } from '@/store'
 import { LOCAL_OPTIONS } from '@/appConfig/localConfig'

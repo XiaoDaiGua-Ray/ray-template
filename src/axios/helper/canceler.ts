@@ -16,13 +16,18 @@
  * 可以根据自己项目进行定制化配置
  */
 
-import type { AxiosRequestConfig } from 'axios'
+import type { AppRawRequestConfig } from '@/axios/type'
 
 export default class RequestCanceler {
   pendingRequest: Map<string, AbortController>
 
   constructor() {
     this.pendingRequest = new Map<string, AbortController>()
+  }
+
+  /** 是否需要加入取消请求表中 */
+  isApending(config: AppRawRequestConfig) {
+    return config.cancelConfig?.needCancel ?? true
   }
 
   /**
@@ -32,7 +37,7 @@ export default class RequestCanceler {
    *
    * @remark 将当前请求 config 生成 request key
    */
-  generateRequestKey(config: AxiosRequestConfig): string {
+  generateRequestKey(config: AppRawRequestConfig): string {
     const { method, url } = config
 
     return [
@@ -49,18 +54,20 @@ export default class RequestCanceler {
    *
    * @remark 给请求体添加 signal 属性, 用于取消请求
    */
-  addPendingRequest(config: AxiosRequestConfig) {
-    const requestKey = this.generateRequestKey(config)
+  addPendingRequest(config: AppRawRequestConfig) {
+    if (this.isApending(config)) {
+      const requestKey = this.generateRequestKey(config)
 
-    if (!this.pendingRequest.has(requestKey)) {
-      const controller = new AbortController()
+      if (!this.pendingRequest.has(requestKey)) {
+        const controller = new AbortController()
 
-      config.signal = controller.signal
+        config.signal = controller.signal
 
-      this.pendingRequest.set(requestKey, controller)
-    } else {
-      // 如果已经有该 key 则重新挂载 signal
-      config.signal = this.pendingRequest.get(requestKey)?.signal
+        this.pendingRequest.set(requestKey, controller)
+      } else {
+        // 如果已经有该 key 则重新挂载 signal
+        config.signal = this.pendingRequest.get(requestKey)?.signal
+      }
     }
   }
 
@@ -70,7 +77,7 @@ export default class RequestCanceler {
    *
    * @remark 取消该请求, 并且清除 map 中对应 generateRequestKey value
    */
-  removePendingRequest(config: AxiosRequestConfig) {
+  removePendingRequest(config: AppRawRequestConfig) {
     const requestKey = this.generateRequestKey(config)
 
     if (this.pendingRequest.has(requestKey)) {
@@ -78,5 +85,12 @@ export default class RequestCanceler {
 
       this.pendingRequest.delete(requestKey)
     }
+  }
+
+  /** 取消所有请求 */
+  cancelAllRequest() {
+    this.pendingRequest.forEach((curr) => {
+      curr.abort()
+    })
   }
 }

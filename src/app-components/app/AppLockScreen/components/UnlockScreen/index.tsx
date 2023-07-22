@@ -12,15 +12,12 @@
 /** 解锁界面 */
 
 import { NInput, NForm, NFormItem, NButton, NSpace } from 'naive-ui'
-import AppAvatar from '@/components/AppComponents/AppAvatar/index'
+import AppAvatar from '@/app-components/app/AppAvatar/index'
 
 import dayjs from 'dayjs'
 import { useSetting, useSignin } from '@/store'
-import {
-  rules,
-  useCondition,
-} from '@/components/AppComponents/AppLockScreen/hook'
-import useAppLockScreen from '@/components/AppComponents/AppLockScreen/appLockVar'
+import { rules, useCondition } from '@/app-components/app/AppLockScreen/hook'
+import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
 
 import type { FormInst, InputInst } from 'naive-ui'
 

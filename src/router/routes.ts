@@ -5,7 +5,7 @@ import { expandRoutes } from '@/router/helper/expandRoutes'
 
 const { path } = ROOT_ROUTE
 
-export default () => [
+export default async () => [
   {
     path: '/',
     name: 'login',

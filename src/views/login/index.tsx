@@ -16,7 +16,7 @@ import Register from './components/Register/index'
 import QRCodeSignin from './components/QRCodeSignin/index'
 import SSOSignin from './components/SSOSignin/index'
 import RayIcon from '@/components/RayIcon'
-import RayLink from '@/components/RayLink/index'
+import RayLink from '@/app-components/app/RayLink/index'
 import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch/index'
 
 import { useSetting } from '@/store'

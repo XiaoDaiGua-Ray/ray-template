@@ -52,4 +52,5 @@ const copyDirective: CustomDirectiveFC<CopyElement, string> = () => {
     },
   }
 }
+
 export default copyDirective

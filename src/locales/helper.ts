@@ -26,7 +26,7 @@ import type { Recordable } from '@/types/modules/helper'
 import type {
   AppLocalesModules,
   AppLocalesDropdownMixedOption,
-  CurrentAppMessages,
+  AppCurrentAppMessages,
   I18nModules,
 } from '@/locales/type'
 
@@ -73,7 +73,7 @@ export const combineI18nMessages = (langs: I18nModules, prefix: string) => {
 export const getAppLocalMessages = async (
   LOCAL_OPTIONS: AppLocalesDropdownMixedOption[],
 ) => {
-  const message = {} as CurrentAppMessages
+  const message = {} as AppCurrentAppMessages
 
   for (const curr of LOCAL_OPTIONS) {
     const msg: AppLocalesModules = await import(`./lang/${curr.key}.ts`)
@@ -132,5 +132,5 @@ export const getAppDefaultLanguage = () => {
     SYSTEM_DEFAULT_LOCAL,
   )
 
-  return language
+  return language as keyof AppCurrentAppMessages
 }

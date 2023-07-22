@@ -1,5 +1,45 @@
 # CHANGE LOG
 
+## 4.1.3
+
+### Feats
+
+- 新增切换路由自动取消上一路由所有请求。但是可以通过配置 `useRequest` 与 `request` 方法的 `cancelConfig.needCancel` 属性控制是否需要自动取消该请求。该配置默认为 `true`，当配置为 `false` 时，则不会被取消器取消
+
+```ts
+import { useRequest, useHookPlusRequest } from '@/axios/index'
+
+// useRequest
+const { data, loading, run } = useRequest<{
+  title: string
+}>(
+  {
+    url: 'https://jsonplaceholder.typicode.com/todos/1',
+    method: 'get',
+    cancelConfig: {
+      needCancel: true,
+    },
+  },
+  {
+    manual: true,
+  },
+)
+
+// request
+request({
+  url: 'https://jsonplaceholder.typicode.com/todos/1',
+  method: 'get',
+  cancelConfig: {
+    needCancel: true,
+  },
+})
+```
+
+- `localConfig` 新增配置类型保护
+- 将原 `AppComponent` 组件包移动至 `app-components` 包中，并且按照其功能拆分为 `sys` `provider`
+- 现在将异步注册 `vue-router`
+- `RayChart` 组件新增 `macarons` 主题。现在支持便捷的自定义主题，在[主题编辑器](https://echarts.apache.org/zh/theme-builder.html)编辑主题后，下载主题（json）放置于对应主题包中即可被自动注册
+
 ## 4.1.2
 
 ### Fixes

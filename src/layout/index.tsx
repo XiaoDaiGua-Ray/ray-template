@@ -21,7 +21,7 @@ import FooterWrapper from '@/layout/default/FooterWrapper'
 import { useSetting } from '@/store'
 import { LAYOUT_CONTENT_REF } from '@/appConfig/routerConfig'
 import { layoutHeaderCssVars } from '@/layout/layoutResize'
-import useAppLockScreen from '@/components/AppComponents/AppLockScreen/appLockVar'
+import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
 
 const Layout = defineComponent({
   name: 'RLayout',

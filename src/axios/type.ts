@@ -7,7 +7,7 @@ import type {
   Axios,
   AxiosResponse,
 } from 'axios'
-import type { AnyFunc } from '@/types/modules/utils'
+import type { AnyFC } from '@/types/modules/utils'
 
 export type AxiosHeaderValue =
   | AxiosHeaders
@@ -22,54 +22,65 @@ export interface RequestHeaderOptions {
   value: AxiosHeaderValue
 }
 
-export interface AxiosInstanceExpand extends Axios {
-  <T = any, D = any>(config: AxiosRequestConfig<D>): Promise<T>
-  <T = any, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<T>
+export interface CancelConfig {
+  needCancel?: boolean
+}
 
-  getUri(config?: AxiosRequestConfig): string
-  request<R = any, D = any>(config: AxiosRequestConfig<D>): Promise<R>
-  get<R = any, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<R>
+export interface AppRawRequestConfig<T = any> extends AxiosRequestConfig<T> {
+  cancelConfig?: CancelConfig
+}
+
+export interface AxiosInstanceExpand extends Axios {
+  <T = any, D = any>(config: AppRawRequestConfig<D>): Promise<T>
+  <T = any, D = any>(url: string, config?: AppRawRequestConfig<D>): Promise<T>
+
+  getUri(config?: AppRawRequestConfig): string
+  request<R = any, D = any>(config: AppRawRequestConfig<D>): Promise<R>
+  get<R = any, D = any>(
+    url: string,
+    config?: AppRawRequestConfig<D>,
+  ): Promise<R>
   delete<R = any, D = any>(
     url: string,
-    config?: AxiosRequestConfig<D>,
+    config?: AppRawRequestConfig<D>,
   ): Promise<R>
   head<R = any, D = any>(
     url: string,
-    config?: AxiosRequestConfig<D>,
+    config?: AppRawRequestConfig<D>,
   ): Promise<R>
   options<R = any, D = any>(
     url: string,
-    config?: AxiosRequestConfig<D>,
+    config?: AppRawRequestConfig<D>,
   ): Promise<R>
   post<R = any, D = any>(
     url: string,
     data?: D,
-    config?: AxiosRequestConfig<D>,
+    config?: AppRawRequestConfig<D>,
   ): Promise<R>
   put<R = any, D = any>(
     url: string,
     data?: D,
-    config?: AxiosRequestConfig<D>,
+    config?: AppRawRequestConfig<D>,
   ): Promise<R>
   patch<R = any, D = any>(
     url: string,
     data?: D,
-    config?: AxiosRequestConfig<D>,
+    config?: AppRawRequestConfig<D>,
   ): Promise<R>
   postForm<R = any, D = any>(
     url: string,
     data?: D,
-    config?: AxiosRequestConfig<D>,
+    config?: AppRawRequestConfig<D>,
   ): Promise<R>
   putForm<R = any, D = any>(
     url: string,
     data?: D,
-    config?: AxiosRequestConfig<D>,
+    config?: AppRawRequestConfig<D>,
   ): Promise<R>
   patchForm<R = any, D = any>(
     url: string,
     data?: D,
-    config?: AxiosRequestConfig<D>,
+    config?: AppRawRequestConfig<D>,
   ): Promise<R>
 
   defaults: Omit<AxiosDefaults, 'headers' | 'cancelToken'> & {
@@ -79,18 +90,18 @@ export interface AxiosInstanceExpand extends Axios {
   }
 }
 
-export type RequestInterceptorConfig<T = any> = AxiosRequestConfig<T>
+export type RequestInterceptorConfig<T = any> = AppRawRequestConfig<T>
 
 export type ResponseInterceptorConfig<T = any, K = any> = AxiosResponse<T, K>
 
 export interface ImplementQueue {
-  implementRequestInterceptorArray: AnyFunc[]
-  implementResponseInterceptorArray: AnyFunc[]
+  implementRequestInterceptorArray: AnyFC[]
+  implementResponseInterceptorArray: AnyFC[]
 }
 
 export interface ErrorImplementQueue {
-  implementRequestInterceptorErrorArray: AnyFunc[]
-  implementResponseInterceptorErrorArray: AnyFunc[]
+  implementRequestInterceptorErrorArray: AnyFC[]
+  implementResponseInterceptorErrorArray: AnyFC[]
 }
 
 export type BeforeFetchFunction<

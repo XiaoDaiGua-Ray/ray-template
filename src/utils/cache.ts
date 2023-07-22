@@ -11,7 +11,7 @@
 
 /** vue3 项目里建议直接用 vueuse useStorage 方法 */
 
-import type { CacheType } from '@/types/modules/utils'
+import type { StorageLike, RemoveStorageKey } from '@/types/modules/utils'
 
 /**
  *
@@ -21,7 +21,7 @@ import type { CacheType } from '@/types/modules/utils'
 function setStorage<T = unknown>(
   key: string,
   value: T,
-  type: CacheType = 'sessionStorage',
+  type: StorageLike = 'sessionStorage',
 ) {
   if (!key) {
     console.error('Failed to set stored data: key is empty or undefined')
@@ -41,12 +41,16 @@ function setStorage<T = unknown>(
 }
 
 /** 重载函数 getStorage */
-function getStorage<T>(key: string, storageType: CacheType, defaultValue: T): T
+function getStorage<T>(
+  key: string,
+  storageType: StorageLike,
+  defaultValue: T,
+): T
 
 /** 重载函数 getStorage */
 function getStorage<T>(
   key: string,
-  storageType?: CacheType,
+  storageType?: StorageLike,
   defaultValue?: T,
 ): T | null
 
@@ -57,7 +61,7 @@ function getStorage<T>(
  */
 function getStorage<T>(
   key: string,
-  storageType: CacheType = 'sessionStorage',
+  storageType: StorageLike = 'sessionStorage',
   defaultValue?: T,
 ): T | null {
   try {
@@ -88,8 +92,8 @@ function getStorage<T>(
  *   - all-localStorage: 删除所有 localStorage 缓存值
  */
 function removeStorage(
-  key: string | 'all' | 'all-sessionStorage' | 'all-localStorage',
-  type: CacheType = 'sessionStorage',
+  key: RemoveStorageKey,
+  type: StorageLike = 'sessionStorage',
 ) {
   switch (key) {
     case 'all':

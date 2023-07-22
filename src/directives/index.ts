@@ -27,7 +27,7 @@ import type { DirectiveModules } from '@/directives/type'
 export const setupDirectives = (app: App<Element>) => {
   // 获取 modules 包下所有的 index.ts 文件
   const directiveRawModules: Record<string, DirectiveModules> =
-    import.meta.glob('./modules/**/index.ts', {
+    import.meta.glob('@/directives/modules/**/index.ts', {
       eager: true,
     })
   // 将所有的包提取出来(./modules/[file-name]/index.ts)

@@ -135,5 +135,5 @@ export const redirectRouterToDashboard = (isReplace = true) => {
 
   setStorage('menuKey', path)
 
-  isReplace ? push(path) : replace(path)
+  isReplace ? replace(path) : push(path)
 }

@@ -72,7 +72,6 @@ const RayCollapseGrid = defineComponent({
               collapsed={this.modelCollapsed}
               xGap={this.xGap || 12}
               yGap={this.yGap || 18}
-              cols={this.cols}
               collapsedRows={this.collapsedRows}
             >
               {this.$slots.default?.()}

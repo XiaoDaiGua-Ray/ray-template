@@ -19,7 +19,7 @@ import { on, off } from '@use-utils/element'
 
 import type { Directive } from 'vue'
 import type { ThrottleBindingOptions } from './type'
-import type { AnyFunc } from '@/types/modules/utils'
+import type { AnyFC } from '@/types/modules/utils'
 import type { DebouncedFunc } from 'lodash-es'
 import type { CustomDirectiveFC } from '@/directives/type'
 
@@ -27,7 +27,7 @@ const throttleDirective: CustomDirectiveFC<
   HTMLElement,
   ThrottleBindingOptions
 > = () => {
-  let throttleFunction: DebouncedFunc<AnyFunc> | null
+  let throttleFunction: DebouncedFunc<AnyFC> | null
 
   return {
     beforeMount: (el, binding) => {

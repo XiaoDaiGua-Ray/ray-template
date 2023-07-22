@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { AnyFunc, MaybeArray } from '@/types/modules/utils'
+import type { AnyFC, MaybeArray } from '@/types/modules/utils'
 
 function call(funcs: MaybeArray<() => void>): void
 
@@ -26,7 +26,7 @@ function call<A1, A2, A3, A4>(
   a4: A4,
 ): void
 
-function call<A extends any[]>(funcs: AnyFunc[] | AnyFunc, ...args: A) {
+function call<A extends any[]>(funcs: AnyFC[] | AnyFC, ...args: A) {
   if (Array.isArray(funcs)) {
     funcs.forEach((func) => (call as any)(func, ...args))
   } else {

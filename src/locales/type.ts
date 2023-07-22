@@ -6,7 +6,7 @@ import type {
 } from 'naive-ui'
 import type { Recordable } from '@/types/modules/helper'
 
-export interface CurrentAppMessages {
+export interface AppCurrentAppMessages {
   'zh-CN': object
   'en-US': object
 }
