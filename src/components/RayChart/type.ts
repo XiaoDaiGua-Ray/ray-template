@@ -40,4 +40,4 @@ export type AutoResize =
       height: number
     }
 
-export type ChartTheme = 'dark' | string | object | 'macarons'
+export type ChartTheme = 'macarons-dark' | string | object | 'macarons'

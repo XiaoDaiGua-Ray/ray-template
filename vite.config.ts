@@ -165,11 +165,13 @@ export default defineConfig(async ({ mode }) => {
         output: {
           manualChunks: (id) => {
             if (id.includes('node_modules')) {
+              const index = id.includes('pnpm') ? 1 : 0
+
               return id
                 .toString()
                 .split('node_modules/')[1]
-                .split('/')[1]
-                .toString()
+                .split('/')
+                [index].toString()
             }
           },
         },

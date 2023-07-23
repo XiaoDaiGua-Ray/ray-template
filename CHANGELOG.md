@@ -39,6 +39,7 @@ request({
 - 将原 `AppComponent` 组件包移动至 `app-components` 包中，并且按照其功能拆分为 `sys` `provider`
 - 现在将异步注册 `vue-router`
 - `RayChart` 组件新增 `macarons` 主题。现在支持便捷的自定义主题，在[主题编辑器](https://echarts.apache.org/zh/theme-builder.html)编辑主题后，下载主题（json）放置于对应主题包中即可被自动注册
+- 兼容 `yarn` `npm` 包管理器的 `manualChunks` 配置
 
 ## 4.1.2
 

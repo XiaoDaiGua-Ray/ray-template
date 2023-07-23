@@ -10,6 +10,7 @@
  */
 
 import { NSpace, NDataTable, NButton } from 'naive-ui'
+import RayTable from '@/components/RayTable/index'
 
 import type { DataTableColumns } from 'naive-ui'
 
@@ -83,7 +84,7 @@ const RouterDemoHome = defineComponent({
   render() {
     return (
       <NSpace wrapItem={false}>
-        <NDataTable columns={this.columns} data={this.dataSource} />
+        <RayTable columns={this.columns} data={this.dataSource} />
       </NSpace>
     )
   },

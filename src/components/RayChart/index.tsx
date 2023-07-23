@@ -295,9 +295,9 @@ const RayChart = defineComponent({
         /** 注册 chart */
         echartInstance = echarts.init(element, theme, {
           /** 如果款度为 0, 则以 200px 填充 */
-          width: width === 0 ? 200 : undefined,
+          width: width === 0 ? 200 : void 0,
           /** 如果高度为 0, 则以 200px 填充 */
-          height: height === 0 ? 200 : undefined,
+          height: height === 0 ? 200 : void 0,
         })
         echartInstanceRef.value = echartInstance
 
@@ -313,6 +313,7 @@ const RayChart = defineComponent({
         if (error) {
           call(error)
         }
+
         console.error('RayChart render error: ', e)
       }
     }
@@ -325,7 +326,7 @@ const RayChart = defineComponent({
      */
     const renderThemeChart = (bool?: boolean) => {
       if (props.autoChangeTheme) {
-        bool ? renderChart('dark') : renderChart()
+        bool ? renderChart('macarons-dark') : renderChart()
 
         return void 0
       }
@@ -383,7 +384,7 @@ const RayChart = defineComponent({
          * 自动跟随模板主题或者指定主题皆可
          */
         if (props.autoChangeTheme || props.theme) {
-          themeValue.value ? renderChart('dark') : renderChart()
+          themeValue.value ? renderChart('macarons-dark') : renderChart()
         } else {
           renderChart()
         }
@@ -425,7 +426,7 @@ const RayChart = defineComponent({
         if (props.autoChangeTheme) {
           renderThemeChart(themeValue.value)
         } else {
-          props.theme ? renderChart('dark') : renderChart()
+          props.theme ? renderChart('macarons-dark') : renderChart()
         }
 
         /** 注册事件 */
