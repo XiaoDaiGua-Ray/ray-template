@@ -70,6 +70,16 @@
 
 > 做了一些大的改动升级，让模板更加好用了一点，默认主题色也做了变更更好看了一点。啰嗦两句，好像也没啥其他的了...
 
+## 项目安装
+
+```sh
+# github
+git clone https://github.com/XiaoDaiGua-Ray/ray-template.git
+
+# 如果你的下载速度很慢，可以切换到下面的代理地址
+git clone https://gh.yka.moe/https://github.com/XiaoDaiGua-Ray/ray-template.git
+```
+
 ## 拉取依赖
 
 ```sh

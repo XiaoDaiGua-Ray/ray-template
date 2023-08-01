@@ -6,6 +6,16 @@
 
 ### 使用
 
+#### 项目安装
+
+```sh
+# github
+git clone https://github.com/XiaoDaiGua-Ray/ray-template.git
+
+# 如果你的下载速度很慢，可以切换到下面的代理地址
+git clone https://gh.yka.moe/https://github.com/XiaoDaiGua-Ray/ray-template.git
+```
+
 #### 依赖安装
 
 ```sh
