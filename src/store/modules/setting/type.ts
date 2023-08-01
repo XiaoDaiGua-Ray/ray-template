@@ -13,4 +13,5 @@ export interface SettingState {
   invertSwitch: boolean
   lockScreenSwitch: boolean
   lockScreenInputSwitch: boolean
+  footerSwitch: boolean
 }

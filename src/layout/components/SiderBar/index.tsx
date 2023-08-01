@@ -12,8 +12,9 @@
 /**
  *
  * 本来想通过写数据配置化的方式实现顶部的功能小按钮, 结果事实发现...
- *
  * 但是我又不想改, 就这样吧
+ *
+ * 如果你希望自己 diy 一些东西，可以自己使用 computed 实现
  */
 
 import './index.scss'
@@ -33,7 +34,6 @@ import screenfull from 'screenfull'
 import { useI18n } from '@/locales/useI18n'
 
 import type { IconEventMapOptions, IconEventMap } from './type'
-import type { SigninCallback } from '@/store/modules/signin/type'
 
 const SiderBar = defineComponent({
   name: 'SiderBar',
@@ -43,12 +43,14 @@ const SiderBar = defineComponent({
     const { t } = useI18n()
     const { updateLocale, changeSwitcher } = settingStore
 
-    const { drawerPlacement, breadcrumbSwitch } = storeToRefs(settingStore)
+    const { drawerPlacement, breadcrumbSwitch, reloadRouteSwitch } =
+      storeToRefs(settingStore)
     const showSettings = ref(false)
     const spaceItemStyle = {
       display: 'flex',
     }
     const globalSearchShown = ref(false)
+    const isScreenfull = ref(screenfull.isFullscreen)
 
     /**
      *
@@ -59,6 +61,9 @@ const SiderBar = defineComponent({
         name: 'reload',
         size: 18,
         tooltip: t('headerTooltip.Reload'),
+        iconClass: computed(() =>
+          !reloadRouteSwitch.value ? 'ray-icon__reload--loading' : '',
+        ),
       },
     ])
     /**
@@ -75,7 +80,11 @@ const SiderBar = defineComponent({
       {
         name: 'fullscreen',
         size: 18,
-        tooltip: t('headerTooltip.FullScreen'),
+        tooltip: computed(() =>
+          isScreenfull.value
+            ? t('headerTooltip.CancelFullScreen')
+            : t('headerTooltip.FullScreen'),
+        ),
         eventKey: 'screen',
       },
       {
@@ -92,10 +101,11 @@ const SiderBar = defineComponent({
       },
     ])
     const iconEventMap: IconEventMapOptions = {
+      // 刷新组件重新加载，手动设置 800ms loading 时长
       reload: () => {
         changeSwitcher(false, 'reloadRouteSwitch')
 
-        setTimeout(() => changeSwitcher(true, 'reloadRouteSwitch'), 300)
+        setTimeout(() => changeSwitcher(true, 'reloadRouteSwitch'), 800)
       },
       setting: () => {
         showSettings.value = true
@@ -111,6 +121,8 @@ const SiderBar = defineComponent({
         } else {
           return (() => {
             screenfull.toggle()
+
+            isScreenfull.value = !screenfull.isFullscreen
           })()
         }
       },
@@ -158,9 +170,14 @@ const SiderBar = defineComponent({
                 {{
                   trigger: () => (
                     <RayIcon
-                      customClassName="layout-header__method--icon"
+                      customClassName={`${
+                        isRef(curr.iconClass)
+                          ? curr.iconClass.value
+                          : curr.iconClass
+                      }`}
                       name={curr.name}
                       size={curr.size}
+                      cursor="pointer"
                       onClick={this.handleIconClick.bind(this, curr.name)}
                     />
                   ),
@@ -178,7 +195,9 @@ const SiderBar = defineComponent({
             {this.rightTooltipIconOptions.map((curr) => (
               <TootipIcon
                 iconName={curr.name}
-                tooltipText={curr.tooltip}
+                tooltipText={
+                  isRef(curr.tooltip) ? curr.tooltip.value : curr.tooltip
+                }
                 onClick={this.handleIconClick.bind(this, curr.name)}
               />
             ))}
@@ -193,6 +212,7 @@ const SiderBar = defineComponent({
                 customClassName="layout-header__method--icon"
                 name="language"
                 size="18"
+                cursor="pointer"
               />
             </NDropdown>
             <NDropdown

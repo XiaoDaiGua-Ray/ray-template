@@ -7,10 +7,8 @@
   > .layout-header__method {
     width: 100%;
 
-    & .layout-header__method--icon {
-      cursor: pointer;
-      outline: none;
-      border: none;
+    & .ray-icon__reload--loading {
+      animation: elementRotate 0.8s linear infinite;
     }
   }
 }

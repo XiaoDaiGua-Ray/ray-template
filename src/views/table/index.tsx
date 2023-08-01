@@ -22,6 +22,7 @@ import {
   NH2,
   NUl,
   NLi,
+  NSpace,
 } from 'naive-ui'
 import RayTable from '@/components/RayTable/index'
 import RayCollapseGrid from '@/components/RayCollapseGrid/index'
@@ -163,7 +164,7 @@ const TableView = defineComponent({
   },
   render() {
     return (
-      <NLayout>
+      <div>
         <NH2>RayTable 组件使用</NH2>
         <NUl alignText>
           <NLi>
@@ -231,13 +232,14 @@ const TableView = defineComponent({
           style="margin-top: 18px"
           ref="tableRef"
           scrollX={2000}
-          title={h(
-            NSwitch,
-            {
-              onUpdateValue: (value: boolean) => (this.tableLoading = value),
-            },
-            {},
-          )}
+          title={
+            <NSpace align="center">
+              <span>标题插槽:</span>
+              <NSwitch
+                onUpdateValue={(value: boolean) => (this.tableLoading = value)}
+              ></NSwitch>
+            </NSpace>
+          }
           data={this.tableData}
           v-model:columns={this.actionColumns}
           pagination={{
@@ -251,7 +253,7 @@ const TableView = defineComponent({
             tableFooter: () => '表格的底部内容区域插槽，有时候你可能会用上',
           }}
         </RayTable>
-      </NLayout>
+      </div>
     )
   },
 })

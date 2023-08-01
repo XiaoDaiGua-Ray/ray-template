@@ -11,7 +11,7 @@
 
 import './index.scss'
 
-import { NLayout, NLayoutContent } from 'naive-ui'
+import { NLayout, NLayoutContent, NScrollbar } from 'naive-ui'
 import Menu from './components/Menu/index'
 import SiderBar from './components/SiderBar/index'
 import MenuTag from './components/MenuTag/index'
@@ -28,57 +28,49 @@ const Layout = defineComponent({
   setup() {
     const layoutSiderBarRef = ref<HTMLElement>()
     const layoutMenuTagRef = ref<HTMLElement>()
+    const layoutFooterRef = ref<HTMLElement>()
 
     const settingStore = useSetting()
 
-    const { height: windowHeight } = useWindowSize()
-    const { menuTagSwitch: modelMenuTagSwitch } = storeToRefs(settingStore)
+    const { menuTagSwitch: modelMenuTagSwitch, footerSwitch } =
+      storeToRefs(settingStore)
     const { getLockAppScreen } = useAppLockScreen()
     const cssVarsRef = layoutHeaderCssVars([
       layoutSiderBarRef,
       layoutMenuTagRef,
+      layoutFooterRef,
     ])
 
     return {
-      windowHeight,
       modelMenuTagSwitch,
       cssVarsRef,
       getLockAppScreen,
       LAYOUT_CONTENT_REF,
       layoutSiderBarRef,
       layoutMenuTagRef,
+      layoutFooterRef,
+      footerSwitch,
     }
   },
   render() {
-    return (
-      <div
-        class={['layout']}
-        style={[`height: ${this.windowHeight}px`, this.cssVarsRef]}
-      >
-        {!this.getLockAppScreen() ? (
-          <NLayout class="layout-full" hasSider>
-            <Menu />
-            <NLayout class="layout__view-container__layout">
-              <SiderBar ref="layoutSiderBarRef" />
-              {this.modelMenuTagSwitch ? (
-                <MenuTag ref="layoutMenuTagRef" />
-              ) : (
-                ''
-              )}
-              <NLayoutContent
-                ref="LAYOUT_CONTENT_REF"
-                class="layout-content__router-view"
-                nativeScrollbar={false}
-              >
-                <ContentWrapper />
-                <FooterWrapper />
-              </NLayoutContent>
-            </NLayout>
-          </NLayout>
-        ) : (
-          ''
-        )}
-      </div>
+    return !this.getLockAppScreen() ? (
+      <NLayout class="r-layout-full" style={[this.cssVarsRef]} hasSider>
+        <Menu />
+        <NLayoutContent class="r-layout-full__viewer">
+          <SiderBar ref="layoutSiderBarRef" />
+          {this.modelMenuTagSwitch ? <MenuTag ref="layoutMenuTagRef" /> : ''}
+          <NLayoutContent
+            ref="LAYOUT_CONTENT_REF"
+            class="r-layout-full__viewer-content"
+            nativeScrollbar={false}
+          >
+            <ContentWrapper />
+          </NLayoutContent>
+          {this.footerSwitch ? <FooterWrapper ref="layoutFooterRef" /> : ''}
+        </NLayoutContent>
+      </NLayout>
+    ) : (
+      ''
     )
   },
 })

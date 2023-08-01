@@ -30,11 +30,12 @@ import type { LayoutInst } from 'naive-ui'
  */
 export const LAYOUT_CONTENT_REF = ref<LayoutInst>()
 
-/** 是否启用路由切换时顶部加载条 */
-export const SETUP_ROUTER_LOADING_BAR = true
-
-/** 是否启用路由守卫, 如果设置为 false 则不会触发路由切换校验 */
-export const SETUP_ROUTER_GUARD = true
+export const SETUP_ROUTER_ACTION = {
+  /** 是否启用路由切换时顶部加载条 */
+  setupRouterLoadingBar: true,
+  /** 是否启用路由守卫, 如果设置为 false 则不会触发路由切换校验 */
+  setupRouterGuard: true,
+} as const
 
 /**
  *

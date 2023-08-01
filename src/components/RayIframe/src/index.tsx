@@ -142,7 +142,9 @@ const RayIframe = defineComponent({
       return iframeEl
     }
 
-    expose()
+    expose({
+      iframeInst: iframeRef,
+    })
 
     onMounted(() => {
       on(getIframeRef(), 'load', iframeLoadSuccess.bind(this))

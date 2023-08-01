@@ -22,7 +22,11 @@ const MultiMenuTwoOne = defineComponent({
   },
   render() {
     return (
-      <div>
+      <div
+        style={{
+          height: 'var(--layout-content-height)',
+        }}
+      >
         多级菜单2-2-1
         <NInput v-model={this.inputValue} />
       </div>

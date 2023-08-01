@@ -46,6 +46,7 @@ const SettingDrawer = defineComponent({
       menuTagSwitch,
       breadcrumbSwitch,
       invertSwitch,
+      footerSwitch,
     } = storeToRefs(settingStore)
 
     const modelShow = computed({
@@ -65,6 +66,7 @@ const SettingDrawer = defineComponent({
       changeSwitcher,
       breadcrumbSwitch,
       invertSwitch,
+      footerSwitch,
     }
   },
   render() {
@@ -107,6 +109,14 @@ const SettingDrawer = defineComponent({
                   v-model:value={this.breadcrumbSwitch}
                   onUpdateValue={(bool: boolean) =>
                     this.changeSwitcher(bool, 'breadcrumbSwitch')
+                  }
+                />
+              </NDescriptionsItem>
+              <NDescriptionsItem label="版权信息">
+                <NSwitch
+                  v-model:value={this.footerSwitch}
+                  onUpdateValue={(bool: boolean) =>
+                    this.changeSwitcher(bool, 'footerSwitch')
                   }
                 />
               </NDescriptionsItem>

@@ -62,6 +62,11 @@ const GlobalSeach = defineComponent({
         plain: true,
       },
       {
+        icon: '↵',
+        label: '选择',
+        plain: true,
+      },
+      {
         icon: 'esc',
         label: '关闭',
         plain: true,

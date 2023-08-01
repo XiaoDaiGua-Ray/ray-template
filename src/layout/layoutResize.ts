@@ -22,12 +22,13 @@ import type { Ref } from 'vue'
 export const layoutHeaderCssVars = (
   element: Ref<HTMLElement | undefined>[],
 ) => {
-  const siderBar = useElementSize(element[0])
-  const menuTag = useElementSize(element[1])
+  const siderBar = useElementBounding(element[0])
+  const menuTag = useElementBounding(element[1])
+  const footer = useElementBounding(element[2])
 
   return computed(() => {
     return {
-      '--layout-content-height': `calc(100% - ${siderBar.height.value}px - ${menuTag.height.value}px)`,
+      '--layout-content-height': `calc(100% - ${siderBar.height.value}px - ${menuTag.height.value}px - ${footer.height.value}px)`,
       '--layout-siderbar-height': `${siderBar.height.value}px`,
       '--layout-menutag-height': `${menuTag.height.value}px`,
     }

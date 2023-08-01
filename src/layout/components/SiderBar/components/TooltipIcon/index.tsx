@@ -26,11 +26,11 @@ const TooltipIcon = defineComponent({
     },
     customClassName: {
       type: String,
-      default: '',
+      default: null,
     },
     tooltipText: {
       type: String,
-      default: '',
+      default: null,
     },
   },
   emits: ['click'],
@@ -51,6 +51,7 @@ const TooltipIcon = defineComponent({
               name={this.iconName}
               size="18"
               customClassName={`tooltip-text__icon ${this.customClassName}`}
+              cursor="pointer"
               onClick={this.handleClick.bind(this)}
             />
           ),

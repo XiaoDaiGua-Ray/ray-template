@@ -27,12 +27,7 @@ import { WHITE_ROUTES } from '@/appConfig/routerConfig'
 import { validRole } from '@/router/helper/routerCopilot'
 import { isValueType } from '@/utils/hook'
 
-import type {
-  Router,
-  NavigationGuardNext,
-  RouteLocationNormalized,
-} from 'vue-router'
-import type { AppMenuOption } from '@/types/modules/app'
+import type { Router, RouteLocationNormalized } from 'vue-router'
 import type { AppRouteMeta } from '@/router/type'
 
 /** 路由守卫 */

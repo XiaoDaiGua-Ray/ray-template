@@ -36,8 +36,8 @@ const rayTableProps = {
      *
      * 可以自定义渲染
      */
-    type: [String, Object] as PropType<string | VNodeChild>,
-    default: '',
+    type: [String, Object] as PropType<VNodeChild | string>,
+    default: null,
   },
   action: {
     /**
@@ -208,7 +208,6 @@ const rayTableProps = {
     default: false,
   },
 } as const
-
 export default rayTableProps
 
 /**

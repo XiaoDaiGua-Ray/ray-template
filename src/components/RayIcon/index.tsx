@@ -12,6 +12,7 @@
 import './index.scss'
 
 import { call } from '@/utils/vue/index'
+import { completeSize } from '@/utils/element'
 
 import type { PropType } from 'vue'
 import type { MaybeArray } from '@/types/modules/utils'
@@ -69,11 +70,11 @@ const RayIcon = defineComponent({
     const cssVars = computed(() => {
       const cssVar = {
         '--ray-icon-width': props.width
-          ? props.width + 'px'
-          : props.size + 'px',
+          ? completeSize(props.width)
+          : completeSize(props.size),
         '--ray-icon-height': props.height
-          ? props.height + 'px'
-          : props.size + 'px',
+          ? completeSize(props.height)
+          : completeSize(props.size),
         '--ray-icon-depth': props.depth,
         '--ray-icon-cursor': props.cursor,
       }

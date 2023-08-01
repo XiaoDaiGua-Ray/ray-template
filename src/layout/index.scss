@@ -1,23 +1,22 @@
-.layout {
-  box-sizing: border-box;
+.r-layout-full.r-layout-full {
+  position: fixed;
+  inset: 0;
 
-  > .layout-full {
-    height: 100%;
-  }
+  & .n-layout-scroll-container {
+    & .r-layout-full__viewer .n-layout-scroll-container {
+      overflow: hidden;
 
-  & .layout__view-container__layout .n-layout-scroll-container {
-    overflow: hidden;
-  }
+      & .r-layout-full__viewer-content {
+        height: var(--layout-content-height);
+        padding: 16px;
 
-  & .layout-content__router-view {
-    height: var(--layout-content-height);
-    padding: calc($layoutRouterViewContainer / 2);
+        & .n-scrollbar-container {
+          height: 100%;
 
-    & .n-scrollbar-container {
-      height: 100%;
-
-      & .n-scrollbar-content {
-        height: 100%;
+          & .n-scrollbar-content {
+            height: 100%;
+          }
+        }
       }
     }
   }

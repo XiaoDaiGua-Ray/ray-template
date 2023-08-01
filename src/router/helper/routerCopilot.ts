@@ -10,11 +10,7 @@
  */
 
 import { permissionRouter } from './permission'
-import {
-  SETUP_ROUTER_LOADING_BAR,
-  SETUP_ROUTER_GUARD,
-  SUPER_ADMIN,
-} from '@/appConfig/routerConfig'
+import { SETUP_ROUTER_ACTION, SUPER_ADMIN } from '@/appConfig/routerConfig'
 import { useSignin } from '@/store'
 import { useVueRouter } from '@/router/helper/useVueRouter'
 import { ROOT_ROUTE } from '@/appConfig/appConfig'
@@ -112,11 +108,14 @@ export const setupRouterLoadingBar = (router: Router) => {
  * @remark 统一的路由相关功能配置, 虽然该方法有点蠢...
  */
 export const vueRouterRegister = (router: Router) => {
-  if (SETUP_ROUTER_LOADING_BAR) {
+  const { setupRouterLoadingBar: cfgSetupRouterLoadingBar, setupRouterGuard } =
+    SETUP_ROUTER_ACTION
+
+  if (cfgSetupRouterLoadingBar) {
     setupRouterLoadingBar(router)
   }
 
-  if (SETUP_ROUTER_GUARD) {
+  if (setupRouterGuard) {
     permissionRouter(router)
   }
 }
