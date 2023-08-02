@@ -14,8 +14,7 @@ dist
 dist/
 *.local
 visualizer.*
-components.d.ts
-auto-imports.d.ts
+.eslintcache
 
 # Editor directories and files
 .idea

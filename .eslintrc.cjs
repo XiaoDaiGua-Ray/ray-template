@@ -13,6 +13,7 @@ module.exports = {
     'plugin:vue/vue3-essential',
     'plugin:prettier/recommended',
     'prettier',
+    './unplugin/.eslintrc-auto-import.json',
   ],
   parser: 'vue-eslint-parser',
   parserOptions: {

@@ -37,8 +37,7 @@
     "cfg.ts",
     "package.json",
     "vite-env.d.ts",
-    "components.d.ts",
-    "auto-imports.d.ts",
+    "./unplugin/**/*",
     "src/**/*"
   ]
 }

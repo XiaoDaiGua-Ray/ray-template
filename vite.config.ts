@@ -10,7 +10,7 @@ import viteVueJSX from '@vitejs/plugin-vue-jsx'
 import viteVeI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import viteInspect from 'vite-plugin-inspect'
 import viteSvgLoader from 'vite-svg-loader'
-import viteEslintPlugin from 'vite-plugin-eslint'
+import viteEslintPlugin from '@nabla/vite-plugin-eslint'
 import vitePluginImp from 'vite-plugin-imp' // 按需打包工具
 import { visualizer } from 'rollup-plugin-visualizer' // 打包体积分析工具
 import viteCompression from 'vite-plugin-compression' // 压缩打包
@@ -70,16 +70,19 @@ export default defineConfig(async ({ mode }) => {
       vue({ reactivityTransform: true }),
       viteVueJSX(),
       title,
-      viteInspect(), // 仅适用于开发模式(检查 `Vite` 插件的中间状态)
       viteVeI18nPlugin({}),
       viteAutoImport({
+        eslintrc: {
+          enabled: true,
+          filepath: './unplugin/.eslintrc-auto-import.json',
+        },
         include: [
           /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
           /\.vue$/,
           /\.vue\?vue/, // .vue
           /\.md$/, // .md
         ],
-        dts: true,
+        dts: './unplugin/auto-imports.d.ts',
         imports: [
           'vue',
           'vue-router',
@@ -105,12 +108,12 @@ export default defineConfig(async ({ mode }) => {
       }),
       viteSVGIcon(),
       viteEslintPlugin({
-        lintOnStart: true, // 构建时自动检查
-        failOnWarning: true, // 如果含有警告则构建失败
-        failOnError: true, // 如果有错误则构建失败
-        cache: true, // 缓存, 减少构建时间
-        exclude: ['**/node_modules/**', 'vite-env.d.ts'],
-        include: ['src/**/*.ts', 'src/**/*.vue', 'src/**/*.tsx'],
+        formatter: 'stylish',
+        eslintOptions: {
+          cache: true,
+          fix: true,
+          extensions: ['.vue', '.tsx', '.ts', '.js', '.jsx'],
+        },
       }),
       vitePluginImp({
         libList: [
@@ -152,6 +155,7 @@ export default defineConfig(async ({ mode }) => {
         preloadingConfig,
         appPrimaryColor,
       }),
+      viteInspect(), // 仅适用于开发模式(检查 `Vite` 插件的中间状态)
     ],
     optimizeDeps: {
       include: ['vue', 'vue-router', 'pinia', 'vue-i18n', '@vueuse/core'],
