@@ -34,6 +34,7 @@ module.exports = {
     defineOptions: 'readonly',
   },
   rules: {
+    'linebreak-style': ['error', 'unix'],
     '@typescript-eslint/no-explicit-any': [
       'error',
       {

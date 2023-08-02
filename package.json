@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build --mode production",
+    "build": "eslint src && vue-tsc --noEmit && vite build --mode production",
     "preview": "vite preview",
-    "test": "vue-tsc --noEmit && vite build --mode test",
-    "dev-build": "vue-tsc --noEmit && vite build --mode development",
-    "report": "vue-tsc --noEmit && vite build --mode report",
+    "test": "eslint src && vue-tsc --noEmit && vite build --mode test",
+    "dev-build": "eslint src && vue-tsc --noEmit && vite build --mode development",
+    "report": "eslint src && vue-tsc --noEmit && vite build --mode report",
     "prepare": "husky install"
   },
   "lint-staged": {

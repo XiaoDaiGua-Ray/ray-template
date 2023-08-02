@@ -14,3 +14,4 @@ visualizer.html
 src/locales/lang
 .depcheckrc
 src/components/RayChart/theme
+*.md
