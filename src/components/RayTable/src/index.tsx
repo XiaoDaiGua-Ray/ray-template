@@ -46,6 +46,7 @@ import props from './props'
 import print from 'print-js'
 import { uuid } from '@use-utils/hook'
 import { exportFileToXLSX } from '@use-utils/xlsx'
+import { cloneDeep } from 'lodash-es'
 
 import type { ActionOptions } from './type'
 import type { WritableComputedRef } from 'vue'
@@ -83,7 +84,7 @@ const RayTable = defineComponent({
 
       return cssVar
     })
-    const tableSize = ref(props.size)
+    const tableSize = ref(cloneDeep(props.size))
     const tableMethods = ref<Omit<DataTableInst, 'clearFilter'>>()
 
     /** 注入相关属性 */

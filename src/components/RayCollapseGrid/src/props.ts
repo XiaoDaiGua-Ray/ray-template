@@ -5,7 +5,7 @@ import type { CollapseToggleText } from './type'
 import type { AnyFC, MaybeArray } from '@/types/modules/utils'
 
 export const collapseGridProps = {
-  value: {
+  open: {
     /**
      *
      * 是否折叠操作栏
