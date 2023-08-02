@@ -5,17 +5,17 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "eslint src && vue-tsc --noEmit && vite build --mode production",
+    "build": "eslint src && eslint --fix . && vue-tsc --noEmit && vite build --mode production",
     "preview": "vite preview",
-    "test": "eslint src && vue-tsc --noEmit && vite build --mode test",
-    "dev-build": "eslint src && vue-tsc --noEmit && vite build --mode development",
-    "report": "eslint src && vue-tsc --noEmit && vite build --mode report",
+    "test": "eslint src && eslint --fix . && vue-tsc --noEmit && vite build --mode test",
+    "dev-build": "eslint src && eslint --fix . && vue-tsc --noEmit && vite build --mode development",
+    "report": "eslint src && eslint --fix . && vue-tsc --noEmit && vite build --mode report",
     "prepare": "husky install"
   },
   "lint-staged": {
     "src/**/*.{vue,jsx,ts,tsx,json}": [
       "prettier --write",
-      "eslint",
+      "eslint src",
       "git add"
     ]
   },
@@ -73,7 +73,7 @@
     "husky": "^8.0.3",
     "lint-staged": "^13.1.0",
     "postcss": "^8.1.0",
-    "postcss-px-to-viewport": "^1.1.1",
+    "postcss-px-to-viewport-update": "1.2.0",
     "prettier": "^2.7.1",
     "rollup-plugin-visualizer": "^5.8.3",
     "svg-sprite-loader": "^6.0.11",

@@ -11,7 +11,9 @@ module.exports = {
       ],
       grid: true,
     },
-    // 'postcss-px-to-viewport': {
+    // 由于该库的作者很久没更新了，导致 exclude include 并没有生效，所以使用的是其一个 fork 版本
+    // 'postcss-px-to-viewport-update': {
+    //   inlinePxToViewport: true,
     //   /** 视窗的宽度(设计稿的宽度) */
     //   viewportWidth: 1920,
     //   /** 视窗的高度(设计稿高度, 一般无需指定) */
@@ -26,6 +28,8 @@ module.exports = {
     //   minPixelValue: 1,
     //   /** 允许在媒体查询中转换 px */
     //   mediaQuery: false,
+    //   exclude: /(\/|\\)(node_modules)(\/|\\)/, // 忽略某些文件夹下的文件或特定文件，例如 'node_modules' 下的文件
+    //   include: [/^src[/\\].*\.(vue|tsx|jsx|ts(?!d))$/],
     // },
   },
 }

@@ -46,7 +46,7 @@ import props from './props'
 import print from 'print-js'
 import { uuid } from '@use-utils/hook'
 import { exportFileToXLSX } from '@use-utils/xlsx'
-import { cloneDeep } from 'lodash-es'
+import { call } from '@/utils/vue/index'
 
 import type { ActionOptions } from './type'
 import type { WritableComputedRef } from 'vue'
@@ -58,13 +58,13 @@ import type { ComponentSize } from '@/types/modules/component'
 const RayTable = defineComponent({
   name: 'RayTable',
   props: props,
-  emits: ['update:columns', 'menuSelect', 'exportSuccess', 'exportError'],
+  emits: ['update:columns', 'exportSuccess', 'exportError'],
   setup(props, { emit, expose }) {
     const rayTableInstance = ref<DataTableInst>()
 
     const tableUUID = uuid(16) // 表格 id, 用于打印表格
     const rayTableUUID = uuid(16) // RayTable id, 用于全屏表格
-    const modelRightClickMenu = computed(() => props.rightClickMenu)
+    const modelRightClickMenu = computed(() => props.rightClickOptions)
     const modelColumns = computed({
       get: () => props.columns,
       set: (arr) => {
@@ -84,14 +84,14 @@ const RayTable = defineComponent({
 
       return cssVar
     })
-    const tableSize = ref(cloneDeep(props.size))
+    const tableSize = ref(props.size)
     const tableMethods = ref<Omit<DataTableInst, 'clearFilter'>>()
 
     /** 注入相关属性 */
     provide('tableSettingProvider', {
       modelRightClickMenu,
       modelColumns,
-      size: props.size,
+      size: tableSize,
       rayTableUUID,
     })
 
@@ -111,7 +111,16 @@ const RayTable = defineComponent({
       key: string | number,
       option: DropdownOption,
     ) => {
-      emit('menuSelect', key, prevRightClickIndex, option)
+      const { onRightMenuClick, 'onUpdate:rightMenuClick': _onRightMenuClick } =
+        props
+
+      if (onRightMenuClick) {
+        call(onRightMenuClick, key, prevRightClickIndex, option)
+      }
+
+      if (_onRightMenuClick) {
+        call(_onRightMenuClick, key, prevRightClickIndex, option)
+      }
 
       menuConfig.showMenu = false
     }
@@ -242,6 +251,7 @@ const RayTable = defineComponent({
       handleChangeTableSize,
       tableSize,
       rayTableInstance,
+      modelRightClickMenu,
     }
   },
   render() {
@@ -274,7 +284,7 @@ const RayTable = defineComponent({
                   trigger="manual"
                   x={this.x}
                   y={this.y}
-                  options={this.rightClickMenu}
+                  options={this.modelRightClickMenu}
                   onClickoutside={() => (this.showMenu = false)}
                   onSelect={this.handleRightMenuSelect.bind(this)}
                 />

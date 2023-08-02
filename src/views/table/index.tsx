@@ -246,8 +246,8 @@ const TableView = defineComponent({
             pageSize: 10,
           }}
           loading={this.tableLoading}
-          rightClickMenu={this.tableMenuOptions}
-          onMenuSelect={this.handleMenuSelect.bind(this)}
+          rightClickOptions={this.tableMenuOptions}
+          onRightMenuClick={this.handleMenuSelect.bind(this)}
         >
           {{
             tableFooter: () => '表格的底部内容区域插槽，有时候你可能会用上',

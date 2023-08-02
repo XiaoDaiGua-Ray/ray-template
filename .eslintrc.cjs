@@ -5,6 +5,7 @@ module.exports = {
     browser: true,
     node: true,
   },
+  ignorePatterns: ['node_modules/', 'dist/'],
   extends: [
     'eslint-config-prettier',
     'eslint:recommended',

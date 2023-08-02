@@ -17,13 +17,12 @@ import { NCard, NGrid, NGridItem, NSpace } from 'naive-ui'
 import RayIcon from '@/components/RayIcon'
 
 import { call } from '@/utils/vue/index'
-import { cloneDeep } from 'lodash-es'
 
 const RayCollapseGrid = defineComponent({
   name: 'RayCollapseGrid',
   props: collapseGridProps,
   setup(props) {
-    const modelCollapsed = ref(cloneDeep(props.open))
+    const modelCollapsed = ref(props.open)
 
     const handleCollapse = () => {
       modelCollapsed.value = !modelCollapsed.value

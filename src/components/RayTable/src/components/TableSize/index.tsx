@@ -14,24 +14,38 @@ import './index.scss'
 import { NPopover, NCard } from 'naive-ui'
 import RayIcon from '@/components/RayIcon/index'
 
+import { call } from '@/utils/vue/index'
+
 import type { TableSettingProvider } from '@/components/RayTable/src/type'
 import type { ComponentSize } from '@/types/modules/component'
+import type { MaybeArray } from '@/types/modules/utils'
 
 const TableSize = defineComponent({
   name: 'TableSize',
+  props: {
+    onChangeSize: {
+      type: [Function, Array] as PropType<
+        MaybeArray<(size: ComponentSize) => void>
+      >,
+      default: null,
+    },
+  },
   emits: ['changeSize'],
-  setup(_, { emit }) {
+  setup(props) {
     const tableSettingProvider = inject(
       'tableSettingProvider',
       {} as TableSettingProvider,
     )
 
     const popoverShow = ref(false)
-    const currentSize = ref(tableSettingProvider.size)
     const size = computed({
       get: () => tableSettingProvider.size,
       set: (val) => {
-        currentSize.value = val
+        const { onChangeSize } = props
+
+        if (onChangeSize) {
+          call(onChangeSize, val)
+        }
       },
     })
     const sizeOptions = ref([
@@ -55,15 +69,13 @@ const TableSize = defineComponent({
           size.value = key
 
           popoverShow.value = false
-
-          emit('changeSize', key)
         }
       })
     }
 
     return {
+      size,
       sizeOptions,
-      currentSize,
       handleDropdownClick,
       popoverShow,
     }
@@ -103,9 +115,7 @@ const TableSize = defineComponent({
                     <div
                       class={[
                         'dropdown-item',
-                        curr.key === this.currentSize
-                          ? 'dropdown-item--active'
-                          : '',
+                        curr.key === this.size ? 'dropdown-item--active' : '',
                       ]}
                       key={curr.key}
                       onClick={this.handleDropdownClick.bind(

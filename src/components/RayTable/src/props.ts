@@ -14,10 +14,12 @@ import { dataTableProps } from 'naive-ui'
 import type { PropType, VNode, VNodeChild } from 'vue'
 import type { DropdownMixedOption } from './type'
 import type PrintConfiguration from 'print-js'
+import type { MaybeArray } from '@/types/modules/utils'
+import type { DropdownOption } from 'naive-ui'
 
 const rayTableProps = {
   ...dataTableProps, // 继承 `data table props`
-  rightClickMenu: {
+  rightClickOptions: {
     /**
      *
      * 表格右键菜单, 基于 `NDropdown` 实现
@@ -28,6 +30,22 @@ const rayTableProps = {
      */
     type: Array as PropType<DropdownMixedOption[]>,
     default: () => [],
+  },
+  onRightMenuClick: {
+    type: [Function, Array] as PropType<
+      MaybeArray<
+        (key: string | number, index: number, option: DropdownOption) => void
+      >
+    >,
+    default: null,
+  },
+  'onUpdate:rightMenuClick': {
+    type: [Function, Array] as PropType<
+      MaybeArray<
+        (key: string | number, index: number, option: DropdownOption) => void
+      >
+    >,
+    default: null,
   },
   title: {
     /**
