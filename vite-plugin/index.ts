@@ -5,7 +5,6 @@ import vueI18nPlugin from '@intlify/unplugin-vue-i18n/vite' // i18n
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons' // `svg icon`
 
 import type { ComponentResolver, TypeImport } from 'unplugin-vue-components'
-import type { ImportsMap, PresetName } from 'unplugin-auto-import/types'
 import type { BuildOptions } from 'vite'
 import type { ViteSvgIconsPlugin } from 'vite-plugin-svg-icons'
 
@@ -38,7 +37,7 @@ export const viteComponents = async (
   types: TypeImport[] = [],
 ) =>
   unpluginViteComponents({
-    dts: true,
+    dts: './unplugin/components.d.ts',
     resolvers: [...resolvers],
     types: [
       {
