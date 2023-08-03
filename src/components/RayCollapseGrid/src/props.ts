@@ -15,7 +15,7 @@ export const collapseGridProps = {
      * `true` 收起, `false` 展开
      */
     type: Boolean,
-    default: true,
+    default: false,
   },
   collapseToggleText: {
     /**
