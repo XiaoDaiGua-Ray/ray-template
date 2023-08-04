@@ -22,7 +22,7 @@ const RayCollapseGrid = defineComponent({
   name: 'RayCollapseGrid',
   props: collapseGridProps,
   setup(props) {
-    const modelCollapsed = ref(props.open)
+    const modelCollapsed = ref(!props.open)
 
     const handleCollapse = () => {
       modelCollapsed.value = !modelCollapsed.value

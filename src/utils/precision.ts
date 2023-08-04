@@ -85,14 +85,28 @@ export const format = (
     : currency(value, options).toString()
 }
 
-/** 加法 */
+/**
+ *
+ * 加法
+ *
+ * @example
+ * format(add(0.1, 0.2)) => 0.3
+ * format(add(0.2, 0.33)) => 0.53
+ */
 export const add = (...args: CurrencyArguments[]) => {
   return basic(args, 0, (pre, curr) => {
     return currency(pre).add(curr)
   })
 }
 
-/** 减法 */
+/**
+ *
+ * 减法
+ *
+ * @example
+ * format(subtract(0.1, 0.12312)) => -0.02
+ * format(subtract(0.2, 0.33)) => -0.13
+ */
 export const subtract = (...args: CurrencyArguments[]) => {
   if (args.length === 2) {
     const [one, two] = args
@@ -112,14 +126,28 @@ export const subtract = (...args: CurrencyArguments[]) => {
   })
 }
 
-/** 乘法 */
+/**
+ *
+ * 乘法
+ *
+ * @example
+ * format(multiply(1, 0.2)) => 0.2
+ * format(multiply(0.2, 0.33)) => 0.07
+ */
 export const multiply = (...args: CurrencyArguments[]) => {
   return basic(args, 1, (pre, curr) => {
     return currency(pre).multiply(curr)
   })
 }
 
-/** 除法 */
+/**
+ *
+ * 除法
+ *
+ * @example
+ * format(divide(1, 0.2)) => 5
+ * format(divide(0.2, 0.33)) => 0.61
+ */
 export const divide = (...args: CurrencyArguments[]) => {
   if (args.length === 2) {
     const [one, two] = args
@@ -144,10 +172,9 @@ export const divide = (...args: CurrencyArguments[]) => {
  * 平分(将一个数值平均分配到一个数组中)
  * 如果值为 undefind null 会自动转换为 0
  *
- * ```
+ * @example
  * distribute(0, 1) => [0]
  * distribute(0, 3) => [0, 0, 0]
- * ```
  */
 export const distribute = (
   value: CurrencyArguments,
