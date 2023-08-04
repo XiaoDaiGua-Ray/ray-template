@@ -16,6 +16,7 @@ import { visualizer } from 'rollup-plugin-visualizer' // 打包体积分析工�
 import viteCompression from 'vite-plugin-compression' // 压缩打包
 import { ViteEjsPlugin as viteEjsPlugin } from 'vite-plugin-ejs'
 import viteAutoImport from 'unplugin-auto-import/vite'
+import viteEslint from 'vite-plugin-eslint'
 
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers' // 模板自动导入组件并且按需打包
 import { VueHooksPlusResolver } from '@vue-hooks-plus/resolvers'
@@ -107,13 +108,22 @@ export default defineConfig(async ({ mode }) => {
         defaultImport: 'component', // 默认以 `componetn` 形式导入 `svg`
       }),
       viteSVGIcon(),
-      viteEslintPlugin({
-        formatter: 'stylish',
-        eslintOptions: {
-          cache: true,
-          fix: true,
-          extensions: ['.vue', '.tsx', '.ts', '.js', '.jsx'],
-        },
+      // viteEslintPlugin({
+      //   formatter: 'stylish',
+      //   eslintOptions: {
+      //     cache: true,
+      //     fix: true,
+      //     extensions: ['.vue', '.tsx', '.ts', '.js', '.jsx'],
+      //   },
+      // }),
+      viteEslint({
+        lintOnStart: true,
+        failOnError: true,
+        failOnWarning: true,
+        cache: true,
+        fix: true,
+        exclude: ['dist/**', '**/node_modules/**'],
+        include: ['src/**/*.{vue,js,jsx,ts,tsx}'],
       }),
       vitePluginImp({
         libList: [
