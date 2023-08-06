@@ -1,23 +1,23 @@
 import { RouterView } from 'vue-router'
 import AppNaiveGlobalProvider from '@/app-components/provider/AppNaiveGlobalProvider/index'
 import AppStyleProvider from '@/app-components/provider/AppStyleProvider/index'
-import GlobalSpin from '@/spin/index'
-import LockScreen from '@/app-components/app/AppLockScreen/index'
+import AppLockScreen from '@/app-components/app/AppLockScreen/index'
+import AppGlobalSpin from '@/spin/index'
 
 const App = defineComponent({
   name: 'App',
   render() {
     return (
       <AppNaiveGlobalProvider>
-        <LockScreen />
+        <AppLockScreen />
         <AppStyleProvider />
 
-        <GlobalSpin>
+        <AppGlobalSpin>
           {{
             default: () => <RouterView />,
             description: () => 'lodaing...',
           }}
-        </GlobalSpin>
+        </AppGlobalSpin>
       </AppNaiveGlobalProvider>
     )
   },

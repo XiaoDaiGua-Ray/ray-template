@@ -9,11 +9,11 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "eslint src && vue-tsc --noEmit && vite build --mode production",
+    "build": "vue-tsc --noEmit && vite build --mode production",
     "preview": "vite preview",
-    "test": "eslint src && vue-tsc --noEmit && vite build --mode test",
-    "dev-build": "eslint src && vue-tsc --noEmit && vite build --mode development",
-    "report": "eslint src && vue-tsc --noEmit && vite build --mode report",
+    "test": "vue-tsc --noEmit && vite build --mode test",
+    "dev-build": "vue-tsc --noEmit && vite build --mode development",
+    "report": "vue-tsc --noEmit && vite build --mode report",
     "prepare": "husky install"
   },
   "lint-staged": {
@@ -52,7 +52,6 @@
     "@commitlint/cli": "^17.4.2",
     "@commitlint/config-conventional": "^17.4.2",
     "@intlify/unplugin-vue-i18n": "^0.12.1",
-    "@nabla/vite-plugin-eslint": "1.5.0",
     "@types/crypto-js": "^4.1.1",
     "@types/lodash-es": "^4.17.7",
     "@types/scrollreveal": "^0.0.8",
@@ -91,7 +90,7 @@
     "vite-plugin-imp": "^2.3.1",
     "vite-plugin-inspect": "^0.7.26",
     "vite-plugin-svg-icons": "^2.0.1",
-    "vite-svg-loader": "^3.4.0",
+    "vite-svg-loader": "^4.0.0",
     "vue-tsc": "^1.8.4"
   },
   "description": "<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->",
@@ -102,10 +101,10 @@
   },
   "keywords": [
     "ray-template",
-    "vue3.2模板",
     "vue3-tsx-vite-pinia",
     "ray template",
-    "Ray Template",
+    "vite",
+    "vue3",
     "admin template",
     "中后台模板"
   ],

@@ -35,9 +35,12 @@ import type { AppRouteRecordRaw, RouteModules } from '@/router/type'
  * 会将 modules 中每一个 ts 文件当作一个路由模块, 即使你以分包的形式创建了路由模块
  */
 export const combineRawRouteModules = () => {
-  const modulesFiles: RouteModules = import.meta.glob('../modules/**/*.ts', {
-    eager: true,
-  })
+  const modulesFiles: RouteModules = import.meta.glob(
+    '@/router/modules/**/*.ts',
+    {
+      eager: true,
+    },
+  )
 
   const modules = Object.keys(modulesFiles).reduce((modules, modulePath) => {
     const route = modulesFiles[modulePath].default

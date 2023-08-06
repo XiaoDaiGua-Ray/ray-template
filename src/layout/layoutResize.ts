@@ -31,6 +31,7 @@ export const layoutHeaderCssVars = (
       '--layout-content-height': `calc(100% - ${siderBar.height.value}px - ${menuTag.height.value}px - ${footer.height.value}px)`,
       '--layout-siderbar-height': `${siderBar.height.value}px`,
       '--layout-menutag-height': `${menuTag.height.value}px`,
+      '--layout-footer-height': `${footer.height.value}px`,
     }
   })
 }

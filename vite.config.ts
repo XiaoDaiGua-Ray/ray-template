@@ -10,7 +10,6 @@ import viteVueJSX from '@vitejs/plugin-vue-jsx'
 import viteVeI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import viteInspect from 'vite-plugin-inspect'
 import viteSvgLoader from 'vite-svg-loader'
-import viteEslintPlugin from '@nabla/vite-plugin-eslint'
 import vitePluginImp from 'vite-plugin-imp' // 按需打包工具
 import { visualizer } from 'rollup-plugin-visualizer' // 打包体积分析工具
 import viteCompression from 'vite-plugin-compression' // 压缩打包
@@ -108,21 +107,12 @@ export default defineConfig(async ({ mode }) => {
         defaultImport: 'component', // 默认以 `componetn` 形式导入 `svg`
       }),
       viteSVGIcon(),
-      // viteEslintPlugin({
-      //   formatter: 'stylish',
-      //   eslintOptions: {
-      //     cache: true,
-      //     fix: true,
-      //     extensions: ['.vue', '.tsx', '.ts', '.js', '.jsx'],
-      //   },
-      // }),
       viteEslint({
         lintOnStart: true,
         failOnError: true,
         failOnWarning: true,
-        cache: true,
         fix: true,
-        exclude: ['dist/**', '**/node_modules/**'],
+        exclude: ['dist/**', '**/node_modules/**', 'vite-env.d.ts', '*.md'],
         include: ['src/**/*.{vue,js,jsx,ts,tsx}'],
       }),
       vitePluginImp({
