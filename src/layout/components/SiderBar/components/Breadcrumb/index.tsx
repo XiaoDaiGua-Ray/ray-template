@@ -22,7 +22,7 @@ import { NDropdown, NBreadcrumb, NBreadcrumbItem } from 'naive-ui'
 
 import { useMenu } from '@/store'
 
-import type { DropdownOption, MenuOption } from 'naive-ui'
+import type { DropdownOption } from 'naive-ui'
 import type {
   AppMenuOption,
   MenuTagOptions,

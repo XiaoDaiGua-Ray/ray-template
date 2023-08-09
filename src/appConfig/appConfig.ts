@@ -61,7 +61,7 @@ export const ROOT_ROUTE: Readonly<RootRoute> = {
  *
  * 如果不设置该属性或者为空, 则不会渲染 LOGO
  */
-export const SIDE_BAR_LOGO: LayoutSideBarLogo = {
+export const SIDE_BAR_LOGO: LayoutSideBarLogo | undefined = {
   icon: 'ray',
   title: 'Ray Template',
   url: '/dashboard',

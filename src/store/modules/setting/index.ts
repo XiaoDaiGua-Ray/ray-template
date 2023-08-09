@@ -38,7 +38,13 @@ export const useSetting = defineStore(
       lockScreenSwitch: false, // 锁屏开关
       lockScreenInputSwitch: false, // 锁屏输入状态开关(预留该字段是为了方便拓展用, 但是舍弃了该字段, 改为使用 useAppLockScreen 方法)
       footerSwitch: true, // 底部区域开关
+      contentTransition: 'scale', // 切换过渡效果
     })
+
+    /** 更新过渡效果 */
+    const updateContentTransition = (value: string) => {
+      settingState.contentTransition = value
+    }
 
     /** 修改当前语言 */
     const updateLocale = (key: string) => {
@@ -103,6 +109,7 @@ export const useSetting = defineStore(
       updateLocale,
       changePrimaryColor,
       changeSwitcher,
+      updateContentTransition,
     }
   },
   {

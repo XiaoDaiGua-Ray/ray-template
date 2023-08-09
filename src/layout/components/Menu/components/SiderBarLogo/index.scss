@@ -2,7 +2,7 @@
  *
  * @author Ray <https://github.com/XiaoDaiGua-Ray>
  *
- * @date 2023-01-06
+ * @date 2023-08-08
  *
  * @workspace ray-template
  *
@@ -10,7 +10,7 @@
  */
 
 .ray-menu__logo {
-  height: 50px;
+  height: $layoutHeaderHeight;
   padding: 0 18px 0 24px;
   display: flex;
   flex-wrap: nowrap;

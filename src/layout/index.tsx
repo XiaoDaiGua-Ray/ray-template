@@ -11,19 +11,19 @@
 
 import './index.scss'
 
-import { NLayout, NLayoutContent, NScrollbar } from 'naive-ui'
+import { NLayout, NLayoutContent } from 'naive-ui'
 import Menu from './components/Menu/index'
-import SiderBar from './components/SiderBar/index'
-import MenuTag from './components/MenuTag/index'
 import ContentWrapper from '@/layout/default/ContentWrapper'
 import FooterWrapper from '@/layout/default/FooterWrapper'
+import HeaderWrapper from './default/HeaderWrapper'
+import FeatureWrapper from './default/FeatureWrapper'
 
 import { useSetting } from '@/store'
 import { LAYOUT_CONTENT_REF } from '@/appConfig/routerConfig'
 import { layoutHeaderCssVars } from '@/layout/layoutResize'
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
 
-const Layout = defineComponent({
+const RLayout = defineComponent({
   name: 'RLayout',
   setup() {
     const layoutSiderBarRef = ref<HTMLElement>()
@@ -57,8 +57,12 @@ const Layout = defineComponent({
       <NLayout class="r-layout-full" style={[this.cssVarsRef]} hasSider>
         <Menu />
         <NLayoutContent class="r-layout-full__viewer">
-          <SiderBar ref="layoutSiderBarRef" />
-          {this.modelMenuTagSwitch ? <MenuTag ref="layoutMenuTagRef" /> : ''}
+          <HeaderWrapper ref="layoutSiderBarRef" />
+          {this.modelMenuTagSwitch ? (
+            <FeatureWrapper ref="layoutMenuTagRef" />
+          ) : (
+            ''
+          )}
           <NLayoutContent
             ref="LAYOUT_CONTENT_REF"
             class="r-layout-full__viewer-content"
@@ -75,4 +79,4 @@ const Layout = defineComponent({
   },
 })
 
-export default Layout
+export default RLayout

@@ -1,4 +1,5 @@
 import './index.scss'
+
 import {
   NDrawer,
   NDrawerContent,
@@ -8,6 +9,7 @@ import {
   NColorPicker,
   NDescriptions,
   NDescriptionsItem,
+  NSelect,
 } from 'naive-ui'
 import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch/index'
 
@@ -39,7 +41,8 @@ const SettingDrawer = defineComponent({
     const { t } = useI18n()
     const settingStore = useSetting()
 
-    const { changePrimaryColor, changeSwitcher } = settingStore
+    const { changePrimaryColor, changeSwitcher, updateContentTransition } =
+      settingStore
     const {
       themeValue,
       primaryColorOverride,
@@ -47,6 +50,7 @@ const SettingDrawer = defineComponent({
       breadcrumbSwitch,
       invertSwitch,
       footerSwitch,
+      contentTransition,
     } = storeToRefs(settingStore)
 
     const modelShow = computed({
@@ -55,6 +59,24 @@ const SettingDrawer = defineComponent({
         emit('update:show', bool)
       },
     })
+    const contentTransitionOptions = [
+      {
+        label: '无',
+        value: 'none',
+      },
+      {
+        label: '缩放效果',
+        value: 'scale',
+      },
+      {
+        label: '淡入淡出',
+        value: 'fade',
+      },
+      {
+        label: '闪入效果',
+        value: 'opacity',
+      },
+    ]
 
     return {
       modelShow,
@@ -67,6 +89,9 @@ const SettingDrawer = defineComponent({
       breadcrumbSwitch,
       invertSwitch,
       footerSwitch,
+      contentTransitionOptions,
+      contentTransition,
+      updateContentTransition,
     }
   },
   render() {
@@ -91,6 +116,16 @@ const SettingDrawer = defineComponent({
               swatches={APP_THEME.APP_THEME_COLOR}
               v-model:value={this.primaryColorOverride.common!.primaryColor}
               onUpdateValue={this.changePrimaryColor.bind(this)}
+            />
+            <NDivider titlePlacement="center">
+              {t('headerSettingOptions.ContentTransition')}
+            </NDivider>
+            <NSelect
+              v-model:value={this.contentTransition}
+              options={this.contentTransitionOptions}
+              onUpdateValue={(value) => {
+                this.updateContentTransition(value)
+              }}
             />
             <NDivider titlePlacement="center">
               {t('headerSettingOptions.InterfaceDisplay')}

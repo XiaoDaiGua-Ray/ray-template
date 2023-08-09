@@ -67,7 +67,7 @@ export default defineConfig(async ({ mode }) => {
       alias: alias,
     },
     plugins: [
-      vue({ reactivityTransform: true }),
+      vue(),
       viteVueJSX(),
       title,
       viteVeI18nPlugin({}),

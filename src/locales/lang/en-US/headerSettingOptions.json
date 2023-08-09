@@ -6,5 +6,6 @@
     "Light": "Light",
     "PrimaryColorConfig": "Primary Color"
   },
-  "InterfaceDisplay": "Display"
+  "InterfaceDisplay": "Display",
+  "ContentTransition": "Content Transition"
 }

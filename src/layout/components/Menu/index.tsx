@@ -1,11 +1,19 @@
-import './index.scss'
+/**
+ *
+ * @author Ray <https://github.com/XiaoDaiGua-Ray>
+ *
+ * @date 2022-10-11
+ *
+ * @workspace ray-template
+ *
+ * @remark 今天也是元气满满撸代码的一天
+ */
 
-import { NMenu, NLayoutSider, NEllipsis } from 'naive-ui'
-import RayIcon from '@/components/RayIcon/index'
+import { NMenu, NLayoutSider } from 'naive-ui'
+import SiderBarLogo from './components/SiderBarLogo/index'
 
 import { useMenu } from '@/store'
 import { APP_MENU_CONFIG } from '@/appConfig/appConfig'
-import { useVueRouter } from '@/router/helper/useVueRouter'
 
 import type { MenuInst } from 'naive-ui'
 import type { NaiveMenuOptions } from '@/types/modules/component'
@@ -17,7 +25,6 @@ const LayoutMenu = defineComponent({
     const menuRef = ref<MenuInst | null>(null)
 
     const menuStore = useMenu()
-    const { router } = useVueRouter()
 
     const { changeMenuModelValue, collapsedMenu } = menuStore
     const modelMenuKey = computed({
@@ -33,17 +40,6 @@ const LayoutMenu = defineComponent({
     })
     const modelMenuOptions = computed(() => menuStore.options)
     const modelCollapsed = computed(() => menuStore.collapsed)
-    const {
-      layout: { sideBarLogo },
-    } = __APP_CFG__
-
-    const handleSideBarLogoClick = () => {
-      if (sideBarLogo && sideBarLogo.url) {
-        sideBarLogo.jumpType === 'station'
-          ? router.push(sideBarLogo.url)
-          : window.open(sideBarLogo.url)
-      }
-    }
 
     const showMenuOption = () => {
       const key = modelMenuKey.value as string
@@ -59,8 +55,6 @@ const LayoutMenu = defineComponent({
       modelMenuOptions,
       modelCollapsed,
       collapsedMenu,
-      sideBarLogo,
-      handleSideBarLogoClick,
       menuRef,
     }
   },
@@ -74,31 +68,7 @@ const LayoutMenu = defineComponent({
         onUpdateCollapsed={this.collapsedMenu.bind(this)}
         nativeScrollbar={false}
       >
-        {this.sideBarLogo ? (
-          <div
-            class={[
-              'ray-menu__logo',
-              this.sideBarLogo.url ? 'ray-menu__logo-url' : '',
-            ]}
-            onClick={this.handleSideBarLogoClick.bind(this)}
-          >
-            {this.sideBarLogo.icon ? (
-              <RayIcon name={this.sideBarLogo.icon} size="30" />
-            ) : (
-              ''
-            )}
-            <h1
-              class={[
-                !this.modelCollapsed ? 'ray-menu__logo-title--open' : '',
-                'ray-menu__logo-title',
-              ]}
-            >
-              <NEllipsis>{this.sideBarLogo.title}</NEllipsis>
-            </h1>
-          </div>
-        ) : (
-          ''
-        )}
+        <SiderBarLogo collapsed={this.modelCollapsed} />
         <NMenu
           ref="menuRef"
           v-model:value={this.modelMenuKey}

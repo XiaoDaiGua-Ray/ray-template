@@ -28,7 +28,7 @@ import type { LayoutInst } from 'naive-ui'
  * })
  * ```
  */
-export const LAYOUT_CONTENT_REF = ref<LayoutInst>()
+export const LAYOUT_CONTENT_REF = ref<LayoutInst | null>(null)
 
 export const SETUP_ROUTER_ACTION = {
   /** 是否启用路由切换时顶部加载条 */

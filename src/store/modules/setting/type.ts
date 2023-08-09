@@ -14,4 +14,5 @@ export interface SettingState {
   lockScreenSwitch: boolean
   lockScreenInputSwitch: boolean
   footerSwitch: boolean
+  contentTransition: string
 }

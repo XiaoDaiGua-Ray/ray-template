@@ -76,7 +76,7 @@
     "husky": "^8.0.3",
     "lint-staged": "^13.1.0",
     "postcss": "^8.1.0",
-    "postcss-px-to-viewport-update": "1.2.0",
+    "postcss-px-to-viewport-8-plugin": "1.2.2",
     "prettier": "^2.7.1",
     "rollup-plugin-visualizer": "^5.8.3",
     "svg-sprite-loader": "^6.0.11",

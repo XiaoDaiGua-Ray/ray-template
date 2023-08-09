@@ -4,4 +4,5 @@
   border: none;
   outline: none;
   box-sizing: border-box;
+  transition: width 0.35s var(--r-bezier);
 }

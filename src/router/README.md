@@ -55,7 +55,6 @@ interface RouteMeta {
   keepAlive?: boolean
   sameLevel?: boolean
   dev?: string | string[]
-  needCancel?: boolean
 }
 ```
 

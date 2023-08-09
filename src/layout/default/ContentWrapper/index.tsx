@@ -17,8 +17,8 @@
 
 import './index.scss'
 
-import RayTransitionComponent from '@/components/RayTransitionComponent/index.vue'
 import { NSpin } from 'naive-ui'
+import RayTransitionComponent from '@/components/RayTransitionComponent/index.vue'
 import AppRequestCanceler from '@/app-components/provider/AppRequestCanceler/index'
 
 import { useSetting } from '@/store'
@@ -31,7 +31,7 @@ const ContentWrapper = defineComponent({
     const settingStore = useSetting()
     const router = useRouter()
 
-    const { reloadRouteSwitch } = storeToRefs(settingStore)
+    const { reloadRouteSwitch, contentTransition } = storeToRefs(settingStore)
     const spinning = ref(false)
     const thmeOverridesSpin: GlobalThemeOverrides['Spin'] = {
       opacitySpinning: '0',
@@ -43,9 +43,7 @@ const ContentWrapper = defineComponent({
       })
 
       router.afterEach(() => {
-        setTimeout(() => {
-          spinning.value = false
-        }, 300)
+        spinning.value = false
       })
     }
 
@@ -55,6 +53,7 @@ const ContentWrapper = defineComponent({
       reloadRouteSwitch,
       spinning,
       thmeOverridesSpin,
+      contentTransition,
     }
   },
   render() {
@@ -69,7 +68,7 @@ const ContentWrapper = defineComponent({
         {this.reloadRouteSwitch ? (
           <RayTransitionComponent
             class="content-wrapper"
-            transitionPropName="layout-content"
+            transitionPropName={this.contentTransition + '-transform'}
           />
         ) : (
           ''

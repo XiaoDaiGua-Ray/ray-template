@@ -43,6 +43,7 @@ import { cloneDeep, throttle } from 'lodash-es'
 import { on, off, completeSize } from '@/utils/element'
 import { call } from '@/utils/vue/index'
 import { setupChartTheme, loadingOptions } from './helper'
+import { LAYOUT_CONTENT_REF } from '@/appConfig/routerConfig'
 
 import type { PropType } from 'vue'
 import type { EChartsInstance } from '@/types/modules/component'
@@ -53,6 +54,7 @@ import type {
   AutoResize,
   ChartTheme,
 } from '@/components/RayChart/type'
+import type { UseResizeObserverReturn } from '@vueuse/core'
 
 export type EChartsExtensionInstallRegisters = typeof CanvasRenderer
 
@@ -186,6 +188,7 @@ const RayChart = defineComponent({
     const echartInstanceRef = ref<EChartsInstance>() // `echart` 拷贝实例, 解决直接使用响应式实例带来的问题
     let echartInstance: EChartsInstance // `echart` 实例
     let resizeThrottle: DebouncedFunc<AnyFC> // resize 防抖方法实例
+    let resizeOvserverReturn: UseResizeObserverReturn | undefined
 
     const cssVarsRef = computed(() => {
       const cssVars = {
@@ -431,10 +434,16 @@ const RayChart = defineComponent({
 
         /** 注册事件 */
         if (props.autoResize) {
-          resizeThrottle = throttle(resizeChart, 1000)
+          resizeThrottle = throttle(resizeChart, 500)
 
           on(window, 'resize', resizeThrottle)
         }
+
+        /** 监听内容区域尺寸变化更新 chart */
+        resizeOvserverReturn = useResizeObserver(
+          LAYOUT_CONTENT_REF.value as unknown as Ref<HTMLElement>,
+          resizeThrottle,
+        )
       })
     })
 
@@ -445,6 +454,7 @@ const RayChart = defineComponent({
       off(window, 'resize', resizeThrottle)
       /** 注销防抖 */
       resizeThrottle.cancel()
+      resizeOvserverReturn?.stop?.()
     })
 
     expose({
