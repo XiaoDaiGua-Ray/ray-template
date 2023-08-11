@@ -170,6 +170,7 @@ export default defineConfig(async ({ mode }) => {
           'mock/shared/**',
         ],
         reload: true,
+        build: true,
       }),
     ],
     optimizeDeps: {

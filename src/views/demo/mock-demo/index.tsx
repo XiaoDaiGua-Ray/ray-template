@@ -77,13 +77,31 @@ const MockDemo = defineComponent({
         render: (row: Person) => {
           return (
             <NSpace align="center">
-              <NButton type="primary" text>
+              <NButton
+                type="primary"
+                text
+                onClick={() => {
+                  window.$message.info('查看')
+                }}
+              >
                 查看
               </NButton>
-              <NButton type="primary" text>
+              <NButton
+                type="primary"
+                text
+                onClick={() => {
+                  window.$message.warning('编辑')
+                }}
+              >
                 编辑
               </NButton>
-              <NButton type="error" text>
+              <NButton
+                type="error"
+                text
+                onClick={() => {
+                  window.$message.error('删除')
+                }}
+              >
                 删除
               </NButton>
             </NSpace>
@@ -129,7 +147,10 @@ const MockDemo = defineComponent({
     return (
       <NSpace vertical wrapItem={false}>
         <NCard title="Mock 数据">
-          <h2>展示 mock 数据的使用。</h2>
+          <h2>
+            mock
+            数据使用。但是，并没有启用生产环境的部署，所以生产环境结果为空。
+          </h2>
         </NCard>
         <NCard title="提示">
           <h2>
