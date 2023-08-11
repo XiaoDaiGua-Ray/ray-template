@@ -1,5 +1,16 @@
 # CHANGE LOG
 
+## 4.1.7
+
+### Feats
+
+- 新增 mock 支持
+- 重新梳理 demo views 包
+
+### Fixes
+
+- 修复 RayCollapseGrid 组件显示问题，现在如果未存在溢出情况，不会显示 展开/收起 按钮
+
 ## 4.1.6
 
 ### Feats

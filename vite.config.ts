@@ -16,6 +16,7 @@ import viteCompression from 'vite-plugin-compression' // 压缩打包
 import { ViteEjsPlugin as viteEjsPlugin } from 'vite-plugin-ejs'
 import viteAutoImport from 'unplugin-auto-import/vite'
 import viteEslint from 'vite-plugin-eslint'
+import mockDevServerPlugin from 'vite-plugin-mock-dev-server'
 
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers' // 模板自动导入组件并且按需打包
 import { VueHooksPlusResolver } from '@vue-hooks-plus/resolvers'
@@ -156,6 +157,21 @@ export default defineConfig(async ({ mode }) => {
         appPrimaryColor,
       }),
       viteInspect(), // 仅适用于开发模式(检查 `Vite` 插件的中间状态)
+      mockDevServerPlugin({
+        include: ['mock/**/*.mock.ts'],
+        exclude: [
+          '**/node_modules/**',
+          '**/test/**',
+          '**/cypress/**',
+          'src/**',
+          '**/.vscode/**',
+          '**/.git/**',
+          '**/dist/**',
+          'mock/shared/**',
+        ],
+        reload: true,
+        build: true,
+      }),
     ],
     optimizeDeps: {
       include: ['vue', 'vue-router', 'pinia', 'vue-i18n', '@vueuse/core'],

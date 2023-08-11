@@ -17,5 +17,6 @@
   "Office_Spreadsheet": "表格",
   "CalculatePrecision": "数字精度",
   "Directive": "指令",
-  "RouterDemo": "页面详情模式"
+  "RouterDemo": "页面详情模式",
+  "Mock": "mock 数据"
 }

@@ -255,6 +255,7 @@ const RayTable = defineComponent({
     }
   },
   render() {
+    console.log(this.action)
     return (
       <NCard
         class="ray-table"
@@ -293,7 +294,7 @@ const RayTable = defineComponent({
               )}
             </>
           ),
-          header: () => this.title,
+          header: () => this.title || <div style="display: none;"></div>,
           'header-extra': () =>
             this.action ? (
               <div class="ray-table-header-extra__space">

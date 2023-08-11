@@ -6,7 +6,7 @@ import type { AppRouteRecordRaw } from '@/router/type'
 const precision: AppRouteRecordRaw = {
   path: '/precision',
   name: 'CalculatePrecision',
-  component: () => import('@/views/precision/index'),
+  component: () => import('@/views/demo/precision/index'),
   meta: {
     i18nKey: t('menu.CalculatePrecision'),
     icon: 'other',

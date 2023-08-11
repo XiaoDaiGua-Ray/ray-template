@@ -16,7 +16,7 @@ const multiMenu: AppRouteRecordRaw = {
     {
       path: 'multi-menu-one',
       name: 'MultiMenuOne',
-      component: () => import('@/views/multi/views/multi-menu-one/index'),
+      component: () => import('@/views/demo/multi/views/multi-menu-one/index'),
       meta: {
         noLocalTitle: '多级菜单-1',
         keepAlive: true,
@@ -35,7 +35,7 @@ const multiMenu: AppRouteRecordRaw = {
           name: 'SubMenuOther',
           component: () =>
             import(
-              '@/views/multi/views/multi-menu-two/views/sub-menu-other/index'
+              '@/views/demo/multi/views/multi-menu-two/views/sub-menu-other/index'
             ),
           meta: {
             noLocalTitle: '多级菜单-2-1',
@@ -56,7 +56,7 @@ const multiMenu: AppRouteRecordRaw = {
               name: 'MultiMenuTwoOne',
               component: () =>
                 import(
-                  '@/views/multi/views/multi-menu-two/views/sub-menu/views/multi-menu-two-one/index'
+                  '@/views/demo/multi/views/multi-menu-two/views/sub-menu/views/multi-menu-two-one/index'
                 ),
               meta: {
                 noLocalTitle: '多级菜单-2-2-1',

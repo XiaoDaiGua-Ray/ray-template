@@ -1,5 +1,10 @@
-export interface AxiosResponseBody<T = unknown> {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export interface BasicResponse<T> {
   data: T
-  message: string
+  msg: string
   code: number
+}
+
+export interface PaginationResponse<T> extends BasicResponse<T> {
+  total: number
 }

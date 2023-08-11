@@ -76,10 +76,14 @@ const RayCollapseGrid = defineComponent({
             >
               {this.$slots.default?.()}
               <NGridItem suffix class="ray-collapse-grid__suffix--btn">
-                <NSpace justify="end">
-                  {this.$slots.action?.()}
-                  {this.CollapseIcon()}
-                </NSpace>
+                {{
+                  default: ({ overflow }: { overflow: boolean }) => (
+                    <NSpace justify="end">
+                      {this.$slots.action?.()}
+                      {overflow ? this.CollapseIcon() : ''}
+                    </NSpace>
+                  ),
+                }}
               </NGridItem>
             </NGrid>
           ),

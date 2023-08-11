@@ -16,7 +16,7 @@ const rely: AppRouteRecordRaw = {
     {
       path: 'rely-about',
       name: 'RelyAbout',
-      component: () => import('@/views/rely/views/rely-about/index'),
+      component: () => import('@/views/demo/rely/views/rely-about/index'),
       meta: {
         i18nKey: 'RelyAbout',
       },
