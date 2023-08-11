@@ -6,7 +6,7 @@ import type { AppRouteRecordRaw } from '@/router/type'
 const office: AppRouteRecordRaw = {
   path: '/office',
   name: 'ROffice',
-  component: () => import('@/views/office/index'),
+  component: () => import('@/views/demo/office/index'),
   meta: {
     i18nKey: t('menu.Office'),
     icon: 'office',
@@ -16,7 +16,7 @@ const office: AppRouteRecordRaw = {
     {
       path: 'document',
       name: 'Document',
-      component: () => import('@/views/office/views/document/index'),
+      component: () => import('@/views/demo/office/views/document/index'),
       meta: {
         i18nKey: 'Office_Document',
       },
@@ -24,7 +24,7 @@ const office: AppRouteRecordRaw = {
     {
       path: 'presentation',
       name: 'Presentation',
-      component: () => import('@/views/office/views/presentation/index'),
+      component: () => import('@/views/demo/office/views/presentation/index'),
       meta: {
         i18nKey: 'Office_Presentation',
       },
@@ -32,7 +32,7 @@ const office: AppRouteRecordRaw = {
     {
       path: 'spreadsheet',
       name: 'Spreadsheet',
-      component: () => import('@/views/office/views/spreadsheet/index'),
+      component: () => import('@/views/demo/office/views/spreadsheet/index'),
       meta: {
         i18nKey: 'Office_Spreadsheet',
       },

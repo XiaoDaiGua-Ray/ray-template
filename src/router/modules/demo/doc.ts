@@ -16,7 +16,7 @@ const doc: AppRouteRecordRaw = {
     {
       path: 'doc-inside',
       name: 'RDocInside',
-      component: () => import('@/views/doc/index'),
+      component: () => import('@/views/demo/doc/index'),
       meta: {
         i18nKey: t('menu.DocLocalInside'),
       },

@@ -98,15 +98,10 @@ const config: AppConfigExport = {
       allow: [],
     },
     proxy: {
-      '/api': {
-        target: 'url',
+      '^/api': {
+        target: 'http://localhost',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
-      },
-      '/office': {
-        target: 'https://office.yka.one/',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/office/, ''),
       },
     },
   },
