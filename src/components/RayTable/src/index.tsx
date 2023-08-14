@@ -255,7 +255,6 @@ const RayTable = defineComponent({
     }
   },
   render() {
-    console.log(this.action)
     return (
       <NCard
         class="ray-table"

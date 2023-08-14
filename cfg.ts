@@ -135,6 +135,10 @@ const config: AppConfigExport = {
       find: '@use-images',
       replacement: path.resolve(__dirname, './src/assets/images'),
     },
+    {
+      find: '@mock',
+      replacement: path.resolve(__dirname, './mock'),
+    },
   ],
 }
 

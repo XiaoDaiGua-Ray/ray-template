@@ -45,6 +45,9 @@ const MockDemo = defineComponent({
       run: personFetchRun,
     } = useHookPlusRequest(getPersonList, {
       manual: true,
+      onSuccess: (data) => {
+        console.log(data)
+      },
     })
     const columns = [
       {
