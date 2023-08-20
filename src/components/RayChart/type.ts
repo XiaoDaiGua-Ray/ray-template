@@ -9,6 +9,8 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
+import type { ECharts, EChartsCoreOption } from 'echarts/core'
+
 export interface ChartThemeRawModules {
   default: Record<string, UnknownObjectKey>
 }
@@ -41,3 +43,26 @@ export type AutoResize =
     }
 
 export type ChartTheme = 'macarons-dark' | string | object | 'macarons'
+
+export interface RayChartInst {
+  /**
+   *
+   * echart 实例
+   * 访问当前 chart 图所有方法与属性
+   *
+   * @default undefined
+   */
+  echart: Ref<ECharts | undefined>
+  /**
+   *
+   * 手动卸载当前 chart 图
+   * 注意：不会卸载当前组件，仅仅是卸载 chart
+   */
+  dispose: () => void
+  /**
+   *
+   * 手动渲染 chart 图
+   * 注意：会根据当前的 options 配置项与 props 配置项重新渲染 chart
+   */
+  render: () => void
+}

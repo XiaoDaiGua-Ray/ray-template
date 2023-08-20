@@ -5,4 +5,10 @@
   outline: none;
   box-sizing: border-box;
   transition: width 0.35s var(--r-bezier);
+
+  & .ray-chart__container {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+  }
 }

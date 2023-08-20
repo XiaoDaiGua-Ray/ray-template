@@ -1,21 +1,10 @@
-@keyframes scaleScreenfull {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.3);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
 .ray-table {
   & .ray-table-icon {
     transition: transform 0.3s var(--r-bezier);
 
     &:hover {
-      animation: scaleScreenfull 0.3s linear;
+      @include scaleAnimate();
+      animation: elementScale 0.3s linear;
       animation-direction: alternate;
     }
   }

@@ -1,14 +1,15 @@
 import './index.scss'
 
-import { NCard, NSwitch, NSpace, NP, NH2 } from 'naive-ui'
+import { NCard, NSwitch, NSpace, NP, NH2, NButton } from 'naive-ui'
 import RayChart from '@/components/RayChart/index'
 
-import type { EChartsInstance } from '@/types/modules/component'
+import type { ECharts } from 'echarts/core'
+import type { RayChartInst } from '@/components/RayChart/index'
 
 const Echart = defineComponent({
   name: 'REchart',
   setup() {
-    const baseChartRef = ref()
+    const baseChartRef = ref<RayChartInst>()
     const chartLoading = ref(false)
     const chartAria = ref(false)
     const state = reactive({
@@ -186,7 +187,7 @@ const Echart = defineComponent({
       chartAria.value = bool
     }
 
-    const handleChartRenderSuccess = (chart: EChartsInstance) => {
+    const handleChartRenderSuccess = (chart: ECharts) => {
       window.$notification.info({
         title: '可视化图渲染成功回调函数',
         content: '可视化图渲染成功, 并且返回了当前可视化图实例',
@@ -194,6 +195,14 @@ const Echart = defineComponent({
       })
 
       console.log(baseChartRef.value, chart)
+    }
+
+    const mountChart = () => {
+      baseChartRef.value?.render()
+    }
+
+    const unmountChart = () => {
+      baseChartRef.value?.dispose()
     }
 
     return {
@@ -207,39 +216,52 @@ const Echart = defineComponent({
       basePieOptions,
       baseLineOptions,
       ...toRefs(state),
+      mountChart,
+      unmountChart,
     }
   },
   render() {
     return (
       <div class="echart">
-        <NH2>RayChart 组件使用</NH2>
-        <NP>
-          该组件会默认以 200*200
-          宽高进行填充。预设了常用的图、方法组件，如果不满足需求，需要用 use
-          方法进行手动拓展。该组件实现了自动跟随模板主题切换功能，但是动态切换损耗较大，所以默认不启用。
-          该组件可以让你只需要关注 options 的配置，无需关心 chart
-          图的资源管理。并且该组件可以自动监听 options
-          的变化，所以天生支持响应式，可以让你放心的加载异步数据。
-        </NP>
-        <NH2>能跟随主题切换的可视化图</NH2>
+        <NCard title="chart 组件">
+          <ul>
+            <li>
+              <h3>当未获取到宽高时，组件会默认以 200*200 尺寸填充。</h3>
+            </li>
+            <li>
+              <h3>
+                默认启用 autoChangeTheme，自动监听模板主题变化（RayTemplate
+                独有）
+              </h3>
+            </li>
+            <li>
+              <h3>默认启用 watchOptions，自动监听配置项变化</h3>
+            </li>
+            <li>
+              <h3>默认启用 animation，强制启用渲染过渡动画</h3>
+            </li>
+          </ul>
+        </NCard>
+        <NH2>强制渲染过渡动画（animation）</NH2>
+        <NSpace style={['padding: 18px 0']}>
+          <NButton onClick={this.mountChart.bind(this)}>渲染</NButton>
+          <NButton onClick={this.unmountChart.bind(this)}>卸载</NButton>
+        </NSpace>
         <div class="chart--container">
           <RayChart
+            ref="baseChartRef"
             autoChangeTheme
             options={this.baseLineOptions}
             showAria={this.chartAria}
           />
         </div>
-        <NH2>渲染成功后运行回调函数</NH2>
-        <div class="chart--container">
-          <RayChart
-            ref="baseChartRef"
-            options={this.basePieOptions}
-            success={this.handleChartRenderSuccess.bind(this)}
-          />
-        </div>
         <NH2>不跟随主题切换的暗色主题可视化图</NH2>
         <div class="chart--container">
-          <RayChart theme="dark" options={this.baseOptions} />
+          <RayChart
+            autoChangeTheme={false}
+            theme="dark"
+            options={this.baseOptions}
+          />
         </div>
         <NH2>加载动画</NH2>
         <NSwitch

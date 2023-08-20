@@ -20,6 +20,10 @@ import type { PropType } from 'vue'
 import type { MaybeArray } from '@/types/modules/utils'
 import type { SpinProps } from 'naive-ui'
 
+export interface RayIframeInst {
+  iframe: Ref<HTMLIFrameElement>
+}
+
 const RayIframe = defineComponent({
   name: 'RayIframe',
   props: {
@@ -73,7 +77,7 @@ const RayIframe = defineComponent({
       type: String,
       default: null,
     },
-    success: {
+    onSuccess: {
       /**
        *
        * iframe 加载成功回调
@@ -84,7 +88,7 @@ const RayIframe = defineComponent({
       >,
       default: null,
     },
-    error: {
+    onError: {
       /**
        *
        * iframe 加载失败回调
@@ -119,20 +123,20 @@ const RayIframe = defineComponent({
     const iframeLoadSuccess = (e: Event) => {
       spinShow.value = false
 
-      const { success } = props
+      const { onSuccess } = props
 
-      if (success) {
-        call(success, iframeRef.value as HTMLIFrameElement, e)
+      if (onSuccess) {
+        call(onSuccess, iframeRef.value as HTMLIFrameElement, e)
       }
     }
 
     const iframeLoadError = (e: Event) => {
       spinShow.value = false
 
-      const { error } = props
+      const { onError } = props
 
-      if (error) {
-        call(error, e)
+      if (onError) {
+        call(onError, e)
       }
     }
 

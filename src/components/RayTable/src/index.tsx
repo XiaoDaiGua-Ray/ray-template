@@ -58,8 +58,7 @@ import type { ComponentSize } from '@/types/modules/component'
 const RayTable = defineComponent({
   name: 'RayTable',
   props: props,
-  emits: ['update:columns', 'exportSuccess', 'exportError'],
-  setup(props, { emit, expose }) {
+  setup(props, { expose }) {
     const rayTableInstance = ref<DataTableInst>()
 
     const tableUUID = uuid(16) // 表格 id, 用于打印表格
@@ -68,7 +67,15 @@ const RayTable = defineComponent({
     const modelColumns = computed({
       get: () => props.columns,
       set: (arr) => {
-        emit('update:columns', arr)
+        const { onUpdateColumns, 'onUpdate:columns': _onUpdateColumns } = props
+
+        if (onUpdateColumns) {
+          call(onUpdateColumns, arr)
+        }
+
+        if (_onUpdateColumns) {
+          call(_onUpdateColumns, arr)
+        }
       },
     }) as unknown as WritableComputedRef<ActionOptions[]>
     const menuConfig = reactive({
@@ -76,7 +83,6 @@ const RayTable = defineComponent({
       y: 0,
       showMenu: false,
     })
-    let prevRightClickIndex = -1 // 缓存上次点击索引位置
     const cssVars = computed(() => {
       const cssVar = {
         '--ray-table-header-space': props.tableHeaderSpace,
@@ -86,6 +92,7 @@ const RayTable = defineComponent({
     })
     const tableSize = ref(props.size)
     const tableMethods = ref<Omit<DataTableInst, 'clearFilter'>>()
+    let prevRightClickIndex = -1 // 缓存上次点击索引位置
 
     /** 注入相关属性 */
     provide('tableSettingProvider', {
@@ -111,15 +118,10 @@ const RayTable = defineComponent({
       key: string | number,
       option: DropdownOption,
     ) => {
-      const { onRightMenuClick, 'onUpdate:rightMenuClick': _onRightMenuClick } =
-        props
+      const { onRightMenuClick } = props
 
       if (onRightMenuClick) {
         call(onRightMenuClick, key, prevRightClickIndex, option)
-      }
-
-      if (_onRightMenuClick) {
-        call(_onRightMenuClick, key, prevRightClickIndex, option)
       }
 
       menuConfig.showMenu = false
@@ -136,22 +138,24 @@ const RayTable = defineComponent({
     const handleRowProps = (arr: ActionOptions, idx: number) => {
       const interceptRowProps = props.rowProps?.(arr, idx)
 
+      const contextmenu = modelRightClickMenu.value.length
+        ? (e: MouseEvent) => {
+            e.preventDefault()
+
+            prevRightClickIndex = idx
+            menuConfig.showMenu = false
+
+            nextTick().then(() => {
+              menuConfig.showMenu = true
+              menuConfig.x = e.clientX
+              menuConfig.y = e.clientY
+            })
+          }
+        : void 0
+
       return {
         ...interceptRowProps,
-        onContextmenu: (e: MouseEvent) => {
-          e.preventDefault()
-
-          prevRightClickIndex = idx
-
-          menuConfig.showMenu = false
-
-          nextTick().then(() => {
-            menuConfig.showMenu = true
-
-            menuConfig.x = e.clientX
-            menuConfig.y = e.clientY
-          })
-        },
+        onContextmenu: contextmenu,
       }
     }
 
@@ -164,6 +168,8 @@ const RayTable = defineComponent({
      * 按需导入 `xlsx` 减少体积, 不依赖传统 `file save` 插件导出方式
      */
     const handleExportPositive = async () => {
+      const { onExportSuccess, onExportError } = props
+
       if (props.data.length && props.columns.length) {
         try {
           await exportFileToXLSX(
@@ -174,9 +180,9 @@ const RayTable = defineComponent({
             },
           )
 
-          emit('exportSuccess')
+          onExportSuccess && call(onExportSuccess)
         } catch (e) {
-          emit('exportError')
+          onExportError && call(onExportError)
         }
       }
     }
@@ -276,21 +282,16 @@ const RayTable = defineComponent({
                   ...this.$slots,
                 }}
               </NDataTable>
-              {this.showMenu ? (
-                // 右键菜单
-                <NDropdown
-                  show={this.showMenu}
-                  placement="bottom-start"
-                  trigger="manual"
-                  x={this.x}
-                  y={this.y}
-                  options={this.modelRightClickMenu}
-                  onClickoutside={() => (this.showMenu = false)}
-                  onSelect={this.handleRightMenuSelect.bind(this)}
-                />
-              ) : (
-                ''
-              )}
+              <NDropdown
+                show={this.showMenu}
+                placement="bottom-start"
+                trigger="manual"
+                x={this.x}
+                y={this.y}
+                options={this.modelRightClickMenu}
+                onClickoutside={() => (this.showMenu = false)}
+                onSelect={this.handleRightMenuSelect.bind(this)}
+              />
             </>
           ),
           header: () => this.title || <div style="display: none;"></div>,

@@ -60,4 +60,10 @@ export const APP_THEME: AppTheme = {
    * 地址: <https://www.naiveui.com/zh-CN/dark/docs/customize-theme#%E4%BD%BF%E7%94%A8-peers-%E4%B8%BB%E9%A2%98%E5%8F%98%E9%87%8F>
    */
   APP_NAIVE_UI_THEME_OVERRIDES: {},
+  /**
+   *
+   * 配置 echart 主题颜色
+   * 约定配置时以：主题名称为文件名，其文件夹下两个主题风格的 json 文件。并且暗色主题必须为 xxx-dark.json
+   */
+  echartTheme: 'macarons',
 }

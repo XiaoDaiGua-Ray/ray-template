@@ -48,7 +48,6 @@ const SettingDrawer = defineComponent({
       primaryColorOverride,
       menuTagSwitch,
       breadcrumbSwitch,
-      invertSwitch,
       footerSwitch,
       contentTransition,
     } = storeToRefs(settingStore)
@@ -87,7 +86,6 @@ const SettingDrawer = defineComponent({
       menuTagSwitch,
       changeSwitcher,
       breadcrumbSwitch,
-      invertSwitch,
       footerSwitch,
       contentTransitionOptions,
       contentTransition,
@@ -152,14 +150,6 @@ const SettingDrawer = defineComponent({
                   v-model:value={this.footerSwitch}
                   onUpdateValue={(bool: boolean) =>
                     this.changeSwitcher(bool, 'footerSwitch')
-                  }
-                />
-              </NDescriptionsItem>
-              <NDescriptionsItem label="反转色">
-                <NSwitch
-                  v-model:value={this.invertSwitch}
-                  onUpdateValue={(bool: boolean) =>
-                    this.changeSwitcher(bool, 'invertSwitch')
                   }
                 />
               </NDescriptionsItem>

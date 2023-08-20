@@ -1,5 +1,21 @@
 # CHANGE LOG
 
+## 4.1.8
+
+### Feats
+
+- 更新 `vite` 版本至 `v4.4.9`
+- 更新 `vue-hooks-plus` 版本至 `v1.8.1`
+- 更新了 RayTable 的一些事件的命名
+- `RayChart` 组件做了一些调整
+  - 支持指定 observer 监听对象，默认为 chart 组件本身
+  - 默认开启 autoChangeTheme 功能
+  - 支持配置 throttleWait 节流等待时间，默认 500ms
+  - 支持通过配置 `desginConfig.echartTheme` 属性指定 `echart theme`。并且只需按照约定方式注册的主题，只需要指定主题名称，即可完成 `light` `dark` 两种主题指定
+  - RayChartInst 新增 dispose render 方法，允许手动渲染与卸载 chart 图
+  - 新增 animation 属性，如果为 true 则会强制触发渲染过渡动画。该配置受 `options.animation` 属性影响，如果该配置为 false 则不会启用过渡动画
+- 移除反转色功能
+
 ## 4.1.7
 
 ### Feats

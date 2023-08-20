@@ -15,7 +15,7 @@ import type { PropType, VNode, VNodeChild } from 'vue'
 import type { DropdownMixedOption } from './type'
 import type PrintConfiguration from 'print-js'
 import type { MaybeArray } from '@/types/modules/utils'
-import type { DropdownOption } from 'naive-ui'
+import type { DropdownOption, DataTableColumn } from 'naive-ui'
 
 const rayTableProps = {
   ...dataTableProps, // 继承 `data table props`
@@ -32,14 +32,6 @@ const rayTableProps = {
     default: () => [],
   },
   onRightMenuClick: {
-    type: [Function, Array] as PropType<
-      MaybeArray<
-        (key: string | number, index: number, option: DropdownOption) => void
-      >
-    >,
-    default: null,
-  },
-  'onUpdate:rightMenuClick': {
     type: [Function, Array] as PropType<
       MaybeArray<
         (key: string | number, index: number, option: DropdownOption) => void
@@ -76,16 +68,6 @@ const rayTableProps = {
      */
     type: Object as PropType<VNode>,
     default: () => ({}),
-  },
-  showMenu: {
-    /**
-     *
-     * 是否展示右键菜单
-     *
-     * 默认启用
-     */
-    type: Boolean,
-    default: true,
   },
   exportTooltip: {
     /**
@@ -225,7 +207,30 @@ const rayTableProps = {
     type: Boolean,
     default: false,
   },
+  /** 导出成功 */
+  onExportSuccess: {
+    type: [Function, Array] as PropType<MaybeArray<() => void>>,
+    default: null,
+  },
+  /** 导出失败 */
+  onExportError: {
+    type: [Function, Array] as PropType<MaybeArray<() => void>>,
+    default: null,
+  },
+  onUpdateColumns: {
+    type: [Function, Array] as PropType<
+      MaybeArray<(arr: DataTableColumn[]) => void>
+    >,
+    default: null,
+  },
+  'onUpdate:columns': {
+    type: [Function, Array] as PropType<
+      MaybeArray<(arr: DataTableColumn[]) => void>
+    >,
+    default: null,
+  },
 } as const
+
 export default rayTableProps
 
 /**

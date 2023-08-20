@@ -32,7 +32,6 @@ export const useSetting = defineStore(
       reloadRouteSwitch: true, // 刷新路由开关
       menuTagSwitch: true, // 多标签页开关
       spinSwitch: false, // 全屏加载
-      invertSwitch: false, // 反转色模式
       breadcrumbSwitch: true, // 面包屑开关
       localeLanguage: getAppDefaultLanguage(),
       lockScreenSwitch: false, // 锁屏开关
@@ -92,17 +91,6 @@ export const useSetting = defineStore(
         settingState[key] = bool
       }
     }
-
-    /** 动态添加反转色 class name */
-    watch(
-      () => settingState.invertSwitch,
-      (newData) => {
-        const body = document.body
-        const className = 'ray-template--invert'
-
-        newData ? addClass(body, className) : removeClass(body, className)
-      },
-    )
 
     return {
       ...toRefs(settingState),
