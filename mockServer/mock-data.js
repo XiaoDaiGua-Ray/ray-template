@@ -4,7 +4,7 @@ var __export = (target, all) => {
     __defProp(target, name, { get: all[name], enumerable: true });
 };
 
-// mock-data-1691765371202.js
+// mock-data-1692514529866.js
 import { transformMockData } from "vite-plugin-mock-dev-server";
 
 // mock/demo/person.mock.ts
@@ -13,9 +13,11 @@ __export(person_mock_exports, {
   getPersonList: () => getPersonList
 });
 import { defineMock } from "vite-plugin-mock-dev-server";
-import Mock from "mockjs";
 
 // mock/shared/utils.ts
+function array(length) {
+  return new Array(length).fill(0);
+}
 function pagination(pageCurrent, pageSize, array2) {
   const offset = (pageCurrent - 1) * Number(pageSize);
   return offset + Number(pageSize) >= array2.length ? array2.slice(offset, array2.length) : array2.slice(offset, offset + Number(pageSize));
@@ -34,8 +36,17 @@ function response(res, code, msg, params) {
 }
 
 // mock/shared/database.ts
-function array(length) {
-  return new Array(length).fill(0);
+import Mock from "mockjs";
+function tableMock(option) {
+  return {
+    ...option,
+    id: Mock.Random.guid(),
+    address: Mock.Random.county(true),
+    email: Mock.Random.email(),
+    name: Mock.Random.cname(),
+    age: Mock.Random.integer(18, 60),
+    createDate: Mock.Random.date()
+  };
 }
 
 // mock/demo/person.mock.ts
@@ -44,18 +55,10 @@ var getPersonList = defineMock({
   method: "GET",
   delay: 500,
   response: (req, res) => {
-    const person = () => ({
-      id: Mock.Random.guid(),
-      address: Mock.Random.county(true),
-      email: Mock.Random.email(),
-      name: Mock.Random.cname(),
-      age: Mock.Random.integer(18, 60),
-      createDate: Mock.Random.date()
-    });
     const {
       query: { page, pageSize, email }
     } = req;
-    let list = array(100).map(() => person());
+    let list = array(100).map(() => tableMock());
     let length = list.length;
     if (!page || !pageSize) {
       res.end(
@@ -82,7 +85,7 @@ var getPersonList = defineMock({
   }
 });
 
-// mock-data-1691765371202.js
+// mock-data-1692514529866.js
 var exporters = [person_mock_exports];
 var mockList = exporters.map((raw) => {
   let mockConfig;
@@ -96,7 +99,7 @@ var mockList = exporters.map((raw) => {
   }
   return mockConfig;
 });
-var mock_data_1691765371202_default = transformMockData(mockList);
+var mock_data_1692514529866_default = transformMockData(mockList);
 export {
-  mock_data_1691765371202_default as default
+  mock_data_1692514529866_default as default
 };
