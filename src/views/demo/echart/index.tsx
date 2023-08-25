@@ -3,6 +3,8 @@ import './index.scss'
 import { NCard, NSwitch, NSpace, NP, NH2, NButton } from 'naive-ui'
 import RayChart from '@/components/RayChart/index'
 
+import dayjs from 'dayjs'
+
 import type { ECharts } from 'echarts/core'
 import type { RayChartInst } from '@/components/RayChart/index'
 
@@ -82,9 +84,9 @@ const Echart = defineComponent({
         },
       ],
     }
-    const baseLineOptions = {
+    const baseLineOptions = ref({
       title: {
-        text: 'Stacked Area Chart',
+        text: dayjs().valueOf(),
       },
       tooltip: {
         trigger: 'axis',
@@ -177,7 +179,7 @@ const Echart = defineComponent({
           data: [820, 932, 901, 934, 1290, 1330, 1320],
         },
       ],
-    }
+    })
 
     const handleLoadingShow = (bool: boolean) => {
       state.loading = bool
@@ -205,6 +207,19 @@ const Echart = defineComponent({
       baseChartRef.value?.dispose()
     }
 
+    const handleUpdateTitle = () => {
+      baseLineOptions.value.title.text = dayjs().valueOf()
+
+      const createData = () => Math.floor((Math.random() + 1) * 100)
+
+      baseLineOptions.value.series[0].data = new Array(7)
+        .fill(0)
+        .map(() => createData())
+      baseLineOptions.value.series[1].data = new Array(7)
+        .fill(0)
+        .map(() => createData())
+    }
+
     return {
       baseOptions,
       baseChartRef,
@@ -218,6 +233,7 @@ const Echart = defineComponent({
       ...toRefs(state),
       mountChart,
       unmountChart,
+      handleUpdateTitle,
     }
   },
   render() {
@@ -240,12 +256,18 @@ const Echart = defineComponent({
             <li>
               <h3>默认启用 animation，强制启用渲染过渡动画</h3>
             </li>
+            <li>
+              <h3>配置 setChartOptions 属性，可以定制化合并模式</h3>
+            </li>
           </ul>
         </NCard>
         <NH2>强制渲染过渡动画（animation）</NH2>
         <NSpace style={['padding: 18px 0']}>
           <NButton onClick={this.mountChart.bind(this)}>渲染</NButton>
           <NButton onClick={this.unmountChart.bind(this)}>卸载</NButton>
+          <NButton onClick={this.handleUpdateTitle.bind(this)}>
+            更新配置项
+          </NButton>
         </NSpace>
         <div class="chart--container">
           <RayChart

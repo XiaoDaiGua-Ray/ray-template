@@ -15,6 +15,9 @@
   - RayChartInst 新增 dispose render 方法，允许手动渲染与卸载 chart 图
   - 新增 animation 属性，如果为 true 则会强制触发渲染过渡动画。该配置受 `options.animation` 属性影响，如果该配置为 false 则不会启用过渡动画
 - 移除反转色功能
+- 新增图标页面
+- 修改国际化图标
+- 剔除无用代码，性能++++
 
 ## 4.1.7
 

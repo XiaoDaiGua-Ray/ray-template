@@ -34,11 +34,9 @@ import {
 } from './helper'
 import { useI18n } from '@/locales/useI18n'
 import { getAppRawRoutes } from '@/router/routeModules'
-import { expandRoutes } from '@/router/helper/expandRoutes'
 import { useKeepAlive } from '@/store'
 import { useVueRouter } from '@/router/helper/useVueRouter'
 
-import type { MenuOption } from 'naive-ui'
 import type { AppRouteMeta, AppRouteRecordRaw } from '@/router/type'
 import type {
   AppMenuOption,

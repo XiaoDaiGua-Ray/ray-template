@@ -52,9 +52,6 @@ const RouterDemoHome = defineComponent({
                 onClick={() => {
                   router.push({
                     path: '/router-demo/router-demo-detail',
-                    query: {
-                      row: JSON.stringify(row),
-                    },
                   })
                 }}
               >

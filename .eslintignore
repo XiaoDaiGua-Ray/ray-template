@@ -15,3 +15,4 @@ src/locales/lang
 .depcheckrc
 src/components/RayChart/theme
 *.md
+src/icons/*.svg

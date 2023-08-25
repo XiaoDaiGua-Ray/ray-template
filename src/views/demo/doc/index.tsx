@@ -21,7 +21,7 @@ const RTemplateDoc = defineComponent({
       <RayIframe
         width="100%"
         height="100%"
-        src="https://ray-template.yunkuangao.com/ray-template-doc/"
+        src="https://xiaodaigua-ray.github.io/ray-template-doc/"
         lazy
       ></RayIframe>
     )

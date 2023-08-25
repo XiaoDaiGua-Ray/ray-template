@@ -9,5 +9,13 @@
   "i18n-ally.displayLanguage": "zh-CN",
   "i18n-ally.enabledFrameworks": ["vue", "react"],
   "typescript.tsdk": "node_modules/typescript/lib",
-  "synthwave84.disableGlow": true
+  "alias-skip.mappings": {
+    "@": "/src",
+    "@use-utils": "/src/utils",
+    "@use-api": "/src/axios/api",
+    "@use-images": "/src/assets/images",
+    "@mock": "/mock"
+  },
+  "alias-skip.allowedsuffix": ["ts", "tsx"],
+  "alias-skip.rootpath": "package.json"
 }

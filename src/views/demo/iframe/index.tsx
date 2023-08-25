@@ -35,9 +35,9 @@ const IframeDemo = defineComponent({
             allow="fullscreen"
           />
         </NCard>
-        <NCard title="vueuse（立即加载）">
+        <NCard title="vue-hooks-plus（立即加载）">
           <RayIframe
-            src="https://www.vueusejs.com/"
+            src="https://inhiblabcore.github.io/docs/hooks/"
             height="300"
             lazy={false}
           />

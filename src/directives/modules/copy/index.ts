@@ -23,11 +23,9 @@ const copyDirective: CustomDirectiveFC<CopyElement, string> = () => {
   let clipboard: ClipboardJS | null
 
   return {
-    mounted: (el, binding) => {
-      const value = binding.value
-
+    mounted: (el, { value }) => {
       clipboard = new ClipboardJS(el, {
-        text: () => String(value),
+        text: () => value,
       })
 
       clipboard?.on('success', () => {
@@ -37,12 +35,10 @@ const copyDirective: CustomDirectiveFC<CopyElement, string> = () => {
         window.$message.error('复制失败')
       })
     },
-    updated: (el, binding) => {
+    updated: (el, { value }) => {
       /** 其实这块代码写的挺蠢的, 但是我目前不知道怎么去优化, 阿巴阿巴阿巴 */
-      const value = binding.value
-
       clipboard = new ClipboardJS(el, {
-        text: () => String(value),
+        text: () => value,
       })
     },
     beforeUnmount: () => {

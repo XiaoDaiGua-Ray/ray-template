@@ -30,16 +30,19 @@ const debounceDirective: CustomDirectiveFC<
   let debounceFunction: DebouncedFunc<AnyFC> | null
 
   return {
-    beforeMount: (el, binding) => {
-      const { func, trigger = 'click', wait = 500, options } = binding.value
+    beforeMount: (el, { value }) => {
+      const { func, trigger = 'click', wait = 500, options } = value
+
       if (typeof func !== 'function') {
         throw new Error('debounce directive value must be a function')
       }
-      debounceFunction = debounce(func, wait, Object.assign({}, {}, options))
+
+      debounceFunction = debounce(func, wait, Object.assign({}, options))
+
       on(el, trigger, debounceFunction)
     },
-    beforeUnmount: (el, binding) => {
-      const { trigger = 'click' } = binding.value
+    beforeUnmount: (el, { value }) => {
+      const { trigger = 'click' } = value
 
       if (debounceFunction) {
         debounceFunction.cancel()

@@ -61,7 +61,7 @@ import type {
   MaybeComputedElementRef,
   MaybeElement,
 } from '@vueuse/core'
-import type { ECharts, EChartsCoreOption } from 'echarts/core'
+import type { ECharts, EChartsCoreOption, SetOptionOpts } from 'echarts/core'
 
 export type EChartsExtensionInstallRegisters = typeof CanvasRenderer
 export type { RayChartInst } from './type'
@@ -205,6 +205,22 @@ const RayChart = defineComponent({
       type: Boolean,
       default: true,
     },
+    setChartOptions: {
+      /**
+       *
+       * 当 options 配置项更改时候，setOptions 方法配置项
+       *
+       * 默认值
+       * notMerge: false,
+       * lazyUpdate: true,
+       * silent: false,
+       * replaceMerge: [],
+       *
+       * 会自动进行合并配置项
+       */
+      type: Object as PropType<SetOptionOpts>,
+      default: () => ({}),
+    },
   },
   setup(props, { expose }) {
     const settingStore = useSetting()
@@ -264,7 +280,7 @@ const RayChart = defineComponent({
         echarts.use(props.use?.filter(Boolean))
       } catch (e) {
         console.error(
-          'Error: wrong property and method passed in extend attribute',
+          'register chart Core error: wrong property and method passed in extend attribute',
         )
       }
     }
@@ -481,22 +497,28 @@ const RayChart = defineComponent({
       },
     )
 
-    if (props.watchOptions) {
-      /** 监听 options 变化 */
-      watch(
-        () => props.options,
-        (noptions) => {
+    /** 监听 options 变化 */
+    watch(
+      () => props.options,
+      (noptions) => {
+        if (props.watchOptions) {
           /** 重新组合 options */
           const options = combineChartOptions(noptions)
+          const setOpt = Object.assign({}, props.setChartOptions, {
+            notMerge: false,
+            lazyUpdate: true,
+            silent: false,
+            replaceMerge: [],
+          })
 
           /** 如果 options 发生变动更新 echarts */
-          echartInstance?.setOption(options)
-        },
-        {
-          deep: true,
-        },
-      )
-    }
+          echartInstance?.setOption(options, setOpt)
+        }
+      },
+      {
+        deep: true,
+      },
+    )
 
     expose({
       echart: echartInstanceRef,

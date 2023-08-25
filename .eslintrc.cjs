@@ -106,7 +106,7 @@ module.exports = {
     'no-lone-blocks': 2, // 禁止不必要的嵌套块
     'no-multi-spaces': 1, // 禁止使用多余的空格
     'no-multiple-empty-lines': [1, { max: 2 }], // 空行最多不能超过 `2` 行
-    'no-new-func': 1, // 禁止使用 `new Function`
+    'no-new-func': 2, // 禁止使用 `new Function`
     'no-new-object': 2, // 禁止使用 `new Object`
     'no-new-require': 2, // 禁止使用 `new require`
     'no-sparse-arrays': 2, // 禁止稀疏数组
@@ -124,7 +124,6 @@ module.exports = {
     'no-useless-call': 2, // 禁止不必要的 `call` 和 `apply`
     'no-var': 'error', // 禁用 `var`
     'no-with': 2, // 禁用 `with`
-    'no-undef': 0,
     'use-isnan': 2, // 强制使用 isNaN 判断 NaN
     'no-multi-assign': 2, // 禁止连续声明变量
     'prefer-arrow-callback': 2, // 强制使用箭头函数作为回调
@@ -143,15 +142,6 @@ module.exports = {
     ],
     'vue/require-v-for-key': ['error'],
     'vue/require-valid-default-prop': ['error'],
-    'no-use-before-define': [
-      'error',
-      {
-        functions: true,
-        classes: true,
-        variables: false,
-        allowNamedExports: false,
-      },
-    ],
     'vue/component-definition-name-casing': ['error', 'PascalCase'],
     'vue/html-closing-bracket-newline': [
       'error',

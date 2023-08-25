@@ -29,7 +29,6 @@ const routerDemo: AppRouteRecordRaw = {
         import('@/views/demo/router-demo/router-demo-detail/index'),
       meta: {
         noLocalTitle: '信息详情',
-        hidden: true,
         sameLevel: true,
       },
     },

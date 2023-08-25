@@ -29,10 +29,10 @@ import type { AppRawRequestConfig } from '@/axios/type'
 
 /**
  *
- * 该方法有一定的局限性，仅可在 setup 环境中使用
- * 如果在非 vue component 文件中使用，会抛出一些警告
+ * 该方法有一定的局限性，仅可在 effect 作用域中使用
+ * 如果在非 vue effect scope 中使用，会抛出一些警告
  *
- * 非 vue component 中使用
+ * 非 vue effect 中使用
  * @example
  *
  * const getUser = () => request({ url: 'http://localhost:3000/user' })
