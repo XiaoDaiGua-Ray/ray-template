@@ -105,7 +105,12 @@ module.exports = {
     'no-labels': 2, // 禁止标签声明
     'no-lone-blocks': 2, // 禁止不必要的嵌套块
     'no-multi-spaces': 1, // 禁止使用多余的空格
-    'no-multiple-empty-lines': [1, { max: 2 }], // 空行最多不能超过 `2` 行
+    'no-multiple-empty-lines': [
+      'error',
+      {
+        max: 2,
+      },
+    ], // 空行最多不能超过 `2` 行
     'no-new-func': 2, // 禁止使用 `new Function`
     'no-new-object': 2, // 禁止使用 `new Object`
     'no-new-require': 2, // 禁止使用 `new require`

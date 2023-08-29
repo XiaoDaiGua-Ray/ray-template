@@ -9,6 +9,16 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
+/**
+ *
+ * <https://www.naiveui.com/zh-CN/dark/components/grid>
+ *
+ * 可折叠操作栏
+ * 可以结合表单或者表格使用，让你快捷的实现高级搜索功能
+ *
+ * 该组件完全基于 `NGrid` `NGridItem` 实现, 所以需要在使用该组件时使用 `NGridItem` 包裹元素
+ */
+
 import './index.scss'
 
 import { collapseGridProps } from './props'
@@ -76,14 +86,10 @@ const RayCollapseGrid = defineComponent({
             >
               {this.$slots.default?.()}
               <NGridItem suffix class="ray-collapse-grid__suffix--btn">
-                {{
-                  default: ({ overflow }: { overflow: boolean }) => (
-                    <NSpace justify="end">
-                      {this.$slots.action?.()}
-                      {overflow ? this.CollapseIcon() : ''}
-                    </NSpace>
-                  ),
-                }}
+                <NSpace justify="end">
+                  {this.$slots.action?.()}
+                  {this.CollapseIcon()}
+                </NSpace>
               </NGridItem>
             </NGrid>
           ),
@@ -94,14 +100,3 @@ const RayCollapseGrid = defineComponent({
 })
 
 export default RayCollapseGrid
-
-/**
- *
- * <https://www.naiveui.com/zh-CN/dark/components/grid>
- *
- * 可折叠操作栏
- *
- * 可以结合表单或者表格使用
- *
- * 该组件完全基于 `NGrid` `NGridItem` 实现, 所以需要在使用该组件时使用 `NGridItem` 包裹元素
- */

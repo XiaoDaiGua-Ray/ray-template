@@ -170,12 +170,12 @@ const MockDemo = defineComponent({
                   <NFormItemGi label="邮箱">
                     <NInput v-model:value={this.email} clearable />
                   </NFormItemGi>
-                  <NFormItemGi>
-                    <NButton type="primary" onClick={this.getPerson.bind(this)}>
-                      搜索
-                    </NButton>
-                  </NFormItemGi>
                 </>
+              ),
+              action: () => (
+                <NButton type="primary" onClick={this.getPerson.bind(this)}>
+                  搜索
+                </NButton>
               ),
             }}
           </RayCollapseGrid>
