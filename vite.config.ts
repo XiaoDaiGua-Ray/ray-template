@@ -105,7 +105,7 @@ export default defineConfig(async ({ mode }) => {
       viteCompression(),
       viteVueI18nPlugin(),
       viteSvgLoader({
-        defaultImport: 'component', // 默认以 `componetn` 形式导入 `svg`
+        defaultImport: 'url', // 默认以 `componetn` 形式导入 `svg`
       }),
       viteSVGIcon(),
       viteEslint({
