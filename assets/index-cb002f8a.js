@@ -1,1 +1,0 @@
-import{R as e}from"./vue-router@4.2.4_vue@3.3.4-e93fe26b.js";import{k as r,b as o}from"./@vue_runtime-core@3.3.4-073fad6e.js";import"./@vue_reactivity@3.3.4-2b3a1c4e.js";import"./@vue_shared@3.3.4-896c5ecf.js";const m=r({name:"ROffice",render(){return o(e,null,null)}});export{m as default};
