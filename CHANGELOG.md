@@ -5,9 +5,11 @@
 ### Feats
 
 - 新增 RayQRCode 组件（二维码）
-  - 基于 awesome-qr 封装，继承其所有特性。并且拓展了 状态、下载、自动更新等属性
+  - 基于 awesome-qr 封装，继承其所有特性。并且拓展 状态、下载、自动更新等属性
   - 自动卸载于释放内存，仅需要关注 text 内容填充
 - 移除 qrcode.vue 依赖
+- 更新 vue-hooks-plus 版本至 v1.8.2
+- 移除 office 功能集成
 
 ### Fixes
 

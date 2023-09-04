@@ -388,7 +388,7 @@ const MenuTag = defineComponent({
         if (tags?.length) {
           const [menuTag] = tags
 
-          nextTick(() => {
+          nextTick().then(() => {
             menuTag.scrollIntoView?.()
           })
         }

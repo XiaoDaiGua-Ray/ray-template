@@ -115,6 +115,7 @@ export default defineConfig(async ({ mode }) => {
         fix: true,
         exclude: ['dist/**', '**/node_modules/**', 'vite-env.d.ts', '*.md'],
         include: ['src/**/*.{vue,js,jsx,ts,tsx}'],
+        cache: true,
       }),
       vitePluginImp({
         libList: [

@@ -43,6 +43,12 @@ const RQRCode = defineComponent({
           <NSpace>
             <RayQRcode text="ray template yes" />
             <RayQRcode text="ray template yes" logoImage={LOGO} />
+            <RayQRcode
+              text="ray template yes"
+              gifBackgroundURL="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80"
+              dotScale={0.5}
+              colorDark="#64d9d6"
+            />
           </NSpace>
         </NCard>
         <NCard title="状态二维码">

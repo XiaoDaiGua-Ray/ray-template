@@ -21,6 +21,35 @@ import { call } from '@/utils/vue/index'
 
 import type { QRCodeRenderResponse } from './type'
 
+const readGIFAsArrayBuffer = (
+  url: string,
+): Promise<string | ArrayBuffer | null> => {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest()
+
+    xhr.responseType = 'blob'
+
+    xhr.onload = () => {
+      const reader = new FileReader()
+
+      reader.onloadend = () => {
+        resolve(reader.result)
+      }
+      reader.onerror = (e) => {
+        reject(e)
+      }
+      reader.onabort = (e) => {
+        reject(e)
+      }
+
+      reader.readAsArrayBuffer(xhr.response)
+    }
+
+    xhr.open('GET', url)
+    xhr.send()
+  })
+}
+
 const RayQRcode = defineComponent({
   name: 'RayQRcode',
   props,
@@ -31,10 +60,28 @@ const RayQRcode = defineComponent({
     const spinOverrides = {
       opacitySpinning: '0.1',
     }
+    let gifBuffer: string | ArrayBuffer | null
+
+    const getGIFImageByURL = async () => {
+      const { gifBackgroundURL } = props
+
+      if (!gifBackgroundURL) {
+        return
+      }
+
+      try {
+        gifBuffer = await readGIFAsArrayBuffer(gifBackgroundURL)
+      } catch (e) {
+        console.error(e)
+      }
+    }
 
     const renderQRCode = () => {
+      const { gifBackgroundURL, gifBackground, ...ops } = props
+
       new AwesomeQR({
-        ...props,
+        ...ops,
+        gifBackground: (gifBuffer as ArrayBuffer) ?? undefined,
       })
         .draw()
         .then((res) => {
@@ -85,7 +132,8 @@ const RayQRcode = defineComponent({
       downloadQRCode,
     })
 
-    onMounted(() => {
+    onMounted(async () => {
+      await getGIFImageByURL()
       renderQRCode()
     })
 

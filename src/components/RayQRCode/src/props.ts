@@ -190,6 +190,15 @@ const props = {
     type: String,
     default: 'rgba(0, 0, 0, 0)',
   },
+  gifBackgroundURL: {
+    /**
+     *
+     * GIF background image to be used in the QR code
+     *
+     * @default undefined
+     */
+    type: String,
+  },
   gifBackground: {
     /**
      *
@@ -248,6 +257,17 @@ const props = {
      */
     type: Number,
     default: 8,
+  },
+  dotScale: {
+    /**
+     *
+     * Ratio of the real size to the full size of the blocks.
+     * This can be helpful when you want to make more parts of the background visible.
+     *
+     * @default 1
+     */
+    type: Number,
+    default: 1,
   },
   onSuccess: {
     /**
