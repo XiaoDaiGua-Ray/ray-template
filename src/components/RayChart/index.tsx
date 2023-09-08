@@ -46,7 +46,7 @@ import { cloneDeep, throttle } from 'lodash-es'
 import { on, off, completeSize } from '@/utils/element'
 import { call } from '@/utils/vue/index'
 import { setupChartTheme, loadingOptions } from './helper'
-import { APP_THEME } from '@/appConfig/designConfig'
+import { APP_THEME } from '@/app-config/designConfig'
 
 import type { PropType } from 'vue'
 import type { AnyFC, MaybeArray } from '@/types/modules/utils'

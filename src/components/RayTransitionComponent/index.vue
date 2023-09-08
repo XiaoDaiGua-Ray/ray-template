@@ -24,7 +24,7 @@
 </template>
 <script lang="ts" setup>
 import { useKeepAlive } from '@/store'
-import { APP_KEEP_ALIVE } from '@/appConfig/appConfig'
+import { APP_KEEP_ALIVE } from '@/app-config/appConfig'
 
 import type { PropType } from 'vue'
 

@@ -20,31 +20,36 @@ import type { CopyElement } from './type'
 import type { CustomDirectiveFC } from '@/directives/type'
 
 const copyDirective: CustomDirectiveFC<CopyElement, string> = () => {
-  let clipboard: ClipboardJS | null
-
   return {
     mounted: (el, { value }) => {
-      clipboard = new ClipboardJS(el, {
+      const clipboard = new ClipboardJS(el, {
         text: () => value,
       })
 
-      clipboard?.on('success', () => {
+      clipboard.on('success', () => {
         window.$message.success('复制成功')
       })
-      clipboard?.on('error', () => {
+      clipboard.on('error', () => {
         window.$message.error('复制失败')
       })
-    },
-    updated: (el, { value }) => {
-      /** 其实这块代码写的挺蠢的, 但是我目前不知道怎么去优化, 阿巴阿巴阿巴 */
-      clipboard = new ClipboardJS(el, {
-        text: () => value,
-      })
-    },
-    beforeUnmount: () => {
-      clipboard?.destroy()
 
-      clipboard = null
+      el.$$clipboard = clipboard
+    },
+    updated: (el, { value, oldValue }) => {
+      if (value !== oldValue) {
+        el.$$clipboard?.destroy()
+
+        el.$$clipboard = new ClipboardJS(el, {
+          text: () => value,
+        })
+      }
+    },
+    beforeUnmount: (el: CopyElement) => {
+      if (el.$$clipboard) {
+        el.$$clipboard?.destroy()
+
+        el.$$clipboard = null
+      }
     },
   }
 }

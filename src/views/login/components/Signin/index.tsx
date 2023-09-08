@@ -4,7 +4,7 @@ import { setStorage } from '@/utils/cache'
 import { setSpin } from '@/spin'
 import { useSignin } from '@/store'
 import { useI18n } from '@/locales/useI18n'
-import { APP_CATCH_KEY, ROOT_ROUTE } from '@/appConfig/appConfig'
+import { APP_CATCH_KEY, ROOT_ROUTE } from '@/app-config/appConfig'
 import { useVueRouter } from '@/router/helper/useVueRouter'
 
 import type { FormInst } from 'naive-ui'

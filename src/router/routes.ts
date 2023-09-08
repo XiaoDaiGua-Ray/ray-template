@@ -1,6 +1,6 @@
 import Layout from '@/layout/index'
 import { getAppRawRoutes } from './routeModules'
-import { ROOT_ROUTE } from '@/appConfig/appConfig'
+import { ROOT_ROUTE } from '@/app-config/appConfig'
 import { expandRoutes } from '@/router/helper/expandRoutes'
 
 export default async () => [

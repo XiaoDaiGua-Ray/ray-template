@@ -25,11 +25,14 @@ export { useKeepAlive } from './modules/keep-alive/index'
 
 import type { App } from 'vue'
 
-/** 设置并且注册 pinia */
+/**
+ *
+ * 设置并且注册 pinia
+ * pinia 天生支持在非 setup 环境中使用，只要在调用时已经注册
+ */
 export const setupStore = async (app: App<Element>) => {
   const store = createPinia()
 
   app.use(store)
-
   store.use(piniaPluginPersistedstate)
 }

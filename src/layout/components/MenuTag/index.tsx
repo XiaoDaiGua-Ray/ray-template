@@ -32,7 +32,7 @@ import { useMenu, useSetting } from '@/store'
 import { uuid } from '@/utils/hook'
 import { hasClass } from '@/utils/element'
 import { redirectRouterToDashboard } from '@/router/helper/routerCopilot'
-import { ROOT_ROUTE } from '@/appConfig/appConfig'
+import { ROOT_ROUTE } from '@/app-config/appConfig'
 import { queryElements } from '@use-utils/element'
 
 import type { MenuOption, ScrollbarInst } from 'naive-ui'

@@ -20,7 +20,7 @@ import type { SettingState } from '@/store/modules/setting/type'
 
 const AppStyleProvider = defineComponent({
   name: 'AppStyleProvider',
-  setup() {
+  setup(_, { expose }) {
     const settingStore = useSetting()
 
     const { themeValue } = storeToRefs(settingStore)
@@ -97,6 +97,8 @@ const AppStyleProvider = defineComponent({
         immediate: true,
       },
     )
+
+    expose()
   },
   render() {
     return <div class="app-style-provider"></div>

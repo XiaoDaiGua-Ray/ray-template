@@ -11,7 +11,7 @@
 
 /** 本方法感谢 <https://yunkuangao.me/> 的支持 */
 
-import { APP_MENU_CONFIG, ROOT_ROUTE } from '@/appConfig/appConfig'
+import { APP_MENU_CONFIG, ROOT_ROUTE } from '@/app-config/appConfig'
 import RayIcon from '@/components/RayIcon/index'
 import { isValueType } from '@/utils/hook'
 import { getStorage, setStorage } from '@/utils/cache'

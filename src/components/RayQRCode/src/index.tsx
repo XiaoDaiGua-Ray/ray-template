@@ -19,11 +19,9 @@ import { AwesomeQR } from 'awesome-qr'
 import { isValueType, downloadBase64File } from '@use-utils/hook'
 import { call } from '@/utils/vue/index'
 
-import type { QRCodeRenderResponse } from './type'
+import type { QRCodeRenderResponse, GIFBuffer } from './type'
 
-const readGIFAsArrayBuffer = (
-  url: string,
-): Promise<string | ArrayBuffer | null> => {
+const readGIFAsArrayBuffer = (url: string): Promise<GIFBuffer> => {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest()
 
@@ -50,7 +48,7 @@ const readGIFAsArrayBuffer = (
   })
 }
 
-const RayQRcode = defineComponent({
+export default defineComponent({
   name: 'RayQRcode',
   props,
   setup(props, ctx) {
@@ -60,7 +58,7 @@ const RayQRcode = defineComponent({
     const spinOverrides = {
       opacitySpinning: '0.1',
     }
-    let gifBuffer: string | ArrayBuffer | null
+    let gifBuffer: GIFBuffer
 
     const getGIFImageByURL = async () => {
       const { gifBackgroundURL } = props
@@ -77,7 +75,7 @@ const RayQRcode = defineComponent({
     }
 
     const renderQRCode = () => {
-      const { gifBackgroundURL, gifBackground, ...ops } = props
+      const { gifBackground, ...ops } = props
 
       new AwesomeQR({
         ...ops,
@@ -149,6 +147,7 @@ const RayQRcode = defineComponent({
         <NSpin
           show={this.status === 'loading'}
           themeOverrides={this.spinOverrides}
+          description={this.loadingDescription}
         >
           <img src={this.qrcodeURL as string | undefined} />
         </NSpin>
@@ -184,5 +183,3 @@ const RayQRcode = defineComponent({
     )
   },
 })
-
-export default RayQRcode

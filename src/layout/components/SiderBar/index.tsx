@@ -28,7 +28,7 @@ import GlobalSeach from './components/GlobalSeach/index'
 import AppAvatar from '@/app-components/app/AppAvatar/index'
 
 import { useSetting } from '@/store'
-import { LOCAL_OPTIONS } from '@/appConfig/localConfig'
+import { LOCAL_OPTIONS } from '@/app-config/localConfig'
 import { useAvatarOptions, avatarDropdownClick } from './hook'
 import screenfull from 'screenfull'
 import { useI18n } from '@/locales/useI18n'

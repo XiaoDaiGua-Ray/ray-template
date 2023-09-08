@@ -12,14 +12,16 @@
 
 ## ✨ 特性
 
-- **最新技术栈**：使用 Vue3.x/vite4.x 等前端前沿技术开发
+- **最新技术栈**：使用 vue3.x/vite4.x/pinia 等前端前沿技术开发
 - **TypeScript**：应用程序级 JavaScript 的语言
 - **主题**：可配置的主题
 - **国际化**：内置完善的国际化方案
 - **Mock 数据**：内置 Mock 数据方案
 - **权限**：内置完善的动态路由权限生成方案
 - **组件**：二次封装了多个常用的组件
-- **Axios 请求**：二次封装 axios 库
+- **Axios 请求**：二次封装 axios 库，支持：取消、防抖、自动重复取消等功能
+- **缓存**：任意深度页面缓存
+- **SVG**：内置 svg icon 解决方案
 
 ## 🪄 预览地址
 
@@ -37,7 +39,7 @@
 
 ## 🪴 准备
 
-- [node](http://nodejs.org/) 和 [git](https://git-scm.com/) -项目开发环境
+- [Node](http://nodejs.org/) 和 [git](https://git-scm.com/) - 项目开发环境
 - [Vite](https://vitejs.dev/) - 熟悉 vite 特性
 - [Vue3](https://v3.vuejs.org/) - 熟悉 Vue 基础语法
 - [TypeScript](https://www.typescriptlang.org/) - 熟悉 TypeScript 基本语法
@@ -63,71 +65,31 @@ git clone https://gh.yka.moe/https://github.com/XiaoDaiGua-Ray/ray-template.git
 ### 拉取依赖
 
 ```sh
-# pnpm
-
 pnpm
-```
-
-```sh
-# npm
-
-npm install
 ```
 
 ### 启动项目
 
 ```sh
-# pnpm
-
 pnpm dev
-```
-
-```sh
-# npm
-
-npm run dev
 ```
 
 ### 项目打包
 
 ```sh
-# pnpm
-
 pnpm build
-```
-
-```sh
-# npm
-
-npm run build
 ```
 
 ### 预览项目
 
 ```sh
-# pnpm
-
 pnpm preview
-```
-
-```sh
-# npm
-
-npm run preview
 ```
 
 ### 体积分析
 
 ```sh
-# pnpm
-
 pnpm report
-```
-
-```sh
-# npm
-
-npm run report
 ```
 
 ## 🪴 项目活动
@@ -150,4 +112,4 @@ npm run report
 
 ## 📄 证书
 
-[MIT License](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/LICENSE) © 2022-PRESENT [Ray](https://github.com/XiaoDaiGua-Ray/ray-template)
+[MIT License](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/LICENSE) © 2022-PRESENT [Ray](https://github.com/XiaoDaiGua-Ray)

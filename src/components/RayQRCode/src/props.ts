@@ -15,6 +15,15 @@ import type { MaybeArray } from '@/types/modules/utils'
 import type { Options } from 'awesome-qr'
 
 const props = {
+  loadingDescription: {
+    /**
+     *
+     * Loading status description label
+     *
+     * @default undefined
+     */
+    type: String,
+  },
   watchText: {
     /**
      *

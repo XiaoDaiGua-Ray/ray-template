@@ -13,7 +13,7 @@ import { NMenu, NLayoutSider } from 'naive-ui'
 import SiderBarLogo from './components/SiderBarLogo/index'
 
 import { useMenu } from '@/store'
-import { APP_MENU_CONFIG } from '@/appConfig/appConfig'
+import { APP_MENU_CONFIG } from '@/app-config/appConfig'
 
 import type { MenuInst } from 'naive-ui'
 import type { NaiveMenuOptions } from '@/types/modules/component'

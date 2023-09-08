@@ -10,7 +10,7 @@
  */
 
 import dayjs from 'dayjs'
-import { DEFAULT_DAYJS_LOCAL, DAYJS_LOCAL_MAP } from '@/appConfig/localConfig'
+import { DEFAULT_DAYJS_LOCAL, DAYJS_LOCAL_MAP } from '@/app-config/localConfig'
 import 'dayjs/locale/zh-cn'
 
 import type { DayjsLocal } from './type'

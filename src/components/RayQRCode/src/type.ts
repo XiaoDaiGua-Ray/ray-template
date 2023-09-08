@@ -24,3 +24,5 @@ export type QRCodeInst = {
    */
   downloadQRCode: (fileName?: string) => void
 }
+
+export type GIFBuffer = string | ArrayBuffer | null

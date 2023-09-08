@@ -3,7 +3,7 @@ import { setStorage } from '@use-utils/cache'
 import { set } from 'lodash-es'
 import { addClass, removeClass, colorToRgba } from '@/utils/element'
 import { useI18n } from '@/locales/useI18n'
-import { APP_THEME } from '@/appConfig/designConfig'
+import { APP_THEME } from '@/app-config/designConfig'
 import { useDayjs } from '@/dayjs/index'
 
 import type { ConditionalPick } from '@/types/modules/helper'

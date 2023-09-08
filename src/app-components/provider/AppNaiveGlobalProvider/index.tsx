@@ -31,9 +31,9 @@ import {
 import { useSetting } from '@/store'
 import { naiveLocales } from '@/locales/helper'
 
-const GlobalProvider = defineComponent({
+export default defineComponent({
   name: 'GlobalProvider',
-  setup() {
+  setup(_, { expose }) {
     const settingStore = useSetting()
 
     const modelPrimaryColorOverride = computed(
@@ -54,6 +54,7 @@ const GlobalProvider = defineComponent({
         configProviderProps: computed(() => ({
           theme: modelThemeValue.value,
         })),
+        notificationProviderProps: {},
       },
     )
 
@@ -61,6 +62,8 @@ const GlobalProvider = defineComponent({
     window.$message = message // 注入 `message`
     window.$loadingBar = loadingBar // 注入 `loadingBar`
     window.$notification = notification // 注入 `notification`
+
+    expose()
 
     return {
       modelPrimaryColorOverride,
@@ -90,5 +93,3 @@ const GlobalProvider = defineComponent({
     )
   },
 })
-
-export default GlobalProvider

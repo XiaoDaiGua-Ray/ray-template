@@ -43,8 +43,8 @@ import {
   buildOptions,
   mixinCSSPlugin,
 } from './vite-plugin/index'
-import { APP_THEME } from './src/appConfig/designConfig'
-import { PRE_LOADING_CONFIG, SIDE_BAR_LOGO } from './src/appConfig/appConfig'
+import { APP_THEME } from './src/app-config/designConfig'
+import { PRE_LOADING_CONFIG, SIDE_BAR_LOGO } from './src/app-config/appConfig'
 
 import type { AppConfigExport } from '@/types/modules/cfg'
 

@@ -10,6 +10,8 @@
 - 移除 qrcode.vue 依赖
 - 更新 vue-hooks-plus 版本至 v1.8.2
 - 移除 office 功能集成
+- 统一包命名方式
+- 更改 v-copy 实现细节（使用方式不变）
 
 ### Fixes
 

@@ -13,7 +13,7 @@ import {
 } from 'naive-ui'
 import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch/index'
 
-import { APP_THEME } from '@/appConfig/designConfig'
+import { APP_THEME } from '@/app-config/designConfig'
 import { useSetting } from '@/store'
 import { useI18n } from '@/locales/useI18n'
 

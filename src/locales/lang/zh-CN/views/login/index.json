@@ -1,6 +1,6 @@
 {
   "Register": "注册",
-  "Signin": "登陆",
+  "Signin": "登录",
   "QRCodeSignin": "扫码登陆",
   "NamePlaceholder": "请输入用户名",
   "PasswordPlaceholder": "请输入密码",

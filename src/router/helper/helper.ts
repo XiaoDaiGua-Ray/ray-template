@@ -18,7 +18,7 @@
  * 如果有需要查看 router 模块的全局通用辅助方法可以查看 routerCopilot 包
  */
 
-import { LAYOUT_CONTENT_REF } from '@/appConfig/routerConfig'
+import { LAYOUT_CONTENT_REF } from '@/app-config/routerConfig'
 
 import type { RouteLocationNormalized } from 'vue-router'
 import type { AppRouteRecordRaw, RouteModules } from '@/router/type'

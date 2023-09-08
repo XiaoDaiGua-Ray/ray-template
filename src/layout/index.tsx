@@ -19,7 +19,7 @@ import HeaderWrapper from './default/HeaderWrapper'
 import FeatureWrapper from './default/FeatureWrapper'
 
 import { useSetting } from '@/store'
-import { LAYOUT_CONTENT_REF } from '@/appConfig/routerConfig'
+import { LAYOUT_CONTENT_REF } from '@/app-config/routerConfig'
 import { layoutHeaderCssVars } from '@/layout/layoutResize'
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
 

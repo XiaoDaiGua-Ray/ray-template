@@ -19,12 +19,14 @@
 
 import { axiosCanceler } from '@/axios/helper/interceptor'
 
-const AppRequestCanceler = defineComponent({
-  name: 'AppRequestCanceler',
-  setup() {
+const AppRequestCancelerProvider = defineComponent({
+  name: 'AppRequestCancelerProvider',
+  setup(_, { expose }) {
     onBeforeRouteUpdate(() => {
       axiosCanceler.cancelAllRequest()
     })
+
+    expose()
   },
   render() {
     return (
@@ -37,4 +39,4 @@ const AppRequestCanceler = defineComponent({
   },
 })
 
-export default AppRequestCanceler
+export default AppRequestCancelerProvider

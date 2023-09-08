@@ -21,9 +21,9 @@
  */
 
 import { getStorage } from '@/utils/cache'
-import { APP_CATCH_KEY, ROOT_ROUTE } from '@/appConfig/appConfig'
+import { APP_CATCH_KEY, ROOT_ROUTE } from '@/app-config/appConfig'
 import { redirectRouterToDashboard } from '@/router/helper/routerCopilot'
-import { WHITE_ROUTES } from '@/appConfig/routerConfig'
+import { WHITE_ROUTES } from '@/app-config/routerConfig'
 import { validRole } from '@/router/helper/routerCopilot'
 import { isValueType } from '@/utils/hook'
 
