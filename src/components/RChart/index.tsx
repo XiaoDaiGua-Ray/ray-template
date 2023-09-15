@@ -66,8 +66,8 @@ import type { ECharts, EChartsCoreOption, SetOptionOpts } from 'echarts/core'
 export type EChartsExtensionInstallRegisters = typeof CanvasRenderer
 export type { RayChartInst } from './type'
 
-const RayChart = defineComponent({
-  name: 'RayChart',
+export default defineComponent({
+  name: 'RChart',
   props: {
     width: {
       /**
@@ -369,7 +369,7 @@ const RayChart = defineComponent({
           call(onError)
         }
 
-        console.error('RayChart render error: ', e)
+        console.error('RChart render error: ', e)
       }
     }
 
@@ -413,7 +413,7 @@ const RayChart = defineComponent({
       // 避免重复渲染
       if (echartInstance?.getDom()) {
         console.warn(
-          'RayChart mount: There is a chart instance already initialized on the dom. Execution was interrupted',
+          'RChart mount: There is a chart instance already initialized on the dom. Execution was interrupted',
         )
 
         return
@@ -555,5 +555,3 @@ const RayChart = defineComponent({
     )
   },
 })
-
-export default RayChart

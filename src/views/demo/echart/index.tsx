@@ -1,7 +1,7 @@
 import './index.scss'
 
 import { NCard, NSwitch, NSpace, NP, NH2, NButton } from 'naive-ui'
-import RayChart from '@/components/RChart/index'
+import RChart from '@/components/RChart/index'
 
 import dayjs from 'dayjs'
 
@@ -270,7 +270,7 @@ const Echart = defineComponent({
           </NButton>
         </NSpace>
         <div class="chart--container">
-          <RayChart
+          <RChart
             ref="baseChartRef"
             autoChangeTheme
             options={this.baseLineOptions}
@@ -279,7 +279,7 @@ const Echart = defineComponent({
         </div>
         <NH2>不跟随主题切换的暗色主题可视化图</NH2>
         <div class="chart--container">
-          <RayChart
+          <RChart
             autoChangeTheme={false}
             theme="dark"
             options={this.baseOptions}
@@ -297,7 +297,7 @@ const Echart = defineComponent({
           }}
         </NSwitch>
         <div class="chart--container">
-          <RayChart loading={this.loading} options={this.baseOptions} />
+          <RChart loading={this.loading} options={this.baseOptions} />
         </div>
         <NH2>贴画可视化图</NH2>
         <NSwitch
@@ -311,7 +311,7 @@ const Echart = defineComponent({
           }}
         </NSwitch>
         <div class="chart--container">
-          <RayChart options={this.baseOptions} showAria={this.chartAria} />
+          <RChart options={this.baseOptions} showAria={this.chartAria} />
         </div>
       </div>
     )
