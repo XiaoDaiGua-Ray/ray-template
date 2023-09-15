@@ -35,7 +35,10 @@ import type { AppRawRequestConfig } from '@/axios/type'
  * 非 vue effect 中使用
  * @example
  *
+ * // 请求函数
  * const getUser = () => request({ url: 'http://localhost:3000/user' })
+ *
+ * // effect 中使用
  * const { data } = useHookPlusRequest(getUser)
  */
 function useRequest<

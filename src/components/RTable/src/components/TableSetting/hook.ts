@@ -1,4 +1,4 @@
-import type { ActionOptions } from '@/components/RayTable/src/type'
+import type { ActionOptions } from '@/components/RTable/src/type'
 
 export const setupSettingOptions = (options: ActionOptions[]) => {
   const arr = options.map((curr) => {

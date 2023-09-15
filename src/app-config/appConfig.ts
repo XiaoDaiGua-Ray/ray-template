@@ -33,7 +33,11 @@ export const APP_KEEP_ALIVE: Readonly<AppKeepAlive> = {
   maxKeepAliveLength: 5,
 }
 
-/** 首屏加载信息配置 */
+/**
+ *
+ * 首屏加载信息配置
+ * 其中 title 属性会是默认的浏览器标题（初始化时）
+ */
 export const PRE_LOADING_CONFIG: PreloadingConfig = {
   title: 'Ray Template',
   tagColor: '#ff6700',

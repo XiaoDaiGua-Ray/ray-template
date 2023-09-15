@@ -10,7 +10,7 @@
  */
 
 import { NPopconfirm, NSpace, NButton, NPopover } from 'naive-ui'
-import RayIcon from '@/components/RayIcon/index'
+import RayIcon from '@/components/RIcon/index'
 
 export type EmitterType = 'positive' | 'negative'
 

@@ -22,7 +22,16 @@ const updateElementDisabledType = (el: HTMLElement, value: boolean) => {
   if (el) {
     const classes = 'ray-template__directive--disabled'
 
-    value ? addClass(el, classes) : removeClass(el, classes)
+    if (value) {
+      el.setAttribute('disabled', 'disabled')
+
+      addClass(el, classes)
+    } else {
+      el.removeAttribute('disabled')
+
+      removeClass(el, classes)
+    }
+
     el?.setAttribute('disabled', value ? 'disabled' : '')
   }
 }

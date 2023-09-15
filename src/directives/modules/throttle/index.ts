@@ -17,7 +17,6 @@
 import { throttle } from 'lodash-es'
 import { on, off } from '@use-utils/element'
 
-import type { Directive } from 'vue'
 import type { ThrottleBindingOptions } from './type'
 import type { AnyFC } from '@/types/modules/utils'
 import type { DebouncedFunc } from 'lodash-es'

@@ -12,7 +12,7 @@
 import './index.scss'
 
 import { NButton, NSpin } from 'naive-ui'
-import RayIcon from '@/components/RayIcon/index'
+import RayIcon from '@/components/RIcon/index'
 
 import props from './props'
 import { AwesomeQR } from 'awesome-qr'

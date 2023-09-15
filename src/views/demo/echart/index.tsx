@@ -1,12 +1,12 @@
 import './index.scss'
 
 import { NCard, NSwitch, NSpace, NP, NH2, NButton } from 'naive-ui'
-import RayChart from '@/components/RayChart/index'
+import RayChart from '@/components/RChart/index'
 
 import dayjs from 'dayjs'
 
 import type { ECharts } from 'echarts/core'
-import type { RayChartInst } from '@/components/RayChart/index'
+import type { RayChartInst } from '@/components/RChart/index'
 
 const Echart = defineComponent({
   name: 'REchart',

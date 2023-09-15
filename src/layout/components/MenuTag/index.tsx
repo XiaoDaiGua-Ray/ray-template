@@ -26,7 +26,7 @@
 import './index.scss'
 
 import { NScrollbar, NTag, NSpace, NLayoutHeader, NDropdown } from 'naive-ui'
-import RayIcon from '@/components/RayIcon/index'
+import RayIcon from '@/components/RIcon/index'
 
 import { useMenu, useSetting } from '@/store'
 import { uuid } from '@/utils/hook'

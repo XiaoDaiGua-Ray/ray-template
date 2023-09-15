@@ -10,11 +10,11 @@
  */
 
 import { NSpace, NCard, NButton } from 'naive-ui'
-import RayQRcode from '@/components/RayQRCode/index'
+import RayQRcode from '@/components/RQRCode/index'
 
 import LOGO from '@/assets/images/ray.svg'
 
-import type { QRCodeStatus, QRCodeInst } from '@/components/RayQRCode/index'
+import type { QRCodeStatus, QRCodeInst } from '@/components/RQRCode/index'
 
 const RQRCode = defineComponent({
   name: 'RQRCode',

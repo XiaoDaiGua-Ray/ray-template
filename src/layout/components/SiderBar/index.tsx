@@ -20,7 +20,7 @@
 import './index.scss'
 
 import { NLayoutHeader, NSpace, NTooltip, NDropdown } from 'naive-ui'
-import RayIcon from '@/components/RayIcon/index'
+import RayIcon from '@/components/RIcon/index'
 import TootipIcon from '@/layout/components/SiderBar/components/TooltipIcon/index'
 import SettingDrawer from './components/SettingDrawer/index'
 import Breadcrumb from './components/Breadcrumb/index'
@@ -31,7 +31,7 @@ import { useSetting } from '@/store'
 import { LOCAL_OPTIONS } from '@/app-config/localConfig'
 import { useAvatarOptions, avatarDropdownClick } from './hook'
 import screenfull from 'screenfull'
-import { useI18n } from '@/locales/useI18n'
+import { useI18n } from '@/hooks/web/index'
 
 import type { IconEventMapOptions, IconEventMap } from './type'
 

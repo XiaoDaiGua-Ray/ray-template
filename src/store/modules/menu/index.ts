@@ -32,10 +32,10 @@ import {
   hasMenuIcon,
   getCatchMenuKey,
 } from './helper'
-import { useI18n } from '@/locales/useI18n'
-import { getAppRawRoutes } from '@/router/routeModules'
+import { useI18n } from '@/hooks/web/index'
+import { getAppRawRoutes } from '@/router/appRouteModules'
 import { useKeepAlive } from '@/store'
-import { useVueRouter } from '@/router/helper/useVueRouter'
+import { useVueRouter } from '@/hooks/web/index'
 
 import type { AppRouteMeta, AppRouteRecordRaw } from '@/router/type'
 import type {

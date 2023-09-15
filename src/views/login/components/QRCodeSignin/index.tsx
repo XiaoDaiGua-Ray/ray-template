@@ -11,7 +11,7 @@
 
 import './index.scss'
 
-import RayQRcode from '@/components/RayQRCode/index'
+import RayQRcode from '@/components/RQRCode/index'
 
 import LOGO from '@/assets/images/ray.svg'
 

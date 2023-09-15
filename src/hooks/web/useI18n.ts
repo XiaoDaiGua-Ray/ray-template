@@ -1,4 +1,15 @@
-import { i18n } from './index'
+/**
+ *
+ * @author Ray <https://github.com/XiaoDaiGua-Ray>
+ *
+ * @date 2023-09-11
+ *
+ * @workspace ray-template
+ *
+ * @remark 今天也是元气满满撸代码的一天
+ */
+
+import { i18n } from '@/locales/index'
 
 import type { WritableComputedRef } from 'vue'
 

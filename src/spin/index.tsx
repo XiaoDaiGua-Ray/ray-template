@@ -16,8 +16,8 @@
  * 基于 Naive UI Spin 组件
  *
  * 使用方法
- *   1. import { setSpin } from '@/spin'
- *   2. setSpin(true) | setSpin(false)
+ *   1. import { setVariable } from '@/hooks/variable/index'
+ *   2. setVariable('globalSpinning', true) | setVariable('globalSpinning', false)
  *
  * 仅需按照上述步骤实现全屏加载动画
  *
@@ -29,9 +29,7 @@
 import { NSpin } from 'naive-ui'
 
 import { spinProps } from 'naive-ui'
-import { spinValue } from './hook'
-
-export { setSpin } from './hook'
+import { globalVariableToRefs } from '@/hooks/variable/index'
 
 const GlobalSpin = defineComponent({
   name: 'GlobalSpin',
@@ -42,6 +40,7 @@ const GlobalSpin = defineComponent({
     const overrides = {
       opacitySpinning: '0.3',
     }
+    const spinValue = globalVariableToRefs('globalSpinning')
 
     return {
       spinValue,

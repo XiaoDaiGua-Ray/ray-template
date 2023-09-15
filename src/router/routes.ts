@@ -1,5 +1,5 @@
 import Layout from '@/layout/index'
-import { getAppRawRoutes } from './routeModules'
+import { getAppRawRoutes } from './appRouteModules'
 import { ROOT_ROUTE } from '@/app-config/appConfig'
 import { expandRoutes } from '@/router/helper/expandRoutes'
 

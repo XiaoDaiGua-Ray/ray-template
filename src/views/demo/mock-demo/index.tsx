@@ -10,8 +10,8 @@
  */
 
 import { NSpace, NCard, NButton, NFormItemGi, NInput, NForm } from 'naive-ui'
-import RayTable from '@/components/RayTable/index'
-import RayCollapseGrid from '@/components/RayCollapseGrid/index'
+import RayTable from '@/components/RTable/index'
+import RayCollapseGrid from '@/components/RCollapseGrid/index'
 
 import { useHookPlusRequest } from '@/axios/index'
 import { getPersonList } from '@/axios/api/demo/mock/person'

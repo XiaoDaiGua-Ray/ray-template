@@ -19,7 +19,7 @@
 import './index.scss'
 
 import { NCard, NPopover, NEllipsis } from 'naive-ui'
-import RayIcon from '@/components/RayIcon/index'
+import RayIcon from '@/components/RIcon/index'
 import VueDraggable from 'vuedraggable'
 
 import { setupSettingOptions } from './hook'
@@ -30,7 +30,7 @@ import type {
   ActionOptions,
   FixedType,
   TableSettingFixedPopoverIcon,
-} from '@/components/RayTable/src/type'
+} from '@/components/RTable/src/type'
 
 const TableSetting = defineComponent({
   name: 'TableSetting',

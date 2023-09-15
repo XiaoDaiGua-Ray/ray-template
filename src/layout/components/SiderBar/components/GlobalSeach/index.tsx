@@ -12,7 +12,7 @@
 import './index.scss'
 
 import { NInput, NModal, NResult, NScrollbar, NSpace } from 'naive-ui'
-import RayIcon from '@/components/RayIcon/index'
+import RayIcon from '@/components/RIcon/index'
 
 import { on, off, queryElements, addClass, removeClass } from '@/utils/element'
 import { debounce } from 'lodash-es'

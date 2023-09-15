@@ -24,7 +24,7 @@ import './index.scss'
 import { collapseGridProps } from './props'
 
 import { NCard, NGrid, NGridItem, NSpace } from 'naive-ui'
-import RayIcon from '@/components/RayIcon'
+import RayIcon from '@/components/RIcon'
 
 import { call } from '@/utils/vue/index'
 

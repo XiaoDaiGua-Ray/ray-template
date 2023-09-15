@@ -60,9 +60,7 @@ const RLayout = defineComponent({
           <HeaderWrapper ref="layoutSiderBarRef" />
           {this.modelMenuTagSwitch ? (
             <FeatureWrapper ref="layoutMenuTagRef" />
-          ) : (
-            ''
-          )}
+          ) : null}
           <NLayoutContent
             ref="LAYOUT_CONTENT_REF"
             class="r-layout-full__viewer-content"
@@ -73,9 +71,7 @@ const RLayout = defineComponent({
           {this.footerSwitch ? <FooterWrapper ref="layoutFooterRef" /> : ''}
         </NLayoutContent>
       </NLayout>
-    ) : (
-      ''
-    )
+    ) : null
   },
 })
 

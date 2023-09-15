@@ -12,11 +12,11 @@
 import './index.scss'
 
 import { NPopover } from 'naive-ui'
-import RayIcon from '@/components/RayIcon/index'
+import RayIcon from '@/components/RIcon/index'
 
 import screenfull from 'screenfull'
 
-import type { TableSettingProvider } from '@/components/RayTable/src/type'
+import type { TableSettingProvider } from '@/components/RTable/src/type'
 
 const TableScreenfull = defineComponent({
   name: 'TableScreenfull',

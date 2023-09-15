@@ -13,7 +13,7 @@ import type {
   ChartThemeRawArray,
   ChartThemeRawModules,
   LoadingOptions,
-} from '@/components/RayChart/type'
+} from '@/components/RChart/type'
 
 /**
  *

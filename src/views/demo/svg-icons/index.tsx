@@ -12,7 +12,7 @@
 import './index.scss'
 
 import { NSpace, NCard, NPopover } from 'naive-ui'
-import RayIcon from '@/components/RayIcon/index'
+import RayIcon from '@/components/RIcon/index'
 
 const PreviewSVGIcons = defineComponent({
   name: 'PreviewSVGIcons',

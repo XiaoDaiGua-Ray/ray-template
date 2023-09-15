@@ -12,11 +12,11 @@
 import './index.scss'
 
 import { NPopover, NCard } from 'naive-ui'
-import RayIcon from '@/components/RayIcon/index'
+import RayIcon from '@/components/RIcon/index'
 
 import { call } from '@/utils/vue/index'
 
-import type { TableSettingProvider } from '@/components/RayTable/src/type'
+import type { TableSettingProvider } from '@/components/RTable/src/type'
 import type { ComponentSize } from '@/types/modules/component'
 import type { MaybeArray } from '@/types/modules/utils'
 

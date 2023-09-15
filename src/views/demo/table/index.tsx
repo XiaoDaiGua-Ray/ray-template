@@ -24,11 +24,11 @@ import {
   NLi,
   NSpace,
 } from 'naive-ui'
-import RayTable from '@/components/RayTable/index'
-import RayCollapseGrid from '@/components/RayCollapseGrid/index'
+import RayTable from '@/components/RTable/index'
+import RayCollapseGrid from '@/components/RCollapseGrid/index'
 
 import type { DataTableColumns } from 'naive-ui'
-import type { RayTableInst } from '@/components/RayTable/index'
+import type { RayTableInst } from '@/components/RTable/index'
 
 type RowData = {
   key: number

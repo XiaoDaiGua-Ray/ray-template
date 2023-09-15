@@ -10,7 +10,7 @@
  */
 
 import { NSpace, NDataTable, NButton } from 'naive-ui'
-import RayTable from '@/components/RayTable/index'
+import RayTable from '@/components/RTable/index'
 
 import type { DataTableColumns } from 'naive-ui'
 

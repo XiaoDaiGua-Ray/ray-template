@@ -1,4 +1,4 @@
-import { t } from '@/locales/useI18n'
+import { t } from '@/hooks/web/index'
 
 import type { AppRouteRecordRaw } from '@/router/type'
 

@@ -15,7 +15,7 @@ import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/c
 
 import { APP_THEME } from '@/app-config/designConfig'
 import { useSetting } from '@/store'
-import { useI18n } from '@/locales/useI18n'
+import { useI18n } from '@/hooks/web/index'
 
 import type { PropType } from 'vue'
 import type { Placement } from '@/types/modules/component'

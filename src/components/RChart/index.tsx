@@ -55,7 +55,7 @@ import type {
   LoadingOptions,
   AutoResize,
   ChartTheme,
-} from '@/components/RayChart/type'
+} from '@/components/RChart/type'
 import type {
   UseResizeObserverReturn,
   MaybeComputedElementRef,

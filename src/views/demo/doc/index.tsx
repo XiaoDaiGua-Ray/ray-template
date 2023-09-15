@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import RayIframe from '@/components/RayIframe/index'
+import RayIframe from '@/components/RIframe/index'
 
 const RTemplateDoc = defineComponent({
   name: 'RTemplateDoc',

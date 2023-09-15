@@ -33,17 +33,20 @@ export const setupDirectives = (app: App<Element>) => {
   // 将所有的包提取出来(./modules/[file-name]/index.ts)
   const directivesModules = combineDirective(directiveRawModules)
   // 提取文件名(./modules/copy/index.ts => copy)
-  const reg = /(?<=modules\/).*(?=\/index\.ts)/
+  const regexExtractDirectiveName = /(?<=modules\/).*(?=\/index\.ts)/
+  // 匹配合法指令名称
+  const regexDirectiveName = /^([^-]+-)*[^-]+$/
 
   forIn(directivesModules, (value, key) => {
-    const dname = key.match(reg)?.[0]
+    const dname = key.match(regexExtractDirectiveName)?.[0]
 
-    if (isValueType<string>(dname, 'String')) {
+    if (
+      isValueType<string>(dname, 'String') &&
+      regexDirectiveName.test(dname)
+    ) {
       app.directive(dname, value?.())
     } else {
-      throw new Error(
-        'directiveName is not string, please check your directive file name',
-      )
+      console.error(`[setupDirectives] ${dname} is not a valid directive name`)
     }
   })
 }

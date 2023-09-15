@@ -12,7 +12,7 @@
 import { permissionRouter } from './permission'
 import { SETUP_ROUTER_ACTION, SUPER_ADMIN } from '@/app-config/routerConfig'
 import { useSignin } from '@/store'
-import { useVueRouter } from '@/router/helper/useVueRouter'
+import { useVueRouter } from '@/hooks/web/index'
 import { ROOT_ROUTE } from '@/app-config/appConfig'
 import { setStorage } from '@/utils/cache'
 import { getAppEnvironment } from '@/utils/hook'

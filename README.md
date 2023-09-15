@@ -1,5 +1,6 @@
-<div align="center"> <a href="https://github.com/XiaoDaiGua-Ray/ray-template"> <img alt="Ray Template" width="200" height="200" src="https://usc1.contabostorage.com/c2e495d7890844d392e8ec0c6e5d77eb:alist/ray/ray.svg?sign=ZklU9Bh5b6oKp1X0LOhGwkx4g5mW4wk_w9Jt5zlZ5EQ=:0"> </a> <br> <br>
-
+<div align="center">
+ <a href="https://github.com/XiaoDaiGua-Ray/ray-template"> <img alt="Ray Template" width="200" height="200" src="https://usc1.contabostorage.com/c2e495d7890844d392e8ec0c6e5d77eb:alist/ray/ray.svg?sign=ZklU9Bh5b6oKp1X0LOhGwkx4g5mW4wk_w9Jt5zlZ5EQ=:0"> </a> <br> <br>
+ <a href="https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/LICENSE"><img src="https://img.shields.io/github/license/XiaoDaiGua-Ray/ray-template" alt="LICENSE"></a>
 </div>
 
 <div align="center">
