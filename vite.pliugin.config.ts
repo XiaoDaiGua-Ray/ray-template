@@ -26,13 +26,16 @@ import mockDevServerPlugin from 'vite-plugin-mock-dev-server'
 import vueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import unpluginViteComponents from 'unplugin-vue-components/vite'
+import { cdn as viteCDNPlugin } from 'vite-plugin-cdn2'
 
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 import { VueHooksPlusResolver } from '@vue-hooks-plus/resolvers'
 
 import config from './cfg'
 
-export default function (mode: string) {
+import type { PluginOption } from 'vite'
+
+export default function (mode: string): PluginOption[] {
   const { title, appPrimaryColor, preloadingConfig } = config
 
   return [
@@ -160,6 +163,25 @@ export default function (mode: string) {
       symbolId: 'icon-[dir]-[name]',
       inject: 'body-last',
       customDomId: '__svg__icons__dom__',
+    }),
+    viteCDNPlugin({
+      modules: [
+        'vue',
+        'vue-demi',
+        'pinia',
+        'naive-ui',
+        'vue-router',
+        'vue-i18n',
+        'dayjs',
+        'echarts',
+        'vuedraggable',
+        'xlsx',
+        'axios',
+        'screenfull',
+        'print-js',
+        'clipboard',
+        'lodash-es',
+      ],
     }),
   ]
 }

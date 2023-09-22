@@ -33,7 +33,7 @@ const debounceDirective: CustomDirectiveFC<
       const { func, trigger = 'click', wait = 500, options } = value
 
       if (typeof func !== 'function') {
-        throw new Error('debounce directive value must be a function')
+        throw new TypeError('debounce directive value must be a function')
       }
 
       debounceFunction = debounce(func, wait, Object.assign({}, options))

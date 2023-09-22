@@ -54,7 +54,7 @@ export const useSignin = defineStore(
             role: 'admin',
             name: signinForm.name,
             avatar:
-              'https://usc1.contabostorage.com/c2e495d7890844d392e8ec0c6e5d77eb:image/longmao.jpeg',
+              'https://usc1.contabostorage.com/c2e495d7890844d392e8ec0c6e5d77eb:image/longmao.navigator.png',
           }
 
           resolve({

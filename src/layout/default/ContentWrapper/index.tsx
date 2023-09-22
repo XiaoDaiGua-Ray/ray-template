@@ -70,9 +70,7 @@ const ContentWrapper = defineComponent({
             class="content-wrapper"
             transitionPropName={this.contentTransition + '-transform'}
           />
-        ) : (
-          ''
-        )}
+        ) : null}
       </NSpin>
     )
   },

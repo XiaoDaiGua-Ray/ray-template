@@ -1,5 +1,18 @@
 # CHANGE LOG
 
+## 4.2.1
+
+经过综合考虑，还是给模板增加 `cdn` 的配置。基于 `vite-plugin-cdn2` 插件实现。
+
+### Feats
+
+- 指令相关
+  - `v-copy` 指令将使用 `String` 强制转换传入的值
+  - 统一暴露节流、防抖指令的配置项类型 `import type { DebounceBindingOptions, ThrottleBindingOptions } from '@/directives/type'`
+  - 现在 `v-disabled` 指令生效时会降低一点元素的亮度
+- `changeMenuModelValue` 方法添加节流锁，避免重复刷新 url 导致的一些问题
+- 新增 `cdn`，缩减构建体积。如果不需要该配置，搜索 `viteCDNPlugin` 注释即可
+
 ## 4.2.0
 
 针对分包，做了全局的重新设计、调整。让包的名称更加语义化；最重要的是，重新抽离了一些全局可能常用的方法，例如：useI18n、useDayjs 等，在以前这些方法存放于对应的包中，其实这样很不合理，所以现在统一存放于 `src/hooks` 包中。并且该包以后统一存放 `hooks` 方法，并不是 `utils` 方法，做了一个本质的区分，所以 `xxxCopilot.ts` 文件中的方法并不会移动，维持存放在原有的模块下。

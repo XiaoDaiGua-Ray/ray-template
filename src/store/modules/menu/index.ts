@@ -36,6 +36,7 @@ import { useI18n } from '@/hooks/web/index'
 import { getAppRawRoutes } from '@/router/appRouteModules'
 import { useKeepAlive } from '@/store'
 import { useVueRouter } from '@/hooks/web/index'
+import { throttle } from 'lodash-es'
 
 import type { AppRouteMeta, AppRouteRecordRaw } from '@/router/type'
 import type {
@@ -354,7 +355,7 @@ export const useMenu = defineStore(
 
     return {
       ...toRefs(menuState),
-      changeMenuModelValue,
+      changeMenuModelValue: throttle(changeMenuModelValue, 500),
       setupAppMenu,
       collapsedMenu,
       spliceMenTagOptions,

@@ -23,7 +23,7 @@ const copyDirective: CustomDirectiveFC<CopyElement, string> = () => {
   return {
     mounted: (el, { value }) => {
       const clipboard = new ClipboardJS(el, {
-        text: () => value,
+        text: () => String(value),
       })
 
       clipboard.on('success', () => {
@@ -40,7 +40,7 @@ const copyDirective: CustomDirectiveFC<CopyElement, string> = () => {
         el.$$clipboard?.destroy()
 
         el.$$clipboard = new ClipboardJS(el, {
-          text: () => value,
+          text: () => String(value),
         })
       }
     },

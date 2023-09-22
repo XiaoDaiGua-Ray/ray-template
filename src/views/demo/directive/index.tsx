@@ -21,6 +21,10 @@ import {
 } from 'naive-ui'
 
 import type { ConditionalPick } from '@/types/modules/helper'
+import type {
+  DebounceBindingOptions,
+  ThrottleBindingOptions,
+} from '@/directives/type'
 
 const RDirective = defineComponent({
   name: 'RDirective',

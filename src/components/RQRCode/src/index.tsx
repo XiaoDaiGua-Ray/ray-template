@@ -114,7 +114,10 @@ export default defineComponent({
 
     const downloadQRCode = (fileName?: string) => {
       if (qrcodeURL.value && isValueType<string>(qrcodeURL.value, 'String')) {
-        downloadBase64File(qrcodeURL.value, fileName)
+        downloadBase64File(
+          qrcodeURL.value,
+          fileName || new Date().getTime() + '.png',
+        )
       }
     }
 

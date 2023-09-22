@@ -3,7 +3,7 @@ import type { AnyFC } from '@/types/modules/utils'
 
 export interface ThrottleBindingOptions {
   func: AnyFC
-  trigger: string
-  wait: number
-  options: ThrottleSettings
+  trigger?: string
+  wait?: number
+  options?: ThrottleSettings
 }

@@ -11,7 +11,6 @@
 
 import { combineDirective } from './helper/combine'
 import { forIn } from 'lodash-es'
-import { isValueType } from '@/utils/hook'
 
 import type { App } from 'vue'
 import type { DirectiveModules } from '@/directives/type'
@@ -40,10 +39,7 @@ export const setupDirectives = (app: App<Element>) => {
   forIn(directivesModules, (value, key) => {
     const dname = key.match(regexExtractDirectiveName)?.[0]
 
-    if (
-      isValueType<string>(dname, 'String') &&
-      regexDirectiveName.test(dname)
-    ) {
+    if (typeof dname === 'string' && regexDirectiveName.test(dname)) {
       app.directive(dname, value?.())
     } else {
       console.error(`[setupDirectives] ${dname} is not a valid directive name`)

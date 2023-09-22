@@ -95,4 +95,5 @@ body .ray-template__directive--disabled {
   opacity: 0.3 !important;
   pointer-events: none !important;
   cursor: not-allowed !important;
+  filter: brightness(0.88);
 }
