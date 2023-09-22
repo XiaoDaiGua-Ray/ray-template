@@ -1,0 +1,1 @@
+const u=Vue.defineComponent({name:"SubMenuOther",setup(){return{inputValue:Vue.ref(null)}},render(){return Vue.createVNode("div",null,[Vue.createTextVNode("多级菜单-2-1"),Vue.createVNode(naive.NInput,{modelValue:this.inputValue,"onUpdate:modelValue":e=>this.inputValue=e},null)])}});export{u as default};
