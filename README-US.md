@@ -7,117 +7,115 @@
 
 # Ray Template
 
-简体中文 | [English](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/README-US.md)
-
-一个基于 vite4.x & ts(x) & pinia & vue3.x 的中后台模板
+A middle and backend template based on vite4.x & ts(x) & pinia & vue3.x
 
 </div>
 
-## ✨ 特性
+## ✨ Feature
 
-- **最新技术栈**：使用 vue3.x/vite4.x/pinia 等前端前沿技术开发
-- **TypeScript**：应用程序级 JavaScript 的语言
-- **主题**：可配置的主题
-- **国际化**：内置完善的国际化方案
-- **Mock 数据**：内置 Mock 数据方案
-- **权限**：内置完善的动态路由权限生成方案
-- **组件**：二次封装了多个常用的组件
-- **Axios 请求**：二次封装 axios 库，支持：取消、防抖、自动重复取消等功能
-- **缓存**：任意深度页面缓存
-- **SVG**：内置 svg icon 解决方案
-- **独立的 Data Methods Views**：解耦管理的数据、方法、视图，放心二次开发
+- **Latest Technology Stack**：Developed using front-end cutting-edge technologies such as vue3.x/vite4.x/pinia
+- **TypeScript**：The language for application-level JavaScript
+- **App Theme**：Configurable themes
+- **Globalization**：Built-in complete internationalization solution
+- **Mock Data**：Built-in Mock data scheme
+- **Permissions**：Built-in complete dynamic routing permission generation solution
+- **Components**：Secondary encapsulation of multiple commonly used components
+- **Axios Request**：Secondary encapsulation of the axios library, supporting functions such as cancellation, anti-shake, automatic repeat cancellation, etc.
+- **Page Cache**：Arbitrarily deep page cache
+- **SVG**：Built-in svg icon solution
+- **Standalone Data Methods Views**：Decoupled management of data, methods, and views allows for secondary development with confidence
 
-## 🪄 预览地址
+## 🪄 Preview
 
-- [点击预览](https://xiaodaigua-ray.github.io/ray-template/#/)
-- [点击预览(加速地址)](https://ray-template.yunkuangao.com/#/)
+- [Click to preview](https://xiaodaigua-ray.github.io/ray-template/#/)
+- [Click to preview(Acceleration address)](https://ray-template.yunkuangao.com/#/)
 
-## 🦾 文档地址
+## 🦾 Document
 
-- [文档](https://xiaodaigua-ray.github.io/ray-template-doc/)
-- [文档(加速地址)](https://ray-template.yunkuangao.com/ray-template-doc/)
+- [Document](https://xiaodaigua-ray.github.io/ray-template-doc/)
+- [Document(Acceleration address)](https://ray-template.yunkuangao.com/ray-template-doc/)
 
-## 🔋 更新日志
+## 🔋 Change Log
 
-- [更新日志](https://github.com/XiaoDaiGua-Ray/xiaodaigua-ray.github.io/blob/main/CHANGELOG.md)
+- [Change Log](https://github.com/XiaoDaiGua-Ray/xiaodaigua-ray.github.io/blob/main/CHANGELOG.md)
 
-## 🪴 准备
+## 🪴 Prepare
 
-- [Node](http://nodejs.org/) 和 [git](https://git-scm.com/) - 项目开发环境
-- [Vite](https://vitejs.dev/) - 熟悉 vite 特性
-- [Vue3](https://v3.vuejs.org/) - 熟悉 Vue 基础语法
-- [TypeScript](https://www.typescriptlang.org/) - 熟悉 TypeScript 基本语法
-- [Es6+](http://es6.ruanyifeng.com/) - 熟悉 es6 基本语法
-- [Vue-Router-Next](https://next.router.vuejs.org/) - 熟悉 vue-router4.x 基本使用
-- [Naive-UI](https://www.naiveui.com) - ui 基本使用
-- [Mock.js](https://github.com/nuysoft/Mock) - mockjs 基本语法
-- [Pinia](https://pinia.vuejs.org/zh/introduction.html) - 状态管理器 pinia 使用
-- [TSX](https://github.com/vuejs/babel-plugin-jsx/blob/main/packages/babel-plugin-jsx/README-zh_CN.md) - tsx 基本语法
+- [Node](http://nodejs.org/) and [git](https://git-scm.com/) - Project development environment
+- [Vite](https://vitejs.dev/) - Familiar with vite features
+- [Vue3](https://v3.vuejs.org/) - Familiar with Vue3.x basic syntax
+- [TypeScript](https://www.typescriptlang.org/) - Familiar with TypeScript basic syntax
+- [Es6+](http://es6.ruanyifeng.com/) - Familiar with es6 basic syntax
+- [Vue-Router-Next](https://next.router.vuejs.org/) - Familiar with the basic use of vue-router4.x
+- [Naive-UI](https://www.naiveui.com) - UI basic usage
+- [Mock.js](https://github.com/nuysoft/Mock) - Mockjs basic syntax
+- [Pinia](https://pinia.vuejs.org/zh/introduction.html) - State manager pinia uses
+- [TSX](https://github.com/vuejs/babel-plugin-jsx/blob/main/packages/babel-plugin-jsx/README-zh_CN.md) - TSX basic syntax
 
-## 📦 起步
+## 📦 Setup
 
-### 获取项目
+### Get Project
 
 ```sh
 # github
 git clone https://github.com/XiaoDaiGua-Ray/ray-template.git
 
-# 如果你的下载速度很慢，可以切换到下面的代理地址
+# If your download speed is very slow, you can switch to the proxy address below
 git clone https://gh.yka.moe/https://github.com/XiaoDaiGua-Ray/ray-template.git
 ```
 
-### 拉取依赖
+### Pull dependencies
 
 ```sh
 pnpm i
 ```
 
-### 启动项目
+### Startup project
 
 ```sh
 pnpm dev
 ```
 
-### 项目打包
+### Project packaging
 
 ```sh
 pnpm build
 ```
 
-### 预览项目
+### Preview project
 
 ```sh
 pnpm preview
 ```
 
-### 体积分析
+### Volumetric analysis
 
 ```sh
 pnpm report
 ```
 
-### 开发
+### Develop
 
-简介、易上手是该模板的核心思路。所以你可以放心的直接删除 `views/demo` `router/moduels/demo` 下的所有文件，这样就是一个干净的项目了。
+Introduction and ease of use are the core ideas of this template. So you can safely delete all files under `views/demo` and `router/moduels/demo`, and you will have a clean project.
 
-## 🪴 项目活动
+## 🪴 Project Activities
 
 ![Alt](https://repobeats.axiom.co/api/embed/fab6071297ab281913a42f07a2779b488cfd62b8.svg 'Repobeats analytics image')
 
-### 贡献者
+### Contributor
 
-感谢他们的所做的一切贡献 🐝 ！
+Thanks for all their contributions 🐝!
 
 <a href="https://github.com/XiaoDaiGua-Ray/ray-template/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=XiaoDaiGua-Ray/ray-template" />
 </a>
 
-## 浏览器支持
+## Browser Support
 
 | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt=" Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>IE | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt=" Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari |
 | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 |                                                                                             not support                                                                                              |                                                                                            last 2 versions                                                                                             |                                                                                                  last 2 versions                                                                                                  |                                                                                                last 2 versions                                                                                                |                                                                                                last 2 versions                                                                                                |
 
-## 📄 证书
+## 📄 License
 
 [MIT License](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/LICENSE) © 2022-PRESENT [Ray](https://github.com/XiaoDaiGua-Ray)
