@@ -38,15 +38,12 @@
 
 import path from 'node:path'
 
-import {
-  HTMLTitlePlugin,
-  buildOptions,
-  mixinCSSPlugin,
-} from './vite-plugin/index'
-import { APP_THEME } from './src/appConfig/designConfig'
-import { PRE_LOADING_CONFIG, SIDE_BAR_LOGO } from './src/appConfig/appConfig'
+import { htmlTitlePlugin, mixinCSSPlugin } from './vite-plugins/index'
+import { APP_THEME } from './src/app-config/designConfig'
+import { PRE_LOADING_CONFIG, SIDE_BAR_LOGO } from './src/app-config/appConfig'
 
 import type { AppConfigExport } from '@/types/modules/cfg'
+import type { BuildOptions } from 'vite'
 
 const config: AppConfigExport = {
   /** 公共基础路径配置, 如果为空则会默认以 '/' 填充 */
@@ -82,7 +79,7 @@ const config: AppConfigExport = {
    *
    * 浏览器标题
    */
-  title: HTMLTitlePlugin('Ray Template'),
+  title: htmlTitlePlugin(PRE_LOADING_CONFIG.title || 'Ray Template'),
   /**
    *
    * 配置 HMR 特定选项(端口、主机、路径和协议)
@@ -109,7 +106,39 @@ const config: AppConfigExport = {
    *
    * 打包相关配置
    */
-  buildOptions: buildOptions,
+  buildOptions: (mode: string): BuildOptions => {
+    const outDirMap = {
+      test: 'dist/test-dist',
+      development: 'dist/development-dist',
+      production: 'dist/production-dist',
+      report: 'dist/report-dist',
+    }
+    const dirPath = outDirMap[mode] || 'dist/test-dist'
+
+    if (mode === 'production') {
+      return {
+        outDir: dirPath,
+        sourcemap: false,
+        terserOptions: {
+          compress: {
+            drop_console: true,
+            drop_debugger: true,
+          },
+        },
+      }
+    } else {
+      return {
+        outDir: dirPath,
+        sourcemap: true,
+        terserOptions: {
+          compress: {
+            drop_console: false,
+            drop_debugger: false,
+          },
+        },
+      }
+    }
+  },
   /**
    *
    * 预设别名
@@ -134,6 +163,10 @@ const config: AppConfigExport = {
     {
       find: '@use-images',
       replacement: path.resolve(__dirname, './src/assets/images'),
+    },
+    {
+      find: '@mock',
+      replacement: path.resolve(__dirname, './mock'),
     },
   ],
 }

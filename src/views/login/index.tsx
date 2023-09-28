@@ -15,13 +15,13 @@ import Signin from './components/Signin/index'
 import Register from './components/Register/index'
 import QRCodeSignin from './components/QRCodeSignin/index'
 import SSOSignin from './components/SSOSignin/index'
-import RayIcon from '@/components/RayIcon'
+import RayIcon from '@/components/RIcon'
 import RayLink from '@/app-components/app/RayLink/index'
 import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch/index'
 
 import { useSetting } from '@/store'
-import { LOCAL_OPTIONS } from '@/appConfig/localConfig'
-import { useI18n } from '@/locales/useI18n'
+import { LOCAL_OPTIONS } from '@/app-config/localConfig'
+import { useI18n } from '@/hooks/web/index'
 
 const Login = defineComponent({
   name: 'RLogin',
@@ -88,6 +88,7 @@ const Login = defineComponent({
                   customClassName="login-icon"
                   name="language"
                   size="18"
+                  cursor="pointer"
                 />
               </NDropdown>
             </NSpace>

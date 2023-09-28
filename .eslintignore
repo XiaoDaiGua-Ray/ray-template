@@ -13,5 +13,6 @@ visualizer.html
 .env.*
 src/locales/lang
 .depcheckrc
-src/components/RayChart/theme
+src/components/RChart/theme
 *.md
+src/icons/*.svg

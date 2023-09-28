@@ -2,9 +2,9 @@ import { getAppDefaultLanguage } from '@/locales/helper'
 import { setStorage } from '@use-utils/cache'
 import { set } from 'lodash-es'
 import { addClass, removeClass, colorToRgba } from '@/utils/element'
-import { useI18n } from '@/locales/useI18n'
-import { APP_THEME } from '@/appConfig/designConfig'
-import { useDayjs } from '@/dayjs/index'
+import { useI18n } from '@/hooks/web/index'
+import { APP_THEME } from '@/app-config/designConfig'
+import { useDayjs } from '@/hooks/web/index'
 
 import type { ConditionalPick } from '@/types/modules/helper'
 import type { SettingState } from '@/store/modules/setting/type'
@@ -32,7 +32,6 @@ export const useSetting = defineStore(
       reloadRouteSwitch: true, // 刷新路由开关
       menuTagSwitch: true, // 多标签页开关
       spinSwitch: false, // 全屏加载
-      invertSwitch: false, // 反转色模式
       breadcrumbSwitch: true, // 面包屑开关
       localeLanguage: getAppDefaultLanguage(),
       lockScreenSwitch: false, // 锁屏开关
@@ -92,17 +91,6 @@ export const useSetting = defineStore(
         settingState[key] = bool
       }
     }
-
-    /** 动态添加反转色 class name */
-    watch(
-      () => settingState.invertSwitch,
-      (newData) => {
-        const body = document.body
-        const className = 'ray-template--invert'
-
-        newData ? addClass(body, className) : removeClass(body, className)
-      },
-    )
 
     return {
       ...toRefs(settingState),

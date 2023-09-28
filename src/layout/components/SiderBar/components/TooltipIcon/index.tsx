@@ -12,7 +12,7 @@
 import './index.scss'
 
 import { NTooltip } from 'naive-ui'
-import RayIcon from '@/components/RayIcon/index'
+import RayIcon from '@/components/RIcon/index'
 
 import { tooltipProps } from 'naive-ui'
 

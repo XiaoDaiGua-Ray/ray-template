@@ -19,7 +19,7 @@ import HeaderWrapper from './default/HeaderWrapper'
 import FeatureWrapper from './default/FeatureWrapper'
 
 import { useSetting } from '@/store'
-import { LAYOUT_CONTENT_REF } from '@/appConfig/routerConfig'
+import { LAYOUT_CONTENT_REF } from '@/app-config/routerConfig'
 import { layoutHeaderCssVars } from '@/layout/layoutResize'
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
 
@@ -60,9 +60,7 @@ const RLayout = defineComponent({
           <HeaderWrapper ref="layoutSiderBarRef" />
           {this.modelMenuTagSwitch ? (
             <FeatureWrapper ref="layoutMenuTagRef" />
-          ) : (
-            ''
-          )}
+          ) : null}
           <NLayoutContent
             ref="LAYOUT_CONTENT_REF"
             class="r-layout-full__viewer-content"
@@ -73,9 +71,7 @@ const RLayout = defineComponent({
           {this.footerSwitch ? <FooterWrapper ref="layoutFooterRef" /> : ''}
         </NLayoutContent>
       </NLayout>
-    ) : (
-      ''
-    )
+    ) : null
   },
 })
 

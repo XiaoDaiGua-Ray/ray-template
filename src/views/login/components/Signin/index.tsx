@@ -1,11 +1,11 @@
 import { NForm, NFormItem, NInput, NButton, NSpace, NDivider } from 'naive-ui'
 
 import { setStorage } from '@/utils/cache'
-import { setSpin } from '@/spin'
 import { useSignin } from '@/store'
-import { useI18n } from '@/locales/useI18n'
-import { APP_CATCH_KEY, ROOT_ROUTE } from '@/appConfig/appConfig'
-import { useVueRouter } from '@/router/helper/useVueRouter'
+import { useI18n } from '@/hooks/web/index'
+import { APP_CATCH_KEY, ROOT_ROUTE } from '@/app-config/appConfig'
+import { useVueRouter } from '@/hooks/web/index'
+import { setVariable } from '@/hooks/variable/index'
 
 import type { FormInst } from 'naive-ui'
 
@@ -45,13 +45,13 @@ const Signin = defineComponent({
     const handleLogin = () => {
       loginFormRef.value?.validate((valid) => {
         if (!valid) {
-          setSpin(true)
+          setVariable('globalSpinning', true)
 
           signin(signinForm.value)
             .then((res) => {
               if (res.code === 0) {
                 setTimeout(() => {
-                  setSpin(false)
+                  setVariable('globalSpinning', false)
 
                   window.$message.success(`欢迎${signinForm.value.name}登陆~`)
 

@@ -19,7 +19,7 @@
 import './index.scss'
 
 import { NSpace, NPopover } from 'naive-ui'
-import RayIcon from '@/components/RayIcon/index'
+import RayIcon from '@/components/RIcon/index'
 
 interface SSOSigninOptions {
   icon: string

@@ -47,3 +47,17 @@
     @content;
   }
 }
+
+@mixin scaleAnimate($scale-from: 1, $scale-to: 1.3) {
+  @keyframes elementScale {
+    0% {
+      transform: scale($scale-from);
+    }
+    50% {
+      transform: scale($scale-to);
+    }
+    100% {
+      transform: scale($scale-from);
+    }
+  }
+}

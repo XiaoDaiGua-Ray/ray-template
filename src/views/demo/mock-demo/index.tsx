@@ -10,8 +10,8 @@
  */
 
 import { NSpace, NCard, NButton, NFormItemGi, NInput, NForm } from 'naive-ui'
-import RayTable from '@/components/RayTable/index'
-import RayCollapseGrid from '@/components/RayCollapseGrid/index'
+import RayTable from '@/components/RTable/index'
+import RayCollapseGrid from '@/components/RCollapseGrid/index'
 
 import { useHookPlusRequest } from '@/axios/index'
 import { getPersonList } from '@/axios/api/demo/mock/person'
@@ -45,6 +45,9 @@ const MockDemo = defineComponent({
       run: personFetchRun,
     } = useHookPlusRequest(getPersonList, {
       manual: true,
+      onSuccess: (data) => {
+        console.log(data)
+      },
     })
     const columns = [
       {
@@ -167,12 +170,12 @@ const MockDemo = defineComponent({
                   <NFormItemGi label="邮箱">
                     <NInput v-model:value={this.email} clearable />
                   </NFormItemGi>
-                  <NFormItemGi>
-                    <NButton type="primary" onClick={this.getPerson.bind(this)}>
-                      搜索
-                    </NButton>
-                  </NFormItemGi>
                 </>
+              ),
+              action: () => (
+                <NButton type="primary" onClick={this.getPerson.bind(this)}>
+                  搜索
+                </NButton>
               ),
             }}
           </RayCollapseGrid>

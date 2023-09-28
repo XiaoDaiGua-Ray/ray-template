@@ -16,27 +16,35 @@
 
 import { addClass, removeClass } from '@/utils/element'
 
-import type { Directive } from 'vue'
 import type { CustomDirectiveFC } from '@/directives/type'
 
 const updateElementDisabledType = (el: HTMLElement, value: boolean) => {
   if (el) {
     const classes = 'ray-template__directive--disabled'
 
-    value ? addClass(el, classes) : removeClass(el, classes)
+    if (value) {
+      el.setAttribute('disabled', 'disabled')
+
+      addClass(el, classes)
+    } else {
+      el.removeAttribute('disabled')
+
+      removeClass(el, classes)
+    }
+
     el?.setAttribute('disabled', value ? 'disabled' : '')
   }
 }
 
 const disabledDirective: CustomDirectiveFC<HTMLElement, boolean> = () => {
   return {
-    mounted: (el, binding) => {
-      const value = binding.value
-
+    mounted: (el, { value }) => {
       updateElementDisabledType(el, value)
     },
-    updated: (el, binding) => {
-      const value = binding.value
+    updated: (el, { value, oldValue }) => {
+      if (value === oldValue) {
+        return
+      }
 
       updateElementDisabledType(el, value)
     },

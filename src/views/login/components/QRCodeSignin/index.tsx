@@ -11,7 +11,9 @@
 
 import './index.scss'
 
-import QRCode from 'qrcode.vue'
+import RayQRcode from '@/components/RQRCode/index'
+
+import LOGO from '@/assets/images/ray.svg'
 
 /**
  *
@@ -34,7 +36,7 @@ const QRCodeSignin = defineComponent({
   render() {
     return (
       <div class="qrcode-signin">
-        <QRCode value={this.qrcodeValue} size={200} />
+        <RayQRcode text="ray template yes" size={200} logoImage={LOGO} />
       </div>
     )
   },

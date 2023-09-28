@@ -1,4 +1,4 @@
-import { t } from '@/locales/useI18n'
+import { t } from '@/hooks/web/index'
 import { LAYOUT } from '@/router/constant/index'
 
 import type { AppRouteRecordRaw } from '@/router/type'
@@ -29,7 +29,6 @@ const routerDemo: AppRouteRecordRaw = {
         import('@/views/demo/router-demo/router-demo-detail/index'),
       meta: {
         noLocalTitle: '信息详情',
-        hidden: true,
         sameLevel: true,
       },
     },

@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import RayIframe from '@/components/RayIframe/index'
+import RayIframe from '@/components/RIframe/index'
 
 const RTemplateDoc = defineComponent({
   name: 'RTemplateDoc',
@@ -21,7 +21,7 @@ const RTemplateDoc = defineComponent({
       <RayIframe
         width="100%"
         height="100%"
-        src="https://ray-template.yunkuangao.com/ray-template-doc/"
+        src="https://xiaodaigua-ray.github.io/ray-template-doc/"
         lazy
       ></RayIframe>
     )

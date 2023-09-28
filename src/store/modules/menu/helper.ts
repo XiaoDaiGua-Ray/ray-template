@@ -11,8 +11,8 @@
 
 /** 本方法感谢 <https://yunkuangao.me/> 的支持 */
 
-import { APP_MENU_CONFIG, ROOT_ROUTE } from '@/appConfig/appConfig'
-import RayIcon from '@/components/RayIcon/index'
+import { APP_MENU_CONFIG, ROOT_ROUTE } from '@/app-config/appConfig'
+import RayIcon from '@/components/RIcon/index'
 import { isValueType } from '@/utils/hook'
 import { getStorage, setStorage } from '@/utils/cache'
 
@@ -164,6 +164,7 @@ export const hasMenuIcon = (option: AppMenuOption) => {
     {
       name: meta!.icon as string,
       size: APP_MENU_CONFIG.MENU_COLLAPSED_ICON_SIZE,
+      cursor: 'pointer',
     },
     {},
   )

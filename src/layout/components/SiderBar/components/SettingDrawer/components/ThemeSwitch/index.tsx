@@ -10,10 +10,10 @@
  */
 
 import { NSpace, NSwitch, NTooltip } from 'naive-ui'
-import RayIcon from '@/components/RayIcon'
+import RayIcon from '@/components/RIcon'
 
 import { useSetting } from '@/store'
-import { useI18n } from '@/locales/useI18n'
+import { useI18n } from '@/hooks/web/index'
 
 const ThemeSwitch = defineComponent({
   name: 'ThemeSwitch',

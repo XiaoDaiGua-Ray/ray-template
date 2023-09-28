@@ -1,0 +1,26 @@
+.ray-qrcode {
+  position: relative;
+  display: inline-flex;
+
+  & .ray-qrcode__error {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0.7);
+    width: 100%;
+    height: 100%;
+    @include flexCenter;
+    flex-direction: column;
+    gap: 18px 0;
+
+    & .ray-qrcode__error-content {
+      text-align: center;
+      font-size: 18px;
+      font-weight: 500;
+      color: #ffffff;
+    }
+  }
+}

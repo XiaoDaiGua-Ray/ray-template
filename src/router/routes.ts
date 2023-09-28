@@ -1,9 +1,7 @@
 import Layout from '@/layout/index'
-import { getAppRawRoutes } from './routeModules'
-import { ROOT_ROUTE } from '@/appConfig/appConfig'
+import { getAppRawRoutes } from './appRouteModules'
+import { ROOT_ROUTE } from '@/app-config/appConfig'
 import { expandRoutes } from '@/router/helper/expandRoutes'
-
-const { path } = ROOT_ROUTE
 
 export default async () => [
   {
@@ -14,7 +12,7 @@ export default async () => [
   {
     path: '/',
     name: 'layout',
-    redirect: path,
+    redirect: ROOT_ROUTE.path,
     component: Layout,
     children: expandRoutes(getAppRawRoutes()),
   },

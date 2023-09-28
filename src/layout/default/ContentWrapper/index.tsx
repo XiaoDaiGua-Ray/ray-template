@@ -18,8 +18,8 @@
 import './index.scss'
 
 import { NSpin } from 'naive-ui'
-import RayTransitionComponent from '@/components/RayTransitionComponent/index.vue'
-import AppRequestCanceler from '@/app-components/provider/AppRequestCanceler/index'
+import RTransitionComponent from '@/components/RTransitionComponent/index.vue'
+import AppRequestCancelerProvider from '@/app-components/provider/AppRequestCancelerProvider/index'
 
 import { useSetting } from '@/store'
 
@@ -64,15 +64,13 @@ const ContentWrapper = defineComponent({
         size="large"
         themeOverrides={this.thmeOverridesSpin}
       >
-        <AppRequestCanceler />
+        <AppRequestCancelerProvider />
         {this.reloadRouteSwitch ? (
-          <RayTransitionComponent
+          <RTransitionComponent
             class="content-wrapper"
             transitionPropName={this.contentTransition + '-transform'}
           />
-        ) : (
-          ''
-        )}
+        ) : null}
       </NSpin>
     )
   },

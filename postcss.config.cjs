@@ -22,6 +22,8 @@ module.exports = {
       unitPrecision: 3,
       /** 指定需要转换成的视窗单位 */
       viewportUnit: 'rem',
+      /** 制定字体转换单位 */
+      fontViewportUnit: 'rem',
       /** 指定不转换为视窗单位的类 */
       selectorBlackList: ['.ignore'],
       /** 小于或等于 1px 不转换为视窗单位 */

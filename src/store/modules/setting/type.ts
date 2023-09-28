@@ -10,7 +10,6 @@ export interface SettingState {
   spinSwitch: boolean
   breadcrumbSwitch: boolean
   localeLanguage: string
-  invertSwitch: boolean
   lockScreenSwitch: boolean
   lockScreenInputSwitch: boolean
   footerSwitch: boolean

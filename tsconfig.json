@@ -23,7 +23,9 @@
       "@use-api/*": ["src/axios/api/*"],
       "@use-images": ["src/assets/images"],
       "@use-images/*": ["src/assets/images"],
-      "@use-micro/*": ["src/micro/*"]
+      "@use-micro/*": ["src/micro/*"],
+      "@mock/*": ["mock/*"],
+      "@mock": ["mock/*"]
     },
     "suppressImplicitAnyIndexErrors": true,
     "typeRoots": ["./src/types/app.d.ts", "./src/types/global.d.ts"],
@@ -32,12 +34,13 @@
   },
   "include": [
     "vite.config.ts",
-    "vite-plugin/index.ts",
-    "vite-plugin/type.ts",
+    "vite-plugins/index.ts",
+    "vite-plugins/type.ts",
     "cfg.ts",
     "package.json",
     "vite-env.d.ts",
     "./unplugin/**/*",
-    "src/**/*"
+    "src/**/*",
+    "mock/**/*"
   ]
 }

@@ -22,7 +22,7 @@ import './index.scss'
 import { NAvatar, NSpace } from 'naive-ui'
 
 import { avatarProps, spaceProps } from 'naive-ui'
-import { APP_CATCH_KEY } from '@/appConfig/appConfig'
+import { APP_CATCH_KEY } from '@/app-config/appConfig'
 import { getStorage } from '@/utils/cache'
 
 import type { PropType } from 'vue'

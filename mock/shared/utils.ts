@@ -11,6 +11,10 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+export function array(length: number) {
+  return new Array(length).fill(0)
+}
+
 /**
  *
  * @param pageCurrent 当前页码

@@ -1,5 +1,5 @@
 import { isValueType } from '@use-utils/hook'
-import { APP_REGEX } from '@/appConfig/regexConfig'
+import { APP_REGEX } from '@/app-config/regexConfig'
 
 import type {
   EventListenerOrEventListenerObject,

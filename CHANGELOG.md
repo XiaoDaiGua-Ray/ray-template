@@ -1,5 +1,69 @@
 # CHANGE LOG
 
+## 4.2.1
+
+经过综合考虑，还是给模板增加 `cdn` 的配置。基于 `vite-plugin-cdn2` 插件实现。
+
+### Feats
+
+- 指令相关
+  - `v-copy` 指令将使用 `String` 强制转换传入的值
+  - 统一暴露节流、防抖指令的配置项类型 `import type { DebounceBindingOptions, ThrottleBindingOptions } from '@/directives/type'`
+  - 现在 `v-disabled` 指令生效时会降低一点元素的亮度
+- `changeMenuModelValue` 方法添加节流锁，避免重复刷新 url 导致的一些问题
+- 新增 `cdn`，缩减构建体积。如果不需要该配置，搜索 `viteCDNPlugin` 注释即可
+
+## 4.2.0
+
+针对分包，做了全局的重新设计、调整。让包的名称更加语义化；最重要的是，重新抽离了一些全局可能常用的方法，例如：useI18n、useDayjs 等，在以前这些方法存放于对应的包中，其实这样很不合理，所以现在统一存放于 `src/hooks` 包中。并且该包以后统一存放 `hooks` 方法，并不是 `utils` 方法，做了一个本质的区分，所以 `xxxCopilot.ts` 文件中的方法并不会移动，维持存放在原有的模块下。
+
+引入 `useGlobalVariable` 来管理全局变量。与 `pinia` `的使用场景不同，useGlobalVariable` 是用于引入一些全局的响应式变量，这些变量不需要缓存，也不依赖任何插件。一个典型的应用是实现 `GlobalSpin`。使用该方法时，请谨慎使用，避免滥用，因为这些变量会被全局缓存且无法被回收。该方法存放的值，暂不支持缓存（如果有需要，可能后期会增加该功能）。
+
+当项目插件或者需要配置项过多时候，会导致 `vite.config.ts` 文件变得异常臃肿。所以，在本次更新中，将插件的配置单独提出维护（`vite.plugin.confit.ts`）。系统的常用配置依旧在 `cfg.ts` 文件中。所以默认情况下，一般不需要修改 `vite.config.ts` 文件。
+
+### Feats
+
+- 新增 `useGlobalVariable` 管理全局变量（该变量可以是在注册插件之前被调用）
+- `v-disbaled` 指令现在会尝试给元素添加 `disabled` 属性，如果该属性生效的话
+- 注册指令操作现在不会中断程序执行，但是会抛出错误警告
+- 抽离 `vite.plugin.confit.ts` 维护项目启动所需插件
+
+## 4.1.9
+
+### Feats
+
+- 新增 RayQRCode 组件（二维码）
+  - 基于 awesome-qr 封装，继承其所有特性。并且拓展 状态、下载、自动更新等属性
+  - 自动卸载于释放内存，仅需要关注 text 内容填充
+- 移除 qrcode.vue 依赖
+- 更新 vue-hooks-plus 版本至 v1.8.2
+- 移除 office 功能集成
+- 统一包命名方式
+- 更改 v-copy 实现细节（使用方式不变）
+
+### Fixes
+
+- 修复了一些小细节问题
+
+## 4.1.8
+
+### Feats
+
+- 更新 `vite` 版本至 `v4.4.9`
+- 更新 `vue-hooks-plus` 版本至 `v1.8.1`
+- 更新了 RayTable 的一些事件的命名
+- `RayChart` 组件做了一些调整
+  - 支持指定 observer 监听对象，默认为 chart 组件本身
+  - 默认开启 autoChangeTheme 功能
+  - 支持配置 throttleWait 节流等待时间，默认 500ms
+  - 支持通过配置 `desginConfig.echartTheme` 属性指定 `echart theme`。并且只需按照约定方式注册的主题，只需要指定主题名称，即可完成 `light` `dark` 两种主题指定
+  - RayChartInst 新增 dispose render 方法，允许手动渲染与卸载 chart 图
+  - 新增 animation 属性，如果为 true 则会强制触发渲染过渡动画。该配置受 `options.animation` 属性影响，如果该配置为 false 则不会启用过渡动画
+- 移除反转色功能
+- 新增图标页面
+- 修改国际化图标
+- 剔除无用代码，性能++++
+
 ## 4.1.7
 
 ### Feats

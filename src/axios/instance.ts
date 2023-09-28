@@ -17,7 +17,7 @@
  */
 
 import axios from 'axios'
-import { AXIOS_CONFIG } from '@/appConfig/requestConfig'
+import { AXIOS_CONFIG } from '@/app-config/requestConfig'
 import { useAxiosInterceptor, axiosCanceler } from '@/axios/helper/interceptor'
 import {
   setupResponseInterceptor,

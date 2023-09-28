@@ -35,6 +35,22 @@ export const arrayBufferToBase64Image = (data: ArrayBuffer): string | null => {
 
 /**
  *
+ * @param base64 base64
+ * @param fileName file name
+ *
+ * @remark 下载 base64 文件
+ */
+export const downloadBase64File = (base64: string, fileName: string) => {
+  const link = document.createElement('a')
+
+  link.href = base64
+  link.download = fileName
+
+  link.click()
+}
+
+/**
+ *
  * @param value 目标值
  * @param type 类型
  */

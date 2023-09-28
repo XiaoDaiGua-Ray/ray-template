@@ -32,13 +32,12 @@ import {
   hasMenuIcon,
   getCatchMenuKey,
 } from './helper'
-import { useI18n } from '@/locales/useI18n'
-import { getAppRawRoutes } from '@/router/routeModules'
-import { expandRoutes } from '@/router/helper/expandRoutes'
+import { useI18n } from '@/hooks/web/index'
+import { getAppRawRoutes } from '@/router/appRouteModules'
 import { useKeepAlive } from '@/store'
-import { useVueRouter } from '@/router/helper/useVueRouter'
+import { useVueRouter } from '@/hooks/web/index'
+import { throttle } from 'lodash-es'
 
-import type { MenuOption } from 'naive-ui'
 import type { AppRouteMeta, AppRouteRecordRaw } from '@/router/type'
 import type {
   AppMenuOption,
@@ -356,7 +355,7 @@ export const useMenu = defineStore(
 
     return {
       ...toRefs(menuState),
-      changeMenuModelValue,
+      changeMenuModelValue: throttle(changeMenuModelValue, 500),
       setupAppMenu,
       collapsedMenu,
       spliceMenTagOptions,

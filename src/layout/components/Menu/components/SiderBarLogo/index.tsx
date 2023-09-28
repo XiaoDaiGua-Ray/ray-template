@@ -11,8 +11,8 @@
 
 import './index.scss'
 
-import { NEllipsis } from 'naive-ui'
-import RayIcon from '@/components/RayIcon/index'
+import { NEllipsis, NPopover } from 'naive-ui'
+import RayIcon from '@/components/RIcon/index'
 
 const SiderBarLogo = defineComponent({
   name: 'SiderBarLogo',
@@ -37,9 +37,14 @@ const SiderBarLogo = defineComponent({
       }
     }
 
+    const TemplateLogo = ({ cursor }: { cursor: string }) => (
+      <RayIcon name={sideBarLogo!.icon as string} size="30" cursor={cursor} />
+    )
+
     return {
       sideBarLogo,
       handleSideBarLogoClick,
+      TemplateLogo,
     }
   },
   render() {
@@ -47,27 +52,32 @@ const SiderBarLogo = defineComponent({
       <div
         class={[
           'ray-menu__logo',
-          this.sideBarLogo?.url ? 'ray-menu__logo-url' : '',
+          this.sideBarLogo?.url ? 'ray-menu__logo-url' : null,
         ]}
         onClick={this.handleSideBarLogoClick.bind(this)}
       >
         {this.sideBarLogo?.icon ? (
-          <RayIcon name={this.sideBarLogo.icon} size="30" />
-        ) : (
-          ''
-        )}
+          this.collapsed ? (
+            <NPopover placement="right">
+              {{
+                trigger: () => <this.TemplateLogo cursor="pointer" />,
+                default: () => this.sideBarLogo?.title,
+              }}
+            </NPopover>
+          ) : (
+            <this.TemplateLogo cursor="pointer" />
+          )
+        ) : null}
         <h1
           class={[
-            !this.collapsed ? 'ray-menu__logo-title--open' : '',
+            !this.collapsed ? 'ray-menu__logo-title--open' : null,
             'ray-menu__logo-title',
           ]}
         >
           <NEllipsis>{this.sideBarLogo?.title}</NEllipsis>
         </h1>
       </div>
-    ) : (
-      ''
-    )
+    ) : null
   },
 })
 
