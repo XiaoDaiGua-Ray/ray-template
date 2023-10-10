@@ -3,29 +3,15 @@ import type {
   DropdownGroupOption,
   DropdownDividerOption,
   DropdownRenderOption,
-  DataTableBaseColumn,
   DataTableInst,
+  DataTableColumn,
+  DataTableBaseColumn,
 } from 'naive-ui'
-import type { ComputedRef, WritableComputedRef, VNode } from 'vue'
-import type { ComponentSize } from '@/types/modules/component'
+import type { VNode, VNodeChild } from 'vue'
+import type PrintConfiguration from 'print-js'
+import type { Recordable } from '@/types/modules/helper'
 
-export interface ActionOptions extends DataTableBaseColumn {
-  leftFixedActivated?: boolean // 向左固定
-  rightFixedActivated?: boolean // 向右固定
-  resizeColumnActivated?: boolean // 拖拽表格列
-}
-
-export type FixedType = 'left' | 'right' | undefined
-
-export interface TableSettingFixedPopoverIcon {
-  element: ActionOptions
-  name: string
-  tooltip: string
-  fn: Function
-  index: number
-  fixed: FixedType
-  key: 'leftFixedActivated' | 'rightFixedActivated'
-}
+export type TableActionIcon = string | (() => VNode)
 
 export type DropdownMixedOption =
   | DropdownOption
@@ -33,46 +19,28 @@ export type DropdownMixedOption =
   | DropdownDividerOption
   | DropdownRenderOption
 
-export type SettingOptions = WritableComputedRef<ActionOptions[]>
-
-export type RightClickMenu = ComputedRef<DropdownMixedOption[]>
-
-export interface TableSettingProvider {
-  modelRightClickMenu: RightClickMenu
-  modelColumns: SettingOptions
-  size: ComponentSize
-  rayTableUUID: string
+export interface DownloadTableOptions {
+  fileName?: string
+  // icon?: TableActionIcon
 }
 
-export interface ExportExcelProvider {
-  exportTooltip: string
-  exportType: string
-  exportPositiveText: string
-  exportNegativeText: string
-  exportFilename: string
+export interface PrintTableOptions {
+  // icon?: TableActionIcon
+  printOptions?: Omit<PrintConfiguration.Configuration, 'printable' | 'type'>
+  type?: PrintConfiguration.PrintTypes
 }
 
-export type ColumnKey = string | number
-
-declare type VNodeChildAtom =
-  | VNode
-  | string
-  | number
-  | boolean
-  | null
-  | undefined
-  | void
-
-export declare type VNodeArrayChildren = Array<
-  VNodeArrayChildren | VNodeChildAtom
->
-
-export declare type VNodeChild = VNodeChildAtom | VNodeArrayChildren
-
-export declare type TableColumnTitle =
-  | string
-  | ((column: DataTableBaseColumn) => VNodeChild)
-
-export declare type RayTableInst = {
-  tableMethods: Omit<DataTableInst, 'clearFilter'>
+export interface TableProvider {
+  uuidWrapper: string
+  uuidTable: string
 }
+
+export interface C extends DataTableBaseColumn {
+  leftFixedActivated?: boolean
+  rightFixedActivated?: boolean
+  resizable?: boolean
+}
+
+export type OverridesTableColumn<T = Recordable> = C | DataTableColumn<T>
+
+export interface TableInst extends Omit<DataTableInst, 'clearFilter'> {}

@@ -1,3 +1,3 @@
-import RayCollapseGrid from './src/index'
+import RCollapseGrid from './src/index'
 
-export default RayCollapseGrid
+export default RCollapseGrid

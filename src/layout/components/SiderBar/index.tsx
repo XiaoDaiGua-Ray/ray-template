@@ -20,7 +20,7 @@
 import './index.scss'
 
 import { NLayoutHeader, NSpace, NTooltip, NDropdown } from 'naive-ui'
-import RayIcon from '@/components/RIcon/index'
+import RIcon from '@/components/RIcon/index'
 import TootipIcon from '@/layout/components/SiderBar/components/TooltipIcon/index'
 import SettingDrawer from './components/SettingDrawer/index'
 import Breadcrumb from './components/Breadcrumb/index'
@@ -169,7 +169,7 @@ const SiderBar = defineComponent({
               <NTooltip>
                 {{
                   trigger: () => (
-                    <RayIcon
+                    <RIcon
                       customClassName={`${
                         isRef(curr.iconClass)
                           ? curr.iconClass.value
@@ -208,7 +208,7 @@ const SiderBar = defineComponent({
               }
               trigger="click"
             >
-              <RayIcon
+              <RIcon
                 customClassName="layout-header__method--icon"
                 name="language"
                 size="18"

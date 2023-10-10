@@ -1,5 +1,32 @@
 # CHANGE LOG
 
+## 4.2.2
+
+重构了 RTable 组件。优化表格渲染逻辑，解决旧组件重复渲染问题。并且允许自定义拓展工具栏。
+
+为了项目未来的可维护性，将 hook 库自动导入方法移除。应该尽量避免滥用 `auto import`，否则项目规模庞大后，带来的项目可维护性是一个负担。
+
+新增了一个新的 `eslint` 规则，并且约定变量初始化的时不明确具体值时，尽量使用 `null` 或者 `void 0` 的方式进行赋值。而不是直接使用 `undefined` 直接赋值。
+
+### Feats
+
+- 优化 `RChart` 组件
+- 设置 `README.md` 默认为英文
+- 优化了一些错误类型的提示，现在报错信息会更加的详细、准确
+- 实现了新的文件下载函数 `downloadAnyFile`，支持 `blod, file, base64, arrayBuffer`
+- 更新 `naive-ui` 版本至 `2.35.0`
+- 新增了一些工具类型与工具方法
+- 新增规则 `no-undefined`，[点击查看](https://eslint.org/docs/latest/rules/no-undefined#rule-details) 具体规则
+
+```ts
+// 错误示例
+const demo = undefined
+
+// 正确示例
+const demo = void 0
+const demo2 = null
+```
+
 ## 4.2.1
 
 经过综合考虑，还是给模板增加 `cdn` 的配置。基于 `vite-plugin-cdn2` 插件实现。
@@ -52,7 +79,7 @@
 - 更新 `vite` 版本至 `v4.4.9`
 - 更新 `vue-hooks-plus` 版本至 `v1.8.1`
 - 更新了 RayTable 的一些事件的命名
-- `RayChart` 组件做了一些调整
+- `RChart` 组件做了一些调整
   - 支持指定 observer 监听对象，默认为 chart 组件本身
   - 默认开启 autoChangeTheme 功能
   - 支持配置 throttleWait 节流等待时间，默认 500ms
@@ -73,7 +100,7 @@
 
 ### Fixes
 
-- 修复 RayCollapseGrid 组件显示问题，现在如果未存在溢出情况，不会显示 展开/收起 按钮
+- 修复 RCollapseGrid 组件显示问题，现在如果未存在溢出情况，不会显示 展开/收起 按钮
 
 ## 4.1.6
 
@@ -86,7 +113,7 @@
 
 ### Fixes
 
-- 修复 RayChart 组件不能根据内容区域尺寸变化更新 chart 图
+- 修复 RChart 组件不能根据内容区域尺寸变化更新 chart 图
 
 ## 4.1.5
 
@@ -95,7 +122,7 @@
 - 修复 windows 平台下构建失败问题
 - 修复换行符导致构建失败问题
 - 修复特定 node pnpm 版本构建栈溢出问题
-- 修复 `RayCollapseGrid` 组件 open 属性歧义问题
+- 修复 `RCollapseGrid` 组件 open 属性歧义问题
 
 ## 4.1.4
 
@@ -149,7 +176,7 @@ request({
 - `localConfig` 新增配置类型保护
 - 将原 `AppComponent` 组件包移动至 `app-components` 包中，并且按照其功能拆分为 `sys` `provider`
 - 现在将异步注册 `vue-router`
-- `RayChart` 组件新增 `macarons` 主题。现在支持便捷的自定义主题，在[主题编辑器](https://echarts.apache.org/zh/theme-builder.html)编辑主题后，下载主题（json）放置于对应主题包中即可被自动注册
+- `RChart` 组件新增 `macarons` 主题。现在支持便捷的自定义主题，在[主题编辑器](https://echarts.apache.org/zh/theme-builder.html)编辑主题后，下载主题（json）放置于对应主题包中即可被自动注册
 - 兼容 `yarn` `npm` 包管理器的 `manualChunks` 配置
 
 ## 4.1.2
@@ -175,7 +202,7 @@ request({
 ### Feats
 
 - 升级 vue 版本为 v3.3.4。并且配套升级了模板的一些插件
-- RayTransitionComponent 组件加入 Suspense 组件的支持（试验性加入，可能会移除）
+- RTransitionComponent 组件加入 Suspense 组件的支持（试验性加入，可能会移除）
 - 更新部分组件的事件触发方式，类似 onUpdateValue、onupdate:value 方法改为 props 定义而非 emit（受控、非受控）
 - 更新路由切换动画的透明度，视觉效果更友好
 - App.tsx 组件内部逻辑抽离为 AppStyleProvider。将一些组件存放位置放在 AppComponents 文件包中
@@ -317,7 +344,7 @@ run('some value')
 
 ### Feats
 
-- Router Meta 属性支持自定义图标，不再局限于 RayIcon，支持自定义图标
+- Router Meta 属性支持自定义图标，不再局限于 RIcon，支持自定义图标
 - 更改部分组件默认值，默认值统一为 `null`
 - 调整 validRole 方法逻辑，将该方法以前逻辑拆分为 validRole 与 validMenuItemShow 两个方法
 - 新增使用手册
@@ -405,7 +432,7 @@ useAppTheme key 类型: 'dark' | 'light'
 ### 补充
 
 - 锁屏功能的设计并不理想，后期会进行破坏性更新。锁屏触发条件与管理方式目前并不理想，管理有点混乱
-- 后期会考虑补充 keepAlive 功能。目前没有实现是因为该功能实现的话，需要将所有路由提升为顶层路由（这是 KeepAlive 组件限制），目前并未实现该功能。后期会在权衡后增加该功能，实现时会在 RayTransitionComponent 进行拓展补充
+- 后期会考虑补充 keepAlive 功能。目前没有实现是因为该功能实现的话，需要将所有路由提升为顶层路由（这是 KeepAlive 组件限制），目前并未实现该功能。后期会在权衡后增加该功能，实现时会在 RTransitionComponent 进行拓展补充
 
 ## 3.2.2
 
@@ -468,7 +495,7 @@ useAppTheme key 类型: 'dark' | 'light'
 - 现在可以直接配置首屏加载动画一些信息(cfg.ts)
 - 新增对于 ejs 支持
 - 补充一些细节注释
-- 新增 RayChart 组件 loading、loadingOptions 属性配置
+- 新增 RChart 组件 loading、loadingOptions 属性配置
 - 新增反转色模式
 - 修改 Menu 菜单过滤逻辑，现在如果权限不匹配或者设置了 hidden 属性，则会被过滤掉
 
@@ -523,7 +550,7 @@ useAppTheme key 类型: 'dark' | 'light'
 ### Feats
 
 - 修改 demo 页面展示
-- 修改 RayCollapseGrid、RayTable 组件为默认不展示 border
+- 修改 RCollapseGrid、RayTable 组件为默认不展示 border
 
 ## 3.1.1
 

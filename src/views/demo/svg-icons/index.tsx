@@ -12,7 +12,7 @@
 import './index.scss'
 
 import { NSpace, NCard, NPopover } from 'naive-ui'
-import RayIcon from '@/components/RIcon/index'
+import RIcon from '@/components/RIcon/index'
 
 const PreviewSVGIcons = defineComponent({
   name: 'PreviewSVGIcons',
@@ -42,12 +42,12 @@ const PreviewSVGIcons = defineComponent({
               {this.icons.map((curr) => (
                 <div
                   class="pre-view-icons__card"
-                  v-copy={`<RayIcon name="${curr}" size="56" />`}
+                  v-copy={`<RIcon name="${curr}" size="56" />`}
                 >
                   <NPopover>
                     {{
                       trigger: () => (
-                        <RayIcon name={curr} size="56" cursor="pointer" />
+                        <RIcon name={curr} size="56" cursor="pointer" />
                       ),
                       default: () => curr,
                     }}

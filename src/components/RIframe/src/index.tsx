@@ -15,98 +15,11 @@ import { NSpin } from 'naive-ui'
 
 import { completeSize, on, off } from '@use-utils/element'
 import { call } from '@/utils/vue/index'
+import props from './props'
 
-import type { PropType } from 'vue'
-import type { MaybeArray } from '@/types/modules/utils'
-import type { SpinProps } from 'naive-ui'
-
-export interface RayIframeInst {
-  iframe: Ref<HTMLIFrameElement>
-}
-
-const RayIframe = defineComponent({
-  name: 'RayIframe',
-  props: {
-    src: {
-      /** iframe url */
-      type: String,
-      required: true,
-    },
-    iframeWrapperClass: {
-      /** 自定义类名 */
-      type: String,
-      default: null,
-    },
-    frameborder: {
-      /** 边框尺寸, 0 则不显示 */
-      type: Number,
-      default: 0,
-    },
-    width: {
-      /** iframe 宽度 */
-      type: [String, Number],
-      default: '100%',
-    },
-    height: {
-      /** iframe 高度 */
-      type: [String, Number],
-      default: '100%',
-    },
-    allow: {
-      /**
-       *
-       * iframe 特征策略
-       *
-       * ```
-       * 全屏激活: allow = 'fullscreen'
-       * 允许跨域: allow = 'payment'
-       * ```
-       *
-       * 但是该配置属性受到浏览器安全策略影响, 使用前请仔细阅读文档
-       */
-      type: String,
-      default: null,
-    },
-    name: {
-      /** iframe 定位嵌入的浏览上下文的名称 */
-      type: String,
-      default: null,
-    },
-    title: {
-      /** 标识 iframe 的主要内容 */
-      type: String,
-      default: null,
-    },
-    onSuccess: {
-      /**
-       *
-       * iframe 加载成功回调
-       * 返回值: iframe 对象, Event
-       */
-      type: [Function, Array] as PropType<
-        MaybeArray<(el: HTMLIFrameElement, e: Event) => void>
-      >,
-      default: null,
-    },
-    onError: {
-      /**
-       *
-       * iframe 加载失败回调
-       * 返回值: iframe 对象, Event
-       */
-      type: [Function, Array] as PropType<MaybeArray<(e: Event) => void>>,
-      default: null,
-    },
-    customSpinProps: {
-      type: Object as PropType<SpinProps>,
-      default: () => ({}),
-    },
-    lazy: {
-      /** 是否延迟加载 iframe */
-      type: Boolean,
-      default: true,
-    },
-  },
+const RIframe = defineComponent({
+  name: 'RIframe',
+  props,
   setup(props, { expose }) {
     const cssVars = computed(() => {
       const cssVar = {
@@ -177,7 +90,7 @@ const RayIframe = defineComponent({
             ...this.$slots,
             default: () => (
               <iframe
-                class="ray-iframe__container"
+                class={['ray-iframe__container', this.wrapperClass]}
                 ref="iframeRef"
                 src={this.src}
                 allow={this.allow}
@@ -186,7 +99,7 @@ const RayIframe = defineComponent({
                 {...{
                   loading: this.lazy ? 'lazy' : null,
                 }}
-              ></iframe>
+              />
             ),
           }}
         </NSpin>
@@ -195,4 +108,4 @@ const RayIframe = defineComponent({
   },
 })
 
-export default RayIframe
+export default RIframe

@@ -12,11 +12,11 @@
 import './index.scss'
 
 import { NButton, NSpin } from 'naive-ui'
-import RayIcon from '@/components/RIcon/index'
+import RIcon from '@/components/RIcon/index'
 
 import props from './props'
 import { AwesomeQR } from 'awesome-qr'
-import { isValueType, downloadBase64File } from '@use-utils/hook'
+import { isValueType, downloadAnyFile } from '@use-utils/hook'
 import { call } from '@/utils/vue/index'
 
 import type { QRCodeRenderResponse, GIFBuffer } from './type'
@@ -79,7 +79,7 @@ export default defineComponent({
 
       new AwesomeQR({
         ...ops,
-        gifBackground: (gifBuffer as ArrayBuffer) ?? undefined,
+        gifBackground: (gifBuffer as ArrayBuffer) ?? void 0,
       })
         .draw()
         .then((res) => {
@@ -114,7 +114,7 @@ export default defineComponent({
 
     const downloadQRCode = (fileName?: string) => {
       if (qrcodeURL.value && isValueType<string>(qrcodeURL.value, 'String')) {
-        downloadBase64File(
+        downloadAnyFile(
           qrcodeURL.value,
           fileName || new Date().getTime() + '.png',
         )
@@ -173,7 +173,7 @@ export default defineComponent({
                     {{
                       default: () => this.errorActionDescription,
                       icon: () => (
-                        <RayIcon name="reload" size="16" color="#ffffff" />
+                        <RIcon name="reload" size="16" color="#ffffff" />
                       ),
                     }}
                   </NButton>

@@ -9,7 +9,7 @@ import {
   NP,
   NH6,
 } from 'naive-ui'
-import RayIcon from '@/components/RIcon/index'
+import RIcon from '@/components/RIcon/index'
 import RayLink from '@/app-components/app/RayLink/index'
 
 const Dashboard = defineComponent({
@@ -37,7 +37,7 @@ const Dashboard = defineComponent({
         label: '个人',
         des: () => (
           <NSpace align="center">
-            <RayIcon name="ray" size="22" />
+            <RIcon name="ray" size="22" />
             努力搬砖、努力摸鱼, 建设美丽家园
           </NSpace>
         ),
@@ -91,7 +91,7 @@ const Dashboard = defineComponent({
           {{
             header: () =>
               h(
-                RayIcon,
+                RIcon,
                 {
                   name: 'ray',
                   size: '64',

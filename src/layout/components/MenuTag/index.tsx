@@ -26,7 +26,7 @@
 import './index.scss'
 
 import { NScrollbar, NTag, NSpace, NLayoutHeader, NDropdown } from 'naive-ui'
-import RayIcon from '@/components/RIcon/index'
+import RIcon from '@/components/RIcon/index'
 
 import { useMenu, useSetting } from '@/store'
 import { uuid } from '@/utils/hook'
@@ -83,7 +83,7 @@ const MenuTag = defineComponent({
         key: 'reloadCurrentPage',
         icon: () =>
           h(
-            RayIcon,
+            RIcon,
             {
               size: 16,
               name: 'reload',
@@ -96,7 +96,7 @@ const MenuTag = defineComponent({
         key: 'closeOther',
         icon: () =>
           h(
-            RayIcon,
+            RIcon,
             {
               size: 16,
               name: 'other',
@@ -109,7 +109,7 @@ const MenuTag = defineComponent({
         key: 'closeRight',
         icon: () =>
           h(
-            RayIcon,
+            RIcon,
             {
               size: 16,
               name: 'right_arrow',
@@ -122,7 +122,7 @@ const MenuTag = defineComponent({
         key: 'closeLeft',
         icon: () =>
           h(
-            RayIcon,
+            RIcon,
             {
               size: 16,
               name: 'left_arrow',
@@ -139,7 +139,7 @@ const MenuTag = defineComponent({
         key: 'closeAll',
         icon: () =>
           h(
-            RayIcon,
+            RIcon,
             {
               size: 16,
               name: 'close',
@@ -265,7 +265,7 @@ const MenuTag = defineComponent({
         return findElement
       }
 
-      return undefined
+      return
     }
 
     const handleScrollX = (type: 'left' | 'right') => {
@@ -474,7 +474,7 @@ const MenuTag = defineComponent({
             inline
             wrapItem={false}
           >
-            <RayIcon
+            <RIcon
               name="expanded"
               width="20"
               height="28"
@@ -518,7 +518,7 @@ const MenuTag = defineComponent({
               </NSpace>
             </NScrollbar>
             <div class="menu-tag__right-wrapper">
-              <RayIcon
+              <RIcon
                 name="expanded"
                 width="20"
                 height="28"
@@ -530,7 +530,7 @@ const MenuTag = defineComponent({
                 trigger="click"
                 onSelect={this.actionDropdownSelect.bind(this)}
               >
-                <RayIcon
+                <RIcon
                   name="more"
                   width="20"
                   height="28"

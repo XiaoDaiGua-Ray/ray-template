@@ -24,12 +24,12 @@ import './index.scss'
 import { collapseGridProps } from './props'
 
 import { NCard, NGrid, NGridItem, NSpace } from 'naive-ui'
-import RayIcon from '@/components/RIcon'
+import RIcon from '@/components/RIcon'
 
 import { call } from '@/utils/vue/index'
 
-const RayCollapseGrid = defineComponent({
-  name: 'RayCollapseGrid',
+const RCollapseGrid = defineComponent({
+  name: 'RCollapseGrid',
   props: collapseGridProps,
   setup(props) {
     const modelCollapsed = ref(!props.open)
@@ -55,7 +55,7 @@ const RayCollapseGrid = defineComponent({
             ? props.collapseToggleText[0]
             : props.collapseToggleText[1]}
         </span>
-        <RayIcon
+        <RIcon
           customClassName={`collapse-icon--arrow ${
             modelCollapsed.value ? '' : 'collapse-icon--arrow__expanded'
           }`}
@@ -99,4 +99,4 @@ const RayCollapseGrid = defineComponent({
   },
 })
 
-export default RayCollapseGrid
+export default RCollapseGrid

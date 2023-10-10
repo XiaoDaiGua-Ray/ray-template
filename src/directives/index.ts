@@ -40,7 +40,7 @@ export const setupDirectives = (app: App<Element>) => {
     const dname = key.match(regexExtractDirectiveName)?.[0]
 
     if (typeof dname === 'string' && regexDirectiveName.test(dname)) {
-      app.directive(dname, value?.())
+      app.directive(dname, value())
     } else {
       console.error(`[setupDirectives] ${dname} is not a valid directive name`)
     }

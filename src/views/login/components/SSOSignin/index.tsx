@@ -19,7 +19,7 @@
 import './index.scss'
 
 import { NSpace, NPopover } from 'naive-ui'
-import RayIcon from '@/components/RIcon/index'
+import RIcon from '@/components/RIcon/index'
 
 interface SSOSigninOptions {
   icon: string
@@ -64,7 +64,7 @@ const SSOSignin = defineComponent({
           <NPopover>
             {{
               trigger: () => (
-                <RayIcon
+                <RIcon
                   name={curr.icon}
                   size="24"
                   cursor="pointer"

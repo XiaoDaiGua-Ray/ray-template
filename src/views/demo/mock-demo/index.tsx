@@ -10,8 +10,8 @@
  */
 
 import { NSpace, NCard, NButton, NFormItemGi, NInput, NForm } from 'naive-ui'
-import RayTable from '@/components/RTable/index'
-import RayCollapseGrid from '@/components/RCollapseGrid/index'
+import RTable from '@/components/RTable/index'
+import RCollapseGrid from '@/components/RCollapseGrid/index'
 
 import { useHookPlusRequest } from '@/axios/index'
 import { getPersonList } from '@/axios/api/demo/mock/person'
@@ -49,7 +49,7 @@ const MockDemo = defineComponent({
         console.log(data)
       },
     })
-    const columns = [
+    const columns = ref([
       {
         title: 'id',
         key: 'id',
@@ -111,7 +111,7 @@ const MockDemo = defineComponent({
           )
         },
       },
-    ]
+    ])
     const condition = reactive({
       email: null,
     })
@@ -157,13 +157,13 @@ const MockDemo = defineComponent({
         </NCard>
         <NCard title="提示">
           <h2>
-            RayTable
+            RTable
             组件有一个比较值得注意的地方就是，该组件会自动的按照数据量计算分页条数。所以你在异步获取数据的时候，一定要手动设置
             remote 属性为 true，并且设置 itemCount 或者 pageCount。
           </h2>
         </NCard>
         <NForm labelPlacement="left">
-          <RayCollapseGrid bordered={false} cols={3}>
+          <RCollapseGrid bordered={false} cols={3}>
             {{
               default: () => (
                 <>
@@ -178,16 +178,15 @@ const MockDemo = defineComponent({
                 </NButton>
               ),
             }}
-          </RayCollapseGrid>
+          </RCollapseGrid>
         </NForm>
-        <RayTable
+        <RTable
           title="分页表格"
           data={this.personData?.data}
           loading={this.personLoading}
-          columns={this.columns}
+          v-model:columns={this.columns}
           pagination={this.paginationRef}
           remote
-          action
         />
       </NSpace>
     )

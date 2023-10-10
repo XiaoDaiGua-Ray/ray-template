@@ -39,7 +39,7 @@ import type {
  */
 export const combineI18nMessages = (langs: I18nModules, prefix: string) => {
   if (typeof prefix !== 'string' || !prefix.trim()) {
-    throw new Error('Expected prefix to be a non-empty string')
+    throw new TypeError('Expected prefix to be a non-empty string')
   }
 
   const langsGather: Record<string, Recordable> = {}

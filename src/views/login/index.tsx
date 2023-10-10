@@ -15,7 +15,7 @@ import Signin from './components/Signin/index'
 import Register from './components/Register/index'
 import QRCodeSignin from './components/QRCodeSignin/index'
 import SSOSignin from './components/SSOSignin/index'
-import RayIcon from '@/components/RIcon'
+import RIcon from '@/components/RIcon'
 import RayLink from '@/app-components/app/RayLink/index'
 import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch/index'
 
@@ -67,7 +67,7 @@ const Login = defineComponent({
         >
           <div class={['login-wrapper__content']}>
             <NSpace align="center" class="login-title__wrapper">
-              <RayIcon name="ray" size="48" />
+              <RIcon name="ray" size="48" />
               <NGradientText class="login-title" type="info" size={28}>
                 Ray Template
               </NGradientText>
@@ -84,7 +84,7 @@ const Login = defineComponent({
                 options={LOCAL_OPTIONS}
                 onSelect={(key) => this.updateLocale(key)}
               >
-                <RayIcon
+                <RIcon
                   customClassName="login-icon"
                   name="language"
                   size="18"
@@ -102,7 +102,7 @@ const Login = defineComponent({
                 class="login__left-wrapper"
               >
                 <NSpace align="center" vertical>
-                  <RayIcon name="login_bg" width="368" height="368" />
+                  <RIcon name="login_bg" width="368" height="368" />
                   <NGradientText class="login-title" type="info" size={36}>
                     开箱即用的中后台管理系统
                   </NGradientText>

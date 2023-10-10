@@ -25,7 +25,7 @@ export const combineDirective = <
 
       return pre
     } else {
-      throw new Error('directiveModules[curr] is not function')
+      throw new TypeError(`directiveModules: ${curr} is not function`)
     }
   }, {} as Record<K, CustomDirectiveFC<unknown, unknown>>)
 

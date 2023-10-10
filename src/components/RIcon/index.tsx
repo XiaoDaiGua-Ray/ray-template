@@ -17,8 +17,8 @@ import { completeSize } from '@/utils/element'
 import type { PropType } from 'vue'
 import type { MaybeArray } from '@/types/modules/utils'
 
-const RayIcon = defineComponent({
-  name: 'RayIcon',
+const RIcon = defineComponent({
+  name: 'RIcon',
   props: {
     color: {
       type: String,
@@ -114,4 +114,4 @@ const RayIcon = defineComponent({
   },
 })
 
-export default RayIcon
+export default RIcon

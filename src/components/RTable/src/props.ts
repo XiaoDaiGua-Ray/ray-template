@@ -2,7 +2,7 @@
  *
  * @author Ray <https://github.com/XiaoDaiGua-Ray>
  *
- * @date 2022-12-08
+ * @date 2023-10-04
  *
  * @workspace ray-template
  *
@@ -12,208 +12,81 @@
 import { dataTableProps } from 'naive-ui'
 
 import type { PropType, VNode, VNodeChild } from 'vue'
-import type { DropdownMixedOption } from './type'
-import type PrintConfiguration from 'print-js'
 import type { MaybeArray } from '@/types/modules/utils'
 import type { DropdownOption, DataTableColumn } from 'naive-ui'
+import type { DownloadTableOptions, PrintTableOptions } from './type'
 
-const rayTableProps = {
-  ...dataTableProps, // 继承 `data table props`
-  rightClickOptions: {
-    /**
-     *
-     * 表格右键菜单, 基于 `NDropdown` 实现
-     *
-     * 如果菜单内容长度为 `0` 则不会渲染
-     *
-     * 只需要传入对应的菜单配置项, 即可自动开启右键菜单功能
-     */
-    type: Array as PropType<DropdownMixedOption[]>,
-    default: () => [],
-  },
-  onRightMenuClick: {
-    type: [Function, Array] as PropType<
-      MaybeArray<
-        (key: string | number, index: number, option: DropdownOption) => void
-      >
-    >,
-    default: null,
-  },
+const props = {
+  ...dataTableProps,
   title: {
     /**
      *
      * 表格标题
-     *
-     * 可以自定义渲染
+     * 支持自定义渲染
      */
-    type: [String, Object] as PropType<VNodeChild | string>,
+    type: [String, Number, Object] as PropType<VNode | string | number>,
     default: null,
   },
-  action: {
-    /**
-     *
-     * 是否开启操作栏
-     *
-     * 默认开启
-     */
-    type: Boolean,
-    default: true,
+  toolOptions: {
+    /** 自定义传递工具栏拓展 */
+    type: Array as PropType<(VNode | (() => VNode))[]>,
   },
-  actionExtra: {
+  contextMenuOptions: {
     /**
      *
-     * 自定义拓展操作栏
-     *
-     * 暂时不开放
+     * 右键菜单配置项
+     * 基于 `NDropdown` 实现
      */
-    type: Object as PropType<VNode>,
-    default: () => ({}),
+    type: Array as PropType<DropdownOption[]>,
   },
-  exportTooltip: {
+  disabledContextMenu: {
     /**
      *
-     * 导出表格提示
-     */
-    type: String,
-    default: '是否导出为Excel表格?',
-  },
-  exportType: {
-    /**
-     *
-     * 导出类型
-     *
-     * 默认为 `xlsx`
-     *
-     * 暂时只支持导出为 `xlsx`
-     */
-    type: String,
-    default: 'xlsx',
-  },
-  exportPositiveText: {
-    /**
-     *
-     * 导出确认按钮文字
-     *
-     * 默认为 `确认`
-     */
-    type: String,
-    default: '确认',
-  },
-  exportNegativeText: {
-    /**
-     *
-     * 导出取消按钮文字
-     *
-     * 默认为 `取消`
-     */
-    type: String,
-    default: '取消',
-  },
-  exportFilename: {
-    /**
-     *
-     * 导出表格名称
-     */
-    type: String,
-    default: '',
-  },
-  printPositiveText: {
-    /**
-     *
-     * 打印确认按钮文字
-     *
-     * 默认为 `确认`
-     */
-    type: String,
-    default: '确认',
-  },
-  printNegativeText: {
-    /**
-     *
-     * 打印取消按钮文字
-     *
-     * 默认为 `取消`
-     */
-    type: String,
-    default: '取消',
-  },
-  printTooltip: {
-    /**
-     *
-     * 打印表格提示
-     */
-    type: String,
-    default: '是否打印该表格?',
-  },
-  printType: {
-    /**
-     *
-     * 打印输出类型: 'pdf' | 'html' | 'image' | 'json'
-     *
-     * 默认为 `html`
-     */
-    type: String as PropType<PrintConfiguration.PrintTypes>,
-    default: 'html',
-  },
-  printOptions: {
-    /**
-     *
-     * `print-js` 打印配置项
-     *
-     * 会自动过滤: `printable`, 'type'
-     */
-    type: Object as PropType<
-      Omit<PrintConfiguration.Configuration, 'printable' | 'type'>
-    >,
-    default: () => ({}),
-  },
-  printIcon: {
-    /**
-     *
-     * 打印按钮自定义图标名称
-     *
-     * 需要结合 `RayIcon` 组件使用
-     *
-     * 如果需要自定义图标, 则需要在 `src/icons` 中添加后使用
-     */
-    type: String,
-    default: 'print',
-  },
-  exportExcelIcon: {
-    /**
-     *
-     * 导出为表格按钮自定义图标名称
-     *
-     * 需要结合 `RayIcon` 组件使用
-     *
-     * 如果需要自定义图标, 则需要在 `src/icons` 中添加后使用
-     */
-    type: String,
-    default: 'export_excel',
-  },
-  tableHeaderSpace: {
-    /**
-     *
-     * 表格头部操作栏, 主要操作栏与额外操作栏之间间隔
-     */
-    type: String,
-    default: '10px',
-  },
-  bordered: {
-    /**
-     *
-     * 表格边框
+     * 是否禁用右键菜单
+     * 如果设置为 false 则不会唤起右键菜单
      */
     type: Boolean,
     default: false,
   },
-  /** 导出成功 */
-  onExportSuccess: {
+  onContextMenuClick: {
+    /** 右键菜单点击 */
+    type: [Function, Array] as PropType<
+      MaybeArray<(key: string | number, option: DropdownOption) => void>
+    >,
+    default: null,
+  },
+  downloadTableOptions: {
+    /**
+     *
+     * 配置下载表格内容为 excel 的配置项
+     */
+    type: Object as PropType<DownloadTableOptions>,
+    default: () => ({}),
+  },
+  wrapperBordered: {
+    /**
+     *
+     * 表格容器边框
+     * 与表格边框为两个不同配置项
+     */
+    type: Boolean,
+    default: false,
+  },
+  printTableOptions: {
+    /**
+     *
+     * 配置打印表格配置项
+     */
+    type: Object as PropType<PrintTableOptions>,
+    default: () => ({}),
+  },
+  onDownloadSuccess: {
+    /** 导出表格成功回调 */
     type: [Function, Array] as PropType<MaybeArray<() => void>>,
     default: null,
   },
-  /** 导出失败 */
-  onExportError: {
+  onDownloadError: {
+    /** 导出表格失败回调 */
     type: [Function, Array] as PropType<MaybeArray<() => void>>,
     default: null,
   },
@@ -229,13 +102,6 @@ const rayTableProps = {
     >,
     default: null,
   },
-} as const
+}
 
-export default rayTableProps
-
-/**
- *
- * `Ray Table Props`
- *
- * 继承 `Naive UI Data Table` <https://www.naiveui.com/zh-CN/dark/components/data-table>
- */
+export default props

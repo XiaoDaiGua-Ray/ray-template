@@ -10,7 +10,7 @@
  */
 
 import { NSpace, NDataTable, NButton } from 'naive-ui'
-import RayTable from '@/components/RTable/index'
+import RTable from '@/components/RTable/index'
 
 import type { DataTableColumns } from 'naive-ui'
 
@@ -26,7 +26,7 @@ const RouterDemoHome = defineComponent({
   setup() {
     const router = useRouter()
 
-    const columns: DataTableColumns<RowData> = [
+    const columns: Ref<DataTableColumns<RowData>> = ref([
       {
         title: '姓名',
         key: 'name',
@@ -61,7 +61,7 @@ const RouterDemoHome = defineComponent({
           )
         },
       },
-    ]
+    ])
     const dataSource: RowData[] = []
 
     for (let i = 0; i < 10; i++) {
@@ -81,7 +81,7 @@ const RouterDemoHome = defineComponent({
   render() {
     return (
       <NSpace wrapItem={false}>
-        <RayTable columns={this.columns} data={this.dataSource} />
+        <RTable v-model:columns={this.columns} data={this.dataSource} />
       </NSpace>
     )
   },

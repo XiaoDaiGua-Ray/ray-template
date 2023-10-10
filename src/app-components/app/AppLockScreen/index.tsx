@@ -45,7 +45,7 @@ const AppLockScreen = defineComponent({
         show
         maskClosable={false}
         closeOnEsc={false}
-        preset={!this.getLockAppScreen() ? 'dialog' : undefined}
+        preset={!this.getLockAppScreen() ? 'dialog' : void 0}
         title="锁定屏幕"
       >
         <div class="app-lock-screen__content">

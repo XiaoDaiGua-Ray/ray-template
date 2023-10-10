@@ -10,7 +10,7 @@
  */
 
 import { NSpace, NSwitch, NTooltip } from 'naive-ui'
-import RayIcon from '@/components/RIcon'
+import RIcon from '@/components/RIcon'
 
 import { useSetting } from '@/store'
 import { useI18n } from '@/hooks/web/index'
@@ -58,7 +58,7 @@ const ThemeSwitch = defineComponent({
                 {{
                   'checked-icon': () =>
                     h(
-                      RayIcon,
+                      RIcon,
                       {
                         name: 'dark',
                       },
@@ -66,7 +66,7 @@ const ThemeSwitch = defineComponent({
                     ),
                   'unchecked-icon': () =>
                     h(
-                      RayIcon,
+                      RIcon,
                       {
                         name: 'light',
                       },

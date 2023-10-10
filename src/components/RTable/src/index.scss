@@ -1,28 +1,14 @@
-.ray-table {
-  & .ray-table-icon {
-    transition: transform 0.3s var(--r-bezier);
+.r-table__c-tree.n-tree .n-tree-node-switcher.n-tree-node-switcher--hide {
+  visibility: visible;
+}
 
-    &:hover {
-      @include scaleAnimate();
-      animation: elementScale 0.3s linear;
-      animation-direction: alternate;
-    }
+.r-table__c-tree.n-tree .ray-icon {
+  &.r-table__c-fixed--active {
+    color: var(--ray-theme-primary-color);
   }
+}
 
-  & .ray-table__setting,
-  & .ray-table-icon {
-    cursor: pointer;
-    outline: none;
-    border: none;
-  }
-
-  & .n-card-header .n-card-header__main {
-    padding-right: var(--ray-table-header-space);
-  }
-
-  & .ray-table-header-extra__space {
-    display: flex;
-    gap: 0 12px;
-    align-items: center;
-  }
+.r-table__setting:hover {
+  transform: rotate(180deg);
+  transition: transform 0.3s var(--r-bezier);
 }

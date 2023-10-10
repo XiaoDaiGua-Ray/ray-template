@@ -29,7 +29,6 @@ import unpluginViteComponents from 'unplugin-vue-components/vite'
 import { cdn as viteCDNPlugin } from 'vite-plugin-cdn2'
 
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
-import { VueHooksPlusResolver } from '@vue-hooks-plus/resolvers'
 
 import config from './cfg'
 
@@ -59,7 +58,6 @@ export default function (mode: string): PluginOption[] {
         'vue',
         'vue-router',
         'pinia',
-        '@vueuse/core',
         'vue-i18n',
         {
           'naive-ui': [
@@ -70,11 +68,11 @@ export default function (mode: string): PluginOption[] {
           ],
         },
       ],
-      resolvers: [NaiveUiResolver(), VueHooksPlusResolver()],
+      resolvers: [NaiveUiResolver()],
     }),
     unpluginViteComponents({
       dts: './unplugin/components.d.ts',
-      resolvers: [NaiveUiResolver(), VueHooksPlusResolver()],
+      resolvers: [NaiveUiResolver()],
       types: [
         {
           from: 'vue-router',

@@ -12,7 +12,7 @@
 import './index.scss'
 
 import { NTooltip } from 'naive-ui'
-import RayIcon from '@/components/RIcon/index'
+import RIcon from '@/components/RIcon/index'
 
 import { tooltipProps } from 'naive-ui'
 
@@ -47,7 +47,7 @@ const TooltipIcon = defineComponent({
       <NTooltip {...this.$props}>
         {{
           trigger: () => (
-            <RayIcon
+            <RIcon
               name={this.iconName}
               size="18"
               customClassName={`tooltip-text__icon ${this.customClassName}`}

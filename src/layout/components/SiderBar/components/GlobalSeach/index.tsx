@@ -12,7 +12,7 @@
 import './index.scss'
 
 import { NInput, NModal, NResult, NScrollbar, NSpace } from 'naive-ui'
-import RayIcon from '@/components/RIcon/index'
+import RIcon from '@/components/RIcon/index'
 
 import { on, off, queryElements, addClass, removeClass } from '@/utils/element'
 import { debounce } from 'lodash-es'
@@ -182,11 +182,11 @@ const GlobalSeach = defineComponent({
       const { icon } = meta
 
       if (typeof icon === 'string') {
-        return <RayIcon name={icon} size="24" />
+        return <RIcon name={icon} size="24" />
       } else if (typeof icon === 'function') {
         return () => icon
       } else {
-        return <RayIcon name="table" size="24" />
+        return <RIcon name="table" size="24" />
       }
     }
 
@@ -277,7 +277,7 @@ const GlobalSeach = defineComponent({
                   onInput={this.handleSearchMenuOptions.bind(this)}
                 >
                   {{
-                    prefix: () => <RayIcon name="search" size="24" />,
+                    prefix: () => <RIcon name="search" size="24" />,
                   }}
                 </NInput>
               </div>
@@ -324,7 +324,7 @@ const GlobalSeach = defineComponent({
                         {curr.plain ? (
                           <span>{curr.icon}</span>
                         ) : (
-                          <RayIcon name={curr.icon} size="18" />
+                          <RIcon name={curr.icon} size="18" />
                         )}
                       </div>
                       <div class="item-laebl">{curr.label}</div>

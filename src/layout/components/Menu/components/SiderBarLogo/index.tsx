@@ -12,7 +12,7 @@
 import './index.scss'
 
 import { NEllipsis, NPopover } from 'naive-ui'
-import RayIcon from '@/components/RIcon/index'
+import RIcon from '@/components/RIcon/index'
 
 const SiderBarLogo = defineComponent({
   name: 'SiderBarLogo',
@@ -38,7 +38,7 @@ const SiderBarLogo = defineComponent({
     }
 
     const TemplateLogo = ({ cursor }: { cursor: string }) => (
-      <RayIcon name={sideBarLogo!.icon as string} size="30" cursor={cursor} />
+      <RIcon name={sideBarLogo!.icon as string} size="30" cursor={cursor} />
     )
 
     return {

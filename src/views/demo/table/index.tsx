@@ -24,11 +24,11 @@ import {
   NLi,
   NSpace,
 } from 'naive-ui'
-import RayTable from '@/components/RTable/index'
-import RayCollapseGrid from '@/components/RCollapseGrid/index'
+import RCollapseGrid from '@/components/RCollapseGrid/index'
+import RTable from '@/components/RTable/index'
 
 import type { DataTableColumns } from 'naive-ui'
-import type { RayTableInst } from '@/components/RTable/index'
+import type { TableInst } from '@/components/RTable/index'
 
 type RowData = {
   key: number
@@ -41,7 +41,7 @@ type RowData = {
 const TableView = defineComponent({
   name: 'TableView',
   setup() {
-    const tableRef = ref<RayTableInst>()
+    const tableRef = ref<TableInst>()
 
     const baseColumns = [
       {
@@ -142,15 +142,9 @@ const TableView = defineComponent({
       tableLoading: false,
     })
 
-    const handleMenuSelect = (key: string | number, idx: number) => {
-      if (key === 'delete') {
-        tableData.value.splice(idx, 1)
-      }
+    const handleMenuSelect = (key: string | number) => {
+      window.$message.info(`${key}`)
     }
-
-    onMounted(() => {
-      console.log(tableRef.value?.tableMethods)
-    })
 
     return {
       ...toRefs(state),
@@ -190,13 +184,13 @@ const TableView = defineComponent({
         <NP>点击打印按钮即可打印该表格</NP>
         <NP>右键菜单</NP>
         <NP>全屏表格</NP>
-        <RayCollapseGrid
+        <RCollapseGrid
           bordered={false}
           collapsedRows={this.gridCollapsedRows}
           cols={this.gridItemCount}
           onUpdateValue={(value: boolean) =>
             window.$message.info(
-              `我是 RayCollapseGrid 组件${value ? '收起' : '展开'}的回调函数`,
+              `我是 RCollapseGrid 组件${value ? '收起' : '展开'}的回调函数`,
             )
           }
         >
@@ -227,8 +221,29 @@ const TableView = defineComponent({
               </>
             ),
           }}
-        </RayCollapseGrid>
-        <RayTable
+        </RCollapseGrid>
+        <RTable
+          style="margin-top: 18px"
+          ref="tableRef"
+          scrollX={2000}
+          title={
+            <NSpace align="center">
+              <span>标题插槽:</span>
+              <NSwitch
+                onUpdateValue={(value: boolean) => (this.tableLoading = value)}
+              ></NSwitch>
+            </NSpace>
+          }
+          data={this.tableData}
+          v-model:columns={this.actionColumns}
+          pagination={{
+            pageSize: 10,
+          }}
+          contextMenuOptions={this.tableMenuOptions}
+          loading={this.tableLoading}
+          onContextMenuClick={this.handleMenuSelect.bind(this)}
+        ></RTable>
+        {/* <RayTable
           style="margin-top: 18px"
           ref="tableRef"
           scrollX={2000}
@@ -252,7 +267,7 @@ const TableView = defineComponent({
           {{
             tableFooter: () => '表格的底部内容区域插槽，有时候你可能会用上',
           }}
-        </RayTable>
+        </RayTable> */}
       </div>
     )
   },

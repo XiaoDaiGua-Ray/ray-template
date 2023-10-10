@@ -63,7 +63,7 @@ interface RouteMeta {
 ```
 order: 菜单顺序，值越大越靠后。仅对顶层有效，子菜单该值无效
 i18nKey: i18n 国际化 key, 会优先使用该字段
-icon: icon 图标， 用于 Menu 菜单(依赖 RayIcon 组件实现)
+icon: icon 图标， 用于 Menu 菜单(依赖 RIcon 组件实现)
 windowOpen: 超链接打开（新开窗口打开）
 role: 权限表
 hidden: 是否显示

@@ -16,6 +16,8 @@
  * 可以根据后台接口进行替换该变量, 只要是一个响应式的变量值即可
  */
 
+import { useStorage } from '@vueuse/core'
+
 const appLockScreen = useStorage('isAppLockScreen', false, sessionStorage, {
   mergeDefaults: true,
 })

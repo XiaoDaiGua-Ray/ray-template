@@ -36,10 +36,7 @@ import {
   PictorialBarChart,
 } from 'echarts/charts' // 系列类型(后缀都为 `SeriesOption`)
 import { LabelLayout, UniversalTransition } from 'echarts/features' // 标签自动布局, 全局过渡动画等特性
-import {
-  CanvasRenderer,
-  // SVGRenderer,
-} from 'echarts/renderers' // `echarts` 渲染器
+import { CanvasRenderer } from 'echarts/renderers' // `echarts` 渲染器
 
 import { useSetting } from '@/store'
 import { cloneDeep, throttle } from 'lodash-es'
@@ -47,8 +44,9 @@ import { on, off, completeSize } from '@/utils/element'
 import { call } from '@/utils/vue/index'
 import { setupChartTheme, loadingOptions } from './helper'
 import { APP_THEME } from '@/app-config/designConfig'
+import { useResizeObserver } from '@vueuse/core'
 
-import type { PropType } from 'vue'
+import type { PropType, WatchStopHandle } from 'vue'
 import type { AnyFC, MaybeArray } from '@/types/modules/utils'
 import type { DebouncedFunc } from 'lodash-es'
 import type {
@@ -228,10 +226,10 @@ export default defineComponent({
     const rayChartRef = ref<HTMLElement>() // `echart` 容器实例
     const rayChartWrapperRef = ref<HTMLElement>()
     const echartInstanceRef = ref<ECharts>() // `echart` 实例
-    let echartInstance: ECharts | null // `echart` 拷贝实例, 解决直接使用响应式实例带来的问题
     let resizeThrottleReturn: DebouncedFunc<AnyFC> | null // resize 防抖方法实例
     let resizeOvserverReturn: UseResizeObserverReturn | null
     const { echartTheme } = APP_THEME
+    let watchOptionsReturn: WatchStopHandle | null
 
     const cssVarsRef = computed(() => {
       const cssVars = {
@@ -294,7 +292,7 @@ export default defineComponent({
      * 如果有需要特殊全局配置的可以在此继续写...
      */
     const combineChartOptions = (ops: EChartsCoreOption) => {
-      let options = cloneDeep(ops)
+      let options = cloneDeep(unref(ops))
 
       const assign = (opts: object) =>
         Object.assign(
@@ -342,26 +340,25 @@ export default defineComponent({
         })
 
         /** 注册 chart */
-        echartInstance = echarts.init(element, theme, {
+        echartInstanceRef.value = echarts.init(element, theme, {
           /** 如果款度为 0, 则以 200px 填充 */
           width: width === 0 ? 200 : void 0,
           /** 如果高度为 0, 则以 200px 填充 */
           height: height === 0 ? 200 : void 0,
         })
-        echartInstanceRef.value = echartInstance
 
         /** 设置 options 配置项 */
-        options && echartInstance.setOption({})
+        echartInstanceRef.value.setOption({})
 
         if (props.animation) {
           setTimeout(() => {
-            options && echartInstance?.setOption(options)
+            options && echartInstanceRef.value?.setOption(options)
           })
         }
 
         /** 渲染成功回调 */
         if (onSuccess) {
-          call(onSuccess, echartInstance)
+          call(onSuccess, echartInstanceRef.value)
         }
       } catch (e) {
         /** 渲染失败回调 */
@@ -396,22 +393,22 @@ export default defineComponent({
      * 销毁 `chart` 实例, 释放资源
      */
     const destroyChart = () => {
-      if (echartInstance) {
-        echartInstance.clear()
-        echartInstance.dispose()
+      if (echartInstanceRef.value) {
+        echartInstanceRef.value.clear()
+        echartInstanceRef.value.dispose()
       }
     }
 
     /** 重置 echarts 尺寸 */
     const resizeChart = () => {
-      if (echartInstance) {
-        echartInstance.resize()
+      if (echartInstanceRef.value) {
+        echartInstanceRef.value.resize()
       }
     }
 
     const mount = () => {
       // 避免重复渲染
-      if (echartInstance?.getDom()) {
+      if (echartInstanceRef.value?.getDom()) {
         console.warn(
           'RChart mount: There is a chart instance already initialized on the dom. Execution was interrupted',
         )
@@ -487,38 +484,33 @@ export default defineComponent({
       },
     )
 
-    /** 显示/隐藏加载动画 */
-    watch(
-      () => props.loading,
-      (ndata) => {
-        ndata
-          ? echartInstance?.showLoading(props.loadingOptions)
-          : echartInstance?.hideLoading()
-      },
-    )
+    watchEffect(() => {
+      /** 监听 options 变化 */
+      if (props.watchOptions) {
+        watchOptionsReturn = watch(
+          () => props.options,
+          (noptions) => {
+            /** 重新组合 options */
+            const options = combineChartOptions(noptions)
+            const setOpt = Object.assign({}, props.setChartOptions, {
+              notMerge: false,
+              lazyUpdate: true,
+              silent: false,
+              replaceMerge: [],
+            })
+            /** 如果 options 发生变动更新 echarts */
+            echartInstanceRef.value?.setOption(options, setOpt)
+          },
+          {
+            deep: true,
+          },
+        )
+      }
 
-    /** 监听 options 变化 */
-    watch(
-      () => props.options,
-      (noptions) => {
-        if (props.watchOptions) {
-          /** 重新组合 options */
-          const options = combineChartOptions(noptions)
-          const setOpt = Object.assign({}, props.setChartOptions, {
-            notMerge: false,
-            lazyUpdate: true,
-            silent: false,
-            replaceMerge: [],
-          })
-
-          /** 如果 options 发生变动更新 echarts */
-          echartInstance?.setOption(options, setOpt)
-        }
-      },
-      {
-        deep: true,
-      },
-    )
+      props.loading
+        ? echartInstanceRef.value?.showLoading(props.loadingOptions)
+        : echartInstanceRef.value?.hideLoading()
+    })
 
     expose({
       echart: echartInstanceRef,
@@ -539,6 +531,7 @@ export default defineComponent({
 
     onBeforeUnmount(() => {
       unmount()
+      watchOptionsReturn?.()
     })
 
     return {

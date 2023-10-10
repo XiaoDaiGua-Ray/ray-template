@@ -1,4 +1,7 @@
-import type { ValidteValueType } from '@/types/modules/utils'
+import type {
+  ValidteValueType,
+  DownloadAnyFileDataType,
+} from '@/types/modules/utils'
 
 /**
  *
@@ -94,4 +97,50 @@ export const uuid = (length = 16, radix = 62) => {
 
   // 将数组中的字符连接起来，返回最终的字符串
   return arr.join('')
+}
+
+/**
+ *
+ * @param data base64, Blob, ArrayBuffer type
+ * @param fileName file name
+ *
+ * @remark 支持下载任意类型的文件，包括 base64, Blob, ArrayBuffer
+ */
+export const downloadAnyFile = (
+  data: DownloadAnyFileDataType,
+  fileName: string,
+): Promise<void> => {
+  return new Promise<void>((resolve, reject) => {
+    let blobData!: Blob
+
+    if (typeof data === 'string') {
+      // 处理 Base64 数据
+      downloadBase64File(data, fileName)
+      resolve()
+    } else if (data instanceof ArrayBuffer) {
+      // 处理 ArrayBuffer 数据
+      blobData = new Blob([new Uint8Array(data)], {
+        type: 'application/octet-stream',
+      })
+    } else {
+      // 处理 Blob 和 File 数据
+      blobData = data
+    }
+
+    const url = URL.createObjectURL(blobData)
+    const link = document.createElement('a')
+
+    link.href = url
+    link.download = fileName
+    link.style.display = 'none'
+
+    document.body.appendChild(link)
+
+    link.click()
+
+    document.body.removeChild(link)
+
+    URL.revokeObjectURL(url)
+    resolve()
+  })
 }

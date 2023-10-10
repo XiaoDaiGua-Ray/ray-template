@@ -45,9 +45,7 @@ export type WordArray = CryptoJS.lib.WordArray
 
 export type CipherParams = CryptoJS.lib.CipherParams
 
-export type AnyFC = (...args: any[]) => any
-
-export type AnyVoidFunc = (...args: any[]) => void
+export type AnyFC<P = any, R = any> = (...args: P[]) => R
 
 export type PartialCSSStyleDeclaration = Partial<
   Record<keyof CSSStyleDeclaration, string>
@@ -56,3 +54,5 @@ export type PartialCSSStyleDeclaration = Partial<
 export type ElementSelector = string | `attr:${string}`
 
 export type MaybeArray<T> = T | T[]
+
+export type DownloadAnyFileDataType = Blob | File | string | ArrayBuffer

@@ -34,7 +34,7 @@ import type { PropType } from 'vue'
  * 常用方法即是声明该组件的 name inheritAttrs 等属性
  */
 defineOptions({
-  name: 'TransitionComponent',
+  name: 'RTransitionComponent',
 })
 
 defineProps({
