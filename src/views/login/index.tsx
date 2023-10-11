@@ -22,6 +22,7 @@ import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/c
 import { useSetting } from '@/store'
 import { LOCAL_OPTIONS } from '@/app-config/localConfig'
 import { useI18n } from '@/hooks/web/index'
+import { useWindowSize } from '@vueuse/core'
 
 const Login = defineComponent({
   name: 'RLogin',
