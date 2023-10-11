@@ -10,7 +10,6 @@
  */
 
 import {
-  NLayout,
   NTag,
   NButton,
   NGridItem,
@@ -18,14 +17,13 @@ import {
   NInput,
   NDatePicker,
   NSwitch,
-  NP,
-  NH2,
-  NUl,
-  NLi,
   NSpace,
+  NPopover,
+  NCard,
 } from 'naive-ui'
 import RCollapseGrid from '@/components/RCollapseGrid/index'
 import RTable from '@/components/RTable/index'
+import RIcon from '@/components/RIcon/index'
 
 import type { DataTableColumns } from 'naive-ui'
 import type { TableInst } from '@/components/RTable/index'
@@ -41,8 +39,6 @@ type RowData = {
 const TableView = defineComponent({
   name: 'TableView',
   setup() {
-    const tableRef = ref<TableInst>()
-
     const baseColumns = [
       {
         title: 'Name',
@@ -153,37 +149,15 @@ const TableView = defineComponent({
       baseColumns,
       tableMenuOptions,
       handleMenuSelect,
-      tableRef,
     }
   },
   render() {
     return (
-      <div>
-        <NH2>RayTable 组件使用</NH2>
-        <NUl alignText>
-          <NLi>
-            该组件基于 Naive UI DataTable
-            组件封装。实现右键菜单、表格标题、导出为 excel 操作栏等功能
-          </NLi>
-          <NLi>RayTable 完全继承 DataTable 的所有属性与方法</NLi>
-          <NLi>
-            相关拓展 props 属性，可以在源码位置
-            src/components/RayTable/src/props.ts 中查看相关代码与注释
-          </NLi>
-          <NLi>该组件可以配合 RayCollapseGird 组件使用实现可折叠搜索栏</NLi>
-        </NUl>
-        <NH2>配合 RayCollapseGird 组件使用与 RayTable 拓展功能</NH2>
-        <NP>
-          使用响应式方法代理 columns 并且打开 action
-          则可以启用操作栏(v-model:columns)
-        </NP>
-        <NP>拖拽操作栏动态切换表格列</NP>
-        <NP>点击左右固定按钮，即可动态固定列</NP>
-        <NP>点击修改列宽度，即可拖动列修改宽度</NP>
-        <NP>点击导出按钮即可导出 excel 表格，默认以列为表头输出</NP>
-        <NP>点击打印按钮即可打印该表格</NP>
-        <NP>右键菜单</NP>
-        <NP>全屏表格</NP>
+      <NSpace wrapItem={false} vertical>
+        <NCard title="RTable">
+          基于 NDataTable 封装，继承该组件所有 props 属性。查看 RTable props
+          文件即可查看该组件拓展项
+        </NCard>
         <RCollapseGrid
           bordered={false}
           collapsedRows={this.gridCollapsedRows}
@@ -224,7 +198,6 @@ const TableView = defineComponent({
         </RCollapseGrid>
         <RTable
           style="margin-top: 18px"
-          ref="tableRef"
           scrollX={2000}
           title={
             <NSpace align="center">
@@ -242,33 +215,30 @@ const TableView = defineComponent({
           contextMenuOptions={this.tableMenuOptions}
           loading={this.tableLoading}
           onContextMenuClick={this.handleMenuSelect.bind(this)}
-        ></RTable>
-        {/* <RayTable
-          style="margin-top: 18px"
-          ref="tableRef"
-          scrollX={2000}
-          title={
-            <NSpace align="center">
-              <span>标题插槽:</span>
-              <NSwitch
-                onUpdateValue={(value: boolean) => (this.tableLoading = value)}
-              ></NSwitch>
-            </NSpace>
-          }
-          data={this.tableData}
-          v-model:columns={this.actionColumns}
-          pagination={{
-            pageSize: 10,
-          }}
-          loading={this.tableLoading}
-          rightClickOptions={this.tableMenuOptions}
-          onRightMenuClick={this.handleMenuSelect.bind(this)}
+          toolOptions={[
+            <NPopover>
+              {{
+                trigger: () => (
+                  <RIcon
+                    name="search"
+                    size="18"
+                    cursor="pointer"
+                    onClick={() => {
+                      window.$message.info('点击了搜索按钮')
+                    }}
+                  />
+                ),
+                default: () => '我是自定义工具栏示例',
+              }}
+            </NPopover>,
+          ]}
         >
           {{
             tableFooter: () => '表格的底部内容区域插槽，有时候你可能会用上',
+            tableAction: () => '表格的操作区域内容插槽，有时候可能会用上',
           }}
-        </RayTable> */}
-      </div>
+        </RTable>
+      </NSpace>
     )
   },
 })

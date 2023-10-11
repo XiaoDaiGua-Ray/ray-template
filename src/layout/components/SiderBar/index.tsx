@@ -30,8 +30,8 @@ import AppAvatar from '@/app-components/app/AppAvatar/index'
 import { useSetting } from '@/store'
 import { LOCAL_OPTIONS } from '@/app-config/localConfig'
 import { useAvatarOptions, avatarDropdownClick } from './hook'
-import screenfull from 'screenfull'
 import { useI18n } from '@/hooks/web/index'
+import { useFullscreen } from 'vue-hooks-plus'
 
 import type { IconEventMapOptions, IconEventMap } from './type'
 
@@ -43,6 +43,9 @@ const SiderBar = defineComponent({
     const { t } = useI18n()
     const { updateLocale, changeSwitcher } = settingStore
 
+    const [isFullscreen, { toggleFullscreen }] = useFullscreen(
+      document.getElementsByTagName('html')[0],
+    )
     const { drawerPlacement, breadcrumbSwitch, reloadRouteSwitch } =
       storeToRefs(settingStore)
     const showSettings = ref(false)
@@ -50,7 +53,6 @@ const SiderBar = defineComponent({
       display: 'flex',
     }
     const globalSearchShown = ref(false)
-    const isScreenfull = ref(screenfull.isFullscreen)
 
     /**
      *
@@ -81,7 +83,7 @@ const SiderBar = defineComponent({
         name: 'fullscreen',
         size: 18,
         tooltip: computed(() =>
-          isScreenfull.value
+          isFullscreen.value
             ? t('headerTooltip.CancelFullScreen')
             : t('headerTooltip.FullScreen'),
         ),
@@ -114,17 +116,7 @@ const SiderBar = defineComponent({
         window.open('https://github.com/XiaoDaiGua-Ray/ray-template')
       },
       fullscreen: () => {
-        if (!screenfull.isEnabled) {
-          return (() => {
-            window.$message.warning('您的浏览器不支持全屏~')
-          })()
-        } else {
-          return (() => {
-            screenfull.toggle()
-
-            isScreenfull.value = !screenfull.isFullscreen
-          })()
-        }
+        toggleFullscreen()
       },
       search: () => {
         globalSearchShown.value = true

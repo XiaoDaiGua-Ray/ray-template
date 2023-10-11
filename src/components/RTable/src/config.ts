@@ -11,4 +11,5 @@
 
 export default {
   tableIconSize: '18',
+  tableKey: Symbol('r-table'),
 }

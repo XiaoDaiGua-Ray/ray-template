@@ -175,7 +175,6 @@ export default function (mode: string): PluginOption[] {
         'vuedraggable',
         'xlsx',
         'axios',
-        'screenfull',
         'print-js',
         'clipboard',
         'lodash-es',

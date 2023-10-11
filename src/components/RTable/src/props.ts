@@ -28,8 +28,13 @@ const props = {
     default: null,
   },
   toolOptions: {
-    /** 自定义传递工具栏拓展 */
+    /** 自定义拓展工具栏 */
     type: Array as PropType<(VNode | (() => VNode))[]>,
+  },
+  coverTool: {
+    /** 当 toolOptions 配置时，是否覆盖原工具栏 */
+    type: Boolean,
+    default: false,
   },
   contextMenuOptions: {
     /**

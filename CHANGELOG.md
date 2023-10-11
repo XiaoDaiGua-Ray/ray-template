@@ -16,6 +16,7 @@
 - 实现了新的文件下载函数 `downloadAnyFile`，支持 `blod, file, base64, arrayBuffer`
 - 更新 `naive-ui` 版本至 `2.35.0`
 - 新增了一些工具类型与工具方法
+- 移除 screenfull 插件，使用 vueuse useFullscreen hook 替代。
 - 新增规则 `no-undefined`，[点击查看](https://eslint.org/docs/latest/rules/no-undefined#rule-details) 具体规则
 
 ```ts
@@ -26,6 +27,10 @@ const demo = undefined
 const demo = void 0
 const demo2 = null
 ```
+
+### Fixes
+
+- 修复全屏不能正确提示状态问题
 
 ## 4.2.1
 

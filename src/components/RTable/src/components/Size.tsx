@@ -71,7 +71,7 @@ export default defineComponent({
         trigger="click"
         onUpdateValue={this.updatePopselectValue.bind(this)}
       >
-        <NPopover>
+        <NPopover showArrow={false}>
           {{
             trigger: () => (
               <RIcon

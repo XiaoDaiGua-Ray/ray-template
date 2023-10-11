@@ -1,10 +1,12 @@
-.r-table__c-tree.n-tree .n-tree-node-switcher.n-tree-node-switcher--hide {
-  visibility: visible;
-}
+.r-table__c-tree {
+  & .n-tree-node-switcher.n-tree-node-switcher--hide {
+    visibility: visible;
+  }
 
-.r-table__c-tree.n-tree .ray-icon {
-  &.r-table__c-fixed--active {
-    color: var(--ray-theme-primary-color);
+  & .ray-icon {
+    &.r-table__c-tool-icon--active {
+      color: var(--ray-theme-primary-color);
+    }
   }
 }
 

@@ -23,7 +23,7 @@ export default defineComponent({
   props,
   setup(props) {
     const { uuidTable } = inject<TableProvider>(
-      'tableProvider',
+      config.tableKey,
       {} as TableProvider,
     )
 
@@ -48,7 +48,7 @@ export default defineComponent({
   },
   render() {
     return (
-      <NPopover>
+      <NPopover showArrow={false}>
         {{
           trigger: () => (
             <RIcon

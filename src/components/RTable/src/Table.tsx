@@ -13,13 +13,14 @@ import './index.scss'
 
 import { NCard, NDataTable, NDropdown, NSpace } from 'naive-ui'
 import Size from './components/Size'
-import Screenfull from './components/Screenfull'
+import Screenfull from './components/Fullscreen'
 import C from './components/C'
 import Print from './components/Print'
 
 import props from './props'
 import { call } from '@/utils/vue/index'
 import { uuid } from '@use-utils/hook'
+import config from './config'
 
 import type { DropdownOption, DataTableInst } from 'naive-ui'
 import type { ComponentSize } from '@/types/modules/component'
@@ -31,7 +32,8 @@ export default defineComponent({
   setup(props, ctx) {
     const { expose } = ctx
 
-    const rTableInstance = ref<DataTableInst | null>(null)
+    const rTableInst = ref<DataTableInst | null>(null)
+    const wrapperRef = ref<HTMLElement | null>(null)
 
     const uuidWrapper = uuid(16)
     const uuidTable = uuid(16)
@@ -103,30 +105,70 @@ export default defineComponent({
       }
     }
 
-    provide('tableProvider', {
+    const renderToolOptions = () => {
+      const { toolOptions } = props
+
+      return toolOptions?.map((curr) =>
+        typeof curr === 'function' ? curr() : curr,
+      )
+    }
+
+    const tool = (p: typeof props) => {
+      const renderDefaultToolOptions = () => (
+        <>
+          <Print {...p} />
+          <Size {...p} onChangeSize={changeTableSize.bind(this)} />
+          <Screenfull />
+          <C {...p} onUpdateColumn={updateTableColumn.bind(this)} />
+        </>
+      )
+
+      if (!props.toolOptions) {
+        return renderDefaultToolOptions
+      } else {
+        if (props.coverTool) {
+          return renderToolOptions
+        } else {
+          return () => (
+            <>
+              {renderDefaultToolOptions()}
+              {renderToolOptions()}
+            </>
+          )
+        }
+      }
+    }
+
+    provide(config.tableKey, {
       uuidTable,
       uuidWrapper,
+      wrapperRef,
     })
     expose({
-      rTableInstance,
+      rTableInst,
+      uuidTable,
+      uuidWrapper,
     })
 
     return {
       uuidWrapper,
       uuidTable,
       contextMenuReactive,
-      rTableInstance,
+      rTableInst,
       combineRowProps,
       contextMenuSelect,
-      changeTableSize,
       privateReactive,
-      updateTableColumn,
+      tool,
+      wrapperRef,
     }
   },
   render() {
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    const { tool } = this
+
     return (
       <NCard
-        class="ray-table"
+        ref="wrapperRef"
         bordered={this.wrapperBordered}
         {...{ id: this.uuidWrapper }}
       >
@@ -134,7 +176,7 @@ export default defineComponent({
           default: () => (
             <>
               <NDataTable
-                ref="rTableInstance"
+                ref="rTableInst"
                 {...{ id: this.uuidTable }}
                 {...this.$props}
                 {...this.$attrs}
@@ -164,19 +206,11 @@ export default defineComponent({
           header: () => this.title || <div style="display: none;"></div>,
           'header-extra': () => (
             <NSpace wrapItem={false} align="center">
-              <Print {...this.$props} />
-              <Size
-                {...this.$props}
-                onChangeSize={this.changeTableSize.bind(this)}
-              />
-              <Screenfull />
-              <C
-                {...this.$props}
-                onUpdateColumn={this.updateTableColumn.bind(this)}
-              />
+              {tool(this.$props as any)}
             </NSpace>
           ),
           footer: () => this.$slots.tableFooter?.(),
+          action: () => this.$slots.tableAction?.(),
         }}
       </NCard>
     )

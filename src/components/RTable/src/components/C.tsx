@@ -9,15 +9,6 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-/**
- *
- * TODO:
- * - 使用 computed 获取数据时，将数据转换为 NTree 格式，并且补充固定列操作栏按钮与初始化样式
- * - 使用 computed 收集固定列、拖拽列后的数据
- * - 点击固定列按钮后，激活样式
- * - Table 父组件通知更新 columns，使用 v-model:columns 方式绑定时，即可实现拖拽、动态展示列、固定列操作
- */
-
 import { NPopover, NSpace, NTree } from 'naive-ui'
 import RIcon from '@/components/RIcon/index'
 
@@ -51,7 +42,7 @@ const RowIconRender = ({
   customClassName?: string
 }) => {
   return (
-    <NPopover>
+    <NPopover showArrow={false}>
       {{
         trigger: () => (
           <RIcon
@@ -103,22 +94,15 @@ export default defineComponent({
     },
   },
   setup(props) {
-    /** 深拷贝 columns 避免修改源数据 */
+    // 深拷贝 columns 避免修改源数据
     const treeDataSource = computed({
       get: () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return props.columns.map((curr: any, idx) => {
-          const {
-            key,
-            title,
-            children,
-            fixed,
-            resizable: $resizable,
-            ...args
-          } = curr
-          const isLeftFixedActivated = fixed && fixed === 'left'
-          const isRightFixedActivated = fixed && fixed === 'right'
-          const isResizable = !!$resizable
+        return props.columns.map((curr, idx) => {
+          const { key, title, children, fixed, isResizable, ...args } =
+            curr as C
+          const isLeftFixedActivated = fixed === 'left'
+          const isRightFixedActivated = fixed === 'right'
           const attr = {
             ...args,
             title,
@@ -126,32 +110,49 @@ export default defineComponent({
             fixed,
             isLeftFixedActivated,
             isRightFixedActivated,
+            isResizable,
           }
 
           return {
             ...attr,
             suffix: () => (
-              <NSpace wrapItem={false} style="padding-left: 24px;">
+              <NSpace wrapItem={false} style="padding-left: 32px;">
                 <RowIconRender
                   icon="row_head"
                   title="固定在列首"
                   customClassName={
-                    isLeftFixedActivated ? 'r-table__c-fixed--active' : ''
+                    isLeftFixedActivated ? 'r-table__c-tool-icon--active' : ''
                   }
                   onClick={fixedClick.bind(this, 'left', attr, idx)}
                 />
+                <NPopover showArrow={false}>
+                  {{
+                    trigger: () => (
+                      <RIcon
+                        name="resize_h"
+                        size={config.tableIconSize}
+                        cursor="pointer"
+                        customClassName={
+                          isResizable ? 'r-table__c-tool-icon--active' : ''
+                        }
+                        onClick={resizableClick.bind(this, attr, idx)}
+                      />
+                    ),
+                    default: () => '修改列宽',
+                  }}
+                </NPopover>
                 <RowIconRender
                   icon="row_end"
                   title="固定在列尾"
                   customClassName={
-                    isRightFixedActivated ? 'r-table__c-fixed--active' : ''
+                    isRightFixedActivated ? 'r-table__c-tool-icon--active' : ''
                   }
                   onClick={fixedClick.bind(this, 'right', attr, idx)}
                 />
               </NSpace>
             ),
           }
-        })
+        }) as C[]
       },
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       set: () => {},
@@ -165,15 +166,20 @@ export default defineComponent({
       }
     }
 
+    const resizableClick = (option: C, index: number) => {
+      console.log('🚀 ~ resizableClick ~ option:', option.isResizable)
+      option['isResizable'] = !option['isResizable']
+      option['resizable'] = option['isResizable']
+      treeDataSource.value[index] = option
+
+      event(treeDataSource.value)
+    }
+
     const fixedClick: FixedClick = (type, option, index) => {
       const key = `${type}FixedActivated`
+      const otherKey = `${type === 'left' ? 'right' : 'left'}FixedActivated`
 
-      if (key === 'leftFixedActivated') {
-        option['rightFixedActivated'] = false
-      } else if (key === 'rightFixedActivated') {
-        option['leftFixedActivated'] = false
-      }
-
+      option[otherKey] = false
       option[key] = !option[key]
       option[key] ? (option['fixed'] = type) : (option['fixed'] = void 0)
       treeDataSource.value[index] = option
@@ -184,7 +190,7 @@ export default defineComponent({
     const treeDrop = ({ node, dragNode, dropPosition }: TreeDropInfo) => {
       const [dragNodeSiblings, dragNodeIndex] = findSiblingsAndIndex(
         dragNode,
-        treeDataSource.value,
+        treeDataSource.value as TreeOption[],
       )
 
       if (dragNodeSiblings === null || dragNodeIndex === null) {
@@ -195,7 +201,7 @@ export default defineComponent({
 
       const [nodeSiblings, nodeIndex] = findSiblingsAndIndex(
         node,
-        treeDataSource.value,
+        treeDataSource.value as TreeOption[],
       )
 
       if (nodeSiblings === null || nodeIndex === null) {
@@ -216,7 +222,7 @@ export default defineComponent({
   },
   render() {
     return (
-      <NPopover displayDirective="show" trigger="click">
+      <NPopover displayDirective="show" trigger="click" showArrow={false}>
         {{
           trigger: () => (
             <RIcon
@@ -232,7 +238,9 @@ export default defineComponent({
               data={this.treeDataSource as TreeOption[]}
               blockLine
               draggable
+              keyboard={false}
               labelField="title"
+              selectable={false}
               renderSwitcherIcon={renderSwitcherIcon.bind(this)}
               onDrop={this.treeDrop.bind(this)}
             />

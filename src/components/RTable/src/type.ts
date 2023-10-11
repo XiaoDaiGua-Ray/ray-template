@@ -21,11 +21,9 @@ export type DropdownMixedOption =
 
 export interface DownloadTableOptions {
   fileName?: string
-  // icon?: TableActionIcon
 }
 
 export interface PrintTableOptions {
-  // icon?: TableActionIcon
   printOptions?: Omit<PrintConfiguration.Configuration, 'printable' | 'type'>
   type?: PrintConfiguration.PrintTypes
 }
@@ -33,14 +31,21 @@ export interface PrintTableOptions {
 export interface TableProvider {
   uuidWrapper: string
   uuidTable: string
+  wrapperRef: Ref<HTMLElement | null>
 }
 
 export interface C extends DataTableBaseColumn {
   leftFixedActivated?: boolean
   rightFixedActivated?: boolean
   resizable?: boolean
+  isResizable?: boolean
+  isLeftFixedActivated?: boolean
+  isRightFixedActivated?: boolean
+  children?: C[]
 }
 
 export type OverridesTableColumn<T = Recordable> = C | DataTableColumn<T>
 
-export interface TableInst extends Omit<DataTableInst, 'clearFilter'> {}
+export interface TableInst extends TableProvider {
+  rTableInst: Omit<DataTableInst, 'clearFilter'>
+}
