@@ -20,6 +20,7 @@ import { isValueType, downloadAnyFile } from '@use-utils/hook'
 import { call } from '@/utils/vue/index'
 
 import type { QRCodeRenderResponse, GIFBuffer } from './type'
+import type { WatchStopHandle } from 'vue'
 
 const readGIFAsArrayBuffer = (url: string): Promise<GIFBuffer> => {
   return new Promise((resolve, reject) => {
@@ -59,6 +60,7 @@ export default defineComponent({
       opacitySpinning: '0.1',
     }
     let gifBuffer: GIFBuffer
+    let watchCallback!: WatchStopHandle
 
     const getGIFImageByURL = async () => {
       const { gifBackgroundURL } = props
@@ -123,9 +125,10 @@ export default defineComponent({
 
     watchEffect(() => {
       if (props.watchText) {
-        nextTick().then(() => {
-          renderQRCode()
-        })
+        watchCallback = watch(
+          () => props.text,
+          () => renderQRCode(),
+        )
       }
     })
 
@@ -136,6 +139,9 @@ export default defineComponent({
     onMounted(async () => {
       await getGIFImageByURL()
       renderQRCode()
+    })
+    onBeforeUnmount(() => {
+      watchCallback && watchCallback()
     })
 
     return {
