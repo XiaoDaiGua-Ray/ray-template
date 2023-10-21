@@ -71,6 +71,7 @@ const LayoutMenu = defineComponent({
         <SiderBarLogo collapsed={this.modelCollapsed} />
         <NMenu
           ref="menuRef"
+          class="r-menu--app"
           v-model:value={this.modelMenuKey}
           options={this.modelMenuOptions as NaiveMenuOptions[]}
           indent={APP_MENU_CONFIG.MENU_COLLAPSED_INDENT}

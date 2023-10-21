@@ -21,16 +21,15 @@
 
 import './index.scss'
 
-import { collapseGridProps } from './props'
-
 import { NCard, NGrid, NGridItem, NSpace } from 'naive-ui'
 import RIcon from '@/components/RIcon'
 
 import { call } from '@/utils/vue/index'
+import props from './props'
 
 const RCollapseGrid = defineComponent({
   name: 'RCollapseGrid',
-  props: collapseGridProps,
+  props,
   setup(props) {
     const modelCollapsed = ref(!props.open)
 

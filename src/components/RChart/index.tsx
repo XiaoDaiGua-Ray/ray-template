@@ -52,7 +52,7 @@ import type { AnyFC } from '@/types/modules/utils'
 import type { DebouncedFunc } from 'lodash-es'
 import type { ChartTheme } from '@/components/RChart/type'
 import type { UseResizeObserverReturn } from '@vueuse/core'
-import type { ECharts, EChartsCoreOption, SetOptionOpts } from 'echarts/core'
+import type { ECharts, EChartsCoreOption } from 'echarts/core'
 
 export type { RayChartInst, EChartsExtensionInstallRegisters } from './type'
 
@@ -62,6 +62,7 @@ const defaultChartOptions = {
   silent: false,
   replaceMerge: [],
 }
+const echartThemes = setupChartTheme()
 
 export default defineComponent({
   name: 'RChart',
@@ -181,7 +182,7 @@ export default defineComponent({
 
       try {
         /** 注册主题 */
-        setupChartTheme().forEach((curr) => {
+        echartThemes.forEach((curr) => {
           echarts.registerTheme(curr.name, curr.theme)
         })
 

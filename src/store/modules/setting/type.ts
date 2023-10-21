@@ -12,6 +12,7 @@ export interface SettingState {
   localeLanguage: string
   lockScreenSwitch: boolean
   lockScreenInputSwitch: boolean
+  watermarkSwitch: boolean
   footerSwitch: boolean
   contentTransition: string
 }

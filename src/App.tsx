@@ -2,16 +2,17 @@ import { RouterView } from 'vue-router'
 import AppNaiveGlobalProvider from '@/app-components/provider/AppNaiveGlobalProvider/index'
 import AppStyleProvider from '@/app-components/provider/AppStyleProvider/index'
 import AppLockScreen from '@/app-components/app/AppLockScreen/index'
+import AppWatermarkProvider from '@/app-components/provider/AppWatermarkProvider/index'
 import AppGlobalSpin from '@/spin/index'
 
-const App = defineComponent({
+export default defineComponent({
   name: 'App',
   render() {
     return (
       <AppNaiveGlobalProvider>
         <AppLockScreen />
         <AppStyleProvider />
-
+        <AppWatermarkProvider />
         <AppGlobalSpin>
           {{
             default: () => <RouterView />,
@@ -22,5 +23,3 @@ const App = defineComponent({
     )
   },
 })
-
-export default App

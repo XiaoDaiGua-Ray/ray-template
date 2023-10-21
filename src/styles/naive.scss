@@ -3,3 +3,8 @@
   width: 100%;
   height: 100%;
 }
+
+.r-menu--app:not(.n-menu--collapsed) .n-menu-item-content.n-menu-item-content--selected:before,
+.r-menu--app:not(.n-menu--collapsed) .n-menu-item-content:hover:before {
+  border-left: 4px solid var(--ray-theme-primary-color);
+}

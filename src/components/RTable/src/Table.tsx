@@ -21,13 +21,8 @@ import props from './props'
 import { call } from '@/utils/vue/index'
 import { uuid } from '@use-utils/hook'
 import config from './config'
-import { throttle } from 'lodash-es'
 
-import type {
-  DropdownOption,
-  DataTableInst,
-  DataTableCreateRowProps,
-} from 'naive-ui'
+import type { DropdownOption, DataTableInst } from 'naive-ui'
 import type { ComponentSize } from '@/types/modules/component'
 import type { C as CType } from './type'
 
@@ -113,9 +108,9 @@ export default defineComponent({
     const renderToolOptions = () => {
       const { toolOptions } = props
 
-      return toolOptions?.map((curr) =>
-        typeof curr === 'function' ? curr() : curr,
-      )
+      return toolOptions
+        ?.filter(() => Boolean)
+        .map((curr) => (typeof curr === 'function' ? curr() : curr))
     }
 
     const tool = (p: typeof props) => {

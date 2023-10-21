@@ -50,6 +50,7 @@ const SettingDrawer = defineComponent({
       breadcrumbSwitch,
       footerSwitch,
       contentTransition,
+      watermarkSwitch,
     } = storeToRefs(settingStore)
 
     const modelShow = computed({
@@ -90,6 +91,7 @@ const SettingDrawer = defineComponent({
       contentTransitionOptions,
       contentTransition,
       updateContentTransition,
+      watermarkSwitch,
     }
   },
   render() {
@@ -142,6 +144,14 @@ const SettingDrawer = defineComponent({
                   v-model:value={this.breadcrumbSwitch}
                   onUpdateValue={(bool: boolean) =>
                     this.changeSwitcher(bool, 'breadcrumbSwitch')
+                  }
+                />
+              </NDescriptionsItem>
+              <NDescriptionsItem label="水印">
+                <NSwitch
+                  v-model:value={this.watermarkSwitch}
+                  onUpdateValue={(bool: boolean) =>
+                    this.changeSwitcher(bool, 'watermarkSwitch')
                   }
                 />
               </NDescriptionsItem>

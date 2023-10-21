@@ -26,12 +26,12 @@ import type {
  * 1. 配置、选择主题
  * 2. 点击下载主题
  * 3. 选择 json 类型，然后复制
- * 4. 在 @/components/RChart/theme 包中创建对应的 json 文件，文件名为主题名称
+ * 4. 在 @/echart-themes 包中创建对应的 json 文件，文件名为主题名称
  */
 export const setupChartTheme = () => {
   // 获取所有主题
   const themeRawModules: Record<string, ChartThemeRawModules> =
-    import.meta.glob('@/components/RChart/theme/**/*.json', {
+    import.meta.glob('@/echart-themes/**/*.json', {
       eager: true,
     })
   const regx = /\/([^/]+)\.json$/

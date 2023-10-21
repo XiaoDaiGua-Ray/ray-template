@@ -23,7 +23,7 @@ import { LAYOUT_CONTENT_REF } from '@/app-config/routerConfig'
 import { layoutHeaderCssVars } from '@/layout/layoutResize'
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
 
-const RLayout = defineComponent({
+export default defineComponent({
   name: 'RLayout',
   setup() {
     const layoutSiderBarRef = ref<HTMLElement>()
@@ -68,11 +68,9 @@ const RLayout = defineComponent({
           >
             <ContentWrapper />
           </NLayoutContent>
-          {this.footerSwitch ? <FooterWrapper ref="layoutFooterRef" /> : ''}
+          {this.footerSwitch ? <FooterWrapper ref="layoutFooterRef" /> : null}
         </NLayoutContent>
       </NLayout>
     ) : null
   },
 })
-
-export default RLayout

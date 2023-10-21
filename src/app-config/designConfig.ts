@@ -45,6 +45,10 @@ export const APP_THEME: AppTheme = {
    *   - APP_PRIMARY_COLOR common 配置优先级大于该配置
    *
    * 如果需要定制化整体组件样式, 配置示例
+   * 具体自行查看官网, 还有模式更佳丰富的 peers 主题变量配置
+   * 地址: <https://www.naiveui.com/zh-CN/dark/docs/customize-theme#%E4%BD%BF%E7%94%A8-peers-%E4%B8%BB%E9%A2%98%E5%8F%98%E9%87%8F>
+   *
+   * @example
    * ```
    * const themeOverrides: GlobalThemeOverrides = {
    *   common: {
@@ -55,9 +59,6 @@ export const APP_THEME: AppTheme = {
    *   },
    * }
    * ```
-   *
-   * 具体自行查看官网, 还有模式更佳丰富的 peers 主题变量配置
-   * 地址: <https://www.naiveui.com/zh-CN/dark/docs/customize-theme#%E4%BD%BF%E7%94%A8-peers-%E4%B8%BB%E9%A2%98%E5%8F%98%E9%87%8F>
    */
   APP_NAIVE_UI_THEME_OVERRIDES: {},
   /**

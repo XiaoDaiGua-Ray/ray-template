@@ -163,6 +163,7 @@ export default function (mode: string): PluginOption[] {
     viteCDNPlugin({
       modules: [
         'vue',
+        'vue-demi',
         'pinia',
         'naive-ui',
         'vue-router',
@@ -172,6 +173,7 @@ export default function (mode: string): PluginOption[] {
         'vuedraggable',
         'xlsx',
         'axios',
+        'screenfull',
         'print-js',
         'clipboard',
         'lodash-es',

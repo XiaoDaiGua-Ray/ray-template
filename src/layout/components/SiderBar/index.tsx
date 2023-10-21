@@ -177,7 +177,7 @@ const SiderBar = defineComponent({
                 }}
               </NTooltip>
             ))}
-            {this.breadcrumbSwitch ? <Breadcrumb /> : ''}
+            {this.breadcrumbSwitch ? <Breadcrumb /> : null}
           </NSpace>
           <NSpace
             align="center"

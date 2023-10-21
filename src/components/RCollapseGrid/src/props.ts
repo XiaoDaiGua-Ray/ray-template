@@ -4,7 +4,7 @@ import type { PropType } from 'vue'
 import type { CollapseToggleText } from './type'
 import type { AnyFC, MaybeArray } from '@/types/modules/utils'
 
-export const collapseGridProps = {
+const props = {
   open: {
     /**
      *
@@ -50,13 +50,4 @@ export const collapseGridProps = {
   ...gridProps,
 } as const
 
-/**
- *
- * 基于 `NGird` 实现
- *
- * 继承该组件所有属性和方法, <https://www.naiveui.com/zh-CN/dark/components/grid>
- *
- * `xGap` 默认 `12`
- *
- * `yGap` 默认 `18`
- */
+export default props

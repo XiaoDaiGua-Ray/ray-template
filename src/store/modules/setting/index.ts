@@ -38,6 +38,7 @@ export const useSetting = defineStore(
       lockScreenInputSwitch: false, // 锁屏输入状态开关(预留该字段是为了方便拓展用, 但是舍弃了该字段, 改为使用 useAppLockScreen 方法)
       footerSwitch: true, // 底部区域开关
       contentTransition: 'scale', // 切换过渡效果
+      watermarkSwitch: false, // 水印开关,
     })
 
     /** 更新过渡效果 */

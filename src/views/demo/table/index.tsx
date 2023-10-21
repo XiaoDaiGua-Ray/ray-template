@@ -24,6 +24,7 @@ import {
 import RCollapseGrid from '@/components/RCollapseGrid/index'
 import RTable from '@/components/RTable/index'
 import RIcon from '@/components/RIcon/index'
+import RMoreDropdown from '@/components/RMoreDropdown/index'
 
 import type { DataTableColumns } from 'naive-ui'
 import type { TableInst } from '@/components/RTable/index'
@@ -83,14 +84,26 @@ const TableView = defineComponent({
       {
         title: 'Action',
         key: 'actions',
-        render: (row: RowData) =>
-          h(
-            NButton,
-            {
-              size: 'small',
-            },
-            { default: () => 'Send Email' },
-          ),
+        render: (row: RowData) => (
+          <NSpace wrapItem={false} align="center">
+            <NButton size="tiny">查看</NButton>
+            <RMoreDropdown
+              options={[
+                {
+                  label: '编辑',
+                  key: 'edit',
+                },
+                {
+                  label: '新增',
+                  key: 'add',
+                },
+              ]}
+              onSelect={(key) => {
+                window.$message.info(`当前选择: ${key}`)
+              }}
+            />
+          </NSpace>
+        ),
       },
     ]
     const actionColumns = ref<DataTableColumns<RowData>>(

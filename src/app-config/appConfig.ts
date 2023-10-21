@@ -108,3 +108,19 @@ export const APP_CATCH_KEY = {
   localeLanguage: 'localeLanguage',
   token: 'token',
 } as const
+
+/**
+ *
+ * 系统水印配置
+ * 具体配置信息查看官网: https://www.naiveui.com/zh-CN/dark/components/watermark#API
+ */
+export const APP_WATERMARK_CONFIG = {
+  content: 'Tring be better~',
+  fontSize: 16,
+  lineHeight: 16,
+  width: 384,
+  height: 384,
+  xOffset: 12,
+  yOffset: 60,
+  rotate: -15,
+} as const

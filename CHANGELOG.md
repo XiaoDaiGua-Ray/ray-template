@@ -1,5 +1,21 @@
 # CHANGE LOG
 
+## 4.2.5
+
+### Feats
+
+- 同步更新 vue 版本至 v3.3.6
+- RChart 组件相关改动
+  - RChart 主题配置提取至 src/echart-themes 包中管理。添加方式和规则不变
+  - 调整 RChart setupChartTheme 运行时机，现在不会重复运行该方法获取主题
+- 新增 AppWatermarkProvider 组件与 appConifg APP_WATERMARK_CONFIG 相关配置项
+- 新增 AppMenu 激活、hover 样式
+- 新增 RMoreDropdown 组件，基于 NDropDown，默认以 `...` 展示下拉，允许自定义图标
+
+### Fixes
+
+- 紧急修复构建 cdn vue-demi 依赖丢失问题
+
 ## 4.2.4
 
 ### Feats

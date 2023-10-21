@@ -27,6 +27,7 @@ import './index.scss'
 
 import { NScrollbar, NTag, NSpace, NLayoutHeader, NDropdown } from 'naive-ui'
 import RIcon from '@/components/RIcon/index'
+import RMoreDropdown from '@/components/RMoreDropdown/index'
 
 import { useMenu, useSetting } from '@/store'
 import { uuid } from '@/utils/hook'
@@ -38,7 +39,7 @@ import { queryElements } from '@use-utils/element'
 import type { MenuOption, ScrollbarInst } from 'naive-ui'
 import type { MenuTagOptions, AppMenuOption } from '@/types/modules/app'
 
-const MenuTag = defineComponent({
+export default defineComponent({
   name: 'MenuTag',
   setup(_, { expose }) {
     const scrollRef = ref<ScrollbarInst | null>(null)
@@ -525,10 +526,11 @@ const MenuTag = defineComponent({
                 customClassName="menu-tag__right-arrow"
                 onClick={this.handleScrollX.bind(this, 'right')}
               />
-              <NDropdown
+              <RMoreDropdown
                 options={this.moreOptions}
                 trigger="click"
                 onSelect={this.actionDropdownSelect.bind(this)}
+                iconSize={20}
               >
                 <RIcon
                   name="more"
@@ -537,7 +539,7 @@ const MenuTag = defineComponent({
                   customClassName="menu-tag__right-setting"
                   onClick={this.setCurrentContentmenuIndex.bind(this)}
                 />
-              </NDropdown>
+              </RMoreDropdown>
             </div>
           </NSpace>
         </div>
@@ -545,5 +547,3 @@ const MenuTag = defineComponent({
     )
   },
 })
-
-export default MenuTag

@@ -1,7 +1,7 @@
 {
   "name": "ray-template",
   "private": false,
-  "version": "4.2.4",
+  "version": "4.2.5",
   "type": "module",
   "engines": {
     "node": ">=16.0.0",
@@ -38,7 +38,7 @@
     "pinia": "^2.1.4",
     "pinia-plugin-persistedstate": "^3.1.0",
     "print-js": "^1.6.0",
-    "vue": "^3.3.4",
+    "vue": "^3.3.6",
     "vue-hooks-plus": "1.8.5",
     "vue-i18n": "^9.2.2",
     "vue-router": "^4.2.4",
