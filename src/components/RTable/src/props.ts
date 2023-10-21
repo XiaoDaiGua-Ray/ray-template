@@ -15,6 +15,7 @@ import type { PropType, VNode, VNodeChild } from 'vue'
 import type { MaybeArray } from '@/types/modules/utils'
 import type { DropdownOption, DataTableColumn } from 'naive-ui'
 import type { DownloadTableOptions, PrintTableOptions } from './type'
+import type { Recordable } from '@/types/modules/helper'
 
 const props = {
   ...dataTableProps,
@@ -104,6 +105,17 @@ const props = {
   'onUpdate:columns': {
     type: [Function, Array] as PropType<
       MaybeArray<(arr: DataTableColumn[]) => void>
+    >,
+    default: null,
+  },
+  onContextmenu: {
+    /**
+     *
+     * 该属性用于启用右键菜单后被 Table 强行代理后的右键点击事件回调
+     * 当右键菜单不启用时，不生效。只需要使用 rowProps 属性配置右键菜单事件即可
+     */
+    type: [Function, Array] as PropType<
+      MaybeArray<(row: Recordable, index: number, e: MouseEvent) => void>
     >,
     default: null,
   },

@@ -1,7 +1,7 @@
 import { getAppDefaultLanguage } from '@/locales/helper'
 import { setStorage } from '@use-utils/cache'
 import { set } from 'lodash-es'
-import { addClass, removeClass, colorToRgba } from '@/utils/element'
+import { colorToRgba } from '@/utils/element'
 import { useI18n } from '@/hooks/web/index'
 import { APP_THEME } from '@/app-config/designConfig'
 import { useDayjs } from '@/hooks/web/index'

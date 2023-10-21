@@ -129,6 +129,8 @@ export default defineComponent({
           () => props.text,
           () => renderQRCode(),
         )
+      } else {
+        watchCallback?.()
       }
     })
 
@@ -141,7 +143,7 @@ export default defineComponent({
       renderQRCode()
     })
     onBeforeUnmount(() => {
-      watchCallback && watchCallback()
+      watchCallback?.()
     })
 
     return {
@@ -175,7 +177,7 @@ export default defineComponent({
                 this.$slots.errorAction()
               ) : (
                 <>
-                  <NButton text color="#ffffff">
+                  <NButton text>
                     {{
                       default: () => this.errorActionDescription,
                       icon: () => (

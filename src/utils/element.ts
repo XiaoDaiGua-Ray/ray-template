@@ -1,15 +1,18 @@
 import { isValueType } from '@use-utils/hook'
 import { APP_REGEX } from '@/app-config/regexConfig'
+import { unrefElement } from '@/utils/vue/index'
 
 import type {
   EventListenerOrEventListenerObject,
   PartialCSSStyleDeclaration,
   ElementSelector,
 } from '@/types/modules/utils'
+import type { EventListenerTarget } from '@/types/modules/utils'
+import type { BasicTarget } from '@/types/modules/vue'
 
 /**
  *
- * @param element Target element dom
+ * @param target Target element dom
  * @param event 绑定事件类型
  * @param handler 事件触发方法
  * @param useCapture 是否冒泡
@@ -17,19 +20,21 @@ import type {
  * @remark 给元素绑定某个事件柄方法
  */
 export const on = (
-  element: HTMLElement | Document | Window,
+  target: EventListenerTarget,
   event: string,
   handler: EventListenerOrEventListenerObject,
   useCapture: boolean | AddEventListenerOptions = false,
 ) => {
-  if (element && event && handler) {
-    element.addEventListener(event, handler, useCapture)
+  const targetElement = unrefElement(target, window)
+
+  if (targetElement && event && handler) {
+    targetElement.addEventListener(event, handler, useCapture)
   }
 }
 
 /**
  *
- * @param element Target element dom
+ * @param target Target element dom
  * @param event 卸载事件类型
  * @param handler 所需卸载方法
  * @param useCapture 是否冒泡
@@ -37,30 +42,37 @@ export const on = (
  * @remark 卸载元素上某个事件柄方法
  */
 export const off = (
-  element: HTMLElement | Document | Window,
+  target: EventListenerTarget,
   event: string,
   handler: EventListenerOrEventListenerObject,
   useCapture: boolean | AddEventListenerOptions = false,
 ) => {
-  if (element && event && handler) {
-    element.removeEventListener(event, handler, useCapture)
+  const targetElement = unrefElement(target, window)
+
+  if (targetElement && event && handler) {
+    targetElement.removeEventListener(event, handler, useCapture)
   }
 }
 
 /**
  *
- * @param element Target element dom
+ * @param target Target element dom
  * @param className 所需添加className，可: 'xxx xxx' | 'xxx' 格式添加(参考向元素绑定 css 语法)
  *
  * @remark 添加元素className(可: 'xxx xxx' | 'xxx'格式添加)
  */
-export const addClass = (element: HTMLElement, className: string) => {
-  if (element) {
+export const addClass = (
+  target: BasicTarget<Element | HTMLElement | SVGAElement>,
+  className: string,
+) => {
+  const targetElement = unrefElement(target)
+
+  if (targetElement) {
     const classes = className.trim().split(' ')
 
     classes.forEach((item) => {
       if (item) {
-        element.classList.add(item)
+        targetElement.classList.add(item)
       }
     })
   }
@@ -68,19 +80,21 @@ export const addClass = (element: HTMLElement, className: string) => {
 
 /**
  *
- * @param element Target element dom
+ * @param target Target element dom
  * @param className 所需删除className，可: 'xxx xxx' | 'xxx' 格式删除(参考向元素绑定 css 语法)
  *
  * @remark 删除元素className(可: 'xxx xxx' | 'xxx'格式删除)
  * @remark 如果输入值为 removeAllClass 则会删除该元素所有 class name
  */
 export const removeClass = (
-  element: HTMLElement,
+  target: BasicTarget<Element | HTMLElement | SVGAElement>,
   className: string | 'removeAllClass',
 ) => {
-  if (element) {
+  const targetElement = unrefElement(target)
+
+  if (targetElement) {
     if (className === 'removeAllClass') {
-      const classList = element.classList
+      const classList = targetElement.classList
 
       classList.forEach((curr) => classList.remove(curr))
     } else {
@@ -88,7 +102,7 @@ export const removeClass = (
 
       classes.forEach((item) => {
         if (item) {
-          element.classList.remove(item)
+          targetElement.classList.remove(item)
         }
       })
     }
@@ -97,15 +111,21 @@ export const removeClass = (
 
 /**
  *
- * @param element Target element dom
+ * @param target Target element dom
  * @param className 查询元素是否含有此className，可: 'xxx xxx' | 'xxx' 格式查询(参考向元素绑定 css 语法)
  *
  * @returns 返回boolean
  *
  * @remark 元素是否含有某个className(可: 'xxx xxx' | 'xxx' 格式查询)
  */
-export const hasClass = (element: HTMLElement, className: string) => {
-  const elementClassName = element.className
+export const hasClass = (target: BasicTarget, className: string) => {
+  const targetElement = unrefElement(target)
+
+  if (!targetElement) {
+    return false
+  }
+
+  const elementClassName = targetElement.className
 
   const classes = className
     .trim()
@@ -117,7 +137,7 @@ export const hasClass = (element: HTMLElement, className: string) => {
 
 /**
  *
- * @param el Target element dom
+ * @param target Target element dom
  * @param styles 所需绑定样式(如果为字符串, 则必须以分号结尾每个行内样式描述)
  *
  *
@@ -139,10 +159,12 @@ export const hasClass = (element: HTMLElement, className: string) => {
  * ```
  */
 export const addStyle = (
-  el: HTMLElement,
+  target: BasicTarget<HTMLElement | SVGAElement>,
   styles: PartialCSSStyleDeclaration | string,
 ) => {
-  if (!el) {
+  const targetElement = unrefElement(target)
+
+  if (!targetElement) {
     return
   }
 
@@ -165,8 +187,8 @@ export const addStyle = (
   Object.keys(styleObj).forEach((key) => {
     const value = styleObj[key]
 
-    if (key in el.style) {
-      el.style[key] = value
+    if (key in targetElement.style) {
+      targetElement.style[key] = value
     }
   })
 }
@@ -177,15 +199,17 @@ export const addStyle = (
  * @param styles 所需卸载样式
  */
 export const removeStyle = (
-  el: HTMLElement,
+  target: BasicTarget<HTMLElement | SVGAElement>,
   styles: (keyof CSSStyleDeclaration & string)[],
 ) => {
-  if (!el) {
+  const targetElement = unrefElement(target)
+
+  if (!targetElement) {
     return
   }
 
   styles.forEach((curr) => {
-    el.style.removeProperty(curr)
+    targetElement.style.removeProperty(curr)
   })
 }
 

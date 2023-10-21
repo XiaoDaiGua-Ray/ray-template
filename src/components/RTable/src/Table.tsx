@@ -21,8 +21,13 @@ import props from './props'
 import { call } from '@/utils/vue/index'
 import { uuid } from '@use-utils/hook'
 import config from './config'
+import { throttle } from 'lodash-es'
 
-import type { DropdownOption, DataTableInst } from 'naive-ui'
+import type {
+  DropdownOption,
+  DataTableInst,
+  DataTableCreateRowProps,
+} from 'naive-ui'
 import type { ComponentSize } from '@/types/modules/component'
 import type { C as CType } from './type'
 
@@ -69,8 +74,8 @@ export default defineComponent({
      * 合并 RTable 的所有 rowProps
      * 如果开启了右键菜单功能，自动会拦截右键事件
      */
-    const combineRowProps = (arr: Record<string, unknown>, idx: number) => {
-      const interceptRowProps = props.rowProps?.(arr, idx)
+    const combineRowProps = (row: Record<string, unknown>, idx: number) => {
+      const interceptRowProps = props.rowProps?.(row, idx)
 
       return {
         ...interceptRowProps,

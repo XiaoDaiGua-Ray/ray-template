@@ -65,7 +65,6 @@ const RIcon = defineComponent({
     },
   },
   setup(props) {
-    const modelColor = computed(() => props.color)
     const symbolId = computed(() => `#${props.prefix}-${props.name}`)
     const cssVars = computed(() => {
       const cssVar = {
@@ -82,7 +81,7 @@ const RIcon = defineComponent({
       return cssVar
     })
 
-    const handleClick = (e: MouseEvent) => {
+    const iconClick = (e: MouseEvent) => {
       const { onClick } = props
 
       if (onClick) {
@@ -91,10 +90,9 @@ const RIcon = defineComponent({
     }
 
     return {
-      modelColor,
       symbolId,
       cssVars,
-      handleClick,
+      iconClick,
     }
   },
   render() {
@@ -102,12 +100,12 @@ const RIcon = defineComponent({
       <span
         class={['ray-icon', this.customClassName]}
         style={[this.cssVars]}
-        onClick={this.handleClick.bind(this)}
+        onClick={this.iconClick.bind(this)}
       >
         <svg
           {...({ RayIconAttribute: 'ray-icon', ariaHidden: true } as object)}
         >
-          <use {...{ 'xlink:href': this.symbolId }} fill={this.modelColor} />
+          <use {...{ 'xlink:href': this.symbolId }} fill={this.color} />
         </svg>
       </span>
     )

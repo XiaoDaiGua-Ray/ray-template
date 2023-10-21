@@ -1,14 +1,16 @@
-import type { ComponentPublicInstance, MaybeRef } from 'vue'
-import type { MaybeElement } from './element'
+import type { ComponentPublicInstance } from 'vue'
 
-export type MaybeElementRef<T extends MaybeElement = MaybeElement> = MaybeRef<T>
+export type TargetValue<T> = T | undefined | null
 
-export type VueInstance = ComponentPublicInstance
+export type TargetType =
+  | HTMLElement
+  | Element
+  | SVGElement
+  | Window
+  | Document
+  | ComponentPublicInstance
 
-export type MaybeRefOrGetter<T> = MaybeRef<T> | (() => T)
-
-export type MaybeComputedElementRef<T extends MaybeElement = MaybeElement> =
-  MaybeRefOrGetter<T>
-
-export type UnRefElementReturn<T extends MaybeElement = MaybeElement> =
-  T extends VueInstance ? Exclude<MaybeElement, VueInstance> : T | undefined
+export type BasicTarget<T extends TargetType = Element> =
+  | (() => TargetValue<T>)
+  | TargetValue<T>
+  | Ref<TargetValue<T>>

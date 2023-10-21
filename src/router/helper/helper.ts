@@ -75,7 +75,7 @@ export const orderRoutes = (routes: AppRouteRecordRaw[]) => {
     const nextOrder = next.meta?.order ?? 0
 
     if (typeof currOrder !== 'number' || typeof nextOrder !== 'number') {
-      throw new Error('orderRoutes error: order must be a number!')
+      throw new TypeError('orderRoutes error: order must be a number!')
     }
 
     if (currOrder === nextOrder) {

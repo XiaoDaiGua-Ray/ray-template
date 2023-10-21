@@ -115,6 +115,11 @@ const UnlockScreen = defineComponent({
                   clearable
                   minlength={6}
                   maxlength={12}
+                  onKeydown={(e: KeyboardEvent) => {
+                    if (e.code === 'Enter') {
+                      this.unlockScreen()
+                    }
+                  }}
                 />
               </NFormItem>
               <NSpace justify="space-between">

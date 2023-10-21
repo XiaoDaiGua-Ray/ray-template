@@ -26,7 +26,7 @@
 import { useKeepAlive } from '@/store'
 import { APP_KEEP_ALIVE } from '@/app-config/appConfig'
 
-import type { PropType } from 'vue'
+import type { TransitionProps } from './type'
 
 /**
  *
@@ -36,20 +36,10 @@ import type { PropType } from 'vue'
 defineOptions({
   name: 'RTransitionComponent',
 })
-
-defineProps({
-  transitionPropName: {
-    type: String,
-    default: 'fade',
-  },
-  transitionMode: {
-    type: String as PropType<'default' | 'out-in' | 'in-out' | undefined>,
-    default: 'out-in',
-  },
-  transitionAppear: {
-    type: Boolean,
-    default: false,
-  },
+withDefaults(defineProps<TransitionProps>(), {
+  transitionPropName: 'fade',
+  transitionMode: 'out-in',
+  transitionAppear: true,
 })
 
 const keepAliveStore = useKeepAlive()

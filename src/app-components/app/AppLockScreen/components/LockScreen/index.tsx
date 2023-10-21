@@ -77,6 +77,11 @@ const LockScreen = defineComponent({
               clearable
               minlength={6}
               maxlength={12}
+              onKeydown={(e: KeyboardEvent) => {
+                if (e.code === 'Enter') {
+                  this.lockScreen()
+                }
+              }}
             />
           </NFormItem>
           <NButton type="primary" onClick={this.lockScreen.bind(this)}>

@@ -53,24 +53,18 @@ const RIframe = defineComponent({
       }
     }
 
-    const getIframeRef = () => {
-      const iframeEl = iframeRef.value as HTMLElement
-
-      return iframeEl
-    }
-
     expose({
       iframeInst: iframeRef,
     })
 
     onMounted(() => {
-      on(getIframeRef(), 'load', iframeLoadSuccess.bind(this))
-      on(getIframeRef(), 'error', iframeLoadError)
+      on(iframeRef.value, 'load', iframeLoadSuccess.bind(this))
+      on(iframeRef.value, 'error', iframeLoadError)
     })
 
     onBeforeUnmount(() => {
-      off(getIframeRef(), 'load', iframeLoadSuccess)
-      off(getIframeRef(), 'error', iframeLoadError)
+      off(iframeRef.value, 'load', iframeLoadSuccess)
+      off(iframeRef.value, 'error', iframeLoadError)
     })
 
     return {

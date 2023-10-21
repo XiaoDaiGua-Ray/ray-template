@@ -23,7 +23,6 @@ import { ViteEjsPlugin as viteEjsPlugin } from 'vite-plugin-ejs'
 import viteAutoImport from 'unplugin-auto-import/vite'
 import viteEslint from 'vite-plugin-eslint'
 import mockDevServerPlugin from 'vite-plugin-mock-dev-server'
-import vueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import unpluginViteComponents from 'unplugin-vue-components/vite'
 import { cdn as viteCDNPlugin } from 'vite-plugin-cdn2'
@@ -41,7 +40,13 @@ export default function (mode: string): PluginOption[] {
     vue(),
     viteVueJSX(),
     title,
-    viteVeI18nPlugin({}),
+    viteVeI18nPlugin({
+      runtimeOnly: true,
+      compositionOnly: true,
+      forceStringify: true,
+      defaultSFCLang: 'json',
+      include: [path.resolve(__dirname, '../locales/**')],
+    }),
     viteAutoImport({
       eslintrc: {
         enabled: true,
@@ -149,13 +154,6 @@ export default function (mode: string): PluginOption[] {
       reload: true,
       build: true,
     }),
-    vueI18nPlugin({
-      runtimeOnly: true,
-      compositionOnly: true,
-      forceStringify: true,
-      defaultSFCLang: 'json',
-      include: [path.resolve(__dirname, '../locales/**')],
-    }),
     createSvgIconsPlugin({
       iconDirs: [path.resolve(process.cwd(), 'src/icons')],
       symbolId: 'icon-[dir]-[name]',
@@ -165,7 +163,6 @@ export default function (mode: string): PluginOption[] {
     viteCDNPlugin({
       modules: [
         'vue',
-        'vue-demi',
         'pinia',
         'naive-ui',
         'vue-router',

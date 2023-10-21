@@ -1,5 +1,20 @@
 # CHANGE LOG
 
+## 4.2.4
+
+### Feats
+
+- 优化 utils/element 包下的方法
+- 更新 vue-hooks-plus 版本至 1.8.5
+- 移除不必要的 cdn
+- 优化了类型包的一些基础类型，剔除了一些无意义的类型
+- 提取 RChart props 单独维护
+- RTable 组件新增 onContextmenu props 属性。用于在启用右键菜单时被组件强行代理右键点击事件的回调
+
+### Fixes
+
+- 修复 RChart 组件不能被正常取消 watchOptions 问题
+
 ## 4.2.3
 
 ### Fixes

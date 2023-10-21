@@ -9,17 +9,27 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import type {
-  MaybeComputedElementRef,
-  UnRefElementReturn,
-  VueInstance,
-} from '@/types/modules/vue'
-import type { MaybeElement } from '@/types/modules/element'
+import type { BasicTarget, TargetType, TargetValue } from '@/types/modules/vue'
+import type { ComponentPublicInstance } from 'vue'
 
-export function unrefElement<T extends MaybeElement>(
-  elRef: MaybeComputedElementRef<T>,
-): UnRefElementReturn<T> {
-  const plain = toValue(elRef)
+export function unrefElement<T extends TargetType>(
+  target: BasicTarget<T>,
+  defaultTarget?: T,
+) {
+  if (!target) {
+    return defaultTarget
+  }
 
-  return (plain as VueInstance)?.$el ?? plain
+  let targetElement: TargetValue<T>
+
+  if (typeof target === 'function') {
+    targetElement = target()
+  } else if (isRef(target)) {
+    targetElement =
+      (target.value as ComponentPublicInstance)?.$el ?? target.value
+  } else {
+    targetElement = target
+  }
+
+  return targetElement
 }

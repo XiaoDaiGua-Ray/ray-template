@@ -10,6 +10,7 @@
  */
 
 import type { ECharts, EChartsCoreOption } from 'echarts/core'
+import type { CanvasRenderer } from 'echarts/renderers' // `echarts` 渲染器
 
 export interface ChartThemeRawModules {
   default: Record<string, UnknownObjectKey>
@@ -66,3 +67,5 @@ export interface RayChartInst {
    */
   render: () => void
 }
+
+export type EChartsExtensionInstallRegisters = typeof CanvasRenderer
