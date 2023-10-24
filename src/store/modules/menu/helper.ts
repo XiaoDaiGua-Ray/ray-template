@@ -163,7 +163,7 @@ export const hasMenuIcon = (option: AppMenuOption) => {
     RIcon,
     {
       name: meta!.icon as string,
-      size: APP_MENU_CONFIG.MENU_COLLAPSED_ICON_SIZE,
+      size: APP_MENU_CONFIG.menuCollapsedIconSize,
       cursor: 'pointer',
     },
     {},

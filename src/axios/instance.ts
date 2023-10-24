@@ -13,20 +13,20 @@
  *
  * 请求拦截器与响应拦截器
  * 如果有需要拓展拦截器, 请在 inject 目录下参照示例方法继续拓展
- * 该页面不做改动与配置
+ * 该页面不应该做过多的改动与配置
  */
 
 import axios from 'axios'
 import { AXIOS_CONFIG } from '@/app-config/requestConfig'
-import { useAxiosInterceptor, axiosCanceler } from '@/axios/helper/interceptor'
+import { useAxiosInterceptor } from '@/axios/helper/interceptor'
 import {
   setupResponseInterceptor,
   setupResponseErrorInterceptor,
-} from '@/axios/inject/response/provide'
+} from '@/axios/inject/response'
 import {
   setupRequestInterceptor,
   setupRequestErrorInterceptor,
-} from '@/axios/inject/request/provide'
+} from '@/axios/inject/request'
 
 import type { AxiosInstanceExpand } from './type'
 
@@ -69,9 +69,6 @@ server.interceptors.response.use(
   (error) => {
     setupResponseErrorInterceptor()
     fetchError('responseError', error, 'implementResponseInterceptorErrorArray')
-
-    // 注销该失败请求的取消器
-    axiosCanceler.removePendingRequest(error.config || {})
 
     return Promise.reject(error)
   },

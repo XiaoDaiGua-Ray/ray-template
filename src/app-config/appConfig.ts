@@ -76,21 +76,21 @@ export const SIDE_BAR_LOGO: LayoutSideBarLogo | undefined = {
  *
  * 系统菜单折叠配置
  *
- * MENU_COLLAPSED_WIDTH 配置仅当 MENU_COLLAPSED_MODE 为 width 风格时才有效
+ * menuCollapsedWidth 配置仅当 menuCollapsedMode 为 width 风格时才有效
  *
- * MENU_COLLAPSED_MODE:
+ * menuCollapsedMode:
  *   - transform: 边栏将只会移动它的位置而不会改变宽度
  *   - width: Sider 的内容宽度将会被实际改变
- * MENU_COLLAPSED_ICON_SIZE 配置菜单未折叠时图标的大小
- * MENU_COLLAPSED_INDENT 配置菜单每级的缩进
- * MENU_ACCORDION 手风琴模式
+ * menuCollapsedIconSize 配置菜单未折叠时图标的大小
+ * menuCollapsedIndent 配置菜单每级的缩进
+ * menuAccordion 手风琴模式
  */
 export const APP_MENU_CONFIG: Readonly<AppMenuConfig> = {
-  MENU_COLLAPSED_WIDTH: 64,
-  MENU_COLLAPSED_MODE: 'width',
-  MENU_COLLAPSED_ICON_SIZE: 22,
-  MENU_COLLAPSED_INDENT: 24,
-  MENU_ACCORDION: false,
+  menuCollapsedWidth: 64,
+  menuCollapsedMode: 'width',
+  menuCollapsedIconSize: 22,
+  menuCollapsedIndent: 24,
+  menuAccordion: false,
 }
 
 /**

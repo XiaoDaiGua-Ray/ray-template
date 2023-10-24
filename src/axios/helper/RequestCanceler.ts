@@ -37,7 +37,7 @@ export default class RequestCanceler {
    *
    * @remark 将当前请求 config 生成 request key
    */
-  generateRequestKey(config: AppRawRequestConfig): string {
+  generateRequestKey(config: AppRawRequestConfig) {
     const { method, url } = config
 
     return [
@@ -82,7 +82,6 @@ export default class RequestCanceler {
 
     if (this.pendingRequest.has(requestKey)) {
       this.pendingRequest.get(requestKey)!.abort()
-
       this.pendingRequest.delete(requestKey)
     }
   }

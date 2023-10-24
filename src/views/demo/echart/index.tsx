@@ -242,22 +242,23 @@ const Echart = defineComponent({
         <NCard title="chart 组件">
           <ul>
             <li>
-              <h3>当未获取到宽高时，组件会默认以 200*200 尺寸填充。</h3>
+              <h3>1. 当未获取到宽高时，组件会默认以 200*200 尺寸填充。</h3>
             </li>
             <li>
               <h3>
-                默认启用 autoChangeTheme，自动监听模板主题变化（RayTemplate
+                2. 默认启用 autoChangeTheme，自动监听模板主题变化，如果设置为
+                false 则为 APP_THEME.echartTheme 配置项为渲染结果（RayTemplate
                 独有）
               </h3>
             </li>
             <li>
-              <h3>默认启用 watchOptions，自动监听配置项变化</h3>
+              <h3>3. 默认启用 watchOptions，自动监听配置项变化</h3>
             </li>
             <li>
-              <h3>默认启用 animation，强制启用渲染过渡动画</h3>
+              <h3>4. 默认启用 animation，强制启用渲染过渡动画</h3>
             </li>
             <li>
-              <h3>配置 setChartOptions 属性，可以定制化合并模式</h3>
+              <h3>5. 配置 setChartOptions 属性，可以定制化合并模式</h3>
             </li>
           </ul>
         </NCard>
@@ -277,11 +278,11 @@ const Echart = defineComponent({
             showAria={this.chartAria}
           />
         </div>
-        <NH2>不跟随主题切换的暗色主题可视化图</NH2>
+        <NH2>不跟随主题切换的暗色主题可视化图，并且手动指定原始主题色</NH2>
         <div class="chart--container">
           <RChart
             autoChangeTheme={false}
-            theme="dark"
+            theme="default"
             options={this.baseOptions}
           />
         </div>

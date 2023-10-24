@@ -18,11 +18,12 @@ import { on, off, queryElements, addClass, removeClass } from '@/utils/element'
 import { debounce } from 'lodash-es'
 import { useMenu } from '@/store'
 import { validMenuItemShow } from '@/router/helper/routerCopilot'
+import { useDevice } from '@/hooks/web/index'
 
 import type { AppRouteMeta } from '@/router/type'
 import type { AppMenuOption } from '@/types/modules/app'
 
-const GlobalSeach = defineComponent({
+export default defineComponent({
   name: 'GlobalSeach',
   props: {
     show: {
@@ -76,6 +77,7 @@ const GlobalSeach = defineComponent({
     let searchElementIndex = 0
     /** 缓存索引 */
     let preSearchElementIndex = searchElementIndex
+    const { isTabletOrSmaller } = useDevice()
 
     /** 初始化一些值 */
     const resetSearchSomeValue = () => {
@@ -240,13 +242,18 @@ const GlobalSeach = defineComponent({
       autoFouceSearchItem()
     }
 
+    watchEffect(() => {
+      if (isTabletOrSmaller.value) {
+        modelShow.value = false
+      }
+    })
+
     onMounted(() => {
       on(window, 'keydown', (e: Event) => {
         registerArouseKeyboard(e as KeyboardEvent)
         registerChangeSearchElementIndex(e as KeyboardEvent)
       })
     })
-
     onBeforeUnmount(() => {
       off(window, 'keydown', (e: Event) => {
         registerArouseKeyboard(e as KeyboardEvent)
@@ -261,10 +268,15 @@ const GlobalSeach = defineComponent({
       handleSearchMenuOptions: debounce(handleSearchMenuOptions, 300),
       handleSearchItemClick,
       RenderPreIcon,
+      isTabletOrSmaller,
     }
   },
   render() {
-    return (
+    const { isTabletOrSmaller } = this
+
+    return isTabletOrSmaller ? (
+      <div></div>
+    ) : (
       <NModal v-model:show={this.modelShow} transform-origin="center" show>
         <div class="global-seach global-seach--dark global-seach--light">
           <div class="global-seach__wrapper">
@@ -339,5 +351,3 @@ const GlobalSeach = defineComponent({
     )
   },
 })
-
-export default GlobalSeach

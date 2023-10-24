@@ -43,7 +43,12 @@ export type AutoResize =
       height: number
     }
 
-export type ChartTheme = 'macarons-dark' | string | object | 'macarons'
+export type ChartTheme =
+  | 'macarons-dark'
+  | 'macarons'
+  | 'default'
+  | string
+  | null
 
 export interface RayChartInst {
   /**

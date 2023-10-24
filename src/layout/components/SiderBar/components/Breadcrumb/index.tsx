@@ -21,6 +21,7 @@
 import { NDropdown, NBreadcrumb, NBreadcrumbItem } from 'naive-ui'
 
 import { useMenu } from '@/store'
+import { useDevice } from '@/hooks/web/index'
 
 import type { DropdownOption } from 'naive-ui'
 import type {
@@ -29,7 +30,7 @@ import type {
   AppMenuKey,
 } from '@/types/modules/app'
 
-const Breadcrumb = defineComponent({
+export default defineComponent({
   name: 'RBreadcrumb',
   setup() {
     const menuStore = useMenu()
@@ -37,15 +38,13 @@ const Breadcrumb = defineComponent({
     const { changeMenuModelValue } = menuStore
     const { breadcrumbOptions } = storeToRefs(menuStore)
     const modelBreadcrumbOptions = computed(() => breadcrumbOptions.value)
+    const { isTabletOrSmaller } = useDevice()
 
-    const handleDropdownSelect = (
-      key: string | number,
-      option: DropdownOption,
-    ) => {
+    const dropdownSelect = (key: string | number, option: DropdownOption) => {
       changeMenuModelValue(key, option as unknown as AppMenuOption)
     }
 
-    const handleBreadcrumbItemClick = (option: AppMenuOption) => {
+    const breadcrumbItemClick = (option: AppMenuOption) => {
       if (!option.children?.length) {
         const { meta = {} } = option
 
@@ -57,24 +56,29 @@ const Breadcrumb = defineComponent({
 
     return {
       modelBreadcrumbOptions,
-      handleDropdownSelect,
-      handleBreadcrumbItemClick,
+      dropdownSelect,
+      breadcrumbItemClick,
+      isTabletOrSmaller,
     }
   },
   render() {
-    return (
+    const { isTabletOrSmaller } = this
+
+    return isTabletOrSmaller ? (
+      <div></div>
+    ) : (
       <NBreadcrumb>
         {this.modelBreadcrumbOptions.map((curr) => (
           <NBreadcrumbItem
             key={curr.key}
-            onClick={this.handleBreadcrumbItemClick.bind(this, curr)}
+            onClick={this.breadcrumbItemClick.bind(this, curr)}
           >
             <NDropdown
               labelField="breadcrumbLabel"
               options={
                 curr.children && curr.children?.length > 1 ? curr.children : []
               }
-              onSelect={this.handleDropdownSelect.bind(this)}
+              onSelect={this.dropdownSelect.bind(this)}
             >
               {{
                 default: () => (
@@ -92,5 +96,3 @@ const Breadcrumb = defineComponent({
     )
   },
 })
-
-export default Breadcrumb

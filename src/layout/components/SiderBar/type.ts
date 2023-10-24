@@ -1,4 +1,5 @@
 import type { DropdownOption } from 'naive-ui'
+import type { ComputedRef } from 'vue'
 
 export interface IconEventMapOptions {
   [propName: string]: (...args: unknown[]) => unknown
@@ -19,4 +20,11 @@ export interface IconOptions {
   tooltip?: string
   eventKey?: string
   dropdown?: IconDropdownOptions
+}
+
+export interface LeftIconOptions {
+  name: string
+  size: number
+  tooltip?: string
+  iconClass?: ComputedRef
 }

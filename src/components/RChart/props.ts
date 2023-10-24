@@ -47,6 +47,7 @@ const props = {
   canvasRender: {
     /**
      *
+     * @deprecated
      * `chart` 渲染器, 默认使用 `canvas`
      *
      * 考虑到打包体积与大多数业务场景缘故, 暂时移除 `SVGRenderer` 渲染器的默认导入
@@ -91,8 +92,12 @@ const props = {
     default: null,
   },
   theme: {
-    type: [String, Object] as PropType<ChartTheme>,
-    default: '',
+    /**
+     *
+     * 手动指定 chart theme
+     */
+    type: String as PropType<ChartTheme>,
+    default: null,
   },
   autoChangeTheme: {
     /**

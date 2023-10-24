@@ -1,5 +1,24 @@
 # CHANGE LOG
 
+## 4.2.6
+
+### Feats
+
+做了一点大的更新改动，支持小尺寸设备、显示器展示了。但是仅仅是在布局上做了一些兼容！
+
+补充了一些代码的注释。
+
+- RChart 改动
+  - 重构了 RChart 组件，现在支持自定义主题色了
+  - 支持配置 theme 为 default 属性，则可以启用 echart 默认样式
+  - 更新了 echart-themes 包中的说明文件
+- 更改 canceler 方法名为 RequestCanceler
+- 更改 app-config 包中的一些属性命名，现在将更加统一命名规则
+
+### Fixes
+
+- 修复 axios request error 状态时不能正确取消拦截器问题
+
 ## 4.2.5
 
 ### Feats

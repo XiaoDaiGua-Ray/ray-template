@@ -69,7 +69,7 @@ export default defineComponent({
   props,
   setup(props, { expose }) {
     const settingStore = useSetting()
-    const { themeValue } = storeToRefs(settingStore)
+    const { themeValue: currentTheme } = storeToRefs(settingStore)
     const rayChartRef = ref<HTMLElement>() // `echart` 容器实例
     const rayChartWrapperRef = ref<HTMLElement>()
     const echartInstanceRef = ref<ECharts>() // `echart` 实例
@@ -132,6 +132,30 @@ export default defineComponent({
 
     /**
      *
+     * 更新 chart 主题
+     */
+    const updateChartTheme = () => {
+      if (props.theme === 'default') {
+        props.autoChangeTheme ? renderChart('dark') : renderChart('')
+
+        return
+      }
+
+      if (!props.theme) {
+        const theme = props.autoChangeTheme
+          ? currentTheme.value
+            ? `${echartTheme}-dark`
+            : echartTheme
+          : echartTheme
+
+        renderChart(theme)
+      } else {
+        renderChart(props.theme)
+      }
+    }
+
+    /**
+     *
      * @returns `chart options`
      *
      * 合并配置项
@@ -171,7 +195,7 @@ export default defineComponent({
      * 缓存两个实例
      * 直接使用响应式代理实例会出现诡异的问题, 例如 `legend` 点击时报错
      */
-    const renderChart = (theme: ChartTheme = echartTheme) => {
+    const renderChart = (theme: string = echartTheme) => {
       /** 获取 dom 容器 */
       const element = rayChartRef.value as HTMLElement
       /** 获取配置项 */
@@ -219,24 +243,6 @@ export default defineComponent({
 
     /**
      *
-     * @param bool 渲染带有主题色的可视化图
-     *
-     * 区别自动跟随模板主题切换与指定主题切换
-     */
-    const renderThemeChart = (bool?: boolean) => {
-      if (props.autoChangeTheme) {
-        bool ? renderChart(`${echartTheme}-dark`) : renderChart()
-
-        return
-      }
-
-      if (!props.theme) {
-        renderChart()
-      }
-    }
-
-    /**
-     *
      * 销毁 `chart` 实例, 释放资源
      */
     const destroyChart = () => {
@@ -249,7 +255,10 @@ export default defineComponent({
     /** 重置 echarts 尺寸 */
     const resizeChart = () => {
       if (echartInstanceRef.value) {
-        echartInstanceRef.value.resize()
+        try {
+          echartInstanceRef.value.resize()
+          // eslint-disable-next-line no-empty
+        } catch (e) {}
       }
     }
 
@@ -263,12 +272,7 @@ export default defineComponent({
         return
       }
 
-      if (props.autoChangeTheme) {
-        /** 注册 echarts */
-        renderThemeChart(themeValue.value)
-      } else {
-        props.theme ? renderChart(`${echartTheme}-dark`) : renderChart()
-      }
+      updateChartTheme()
 
       /** 注册事件 */
       if (props.autoResize) {
@@ -296,8 +300,8 @@ export default defineComponent({
 
     /** 监听全局主题变化, 然后重新渲染对应主题 echarts */
     watch(
-      () => themeValue.value,
-      (theme) => {
+      () => currentTheme.value,
+      () => {
         /**
          *
          * Q: 为什么需要重新卸载再渲染
@@ -306,8 +310,7 @@ export default defineComponent({
          */
         if (props.autoChangeTheme) {
           destroyChart()
-
-          renderThemeChart(theme)
+          updateChartTheme()
         }
       },
     )
@@ -322,12 +325,7 @@ export default defineComponent({
       () => props.showAria,
       () => {
         destroyChart()
-
-        if (props.autoChangeTheme || props.theme) {
-          themeValue.value ? renderChart(`${echartTheme}-dark`) : renderChart()
-        } else {
-          renderChart()
-        }
+        updateChartTheme()
       },
     )
 
@@ -369,13 +367,11 @@ export default defineComponent({
       /** 注册 echarts 组件与渲染器 */
       await registerChartCore()
     })
-
     onMounted(() => {
       nextTick(() => {
         mount()
       })
     })
-
     onBeforeUnmount(() => {
       unmount()
       watchCallback?.()

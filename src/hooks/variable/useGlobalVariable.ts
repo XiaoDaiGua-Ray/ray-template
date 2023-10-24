@@ -20,6 +20,7 @@
 /** 全局响应式变量 */
 const variableState = reactive({
   globalSpinning: false,
+  globalDrawerValue: false,
 })
 
 type VariableStateKey = keyof typeof variableState

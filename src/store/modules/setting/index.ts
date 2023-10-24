@@ -22,7 +22,7 @@ export const useSetting = defineStore(
     const settingState = reactive<SettingState>({
       drawerPlacement: 'right',
       primaryColorOverride: {
-        ...APP_THEME.APP_NAIVE_UI_THEME_OVERRIDES,
+        ...APP_THEME.appNaiveUIThemeOverrides,
         common: {
           primaryColor: primaryColor, // 主题色
           primaryColorHover: primaryColor,

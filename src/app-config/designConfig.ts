@@ -19,7 +19,7 @@ export const APP_THEME: AppTheme = {
    * 系统主题颜色预设色盘
    * 支持 RGBA、RGB、十六进制
    */
-  APP_THEME_COLOR: [
+  appThemeColors: [
     '#2d8cf0',
     '#0960bd',
     '#536dfe',
@@ -30,7 +30,7 @@ export const APP_THEME: AppTheme = {
     '#18A058',
   ],
   /** 系统主题色 */
-  APP_PRIMARY_COLOR: {
+  appPrimaryColor: {
     /** 主题色 */
     primaryColor: '#2d8cf0',
     /** 主题辅助色(用于整体 hover、active 等之类颜色) */
@@ -42,7 +42,7 @@ export const APP_THEME: AppTheme = {
    * 官网文档地址: <https://www.naiveui.com/zh-CN/dark/docs/customize-theme>
    *
    * 注意:
-   *   - APP_PRIMARY_COLOR common 配置优先级大于该配置
+   *   - appPrimaryColor common 配置优先级大于该配置
    *
    * 如果需要定制化整体组件样式, 配置示例
    * 具体自行查看官网, 还有模式更佳丰富的 peers 主题变量配置
@@ -60,7 +60,7 @@ export const APP_THEME: AppTheme = {
    * }
    * ```
    */
-  APP_NAIVE_UI_THEME_OVERRIDES: {},
+  appNaiveUIThemeOverrides: {},
   /**
    *
    * 配置 echart 主题颜色

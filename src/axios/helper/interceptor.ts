@@ -20,7 +20,7 @@
  * 所以在使用的时候, 需要按照约定格式进行参数传递
  */
 
-import RequestCanceler from '@/axios/helper/canceler'
+import RequestCanceler from '@/axios/helper/RequestCanceler'
 import { getAppEnvironment } from '@use-utils/hook'
 
 import type {

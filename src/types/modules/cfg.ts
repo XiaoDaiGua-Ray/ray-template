@@ -76,8 +76,8 @@ export interface AppConfig {
 export type AppConfigExport = Config & UserConfigExport
 
 export interface AppTheme {
-  APP_THEME_COLOR: string[]
-  APP_PRIMARY_COLOR: AppPrimaryColor
-  APP_NAIVE_UI_THEME_OVERRIDES: GlobalThemeOverrides
+  appThemeColors: string[]
+  appPrimaryColor: AppPrimaryColor
+  appNaiveUIThemeOverrides: GlobalThemeOverrides
   echartTheme: string
 }

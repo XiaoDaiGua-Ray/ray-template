@@ -16,9 +16,11 @@
  * 在内部执行方法中, 已经做了边界处理
  *
  * 提供两个工具方法, 方便类型推导
+ *
+ * 其中 injectRequestCanceler requestErrorCanceler 方法为 axios request interceptor 方法
  */
 
-import { useAxiosInterceptor, axiosCanceler } from '@/axios/helper/interceptor'
+import { axiosCanceler } from '@/axios/helper/interceptor'
 import { appendRequestHeaders } from '@/axios/helper/axiosCopilot'
 import { APP_CATCH_KEY } from '@/app-config/appConfig'
 import { getStorage } from '@/utils/cache'
@@ -28,8 +30,7 @@ import type {
   BeforeFetchFunction,
   FetchErrorFunction,
 } from '@/axios/type'
-
-const { setImplement } = useAxiosInterceptor()
+import type { Recordable } from '@/types/modules/helper'
 
 /**
  *
@@ -66,8 +67,14 @@ const injectRequestHeaders: BeforeFetchFunction<RequestInterceptorConfig> = (
   ])
 }
 
-/** 注入重复请求拦截器 */
-const injectCanceler: BeforeFetchFunction<RequestInterceptorConfig> = (
+/**
+ *
+ * @param ins 当前请求实例
+ * @param mode 当前环境
+ *
+ * 移除请求拦截器与注入请求拦截器
+ */
+const injectRequestCanceler: BeforeFetchFunction<RequestInterceptorConfig> = (
   ins,
   mode,
 ) => {
@@ -75,9 +82,15 @@ const injectCanceler: BeforeFetchFunction<RequestInterceptorConfig> = (
   axiosCanceler.addPendingRequest(ins) // 把当前的请求信息添加到 pendingRequest 表中
 }
 
-/** 请求发生错误示例 */
-const requestError: FetchErrorFunction<unknown> = (error, mode) => {
-  console.log(error, mode)
+/**
+ *
+ * @param error 请求错误信息
+ * @param mode 当前环境
+ *
+ * 请求错误时候，移除请求拦截器
+ */
+const requestErrorCanceler: FetchErrorFunction<Recordable> = (error, mode) => {
+  axiosCanceler.removePendingRequest(error)
 }
 
 /**
@@ -85,19 +98,12 @@ const requestError: FetchErrorFunction<unknown> = (error, mode) => {
  * 注册请求拦截器
  * 请注意执行顺序
  */
-export const setupRequestInterceptor = () => {
-  setImplement(
-    'implementRequestInterceptorArray',
-    [injectRequestHeaders, injectCanceler],
-    'ok',
-  )
-}
-
-/**
- *
- * 注册请求错误拦截器
- * 请注意执行顺序
- */
-export const setupRequestErrorInterceptor = () => {
-  setImplement('implementRequestInterceptorErrorArray', [requestError], 'error')
+export default {
+  // 请求正常
+  implementRequestInterceptorArray: [
+    injectRequestHeaders,
+    injectRequestCanceler,
+  ],
+  // 请求错误
+  implementRequestInterceptorErrorArray: [requestErrorCanceler],
 }

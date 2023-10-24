@@ -3,11 +3,11 @@ import type { CreateAxiosDefaults } from 'axios'
 export type CollapsedMode = 'transform' | 'width'
 
 export interface AppMenuConfig {
-  MENU_COLLAPSED_WIDTH: number
-  MENU_COLLAPSED_MODE: CollapsedMode
-  MENU_COLLAPSED_ICON_SIZE: number
-  MENU_COLLAPSED_INDENT: number
-  MENU_ACCORDION: boolean
+  menuCollapsedWidth: number
+  menuCollapsedMode: CollapsedMode
+  menuCollapsedIconSize: number
+  menuCollapsedIndent: number
+  menuAccordion: boolean
 }
 
 export interface AppKeepAlive {

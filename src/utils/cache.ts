@@ -9,8 +9,6 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-/** vue3 项目里建议直接用 vueuse useStorage 方法 */
-
 import type { StorageLike, RemoveStorageKey } from '@/types/modules/utils'
 
 /**
@@ -40,15 +38,13 @@ function setStorage<T = unknown>(
   }
 }
 
-/** 重载函数 getStorage */
-function getStorage<T>(
+function getStorage<T = unknown>(
   key: string,
   storageType: StorageLike,
   defaultValue: T,
 ): T
 
-/** 重载函数 getStorage */
-function getStorage<T>(
+function getStorage<T = unknown>(
   key: string,
   storageType?: StorageLike,
   defaultValue?: T,
@@ -59,7 +55,7 @@ function getStorage<T>(
  * @param key 需要获取目标缓存的key
  * @returns 获取缓存值
  */
-function getStorage<T>(
+function getStorage<T = unknown>(
   key: string,
   storageType: StorageLike = 'sessionStorage',
   defaultValue?: T,

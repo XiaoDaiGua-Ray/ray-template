@@ -113,7 +113,7 @@ const SettingDrawer = defineComponent({
               {t('headerSettingOptions.ThemeOptions.PrimaryColorConfig')}
             </NDivider>
             <NColorPicker
-              swatches={APP_THEME.APP_THEME_COLOR}
+              swatches={APP_THEME.appThemeColors}
               v-model:value={this.primaryColorOverride.common!.primaryColor}
               onUpdateValue={this.changePrimaryColor.bind(this)}
             />
