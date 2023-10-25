@@ -12,7 +12,7 @@
 import MenuTag from '@/layout/components/MenuTag/index'
 
 const FeatureWrapper = defineComponent({
-  name: 'FeatureWrapper',
+  name: 'LayoutFeatureWrapper',
   setup() {
     return {}
   },

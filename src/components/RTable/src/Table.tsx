@@ -19,7 +19,7 @@ import Print from './components/Print'
 
 import props from './props'
 import { call } from '@/utils/vue/index'
-import { uuid } from '@use-utils/hook'
+import { uuid } from '@/utils/basic'
 import config from './config'
 
 import type { DropdownOption, DataTableInst } from 'naive-ui'

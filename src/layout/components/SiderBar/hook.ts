@@ -1,6 +1,9 @@
 import { useSetting, useSignin } from '@/store'
+import { useI18n } from '@/hooks/web/index'
 
-export const useAvatarOptions = () => [
+import type { IconOptionsFC, IconOptions } from './type'
+
+export const createAvatarOptions = () => [
   {
     key: 'person',
     label: '个人信息',
@@ -46,4 +49,72 @@ export const avatarDropdownClick = (key: string | number) => {
   const action = avatarDropdownActionMap[key]
 
   action ? action() : window.$message.info('这个人很懒, 没做这个功能~')
+}
+
+export const createLeftIconOptions = (opts: IconOptionsFC) => {
+  const { isTabletOrSmaller, reloadRouteSwitch } = opts
+  const { t } = useI18n()
+
+  const notTableOrSmallerOptions: IconOptions[] = [
+    {
+      name: 'reload',
+      size: 18,
+      tooltip: t('headerTooltip.Reload'),
+      iconClass: !reloadRouteSwitch.value ? 'ray-icon__reload--loading' : '',
+      eventKey: 'reload',
+    },
+  ]
+  const tableOrSmallerOptions: IconOptions[] = [
+    {
+      name: 'menu',
+      size: 18,
+      eventKey: 'menu',
+    },
+  ]
+
+  return isTabletOrSmaller!.value
+    ? tableOrSmallerOptions
+    : notTableOrSmallerOptions
+}
+
+export const createRightIconOptions = (opts: IconOptionsFC) => {
+  const { isFullscreen, isTabletOrSmaller } = opts
+  const { t } = useI18n()
+
+  const basicOptions: IconOptions[] = [
+    {
+      name: 'fullscreen',
+      size: 18,
+      tooltip: isFullscreen.value
+        ? t('headerTooltip.CancelFullScreen')
+        : t('headerTooltip.FullScreen'),
+      eventKey: 'screen',
+    },
+    {
+      name: 'github',
+      size: 18,
+      tooltip: t('headerTooltip.Github'),
+      eventKey: 'github',
+    },
+    {
+      name: 'setting',
+      size: 18,
+      tooltip: t('headerTooltip.Setting'),
+      eventKey: 'setting',
+    },
+  ]
+  const notTableOrSmallerOptions: IconOptions[] = [
+    {
+      name: 'search',
+      size: 18,
+      tooltip: t('headerTooltip.Search'),
+      eventKey: 'search',
+    },
+    ...basicOptions,
+  ]
+  const tableOrSmallerOptions: IconOptions[] = [...basicOptions]
+
+  return isTabletOrSmaller!.value
+    ? tableOrSmallerOptions
+    : notTableOrSmallerOptions
 }

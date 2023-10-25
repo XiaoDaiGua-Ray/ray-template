@@ -1,5 +1,19 @@
 # CHANGE LOG
 
+## 4.2.7
+
+主要是做了一些统一命名的事情，以前由于写的比较放浪形骸现在正在慢慢更改这个大问题。
+
+### Feats
+
+- 优化顶部操作栏的渲染逻辑，现在将更加合理的管理数据渲染图标
+- 二次封装 useFullscreen 方法，如果当前环境不支持全屏则会自动弹出提示
+- 重命名 utils/hook 包名为 basic
+- 移除 vuedraggable 插件
+- RequestCanceler 方法部分属性与方法变为私有
+- 重命名 layout 包下的一些组件 name
+- 升级 echarts 至 5.4.3 版本
+
 ## 4.2.6
 
 ### Feats

@@ -13,7 +13,7 @@ import { NPopover } from 'naive-ui'
 import RIcon from '@/components/RIcon/index'
 
 import config from '../config'
-import { useFullscreen } from 'vue-hooks-plus'
+import { useFullscreen } from '@/hooks/web/index'
 
 import type { TableProvider } from '../type'
 

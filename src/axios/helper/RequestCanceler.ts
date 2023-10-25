@@ -19,14 +19,14 @@
 import type { AppRawRequestConfig } from '@/axios/type'
 
 export default class RequestCanceler {
-  pendingRequest: Map<string, AbortController>
+  private pendingRequest: Map<string, AbortController>
 
   constructor() {
     this.pendingRequest = new Map<string, AbortController>()
   }
 
   /** 是否需要加入取消请求表中 */
-  isApending(config: AppRawRequestConfig) {
+  private isApending(config: AppRawRequestConfig) {
     return config.cancelConfig?.needCancel ?? true
   }
 
@@ -37,7 +37,7 @@ export default class RequestCanceler {
    *
    * @remark 将当前请求 config 生成 request key
    */
-  generateRequestKey(config: AppRawRequestConfig) {
+  private generateRequestKey(config: AppRawRequestConfig) {
     const { method, url } = config
 
     return [

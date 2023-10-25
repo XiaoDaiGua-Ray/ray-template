@@ -26,7 +26,7 @@ import { useSetting } from '@/store'
 import type { GlobalThemeOverrides } from 'naive-ui'
 
 const ContentWrapper = defineComponent({
-  name: 'ContentWrapper',
+  name: 'LayoutContentWrapper',
   setup() {
     const settingStore = useSetting()
     const router = useRouter()

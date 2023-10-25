@@ -13,10 +13,9 @@
 
 import { APP_MENU_CONFIG, ROOT_ROUTE } from '@/app-config/appConfig'
 import RIcon from '@/components/RIcon/index'
-import { isValueType } from '@/utils/hook'
-import { getStorage, setStorage } from '@/utils/cache'
+import { isValueType } from '@/utils/basic'
+import { getStorage } from '@/utils/cache'
 
-import type { VNode } from 'vue'
 import type {
   AppMenuOption,
   MenuTagOptions,

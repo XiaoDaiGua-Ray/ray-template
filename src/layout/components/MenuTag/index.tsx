@@ -30,7 +30,7 @@ import RIcon from '@/components/RIcon/index'
 import RMoreDropdown from '@/components/RMoreDropdown/index'
 
 import { useMenu, useSetting } from '@/store'
-import { uuid } from '@/utils/hook'
+import { uuid } from '@/utils/basic'
 import { hasClass } from '@/utils/element'
 import { redirectRouterToDashboard } from '@/router/helper/routerCopilot'
 import { ROOT_ROUTE } from '@/app-config/appConfig'
@@ -40,7 +40,7 @@ import type { MenuOption, ScrollbarInst } from 'naive-ui'
 import type { MenuTagOptions, AppMenuOption } from '@/types/modules/app'
 
 export default defineComponent({
-  name: 'MenuTag',
+  name: 'AppMenuTag',
   setup(_, { expose }) {
     const scrollRef = ref<ScrollbarInst | null>(null)
 
@@ -269,7 +269,7 @@ export default defineComponent({
       return
     }
 
-    const handleScrollX = (type: 'left' | 'right') => {
+    const scrollX = (type: 'left' | 'right') => {
       const el = getScrollElement()
 
       if (el) {
@@ -438,7 +438,7 @@ export default defineComponent({
       menuKey,
       handleTagClick,
       moreOptions,
-      handleScrollX,
+      scrollX,
       scrollRef,
       scrollBarUUID,
       actionDropdownSelect,
@@ -480,7 +480,7 @@ export default defineComponent({
               width="20"
               height="28"
               customClassName="menu-tag__left-arrow"
-              onClick={this.handleScrollX.bind(this, 'left')}
+              onClick={this.scrollX.bind(this, 'left')}
             />
             <NScrollbar
               xScrollable
@@ -524,7 +524,7 @@ export default defineComponent({
                 width="20"
                 height="28"
                 customClassName="menu-tag__right-arrow"
-                onClick={this.handleScrollX.bind(this, 'right')}
+                onClick={this.scrollX.bind(this, 'right')}
               />
               <RMoreDropdown
                 options={this.moreOptions}

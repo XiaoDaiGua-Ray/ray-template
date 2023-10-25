@@ -1,4 +1,4 @@
-import { isValueType } from '@use-utils/hook'
+import { isValueType } from '@/utils/basic'
 import { APP_REGEX } from '@/app-config/regexConfig'
 import { unrefElement } from '@/utils/vue/index'
 

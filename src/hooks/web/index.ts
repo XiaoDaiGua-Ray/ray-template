@@ -13,5 +13,6 @@ import { useI18n, t } from './useI18n'
 import { useVueRouter } from '../web/useVueRouter'
 import { useDayjs } from '../web/useDayjs'
 import { useDevice } from './useDevice'
+import { useFullscreen } from './useFullscreen'
 
-export { useI18n, useVueRouter, useDayjs, t, useDevice }
+export { useI18n, useVueRouter, useDayjs, t, useDevice, useFullscreen }

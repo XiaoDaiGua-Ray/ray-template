@@ -71,11 +71,11 @@ export const combineI18nMessages = (langs: I18nModules, prefix: string) => {
 
 /** 获取所有语言 */
 export const getAppLocalMessages = async (
-  LOCAL_OPTIONS: AppLocalesDropdownMixedOption[],
+  localOptions: AppLocalesDropdownMixedOption[],
 ) => {
   const message = {} as AppCurrentAppMessages
 
-  for (const curr of LOCAL_OPTIONS) {
+  for (const curr of localOptions) {
     const msg: AppLocalesModules = await import(`./lang/${curr.key}.ts`)
     const key = curr.key
 

@@ -15,7 +15,7 @@ import { useSignin } from '@/store'
 import { useVueRouter } from '@/hooks/web/index'
 import { ROOT_ROUTE } from '@/app-config/appConfig'
 import { setStorage } from '@/utils/cache'
-import { getAppEnvironment } from '@/utils/hook'
+import { getAppEnvironment } from '@/utils/basic'
 
 import type { Router } from 'vue-router'
 import type { AppRouteMeta } from '@/router/type'

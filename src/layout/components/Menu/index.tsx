@@ -23,8 +23,8 @@ import type { MenuInst } from 'naive-ui'
 import type { NaiveMenuOptions } from '@/types/modules/component'
 import type { AppMenuOption } from '@/types/modules/app'
 
-const LayoutMenu = defineComponent({
-  name: 'LayoutMenu',
+export default defineComponent({
+  name: 'AppMenu',
   setup() {
     const menuRef = ref<MenuInst | null>(null)
 
@@ -114,5 +114,3 @@ const LayoutMenu = defineComponent({
     )
   },
 })
-
-export default LayoutMenu

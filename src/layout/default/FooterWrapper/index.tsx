@@ -12,7 +12,7 @@
 import './index.scss'
 
 const FooterWrapper = defineComponent({
-  name: 'FooterWrapper',
+  name: 'LayoutFooterWrapper',
   setup() {
     const {
       layout: { copyright },

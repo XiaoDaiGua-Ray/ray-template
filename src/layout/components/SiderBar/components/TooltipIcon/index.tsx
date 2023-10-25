@@ -16,7 +16,7 @@ import RIcon from '@/components/RIcon/index'
 
 import { tooltipProps } from 'naive-ui'
 
-const TooltipIcon = defineComponent({
+export default defineComponent({
   name: 'TooltipIcon',
   props: {
     ...tooltipProps,
@@ -34,32 +34,38 @@ const TooltipIcon = defineComponent({
     },
   },
   emits: ['click'],
-  setup(_, { emit }) {
-    const handleClick = (e?: MouseEvent) => {
+  setup(props, { emit }) {
+    const iconClick = (e?: MouseEvent) => {
       emit('click', e)
     }
+
+    const Icon = () => (
+      <RIcon
+        name={props.iconName}
+        size="18"
+        customClassName={`tooltip-text__icon ${props.customClassName}`}
+        cursor="pointer"
+        onClick={iconClick.bind(this)}
+      />
+    )
+
     return {
-      handleClick,
+      iconClick,
+      Icon,
     }
   },
   render() {
-    return (
+    const { Icon } = this
+
+    return this.tooltipText ? (
       <NTooltip {...this.$props}>
         {{
-          trigger: () => (
-            <RIcon
-              name={this.iconName}
-              size="18"
-              customClassName={`tooltip-text__icon ${this.customClassName}`}
-              cursor="pointer"
-              onClick={this.handleClick.bind(this)}
-            />
-          ),
+          trigger: () => <Icon />,
           default: () => this.tooltipText,
         }}
       </NTooltip>
+    ) : (
+      <Icon />
     )
   },
 })
-
-export default TooltipIcon

@@ -170,7 +170,6 @@ export default function (mode: string): PluginOption[] {
         'vue-i18n',
         'dayjs',
         'echarts',
-        'vuedraggable',
         'xlsx',
         'axios',
         'screenfull',
