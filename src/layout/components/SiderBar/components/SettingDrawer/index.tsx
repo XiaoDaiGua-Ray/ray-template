@@ -15,7 +15,6 @@ import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/c
 
 import { APP_THEME } from '@/app-config/designConfig'
 import { useSetting } from '@/store'
-import { useI18n } from '@/hooks/web/index'
 
 import type { PropType } from 'vue'
 import type { Placement } from '@/types/modules/component'
@@ -38,7 +37,6 @@ const SettingDrawer = defineComponent({
   },
   emits: ['update:show'],
   setup(props, { emit }) {
-    const { t } = useI18n()
     const settingStore = useSetting()
 
     const { changePrimaryColor, changeSwitcher, updateContentTransition } =
@@ -80,7 +78,6 @@ const SettingDrawer = defineComponent({
 
     return {
       modelShow,
-      t,
       changePrimaryColor,
       themeValue,
       primaryColorOverride,
@@ -95,7 +92,7 @@ const SettingDrawer = defineComponent({
     }
   },
   render() {
-    const { t } = this
+    const { $t } = this
 
     return (
       <NDrawer
@@ -103,14 +100,14 @@ const SettingDrawer = defineComponent({
         placement={this.placement}
         width={this.width}
       >
-        <NDrawerContent title={t('headerSettingOptions.Title')}>
+        <NDrawerContent title={$t('headerSettingOptions.Title')}>
           <NSpace class="setting-drawer__space" vertical>
             <NDivider titlePlacement="center">
-              {t('headerSettingOptions.ThemeOptions.Title')}
+              {$t('headerSettingOptions.ThemeOptions.Title')}
             </NDivider>
             <ThemeSwitch />
             <NDivider titlePlacement="center">
-              {t('headerSettingOptions.ThemeOptions.PrimaryColorConfig')}
+              {$t('headerSettingOptions.ThemeOptions.PrimaryColorConfig')}
             </NDivider>
             <NColorPicker
               swatches={APP_THEME.appThemeColors}
@@ -118,7 +115,7 @@ const SettingDrawer = defineComponent({
               onUpdateValue={this.changePrimaryColor.bind(this)}
             />
             <NDivider titlePlacement="center">
-              {t('headerSettingOptions.ContentTransition')}
+              {$t('headerSettingOptions.ContentTransition')}
             </NDivider>
             <NSelect
               v-model:value={this.contentTransition}
@@ -128,7 +125,7 @@ const SettingDrawer = defineComponent({
               }}
             />
             <NDivider titlePlacement="center">
-              {t('headerSettingOptions.InterfaceDisplay')}
+              {$t('headerSettingOptions.InterfaceDisplay')}
             </NDivider>
             <NDescriptions labelPlacement="left" column={1}>
               <NDescriptionsItem label="多标签">

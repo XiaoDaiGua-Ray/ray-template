@@ -37,24 +37,27 @@ import {
 } from 'echarts/charts' // 系列类型(后缀都为 `SeriesOption`)
 import { LabelLayout, UniversalTransition } from 'echarts/features' // 标签自动布局, 全局过渡动画等特性
 import { CanvasRenderer } from 'echarts/renderers' // `echarts` 渲染器
+import { NCard } from 'naive-ui'
 
 import props from './props'
 import { useSetting } from '@/store'
-import { cloneDeep, throttle } from 'lodash-es'
-import { on, off, completeSize } from '@/utils/element'
+import { throttle } from 'lodash-es'
+import { completeSize } from '@/utils/element'
 import { call } from '@/utils/vue/index'
 import { setupChartTheme } from './helper'
 import { APP_THEME } from '@/app-config/designConfig'
 import { useResizeObserver } from '@vueuse/core'
+import RMoreDropdown from '@/components/RMoreDropdown/index'
+import { renderNode } from '@use-utils/vue/index'
+import { downloadBase64File } from '@use-utils/basic'
 
 import type { WatchStopHandle } from 'vue'
 import type { AnyFC } from '@/types/modules/utils'
 import type { DebouncedFunc } from 'lodash-es'
-import type { ChartTheme } from '@/components/RChart/type'
 import type { UseResizeObserverReturn } from '@vueuse/core'
 import type { ECharts, EChartsCoreOption } from 'echarts/core'
-
-export type { RayChartInst, EChartsExtensionInstallRegisters } from './type'
+import type { RenderVNodeType } from '@use-utils/vue/renderNode'
+import type { DropdownProps, DropdownOption } from 'naive-ui'
 
 const defaultChartOptions = {
   notMerge: false,
@@ -70,14 +73,24 @@ export default defineComponent({
   setup(props, { expose }) {
     const settingStore = useSetting()
     const { themeValue: currentTheme } = storeToRefs(settingStore)
-    const rayChartRef = ref<HTMLElement>() // `echart` 容器实例
+    const rayChartRef = ref<HTMLElement>() // echart 容器实例
     const rayChartWrapperRef = ref<HTMLElement>()
-    const echartInstanceRef = ref<ECharts>() // `echart` 实例
+    const echartInstanceRef = ref<ECharts>() // echart 实例
     let resizeThrottleReturn: DebouncedFunc<AnyFC> | null // resize 防抖方法实例
     let resizeOvserverReturn: UseResizeObserverReturn | null
     const { echartTheme } = APP_THEME
     let watchCallback: WatchStopHandle | null
-
+    let echartInst: ECharts | null // 无代理响应式代理缓存 echart inst
+    const moreDropDownOptions = computed<DropdownProps['options']>(() => [
+      {
+        label: '下载图片',
+        key: 'downloadChart',
+        disabled:
+          echartInstanceRef.value && echartInstanceRef.value.getDom()
+            ? false
+            : true,
+      },
+    ])
     const cssVarsRef = computed(() => {
       const cssVars = {
         '--ray-chart-width': completeSize(props.width),
@@ -105,7 +118,6 @@ export default defineComponent({
         ToolboxComponent,
         AriaComponent,
       ]) // 注册组件
-
       echarts.use([
         BarChart,
         LineChart,
@@ -114,11 +126,7 @@ export default defineComponent({
         ScatterChart,
         PictorialBarChart,
       ]) // 注册 chart series type
-
       echarts.use([LabelLayout, UniversalTransition]) // 注册布局, 过度效果
-
-      // 如果业务场景中需要 `svg` 渲染器, 手动导入渲染器后使用该行代码即可(不过为了体积考虑, 移除了 SVG 渲染器)
-      // echarts.use([props.canvasRender ? CanvasRenderer : SVGRenderer])
       echarts.use([CanvasRenderer]) // 注册渲染器
 
       try {
@@ -132,7 +140,13 @@ export default defineComponent({
 
     /**
      *
-     * 更新 chart 主题
+     * 更具当前主题渲染 chart
+     *
+     * 如果手动配置了 theme 属性，autoChangeTheme 属性则会失效
+     * 但是，如果配置 theme 属性为 default，则会根据当前主题色渲染 chart 默认主题
+     *
+     * 当 Boolean(theme) 为 false，则会尝试获取 echartTheme 属性
+     * 但是，如果未获取到 echartTheme 属性，则会使用默认样式
      */
     const updateChartTheme = () => {
       if (props.theme === 'default') {
@@ -159,11 +173,10 @@ export default defineComponent({
      * @returns `chart options`
      *
      * 合并配置项
-     *
      * 如果有需要特殊全局配置的可以在此继续写...
      */
     const combineChartOptions = (ops: EChartsCoreOption) => {
-      let options = cloneDeep(unref(ops))
+      let options = unref(ops)
 
       const assign = (opts: object) =>
         Object.assign(
@@ -211,25 +224,28 @@ export default defineComponent({
         })
 
         /** 注册 chart */
-        echartInstanceRef.value = echarts.init(element, theme, {
+        echartInst = echarts.init(element, theme, {
           /** 如果款度为 0, 则以 200px 填充 */
           width: width === 0 ? 200 : void 0,
           /** 如果高度为 0, 则以 200px 填充 */
           height: height === 0 ? 200 : void 0,
         })
+        echartInstanceRef.value = echartInst
 
         /** 设置 options 配置项 */
-        echartInstanceRef.value.setOption({})
-
         if (props.animation) {
+          echartInst.setOption({})
+
           setTimeout(() => {
-            options && echartInstanceRef.value?.setOption(options)
+            options && echartInst?.setOption(options)
           })
+        } else {
+          options && echartInst?.setOption(options)
         }
 
         /** 渲染成功回调 */
         if (onSuccess) {
-          call(onSuccess, echartInstanceRef.value)
+          call(onSuccess, echartInst)
         }
       } catch (e) {
         /** 渲染失败回调 */
@@ -246,25 +262,40 @@ export default defineComponent({
      * 销毁 `chart` 实例, 释放资源
      */
     const destroyChart = () => {
-      if (echartInstanceRef.value) {
-        echartInstanceRef.value.clear()
-        echartInstanceRef.value.dispose()
+      if (echartInst && echartInst.getDom()) {
+        echartInst.clear()
+        echartInst.dispose()
+        echartInstanceRef.value = void 0
       }
     }
 
     /** 重置 echarts 尺寸 */
     const resizeChart = () => {
-      if (echartInstanceRef.value) {
-        try {
-          echartInstanceRef.value.resize()
-          // eslint-disable-next-line no-empty
-        } catch (e) {}
+      if (echartInst) {
+        echartInst.resize()
+      }
+    }
+
+    const dropdownSelect = (key: string | number, option: DropdownOption) => {
+      if (key === 'downloadChart' && echartInst && echartInst.getDom()) {
+        const { filename, ...args } = props.downloadOptions
+
+        downloadBase64File(
+          echartInst.getDataURL(args),
+          filename ?? `${new Date().getTime()}`,
+        )
+      }
+
+      const { onDropdownSelect } = props
+
+      if (onDropdownSelect) {
+        call(onDropdownSelect, key, option)
       }
     }
 
     const mount = () => {
       // 避免重复渲染
-      if (echartInstanceRef.value?.getDom()) {
+      if (echartInst?.getDom()) {
         console.warn(
           'RChart mount: There is a chart instance already initialized on the dom. Execution was interrupted',
         )
@@ -278,20 +309,17 @@ export default defineComponent({
       if (props.autoResize) {
         resizeThrottleReturn = throttle(resizeChart, props.throttleWait)
         /** 监听内容区域尺寸变化更新 chart */
+
         resizeOvserverReturn = useResizeObserver(
           props.observer || rayChartWrapperRef,
           resizeThrottleReturn,
         )
-
-        on(window, 'resize', resizeThrottleReturn)
       }
     }
 
     const unmount = () => {
       /** 卸载 echarts */
       destroyChart()
-      /** 卸载事件柄 */
-      resizeThrottleReturn && off(window, 'resize', resizeThrottleReturn)
       /** 注销防抖 */
       resizeThrottleReturn?.cancel()
       /** 注销 observer 监听 */
@@ -342,7 +370,7 @@ export default defineComponent({
               defaultChartOptions,
             )
             /** 如果 options 发生变动更新 echarts */
-            echartInstanceRef.value?.setOption(options, setOpt)
+            echartInst?.setOption(options, setOpt)
           },
           {
             deep: true,
@@ -353,8 +381,8 @@ export default defineComponent({
       }
 
       props.loading
-        ? echartInstanceRef.value?.showLoading(props.loadingOptions)
-        : echartInstanceRef.value?.hideLoading()
+        ? echartInst?.showLoading(props.loadingOptions)
+        : echartInst?.hideLoading()
     })
 
     expose({
@@ -368,9 +396,7 @@ export default defineComponent({
       await registerChartCore()
     })
     onMounted(() => {
-      nextTick(() => {
-        mount()
-      })
+      mount()
     })
     onBeforeUnmount(() => {
       unmount()
@@ -381,10 +407,51 @@ export default defineComponent({
       rayChartRef,
       cssVarsRef,
       rayChartWrapperRef,
+      moreDropDownOptions,
+      dropdownSelect,
     }
   },
   render() {
-    return (
+    const {
+      title,
+      contentStyle,
+      preset,
+      moreDropDownOptions,
+      dropdownSelect,
+      bordered,
+      dropdownOptions,
+    } = this
+    const { cardExtra } = this.$slots
+
+    return preset === 'card' ? (
+      <NCard
+        class="ray-chart"
+        ref="rayChartWrapperRef"
+        style={[this.cssVarsRef]}
+        contentStyle={contentStyle}
+        bordered={bordered}
+      >
+        {{
+          default: () => (
+            <div class="ray-chart__container" ref="rayChartRef"></div>
+          ),
+          header: renderNode(title, {
+            defaultElement: <div style="display: none;"></div>,
+          }),
+          'header-extra': renderNode(cardExtra as RenderVNodeType, {
+            defaultElement: (
+              <RMoreDropdown
+                iconSize={18}
+                cursor="pointer"
+                options={dropdownOptions ?? moreDropDownOptions}
+                trigger="click"
+                onSelect={dropdownSelect.bind(this)}
+              />
+            ),
+          }),
+        }}
+      </NCard>
+    ) : (
       <div class="ray-chart" style={[this.cssVarsRef]} ref="rayChartWrapperRef">
         <div class="ray-chart__container" ref="rayChartRef"></div>
       </div>

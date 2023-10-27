@@ -75,6 +75,7 @@ const LockScreen = defineComponent({
               type="password"
               placeholder="请输入锁屏密码"
               clearable
+              showPasswordOn="click"
               minlength={6}
               maxlength={12}
               onKeydown={(e: KeyboardEvent) => {

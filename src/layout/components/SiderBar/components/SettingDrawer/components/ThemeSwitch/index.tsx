@@ -13,12 +13,10 @@ import { NSpace, NSwitch, NTooltip } from 'naive-ui'
 import RIcon from '@/components/RIcon'
 
 import { useSetting } from '@/store'
-import { useI18n } from '@/hooks/web/index'
 
 const ThemeSwitch = defineComponent({
   name: 'ThemeSwitch',
   setup() {
-    const { t } = useI18n()
     const settingStore = useSetting()
     const { changeSwitcher } = settingStore
     const { themeValue } = storeToRefs(settingStore)
@@ -34,14 +32,13 @@ const ThemeSwitch = defineComponent({
     }
 
     return {
-      t,
       changeSwitcher,
       themeValue,
       handleRailStyle,
     }
   },
   render() {
-    const { t } = this
+    const { $t } = this
 
     return (
       <NSpace justify="center">
@@ -79,8 +76,8 @@ const ThemeSwitch = defineComponent({
             ),
             default: () =>
               this.themeValue
-                ? t('headerSettingOptions.ThemeOptions.Dark')
-                : t('headerSettingOptions.ThemeOptions.Light'),
+                ? $t('headerSettingOptions.ThemeOptions.Dark')
+                : $t('headerSettingOptions.ThemeOptions.Light'),
           }}
         </NTooltip>
       </NSpace>

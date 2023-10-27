@@ -21,13 +21,11 @@ import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/c
 
 import { useSetting } from '@/store'
 import { LOCAL_OPTIONS } from '@/app-config/localConfig'
-import { useI18n } from '@/hooks/web/index'
 import { useWindowSize } from '@vueuse/core'
 
 const Login = defineComponent({
   name: 'RLogin',
   setup() {
-    const { t } = useI18n()
     const {
       layout: { copyright },
     } = __APP_CFG__
@@ -44,13 +42,12 @@ const Login = defineComponent({
       ...toRefs(state),
       windowHeight,
       updateLocale,
-      t,
       copyright,
       windowWidth,
     }
   },
   render() {
-    const { t } = this
+    const { $t } = this
 
     return (
       <div
@@ -125,19 +122,19 @@ const Login = defineComponent({
                       default: () => (
                         <>
                           <NTabPane
-                            tab={t('views.login.index.Signin')}
+                            tab={$t('views.login.index.Signin')}
                             name="signin"
                           >
                             <Signin />
                           </NTabPane>
                           <NTabPane
-                            tab={t('views.login.index.Register')}
+                            tab={$t('views.login.index.Register')}
                             name="register"
                           >
                             <Register />
                           </NTabPane>
                           <NTabPane
-                            tab={t('views.login.index.QRCodeSignin')}
+                            tab={$t('views.login.index.QRCodeSignin')}
                             name="qrcodeSignin"
                           >
                             <QRCodeSignin />

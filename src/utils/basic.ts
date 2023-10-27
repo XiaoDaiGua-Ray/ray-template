@@ -49,7 +49,11 @@ export const downloadBase64File = (base64: string, fileName: string) => {
   link.href = base64
   link.download = fileName
 
+  link.style.display = 'none'
+
+  document.body.appendChild(link)
   link.click()
+  document.body.removeChild(link)
 }
 
 /**
@@ -135,12 +139,10 @@ export const downloadAnyFile = (
     link.style.display = 'none'
 
     document.body.appendChild(link)
-
     link.click()
-
     document.body.removeChild(link)
-
     URL.revokeObjectURL(url)
+
     resolve()
   })
 }

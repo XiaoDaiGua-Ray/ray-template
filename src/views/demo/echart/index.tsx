@@ -1,12 +1,9 @@
 import './index.scss'
 
-import { NCard, NSwitch, NSpace, NP, NH2, NButton } from 'naive-ui'
+import { NCard, NSwitch, NSpace, NH2, NButton } from 'naive-ui'
 import RChart from '@/components/RChart/index'
 
-import dayjs from 'dayjs'
-
-import type { ECharts } from 'echarts/core'
-import type { RayChartInst } from '@/components/RChart/index'
+import type { RayChartInst } from '@/components/RChart/type'
 
 const Echart = defineComponent({
   name: 'REchart',
@@ -85,9 +82,6 @@ const Echart = defineComponent({
       ],
     }
     const baseLineOptions = ref({
-      title: {
-        text: dayjs().valueOf(),
-      },
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -99,11 +93,6 @@ const Echart = defineComponent({
       },
       legend: {
         data: ['Email', 'Union Ads', 'Video Ads', 'Direct', 'Search Engine'],
-      },
-      toolbox: {
-        feature: {
-          saveAsImage: {},
-        },
       },
       grid: {
         left: '3%',
@@ -189,16 +178,6 @@ const Echart = defineComponent({
       chartAria.value = bool
     }
 
-    const handleChartRenderSuccess = (chart: ECharts) => {
-      window.$notification.info({
-        title: '可视化图渲染成功回调函数',
-        content: '可视化图渲染成功, 并且返回了当前可视化图实例',
-        duration: 5 * 1000,
-      })
-
-      console.log(baseChartRef.value, chart)
-    }
-
     const mountChart = () => {
       baseChartRef.value?.render()
     }
@@ -208,8 +187,6 @@ const Echart = defineComponent({
     }
 
     const handleUpdateTitle = () => {
-      baseLineOptions.value.title.text = dayjs().valueOf()
-
       const createData = () => Math.floor((Math.random() + 1) * 100)
 
       baseLineOptions.value.series[0].data = new Array(7)
@@ -227,7 +204,6 @@ const Echart = defineComponent({
       handleLoadingShow,
       chartAria,
       handleAriaShow,
-      handleChartRenderSuccess,
       basePieOptions,
       baseLineOptions,
       ...toRefs(state),
@@ -262,7 +238,7 @@ const Echart = defineComponent({
             </li>
           </ul>
         </NCard>
-        <NH2>强制渲染过渡动画（animation）</NH2>
+        <NH2>强制渲染过渡动画（animation），预设 card 风格图表</NH2>
         <NSpace style={['padding: 18px 0']}>
           <NButton onClick={this.mountChart.bind(this)}>渲染</NButton>
           <NButton onClick={this.unmountChart.bind(this)}>卸载</NButton>
@@ -272,10 +248,12 @@ const Echart = defineComponent({
         </NSpace>
         <div class="chart--container">
           <RChart
+            title="周销售量"
             ref="baseChartRef"
             autoChangeTheme
             options={this.baseLineOptions}
             showAria={this.chartAria}
+            preset="card"
           />
         </div>
         <NH2>不跟随主题切换的暗色主题可视化图，并且手动指定原始主题色</NH2>

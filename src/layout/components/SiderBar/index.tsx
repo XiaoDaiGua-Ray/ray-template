@@ -35,8 +35,10 @@ import {
   createLeftIconOptions,
   createRightIconOptions,
 } from './hook'
-import { useDevice, useFullscreen } from '@/hooks/web/index'
+import { useDevice } from '@/hooks/web/index'
 import { globalVariableToRefs, setVariable } from '@/hooks/variable/index'
+import { useFullscreen } from 'vue-hooks-plus'
+import { useI18n } from '@/hooks/web/index'
 
 import type { IconEventMapOptions, IconEventMap } from './type'
 
@@ -46,8 +48,9 @@ export default defineComponent({
     const settingStore = useSetting()
 
     const { updateLocale, changeSwitcher } = settingStore
+    const { t } = useI18n()
 
-    const [isFullscreen, { toggleFullscreen }] = useFullscreen(
+    const [isFullscreen, { toggleFullscreen, isEnabled }] = useFullscreen(
       document.getElementsByTagName('html')[0],
     )
     const { drawerPlacement, breadcrumbSwitch, reloadRouteSwitch } =
@@ -96,6 +99,10 @@ export default defineComponent({
         window.open('https://github.com/XiaoDaiGua-Ray/ray-template')
       },
       fullscreen: () => {
+        if (!isEnabled) {
+          window.$message.warning(t('globalMessage.isEnabledFullscreen'))
+        }
+
         toggleFullscreen()
       },
       search: () => {

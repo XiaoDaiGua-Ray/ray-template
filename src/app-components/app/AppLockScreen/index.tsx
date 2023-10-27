@@ -43,6 +43,7 @@ const AppLockScreen = defineComponent({
         v-model:show={this.lockScreenSwitch}
         transformOrigin="center"
         show
+        autoFocus={false}
         maskClosable={false}
         closeOnEsc={false}
         preset={!this.getLockAppScreen() ? 'dialog' : void 0}

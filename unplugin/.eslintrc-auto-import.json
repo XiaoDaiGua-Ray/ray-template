@@ -70,7 +70,6 @@
     "useCssModule": true,
     "useCssVars": true,
     "useDialog": true,
-    "useI18n": true,
     "useLink": true,
     "useLoadingBar": true,
     "useMessage": true,

@@ -63,14 +63,24 @@ export interface RayChartInst {
    *
    * 手动卸载当前 chart 图
    * 注意：不会卸载当前组件，仅仅是卸载 chart
+   *
+   * @default () => void
    */
   dispose: () => void
   /**
    *
    * 手动渲染 chart 图
    * 注意：会根据当前的 options 配置项与 props 配置项重新渲染 chart
+   *
+   * @default () => void
    */
   render: () => void
 }
 
 export type EChartsExtensionInstallRegisters = typeof CanvasRenderer
+
+export type RChartPresetType = 'card' | 'default' | null | undefined
+
+export type RChartDownloadOptions = {
+  filename?: string
+} & Parameters<ECharts['getDataURL']>[0]

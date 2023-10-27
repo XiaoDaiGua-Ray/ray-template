@@ -1,15 +1,15 @@
-import { NForm, NFormItem, NInput, NButton, NSpace, NDivider } from 'naive-ui'
+import { NForm, NFormItem, NInput, NButton } from 'naive-ui'
 
 import { setStorage } from '@/utils/cache'
 import { useSignin } from '@/store'
 import { useI18n } from '@/hooks/web/index'
 import { APP_CATCH_KEY, ROOT_ROUTE } from '@/app-config/appConfig'
 import { useVueRouter } from '@/hooks/web/index'
-import { setVariable } from '@/hooks/variable/index'
+import { setVariable, globalVariableToRefs } from '@/hooks/variable/index'
 
 import type { FormInst } from 'naive-ui'
 
-const Signin = defineComponent({
+export default defineComponent({
   name: 'RSignin',
   setup() {
     const loginFormRef = ref<FormInst>()
@@ -19,6 +19,7 @@ const Signin = defineComponent({
 
     const { signin } = signinStore
     const { path } = ROOT_ROUTE
+    const globalSpinning = globalVariableToRefs('globalSpinning')
 
     const useSigninForm = () => ({
       name: 'Ray Admin',
@@ -74,37 +75,37 @@ const Signin = defineComponent({
       loginFormRef,
       handleLogin,
       rules,
-      t,
+      globalSpinning,
     }
   },
   render() {
-    const { t } = this
+    const { $t, globalSpinning } = this
 
     return (
       <NForm model={this.signinForm} ref="loginFormRef" rules={this.rules}>
-        <NFormItem label={t('views.login.index.Name')} path="name">
+        <NFormItem label={$t('views.login.index.Name')} path="name">
           <NInput
             v-model:value={this.signinForm.name}
-            placeholder={t('views.login.index.NamePlaceholder')}
+            placeholder={$t('views.login.index.NamePlaceholder')}
           />
         </NFormItem>
-        <NFormItem label={t('views.login.index.Password')} path="pwd">
+        <NFormItem label={$t('views.login.index.Password')} path="pwd">
           <NInput
             v-model:value={this.signinForm.pwd}
             type="password"
-            placeholder={t('views.login.index.PasswordPlaceholder')}
+            showPasswordOn="click"
+            placeholder={$t('views.login.index.PasswordPlaceholder')}
           />
         </NFormItem>
         <NButton
           style={['width: 100%', 'margin-to: 18px']}
           type="primary"
           onClick={this.handleLogin.bind(this)}
+          loading={globalSpinning}
         >
-          {t('views.login.index.Login')}
+          {$t('views.login.index.Login')}
         </NButton>
       </NForm>
     )
   },
 })
-
-export default Signin

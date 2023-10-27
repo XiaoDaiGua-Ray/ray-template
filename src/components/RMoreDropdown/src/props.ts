@@ -17,6 +17,10 @@ const props = {
     type: Number,
     default: 14,
   },
+  cursor: {
+    type: String,
+    default: 'default',
+  },
 }
 
 export default props

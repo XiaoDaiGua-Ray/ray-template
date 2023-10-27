@@ -167,7 +167,6 @@ export default defineComponent({
     }
 
     const resizableClick = (option: C, index: number) => {
-      console.log('🚀 ~ resizableClick ~ option:', option.isResizable)
       option['isResizable'] = !option['isResizable']
       option['resizable'] = option['isResizable']
       treeDataSource.value[index] = option

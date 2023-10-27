@@ -18,7 +18,7 @@ import C from './components/C'
 import Print from './components/Print'
 
 import props from './props'
-import { call } from '@/utils/vue/index'
+import { call, renderNode } from '@/utils/vue/index'
 import { uuid } from '@/utils/basic'
 import config from './config'
 
@@ -203,7 +203,9 @@ export default defineComponent({
               ) : null}
             </>
           ),
-          header: () => this.title || <div style="display: none;"></div>,
+          header: renderNode(this.title, {
+            defaultElement: <div style="display: none;"></div>,
+          }),
           'header-extra': () => (
             <NSpace wrapItem={false} align="center">
               {tool(this.$props as any)}

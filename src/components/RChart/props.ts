@@ -1,5 +1,5 @@
 import type * as echarts from 'echarts/core' // `echarts` 核心模块
-import type { PropType } from 'vue'
+import type { PropType, VNode } from 'vue'
 import type { MaybeArray } from '@/types/modules/utils'
 import type {
   LoadingOptions,
@@ -8,11 +8,60 @@ import type {
 } from '@/components/RChart/type'
 import type { ECharts, SetOptionOpts } from 'echarts/core'
 import type { MaybeComputedElementRef, MaybeElement } from '@vueuse/core'
-import type { EChartsExtensionInstallRegisters } from './type'
+import type {
+  EChartsExtensionInstallRegisters,
+  RChartPresetType,
+  RChartDownloadOptions,
+} from './type'
+import type { CardProps, DropdownProps, DropdownOption } from 'naive-ui'
 
 import { loadingOptions } from './helper'
 
 const props = {
+  bordered: {
+    /**
+     *
+     * 仅在 preset 为 card 时生效
+     *
+     * 设置边框
+     */
+    type: Boolean,
+    default: true,
+  },
+  downloadOptions: {
+    /**
+     *
+     * 仅在 preset 为 card 时生效
+     *
+     * type: 导出的格式，可选 png, jpg, svg。注意：png, jpg 只有在 canvas 渲染器的时候可使用，svg 只有在使用 svg 渲染器的时候可用
+     * pixelRatio: 导出的图片分辨率比例，默认为 1
+     * backgroundColor: 导出的图片背景色，默认使用 option 里的 backgroundColor
+     * excludeComponents: 忽略组件的列表，例如要忽略 toolbox 就是 ['toolbox']
+     */
+    type: Object as PropType<RChartDownloadOptions>,
+    default: () => ({}),
+  },
+  onDropdownSelect: {
+    // 仅在 preset 为 card 时生效
+    type: [Function, Array] as PropType<
+      MaybeArray<(key: string | number, option: DropdownOption) => void>
+    >,
+  },
+  dropdownOptions: {
+    // 仅在 preset 为 card 时生效
+    type: Array as PropType<DropdownProps['options']>,
+  },
+  preset: {
+    type: String as PropType<RChartPresetType>,
+  },
+  contentStyle: {
+    // 仅在 preset 为 card 时生效
+    type: [String, Object] as PropType<CardProps['contentStyle']>,
+  },
+  title: {
+    // 仅在 preset 为 card 时生效
+    type: [String, Function] as PropType<string | (() => VNode)>,
+  },
   width: {
     /**
      *
@@ -42,17 +91,6 @@ const props = {
      * 默认每秒触发一次的频率
      */
     type: [Boolean, Object] as PropType<AutoResize>,
-    default: true,
-  },
-  canvasRender: {
-    /**
-     *
-     * @deprecated
-     * `chart` 渲染器, 默认使用 `canvas`
-     *
-     * 考虑到打包体积与大多数业务场景缘故, 暂时移除 `SVGRenderer` 渲染器的默认导入
-     */
-    type: Boolean,
     default: true,
   },
   showAria: {

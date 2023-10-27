@@ -37,5 +37,5 @@ export function getVariable(key: VariableStateKey) {
 }
 
 export function globalVariableToRefs<K extends VariableStateKey>(key: K) {
-  return toRef<typeof variableState, K>(variableState, key)
+  return readonly(toRef<typeof variableState, K>(variableState, key))
 }

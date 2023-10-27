@@ -18,6 +18,7 @@ import dayjs from 'dayjs'
 import { useSetting, useSignin } from '@/store'
 import { rules, useCondition } from '@/app-components/app/AppLockScreen/hook'
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
+import { useDevice } from '@/hooks/web/index'
 
 import type { FormInst, InputInst } from 'naive-ui'
 
@@ -30,6 +31,7 @@ const UnlockScreen = defineComponent({
     const { logout } = useSignin()
     const { changeSwitcher } = useSetting()
     const { setLockAppScreen } = useAppLockScreen()
+    const { isTabletOrSmaller } = useDevice()
 
     const HH_MM_FORMAT = 'HH:mm'
     const AM_PM_FORMAT = 'A'
@@ -91,13 +93,23 @@ const UnlockScreen = defineComponent({
       unlockScreen,
       formRef,
       inputInstRef,
+      isTabletOrSmaller,
     }
   },
   render() {
+    const { isTabletOrSmaller } = this
+
     return (
       <div class="app-lock-screen__unlock">
         <div class="app-lock-screen__unlock__content">
-          <div class="app-lock-screen__unlock__content-bg">
+          <div
+            class={[
+              'app-lock-screen__unlock__content-bg',
+              isTabletOrSmaller
+                ? 'app-lock-screen__unlock__content-bg--smaller'
+                : '',
+            ]}
+          >
             <div class="left">{this.HH_MM?.split(':')[0]}</div>
             <div class="right">{this.HH_MM?.split(':')[1]}</div>
           </div>

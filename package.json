@@ -1,7 +1,7 @@
 {
   "name": "ray-template",
   "private": false,
-  "version": "4.2.7",
+  "version": "4.2.8",
   "type": "module",
   "engines": {
     "node": ">=16.0.0",
@@ -53,7 +53,6 @@
     "@types/crypto-js": "^4.1.1",
     "@types/lodash-es": "^4.17.7",
     "@types/mockjs": "1.0.7",
-    "@types/scrollreveal": "^0.0.8",
     "@typescript-eslint/eslint-plugin": "^5.61.0",
     "@typescript-eslint/parser": "^5.61.0",
     "@vitejs/plugin-vue": "^4.2.3",

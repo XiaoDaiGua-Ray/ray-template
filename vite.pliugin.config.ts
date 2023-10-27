@@ -63,7 +63,6 @@ export default function (mode: string): PluginOption[] {
         'vue',
         'vue-router',
         'pinia',
-        'vue-i18n',
         {
           'naive-ui': [
             'useDialog',
@@ -107,11 +106,6 @@ export default function (mode: string): PluginOption[] {
         },
         {
           libName: '@vueuse',
-          libDirectory: '',
-          camel2DashComponentName: false,
-        },
-        {
-          libName: 'lodash',
           libDirectory: '',
           camel2DashComponentName: false,
         },

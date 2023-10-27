@@ -1,5 +1,36 @@
 # CHANGE LOG
 
+## 4.2.8
+
+我好像犯了一个很愚蠢的错误，那就是使用 useFullscreen 方法的时候总是会弹出提示。所以紧急修复了这个很愚蠢的问题，并且移除了这个方法。
+
+在兼容移动端后，手机打开页面会触发缩放情况，这个版本禁用了缩放。如果有需求可以去设置 `index.html` 中的 `meta` 标签。并且优化了移动端的锁屏样式。
+
+重构了 RChart 组件，因为该组件过于单调，所以决定赋予更多的功能。结合 naive NCard 组件进行了二次封装。当然你也可以通过设置 `preset = default | null | void 0` 调用无预设样式的 chart 图表。
+
+### Feats
+
+- 移除二次封装 useFullscreen 方法
+- 禁用自动缩放
+- 优化移动端锁屏样式
+- 禁用 vue-i18n 自动导入
+- RChart
+  - 新增 preset 属性配置，以下配置属性仅在 preset 为 card 生效
+    - 新增 downloadOptions 下载图片配置，具体说明查看文档：https://echarts.apache.org/zh/api.html#echartsInstance.getDataURL
+    - 修改 RChart 渲染时机，更改为主进程渲染
+    - 新增 cardExtra slots 自定义配置操作栏
+    - 新增 title 属性
+    - 新增 onDropdownSelect 回调方法
+- 新增 renderNode 方法，用于减少 if else 表达式渲染 vnode
+- 语言包新增 globalMessage 模块，用于配置统一的输出消息
+
+### Fixes
+
+- 修复每次执行 useFullscreen 都弹出提示的问题
+- RChart
+  - 修复 animation false 状态渲染异常问题
+  - 修复响应式代理 echart instance 时，导致部分方法异常问题
+ 
 ## 4.2.7
 
 主要是做了一些统一命名的事情，以前由于写的比较放浪形骸现在正在慢慢更改这个大问题。

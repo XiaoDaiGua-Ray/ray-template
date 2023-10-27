@@ -18,14 +18,14 @@ export default defineComponent({
   name: 'RMoreDropdown',
   props,
   render() {
-    const { iconSize } = this
+    const { iconSize, cursor } = this
 
     return (
       <NDropdown {...this.$props} {...this.$attrs}>
         {this.$slots.default ? (
           this.$slots.default()
         ) : (
-          <RIcon name="more" size={iconSize} />
+          <RIcon name="more" size={iconSize} cursor={cursor} />
         )}
       </NDropdown>
     )
