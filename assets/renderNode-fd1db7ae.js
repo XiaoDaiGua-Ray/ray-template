@@ -1,1 +1,0 @@
-import{r as f}from"./index-6d9096b2.js";function n(t,e){if(!t){const{defaultElement:r}=e??{};return typeof r=="function"?r:()=>r}if(typeof t=="string"||f(t,"Object"))return()=>t;if(typeof t=="function")return t}export{n as r};
