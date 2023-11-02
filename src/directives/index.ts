@@ -37,12 +37,17 @@ export const setupDirectives = (app: App<Element>) => {
   const regexDirectiveName = /^([^-]+-)*[^-]+$/
 
   forIn(directivesModules, (value, key) => {
-    const dname = key.match(regexExtractDirectiveName)?.[0]
+    const directiveBindName = key.match(regexExtractDirectiveName)?.[0]
 
-    if (typeof dname === 'string' && regexDirectiveName.test(dname)) {
-      app.directive(dname, value())
+    if (
+      typeof directiveBindName === 'string' &&
+      regexDirectiveName.test(directiveBindName)
+    ) {
+      app.directive(directiveBindName, value())
     } else {
-      console.error(`[setupDirectives] ${dname} is not a valid directive name`)
+      console.error(
+        `[setupDirectives] ${directiveBindName} is not a valid directive name`,
+      )
     }
   })
 }

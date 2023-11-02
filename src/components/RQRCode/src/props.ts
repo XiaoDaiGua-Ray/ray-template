@@ -27,7 +27,7 @@ const props = {
   watchText: {
     /**
      *
-     * Atuo watch QR code text
+     * Auto watch QR code text
      * If update text, then re-render QR code
      *
      * @default true

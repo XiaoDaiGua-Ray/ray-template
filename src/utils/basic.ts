@@ -1,6 +1,7 @@
 import type {
-  ValidteValueType,
+  ValidateValueType,
   DownloadAnyFileDataType,
+  BasicTypes,
 } from '@/types/modules/utils'
 
 /**
@@ -17,7 +18,7 @@ export const getAppEnvironment = () => {
  *
  * @param data 二进制流数据
  *
- * @returns formate binary to base64 of the image
+ * @returns format binary to base64 of the image
  */
 export const arrayBufferToBase64Image = (data: ArrayBuffer): string | null => {
   if (!data || data.byteLength) {
@@ -61,9 +62,9 @@ export const downloadBase64File = (base64: string, fileName: string) => {
  * @param value 目标值
  * @param type 类型
  */
-export const isValueType = <T>(
+export const isValueType = <T extends BasicTypes>(
   value: unknown,
-  type: ValidteValueType,
+  type: ValidateValueType,
 ): value is T => {
   const valid = Object.prototype.toString.call(value)
 
@@ -117,32 +118,52 @@ export const downloadAnyFile = (
   return new Promise<void>((resolve, reject) => {
     let blobData!: Blob
 
-    if (typeof data === 'string') {
-      // 处理 Base64 数据
-      downloadBase64File(data, fileName)
-      resolve()
-    } else if (data instanceof ArrayBuffer) {
-      // 处理 ArrayBuffer 数据
-      blobData = new Blob([new Uint8Array(data)], {
-        type: 'application/octet-stream',
+    try {
+      if (typeof data === 'string') {
+        downloadBase64File(data, fileName)
+        resolve()
+
+        return
+      }
+
+      if (data instanceof ArrayBuffer) {
+        blobData = new Blob([new Uint8Array(data)], {
+          type: 'application/octet-stream',
+        })
+      } else if (data instanceof File || data instanceof Blob) {
+        blobData = data
+      } else {
+        reject(new Error('Unsupported data type'))
+
+        return
+      }
+
+      const url = URL.createObjectURL(blobData)
+      const link = document.createElement('a')
+
+      link.href = url
+      link.download = fileName
+      link.style.display = 'none'
+
+      const remove = () => {
+        URL.revokeObjectURL(url)
+        document.body.removeChild(link)
+      }
+
+      link.addEventListener('load', () => {
+        remove()
+        resolve()
       })
-    } else {
-      // 处理 Blob 和 File 数据
-      blobData = data
+
+      link.addEventListener('error', (error) => {
+        remove()
+        reject(error)
+      })
+
+      document.body.appendChild(link)
+      link.click()
+    } catch (error) {
+      reject(error)
     }
-
-    const url = URL.createObjectURL(blobData)
-    const link = document.createElement('a')
-
-    link.href = url
-    link.download = fileName
-    link.style.display = 'none'
-
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    URL.revokeObjectURL(url)
-
-    resolve()
   })
 }

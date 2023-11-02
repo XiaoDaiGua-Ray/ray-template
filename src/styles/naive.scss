@@ -1,10 +1,13 @@
-.n-spin-container,
-.n-spin-container .n-spin-content {
+// layout content 区域默认开启继承宽高，避免 global lodaing 丢失高度
+.r-layout-full__viewer-content .n-spin-container,
+.r-layout-full__viewer-content .n-spin-container .n-spin-content {
   width: 100%;
   height: 100%;
 }
 
+// 拓展 AppMenu Item样式
 .r-menu--app:not(.n-menu--collapsed) .n-menu-item-content.n-menu-item-content--selected:before,
 .r-menu--app:not(.n-menu--collapsed) .n-menu-item-content:hover:before {
   border-left: 4px solid var(--ray-theme-primary-color);
+  transition: border-left 0.1s;
 }

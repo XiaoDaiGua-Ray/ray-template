@@ -13,57 +13,11 @@ import './index.scss'
 
 import { call } from '@/utils/vue/index'
 import { completeSize } from '@/utils/element'
+import props from './props'
 
-import type { PropType } from 'vue'
-import type { MaybeArray } from '@/types/modules/utils'
-
-const RIcon = defineComponent({
+export default defineComponent({
   name: 'RIcon',
-  props: {
-    color: {
-      type: String,
-      default: 'currentColor',
-    },
-    prefix: {
-      type: String,
-      default: 'icon',
-    },
-    name: {
-      type: String,
-      required: true,
-    },
-    size: {
-      type: [Number, String],
-      default: 14,
-    },
-    width: {
-      type: [Number, String],
-      default: 0,
-    },
-    height: {
-      type: [Number, String],
-      default: 0,
-    },
-    customClassName: {
-      /** 自定义 class name */
-      type: String,
-      default: null,
-    },
-    depth: {
-      /** 图标深度 */
-      type: Number,
-      default: 1,
-    },
-    cursor: {
-      /** 鼠标指针样式 */
-      type: String,
-      default: 'default',
-    },
-    onClick: {
-      type: [Function, Array] as PropType<MaybeArray<(e: MouseEvent) => void>>,
-      default: null,
-    },
-  },
+  props,
   setup(props) {
     const symbolId = computed(() => `#${props.prefix}-${props.name}`)
     const cssVars = computed(() => {
@@ -111,5 +65,3 @@ const RIcon = defineComponent({
     )
   },
 })
-
-export default RIcon

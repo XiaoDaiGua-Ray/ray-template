@@ -8,7 +8,7 @@ const qrcode: AppRouteRecordRaw = {
   name: 'RQRCode',
   component: () => import('@/views/demo/qrcode/index'),
   meta: {
-    noLocalTitle: '二维码',
+    i18nKey: t('menu.QRCode'),
     icon: 'other',
     order: 3,
   },

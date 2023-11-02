@@ -14,9 +14,9 @@ import RTable from '@/components/RTable/index'
 import RCollapseGrid from '@/components/RCollapseGrid/index'
 
 import { useHookPlusRequest } from '@/axios/index'
-import { getPersonList } from '@/axios/api/demo/mock/person'
+import { getPersonList } from '@/api/demo/mock/person'
 
-import type { Person } from '@/axios/api/demo/mock/person'
+import type { Person } from '@/api/demo/mock/person'
 
 const MockDemo = defineComponent({
   name: 'MockDemo',

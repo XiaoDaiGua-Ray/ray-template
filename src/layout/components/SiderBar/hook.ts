@@ -1,4 +1,4 @@
-import { useSetting, useSignin } from '@/store'
+import { useSetting, useSigning } from '@/store'
 import { useI18n } from '@/hooks/web/index'
 
 import type { IconOptionsFC, IconOptions } from './type'
@@ -24,8 +24,8 @@ export const createAvatarOptions = () => [
 
 const avatarDropdownActionMap = {
   logout: () => {
-    const signinStore = useSignin()
-    const { logout } = signinStore
+    const signingStore = useSigning()
+    const { logout } = signingStore
 
     window.$dialog.warning({
       title: '提示',

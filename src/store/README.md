@@ -1,6 +1,6 @@
 ## 描述
 
-> pinia store 仓库包。存放全局公共状态。
+> pinia store 仓库包。存放全局公共状态。如果不需要 pinia 但是又希望使用全局变量，可以使用 `global-variable` 管理数据。
 
 ## 约束
 

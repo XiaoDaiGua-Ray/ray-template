@@ -44,7 +44,7 @@ const axiosFetchError: AxiosFetchError = {
   requestError: null,
   responseError: null,
 }
-/** 请求队列(区分 reslove 与 reject 状态) */
+/** 请求队列(区分 resolve 与 reject 状态) */
 const implement: ImplementQueue = {
   implementRequestInterceptorArray: [],
   implementResponseInterceptorArray: [],

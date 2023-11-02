@@ -1,5 +1,27 @@
 # CHANGE LOG
 
+## 4.2.9
+
+主要更新了命名问题。并且使用单词检查器，扫描整个项目替换了拼写错误的单词。
+
+### Feats
+
+- setVariable 方法新增回调函数参数
+- 优化 getVariable ts 类型提示，并且使用 readonly 方法包裹
+- 重命名 globalVariableToRefs 为 getVariableToRefs，并且使用 readonly 方法包裹
+- renderNode 方法新增对于 Slot 类型参数支持
+- 新增 BasicTypes 类型
+- 提取 RIcon 组件 props 单独维护
+- 将 api 管理，提取到 `src` 下维护
+- getAppLocalMessages 获取路径方式由相对路径改为绝对路径
+- 将 hooks 包中的 variable 方法提取至 `src` 下管理，并且更改名称为 `global-variable`
+- 调整 GlobalSearch 样式
+
+### Fixes
+
+- 修复 downloadBase64File 下载后不能正常移除 `a` 标签问题
+- 修复 downloadAnyFile 存在的可能未加载完成而提前执行方法的问题
+
 ## 4.2.8
 
 我好像犯了一个很愚蠢的错误，那就是使用 useFullscreen 方法的时候总是会弹出提示。所以紧急修复了这个很愚蠢的问题，并且移除了这个方法。
@@ -30,7 +52,7 @@
 - RChart
   - 修复 animation false 状态渲染异常问题
   - 修复响应式代理 echart instance 时，导致部分方法异常问题
- 
+
 ## 4.2.7
 
 主要是做了一些统一命名的事情，以前由于写的比较放浪形骸现在正在慢慢更改这个大问题。

@@ -86,7 +86,7 @@ export interface LibItem {
   /**
    *
    * whether replace old import statement, default `command === 'build'`,
-   * that means in vite serve default to `false`, in vite build default to `ture`
+   * that means in vite serve default to `false`, in vite build default to `true`
    */
   replaceOldImport?: boolean
   /**
@@ -117,7 +117,7 @@ export interface ImpConfig {
   /**
    *
    * By default `vite-plugin-imp` ignores all files inside node_modules.
-   * You can enable this option to avoid unexpected untranspiled code from third-party dependencies.
+   * You can enable this option to avoid unexpected untranslated code from third-party dependencies.
    *
    * Transpiling all the dependencies could slow down the build process, though.
    * If build performance is a concern, you can explicitly transpile only some of the dependencies

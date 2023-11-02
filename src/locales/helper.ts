@@ -76,7 +76,7 @@ export const getAppLocalMessages = async (
   const message = {} as AppCurrentAppMessages
 
   for (const curr of localOptions) {
-    const msg: AppLocalesModules = await import(`./lang/${curr.key}.ts`)
+    const msg: AppLocalesModules = await import(`@/locales/lang/${curr.key}.ts`)
     const key = curr.key
 
     if (key) {
@@ -123,7 +123,7 @@ export const naiveLocales = (key: string) => {
  *
  * @returns 获取当前环境默认语言
  *
- * @remak 未避免出现加载语言错误问题, 故而在 `main.ts` 注册时, 应优先加载 `i18n` 避免出现该问题
+ * @remark 未避免出现加载语言错误问题, 故而在 `main.ts` 注册时, 应优先加载 `i18n` 避免出现该问题
  */
 export const getAppDefaultLanguage = () => {
   const language = getStorage(

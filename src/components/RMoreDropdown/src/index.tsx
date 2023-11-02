@@ -13,20 +13,20 @@ import { NDropdown } from 'naive-ui'
 import RIcon from '@/components/RIcon/index'
 
 import props from './props'
+import { renderNode } from '@use-utils/vue/index'
 
 export default defineComponent({
   name: 'RMoreDropdown',
   props,
   render() {
     const { iconSize, cursor } = this
+    const { default: $default } = this.$slots
 
     return (
-      <NDropdown {...this.$props} {...this.$attrs}>
-        {this.$slots.default ? (
-          this.$slots.default()
-        ) : (
-          <RIcon name="more" size={iconSize} cursor={cursor} />
-        )}
+      <NDropdown {...this.$props} {...this.$attrs} placement="bottom-start">
+        {renderNode($default, {
+          defaultElement: <RIcon name="more" size={iconSize} cursor={cursor} />,
+        })}
       </NDropdown>
     )
   },

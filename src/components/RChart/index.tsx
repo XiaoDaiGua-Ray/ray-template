@@ -56,7 +56,6 @@ import type { AnyFC } from '@/types/modules/utils'
 import type { DebouncedFunc } from 'lodash-es'
 import type { UseResizeObserverReturn } from '@vueuse/core'
 import type { ECharts, EChartsCoreOption } from 'echarts/core'
-import type { RenderVNodeType } from '@use-utils/vue/renderNode'
 import type { DropdownProps, DropdownOption } from 'naive-ui'
 
 const defaultChartOptions = {
@@ -77,7 +76,7 @@ export default defineComponent({
     const rayChartWrapperRef = ref<HTMLElement>()
     const echartInstanceRef = ref<ECharts>() // echart 实例
     let resizeThrottleReturn: DebouncedFunc<AnyFC> | null // resize 防抖方法实例
-    let resizeOvserverReturn: UseResizeObserverReturn | null
+    let resizeObserverReturn: UseResizeObserverReturn | null
     const { echartTheme } = APP_THEME
     let watchCallback: WatchStopHandle | null
     let echartInst: ECharts | null // 无代理响应式代理缓存 echart inst
@@ -85,19 +84,16 @@ export default defineComponent({
       {
         label: '下载图片',
         key: 'downloadChart',
-        disabled:
+        disabled: !(
           echartInstanceRef.value && echartInstanceRef.value.getDom()
-            ? false
-            : true,
+        ),
       },
     ])
     const cssVarsRef = computed(() => {
-      const cssVars = {
+      return {
         '--ray-chart-width': completeSize(props.width),
         '--ray-chart-height': completeSize(props.height),
       }
-
-      return cssVars
     })
 
     /**
@@ -257,14 +253,16 @@ export default defineComponent({
       }
     }
 
+    const isDispose = () => !!(echartInst && echartInst.getDom())
+
     /**
      *
      * 销毁 `chart` 实例, 释放资源
      */
     const destroyChart = () => {
-      if (echartInst && echartInst.getDom()) {
-        echartInst.clear()
-        echartInst.dispose()
+      if (isDispose()) {
+        echartInst!.clear()
+        echartInst!.dispose()
         echartInstanceRef.value = void 0
       }
     }
@@ -277,11 +275,11 @@ export default defineComponent({
     }
 
     const dropdownSelect = (key: string | number, option: DropdownOption) => {
-      if (key === 'downloadChart' && echartInst && echartInst.getDom()) {
+      if (key === 'downloadChart' && isDispose()) {
         const { filename, ...args } = props.downloadOptions
 
         downloadBase64File(
-          echartInst.getDataURL(args),
+          echartInst!.getDataURL(args),
           filename ?? `${new Date().getTime()}`,
         )
       }
@@ -310,7 +308,7 @@ export default defineComponent({
         resizeThrottleReturn = throttle(resizeChart, props.throttleWait)
         /** 监听内容区域尺寸变化更新 chart */
 
-        resizeOvserverReturn = useResizeObserver(
+        resizeObserverReturn = useResizeObserver(
           props.observer || rayChartWrapperRef,
           resizeThrottleReturn,
         )
@@ -323,7 +321,7 @@ export default defineComponent({
       /** 注销防抖 */
       resizeThrottleReturn?.cancel()
       /** 注销 observer 监听 */
-      resizeOvserverReturn?.stop?.()
+      resizeObserverReturn?.stop?.()
     }
 
     /** 监听全局主题变化, 然后重新渲染对应主题 echarts */
@@ -362,9 +360,9 @@ export default defineComponent({
       if (props.watchOptions) {
         watchCallback = watch(
           () => props.options,
-          (noptions) => {
+          (ndata) => {
             /** 重新组合 options */
-            const options = combineChartOptions(noptions)
+            const options = combineChartOptions(ndata)
             const setOpt = Object.assign(
               props.setChartOptions,
               defaultChartOptions,
@@ -432,13 +430,13 @@ export default defineComponent({
         bordered={bordered}
       >
         {{
-          default: () => (
-            <div class="ray-chart__container" ref="rayChartRef"></div>
+          default: renderNode(
+            <div class="ray-chart__container" ref="rayChartRef"></div>,
           ),
           header: renderNode(title, {
             defaultElement: <div style="display: none;"></div>,
           }),
-          'header-extra': renderNode(cardExtra as RenderVNodeType, {
+          'header-extra': renderNode(cardExtra, {
             defaultElement: (
               <RMoreDropdown
                 iconSize={18}
@@ -446,6 +444,7 @@ export default defineComponent({
                 options={dropdownOptions ?? moreDropDownOptions}
                 trigger="click"
                 onSelect={dropdownSelect.bind(this)}
+                placement="bottom-end"
               />
             ),
           }),

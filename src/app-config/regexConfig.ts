@@ -17,6 +17,6 @@
 
 export const APP_REGEX: Record<string, RegExp> = {
   /** css 尺寸单位匹配 */
-  validerCSSUnit:
+  validCSSUnit:
     /^\d+(\.\d+)?(px|em|rem|%|vw|vh|vmin|vmax|cm|mm|in|pt|pc|ch|ex|q|s|ms|deg|rad|turn|grad|hz|khz|dpi|dpcm|dppx|fr|auto)$/,
 }

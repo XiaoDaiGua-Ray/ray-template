@@ -21,10 +21,10 @@ import './index.scss'
 
 import { NLayoutHeader, NSpace, NDropdown } from 'naive-ui'
 import RIcon from '@/components/RIcon/index'
-import TootipIcon from '@/layout/components/SiderBar/components/TooltipIcon/index'
+import TooltipIcon from '@/layout/components/SiderBar/components/TooltipIcon/index'
 import SettingDrawer from './components/SettingDrawer/index'
 import Breadcrumb from './components/Breadcrumb/index'
-import GlobalSeach from './components/GlobalSeach/index'
+import GlobalSearch from './components/GlobalSearch/index'
 import AppAvatar from '@/app-components/app/AppAvatar/index'
 
 import { useSetting } from '@/store'
@@ -36,7 +36,7 @@ import {
   createRightIconOptions,
 } from './hook'
 import { useDevice } from '@/hooks/web/index'
-import { globalVariableToRefs, setVariable } from '@/hooks/variable/index'
+import { getVariableToRefs, setVariable } from '@/global-variable/index'
 import { useFullscreen } from 'vue-hooks-plus'
 import { useI18n } from '@/hooks/web/index'
 
@@ -61,7 +61,7 @@ export default defineComponent({
     }
     const globalSearchShown = ref(false)
     const { isTabletOrSmaller } = useDevice()
-    const globalDrawerValue = globalVariableToRefs('globalDrawerValue')
+    const globalDrawerValue = getVariableToRefs('globalDrawerValue')
 
     /**
      *
@@ -135,7 +135,7 @@ export default defineComponent({
   render() {
     return (
       <NLayoutHeader class="layout-header" bordered>
-        <GlobalSeach v-model:show={this.globalSearchShown} />
+        <GlobalSearch v-model:show={this.globalSearchShown} />
         <NSpace
           class="layout-header__method"
           align="center"
@@ -147,7 +147,7 @@ export default defineComponent({
             itemStyle={this.spaceItemStyle}
           >
             {this.leftIconOptions.map((curr) => (
-              <TootipIcon
+              <TooltipIcon
                 iconName={curr.name}
                 tooltipText={
                   isRef(curr.tooltip) ? curr.tooltip.value : curr.tooltip
@@ -164,7 +164,7 @@ export default defineComponent({
             itemStyle={this.spaceItemStyle}
           >
             {this.rightTooltipIconOptions.map((curr) => (
-              <TootipIcon
+              <TooltipIcon
                 iconName={curr.name}
                 tooltipText={
                   isRef(curr.tooltip) ? curr.tooltip.value : curr.tooltip

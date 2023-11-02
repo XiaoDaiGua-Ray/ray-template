@@ -15,20 +15,20 @@ import { NInput, NForm, NFormItem, NButton, NSpace } from 'naive-ui'
 import AppAvatar from '@/app-components/app/AppAvatar/index'
 
 import dayjs from 'dayjs'
-import { useSetting, useSignin } from '@/store'
+import { useSetting, useSigning } from '@/store'
 import { rules, useCondition } from '@/app-components/app/AppLockScreen/hook'
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
 import { useDevice } from '@/hooks/web/index'
 
 import type { FormInst, InputInst } from 'naive-ui'
 
-const UnlockScreen = defineComponent({
+export default defineComponent({
   name: 'UnlockScreen',
   setup() {
     const formRef = ref<FormInst | null>(null)
     const inputInstRef = ref<InputInst | null>(null)
 
-    const { logout } = useSignin()
+    const { logout } = useSigning()
     const { changeSwitcher } = useSetting()
     const { setLockAppScreen } = useAppLockScreen()
     const { isTabletOrSmaller } = useDevice()
@@ -55,7 +55,7 @@ const UnlockScreen = defineComponent({
     }, 86_400_000)
 
     /** 退出登陆并且回到登陆页 */
-    const backToSignin = () => {
+    const backToSigning = () => {
       window.$dialog.warning({
         title: '警告',
         content: '是否返回到登陆页?',
@@ -89,7 +89,7 @@ const UnlockScreen = defineComponent({
 
     return {
       ...toRefs(state),
-      backToSignin,
+      backToSigning,
       unlockScreen,
       formRef,
       inputInstRef,
@@ -138,7 +138,7 @@ const UnlockScreen = defineComponent({
                 <NButton
                   type="primary"
                   text
-                  onClick={this.backToSignin.bind(this)}
+                  onClick={this.backToSigning.bind(this)}
                 >
                   返回登陆
                 </NButton>
@@ -165,5 +165,3 @@ const UnlockScreen = defineComponent({
     )
   },
 })
-
-export default UnlockScreen

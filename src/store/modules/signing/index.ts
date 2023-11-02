@@ -16,20 +16,20 @@
  *
  * 使用 sessionStorage 缓存部分用户信息
  *
- * 默认仅缓存 signinCallback 属性
+ * 默认仅缓存 SigningCallback 属性
  */
 
 import { isEmpty } from 'lodash-es'
 import { removeStorage } from '@/utils/cache'
 
 import type {
-  SigninForm,
-  SigninCallback,
-  SigninResponse,
-} from '@/store/modules/signin/type'
+  SigningForm,
+  SigningCallback,
+  SigningResponse,
+} from '@/store/modules/signing/type'
 
-export const useSignin = defineStore(
-  'signin',
+export const useSigning = defineStore(
+  'signing',
   () => {
     const state = reactive({
       /**
@@ -37,22 +37,22 @@ export const useSignin = defineStore(
        * 登陆返回信息(可以存放用户名、权限、头像等一些信息)
        * 路由鉴权依赖该属性中的 role 属性, 如果需要更改请同步更改: router/basic.ts、router/permission.ts
        */
-      signinCallback: {} as SigninCallback,
+      signingCallback: {} as SigningCallback,
     })
 
     /**
      *
-     * @param signinForm 用户登录信息
+     * @param SigningForm 用户登录信息
      * @returns 状态码
      *
      * @remark 0: 登陆成功, 1: 登陆失败
      */
-    const signin = (signinForm: SigninForm): Promise<SigninResponse> => {
+    const signing = (SigningForm: SigningForm): Promise<SigningResponse> => {
       return new Promise((resolve, reject) => {
-        if (!isEmpty(signinForm)) {
-          state.signinCallback = {
+        if (!isEmpty(SigningForm)) {
+          state.signingCallback = {
             role: 'admin',
-            name: signinForm.name,
+            name: SigningForm.name,
             avatar:
               'https://usc1.contabostorage.com/c2e495d7890844d392e8ec0c6e5d77eb:image/longmao.navigator.png',
           }
@@ -60,7 +60,7 @@ export const useSignin = defineStore(
           resolve({
             code: 0,
             message: '登陆成功',
-            data: state.signinCallback,
+            data: state.signingCallback,
           })
         } else {
           reject({
@@ -86,14 +86,14 @@ export const useSignin = defineStore(
 
     return {
       ...toRefs(state),
-      signin,
+      signing,
       logout,
     }
   },
   {
     persist: {
-      key: 'piniaSigninStore',
-      paths: ['signinCallback'],
+      key: 'piniaSigningStore',
+      paths: ['signingCallback'],
       storage: sessionStorage,
     },
   },

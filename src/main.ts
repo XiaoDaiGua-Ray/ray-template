@@ -2,7 +2,7 @@ import App from './App'
 
 import '@/styles/base.scss'
 
-import 'virtual:svg-icons-register' // `vite-plugin-svg-icons` 脚本
+import 'virtual:svg-icons-register' // vite-plugin-svg-icons 脚本，启用 svg 雪碧图
 
 import { setupRouter } from './router/index'
 import { setupStore } from './store/index'
@@ -40,8 +40,8 @@ const setupTemplate = async () => {
 
 /**
  *
- * 作为 `wujie-micro` 子应用注册应用方法
- * 注意: 此处的 `instance` 名称不可以写为 `app`
+ * 作为 wujie-micro 子应用注册应用方法
+ * 并且挂载一个 __WUJIE_MOUNT 实例
  */
 const setupWujieTemplate = async () => {
   let instance: AppType<Element>
@@ -62,7 +62,6 @@ const setupWujieTemplate = async () => {
 
 /**
  *
- * 如果此处需要作为微服务主应用使用, 则只需要执行 `setupTemplate` 方法即可
  * 如果项目启用无界微服务, 会自动识别并且启动以无界微服务方法启动该项目
  *
  * @example

@@ -17,5 +17,16 @@
     "@mock": "/mock"
   },
   "alias-skip.allowedsuffix": ["ts", "tsx"],
-  "alias-skip.rootpath": "package.json"
+  "alias-skip.rootpath": "package.json",
+  "cSpell.words": [
+    "Clickoutside",
+    "macarons",
+    "menutag",
+    "ndata",
+    "persistedstate",
+    "Popselect",
+    "siderbar",
+    "WUJIE",
+    "zlevel"
+  ]
 }

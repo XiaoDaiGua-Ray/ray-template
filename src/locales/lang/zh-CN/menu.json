@@ -18,5 +18,7 @@
   "CalculatePrecision": "数字精度",
   "Directive": "指令",
   "RouterDemo": "页面详情模式",
-  "Mock": "mock 数据"
+  "Mock": "mock 数据",
+  "QRCode": "二维码",
+  "SvgIcon": "SVG图标"
 }

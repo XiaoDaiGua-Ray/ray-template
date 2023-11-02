@@ -1,11 +1,11 @@
 import { NForm, NFormItem, NInput, NButton } from 'naive-ui'
 
 import { setStorage } from '@/utils/cache'
-import { useSignin } from '@/store'
+import { useSigning } from '@/store'
 import { useI18n } from '@/hooks/web/index'
 import { APP_CATCH_KEY, ROOT_ROUTE } from '@/app-config/appConfig'
 import { useVueRouter } from '@/hooks/web/index'
-import { setVariable, globalVariableToRefs } from '@/hooks/variable/index'
+import { setVariable, getVariableToRefs } from '@/global-variable/index'
 
 import type { FormInst } from 'naive-ui'
 
@@ -15,19 +15,19 @@ export default defineComponent({
     const loginFormRef = ref<FormInst>()
 
     const { t } = useI18n()
-    const signinStore = useSignin()
+    const signingStore = useSigning()
 
-    const { signin } = signinStore
+    const { signing } = signingStore
     const { path } = ROOT_ROUTE
-    const globalSpinning = globalVariableToRefs('globalSpinning')
+    const globalSpinning = getVariableToRefs('globalSpinning')
 
-    const useSigninForm = () => ({
+    const useSigningForm = () => ({
       name: 'Ray Admin',
       pwd: '123456',
     })
 
     const { router } = useVueRouter()
-    const signinForm = ref(useSigninForm())
+    const signingForm = ref(useSigningForm())
 
     const rules = {
       name: {
@@ -48,16 +48,16 @@ export default defineComponent({
         if (!valid) {
           setVariable('globalSpinning', true)
 
-          signin(signinForm.value)
+          signing(signingForm.value)
             .then((res) => {
               if (res.code === 0) {
                 setTimeout(() => {
                   setVariable('globalSpinning', false)
 
-                  window.$message.success(`欢迎${signinForm.value.name}登陆~`)
+                  window.$message.success(`欢迎${signingForm.value.name}登陆~`)
 
                   setStorage(APP_CATCH_KEY.token, 'tokenValue')
-                  setStorage(APP_CATCH_KEY.signin, res.data)
+                  setStorage(APP_CATCH_KEY.signing, res.data)
 
                   router.push(path)
                 }, 2 * 1000)
@@ -71,7 +71,7 @@ export default defineComponent({
     }
 
     return {
-      signinForm,
+      signingForm,
       loginFormRef,
       handleLogin,
       rules,
@@ -82,16 +82,16 @@ export default defineComponent({
     const { $t, globalSpinning } = this
 
     return (
-      <NForm model={this.signinForm} ref="loginFormRef" rules={this.rules}>
+      <NForm model={this.signingForm} ref="loginFormRef" rules={this.rules}>
         <NFormItem label={$t('views.login.index.Name')} path="name">
           <NInput
-            v-model:value={this.signinForm.name}
+            v-model:value={this.signingForm.name}
             placeholder={$t('views.login.index.NamePlaceholder')}
           />
         </NFormItem>
         <NFormItem label={$t('views.login.index.Password')} path="pwd">
           <NInput
-            v-model:value={this.signinForm.pwd}
+            v-model:value={this.signingForm.pwd}
             type="password"
             showPasswordOn="click"
             placeholder={$t('views.login.index.PasswordPlaceholder')}

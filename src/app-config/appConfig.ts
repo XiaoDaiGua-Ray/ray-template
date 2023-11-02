@@ -99,12 +99,12 @@ export const APP_MENU_CONFIG: Readonly<AppMenuConfig> = {
  * 仅暴露部分系统获取缓存配置, 其余 key 暂不开放
  *
  * 说明:
- *   - signin: 登陆信息缓存 key
+ *   - signing: 登陆信息缓存 key
  *   - localeLanguage: 国际化默认缓存 key
  *   - token: token key
  */
 export const APP_CATCH_KEY = {
-  signin: 'signin',
+  signing: 'signing',
   localeLanguage: 'localeLanguage',
   token: 'token',
 } as const

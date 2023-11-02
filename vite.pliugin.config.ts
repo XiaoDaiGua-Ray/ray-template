@@ -166,7 +166,6 @@ export default function (mode: string): PluginOption[] {
         'echarts',
         'xlsx',
         'axios',
-        'screenfull',
         'print-js',
         'clipboard',
         'lodash-es',

@@ -16,7 +16,7 @@ export default defineComponent({
         <AppGlobalSpin>
           {{
             default: () => <RouterView />,
-            description: () => 'lodaing...',
+            description: () => 'loading...',
           }}
         </AppGlobalSpin>
       </AppNaiveGlobalProvider>

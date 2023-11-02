@@ -11,7 +11,15 @@
 
 import './index.scss'
 
-import { NInput, NModal, NResult, NScrollbar, NSpace } from 'naive-ui'
+import {
+  NInput,
+  NModal,
+  NResult,
+  NScrollbar,
+  NSpace,
+  NDivider,
+  NButton,
+} from 'naive-ui'
 import RIcon from '@/components/RIcon/index'
 
 import { on, off, queryElements, addClass, removeClass } from '@/utils/element'
@@ -24,7 +32,7 @@ import type { AppRouteMeta } from '@/router/type'
 import type { AppMenuOption } from '@/types/modules/app'
 
 export default defineComponent({
-  name: 'GlobalSeach',
+  name: 'GlobalSearch',
   props: {
     show: {
       type: Boolean,
@@ -51,7 +59,7 @@ export default defineComponent({
       searchValue: null,
       searchOptions: [] as AppMenuOption[],
     })
-    const tiptextOptions = [
+    const helperTipOptions = [
       {
         icon: 'cmd / ctrl + k',
         label: '唤起',
@@ -131,7 +139,7 @@ export default defineComponent({
       }
 
       nextTick().then(() => {
-        autoFouceSearchItem()
+        autoFocusingSearchItem()
       })
     }
 
@@ -151,7 +159,7 @@ export default defineComponent({
     }
 
     /** 自动聚焦检索项 */
-    const autoFouceSearchItem = () => {
+    const autoFocusingSearchItem = () => {
       const currentOption = state.searchOptions[searchElementIndex]
       const preOption = state.searchOptions[preSearchElementIndex]
 
@@ -239,8 +247,23 @@ export default defineComponent({
           break
       }
 
-      autoFouceSearchItem()
+      autoFocusingSearchItem()
     }
+
+    const SearchItem = ({ menuOption }: { menuOption: AppMenuOption }) => (
+      <NSpace
+        align="center"
+        wrapItem={false}
+        class="content-item"
+        {...{
+          onClick: handleSearchItemClick.bind(this, menuOption),
+          data_path: menuOption.path,
+        }}
+      >
+        <div class="content-item-icon">{RenderPreIcon(menuOption.meta)}</div>
+        <div class="content-item-label">{menuOption.breadcrumbLabel}</div>
+      </NSpace>
+    )
 
     watchEffect(() => {
       if (isTabletOrSmaller.value) {
@@ -264,24 +287,30 @@ export default defineComponent({
     return {
       ...toRefs(state),
       modelShow,
-      tiptextOptions,
+      helperTipOptions,
       handleSearchMenuOptions: debounce(handleSearchMenuOptions, 300),
       handleSearchItemClick,
       RenderPreIcon,
       isTabletOrSmaller,
+      SearchItem,
     }
   },
   render() {
-    const { isTabletOrSmaller } = this
+    const { isTabletOrSmaller, searchOptions } = this
+    const { SearchItem } = this
 
     return isTabletOrSmaller ? (
-      <div></div>
+      <div style="display: none;"></div>
     ) : (
-      <NModal v-model:show={this.modelShow} transform-origin="center" show>
-        <div class="global-seach global-seach--dark global-seach--light">
-          <div class="global-seach__wrapper">
-            <div class="global-seach__card">
-              <div class="global-seach__card-header">
+      <NModal
+        v-model:show={this.modelShow}
+        transformOrigin="center"
+        displayDirective="if"
+      >
+        <div class="global-search global-search--dark global-search--light">
+          <div class="global-search__wrapper">
+            <div class="global-search__card">
+              <div class="global-search__card-header">
                 <NInput
                   size="large"
                   v-model:value={this.searchValue}
@@ -293,44 +322,39 @@ export default defineComponent({
                   }}
                 </NInput>
               </div>
-              <NScrollbar class="global-seach__card-content">
-                {this.searchOptions.length ? (
+              <NScrollbar class="global-search__card-content">
+                {searchOptions.length ? (
                   <NSpace vertical wrapItem={false} size={[8, 8]}>
-                    {this.searchOptions.map((curr) => (
-                      <NSpace
-                        align="center"
-                        wrapItem={false}
-                        class="content-item"
-                        {...{
-                          onClick: this.handleSearchItemClick.bind(this, curr),
-                          data_path: curr.path,
-                        }}
-                      >
-                        <div class="content-item-icon">
-                          {this.RenderPreIcon(curr.meta)}
-                        </div>
-                        <div class="content-item-label">
-                          {curr.breadcrumbLabel}
-                        </div>
-                      </NSpace>
+                    {searchOptions.map((curr) => (
+                      <SearchItem menuOption={curr} />
                     ))}
                   </NSpace>
                 ) : (
-                  <NResult size="large" description="暂无搜索结果">
+                  <NResult size="large" class="global-search__empty">
                     {{
-                      icon: () => '',
+                      icon: () => null,
+                      default: () => (
+                        <NSpace
+                          wrapItem={false}
+                          justify="center"
+                          class="global-search__empty-content"
+                        >
+                          <RIcon name="empty" size="24" />
+                          暂无搜索结果
+                        </NSpace>
+                      ),
                     }}
                   </NResult>
                 )}
               </NScrollbar>
-              <div class="global-seach__card-footer">
+              <div class="global-search__card-footer">
                 <NSpace
                   class="card-footer__tip-wrapper"
                   align="center"
                   wrapItem={false}
                   size={[24, 8]}
                 >
-                  {this.tiptextOptions.map((curr) => (
+                  {this.helperTipOptions.map((curr) => (
                     <div class="tip-wrapper-item">
                       <div class="item-icon">
                         {curr.plain ? (
@@ -339,7 +363,7 @@ export default defineComponent({
                           <RIcon name={curr.icon} size="18" />
                         )}
                       </div>
-                      <div class="item-laebl">{curr.label}</div>
+                      <div class="item-label">{curr.label}</div>
                     </div>
                   ))}
                 </NSpace>

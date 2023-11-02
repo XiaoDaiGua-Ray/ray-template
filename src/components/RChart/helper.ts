@@ -34,10 +34,10 @@ export const setupChartTheme = () => {
     import.meta.glob('@/echart-themes/**/*.json', {
       eager: true,
     })
-  const regx = /\/([^/]+)\.json$/
+  const regex = /\/([^/]+)\.json$/
 
   const rawThemes = Object.keys(themeRawModules).reduce((pre, curr) => {
-    const name = curr.match(regx)?.[1]
+    const name = curr.match(regex)?.[1]
 
     if (name) {
       pre.push({

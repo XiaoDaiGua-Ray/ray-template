@@ -33,7 +33,7 @@ const ContentWrapper = defineComponent({
 
     const { reloadRouteSwitch, contentTransition } = storeToRefs(settingStore)
     const spinning = ref(false)
-    const thmeOverridesSpin: GlobalThemeOverrides['Spin'] = {
+    const themeOverridesSpin: GlobalThemeOverrides['Spin'] = {
       opacitySpinning: '0',
     }
 
@@ -52,7 +52,7 @@ const ContentWrapper = defineComponent({
     return {
       reloadRouteSwitch,
       spinning,
-      thmeOverridesSpin,
+      themeOverridesSpin,
       contentTransition,
     }
   },
@@ -62,7 +62,7 @@ const ContentWrapper = defineComponent({
         show={this.spinning || !this.reloadRouteSwitch}
         description="loading..."
         size="large"
-        themeOverrides={this.thmeOverridesSpin}
+        themeOverrides={this.themeOverridesSpin}
       >
         <AppRequestCancelerProvider />
         {this.reloadRouteSwitch ? (

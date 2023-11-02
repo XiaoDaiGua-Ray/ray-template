@@ -26,7 +26,7 @@ export default class RequestCanceler {
   }
 
   /** 是否需要加入取消请求表中 */
-  private isApending(config: AppRawRequestConfig) {
+  private isAppending(config: AppRawRequestConfig) {
     return config.cancelConfig?.needCancel ?? true
   }
 
@@ -55,7 +55,7 @@ export default class RequestCanceler {
    * @remark 给请求体添加 signal 属性, 用于取消请求
    */
   addPendingRequest(config: AppRawRequestConfig) {
-    if (this.isApending(config)) {
+    if (this.isAppending(config)) {
       const requestKey = this.generateRequestKey(config)
 
       if (!this.pendingRequest.has(requestKey)) {

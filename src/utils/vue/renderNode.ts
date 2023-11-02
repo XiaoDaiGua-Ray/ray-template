@@ -11,32 +11,34 @@
 
 import { isValueType } from '@/utils/basic'
 
-import type { VNode, VNodeChild } from 'vue'
+import type { VNode, Slot } from 'vue'
 
-export type RenderVNodeType =
+export type RenderVNodeType<T = unknown> =
   | VNode
-  | VNodeChild
   | (() => VNode)
   | string
   | number
   | undefined
   | null
   | JSX.Element
+  | Slot<T>
 
-export type DefaultElement = NonNullable<
-  Omit<RenderVNodeType, 'string' | 'number'>
+export type DefaultElement<T = unknown> = NonNullable<
+  Omit<RenderVNodeType<T>, 'string' | 'number'>
 >
 
 export interface RenderNodeOptions<T extends DefaultElement> {
   defaultElement?: T
 }
 
+export type RenderNodeReturn = ReturnType<typeof renderNode>
+
 export function renderNode<T extends DefaultElement>(
   vnode: RenderVNodeType,
   options?: RenderNodeOptions<T>,
 ) {
   if (!vnode) {
-    const { defaultElement } = options ?? {}
+    const { defaultElement = null } = options ?? {}
 
     return typeof defaultElement === 'function'
       ? defaultElement

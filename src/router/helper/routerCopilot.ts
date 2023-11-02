@@ -11,7 +11,7 @@
 
 import { permissionRouter } from './permission'
 import { SETUP_ROUTER_ACTION, SUPER_ADMIN } from '@/app-config/routerConfig'
-import { useSignin } from '@/store'
+import { useSigning } from '@/store'
 import { useVueRouter } from '@/hooks/web/index'
 import { ROOT_ROUTE } from '@/app-config/appConfig'
 import { setStorage } from '@/utils/cache'
@@ -29,14 +29,14 @@ import type { AppMenuOption } from '@/types/modules/app'
  * 如果为超级管理员, 则会默认获取所有权限
  */
 export const validRole = (meta: AppRouteMeta) => {
-  const { signinCallback } = storeToRefs(useSignin())
-  const modelRole = computed(() => signinCallback.value.role)
+  const { signingCallback } = storeToRefs(useSigning())
+  const modelRole = computed(() => signingCallback.value.role)
   const { role: metaRole } = meta
 
   if (SUPER_ADMIN?.length && SUPER_ADMIN.includes(modelRole.value)) {
     return true
   } else {
-    // 如果 role 为 undefind 或者空数组, 则认为该路由不做权限过滤
+    // 如果 role 为 undefined 或者空数组, 则认为该路由不做权限过滤
     if (!metaRole || !metaRole?.length) {
       return true
     }

@@ -35,6 +35,7 @@ import { hasClass } from '@/utils/element'
 import { redirectRouterToDashboard } from '@/router/helper/routerCopilot'
 import { ROOT_ROUTE } from '@/app-config/appConfig'
 import { queryElements } from '@use-utils/element'
+import { renderNode } from '@/utils/vue/index'
 
 import type { MenuOption, ScrollbarInst } from 'naive-ui'
 import type { MenuTagOptions, AppMenuOption } from '@/types/modules/app'
@@ -58,7 +59,10 @@ export default defineComponent({
     const { path } = ROOT_ROUTE
 
     const exclude = ['closeAll', 'closeRight', 'closeLeft', 'closeOther']
-    let currentContentmenuIndex = -1 // 当前右键标签页索引位置
+    let currentContextmenuIndex = -1 // 当前右键标签页索引位置
+    const iconConfig = {
+      size: 16,
+    }
     const modelMenuTagOptions = computed(() =>
       menuTagOptions.value.map((curr, _idx, currentArray) => {
         if (curr.key === menuKey.value && curr.key !== path) {
@@ -86,7 +90,7 @@ export default defineComponent({
           h(
             RIcon,
             {
-              size: 16,
+              size: iconConfig.size,
               name: 'reload',
             },
             {},
@@ -99,7 +103,7 @@ export default defineComponent({
           h(
             RIcon,
             {
-              size: 16,
+              size: iconConfig.size,
               name: 'other',
             },
             {},
@@ -112,7 +116,7 @@ export default defineComponent({
           h(
             RIcon,
             {
-              size: 16,
+              size: iconConfig.size,
               name: 'right_arrow',
             },
             {},
@@ -125,7 +129,7 @@ export default defineComponent({
           h(
             RIcon,
             {
-              size: 16,
+              size: iconConfig.size,
               name: 'left_arrow',
             },
             {},
@@ -142,7 +146,7 @@ export default defineComponent({
           h(
             RIcon,
             {
-              size: 16,
+              size: iconConfig.size,
               name: 'close',
             },
             {},
@@ -176,16 +180,16 @@ export default defineComponent({
          * 如果当前选择标签与 menuKey 不匹配, 则会关闭当前标签右侧所有变迁并且跳转至该页面
          */
         const length = moreOptions.value.length
-        const routeItem = modelMenuTagOptions.value[currentContentmenuIndex]
+        const routeItem = modelMenuTagOptions.value[currentContextmenuIndex]
 
-        spliceMenTagOptions(currentContentmenuIndex + 1, length - 1)
+        spliceMenTagOptions(currentContextmenuIndex + 1, length - 1)
 
         if (menuKey.value !== routeItem.key) {
           changeMenuModelValue(routeItem.key, routeItem)
         }
       },
       closeLeft: () => {
-        spliceMenTagOptions(0, currentContentmenuIndex)
+        spliceMenTagOptions(0, currentContextmenuIndex)
       },
       closeOther: () => {
         /**
@@ -194,7 +198,7 @@ export default defineComponent({
          *
          * 如果关闭标签与当前 menuKey 不匹配, 则会关闭当前选择标签页以外的所有标签页并且跳转至该页面
          */
-        const routeItem = modelMenuTagOptions.value[currentContentmenuIndex]
+        const routeItem = modelMenuTagOptions.value[currentContextmenuIndex]
 
         if (menuKey.value !== routeItem.key) {
           emptyMenuTagOptions()
@@ -306,7 +310,7 @@ export default defineComponent({
       e.preventDefault()
 
       actionState.actionDropdownShow = false
-      currentContentmenuIndex = idx
+      currentContextmenuIndex = idx
 
       nextTick().then(() => {
         actionState.actionDropdownShow = true
@@ -318,31 +322,31 @@ export default defineComponent({
     const setDisabledAccordionToIndex = () => {
       const length = modelMenuTagOptions.value.length - 1
 
-      if (currentContentmenuIndex === length) {
+      if (currentContextmenuIndex === length) {
         setMoreOptionsDisabled('closeRight', true)
-      } else if (currentContentmenuIndex < length) {
+      } else if (currentContextmenuIndex < length) {
         setMoreOptionsDisabled('closeRight', false)
       }
 
-      if (currentContentmenuIndex === 0) {
+      if (currentContextmenuIndex === 0) {
         setMoreOptionsDisabled('closeLeft', true)
-      } else if (currentContentmenuIndex > 0) {
+      } else if (currentContextmenuIndex > 0) {
         setMoreOptionsDisabled('closeLeft', false)
       }
     }
 
     /**
      *
-     * 如果通过更多按钮触发关闭事件, 则根据当前标签所在索引值为 currentContentmenuIndex
+     * 如果通过更多按钮触发关闭事件, 则根据当前标签所在索引值为 currentContextmenuIndex
      *
      * 并且动态设置是否可操作状态
      */
-    const setCurrentContentmenuIndex = () => {
+    const setCurrentContextmenuIndex = () => {
       const index = modelMenuTagOptions.value.findIndex(
         (curr) => curr.key === menuKey.value,
       )
 
-      currentContentmenuIndex = index
+      currentContextmenuIndex = index
 
       setDisabledAccordionToIndex()
     }
@@ -445,13 +449,18 @@ export default defineComponent({
       rootPath: path,
       actionState,
       handleContextMenu,
-      setCurrentContentmenuIndex,
+      setCurrentContextmenuIndex,
       menuTagMouseenter,
       menuTagMouseleave,
       MENU_TAG_DATA,
     }
   },
   render() {
+    const iconConfig = {
+      width: 20,
+      height: 28,
+    }
+
     return (
       <NLayoutHeader>
         <div class="menu-tag">
@@ -468,7 +477,7 @@ export default defineComponent({
             onSelect={this.actionDropdownSelect.bind(this)}
           />
           <NSpace
-            class="menu-tag-sapce"
+            class="menu-tag-space"
             wrap={false}
             align="center"
             justify="space-between"
@@ -477,8 +486,8 @@ export default defineComponent({
           >
             <RIcon
               name="expanded"
-              width="20"
-              height="28"
+              width={iconConfig.width}
+              height={iconConfig.height}
               customClassName="menu-tag__left-arrow"
               onClick={this.scrollX.bind(this, 'left')}
             />
@@ -511,9 +520,7 @@ export default defineComponent({
                       [this.MENU_TAG_DATA]: curr.path,
                     }}
                   >
-                    {typeof curr.label === 'string'
-                      ? curr.label
-                      : curr.label?.()}
+                    {renderNode(curr.label)}
                   </NTag>
                 ))}
               </NSpace>
@@ -521,8 +528,8 @@ export default defineComponent({
             <div class="menu-tag__right-wrapper">
               <RIcon
                 name="expanded"
-                width="20"
-                height="28"
+                width={iconConfig.width}
+                height={iconConfig.height}
                 customClassName="menu-tag__right-arrow"
                 onClick={this.scrollX.bind(this, 'right')}
               />
@@ -534,10 +541,10 @@ export default defineComponent({
               >
                 <RIcon
                   name="more"
-                  width="20"
-                  height="28"
+                  width={iconConfig.width}
+                  height={iconConfig.height}
                   customClassName="menu-tag__right-setting"
-                  onClick={this.setCurrentContentmenuIndex.bind(this)}
+                  onClick={this.setCurrentContextmenuIndex.bind(this)}
                 />
               </RMoreDropdown>
             </div>

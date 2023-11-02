@@ -19,17 +19,17 @@ export const htmlTitlePlugin = (title: string) => {
  * @remark 辅助处理需要全局注入的 css 样式文件, 会在构建期间完成注入
  */
 export const mixinCSSPlugin = (options?: string[]) => {
-  const defaultOptions = []
-
-  if (Array.isArray(options)) {
-    defaultOptions.push(...options)
+  if (!Array.isArray(options)) {
+    throw TypeError(
+      'mixinCSSPlugin: The mixinCSSPlugin argument must be an array!',
+    )
   }
 
-  const mixisString = defaultOptions.reduce((pre, curr) => {
+  const mixinString = options.reduce((pre, curr) => {
     const temp = `@import "${curr}";`
 
     return (pre += temp)
   }, '')
 
-  return mixisString as string
+  return mixinString as string
 }

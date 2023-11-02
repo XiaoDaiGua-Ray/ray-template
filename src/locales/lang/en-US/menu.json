@@ -18,5 +18,7 @@
   "CalculatePrecision": "Precision",
   "Directive": "Directive",
   "RouterDemo": "Same Level Router Demo",
-  "Mock": "Mock"
+  "Mock": "Mock",
+  "QRCode": "QRCode",
+  "SvgIcon": "SVG Icon"
 }

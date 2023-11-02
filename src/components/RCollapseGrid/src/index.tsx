@@ -27,13 +27,13 @@ import RIcon from '@/components/RIcon'
 import { call } from '@/utils/vue/index'
 import props from './props'
 
-const RCollapseGrid = defineComponent({
+export default defineComponent({
   name: 'RCollapseGrid',
   props,
   setup(props) {
     const modelCollapsed = ref(!props.open)
 
-    const handleCollapse = () => {
+    const collapseClick = () => {
       modelCollapsed.value = !modelCollapsed.value
 
       const { onUpdateValue, 'onUpdate:value': _onUpdateValue } = props
@@ -48,7 +48,7 @@ const RCollapseGrid = defineComponent({
     }
 
     const CollapseIcon = () => (
-      <div class="collapse-icon" onClick={handleCollapse.bind(this)}>
+      <div class="collapse-icon" onClick={collapseClick.bind(this)}>
         <span>
           {modelCollapsed.value
             ? props.collapseToggleText[0]
@@ -66,7 +66,7 @@ const RCollapseGrid = defineComponent({
 
     return {
       modelCollapsed,
-      handleCollapse,
+      collapseClick,
       CollapseIcon,
     }
   },
@@ -97,5 +97,3 @@ const RCollapseGrid = defineComponent({
     )
   },
 })
-
-export default RCollapseGrid

@@ -17,7 +17,7 @@ import SiderBarLogo from './components/SiderBarLogo/index'
 import { useMenu } from '@/store'
 import { APP_MENU_CONFIG } from '@/app-config/appConfig'
 import { useDevice } from '@/hooks/web/index'
-import { globalVariableToRefs, setVariable } from '@/hooks/variable/index'
+import { getVariableToRefs, setVariable } from '@/global-variable/index'
 
 import type { MenuInst } from 'naive-ui'
 import type { NaiveMenuOptions } from '@/types/modules/component'
@@ -49,7 +49,7 @@ export default defineComponent({
     const modelCollapsed = computed(() => menuStore.collapsed)
     const { isTabletOrSmaller } = useDevice()
     const modelGlobalDrawerValue = computed({
-      get: () => globalVariableToRefs('globalDrawerValue').value,
+      get: () => getVariableToRefs('globalDrawerValue').value,
       set: (val) => {
         setVariable('globalDrawerValue', val)
       },
@@ -63,7 +63,7 @@ export default defineComponent({
       })
     }
 
-    const BaseicMenu = () => (
+    const BasicMenu = () => (
       <NLayoutSider
         bordered
         showTrigger={!isTabletOrSmaller.value}
@@ -93,23 +93,24 @@ export default defineComponent({
     return {
       menuRef,
       isTabletOrSmaller,
-      BaseicMenu,
+      BasicMenu: BasicMenu,
       modelGlobalDrawerValue,
     }
   },
   render() {
-    const { isTabletOrSmaller, BaseicMenu } = this
+    const { isTabletOrSmaller, BasicMenu } = this
 
     return !isTabletOrSmaller ? (
-      <BaseicMenu />
+      <BasicMenu />
     ) : (
       <NDrawer
         class="app-menu__drawer"
         v-model:show={this.modelGlobalDrawerValue}
         placement="left"
         displayDirective="show"
+        autoFocus={false}
       >
-        <BaseicMenu />
+        <BasicMenu />
       </NDrawer>
     )
   },

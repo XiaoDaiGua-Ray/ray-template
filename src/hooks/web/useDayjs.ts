@@ -23,9 +23,9 @@ import type { DayjsLocal } from '@/dayjs/type'
  */
 export const useDayjs = () => {
   const locale = (key: DayjsLocal) => {
-    const mapkey = DAYJS_LOCAL_MAP[key]
+    const locale = DAYJS_LOCAL_MAP[key]
 
-    mapkey ? dayjs.locale(mapkey) : dayjs.locale(DEFAULT_DAYJS_LOCAL)
+    locale ? dayjs.locale(locale) : dayjs.locale(DEFAULT_DAYJS_LOCAL)
   }
 
   return {

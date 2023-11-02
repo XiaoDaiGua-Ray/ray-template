@@ -170,7 +170,7 @@ export const divide = (...args: CurrencyArguments[]) => {
 /**
  *
  * 平分(将一个数值平均分配到一个数组中)
- * 如果值为 undefind null 会自动转换为 0
+ * 如果值为 undefined null 会自动转换为 0
  *
  * @example
  * distribute(0, 1) => [0]

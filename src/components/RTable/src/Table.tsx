@@ -13,7 +13,7 @@ import './index.scss'
 
 import { NCard, NDataTable, NDropdown, NSpace } from 'naive-ui'
 import Size from './components/Size'
-import Screenfull from './components/Fullscreen'
+import Fullscreen from './components/Fullscreen'
 import C from './components/C'
 import Print from './components/Print'
 
@@ -118,7 +118,7 @@ export default defineComponent({
         <>
           <Print {...p} />
           <Size {...p} onChangeSize={changeTableSize.bind(this)} />
-          <Screenfull />
+          <Fullscreen />
           <C {...p} onUpdateColumn={updateTableColumn.bind(this)} />
         </>
       )

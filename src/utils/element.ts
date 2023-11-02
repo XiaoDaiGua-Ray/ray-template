@@ -305,7 +305,7 @@ export const completeSize = (size: number | string, unit = 'px') => {
     return size.toString() + unit
   } else if (
     isValueType<string>(size, 'String') &&
-    APP_REGEX.validerCSSUnit.test(size)
+    APP_REGEX.validCSSUnit.test(size)
   ) {
     return size
   } else {

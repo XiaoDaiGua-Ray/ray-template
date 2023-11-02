@@ -17,7 +17,7 @@ import { completeSize, on, off } from '@use-utils/element'
 import { call } from '@/utils/vue/index'
 import props from './props'
 
-const RIframe = defineComponent({
+export default defineComponent({
   name: 'RIframe',
   props,
   setup(props, { expose }) {
@@ -61,7 +61,6 @@ const RIframe = defineComponent({
       on(iframeRef.value, 'load', iframeLoadSuccess.bind(this))
       on(iframeRef.value, 'error', iframeLoadError)
     })
-
     onBeforeUnmount(() => {
       off(iframeRef.value, 'load', iframeLoadSuccess)
       off(iframeRef.value, 'error', iframeLoadError)
@@ -101,5 +100,3 @@ const RIframe = defineComponent({
     )
   },
 })
-
-export default RIframe

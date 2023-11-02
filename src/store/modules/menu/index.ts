@@ -108,15 +108,15 @@ export const useMenu = defineStore(
 
     /**
      *
-     * @param optins menu tag option(s)
+     * @param options menu tag option(s)
      * @param isAppend true: 追加操作(push), false: 覆盖操作
      */
     const setMenuTagOptions = (
-      optins: MenuTagOptions | MenuTagOptions[],
+      options: MenuTagOptions | MenuTagOptions[],
       isAppend = true,
     ) => {
-      const isArray = Array.isArray(optins)
-      const arr = isArray ? [...optins] : [optins]
+      const isArray = Array.isArray(options)
+      const arr = isArray ? [...options] : [options]
 
       isAppend
         ? menuState.menuTagOptions.push(...arr)

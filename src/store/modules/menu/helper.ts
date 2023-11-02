@@ -171,7 +171,7 @@ export const hasMenuIcon = (option: AppMenuOption) => {
   return () => icon
 }
 
-/** 获取缓存的 menu key, 如果未获取到则使用 ROOTROUTE path 当作默认激活路由菜单 */
+/** 获取缓存的 menu key, 如果未获取到则使用 ROOT_ROUTE path 当作默认激活路由菜单 */
 export const getCatchMenuKey = () => {
   const { path: rootPath } = ROOT_ROUTE
   const cacheMenuKey = getStorage<AppMenuKey>(

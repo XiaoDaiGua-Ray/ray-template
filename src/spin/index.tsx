@@ -29,7 +29,7 @@
 import { NSpin } from 'naive-ui'
 
 import { spinProps } from 'naive-ui'
-import { globalVariableToRefs } from '@/hooks/variable/index'
+import { getVariableToRefs } from '@/global-variable/index'
 
 const GlobalSpin = defineComponent({
   name: 'GlobalSpin',
@@ -40,7 +40,7 @@ const GlobalSpin = defineComponent({
     const overrides = {
       opacitySpinning: '0.3',
     }
-    const spinValue = globalVariableToRefs('globalSpinning')
+    const spinValue = getVariableToRefs('globalSpinning')
 
     return {
       spinValue,
