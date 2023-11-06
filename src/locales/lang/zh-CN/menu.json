@@ -18,7 +18,8 @@
   "CalculatePrecision": "数字精度",
   "Directive": "指令",
   "RouterDemo": "页面详情模式",
-  "Mock": "mock 数据",
+  "Mock": "Mock 数据",
   "QRCode": "二维码",
-  "SvgIcon": "SVG图标"
+  "SvgIcon": "SVG 图标",
+  "TemplateHooks": "模板内置 Api"
 }

@@ -20,6 +20,7 @@
  * 缓存(sessionStorage):
  *   - breadcrumbOptions
  *   - menuKey
+ *   - menuTagOptions
  */
 
 import { NEllipsis } from 'naive-ui'
@@ -34,9 +35,9 @@ import {
 } from './helper'
 import { useI18n } from '@/hooks/web/index'
 import { getAppRawRoutes } from '@/router/appRouteModules'
-import { useKeepAlive } from '@/store'
 import { useVueRouter } from '@/hooks/web/index'
 import { throttle } from 'lodash-es'
+import { useKeepAliveActions } from '@/store'
 
 import type { AppRouteMeta, AppRouteRecordRaw } from '@/router/type'
 import type {
@@ -46,13 +47,13 @@ import type {
 } from '@/types/modules/app'
 import type { MenuState } from '@/store/modules/menu/type'
 
-export const useMenu = defineStore(
+export const piniaMenuStore = defineStore(
   'menu',
   () => {
     const { router } = useVueRouter()
     const route = useRoute()
     const { t } = useI18n()
-    const { setKeepAliveInclude } = useKeepAlive()
+    const { setKeepAliveInclude } = useKeepAliveActions()
 
     const menuState = reactive<MenuState>({
       menuKey: getCatchMenuKey(), // 当前菜单 `key`
@@ -60,6 +61,7 @@ export const useMenu = defineStore(
       collapsed: false, // 是否折叠菜单
       menuTagOptions: [], // tag 标签菜单
       breadcrumbOptions: [], // 面包屑菜单
+      currentMenuOption: null, // 当前激活菜单项
     })
     const isSetupAppMenuLock = ref(true)
 
@@ -191,6 +193,8 @@ export const useMenu = defineStore(
         } else {
           setBreadcrumbOptions(menuState.menuKey || '', option)
         }
+
+        menuState.currentMenuOption = option
       }
     }
 
@@ -367,7 +371,7 @@ export const useMenu = defineStore(
     persist: {
       key: 'piniaMenuStore',
       storage: window.sessionStorage,
-      paths: ['breadcrumbOptions', 'menuKey'],
+      paths: ['breadcrumbOptions', 'menuKey', 'menuTagOptions'],
     },
   },
 )

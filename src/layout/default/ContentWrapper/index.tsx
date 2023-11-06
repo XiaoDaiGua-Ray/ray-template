@@ -21,21 +21,22 @@ import { NSpin } from 'naive-ui'
 import RTransitionComponent from '@/components/RTransitionComponent/index.vue'
 import AppRequestCancelerProvider from '@/app-components/provider/AppRequestCancelerProvider/index'
 
-import { useSetting } from '@/store'
+import { getVariableToRefs } from '@/global-variable/index'
+import { useSettingGetters } from '@/store'
 
 import type { GlobalThemeOverrides } from 'naive-ui'
 
 const ContentWrapper = defineComponent({
   name: 'LayoutContentWrapper',
   setup() {
-    const settingStore = useSetting()
     const router = useRouter()
 
-    const { reloadRouteSwitch, contentTransition } = storeToRefs(settingStore)
+    const { getContentTransition } = useSettingGetters()
     const spinning = ref(false)
     const themeOverridesSpin: GlobalThemeOverrides['Spin'] = {
       opacitySpinning: '0',
     }
+    const globalMainLayoutLoad = getVariableToRefs('globalMainLayoutLoad')
 
     const setupLayoutContentSpin = () => {
       router.beforeEach(() => {
@@ -50,25 +51,27 @@ const ContentWrapper = defineComponent({
     setupLayoutContentSpin()
 
     return {
-      reloadRouteSwitch,
+      globalMainLayoutLoad,
       spinning,
       themeOverridesSpin,
-      contentTransition,
+      getContentTransition,
     }
   },
   render() {
+    const { globalMainLayoutLoad } = this
+
     return (
       <NSpin
-        show={this.spinning || !this.reloadRouteSwitch}
+        show={this.spinning || !globalMainLayoutLoad}
         description="loading..."
         size="large"
         themeOverrides={this.themeOverridesSpin}
       >
         <AppRequestCancelerProvider />
-        {this.reloadRouteSwitch ? (
+        {globalMainLayoutLoad ? (
           <RTransitionComponent
             class="content-wrapper"
-            transitionPropName={this.contentTransition + '-transform'}
+            transitionPropName={this.getContentTransition + '-transform'}
           />
         ) : null}
       </NSpin>

@@ -14,9 +14,9 @@
 import { NInput, NForm, NFormItem, NButton, NSpace } from 'naive-ui'
 import AppAvatar from '@/app-components/app/AppAvatar/index'
 
-import { useSetting } from '@/store'
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
 import { rules, useCondition } from '@/app-components/app/AppLockScreen/hook'
+import { useSettingGetters, useSettingActions } from '@/store'
 
 import type { FormInst, InputInst } from 'naive-ui'
 
@@ -27,7 +27,7 @@ const LockScreen = defineComponent({
     const inputInstRef = ref<InputInst | null>(null)
 
     const { setLockAppScreen } = useAppLockScreen()
-    const { changeSwitcher } = useSetting()
+    const { changeSwitcher } = useSettingActions()
 
     const state = reactive({
       lockCondition: useCondition(),

@@ -12,19 +12,19 @@
 import { NWatermark } from 'naive-ui'
 
 import { APP_WATERMARK_CONFIG } from '@/app-config/appConfig'
-import { useSetting } from '@/store'
+import { useSettingGetters } from '@/store'
 
 export default defineComponent({
   name: 'AppWatermarkProvider',
   setup() {
-    const { watermarkSwitch } = storeToRefs(useSetting())
+    const { getWatermarkSwitch } = useSettingGetters()
 
     return {
-      watermarkSwitch,
+      getWatermarkSwitch,
     }
   },
   render() {
-    return this.watermarkSwitch ? (
+    return this.getWatermarkSwitch ? (
       <NWatermark cross fullscreen {...APP_WATERMARK_CONFIG} />
     ) : null
   },

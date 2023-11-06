@@ -40,7 +40,6 @@ import { CanvasRenderer } from 'echarts/renderers' // `echarts` 渲染器
 import { NCard } from 'naive-ui'
 
 import props from './props'
-import { useSetting } from '@/store'
 import { throttle } from 'lodash-es'
 import { completeSize } from '@/utils/element'
 import { call } from '@/utils/vue/index'
@@ -50,6 +49,7 @@ import { useResizeObserver } from '@vueuse/core'
 import RMoreDropdown from '@/components/RMoreDropdown/index'
 import { renderNode } from '@use-utils/vue/index'
 import { downloadBase64File } from '@use-utils/basic'
+import { useSettingGetters } from '@/store'
 
 import type { WatchStopHandle } from 'vue'
 import type { AnyFC } from '@/types/modules/utils'
@@ -70,8 +70,7 @@ export default defineComponent({
   name: 'RChart',
   props,
   setup(props, { expose }) {
-    const settingStore = useSetting()
-    const { themeValue: currentTheme } = storeToRefs(settingStore)
+    const { getAppTheme } = useSettingGetters()
     const rayChartRef = ref<HTMLElement>() // echart 容器实例
     const rayChartWrapperRef = ref<HTMLElement>()
     const echartInstanceRef = ref<ECharts>() // echart 实例
@@ -153,7 +152,7 @@ export default defineComponent({
 
       if (!props.theme) {
         const theme = props.autoChangeTheme
-          ? currentTheme.value
+          ? getAppTheme.value
             ? `${echartTheme}-dark`
             : echartTheme
           : echartTheme
@@ -295,7 +294,7 @@ export default defineComponent({
       // 避免重复渲染
       if (echartInst?.getDom()) {
         console.warn(
-          'RChart mount: There is a chart instance already initialized on the dom. Execution was interrupted',
+          'RChart mount: There is a chart instance already initialized on the dom. Execution was interrupted.',
         )
 
         return
@@ -326,7 +325,7 @@ export default defineComponent({
 
     /** 监听全局主题变化, 然后重新渲染对应主题 echarts */
     watch(
-      () => currentTheme.value,
+      () => getAppTheme.value,
       () => {
         /**
          *

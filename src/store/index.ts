@@ -18,10 +18,20 @@
  */
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
-export { useSetting } from './modules/setting/index' // import { useSetting } from '@/store' 即可使用
-export { useMenu } from './modules/menu/index'
-export { useSigning } from './modules/signing/index'
-export { useKeepAlive } from './modules/keep-alive/index'
+// 导出仓库实例
+export { piniaSettingStore } from './modules/setting/index' // import { piniaSettingStore } from '@/store' 即可使用
+export { piniaMenuStore } from './modules/menu/index'
+export { piniaSigningStore } from './modules/signing/index'
+export { piniaKeepAliveStore } from './modules/keep-alive/index'
+
+// 导出 getters, actions
+export { useMenuGetters, useMenuActions } from './hooks/useMenuStore'
+export { useSettingGetters, useSettingActions } from './hooks/useSettingStore'
+export { useSigningGetters, useSigningActions } from './hooks/useSigningStore'
+export {
+  useKeepAliveGetters,
+  useKeepAliveActions,
+} from './hooks/useKeepAliveStore'
 
 import type { App } from 'vue'
 

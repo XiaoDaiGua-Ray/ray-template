@@ -10,4 +10,5 @@ export interface MenuState {
   collapsed: boolean
   menuTagOptions: MenuTagOptions[]
   breadcrumbOptions: AppMenuOption[]
+  currentMenuOption: AppMenuOption | null
 }

@@ -21,26 +21,25 @@ import { NModal } from 'naive-ui'
 import LockScreen from './components/LockScreen'
 import UnlockScreen from './components/UnlockScreen'
 
-import { useSetting } from '@/store'
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
+import { useSettingGetters } from '@/store'
 
 const AppLockScreen = defineComponent({
   name: 'AppLockScreen',
   setup() {
-    const settingStore = useSetting()
-    const { lockScreenSwitch } = storeToRefs(settingStore)
+    const { getLockScreenSwitch } = useSettingGetters()
 
     const { getLockAppScreen } = useAppLockScreen()
 
     return {
-      lockScreenSwitch,
+      getLockScreenSwitch,
       getLockAppScreen,
     }
   },
   render() {
     return (
       <NModal
-        v-model:show={this.lockScreenSwitch}
+        v-model:show={this.getLockScreenSwitch}
         transformOrigin="center"
         show
         autoFocus={false}

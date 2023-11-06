@@ -28,22 +28,17 @@ import {
   NGlobalStyle,
 } from 'naive-ui'
 
-import { useSetting } from '@/store'
 import { naiveLocales } from '@/locales/helper'
+import { useSettingGetters } from '@/store'
 
 export default defineComponent({
   name: 'GlobalProvider',
   setup(_, { expose }) {
-    const settingStore = useSetting()
+    const { getPrimaryColorOverride, getAppTheme, getLocaleLanguage } =
+      useSettingGetters()
 
-    const modelPrimaryColorOverride = computed(
-      () => settingStore.primaryColorOverride,
-    )
-    const modelThemeValue = computed(() =>
-      settingStore.themeValue ? darkTheme : null,
-    )
     const localePackage = computed(() => {
-      const key = settingStore.localeLanguage
+      const key = getLocaleLanguage.value
 
       return naiveLocales(key)
     })
@@ -52,7 +47,7 @@ export default defineComponent({
       ['message', 'dialog', 'notification', 'loadingBar'],
       {
         configProviderProps: computed(() => ({
-          theme: modelThemeValue.value,
+          theme: getAppTheme.value ? darkTheme : null,
         })),
         notificationProviderProps: {},
       },
@@ -66,16 +61,16 @@ export default defineComponent({
     expose()
 
     return {
-      modelPrimaryColorOverride,
-      modelThemeValue,
+      getPrimaryColorOverride,
       localePackage,
+      getAppTheme,
     }
   },
   render() {
     return (
       <NConfigProvider
-        themeOverrides={this.modelPrimaryColorOverride}
-        theme={this.modelThemeValue}
+        themeOverrides={this.getPrimaryColorOverride}
+        theme={this.getAppTheme ? darkTheme : null}
         locale={this.localePackage.locale}
         dateLocale={this.localePackage.dateLocal}
       >

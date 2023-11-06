@@ -11,7 +11,7 @@
           <KeepAlive
             v-if="setupKeepAlive"
             :max="maxKeepAliveLength"
-            :include="keepAliveInclude"
+            :include="getKeepAliveInclude"
             :exclude="keepAliveExclude"
           >
             <Component :is="Component" :key="route.fullPath" />
@@ -23,7 +23,7 @@
   </RouterView>
 </template>
 <script lang="ts" setup>
-import { useKeepAlive } from '@/store'
+import { useKeepAliveGetters } from '@/store'
 import { APP_KEEP_ALIVE } from '@/app-config/appConfig'
 
 import type { TransitionProps } from './type'
@@ -42,7 +42,6 @@ withDefaults(defineProps<TransitionProps>(), {
   transitionAppear: true,
 })
 
-const keepAliveStore = useKeepAlive()
-const { keepAliveInclude } = storeToRefs(keepAliveStore)
+const { getKeepAliveInclude } = useKeepAliveGetters()
 const { setupKeepAlive, maxKeepAliveLength, keepAliveExclude } = APP_KEEP_ALIVE
 </script>

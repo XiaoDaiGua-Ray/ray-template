@@ -14,7 +14,7 @@ import {
 import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch/index'
 
 import { APP_THEME } from '@/app-config/designConfig'
-import { useSetting } from '@/store'
+import { useSettingGetters, useSettingActions } from '@/store'
 
 import type { PropType } from 'vue'
 import type { Placement } from '@/types/modules/component'
@@ -37,19 +37,17 @@ const SettingDrawer = defineComponent({
   },
   emits: ['update:show'],
   setup(props, { emit }) {
-    const settingStore = useSetting()
-
     const { changePrimaryColor, changeSwitcher, updateContentTransition } =
-      settingStore
+      useSettingActions()
     const {
-      themeValue,
-      primaryColorOverride,
-      menuTagSwitch,
-      breadcrumbSwitch,
-      footerSwitch,
-      contentTransition,
-      watermarkSwitch,
-    } = storeToRefs(settingStore)
+      getAppTheme,
+      getPrimaryColorOverride,
+      getMenuTagSwitch,
+      getBreadcrumbSwitch,
+      getCopyrightSwitch,
+      getContentTransition,
+      getWatermarkSwitch,
+    } = useSettingGetters()
 
     const modelShow = computed({
       get: () => props.show,
@@ -79,16 +77,16 @@ const SettingDrawer = defineComponent({
     return {
       modelShow,
       changePrimaryColor,
-      themeValue,
-      primaryColorOverride,
-      menuTagSwitch,
+      getAppTheme,
+      getPrimaryColorOverride,
+      getMenuTagSwitch,
       changeSwitcher,
-      breadcrumbSwitch,
-      footerSwitch,
+      getBreadcrumbSwitch,
+      getCopyrightSwitch,
       contentTransitionOptions,
-      contentTransition,
+      getContentTransition,
       updateContentTransition,
-      watermarkSwitch,
+      getWatermarkSwitch,
     }
   },
   render() {
@@ -111,14 +109,14 @@ const SettingDrawer = defineComponent({
             </NDivider>
             <NColorPicker
               swatches={APP_THEME.appThemeColors}
-              v-model:value={this.primaryColorOverride.common!.primaryColor}
+              v-model:value={this.getPrimaryColorOverride.common!.primaryColor}
               onUpdateValue={this.changePrimaryColor.bind(this)}
             />
             <NDivider titlePlacement="center">
               {$t('headerSettingOptions.ContentTransition')}
             </NDivider>
             <NSelect
-              v-model:value={this.contentTransition}
+              v-model:value={this.getContentTransition}
               options={this.contentTransitionOptions}
               onUpdateValue={(value) => {
                 this.updateContentTransition(value)
@@ -130,7 +128,7 @@ const SettingDrawer = defineComponent({
             <NDescriptions labelPlacement="left" column={1}>
               <NDescriptionsItem label="多标签">
                 <NSwitch
-                  v-model:value={this.menuTagSwitch}
+                  v-model:value={this.getMenuTagSwitch}
                   onUpdateValue={(bool: boolean) =>
                     this.changeSwitcher(bool, 'menuTagSwitch')
                   }
@@ -138,7 +136,7 @@ const SettingDrawer = defineComponent({
               </NDescriptionsItem>
               <NDescriptionsItem label="面包屑">
                 <NSwitch
-                  v-model:value={this.breadcrumbSwitch}
+                  v-model:value={this.getBreadcrumbSwitch}
                   onUpdateValue={(bool: boolean) =>
                     this.changeSwitcher(bool, 'breadcrumbSwitch')
                   }
@@ -146,7 +144,7 @@ const SettingDrawer = defineComponent({
               </NDescriptionsItem>
               <NDescriptionsItem label="水印">
                 <NSwitch
-                  v-model:value={this.watermarkSwitch}
+                  v-model:value={this.getWatermarkSwitch}
                   onUpdateValue={(bool: boolean) =>
                     this.changeSwitcher(bool, 'watermarkSwitch')
                   }
@@ -154,9 +152,9 @@ const SettingDrawer = defineComponent({
               </NDescriptionsItem>
               <NDescriptionsItem label="版权信息">
                 <NSwitch
-                  v-model:value={this.footerSwitch}
+                  v-model:value={this.getCopyrightSwitch}
                   onUpdateValue={(bool: boolean) =>
-                    this.changeSwitcher(bool, 'footerSwitch')
+                    this.changeSwitcher(bool, 'copyrightSwitch')
                   }
                 />
               </NDescriptionsItem>

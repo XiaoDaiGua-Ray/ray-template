@@ -10,7 +10,7 @@ import type { ConditionalPick } from '@/types/modules/helper'
 import type { SettingState } from '@/store/modules/setting/type'
 import type { DayjsLocal } from '@/dayjs/type'
 
-export const useSetting = defineStore(
+export const piniaSettingStore = defineStore(
   'setting',
   () => {
     const {
@@ -28,15 +28,12 @@ export const useSetting = defineStore(
           primaryColorHover: primaryColor,
         },
       },
-      themeValue: false, // `true` 为黑夜主题, `false` 为白色主题
-      reloadRouteSwitch: true, // 刷新路由开关
+      appTheme: false, // `true` 为黑夜主题, `false` 为白色主题
       menuTagSwitch: true, // 多标签页开关
-      spinSwitch: false, // 全屏加载
       breadcrumbSwitch: true, // 面包屑开关
       localeLanguage: getAppDefaultLanguage(),
       lockScreenSwitch: false, // 锁屏开关
-      lockScreenInputSwitch: false, // 锁屏输入状态开关(预留该字段是为了方便拓展用, 但是舍弃了该字段, 改为使用 useAppLockScreen 方法)
-      footerSwitch: true, // 底部区域开关
+      copyrightSwitch: true, // 底部区域开关
       contentTransition: 'scale', // 切换过渡效果
       watermarkSwitch: false, // 水印开关,
     })

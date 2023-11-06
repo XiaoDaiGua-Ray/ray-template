@@ -13,17 +13,15 @@ import './index.scss'
 
 import { getStorage } from '@/utils/cache'
 import { get } from 'lodash-es'
-import { useSetting } from '@/store'
 import { addClass, removeClass, addStyle, colorToRgba } from '@/utils/element'
+import { useSettingGetters } from '@/store'
 
 import type { SettingState } from '@/store/modules/setting/type'
 
 const AppStyleProvider = defineComponent({
   name: 'AppStyleProvider',
   setup(_, { expose }) {
-    const settingStore = useSetting()
-
-    const { themeValue } = storeToRefs(settingStore)
+    const { getAppTheme } = useSettingGetters()
 
     /** 同步主题色变量至 body, 如果未获取到缓存值则已默认值填充 */
     const syncPrimaryColorToBody = () => {
@@ -72,7 +70,7 @@ const AppStyleProvider = defineComponent({
        *
        * 初始化时根据当前主题色进行初始化 body 的 class 属性
        *
-       * 根据 themeValue 进行初始化
+       * 根据 getAppTheme 进行初始化
        */
       const body = document.body
       const darkClassName = 'ray-template--dark'
@@ -89,7 +87,7 @@ const AppStyleProvider = defineComponent({
     hiddenLoadingAnimation()
 
     watch(
-      () => themeValue.value,
+      () => getAppTheme.value,
       (ndata) => {
         updateGlobalThemeClass(ndata)
       },

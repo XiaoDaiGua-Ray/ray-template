@@ -21,16 +21,16 @@ import './index.scss'
 import { NSpace, NPopover } from 'naive-ui'
 import RIcon from '@/components/RIcon/index'
 
-interface SSOSigninOptions {
+interface SSOSigningOptions {
   icon: string
   key: string
   tooltipLabel: string
 }
 
-const SSOSignin = defineComponent({
-  name: 'SSOSignin',
+const SSOSigning = defineComponent({
+  name: 'SSOSigning',
   setup() {
-    const ssoSigninOptions = [
+    const ssoSigningOptions = [
       {
         icon: 'github',
         key: 'github',
@@ -48,27 +48,31 @@ const SSOSignin = defineComponent({
       },
     ]
 
-    const handleSSOSigninClick = (option: SSOSigninOptions) => {
+    const handleSSOSigningClick = (option: SSOSigningOptions) => {
       window.$message.info(`调用${option.tooltipLabel}`)
     }
 
     return {
-      ssoSigninOptions,
-      handleSSOSigninClick,
+      ssoSigningOptions,
+      handleSSOSigningClick,
     }
   },
   render() {
     return (
-      <NSpace class="sso-signin" align="center" itemStyle={{ display: 'flex' }}>
-        {this.ssoSigninOptions.map((curr) => (
-          <NPopover>
+      <NSpace
+        class="sso-signing"
+        align="center"
+        itemStyle={{ display: 'flex' }}
+      >
+        {this.ssoSigningOptions.map((curr) => (
+          <NPopover key={curr.key}>
             {{
               trigger: () => (
                 <RIcon
                   name={curr.icon}
                   size="24"
                   cursor="pointer"
-                  onClick={this.handleSSOSigninClick.bind(this, curr)}
+                  onClick={this.handleSSOSigningClick.bind(this, curr)}
                 />
               ),
               default: () => curr.tooltipLabel,
@@ -80,4 +84,4 @@ const SSOSignin = defineComponent({
   },
 })
 
-export default SSOSignin
+export default SSOSigning

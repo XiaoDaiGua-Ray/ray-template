@@ -27,7 +27,6 @@ import Breadcrumb from './components/Breadcrumb/index'
 import GlobalSearch from './components/GlobalSearch/index'
 import AppAvatar from '@/app-components/app/AppAvatar/index'
 
-import { useSetting } from '@/store'
 import { LOCAL_OPTIONS } from '@/app-config/localConfig'
 import {
   createAvatarOptions,
@@ -39,22 +38,22 @@ import { useDevice } from '@/hooks/web/index'
 import { getVariableToRefs, setVariable } from '@/global-variable/index'
 import { useFullscreen } from 'vue-hooks-plus'
 import { useI18n } from '@/hooks/web/index'
+import { useMainPage } from '@/hooks/template/index'
+import { useSettingGetters, useSettingActions } from '@/store'
 
 import type { IconEventMapOptions, IconEventMap } from './type'
 
 export default defineComponent({
   name: 'AppSiderBar',
   setup() {
-    const settingStore = useSetting()
-
-    const { updateLocale, changeSwitcher } = settingStore
+    const { updateLocale, changeSwitcher } = useSettingActions()
     const { t } = useI18n()
+    const { reload } = useMainPage()
 
     const [isFullscreen, { toggleFullscreen, isEnabled }] = useFullscreen(
       document.getElementsByTagName('html')[0],
     )
-    const { drawerPlacement, breadcrumbSwitch, reloadRouteSwitch } =
-      storeToRefs(settingStore)
+    const { getDrawerPlacement, getBreadcrumbSwitch } = useSettingGetters()
     const showSettings = ref(false)
     const spaceItemStyle = {
       display: 'flex',
@@ -62,6 +61,7 @@ export default defineComponent({
     const globalSearchShown = ref(false)
     const { isTabletOrSmaller } = useDevice()
     const globalDrawerValue = getVariableToRefs('globalDrawerValue')
+    const globalMainLayoutLoad = getVariableToRefs('globalMainLayoutLoad')
 
     /**
      *
@@ -71,7 +71,7 @@ export default defineComponent({
       createLeftIconOptions({
         isFullscreen,
         isTabletOrSmaller,
-        reloadRouteSwitch,
+        globalMainLayoutLoad,
       }),
     )
     /**
@@ -82,15 +82,13 @@ export default defineComponent({
       createRightIconOptions({
         isFullscreen,
         isTabletOrSmaller,
-        reloadRouteSwitch,
+        globalMainLayoutLoad,
       }),
     )
     const iconEventMap: IconEventMapOptions = {
       // 刷新组件重新加载，手动设置 800ms loading 时长
       reload: () => {
-        changeSwitcher(false, 'reloadRouteSwitch')
-
-        setTimeout(() => changeSwitcher(true, 'reloadRouteSwitch'), 800)
+        reload()
       },
       setting: () => {
         showSettings.value = true
@@ -127,8 +125,8 @@ export default defineComponent({
       showSettings,
       updateLocale,
       spaceItemStyle,
-      drawerPlacement,
-      breadcrumbSwitch,
+      getDrawerPlacement,
+      getBreadcrumbSwitch,
       globalSearchShown,
     }
   },
@@ -148,6 +146,7 @@ export default defineComponent({
           >
             {this.leftIconOptions.map((curr) => (
               <TooltipIcon
+                key={curr.name}
                 iconName={curr.name}
                 tooltipText={
                   isRef(curr.tooltip) ? curr.tooltip.value : curr.tooltip
@@ -156,7 +155,7 @@ export default defineComponent({
                 onClick={this.toolIconClick.bind(this, curr.name)}
               />
             ))}
-            {this.breadcrumbSwitch ? <Breadcrumb /> : null}
+            {this.getBreadcrumbSwitch ? <Breadcrumb /> : null}
           </NSpace>
           <NSpace
             align="center"
@@ -165,6 +164,7 @@ export default defineComponent({
           >
             {this.rightTooltipIconOptions.map((curr) => (
               <TooltipIcon
+                key={curr.name}
                 iconName={curr.name}
                 tooltipText={
                   isRef(curr.tooltip) ? curr.tooltip.value : curr.tooltip
@@ -198,7 +198,7 @@ export default defineComponent({
         </NSpace>
         <SettingDrawer
           v-model:show={this.showSettings}
-          placement={this.drawerPlacement}
+          placement={this.getDrawerPlacement}
         />
       </NLayoutHeader>
     )

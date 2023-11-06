@@ -18,10 +18,11 @@ import FooterWrapper from '@/layout/default/FooterWrapper'
 import HeaderWrapper from './default/HeaderWrapper'
 import FeatureWrapper from './default/FeatureWrapper'
 
-import { useSetting } from '@/store'
 import { LAYOUT_CONTENT_REF } from '@/app-config/routerConfig'
 import { layoutHeaderCssVars } from '@/layout/layoutResize'
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
+import { getVariableToRefs } from '@/global-variable/index'
+import { useSettingGetters } from '@/store'
 
 export default defineComponent({
   name: 'RLayout',
@@ -30,45 +31,54 @@ export default defineComponent({
     const layoutMenuTagRef = ref<HTMLElement>()
     const layoutFooterRef = ref<HTMLElement>()
 
-    const settingStore = useSetting()
-
-    const { menuTagSwitch: modelMenuTagSwitch, footerSwitch } =
-      storeToRefs(settingStore)
+    const { getMenuTagSwitch, getCopyrightSwitch } = useSettingGetters()
     const { getLockAppScreen } = useAppLockScreen()
     const cssVarsRef = layoutHeaderCssVars([
       layoutSiderBarRef,
       layoutMenuTagRef,
       layoutFooterRef,
     ])
+    const layoutContentMaximize = getVariableToRefs('layoutContentMaximize')
 
     return {
-      modelMenuTagSwitch,
+      getMenuTagSwitch,
       cssVarsRef,
       getLockAppScreen,
-      LAYOUT_CONTENT_REF,
       layoutSiderBarRef,
       layoutMenuTagRef,
       layoutFooterRef,
-      footerSwitch,
+      getCopyrightSwitch,
+      layoutContentMaximize,
     }
   },
   render() {
-    return !this.getLockAppScreen() ? (
-      <NLayout class="r-layout-full" style={[this.cssVarsRef]} hasSider>
+    const {
+      layoutContentMaximize,
+      getMenuTagSwitch,
+      cssVarsRef,
+      getCopyrightSwitch,
+    } = this
+    const { getLockAppScreen } = this
+
+    return !getLockAppScreen() ? (
+      <NLayout class="r-layout-full" style={[cssVarsRef]} hasSider>
         <Menu />
         <NLayoutContent class="r-layout-full__viewer">
           <HeaderWrapper ref="layoutSiderBarRef" />
-          {this.modelMenuTagSwitch ? (
-            <FeatureWrapper ref="layoutMenuTagRef" />
-          ) : null}
+          {getMenuTagSwitch ? <FeatureWrapper ref="layoutMenuTagRef" /> : null}
           <NLayoutContent
-            ref="LAYOUT_CONTENT_REF"
-            class="r-layout-full__viewer-content"
+            ref={LAYOUT_CONTENT_REF}
+            class={[
+              'r-layout-full__viewer-content',
+              layoutContentMaximize
+                ? 'r-layout-full__viewer-content--maximize'
+                : null,
+            ]}
             nativeScrollbar={false}
           >
             <ContentWrapper />
           </NLayoutContent>
-          {this.footerSwitch ? <FooterWrapper ref="layoutFooterRef" /> : null}
+          {getCopyrightSwitch ? <FooterWrapper ref="layoutFooterRef" /> : null}
         </NLayoutContent>
       </NLayout>
     ) : null

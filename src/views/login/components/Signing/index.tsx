@@ -1,23 +1,21 @@
 import { NForm, NFormItem, NInput, NButton } from 'naive-ui'
 
 import { setStorage } from '@/utils/cache'
-import { useSigning } from '@/store'
 import { useI18n } from '@/hooks/web/index'
 import { APP_CATCH_KEY, ROOT_ROUTE } from '@/app-config/appConfig'
 import { useVueRouter } from '@/hooks/web/index'
 import { setVariable, getVariableToRefs } from '@/global-variable/index'
+import { useSigningActions, useSigningGetters } from '@/store'
 
 import type { FormInst } from 'naive-ui'
 
 export default defineComponent({
-  name: 'RSignin',
+  name: 'RSigning',
   setup() {
     const loginFormRef = ref<FormInst>()
 
     const { t } = useI18n()
-    const signingStore = useSigning()
-
-    const { signing } = signingStore
+    const { signing } = useSigningActions()
     const { path } = ROOT_ROUTE
     const globalSpinning = getVariableToRefs('globalSpinning')
 

@@ -23,7 +23,7 @@ import { APP_KEEP_ALIVE } from '@/app-config/appConfig'
 import type { KeepAliveStoreState } from './type'
 import type { AppMenuOption } from '@/types/modules/app'
 
-export const useKeepAlive = defineStore(
+export const piniaKeepAliveStore = defineStore(
   'keepAlive',
   () => {
     const { maxKeepAliveLength } = APP_KEEP_ALIVE

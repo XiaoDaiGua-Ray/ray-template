@@ -62,7 +62,7 @@ const RayLink = defineComponent({
     return (
       <NSpace>
         {this.avatarOptions.map((curr) => (
-          <NTooltip>
+          <NTooltip key={curr.key}>
             {{
               trigger: () => (
                 <NAvatar

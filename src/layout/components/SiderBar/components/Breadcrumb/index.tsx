@@ -20,24 +20,17 @@
 
 import { NDropdown, NBreadcrumb, NBreadcrumbItem } from 'naive-ui'
 
-import { useMenu } from '@/store'
+import { useMenuGetters, useMenuActions } from '@/store'
 import { useDevice } from '@/hooks/web/index'
 
 import type { DropdownOption } from 'naive-ui'
-import type {
-  AppMenuOption,
-  MenuTagOptions,
-  AppMenuKey,
-} from '@/types/modules/app'
+import type { AppMenuOption } from '@/types/modules/app'
 
 export default defineComponent({
   name: 'RBreadcrumb',
   setup() {
-    const menuStore = useMenu()
-
-    const { changeMenuModelValue } = menuStore
-    const { breadcrumbOptions } = storeToRefs(menuStore)
-    const modelBreadcrumbOptions = computed(() => breadcrumbOptions.value)
+    const { changeMenuModelValue } = useMenuActions()
+    const { getBreadcrumbOptions } = useMenuGetters()
     const { isTabletOrSmaller } = useDevice()
 
     const dropdownSelect = (key: string | number, option: DropdownOption) => {
@@ -55,7 +48,7 @@ export default defineComponent({
     }
 
     return {
-      modelBreadcrumbOptions,
+      getBreadcrumbOptions,
       dropdownSelect,
       breadcrumbItemClick,
       isTabletOrSmaller,
@@ -68,7 +61,7 @@ export default defineComponent({
       <div></div>
     ) : (
       <NBreadcrumb>
-        {this.modelBreadcrumbOptions.map((curr) => (
+        {this.getBreadcrumbOptions.map((curr) => (
           <NBreadcrumbItem
             key={curr.key}
             onClick={this.breadcrumbItemClick.bind(this, curr)}

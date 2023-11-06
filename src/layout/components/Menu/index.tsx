@@ -14,10 +14,10 @@ import './index.scss'
 import { NMenu, NLayoutSider, NDrawer } from 'naive-ui'
 import SiderBarLogo from './components/SiderBarLogo/index'
 
-import { useMenu } from '@/store'
 import { APP_MENU_CONFIG } from '@/app-config/appConfig'
 import { useDevice } from '@/hooks/web/index'
 import { getVariableToRefs, setVariable } from '@/global-variable/index'
+import { useMenuGetters, useMenuActions } from '@/store'
 
 import type { MenuInst } from 'naive-ui'
 import type { NaiveMenuOptions } from '@/types/modules/component'
@@ -28,16 +28,16 @@ export default defineComponent({
   setup() {
     const menuRef = ref<MenuInst | null>(null)
 
-    const menuStore = useMenu()
+    const { changeMenuModelValue, collapsedMenu } = useMenuActions()
+    const { getMenuOptions, getCollapsed, getMenuKey } = useMenuGetters()
 
-    const { changeMenuModelValue, collapsedMenu } = menuStore
     const modelMenuKey = computed({
       get: () => {
         nextTick().then(() => {
           showMenuOption()
         })
 
-        return menuStore.menuKey
+        return getMenuKey.value
       },
       set: () => {
         if (isTabletOrSmaller.value) {
@@ -45,8 +45,6 @@ export default defineComponent({
         }
       },
     })
-    const modelMenuOptions = computed(() => menuStore.options)
-    const modelCollapsed = computed(() => menuStore.collapsed)
     const { isTabletOrSmaller } = useDevice()
     const modelGlobalDrawerValue = computed({
       get: () => getVariableToRefs('globalDrawerValue').value,
@@ -72,14 +70,14 @@ export default defineComponent({
         onUpdateCollapsed={collapsedMenu.bind(this)}
         nativeScrollbar={false}
       >
-        <SiderBarLogo collapsed={modelCollapsed.value} />
+        <SiderBarLogo collapsed={getCollapsed.value} />
         <NMenu
-          ref="menuRef"
+          ref={menuRef}
           class="r-menu--app"
           v-model:value={modelMenuKey.value}
-          options={modelMenuOptions.value as NaiveMenuOptions[]}
+          options={getMenuOptions.value as NaiveMenuOptions[]}
           indent={APP_MENU_CONFIG.menuCollapsedIndent}
-          collapsed={modelCollapsed.value}
+          collapsed={getCollapsed.value}
           collapsedIconSize={APP_MENU_CONFIG.menuCollapsedIconSize}
           collapsedWidth={APP_MENU_CONFIG.menuCollapsedWidth}
           onUpdateValue={(key, op) => {
@@ -91,7 +89,6 @@ export default defineComponent({
     )
 
     return {
-      menuRef,
       isTabletOrSmaller,
       BasicMenu: BasicMenu,
       modelGlobalDrawerValue,

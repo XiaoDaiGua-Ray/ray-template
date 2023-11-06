@@ -28,7 +28,7 @@ import type {
   SigningResponse,
 } from '@/store/modules/signing/type'
 
-export const useSigning = defineStore(
+export const piniaSigningStore = defineStore(
   'signing',
   () => {
     const state = reactive({

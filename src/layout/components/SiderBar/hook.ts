@@ -1,5 +1,9 @@
-import { useSetting, useSigning } from '@/store'
 import { useI18n } from '@/hooks/web/index'
+import {
+  useSigningActions,
+  useSigningGetters,
+  useSettingActions,
+} from '@/store'
 
 import type { IconOptionsFC, IconOptions } from './type'
 
@@ -24,8 +28,7 @@ export const createAvatarOptions = () => [
 
 const avatarDropdownActionMap = {
   logout: () => {
-    const signingStore = useSigning()
-    const { logout } = signingStore
+    const { logout } = useSigningActions()
 
     window.$dialog.warning({
       title: '提示',
@@ -38,8 +41,7 @@ const avatarDropdownActionMap = {
     })
   },
   lockScreen: () => {
-    const settingStore = useSetting()
-    const { changeSwitcher } = settingStore
+    const { changeSwitcher } = useSettingActions()
 
     changeSwitcher(true, 'lockScreenSwitch')
   },
@@ -52,7 +54,7 @@ export const avatarDropdownClick = (key: string | number) => {
 }
 
 export const createLeftIconOptions = (opts: IconOptionsFC) => {
-  const { isTabletOrSmaller, reloadRouteSwitch } = opts
+  const { isTabletOrSmaller, globalMainLayoutLoad } = opts
   const { t } = useI18n()
 
   const notTableOrSmallerOptions: IconOptions[] = [
@@ -60,7 +62,7 @@ export const createLeftIconOptions = (opts: IconOptionsFC) => {
       name: 'reload',
       size: 18,
       tooltip: t('headerTooltip.Reload'),
-      iconClass: !reloadRouteSwitch.value ? 'ray-icon__reload--loading' : '',
+      iconClass: !globalMainLayoutLoad.value ? 'ray-icon__reload--loading' : '',
       eventKey: 'reload',
     },
   ]

@@ -20,5 +20,6 @@
   "RouterDemo": "Same Level Router Demo",
   "Mock": "Mock",
   "QRCode": "QRCode",
-  "SvgIcon": "SVG Icon"
+  "SvgIcon": "SVG Icon",
+  "TemplateHooks": "Template Api"
 }

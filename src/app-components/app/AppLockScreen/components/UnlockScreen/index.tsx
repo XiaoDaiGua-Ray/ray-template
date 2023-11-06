@@ -15,7 +15,7 @@ import { NInput, NForm, NFormItem, NButton, NSpace } from 'naive-ui'
 import AppAvatar from '@/app-components/app/AppAvatar/index'
 
 import dayjs from 'dayjs'
-import { useSetting, useSigning } from '@/store'
+import { useSigningActions, useSettingActions } from '@/store'
 import { rules, useCondition } from '@/app-components/app/AppLockScreen/hook'
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
 import { useDevice } from '@/hooks/web/index'
@@ -28,8 +28,8 @@ export default defineComponent({
     const formRef = ref<FormInst | null>(null)
     const inputInstRef = ref<InputInst | null>(null)
 
-    const { logout } = useSigning()
-    const { changeSwitcher } = useSetting()
+    const { logout } = useSigningActions()
+    const { changeSwitcher } = useSettingActions()
     const { setLockAppScreen } = useAppLockScreen()
     const { isTabletOrSmaller } = useDevice()
 

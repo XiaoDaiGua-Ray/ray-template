@@ -11,20 +11,12 @@
 
 import './index.scss'
 
-import {
-  NInput,
-  NModal,
-  NResult,
-  NScrollbar,
-  NSpace,
-  NDivider,
-  NButton,
-} from 'naive-ui'
+import { NInput, NModal, NResult, NScrollbar, NSpace } from 'naive-ui'
 import RIcon from '@/components/RIcon/index'
 
 import { on, off, queryElements, addClass, removeClass } from '@/utils/element'
 import { debounce } from 'lodash-es'
-import { useMenu } from '@/store'
+import { useMenuGetters, useMenuActions } from '@/store'
 import { validMenuItemShow } from '@/router/helper/routerCopilot'
 import { useDevice } from '@/hooks/web/index'
 
@@ -41,9 +33,7 @@ export default defineComponent({
   },
   emits: ['update:show'],
   setup(props, { emit }) {
-    const menuStore = useMenu()
-
-    const { changeMenuModelValue } = menuStore
+    const { changeMenuModelValue } = useMenuActions()
     const modelShow = computed({
       get: () => props.show,
       set: (val) => {
@@ -54,7 +44,8 @@ export default defineComponent({
         }
       },
     })
-    const modelMenuOptions = computed(() => menuStore.options)
+    const { getMenuOptions } = useMenuGetters()
+
     const state = reactive({
       searchValue: null,
       searchOptions: [] as AppMenuOption[],
@@ -131,7 +122,7 @@ export default defineComponent({
       }
 
       if (value) {
-        filterArr(modelMenuOptions.value)
+        filterArr(getMenuOptions.value)
 
         state.searchOptions = arr
       } else {
@@ -326,7 +317,7 @@ export default defineComponent({
                 {searchOptions.length ? (
                   <NSpace vertical wrapItem={false} size={[8, 8]}>
                     {searchOptions.map((curr) => (
-                      <SearchItem menuOption={curr} />
+                      <SearchItem menuOption={curr} key={curr.key} />
                     ))}
                   </NSpace>
                 ) : (
@@ -355,7 +346,7 @@ export default defineComponent({
                   size={[24, 8]}
                 >
                   {this.helperTipOptions.map((curr) => (
-                    <div class="tip-wrapper-item">
+                    <div class="tip-wrapper-item" key={curr.label}>
                       <div class="item-icon">
                         {curr.plain ? (
                           <span>{curr.icon}</span>

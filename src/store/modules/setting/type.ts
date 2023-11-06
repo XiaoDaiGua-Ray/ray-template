@@ -4,15 +4,12 @@ import type { Placement } from '@/types/modules/component'
 export interface SettingState {
   drawerPlacement: Placement
   primaryColorOverride: GlobalThemeOverrides
-  themeValue: boolean
-  reloadRouteSwitch: boolean
+  appTheme: boolean
   menuTagSwitch: boolean
-  spinSwitch: boolean
   breadcrumbSwitch: boolean
   localeLanguage: string
   lockScreenSwitch: boolean
-  lockScreenInputSwitch: boolean
   watermarkSwitch: boolean
-  footerSwitch: boolean
+  copyrightSwitch: boolean
   contentTransition: string
 }

@@ -43,6 +43,7 @@ const PreviewSVGIcons = defineComponent({
                 <div
                   class="pre-view-icons__card"
                   v-copy={`<RIcon name="${curr}" size="56" />`}
+                  key={curr}
                 >
                   <NPopover>
                     {{

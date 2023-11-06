@@ -29,15 +29,17 @@ import { NScrollbar, NTag, NSpace, NLayoutHeader, NDropdown } from 'naive-ui'
 import RIcon from '@/components/RIcon/index'
 import RMoreDropdown from '@/components/RMoreDropdown/index'
 
-import { useMenu, useSetting } from '@/store'
+import { useMenuGetters, useMenuActions } from '@/store'
 import { uuid } from '@/utils/basic'
 import { hasClass } from '@/utils/element'
 import { redirectRouterToDashboard } from '@/router/helper/routerCopilot'
 import { ROOT_ROUTE } from '@/app-config/appConfig'
 import { queryElements } from '@use-utils/element'
 import { renderNode } from '@/utils/vue/index'
+import { useMainPage } from '@/hooks/template/index'
+import { useMenuTag } from '@/hooks/template/index'
 
-import type { MenuOption, ScrollbarInst } from 'naive-ui'
+import type { ScrollbarInst } from 'naive-ui'
 import type { MenuTagOptions, AppMenuOption } from '@/types/modules/app'
 
 export default defineComponent({
@@ -45,43 +47,28 @@ export default defineComponent({
   setup(_, { expose }) {
     const scrollRef = ref<ScrollbarInst | null>(null)
 
-    const menuStore = useMenu()
-    const settingStore = useSetting()
-
-    const { menuKey, menuTagOptions } = storeToRefs(menuStore)
+    const { getMenuKey, getMenuTagOptions } = useMenuGetters()
     const {
       changeMenuModelValue,
       spliceMenTagOptions,
       emptyMenuTagOptions,
       setMenuTagOptions,
-    } = menuStore
-    const { changeSwitcher } = settingStore
+    } = useMenuActions()
     const { path } = ROOT_ROUTE
+    const { reload } = useMainPage()
+    const {
+      close,
+      closeAll: $closeAll,
+      closeRight: $closeRight,
+      closeLeft: $closeLeft,
+      closeOther: $closeOther,
+    } = useMenuTag()
 
     const exclude = ['closeAll', 'closeRight', 'closeLeft', 'closeOther']
     let currentContextmenuIndex = -1 // 当前右键标签页索引位置
     const iconConfig = {
       size: 16,
     }
-    const modelMenuTagOptions = computed(() =>
-      menuTagOptions.value.map((curr, _idx, currentArray) => {
-        if (curr.key === menuKey.value && curr.key !== path) {
-          curr.closeable = true
-        } else {
-          curr.closeable = false
-        }
-
-        if (curr.key === path) {
-          curr.closeable = false
-        }
-
-        if (currentArray.length <= 1) {
-          curr.closeable = false
-        }
-
-        return curr
-      }),
-    )
     const moreOptions = ref([
       {
         label: '重新加载',
@@ -154,58 +141,22 @@ export default defineComponent({
         disabled: false,
       },
     ])
-    const scrollBarUUID = uuid(16)
+    const uuidScrollBar = uuid(16)
     const actionMap = {
       reloadCurrentPage: () => {
-        changeSwitcher(false, 'reloadRouteSwitch')
-
-        setTimeout(() => changeSwitcher(true, 'reloadRouteSwitch'))
+        reload()
       },
       closeAll: () => {
-        /**
-         *
-         * 关闭全部标签页, 然后重定向至首页(dashboard)
-         * 如果做了相关更改, 则需要手动更新
-         */
-        if (moreOptions.value.length > 1) {
-          emptyMenuTagOptions()
-          redirectRouterToDashboard(true)
-        }
+        $closeAll()
       },
       closeRight: () => {
-        /**
-         *
-         * 关闭右侧标签
-         *
-         * 如果当前选择标签与 menuKey 不匹配, 则会关闭当前标签右侧所有变迁并且跳转至该页面
-         */
-        const length = moreOptions.value.length
-        const routeItem = modelMenuTagOptions.value[currentContextmenuIndex]
-
-        spliceMenTagOptions(currentContextmenuIndex + 1, length - 1)
-
-        if (menuKey.value !== routeItem.key) {
-          changeMenuModelValue(routeItem.key, routeItem)
-        }
+        $closeRight(currentContextmenuIndex)
       },
       closeLeft: () => {
-        spliceMenTagOptions(0, currentContextmenuIndex)
+        $closeLeft(currentContextmenuIndex)
       },
       closeOther: () => {
-        /**
-         *
-         * 关闭其他标签
-         *
-         * 如果关闭标签与当前 menuKey 不匹配, 则会关闭当前选择标签页以外的所有标签页并且跳转至该页面
-         */
-        const routeItem = modelMenuTagOptions.value[currentContextmenuIndex]
-
-        if (menuKey.value !== routeItem.key) {
-          emptyMenuTagOptions()
-          changeMenuModelValue(routeItem.key, routeItem)
-        } else {
-          setMenuTagOptions(routeItem, false)
-        }
+        $closeOther(currentContextmenuIndex)
       },
     }
     /** 右键菜单 */
@@ -223,16 +174,7 @@ export default defineComponent({
      * @remark 关闭 `tag` 菜单, 如果仅有一个则不能关闭
      */
     const closeCurrentMenuTag = (idx: number) => {
-      spliceMenTagOptions(idx)
-
-      if (menuKey.value !== path) {
-        const options = modelMenuTagOptions.value
-        const length = options.length
-
-        const tag = options[length - 1]
-
-        changeMenuModelValue(tag.key as string, tag)
-      }
+      close(idx)
     }
 
     const setMoreOptionsDisabled = (
@@ -257,7 +199,7 @@ export default defineComponent({
     }
 
     const getScrollElement = () => {
-      const scroll = document.getElementById(scrollBarUUID) // 获取滚动条容器
+      const scroll = document.getElementById(uuidScrollBar) // 获取滚动条容器
 
       if (scroll) {
         const scrollContentElement = Array.from(
@@ -320,7 +262,7 @@ export default defineComponent({
     }
 
     const setDisabledAccordionToIndex = () => {
-      const length = modelMenuTagOptions.value.length - 1
+      const length = getMenuTagOptions.value.length - 1
 
       if (currentContextmenuIndex === length) {
         setMoreOptionsDisabled('closeRight', true)
@@ -342,8 +284,8 @@ export default defineComponent({
      * 并且动态设置是否可操作状态
      */
     const setCurrentContextmenuIndex = () => {
-      const index = modelMenuTagOptions.value.findIndex(
-        (curr) => curr.key === menuKey.value,
+      const index = getMenuTagOptions.value.findIndex(
+        (curr) => curr.key === getMenuKey.value,
       )
 
       currentContextmenuIndex = index
@@ -351,16 +293,16 @@ export default defineComponent({
       setDisabledAccordionToIndex()
     }
 
-    /** 仅有 modelMenuTagOptions 长度大于 1 并且非 root path 时, 才激活关闭按钮 */
+    /** 仅有 getMenuTagOptions 长度大于 1 并且非 root path 时, 才激活关闭按钮 */
     const menuTagMouseenter = (option: MenuTagOptions) => {
-      if (modelMenuTagOptions.value.length > 1 && option.key !== path) {
+      if (getMenuTagOptions.value.length > 1 && option.key !== path) {
         option.closeable = true
       }
     }
 
     /** 移出 MenuTag 时, 判断是否为当前已激活 key */
     const menuTagMouseleave = (option: MenuTagOptions) => {
-      if (option.key !== menuKey.value) {
+      if (option.key !== getMenuKey.value) {
         option.closeable = false
       }
     }
@@ -387,7 +329,7 @@ export default defineComponent({
     const positionMenuTag = () => {
       nextTick().then(() => {
         const tags = queryElements<HTMLElement>(
-          `attr:${MENU_TAG_DATA}="${menuKey.value}"`,
+          `attr:${MENU_TAG_DATA}="${getMenuKey.value}"`,
         )
 
         if (tags?.length) {
@@ -402,7 +344,7 @@ export default defineComponent({
 
     /** 如果有且只有一个标签页时, 禁止全部关闭操作 */
     watch(
-      () => modelMenuTagOptions.value,
+      () => getMenuTagOptions.value,
       (newData, oldData) => {
         moreOptions.value.forEach((curr) => {
           if (exclude.includes(curr.key)) {
@@ -436,15 +378,15 @@ export default defineComponent({
     expose({})
 
     return {
-      modelMenuTagOptions,
+      getMenuTagOptions,
       changeMenuModelValue,
       closeCurrentMenuTag,
-      menuKey,
+      getMenuKey,
       handleTagClick,
       moreOptions,
       scrollX,
       scrollRef,
-      scrollBarUUID,
+      uuidScrollBar,
       actionDropdownSelect,
       rootPath: path,
       actionState,
@@ -495,7 +437,7 @@ export default defineComponent({
               xScrollable
               ref="scrollRef"
               {...{
-                id: this.scrollBarUUID,
+                id: this.uuidScrollBar,
               }}
             >
               <NSpace
@@ -504,13 +446,14 @@ export default defineComponent({
                 align="center"
                 justify="start"
               >
-                {this.modelMenuTagOptions.map((curr, idx) => (
+                {this.getMenuTagOptions.map((curr, idx) => (
                   <NTag
+                    key={curr.key}
                     size="large"
                     strong
                     closable={curr.closeable}
                     onClose={this.closeCurrentMenuTag.bind(this, idx)}
-                    type={curr.key === this.menuKey ? 'primary' : 'default'}
+                    type={curr.key === this.getMenuKey ? 'primary' : 'default'}
                     bordered={false}
                     {...{
                       onClick: this.handleTagClick.bind(this, curr),
@@ -520,7 +463,7 @@ export default defineComponent({
                       [this.MENU_TAG_DATA]: curr.path,
                     }}
                   >
-                    {renderNode(curr.label)}
+                    {renderNode(curr.breadcrumbLabel)}
                   </NTag>
                 ))}
               </NSpace>

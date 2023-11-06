@@ -22,8 +22,8 @@ import LOGO from '@/assets/images/ray.svg'
  * 可以根据业务需求自行更改
  */
 
-const QRCodeSignin = defineComponent({
-  name: 'QRCodeSignin',
+const QRCodeSigning = defineComponent({
+  name: 'QRCodeSigning',
   setup() {
     const qrcodeState = reactive({
       qrcodeValue: 'https://github.com/XiaoDaiGua-Ray/xiaodaigua-ray.github.io',
@@ -35,11 +35,11 @@ const QRCodeSignin = defineComponent({
   },
   render() {
     return (
-      <div class="qrcode-signin">
+      <div class="qrcode-signing">
         <RayQRcode text="ray template yes" size={200} logoImage={LOGO} />
       </div>
     )
   },
 })
 
-export default QRCodeSignin
+export default QRCodeSigning

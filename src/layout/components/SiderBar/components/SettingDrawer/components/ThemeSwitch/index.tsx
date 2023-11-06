@@ -12,14 +12,13 @@
 import { NSpace, NSwitch, NTooltip } from 'naive-ui'
 import RIcon from '@/components/RIcon'
 
-import { useSetting } from '@/store'
+import { useSettingGetters, useSettingActions } from '@/store'
 
 const ThemeSwitch = defineComponent({
   name: 'ThemeSwitch',
   setup() {
-    const settingStore = useSetting()
-    const { changeSwitcher } = settingStore
-    const { themeValue } = storeToRefs(settingStore)
+    const { changeSwitcher } = useSettingActions()
+    const { getAppTheme } = useSettingGetters()
 
     const handleRailStyle = ({ checked }: { checked: boolean }) => {
       return checked
@@ -33,7 +32,7 @@ const ThemeSwitch = defineComponent({
 
     return {
       changeSwitcher,
-      themeValue,
+      getAppTheme,
       handleRailStyle,
     }
   },
@@ -46,10 +45,10 @@ const ThemeSwitch = defineComponent({
           {{
             trigger: () => (
               <NSwitch
-                v-model:value={this.themeValue}
+                v-model:value={this.getAppTheme}
                 railStyle={this.handleRailStyle.bind(this)}
                 onUpdateValue={(bool: boolean) =>
-                  this.changeSwitcher(bool, 'themeValue')
+                  this.changeSwitcher(bool, 'appTheme')
                 }
               >
                 {{
@@ -75,7 +74,7 @@ const ThemeSwitch = defineComponent({
               </NSwitch>
             ),
             default: () =>
-              this.themeValue
+              this.getAppTheme
                 ? $t('headerSettingOptions.ThemeOptions.Dark')
                 : $t('headerSettingOptions.ThemeOptions.Light'),
           }}

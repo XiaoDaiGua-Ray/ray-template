@@ -9,6 +9,17 @@
       & .r-layout-full__viewer-content {
         height: var(--layout-content-height);
         padding: 16px;
+        transition: all 0.3s;
+
+        &.r-layout-full__viewer-content--maximize {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          transform-origin: center;
+          z-index: 99;
+        }
 
         & .n-scrollbar-container {
           height: 100%;

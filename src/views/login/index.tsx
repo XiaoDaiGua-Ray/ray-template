@@ -11,17 +11,17 @@ import {
   NGrid,
   NGridItem,
 } from 'naive-ui'
-import Signin from './components/Signin/index'
+import Signing from './components/Signing/index'
 import Register from './components/Register/index'
-import QRCodeSignin from './components/QRCodeSignin/index'
-import SSOSignin from './components/SSOSignin/index'
+import QRCodeSigning from './components/QRCodeSigning/index'
+import SSOSigning from './components/SSOSigning/index'
 import RIcon from '@/components/RIcon'
 import RayLink from '@/app-components/app/RayLink/index'
 import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch/index'
 
-import { useSetting } from '@/store'
 import { LOCAL_OPTIONS } from '@/app-config/localConfig'
 import { useWindowSize } from '@vueuse/core'
+import { useSettingActions } from '@/store'
 
 const Login = defineComponent({
   name: 'RLogin',
@@ -31,12 +31,11 @@ const Login = defineComponent({
     } = __APP_CFG__
 
     const state = reactive({
-      tabsValue: 'signin',
+      tabsValue: 'signing',
     })
 
     const { height: windowHeight, width: windowWidth } = useWindowSize()
-    const settingStore = useSetting()
-    const { updateLocale } = settingStore
+    const { updateLocale } = useSettingActions()
 
     return {
       ...toRefs(state),
@@ -122,10 +121,10 @@ const Login = defineComponent({
                       default: () => (
                         <>
                           <NTabPane
-                            tab={$t('views.login.index.Signin')}
-                            name="signin"
+                            tab={$t('views.login.index.Signing')}
+                            name="signing"
                           >
-                            <Signin />
+                            <Signing />
                           </NTabPane>
                           <NTabPane
                             tab={$t('views.login.index.Register')}
@@ -134,17 +133,17 @@ const Login = defineComponent({
                             <Register />
                           </NTabPane>
                           <NTabPane
-                            tab={$t('views.login.index.QRCodeSignin')}
-                            name="qrcodeSignin"
+                            tab={$t('views.login.index.QRCodeSigning')}
+                            name="qrcodeSigning"
                           >
-                            <QRCodeSignin />
+                            <QRCodeSigning />
                           </NTabPane>
                         </>
                       ),
                     }}
                   </NTabs>
                   <NDivider>其他登陆方式</NDivider>
-                  <SSOSignin />
+                  <SSOSigning />
                   <NDivider>友情链接</NDivider>
                   <RayLink />
                 </NCard>
