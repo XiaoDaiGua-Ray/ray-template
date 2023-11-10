@@ -53,6 +53,10 @@ export default defineComponent({
       },
     })
 
+    /**
+     *
+     * 手动展开当前激活菜单项
+     */
     const showMenuOption = () => {
       const key = modelMenuKey.value as string
 

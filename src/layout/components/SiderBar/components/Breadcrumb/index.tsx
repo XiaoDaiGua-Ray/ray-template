@@ -27,7 +27,7 @@ import type { DropdownOption } from 'naive-ui'
 import type { AppMenuOption } from '@/types/modules/app'
 
 export default defineComponent({
-  name: 'RBreadcrumb',
+  name: 'SiderBarBreadcrumb',
   setup() {
     const { changeMenuModelValue } = useMenuActions()
     const { getBreadcrumbOptions } = useMenuGetters()
@@ -37,6 +37,12 @@ export default defineComponent({
       changeMenuModelValue(key, option as unknown as AppMenuOption)
     }
 
+    /**
+     *
+     * @param option bread option
+     *
+     * 点击面包屑，如果包含子集，则允许点击更新页面
+     */
     const breadcrumbItemClick = (option: AppMenuOption) => {
       if (!option.children?.length) {
         const { meta = {} } = option

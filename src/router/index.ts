@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import { scrollViewToTop } from '@/router/helper/helper'
+import { scrollViewToTop } from '@/router/helper/setupHelper'
 import { vueRouterRegister } from '@/router/helper/routerCopilot'
 import { useVueRouter } from '@/hooks/web/index'
 
@@ -10,6 +10,11 @@ import type { RouteRecordRaw, Router } from 'vue-router'
 
 export let router: Router
 
+/**
+ *
+ * 创建 vue router 实例
+ * 注册 scrollBehavior 方法
+ */
 const createVueRouter = async () => {
   return createRouter({
     history: createWebHashHistory(),

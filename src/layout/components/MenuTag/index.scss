@@ -25,8 +25,8 @@ $menuTagWrapperWidth: 76px;
     }
 
     & .menu-tag__right-wrapper {
-      display: inline-flex;
-      align-items: center;
+      // display: inline-flex;
+      // align-items: center;
 
       & .menu-tag__right-arrow {
         transform: rotate(270deg);
@@ -41,5 +41,12 @@ $menuTagWrapperWidth: 76px;
 
   & .n-tag {
     cursor: pointer;
+  }
+}
+
+.menu-tag__dropdown {
+  & .menu-tag__icon {
+    width: 18px;
+    height: 18px;
   }
 }

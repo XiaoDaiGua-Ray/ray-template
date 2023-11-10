@@ -1,3 +1,13 @@
+/**
+ *
+ * app setting 抽屉
+ * 提供了一些基础的动态配置能力
+ * 如果需要其他额外的配置项，可以按照当前的方式进行拓展
+ *
+ * 可能会疑问，为什么可配置项那么少？
+ * 其实并不少，只是有一些东西，在我看来是没多大意义需要动态的去改动的，所以都是在 `app-config` 包中进行配置维护
+ */
+
 import './index.scss'
 
 import {
@@ -55,6 +65,7 @@ const SettingDrawer = defineComponent({
         emit('update:show', bool)
       },
     })
+    // 过渡效果下拉
     const contentTransitionOptions = [
       {
         label: '无',

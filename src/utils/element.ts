@@ -1,6 +1,7 @@
 import { isValueType } from '@/utils/basic'
 import { APP_REGEX } from '@/app-config/regexConfig'
 import { unrefElement } from '@/utils/vue/index'
+import { watchEffectWithTarget } from '@/utils/vue/index'
 
 import type {
   EventListenerOrEventListenerObject,
@@ -25,11 +26,15 @@ export const on = (
   handler: EventListenerOrEventListenerObject,
   useCapture: boolean | AddEventListenerOptions = false,
 ) => {
-  const targetElement = unrefElement(target, window)
+  const targetElement = computed(() => unrefElement(target, window))
 
-  if (targetElement && event && handler) {
-    targetElement.addEventListener(event, handler, useCapture)
+  const update = () => {
+    if (targetElement.value && event && handler) {
+      targetElement.value.addEventListener(event, handler, useCapture)
+    }
   }
+
+  watchEffectWithTarget(update)
 }
 
 /**
@@ -47,11 +52,15 @@ export const off = (
   handler: EventListenerOrEventListenerObject,
   useCapture: boolean | AddEventListenerOptions = false,
 ) => {
-  const targetElement = unrefElement(target, window)
+  const targetElement = computed(() => unrefElement(target, window))
 
-  if (targetElement && event && handler) {
-    targetElement.removeEventListener(event, handler, useCapture)
+  const update = () => {
+    if (targetElement.value && event && handler) {
+      targetElement.value.removeEventListener(event, handler, useCapture)
+    }
   }
+
+  watchEffectWithTarget(update)
 }
 
 /**
@@ -65,17 +74,21 @@ export const addClass = (
   target: BasicTarget<Element | HTMLElement | SVGAElement>,
   className: string,
 ) => {
-  const targetElement = unrefElement(target)
+  const targetElement = computed(() => unrefElement(target))
 
-  if (targetElement) {
-    const classes = className.trim().split(' ')
+  const update = () => {
+    if (targetElement.value) {
+      const classes = className.trim().split(' ')
 
-    classes.forEach((item) => {
-      if (item) {
-        targetElement.classList.add(item)
-      }
-    })
+      classes.forEach((item) => {
+        if (item) {
+          targetElement.value!.classList.add(item)
+        }
+      })
+    }
   }
+
+  watchEffectWithTarget(update)
 }
 
 /**
@@ -90,23 +103,27 @@ export const removeClass = (
   target: BasicTarget<Element | HTMLElement | SVGAElement>,
   className: string | 'removeAllClass',
 ) => {
-  const targetElement = unrefElement(target)
+  const targetElement = computed(() => unrefElement(target))
 
-  if (targetElement) {
-    if (className === 'removeAllClass') {
-      const classList = targetElement.classList
+  const update = () => {
+    if (targetElement.value) {
+      if (className === 'removeAllClass') {
+        const classList = targetElement.value.classList
 
-      classList.forEach((curr) => classList.remove(curr))
-    } else {
-      const classes = className.trim().split(' ')
+        classList.forEach((curr) => classList.remove(curr))
+      } else {
+        const classes = className.trim().split(' ')
 
-      classes.forEach((item) => {
-        if (item) {
-          targetElement.classList.remove(item)
-        }
-      })
+        classes.forEach((item) => {
+          if (item) {
+            targetElement.value!.classList.remove(item)
+          }
+        })
+      }
     }
   }
+
+  watchEffectWithTarget(update)
 }
 
 /**
@@ -162,35 +179,39 @@ export const addStyle = (
   target: BasicTarget<HTMLElement | SVGAElement>,
   styles: PartialCSSStyleDeclaration | string,
 ) => {
-  const targetElement = unrefElement(target)
+  const targetElement = computed(() => unrefElement(target))
 
-  if (!targetElement) {
+  if (!targetElement.value) {
     return
   }
 
   let styleObj: PartialCSSStyleDeclaration
 
-  if (isValueType<string>(styles, 'String')) {
-    styleObj = styles.split(';').reduce((pre, curr) => {
-      const [key, value] = curr.split(':').map((s) => s.trim())
+  const update = () => {
+    if (isValueType<string>(styles, 'String')) {
+      styleObj = styles.split(';').reduce((pre, curr) => {
+        const [key, value] = curr.split(':').map((s) => s.trim())
 
-      if (key && value) {
-        pre[key] = value
+        if (key && value) {
+          pre[key] = value
+        }
+
+        return pre
+      }, {} as PartialCSSStyleDeclaration)
+    } else {
+      styleObj = styles
+    }
+
+    Object.keys(styleObj).forEach((key) => {
+      const value = styleObj[key]
+
+      if (key in targetElement.value!.style) {
+        targetElement.value!.style[key] = value
       }
-
-      return pre
-    }, {} as PartialCSSStyleDeclaration)
-  } else {
-    styleObj = styles
+    })
   }
 
-  Object.keys(styleObj).forEach((key) => {
-    const value = styleObj[key]
-
-    if (key in targetElement.style) {
-      targetElement.style[key] = value
-    }
-  })
+  watchEffectWithTarget(update)
 }
 
 /**
@@ -202,15 +223,19 @@ export const removeStyle = (
   target: BasicTarget<HTMLElement | SVGAElement>,
   styles: (keyof CSSStyleDeclaration & string)[],
 ) => {
-  const targetElement = unrefElement(target)
+  const targetElement = computed(() => unrefElement(target))
 
-  if (!targetElement) {
+  if (!targetElement.value) {
     return
   }
 
-  styles.forEach((curr) => {
-    targetElement.style.removeProperty(curr)
-  })
+  const update = () => {
+    styles.forEach((curr) => {
+      targetElement.value!.style.removeProperty(curr)
+    })
+  }
+
+  watchEffectWithTarget(update)
 }
 
 /**

@@ -22,6 +22,12 @@ import type { DayjsLocal } from '@/dayjs/type'
  *   - locale: 切换 dayjs 语言配置
  */
 export const useDayjs = () => {
+  /**
+   *
+   * @param key 当前语言
+   *
+   * 手动配置 dayjs 语言（国际化）
+   */
   const locale = (key: DayjsLocal) => {
     const locale = DAYJS_LOCAL_MAP[key]
 

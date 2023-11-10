@@ -22,7 +22,11 @@ export type QRCodeInst = {
    *
    * 如果未设置名称，则默认以 时间戳.png 命名
    */
-  downloadQRCode: (fileName?: string) => void
+  downloadQRCode: (fileName?: DownloadFilenameType) => void
 }
 
 export type GIFBuffer = string | ArrayBuffer | null
+
+export type DefaultDownloadImageType = 'png' | 'jpg' | 'jpeg' | 'webp'
+
+export type DownloadFilenameType = `${string}.${DefaultDownloadImageType}`

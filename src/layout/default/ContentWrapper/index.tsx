@@ -20,13 +20,15 @@ import './index.scss'
 import { NSpin } from 'naive-ui'
 import RTransitionComponent from '@/components/RTransitionComponent/index.vue'
 import AppRequestCancelerProvider from '@/app-components/provider/AppRequestCancelerProvider/index'
+import RIcon from '@/components/RIcon/index'
 
 import { getVariableToRefs } from '@/global-variable/index'
 import { useSettingGetters } from '@/store'
+import { useMainPage } from '@/hooks/template/index'
 
 import type { GlobalThemeOverrides } from 'naive-ui'
 
-const ContentWrapper = defineComponent({
+export default defineComponent({
   name: 'LayoutContentWrapper',
   setup() {
     const router = useRouter()
@@ -37,6 +39,8 @@ const ContentWrapper = defineComponent({
       opacitySpinning: '0',
     }
     const globalMainLayoutLoad = getVariableToRefs('globalMainLayoutLoad')
+    const layoutContentMaximize = getVariableToRefs('layoutContentMaximize')
+    const { maximize } = useMainPage()
 
     const setupLayoutContentSpin = () => {
       router.beforeEach(() => {
@@ -55,10 +59,13 @@ const ContentWrapper = defineComponent({
       spinning,
       themeOverridesSpin,
       getContentTransition,
+      layoutContentMaximize,
+      maximize,
     }
   },
   render() {
-    const { globalMainLayoutLoad } = this
+    const { globalMainLayoutLoad, layoutContentMaximize } = this
+    const { maximize } = this
 
     return (
       <NSpin
@@ -67,6 +74,16 @@ const ContentWrapper = defineComponent({
         size="large"
         themeOverrides={this.themeOverridesSpin}
       >
+        {layoutContentMaximize ? (
+          <div
+            class="layout-content__maximize-out"
+            onClick={() => {
+              maximize(false)
+            }}
+          >
+            <RIcon name="out" size="16" cursor="pointer" />
+          </div>
+        ) : null}
         <AppRequestCancelerProvider />
         {globalMainLayoutLoad ? (
           <RTransitionComponent
@@ -78,5 +95,3 @@ const ContentWrapper = defineComponent({
     )
   },
 })
-
-export default ContentWrapper

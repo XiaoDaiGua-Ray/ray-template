@@ -15,14 +15,17 @@
  */
 
 import { useWindowSize } from '@vueuse/core'
+import { watchEffectWithTarget } from '@/utils/vue/index'
 
 export function useDevice() {
   const { width, height } = useWindowSize()
   const isTabletOrSmaller = ref(false)
 
-  watchEffect(() => {
+  const update = () => {
     isTabletOrSmaller.value = width.value <= 768
-  })
+  }
+
+  watchEffectWithTarget(update)
 
   return {
     width,

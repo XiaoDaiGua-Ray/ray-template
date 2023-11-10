@@ -27,9 +27,9 @@ import { useSettingGetters } from '@/store'
 export default defineComponent({
   name: 'RLayout',
   setup() {
-    const layoutSiderBarRef = ref<HTMLElement>()
-    const layoutMenuTagRef = ref<HTMLElement>()
-    const layoutFooterRef = ref<HTMLElement>()
+    const layoutSiderBarRef = ref<HTMLElement>() // 顶部操作栏 ref
+    const layoutMenuTagRef = ref<HTMLElement>() // 标签页 ref
+    const layoutFooterRef = ref<HTMLElement>() // 底部版权 ref
 
     const { getMenuTagSwitch, getCopyrightSwitch } = useSettingGetters()
     const { getLockAppScreen } = useAppLockScreen()
@@ -70,6 +70,8 @@ export default defineComponent({
             ref={LAYOUT_CONTENT_REF}
             class={[
               'r-layout-full__viewer-content',
+              'r-layout-full__viewer-content--maximize--light',
+              'r-layout-full__viewer-content--maximize--dark',
               layoutContentMaximize
                 ? 'r-layout-full__viewer-content--maximize'
                 : null,

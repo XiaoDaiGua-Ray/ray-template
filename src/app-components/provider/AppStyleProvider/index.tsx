@@ -18,7 +18,7 @@ import { useSettingGetters } from '@/store'
 
 import type { SettingState } from '@/store/modules/setting/type'
 
-const AppStyleProvider = defineComponent({
+export default defineComponent({
   name: 'AppStyleProvider',
   setup(_, { expose }) {
     const { getAppTheme } = useSettingGetters()
@@ -33,22 +33,22 @@ const AppStyleProvider = defineComponent({
       const primaryColorOverride = getStorage<SettingState>(
         'piniaSettingStore',
         'localStorage',
-      )
+      ) // 获取缓存 naive ui 配置项
 
       if (primaryColorOverride) {
-        const _p = get(
+        const p = get(
           primaryColorOverride,
           'primaryColorOverride.common.primaryColor',
           primaryColor,
-        )
-        const _fp = colorToRgba(_p, 0.38)
+        ) // 获取主色调
+        const fp = colorToRgba(p, 0.38) // 将主色调任意颜色转换为 rgba 格式
 
         /** 设置全局主题色 css 变量 */
-        body.style.setProperty('--ray-theme-primary-color', _p)
+        body.style.setProperty('--ray-theme-primary-color', p) // 主色调
         body.style.setProperty(
           '--ray-theme-primary-fade-color',
-          _fp || primaryFadeColor,
-        )
+          fp || primaryFadeColor,
+        ) // 降低透明度后的主色调
       }
     }
 
@@ -73,8 +73,8 @@ const AppStyleProvider = defineComponent({
        * 根据 getAppTheme 进行初始化
        */
       const body = document.body
-      const darkClassName = 'ray-template--dark'
-      const lightClassName = 'ray-template--light'
+      const darkClassName = 'ray-template--dark' // 暗色类名
+      const lightClassName = 'ray-template--light' // 明亮色类名
 
       bool
         ? removeClass(body, lightClassName)
@@ -86,6 +86,7 @@ const AppStyleProvider = defineComponent({
     syncPrimaryColorToBody()
     hiddenLoadingAnimation()
 
+    // 当切换主题时，更新 body 当前的注入 class
     watch(
       () => getAppTheme.value,
       (ndata) => {
@@ -102,5 +103,3 @@ const AppStyleProvider = defineComponent({
     return <div class="app-style-provider"></div>
   },
 })
-
-export default AppStyleProvider

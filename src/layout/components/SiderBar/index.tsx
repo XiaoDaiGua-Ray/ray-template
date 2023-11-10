@@ -33,7 +33,7 @@ import {
   avatarDropdownClick,
   createLeftIconOptions,
   createRightIconOptions,
-} from './hook'
+} from './shared'
 import { useDevice } from '@/hooks/web/index'
 import { getVariableToRefs, setVariable } from '@/global-variable/index'
 import { useFullscreen } from 'vue-hooks-plus'
@@ -54,11 +54,11 @@ export default defineComponent({
       document.getElementsByTagName('html')[0],
     )
     const { getDrawerPlacement, getBreadcrumbSwitch } = useSettingGetters()
-    const showSettings = ref(false)
+    const showSettings = ref(false) // 是否显示设置抽屉
     const spaceItemStyle = {
       display: 'flex',
     }
-    const globalSearchShown = ref(false)
+    const globalSearchShown = ref(false) // 是否展示全局搜索
     const { isTabletOrSmaller } = useDevice()
     const globalDrawerValue = getVariableToRefs('globalDrawerValue')
     const globalMainLayoutLoad = getVariableToRefs('globalMainLayoutLoad')
@@ -114,7 +114,7 @@ export default defineComponent({
       },
     }
 
-    const toolIconClick = (key: IconEventMap) => {
+    const toolIconClick = (key: keyof typeof iconEventMap) => {
       iconEventMap[key]?.()
     }
 

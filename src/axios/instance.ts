@@ -36,20 +36,17 @@ const { createAxiosInstance, beforeFetch, fetchError } = useAxiosInterceptor()
 // 请求拦截器
 server.interceptors.request.use(
   (request) => {
-    // 生成 request instance
-    createAxiosInstance(request, 'requestInstance')
-    // 初始化拦截器所有已注入方法
-    setupRequestInterceptor()
-    // 执行拦截器所有已注入方法
-    beforeFetch('requestInstance', 'implementRequestInterceptorArray', 'ok')
+    createAxiosInstance(request, 'requestInstance') // 生成 request instance
+
+    setupRequestInterceptor() // 初始化拦截器所有已注入方法
+
+    beforeFetch('requestInstance', 'implementRequestInterceptorArray', 'ok') // 执行拦截器所有已注入方法
 
     return request
   },
   (error) => {
-    // 初始化拦截器所有已注入方法(错误状态)
-    setupRequestErrorInterceptor()
-    // 执行所有已注入方法
-    fetchError('requestError', error, 'implementRequestInterceptorErrorArray')
+    setupRequestErrorInterceptor() // 初始化拦截器所有已注入方法(错误状态)
+    fetchError('requestError', error, 'implementRequestInterceptorErrorArray') // 执行所有已注入方法
 
     return Promise.reject(error)
   },
@@ -58,17 +55,17 @@ server.interceptors.request.use(
 // 响应拦截器
 server.interceptors.response.use(
   (response) => {
-    createAxiosInstance(response, 'responseInstance')
-    setupResponseInterceptor()
-    beforeFetch('responseInstance', 'implementResponseInterceptorArray', 'ok')
+    createAxiosInstance(response, 'responseInstance') // 创建响应实例
+    setupResponseInterceptor() // 注入响应成功待执行队列
+    beforeFetch('responseInstance', 'implementResponseInterceptorArray', 'ok') // 执行响应成功拦截器
 
     const { data } = response
 
     return Promise.resolve(data)
   },
   (error) => {
-    setupResponseErrorInterceptor()
-    fetchError('responseError', error, 'implementResponseInterceptorErrorArray')
+    setupResponseErrorInterceptor() // 注入响应失败待执行队列
+    fetchError('responseError', error, 'implementResponseInterceptorErrorArray') // 执行响应失败后拦截器
 
     return Promise.reject(error)
   },

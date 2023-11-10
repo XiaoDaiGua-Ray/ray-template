@@ -15,7 +15,7 @@ import { NInput, NForm, NFormItem, NButton, NSpace } from 'naive-ui'
 import AppAvatar from '@/app-components/app/AppAvatar/index'
 
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
-import { rules, useCondition } from '@/app-components/app/AppLockScreen/hook'
+import { rules, useCondition } from '@/app-components/app/AppLockScreen/shared'
 import { useSettingGetters, useSettingActions } from '@/store'
 
 import type { FormInst, InputInst } from 'naive-ui'

@@ -35,6 +35,12 @@ export default defineComponent({
 
     return (
       <NSpace wrapItem={false} vertical>
+        <NCard title="接口说明">
+          <h3>
+            hooks/template 包存放模板专属 hook
+            方法。这里不做过多的赘述，可以查看文档具体描述。
+          </h3>
+        </NCard>
         <NCard title="useAppMenu 导航方法">
           <h3>
             navigationTo

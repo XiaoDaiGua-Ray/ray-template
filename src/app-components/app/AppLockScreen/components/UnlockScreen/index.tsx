@@ -16,7 +16,7 @@ import AppAvatar from '@/app-components/app/AppAvatar/index'
 
 import dayjs from 'dayjs'
 import { useSigningActions, useSettingActions } from '@/store'
-import { rules, useCondition } from '@/app-components/app/AppLockScreen/hook'
+import { rules, useCondition } from '@/app-components/app/AppLockScreen/shared'
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
 import { useDevice } from '@/hooks/web/index'
 
@@ -98,6 +98,9 @@ export default defineComponent({
   },
   render() {
     const { isTabletOrSmaller } = this
+    const { HH_MM, AM_PM, YY_MM_DD, DDD } = this
+    const hmSplit = HH_MM.split(':')
+    const { unlockScreen, backToSigning } = this
 
     return (
       <div class="app-lock-screen__unlock">
@@ -110,8 +113,8 @@ export default defineComponent({
                 : '',
             ]}
           >
-            <div class="left">{this.HH_MM?.split(':')[0]}</div>
-            <div class="right">{this.HH_MM?.split(':')[1]}</div>
+            <div class="left">{hmSplit[0]}</div>
+            <div class="right">{hmSplit[1]}</div>
           </div>
           <div class="app-lock-screen__unlock__content-avatar">
             <AppAvatar vertical align="center" avatarSize={52} />
@@ -129,24 +132,16 @@ export default defineComponent({
                   maxlength={12}
                   onKeydown={(e: KeyboardEvent) => {
                     if (e.code === 'Enter') {
-                      this.unlockScreen()
+                      unlockScreen()
                     }
                   }}
                 />
               </NFormItem>
               <NSpace justify="space-between">
-                <NButton
-                  type="primary"
-                  text
-                  onClick={this.backToSigning.bind(this)}
-                >
+                <NButton type="primary" text onClick={backToSigning.bind(this)}>
                   返回登陆
                 </NButton>
-                <NButton
-                  type="primary"
-                  text
-                  onClick={this.unlockScreen.bind(this)}
-                >
+                <NButton type="primary" text onClick={unlockScreen.bind(this)}>
                   进入系统
                 </NButton>
               </NSpace>
@@ -154,10 +149,10 @@ export default defineComponent({
           </div>
           <div class="app-lock-screen__unlock__content-date">
             <div class="current-date">
-              {this.HH_MM}&nbsp;<span>{this.AM_PM}</span>
+              {HH_MM}&nbsp;<span>{AM_PM}</span>
             </div>
             <div class="current-year">
-              {this.YY_MM_DD}&nbsp;<span>{this.DDD}</span>
+              {YY_MM_DD}&nbsp;<span>{DDD}</span>
             </div>
           </div>
         </div>

@@ -13,17 +13,61 @@
   - 缓存插件 key 应该按照 `piniaXXXStore` 格式命名（XXX 表示该包名称）
 
 ```ts
-export const useDemoStore = defineStore('demo', () => {}, {
-  persist: {
-    key: 'piniaDemoStore',
-    paths: ['demoState'],
-    storage: sessionStorage | localStorage,
+export const piniaDemoStore = defineStore(
+  'demo',
+  () => {
+    const demoRef = ref('hello')
+
+    const updateDemoRef = (str: string) => (demoRef.value = str)
+
+    return {
+      demoRef,
+      updateDemoRef,
+    }
   },
-})
+  {
+    persist: {
+      key: 'piniaDemoStore',
+      paths: ['demoRef'],
+      storage: sessionStorage | localStorage,
+    },
+  },
+)
 ```
 
-- 最后在 index.ts 中暴露使用
+- 注册对应的 getters actions
 
 ```ts
-export { useDemo } from './modules/demo/index'
+// piniaDemoStore
+import piniaDemoStore from '../index'
+
+export const useDemoGetters = () => {
+  const variable = piniaDemoStore()
+
+  const getDemoRef = computed(() => variable.demoRef)
+
+  return {
+    getDemoRef,
+  }
+}
+
+export const useMenuActions = () => {
+  const { updateDemoRef } = piniaDemoStore()
+
+  return {
+    updateDemoRef,
+  }
+}
+```
+
+- 最后在 index.ts 中暴露
+
+```ts
+export { useDemoGetters, useMenuActions } from './modules/demo/index'
+```
+
+- 使用
+
+```ts
+import { useDemoGetters, useMenuActions } from '@/store'
 ```

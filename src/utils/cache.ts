@@ -13,6 +13,18 @@ import type { StorageLike, RemoveStorageKey } from '@/types/modules/utils'
 
 /**
  *
+ * @param key cache key
+ * @param storageType session or local
+ *
+ * 查找当前缓存中是否含有某个 key
+ * 默认查找 sessionStorage
+ */
+function hasStorage(key: string, storageType: StorageLike = 'sessionStorage') {
+  return getStorage(key, storageType) !== null
+}
+
+/**
+ *
  * @param key 需要设置的key
  * @param value 需要缓存的值
  */
@@ -52,8 +64,11 @@ function getStorage<T = unknown>(
 
 /**
  *
- * @param key 需要获取目标缓存的key
- * @returns 获取缓存值
+ * @param key cache
+ * @param storageType session or local
+ * @param defaultValue default value
+ *
+ * 获取缓存值
  */
 function getStorage<T = unknown>(
   key: string,
@@ -121,4 +136,4 @@ function removeStorage(
   }
 }
 
-export { setStorage, getStorage, removeStorage }
+export { setStorage, getStorage, removeStorage, hasStorage }

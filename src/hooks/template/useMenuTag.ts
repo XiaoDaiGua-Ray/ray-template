@@ -11,7 +11,6 @@
 
 import { useMenuGetters, useMenuActions } from '@/store'
 import { ROOT_ROUTE } from '@/app-config/appConfig'
-import { redirectRouterToDashboard } from '@/router/helper/routerCopilot'
 
 import type { MenuTagOptions, Key } from '@/types/modules/app'
 
@@ -93,8 +92,13 @@ export function useMenuTag() {
    * 关闭所有标签并且导航至 root path
    */
   const closeAll = () => {
+    const option = getMenuTagOptions.value.find((curr) => curr.key === path)
+
+    if (option) {
+      changeMenuModelValue(path, option)
+    }
+
     emptyMenuTagOptions()
-    redirectRouterToDashboard(true)
   }
 
   /**

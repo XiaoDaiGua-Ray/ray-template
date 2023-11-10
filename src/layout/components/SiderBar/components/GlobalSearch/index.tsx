@@ -9,6 +9,15 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
+/**
+ *
+ * app search 搜索功能
+ * 递归模糊查找所有在 getMenuOptions 中匹配的项
+ * 只有在满足 validMenuItemShow 的时候，才会出现在搜索结果中
+ *
+ * 该功能不会在小尺寸屏幕中启用（isTabletOrSmaller = true）
+ */
+
 import './index.scss'
 
 import { NInput, NModal, NResult, NScrollbar, NSpace } from 'naive-ui'
@@ -98,7 +107,7 @@ export default defineComponent({
     }
 
     /** 根据输入值模糊检索菜单 */
-    const handleSearchMenuOptions = (value: string) => {
+    const fuzzySearchMenuOptions = (value: string) => {
       const arr: AppMenuOption[] = []
 
       const filterArr = (options: AppMenuOption[]) => {
@@ -108,11 +117,12 @@ export default defineComponent({
           }
 
           /** 处理菜单名与输入值, 不区分大小写 */
-          const _breadcrumbLabel = curr.breadcrumbLabel?.toLocaleLowerCase()
-          const _value = String(value).toLocaleLowerCase()
+          const $breadcrumbLabel = curr.breadcrumbLabel?.toLocaleLowerCase()
+          const $value = String(value).toLocaleLowerCase()
 
+          // 是否模糊匹配字符、满足展示条件
           if (
-            _breadcrumbLabel?.includes(_value) &&
+            $breadcrumbLabel?.includes($value) &&
             validMenuItemShow(curr) &&
             !curr.children?.length
           ) {
@@ -151,8 +161,9 @@ export default defineComponent({
 
     /** 自动聚焦检索项 */
     const autoFocusingSearchItem = () => {
-      const currentOption = state.searchOptions[searchElementIndex]
-      const preOption = state.searchOptions[preSearchElementIndex]
+      const currentOption = state.searchOptions[searchElementIndex] // 获取当前搜索项
+      const preOption = state.searchOptions[preSearchElementIndex] // 获取上一搜索项
+      const activeClass = 'content-item--active' // 激活样式 class name
 
       if (currentOption) {
         nextTick().then(() => {
@@ -166,13 +177,13 @@ export default defineComponent({
           if (preSearchElementOptions?.length) {
             const [el] = preSearchElementOptions
 
-            removeClass(el, 'content-item--active')
+            removeClass(el, activeClass)
           }
 
           if (searchElementOptions?.length) {
             const [el] = searchElementOptions
 
-            addClass(el, 'content-item--active')
+            addClass(el, activeClass)
           }
         })
       }
@@ -191,6 +202,19 @@ export default defineComponent({
       }
     }
 
+    /** 更新索引 */
+    const updateIndex = (type: 'up' | 'down') => {
+      if (type === 'up') {
+        searchElementIndex =
+          searchElementIndex - 1 < 0 ? 0 : searchElementIndex - 1
+      } else if (type === 'down') {
+        searchElementIndex =
+          searchElementIndex + 1 >= state.searchOptions.length
+            ? state.searchOptions.length - 1
+            : searchElementIndex + 1
+      }
+    }
+
     /** 注册按键: 上、下、回车 */
     const registerChangeSearchElementIndex = (e: KeyboardEvent) => {
       const keyCode = e.key
@@ -200,20 +224,8 @@ export default defineComponent({
         e.stopPropagation()
       }
 
+      // 当初始化索引小于等于 0 时，缓存重置缓存索引
       preSearchElementIndex = searchElementIndex <= 0 ? 0 : searchElementIndex
-
-      /** 更新索引 */
-      const updateIndex = (type: 'up' | 'down') => {
-        if (type === 'up') {
-          searchElementIndex =
-            searchElementIndex - 1 < 0 ? 0 : searchElementIndex - 1
-        } else if (type === 'down') {
-          searchElementIndex =
-            searchElementIndex + 1 >= state.searchOptions.length
-              ? state.searchOptions.length - 1
-              : searchElementIndex + 1
-        }
-      }
 
       switch (keyCode) {
         case 'ArrowUp':
@@ -257,6 +269,7 @@ export default defineComponent({
     )
 
     watchEffect(() => {
+      // 当处于小尺寸状态时，自动关闭搜索框
       if (isTabletOrSmaller.value) {
         modelShow.value = false
       }
@@ -279,7 +292,7 @@ export default defineComponent({
       ...toRefs(state),
       modelShow,
       helperTipOptions,
-      handleSearchMenuOptions: debounce(handleSearchMenuOptions, 300),
+      fuzzySearchMenuOptions: debounce(fuzzySearchMenuOptions, 300),
       handleSearchItemClick,
       RenderPreIcon,
       isTabletOrSmaller,
@@ -306,7 +319,7 @@ export default defineComponent({
                   size="large"
                   v-model:value={this.searchValue}
                   clearable
-                  onInput={this.handleSearchMenuOptions.bind(this)}
+                  onInput={this.fuzzySearchMenuOptions.bind(this)}
                 >
                   {{
                     prefix: () => <RIcon name="search" size="24" />,

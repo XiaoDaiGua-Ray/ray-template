@@ -1,12 +1,12 @@
 import { useI18n } from '@/hooks/web/index'
-import {
-  useSigningActions,
-  useSigningGetters,
-  useSettingActions,
-} from '@/store'
+import { useSigningActions, useSettingActions } from '@/store'
 
 import type { IconOptionsFC, IconOptions } from './type'
 
+/**
+ *
+ * 创建头像点击下拉菜单
+ */
 export const createAvatarOptions = () => [
   {
     key: 'person',
@@ -26,7 +26,16 @@ export const createAvatarOptions = () => [
   },
 ]
 
+/**
+ *
+ * 头像 Dropdown 下拉点击事件 map
+ */
 const avatarDropdownActionMap = {
+  /**
+   *
+   * 退出登陆
+   * 清除所有 session 缓存并且重定向至登录页
+   */
   logout: () => {
     const { logout } = useSigningActions()
 
@@ -40,6 +49,10 @@ const avatarDropdownActionMap = {
       },
     })
   },
+  /**
+   *
+   * 锁定屏幕
+   */
   lockScreen: () => {
     const { changeSwitcher } = useSettingActions()
 
@@ -53,6 +66,15 @@ export const avatarDropdownClick = (key: string | number) => {
   action ? action() : window.$message.info('这个人很懒, 没做这个功能~')
 }
 
+/**
+ *
+ * @param opts 当前操作栏依赖的 ref 集合
+ *
+ * 创建顶部操作栏左侧操作按钮
+ * isTabletOrSmaller:
+ *   - true: 菜单按钮
+ *   - false: 刷新按钮
+ */
 export const createLeftIconOptions = (opts: IconOptionsFC) => {
   const { isTabletOrSmaller, globalMainLayoutLoad } = opts
   const { t } = useI18n()
@@ -79,6 +101,14 @@ export const createLeftIconOptions = (opts: IconOptionsFC) => {
     : notTableOrSmallerOptions
 }
 
+/**
+ *
+ * @param opts 当前操作栏依赖的 ref 集合
+ *
+ * 创建顶部操作栏右侧操作按钮
+ * isTabletOrSmaller:
+ *   - false: 不展示搜索按钮
+ */
 export const createRightIconOptions = (opts: IconOptionsFC) => {
   const { isFullscreen, isTabletOrSmaller } = opts
   const { t } = useI18n()

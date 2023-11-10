@@ -11,7 +11,7 @@
 
 import MenuTag from '@/layout/components/MenuTag/index'
 
-const FeatureWrapper = defineComponent({
+export default defineComponent({
   name: 'LayoutFeatureWrapper',
   setup() {
     return {}
@@ -20,5 +20,3 @@ const FeatureWrapper = defineComponent({
     return <MenuTag />
   },
 })
-
-export default FeatureWrapper

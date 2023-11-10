@@ -1,5 +1,22 @@
 # CHANGE LOG
 
+## 4.3.1
+
+根据反馈，尽可能的补充了一些代码注释。
+
+### Feats
+
+- 标签页右键菜单新增关闭当前页功能，优化了文案
+- `utils/basic` 包中的部分方法改为 effect 执行逻辑，避免使用 ref 注册的 dom 不能正确的被获取的问题
+- 新增 `scopeDispose`, `watchEffectWithTarget` 方法
+- `utils/cache` 新增 `hasStorage` 方法
+- 现在标签页会缓存，不再随着刷新后丢失
+- 新增 maximize 方法，并且基于该方法实现 LayoutContent 全屏效果
+
+### Fixes
+
+- 修复标签页右键菜单闪烁问题
+
 ## 4.3.0
 
 提供了专用于一些模板的 `hooks`，可以通过这些方法调用模板的特定功能。并且该功能后续是模板维护的重点。

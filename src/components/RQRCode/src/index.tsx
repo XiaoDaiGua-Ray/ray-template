@@ -19,7 +19,11 @@ import { AwesomeQR } from 'awesome-qr'
 import { isValueType, downloadAnyFile } from '@/utils/basic'
 import { call } from '@/utils/vue/index'
 
-import type { QRCodeRenderResponse, GIFBuffer } from './type'
+import type {
+  QRCodeRenderResponse,
+  GIFBuffer,
+  DownloadFilenameType,
+} from './type'
 import type { WatchStopHandle } from 'vue'
 
 const readGIFAsArrayBuffer = (url: string): Promise<GIFBuffer> => {
@@ -114,7 +118,7 @@ export default defineComponent({
       }
     }
 
-    const downloadQRCode = (fileName?: string) => {
+    const downloadQRCode = (fileName?: DownloadFilenameType) => {
       if (qrcodeURL.value && isValueType<string>(qrcodeURL.value, 'String')) {
         downloadAnyFile(
           qrcodeURL.value,

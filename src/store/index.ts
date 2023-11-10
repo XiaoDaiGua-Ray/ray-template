@@ -18,7 +18,7 @@
  */
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
-// 导出仓库实例
+// 导出仓库实例，不建议直接使用 store
 export { piniaSettingStore } from './modules/setting/index' // import { piniaSettingStore } from '@/store' 即可使用
 export { piniaMenuStore } from './modules/menu/index'
 export { piniaSigningStore } from './modules/signing/index'

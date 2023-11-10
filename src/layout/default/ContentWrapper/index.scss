@@ -5,3 +5,48 @@
     display: none;
   }
 }
+
+.r-layout-full__viewer-content--maximize .layout-content__maximize-out {
+  position: fixed;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 99;
+  right: -40px;
+  top: -40px;
+  @include flexCenter;
+  transition: color 0.3s var(--r-bezier), background-color 0.3s var(--r-bezier);
+
+  & .ray-icon {
+    transform: translate(-14px, 14px);
+  }
+}
+
+.r-layout-full__viewer-content--maximize--dark {
+  @include useAppTheme('dark') {
+    & .layout-content__maximize-out {
+      color: #2c2a28;
+      background: #757473;
+
+      &:hover {
+        background-color: #d5d3d1;
+        color: #44403c;
+      }
+    }
+  }
+}
+
+.r-layout-full__viewer-content--maximize--light {
+  @include useAppTheme('light') {
+    & .layout-content__maximize-out {
+      color: #eae9e8;
+      background: #a19f9d;
+
+      &:hover {
+        background-color: #44403c;
+        color: #d5d3d1;
+      }
+    }
+  }
+}

@@ -12,7 +12,7 @@
 import { NSpace } from 'naive-ui'
 import SiderBar from '@/layout/components/SiderBar/index'
 
-const HeaderWrapper = defineComponent({
+export default defineComponent({
   name: 'LayoutHeaderWrapper',
   setup() {
     return {}
@@ -25,5 +25,3 @@ const HeaderWrapper = defineComponent({
     )
   },
 })
-
-export default HeaderWrapper

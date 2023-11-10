@@ -11,7 +11,7 @@
 
 import './index.scss'
 
-const FooterWrapper = defineComponent({
+export default defineComponent({
   name: 'LayoutFooterWrapper',
   setup() {
     const {
@@ -30,5 +30,3 @@ const FooterWrapper = defineComponent({
     )
   },
 })
-
-export default FooterWrapper

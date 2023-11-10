@@ -14,11 +14,12 @@ import RIcon from '@/components/RIcon'
 
 import { useSettingGetters, useSettingActions } from '@/store'
 
-const ThemeSwitch = defineComponent({
+export default defineComponent({
   name: 'ThemeSwitch',
   setup() {
     const { changeSwitcher } = useSettingActions()
     const { getAppTheme } = useSettingGetters()
+    const modelAppThemeRef = ref(getAppTheme.value)
 
     const handleRailStyle = ({ checked }: { checked: boolean }) => {
       return checked
@@ -34,6 +35,7 @@ const ThemeSwitch = defineComponent({
       changeSwitcher,
       getAppTheme,
       handleRailStyle,
+      modelAppThemeRef,
     }
   },
   render() {
@@ -45,7 +47,7 @@ const ThemeSwitch = defineComponent({
           {{
             trigger: () => (
               <NSwitch
-                v-model:value={this.getAppTheme}
+                v-model:value={this.modelAppThemeRef}
                 railStyle={this.handleRailStyle.bind(this)}
                 onUpdateValue={(bool: boolean) =>
                   this.changeSwitcher(bool, 'appTheme')
@@ -83,5 +85,3 @@ const ThemeSwitch = defineComponent({
     )
   },
 })
-
-export default ThemeSwitch

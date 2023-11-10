@@ -14,7 +14,7 @@ import './index.scss'
 import { NEllipsis, NPopover } from 'naive-ui'
 import RIcon from '@/components/RIcon/index'
 
-const SiderBarLogo = defineComponent({
+export default defineComponent({
   name: 'SiderBarLogo',
   props: {
     collapsed: {
@@ -29,6 +29,13 @@ const SiderBarLogo = defineComponent({
       layout: { sideBarLogo },
     } = __APP_CFG__
 
+    /**
+     *
+     * 点击 logo 跳转页面
+     * jumpType:
+     *   - station: 模板内跳转
+     *   - outsideStation: 新开页面跳转
+     */
     const handleSideBarLogoClick = () => {
       if (sideBarLogo && sideBarLogo.url) {
         sideBarLogo.jumpType === 'station'
@@ -80,5 +87,3 @@ const SiderBarLogo = defineComponent({
     ) : null
   },
 })
-
-export default SiderBarLogo
