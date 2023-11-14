@@ -1,5 +1,18 @@
 # CHANGE LOG
 
+## 4.3.2
+
+### Feats
+
+- `useMenuTag` 所有关闭方法，都支持了多种参数类型传递方式。并且 `closeRight`, `closeLeft` 方法能够正确的关闭标签页
+- `useDayjs` 新增一些常用方法
+- 新增 `appExpandRoutes` 变量，存放展开、提升后的路由
+- `scopeDispose` 重命名为 `effectDispose`
+
+### Fixes
+
+- 修复 LayoutContent 全屏时候在手机浏览器打开高度显示不正确问题
+
 ## 4.3.1
 
 根据反馈，尽可能的补充了一些代码注释。
@@ -8,7 +21,7 @@
 
 - 标签页右键菜单新增关闭当前页功能，优化了文案
 - `utils/basic` 包中的部分方法改为 effect 执行逻辑，避免使用 ref 注册的 dom 不能正确的被获取的问题
-- 新增 `scopeDispose`, `watchEffectWithTarget` 方法
+- 新增 `effectDispose`, `watchEffectWithTarget` 方法
 - `utils/cache` 新增 `hasStorage` 方法
 - 现在标签页会缓存，不再随着刷新后丢失
 - 新增 maximize 方法，并且基于该方法实现 LayoutContent 全屏效果

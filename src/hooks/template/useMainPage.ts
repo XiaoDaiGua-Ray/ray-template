@@ -13,6 +13,7 @@ import { setVariable } from '@/global-variable/index'
 import { LAYOUT_CONTENT_REF } from '@/app-config/routerConfig'
 import { addStyle, removeStyle } from '@/utils/element'
 import { unrefElement } from '@/utils/vue/index'
+import { useWindowSize } from '@vueuse/core'
 
 import type { Ref } from 'vue'
 
@@ -39,13 +40,15 @@ export function useMainPage() {
     const contentEl = unrefElement(LAYOUT_CONTENT_REF as Ref<HTMLElement>)
 
     if (contentEl) {
-      const { left, top } = contentEl.getBoundingClientRect()
+      const { left, top } = contentEl.getBoundingClientRect() // 使用 left, top 计算 translate 偏移
+      const { height } = useWindowSize() // 获取实际高度避免 100vh 会导致手机端浏览器获取不准确问题
 
       full
         ? addStyle(contentEl, {
             transform: `translate(-${left}px, -${top}px)`,
+            height: `${height.value}px`,
           })
-        : removeStyle(contentEl, ['transform'])
+        : removeStyle(contentEl, ['transform', 'height'])
     }
 
     setVariable('layoutContentMaximize', full)

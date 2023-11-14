@@ -1,5 +1,5 @@
 export { call } from './call'
 export { unrefElement } from './unrefElement'
 export { renderNode } from './renderNode'
-export { scopeDispose } from './scopeDispose'
+export { effectDispose } from './effectDispose'
 export { watchEffectWithTarget } from './watchEffectWithTarget'

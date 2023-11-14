@@ -22,6 +22,10 @@
 
 import { combineRawRouteModules } from '@/router/helper/setupHelper'
 import { orderRoutes } from '@/router/helper/setupHelper'
+import { expandRoutes } from '@/router/helper/expandRoutes'
 
 /** 获取所有被合并与排序的路由 */
 export const getAppRawRoutes = () => orderRoutes(combineRawRouteModules())
+
+/** 获取所有平铺展开的路由 */
+export const appExpandRoutes = expandRoutes(getAppRawRoutes())

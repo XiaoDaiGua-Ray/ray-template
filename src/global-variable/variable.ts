@@ -30,10 +30,10 @@
 import type { AnyFC } from '@/types/modules/utils'
 
 const variableState = reactive({
-  globalSpinning: false,
-  globalDrawerValue: false,
-  globalMainLayoutLoad: true,
-  layoutContentMaximize: false,
+  globalSpinning: false, // 全局加载控制器
+  globalDrawerValue: false, // 全局抽屉控制器（小尺寸设备可用）
+  globalMainLayoutLoad: true, // LayoutContent 区域加载控制器
+  layoutContentMaximize: false, // LayoutContent 区域全屏控制器
 })
 
 export type VariableState = typeof variableState

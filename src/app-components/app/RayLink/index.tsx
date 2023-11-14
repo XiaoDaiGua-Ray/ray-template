@@ -15,13 +15,13 @@ const RayLink = defineComponent({
         key: 'yunhome',
         src: 'https://yunkuangao.me/',
         tooltip: '云之家',
-        icon: 'https://yunkuangao.me/wp-content/uploads/2022/05/cropped-cropped-QQ%E5%9B%BE%E7%89%8720220511113928.jpg',
+        icon: 'https://usc1.contabostorage.com/c2e495d7890844d392e8ec0c6e5d77eb:image/avatar.jpeg',
       },
       {
         key: 'yun-cloud-images',
         src: 'https://yunkuangao.com/',
         tooltip: '云图床',
-        icon: 'https://yunkuangao.me/wp-content/uploads/2022/05/cropped-cropped-QQ%E5%9B%BE%E7%89%8720220511113928.jpg',
+        icon: 'https://usc1.contabostorage.com/c2e495d7890844d392e8ec0c6e5d77eb:image/avatar.jpeg',
       },
       {
         key: 'ray-js-note',

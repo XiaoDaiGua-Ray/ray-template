@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { scopeDispose } from './scopeDispose'
+import { effectDispose } from './effectDispose'
 
 import type { WatchOptionsBase } from 'vue'
 import type { AnyFC } from '@/types/modules/utils'
@@ -28,5 +28,5 @@ export function watchEffectWithTarget(
 ) {
   const stop = watchEffect(fc, watchOptions)
 
-  scopeDispose(stop)
+  effectDispose(stop)
 }

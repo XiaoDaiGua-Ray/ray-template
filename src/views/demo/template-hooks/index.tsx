@@ -12,12 +12,13 @@
 import { NSpace, NCard, NButton } from 'naive-ui'
 
 import { useAppMenu, useMainPage } from '@/hooks/template/index'
+import { getVariableToRefs } from '@/global-variable/index'
 
 export default defineComponent({
   name: 'TemplateHooks',
   setup() {
     const currentMenuOption = ref('')
-    const maximizeRef = ref(false)
+    const maximizeRef = getVariableToRefs('layoutContentMaximize')
 
     const { navigationTo } = useAppMenu()
     const { reload, maximize } = useMainPage()
@@ -67,9 +68,7 @@ export default defineComponent({
           <NCard title="maximize 内容区域最大化">
             <NButton
               onClick={() => {
-                this.maximizeRef = !this.maximizeRef
-
-                maximize(this.maximizeRef)
+                maximize(!this.maximizeRef)
               }}
             >
               最大化内容区域

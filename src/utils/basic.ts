@@ -133,7 +133,7 @@ export const downloadAnyFile = (
       } else if (data instanceof File || data instanceof Blob) {
         blobData = data
       } else {
-        reject(new Error('Unsupported data type'))
+        reject(new Error('downloadAnyFile: Unsupported data type.'))
 
         return
       }

@@ -28,16 +28,76 @@ export function useMenuTag() {
 
   /**
    *
-   * 如果为非 root path，直接导航至上一 menuTag
+   * @param target 标签页对象、索引、key
+   * @param fc 触发函数
+   *
+   * 该方法用于统一获取目标标签页方法
    */
-  const navigationPreTagOption = () => {
-    const options = getMenuTagOptions.value
-    const length = options.length
-    const preOption = options[length - 1]
+  const normalMenuTagOption = (target: CloseMenuTag, fc: string) => {
+    if (typeof target === 'number') {
+      // 判断是否为 NaN
+      if (isNaN(target)) {
+        console.warn(`${fc}: The ${target} is NaN, expect number.`)
 
-    if (getMenuKey.value !== path) {
-      changeMenuModelValue(preOption.key as string, preOption)
+        return
+      }
+
+      // 判断是否超出当前标签页列表最大长度或者是否为负数
+      if (target > getMenuTagOptions.value.length || target < -1) {
+        console.warn(
+          `${fc}: The incoming index ${target} did not match the corresponding item.`,
+        )
+
+        return
+      }
+
+      return {
+        option: getMenuTagOptions.value[target],
+        index: target,
+      }
+    } else if (typeof target === 'string') {
+      // 查找符合条件的 key
+      const index = getMenuTagOptions.value.findIndex(
+        (curr) => curr.key === target,
+      )
+
+      return index > -1
+        ? {
+            option: getMenuTagOptions.value[index],
+            index,
+          }
+        : console.warn(
+            `${fc}: The incoming key ${target} did not match the corresponding item.`,
+          )
+    } else {
+      const { key } = target
+      const index = getMenuTagOptions.value.findIndex(
+        (curr) => curr.key === key,
+      )
+
+      if (index === -1) {
+        console.warn(
+          `${fc}: The incoming menuTag option ${target.key} did not match the corresponding item.`,
+        )
+
+        return
+      }
+
+      return {
+        option: target,
+        index,
+      }
     }
+  }
+
+  /**
+   *
+   * @remark 获取当前激活标签页索引位置
+   */
+  const getCurrentTagIndex = () => {
+    return getMenuTagOptions.value.findIndex(
+      (curr) => curr.key === getMenuKey.value,
+    )
   }
 
   /**
@@ -46,44 +106,72 @@ export function useMenuTag() {
    *
    * 传递参数类型情况:
    * - number: 关闭当前项索引
-   * - string: 关闭当前项 key
+   * - string: 关闭当前项 key，其实 key 也是一个具体的页面 url 地址
+   * - AppMenuOption: 关闭当前项
+   *
+   * @remark 校验指定标签右侧是否有可关闭的标签
+   */
+  const checkCloseRight = (target: CloseMenuTag) => {
+    const normal = normalMenuTagOption(target, 'checkCloseRight')
+
+    if (normal) {
+      const { index } = normal
+      const length = getMenuTagOptions.value.length - 1
+
+      return !(index >= length)
+    }
+
+    return false
+  }
+
+  /**
+   *
+   * @param target 当前关闭项
+   *
+   * 传递参数类型情况:
+   * - number: 关闭当前项索引
+   * - string: 关闭当前项 key，其实 key 也是一个具体的页面 url 地址
+   * - AppMenuOption: 关闭当前项
+   *
+   * @remark 校验指定标签左侧是否有可关闭的标签
+   */
+  const checkCloseLeft = (target: CloseMenuTag) => {
+    const normal = normalMenuTagOption(target, 'checkCloseRight')
+
+    if (normal) {
+      const { index } = normal
+      const length = getMenuTagOptions.value.length - 1
+
+      if (index === 0) {
+        return false
+      }
+
+      if (index > 0 && length > 0) {
+        return true
+      }
+
+      return false
+    }
+
+    return false
+  }
+
+  /**
+   *
+   * @param target 当前关闭项
+   *
+   * 传递参数类型情况:
+   * - number: 关闭当前项索引
+   * - string: 关闭当前项 key，其实 key 也是一个具体的页面 url 地址
    * - AppMenuOption: 关闭当前项
    */
   const close = (target: CloseMenuTag) => {
-    if (typeof target === 'number') {
-      if (isNaN(target)) {
-        console.warn(`close: The ${target} is NaN, expect number.`)
+    const normal = normalMenuTagOption(target, 'close')
 
-        return
-      }
+    if (normal) {
+      const { option } = normal
 
-      if (target > getMenuTagOptions.value.length) {
-        console.warn(
-          `close: The ${target} is greater than menuTagOptions length.`,
-        )
-
-        return
-      }
-
-      spliceMenTagOptions(target)
-      navigationPreTagOption()
-    } else if (typeof target === 'string') {
-      const findOptionIndex = getMenuTagOptions.value.findIndex(
-        (curr) => curr.key === target,
-      )
-
-      if (findOptionIndex !== -1) {
-        spliceMenTagOptions(findOptionIndex)
-        navigationPreTagOption()
-      } else {
-        console.warn(
-          `close: The ${target} is not found in current menuTagOptions.`,
-        )
-
-        return
-      }
-    } else {
-      changeMenuModelValue(target.key as string, target)
+      changeMenuModelValue(option.key, option)
     }
   }
 
@@ -103,59 +191,86 @@ export function useMenuTag() {
 
   /**
    *
-   * @param currentIndex 开始关闭索引
+   * @param target 目标标签页
    *
    * 关闭以当前项为索引的右侧标签
-   * 如果当前选择标签与 menuKey 不匹配，则会关闭当前标签右侧所有变迁并且跳转至该页面
+   * 如果当前选择标签与 menuKey 不匹配并且包含了当前激活标签页，则会关闭当前标签右侧所有变迁并且跳转至该页面
+   *
+   * 传递参数类型情况:
+   * - number: 关闭当前项索引
+   * - string: 关闭当前项 key，其实 key 也是一个具体的页面 url 地址
+   * - AppMenuOption: 关闭当前项
    */
-  const closeRight = (currentIndex: number) => {
-    const spliceLength = getMenuTagOptions.value.length - currentIndex
-    const routeOption = getMenuTagOptions.value[currentIndex]
+  const closeRight = (target: CloseMenuTag) => {
+    const normal = normalMenuTagOption(target, 'closeRight')
 
-    if (spliceLength > -1 && routeOption) {
-      spliceMenTagOptions(currentIndex + 1, spliceLength)
+    if (normal) {
+      const { option, index } = normal
+      const spliceLength = getMenuTagOptions.value.length - index // 待删除长度
+      const currentIndex = getCurrentTagIndex()
 
-      if (getMenuKey.value !== routeOption.key) {
-        changeMenuModelValue(routeOption.key as string, routeOption)
+      spliceMenTagOptions(index + 1, spliceLength)
+
+      if (index <= currentIndex) {
+        if (getMenuKey.value !== option.key) {
+          changeMenuModelValue(option.key as string, option)
+        }
       }
-    } else {
-      console.warn(
-        `closeRight: The ${currentIndex} is not found in current menuTagOptions.`,
-      )
     }
   }
 
   /**
    *
-   * @param currentIndex 当前选择项的索引
+   * @param target 目标标签页
    *
    * 关闭以当前项左侧所有标签
-   * 如果当前选择标签与 menuKey 不匹配，则会关闭当前标签左侧所有变迁并且跳转至该页面
+   * 如果当前选择标签与 menuKey 不匹配并且包含了当前激活标签页，则会关闭当前标签左侧所有变迁并且跳转至该页面
+   *
+   * 传递参数类型情况:
+   * - number: 关闭当前项索引
+   * - string: 关闭当前项 key，其实 key 也是一个具体的页面 url 地址
+   * - AppMenuOption: 关闭当前项
    */
-  const closeLeft = (currentIndex: number) => {
-    spliceMenTagOptions(0, currentIndex)
+  const closeLeft = (target: CloseMenuTag) => {
+    const normal = normalMenuTagOption(target, 'closeLeft')
+
+    if (normal) {
+      const { option, index } = normal
+      const currentIndex = getCurrentTagIndex()
+
+      spliceMenTagOptions(0, index)
+
+      if (currentIndex <= index) {
+        if (getMenuKey.value !== option.key) {
+          changeMenuModelValue(option.key as string, option)
+        }
+      }
+    }
   }
 
   /**
    *
-   * @param currentIndex 当前项索引
+   * @param target 目标标签页
    *
    * 会关闭除了当前索引的所有菜单项
+   *
+   * 传递参数类型情况:
+   * - number: 关闭当前项索引
+   * - string: 关闭当前项 key，其实 key 也是一个具体的页面 url 地址
+   * - AppMenuOption: 关闭当前项
    */
-  const closeOther = (currentIndex: number) => {
-    const routeOption = getMenuTagOptions.value[currentIndex]
+  const closeOther = (target: CloseMenuTag) => {
+    const normal = normalMenuTagOption(target, 'closeOther')
 
-    if (routeOption) {
-      if (getMenuKey.value !== routeOption.key) {
+    if (normal) {
+      const { option } = normal
+
+      if (getMenuKey.value !== option.key) {
         emptyMenuTagOptions()
-        changeMenuModelValue(routeOption.key, routeOption)
+        changeMenuModelValue(option.key, option)
       } else {
-        setMenuTagOptions(routeOption, false)
+        setMenuTagOptions(option, false)
       }
-    } else {
-      console.warn(
-        `closeOther: The ${currentIndex} is not found in current menuTagOptions.`,
-      )
     }
   }
 
@@ -165,5 +280,8 @@ export function useMenuTag() {
     closeRight,
     closeLeft,
     closeOther,
+    getCurrentTagIndex,
+    checkCloseRight,
+    checkCloseLeft,
   }
 }
