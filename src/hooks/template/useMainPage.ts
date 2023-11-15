@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { setVariable } from '@/global-variable/index'
+import { setVariable, getVariableToRefs } from '@/global-variable/index'
 import { LAYOUT_CONTENT_REF } from '@/app-config/routerConfig'
 import { addStyle, removeStyle } from '@/utils/element'
 import { unrefElement } from '@/utils/vue/index'
@@ -29,6 +29,15 @@ export function useMainPage() {
 
     setTimeout(() => setVariable('globalMainLayoutLoad', true), wait)
   }
+
+  /**
+   *
+   * 当前 LayoutContent 是处于否全屏状态
+   * - true: 全屏
+   * - false: 非全屏
+   */
+  const isLayoutContentMaximized = () =>
+    computed(() => getVariableToRefs('layoutContentMaximize').value)
 
   /**
    *
@@ -57,5 +66,6 @@ export function useMainPage() {
   return {
     reload,
     maximize,
+    isLayoutContentMaximized,
   }
 }

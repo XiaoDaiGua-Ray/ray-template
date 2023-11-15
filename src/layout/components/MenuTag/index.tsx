@@ -269,7 +269,8 @@ export default defineComponent({
       } else {
         const isRoot = moreOptions.value[currentContextmenuIndex]
 
-        if (isRoot.key === 'closeCurrentPage') {
+        // 避免 isRoot 为 undefined
+        if (isRoot?.key === 'closeCurrentPage') {
           setMoreOptionsDisabled('closeCurrentPage', true)
         } else {
           setMoreOptionsDisabled('closeCurrentPage', false)
@@ -385,9 +386,11 @@ export default defineComponent({
     /** 动态设置关闭按钮是否可操作 */
     watch(
       () => actionState.actionDropdownShow,
-      () => {
+      (ndata) => {
         // 使用节流函数，避免右键菜单闪烁问题
-        throttle(setDisabledAccordionToIndex, 100)?.()
+        if (ndata) {
+          throttle(setDisabledAccordionToIndex, 100)?.()
+        }
       },
     )
 
@@ -470,7 +473,6 @@ export default defineComponent({
                 {this.getMenuTagOptions.map((curr, idx) => (
                   <NTag
                     key={curr.key}
-                    size="large"
                     strong
                     closable={curr.closeable}
                     onClose={this.closeCurrentMenuTag.bind(this, idx)}

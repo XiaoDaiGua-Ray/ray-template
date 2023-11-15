@@ -6,7 +6,7 @@ $menuTagWrapperWidth: 76px;
   border-bottom: solid 1px var(--n-border-color);
   display: flex;
   align-items: center;
-  padding: 4px 0;
+  padding: 6px 0;
 
   & .menu-tag-space {
     width: calc(100% - $space * 2);
