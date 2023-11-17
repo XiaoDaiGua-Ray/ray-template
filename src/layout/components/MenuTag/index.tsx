@@ -42,12 +42,12 @@ import CloseLeft from '@/icons/close_left.svg?component'
 import { useMenuGetters, useMenuActions } from '@/store'
 import { uuid } from '@/utils/basic'
 import { hasClass } from '@/utils/element'
-import { ROOT_ROUTE } from '@/app-config/appConfig'
 import { queryElements } from '@use-utils/element'
 import { renderNode } from '@/utils/vue/index'
 import { useMainPage } from '@/hooks/template/index'
 import { useMenuTag } from '@/hooks/template/index'
 import { throttle } from 'lodash-es'
+import { useRootRoute } from '@/hooks/template/index'
 
 import type { ScrollbarInst } from 'naive-ui'
 import type { MenuTagOptions, AppMenuOption } from '@/types/modules/app'
@@ -59,7 +59,7 @@ export default defineComponent({
 
     const { getMenuKey, getMenuTagOptions } = useMenuGetters()
     const { changeMenuModelValue } = useMenuActions()
-    const { path } = ROOT_ROUTE
+    const { getRootPath } = useRootRoute()
     const { reload, maximize } = useMainPage()
     const {
       close,
@@ -124,7 +124,7 @@ export default defineComponent({
     const uuidScrollBar = uuid(16) // scroll bar uuid
     const actionMap = {
       closeCurrentPage: () => {
-        getMenuKey.value !== path && close(currentContextmenuIndex)
+        getMenuKey.value !== getRootPath.value && close(currentContextmenuIndex)
       },
       reloadCurrentPage: () => {
         reload()
@@ -262,20 +262,12 @@ export default defineComponent({
      */
     const setDisabledAccordionToIndex = () => {
       const length = getMenuTagOptions.value.length - 1
+      const { closeable } =
+        getMenuTagOptions.value[currentContextmenuIndex] ??
+        ({} as MenuTagOptions)
 
       // 是否需要禁用关闭当前标签页
-      if (getMenuKey.value === path) {
-        setMoreOptionsDisabled('closeCurrentPage', true)
-      } else {
-        const isRoot = moreOptions.value[currentContextmenuIndex]
-
-        // 避免 isRoot 为 undefined
-        if (isRoot?.key === 'closeCurrentPage') {
-          setMoreOptionsDisabled('closeCurrentPage', true)
-        } else {
-          setMoreOptionsDisabled('closeCurrentPage', false)
-        }
-      }
+      setMoreOptionsDisabled('closeCurrentPage', !closeable ?? false)
 
       // 是否需要禁用关闭右侧标签页
       if (currentContextmenuIndex === length) {
@@ -310,7 +302,10 @@ export default defineComponent({
 
     /** 仅有 getMenuTagOptions 长度大于 1 并且非 root path 时, 才激活关闭按钮 */
     const menuTagMouseenter = (option: MenuTagOptions) => {
-      if (getMenuTagOptions.value.length > 1 && option.key !== path) {
+      if (
+        getMenuTagOptions.value.length > 1 &&
+        option.key !== getRootPath.value
+      ) {
         option.closeable = true
       }
     }
@@ -360,21 +355,19 @@ export default defineComponent({
     /** 如果有且只有一个标签页时, 禁止全部关闭操作 */
     watch(
       () => getMenuTagOptions.value,
-      (newData, oldData) => {
+      (ndata, odata) => {
         // 当 menuTagOptions 长度为 1时，禁用所有 canDisabledOptions 匹配的项
         moreOptions.value.forEach((curr) => {
           if (canDisabledOptions.includes(curr.key)) {
-            newData.length > 1
-              ? (curr.disabled = false)
-              : (curr.disabled = true)
+            ndata.length > 1 ? (curr.disabled = false) : (curr.disabled = true)
           }
         })
 
         // 更新当前激活标签定位
-        if (oldData?.length) {
-          if (newData.length > oldData?.length) {
+        if (odata?.length) {
+          if (ndata.length > odata?.length) {
             updateScrollBarPosition()
-          } else if (newData.length === oldData?.length) {
+          } else if (ndata.length === odata?.length) {
             positionMenuTag()
           }
         }
@@ -422,7 +415,7 @@ export default defineComponent({
   },
   render() {
     const { iconConfig } = this
-    const { maximize } = this
+    const { maximize, closeCurrentMenuTag } = this
 
     return (
       <NLayoutHeader>
@@ -475,7 +468,7 @@ export default defineComponent({
                     key={curr.key}
                     strong
                     closable={curr.closeable}
-                    onClose={this.closeCurrentMenuTag.bind(this, idx)}
+                    onClose={closeCurrentMenuTag.bind(this, idx)}
                     type={curr.key === this.getMenuKey ? 'primary' : 'default'}
                     bordered={false}
                     {...{

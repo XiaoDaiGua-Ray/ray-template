@@ -10,7 +10,8 @@
  */
 
 import { useMenuGetters, useMenuActions } from '@/store'
-import { ROOT_ROUTE } from '@/app-config/appConfig'
+import { redirectRouterToDashboard } from '@/router/helper/routerCopilot'
+import { useRootRoute } from '@/hooks/template/index'
 
 import type { MenuTagOptions, Key } from '@/types/modules/app'
 
@@ -24,7 +25,7 @@ export function useMenuTag() {
     emptyMenuTagOptions,
     setMenuTagOptions,
   } = useMenuActions()
-  const { path } = ROOT_ROUTE
+  const { getRootPath } = useRootRoute()
 
   /**
    *
@@ -169,9 +170,16 @@ export function useMenuTag() {
     const normal = normalMenuTagOption(target, 'close')
 
     if (normal) {
-      const { option } = normal
+      const { index } = normal
 
-      changeMenuModelValue(option.key, option)
+      spliceMenTagOptions(index)
+
+      if (getMenuKey.value !== getRootPath.value) {
+        const length = getMenuTagOptions.value.length
+        const tag = getMenuTagOptions.value[length - 1]
+
+        changeMenuModelValue(tag.key as string, tag)
+      }
     }
   }
 
@@ -180,13 +188,8 @@ export function useMenuTag() {
    * 关闭所有标签并且导航至 root path
    */
   const closeAll = () => {
-    const option = getMenuTagOptions.value.find((curr) => curr.key === path)
-
-    if (option) {
-      changeMenuModelValue(path, option)
-    }
-
     emptyMenuTagOptions()
+    redirectRouterToDashboard()
   }
 
   /**

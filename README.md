@@ -15,17 +15,18 @@ A middle and backend template based on vite4.x & ts(x) & pinia & vue3.x
 
 ## ✨ Feature
 
-- **Latest Technology Stack**：Developed using front-end cutting-edge technologies such as vue3.x/vite4.x/pinia
-- **TypeScript**：The language for application-level JavaScript
-- **App Theme**：Configurable themes
-- **Globalization**：Built-in complete internationalization solution
-- **Mock Data**：Built-in Mock data scheme
-- **Permissions**：Built-in complete dynamic routing permission generation solution
-- **Components**：Secondary encapsulation of multiple commonly used components
+- **Latest Technology Stack**：Developed using front-end cutting-edge technologies such as vue3.x/vite4.x/pinia.
+- **TypeScript**：The language for application-level JavaScript.
+- **App Theme**：Configurable themes.
+- **Globalization**：Built-in complete internationalization solution.
+- **Mock Data**：Built-in Mock data scheme.
+- **Permissions**：Built-in complete dynamic routing permission generation solution.
+- **Components**：Secondary encapsulation of multiple commonly used components.
 - **Axios Request**：Secondary encapsulation of the axios library, supporting functions such as cancellation, anti-shake, automatic repeat cancellation, etc.
-- **Page Cache**：Arbitrarily deep page cache
-- **SVG**：Built-in svg icon solution
-- **Standalone Data Methods Views**：Decoupled management of data, methods, and views allows for secondary development with confidence
+- **Page Cache**：Arbitrarily deep page cache.
+- **SVG**：Built-in svg icon solution.
+- **Standalone Data Methods Views**：Decoupled management of data, methods, and views allows for secondary development with confidence.
+- **Template Specific Hooks** : Hooks based on the template feature package make it easier to use some of the features of the template.
 
 ## 🪄 Preview
 

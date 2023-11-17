@@ -88,7 +88,6 @@ const config: AppConfigExport = {
     host: '0.0.0.0',
     port: 9527,
     open: false,
-    https: false,
     strictPort: false,
     fs: {
       strict: false,

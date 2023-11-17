@@ -80,6 +80,7 @@ const Login = defineComponent({
               <NDropdown
                 options={LOCAL_OPTIONS}
                 onSelect={(key) => this.updateLocale(key)}
+                trigger="click"
               >
                 <RIcon
                   customClassName="login-icon"

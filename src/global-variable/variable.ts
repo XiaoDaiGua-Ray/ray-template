@@ -27,6 +27,9 @@
  * setVariable('key', 'value')
  */
 
+import { ROOT_ROUTE } from '@/app-config/appConfig'
+import { cloneDeep } from 'lodash-es'
+
 import type { AnyFC } from '@/types/modules/utils'
 
 const variableState = reactive({
@@ -34,6 +37,7 @@ const variableState = reactive({
   globalDrawerValue: false, // 全局抽屉控制器（小尺寸设备可用）
   globalMainLayoutLoad: true, // LayoutContent 区域加载控制器
   layoutContentMaximize: false, // LayoutContent 区域全屏控制器
+  globalRootRoute: cloneDeep(ROOT_ROUTE), // 全局根路由配置，同步至 ROOT_ROUTE
 })
 
 export type VariableState = typeof variableState

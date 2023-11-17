@@ -17,17 +17,20 @@ export const combineDirective = <
 >(
   directiveModules: T,
 ) => {
-  const directives = Object.keys(directiveModules).reduce((pre, curr) => {
-    const fc = directiveModules[curr]?.default
+  const directives = Object.keys(directiveModules).reduce(
+    (pre, curr) => {
+      const fc = directiveModules[curr]?.default
 
-    if (typeof fc === 'function') {
-      pre[curr] = fc
+      if (typeof fc === 'function') {
+        pre[curr] = fc
 
-      return pre
-    } else {
-      throw new TypeError(`directiveModules: ${curr} is not function`)
-    }
-  }, {} as Record<K, CustomDirectiveFC<unknown, unknown>>)
+        return pre
+      } else {
+        throw new TypeError(`directiveModules: ${curr} is not function`)
+      }
+    },
+    {} as Record<K, CustomDirectiveFC<unknown, unknown>>,
+  )
 
   return directives
 }

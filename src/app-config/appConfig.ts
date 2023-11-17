@@ -46,12 +46,15 @@ export const PRE_LOADING_CONFIG: PreloadingConfig = {
 
 /**
  *
- * 配置根页面
- * 该项目所有重定向至首页, 都依赖该配置项
+ * 配置根路由信息
+ * 模板维护一个根路由 ROOT_ROUTE，所有的重定向操作、回到 Layout Root Path 操作都依赖该 path
  *
- * 如果修改了该项目的首页路由配置, 需要更改该配置项, 以免重定向首页操作出现错误
+ * 该变量的值，会传递给 globalRootRoute
+ * 这么做也是为了能够在兼容老版本的模板，并且也是为了能够动态的维护根路由信息
+ *
+ * 有些时候，如果你希望动态的维护 Root Route 信息，可以使用 useRootRoute 方法
  */
-export const ROOT_ROUTE: Readonly<RootRoute> = {
+export const ROOT_ROUTE: RootRoute = {
   name: 'Dashboard',
   path: '/dashboard',
 }
