@@ -9,6 +9,7 @@ const server = createServer(app);
 const httpProxies = ["^/api"];
 const wsProxies = [];
 const cookiesOptions = {};
+const priority = {};
 
 mockWebSocket({ mockData }, server, wsProxies, cookiesOptions);
 
@@ -16,6 +17,7 @@ app.use(corsMiddleware());
 app.use(baseMiddleware({ mockData }, {
   formidableOptions: { multiples: true },
   proxies: httpProxies,
+  priority,
   cookiesOptions,
 }));
 
