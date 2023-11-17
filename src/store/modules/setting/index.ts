@@ -8,7 +8,7 @@ import { useDayjs } from '@/hooks/web/index'
 
 import type { ConditionalPick } from '@/types/modules/helper'
 import type { SettingState } from '@/store/modules/setting/type'
-import type { DayjsLocal } from '@/dayjs/type'
+import type { LocalKey } from '@/hooks/web/index'
 
 export const piniaSettingStore = defineStore(
   'setting',
@@ -46,7 +46,7 @@ export const piniaSettingStore = defineStore(
     /** 修改当前语言 */
     const updateLocale = (key: string) => {
       locale(key)
-      dayjsLocal(key as DayjsLocal)
+      dayjsLocal(key as LocalKey)
 
       settingState.localeLanguage = key
 
@@ -54,7 +54,7 @@ export const piniaSettingStore = defineStore(
     }
 
     /** 切换主题色 */
-    const changePrimaryColor = (value: string) => {
+    const changePrimaryColor = (value: string, alpha = 0.3) => {
       set(
         settingState,
         'settingState.primaryColorOverride.common.primaryColorHover',
@@ -67,7 +67,7 @@ export const piniaSettingStore = defineStore(
       body.style.setProperty('--ray-theme-primary-color', value)
       body.style.setProperty(
         '--ray-theme-primary-fade-color',
-        colorToRgba(value, 0.3),
+        colorToRgba(value, alpha),
       )
     }
 

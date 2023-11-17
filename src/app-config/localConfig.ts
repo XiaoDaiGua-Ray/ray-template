@@ -11,8 +11,12 @@
 
 /** 国际化相关配置 */
 
-import type { DayjsLocal, DayjsLocalMap } from '@/dayjs/type'
-import type { AppLocalesDropdownMixedOption } from '@/locales/type'
+import type {
+  TemplateLocale,
+  LocalOptions,
+  DayjsLocalMap,
+} from '@/types/modules/appConfig'
+import type { ValueOf } from '@/types/modules/helper'
 
 /**
  *
@@ -21,7 +25,7 @@ import type { AppLocalesDropdownMixedOption } from '@/locales/type'
  *
  * 添加新的语言包后, 如果需要其类型提示, 需要在 AppCurrentAppMessages 中添加新的类型
  */
-export const LOCAL_OPTIONS: AppLocalesDropdownMixedOption[] = [
+export const LOCAL_OPTIONS: LocalOptions = [
   {
     key: 'zh-CN',
     label: '中文(简体)',
@@ -38,16 +42,7 @@ export const LOCAL_OPTIONS: AppLocalesDropdownMixedOption[] = [
  *
  * 配置时应该与 LOCAL_OPTIONS 的 key 一致
  */
-export const SYSTEM_DEFAULT_LOCAL = 'zh-CN'
-
-/**
- *
- * dayjs 默认语言格式
- * 默认为英文(en)
- *
- * 系统默认设置为中文(大陆-简体)
- */
-export const DEFAULT_DAYJS_LOCAL: DayjsLocal = 'zh-cn'
+export const SYSTEM_DEFAULT_LOCAL: TemplateLocale<LocalOptions> = 'zh-CN'
 
 /**
  *
@@ -59,4 +54,13 @@ export const DEFAULT_DAYJS_LOCAL: DayjsLocal = 'zh-cn'
 export const DAYJS_LOCAL_MAP: DayjsLocalMap = {
   'zh-CN': 'zh-cn',
   'en-US': 'en',
-}
+} as const
+
+/**
+ *
+ * dayjs 默认语言格式
+ * 默认为英文(en)
+ *
+ * 系统默认设置为中文(大陆-简体)
+ */
+export const DEFAULT_DAYJS_LOCAL: ValueOf<typeof DAYJS_LOCAL_MAP> = 'zh-cn'

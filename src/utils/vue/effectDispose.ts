@@ -19,7 +19,7 @@ import type { AnyFC } from '@/types/modules/utils'
  *
  * @remark 返回 true 表示获取到 effect 作用域并且卸载；false 表示未存在 effect 作用域
  */
-export function effectDispose(fc: AnyFC) {
+export function effectDispose<T extends AnyFC>(fc: T) {
   if (getCurrentScope()) {
     onScopeDispose(fc)
 

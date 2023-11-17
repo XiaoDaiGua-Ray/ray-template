@@ -4,7 +4,9 @@
 
 升级 `vue` 版本至最新 `v3.3.8`。
 
-尽可能的暴露了一些模板专属 `hooks`，便于开发者使用。
+更新了 appConfig 的一些类型，类型定义不再那么的宽泛。
+
+新增 `useAppSetting hook`，区别于其他的模板方法，该包中的方法，可以用于全局任意页面。该方法相当是对于 `useSettingStore` 包中方法的补充。
 
 ### Feats
 
@@ -12,6 +14,8 @@
 - `useDayjs` 新增一些常用方法
 - 新增 `appExpandRoutes` 变量，存放展开、提升后的路由
 - `scopeDispose` 重命名为 `effectDispose`
+- 优化 maximize 方法，并且支持配置层级。默认层级 99
+- changePrimaryColor 方法支持自定义透明度
 
 ### Fixes
 

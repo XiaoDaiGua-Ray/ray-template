@@ -14,4 +14,6 @@ import { useVueRouter } from '../web/useVueRouter'
 import { useDayjs } from '../web/useDayjs'
 import { useDevice } from './useDevice'
 
+export type { FormatOption, DateRange, LocalKey } from './useDayjs'
+
 export { useI18n, useVueRouter, useDayjs, t, useDevice }

@@ -218,10 +218,14 @@ export const addStyle = (
  *
  * @param el Target element dom
  * @param styles 所需卸载样式
+ *
+ * 当你发现不能正常的移除某些样式的时候，应该考虑是否是样式表兼容问题
+ * @example
+ * removeStyle(['zIndex', 'z-index'])
  */
 export const removeStyle = (
   target: BasicTarget<HTMLElement | SVGAElement>,
-  styles: (keyof CSSStyleDeclaration & string)[],
+  styles: ((keyof CSSStyleDeclaration & string) | string)[],
 ) => {
   const targetElement = computed(() => unrefElement(target))
 

@@ -12,8 +12,6 @@
 import dayjs from 'dayjs'
 import { DEFAULT_DAYJS_LOCAL, DAYJS_LOCAL_MAP } from '@/app-config/localConfig'
 
-import type { DayjsLocal } from '@/dayjs/type'
-
 export interface FormatOption {
   format?: string
 }
@@ -22,6 +20,8 @@ export interface DateRange {
   start: dayjs.ConfigType
   end: dayjs.ConfigType
 }
+
+export type LocalKey = typeof DEFAULT_DAYJS_LOCAL
 
 const defaultDayjsFormat = 'YYYY-MM-DD HH:mm:ss'
 
@@ -39,7 +39,7 @@ export const useDayjs = () => {
    *
    * 手动配置 dayjs 语言（国际化）
    */
-  const locale = (key: DayjsLocal) => {
+  const locale = (key: LocalKey) => {
     const locale = DAYJS_LOCAL_MAP[key]
 
     locale ? dayjs.locale(locale) : dayjs.locale(DEFAULT_DAYJS_LOCAL)

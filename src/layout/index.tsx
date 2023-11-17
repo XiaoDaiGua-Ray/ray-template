@@ -21,7 +21,6 @@ import FeatureWrapper from './default/FeatureWrapper'
 import { LAYOUT_CONTENT_REF } from '@/app-config/routerConfig'
 import { layoutHeaderCssVars } from '@/layout/layoutResize'
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
-import { getVariableToRefs } from '@/global-variable/index'
 import { useSettingGetters } from '@/store'
 
 export default defineComponent({
@@ -38,7 +37,6 @@ export default defineComponent({
       layoutMenuTagRef,
       layoutFooterRef,
     ])
-    const layoutContentMaximize = getVariableToRefs('layoutContentMaximize')
 
     return {
       getMenuTagSwitch,
@@ -48,16 +46,10 @@ export default defineComponent({
       layoutMenuTagRef,
       layoutFooterRef,
       getCopyrightSwitch,
-      layoutContentMaximize,
     }
   },
   render() {
-    const {
-      layoutContentMaximize,
-      getMenuTagSwitch,
-      cssVarsRef,
-      getCopyrightSwitch,
-    } = this
+    const { getMenuTagSwitch, cssVarsRef, getCopyrightSwitch } = this
     const { getLockAppScreen } = this
 
     return !getLockAppScreen() ? (
@@ -68,14 +60,7 @@ export default defineComponent({
           {getMenuTagSwitch ? <FeatureWrapper ref="layoutMenuTagRef" /> : null}
           <NLayoutContent
             ref={LAYOUT_CONTENT_REF}
-            class={[
-              'r-layout-full__viewer-content',
-              'r-layout-full__viewer-content--maximize--light',
-              'r-layout-full__viewer-content--maximize--dark',
-              layoutContentMaximize
-                ? 'r-layout-full__viewer-content--maximize'
-                : null,
-            ]}
+            class={['r-layout-full__viewer-content']}
             nativeScrollbar={false}
           >
             <ContentWrapper />

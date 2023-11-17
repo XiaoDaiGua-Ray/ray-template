@@ -11,3 +11,5 @@ export type ConditionalPick<Base, Condition> = Pick<
 >
 
 export type Recordable<T = any> = Record<string, T>
+
+export type ValueOf<T extends object> = T[keyof T]

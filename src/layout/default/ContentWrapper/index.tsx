@@ -73,6 +73,13 @@ export default defineComponent({
         description="loading..."
         size="large"
         themeOverrides={this.themeOverridesSpin}
+        class={[
+          layoutContentMaximize
+            ? 'r-layout-full__viewer-content--maximize'
+            : null,
+          'r-layout-full__viewer-content--maximize--light',
+          'r-layout-full__viewer-content--maximize--dark',
+        ]}
       >
         {layoutContentMaximize ? (
           <div

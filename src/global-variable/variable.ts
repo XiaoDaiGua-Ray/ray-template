@@ -40,10 +40,10 @@ export type VariableState = typeof variableState
 
 export type VariableStateKey = keyof VariableState
 
-export function setVariable<T extends VariableStateKey>(
+export function setVariable<T extends VariableStateKey, FC extends AnyFC>(
   key: T,
   value: VariableState[T],
-  cb?: AnyFC,
+  cb?: FC,
 ) {
   variableState[key] = value
 
