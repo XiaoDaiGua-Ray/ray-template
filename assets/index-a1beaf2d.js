@@ -1,1 +1,0 @@
-const e=Vue.defineComponent({name:"ScrollReveal",render(){return Vue.createVNode("div",{class:"scroll-reveal"},[Vue.createVNode(naive.NCard,{title:"提示"},{default:()=>[Vue.createTextVNode("RayScrollReveal组件有点问题, 暂时移除. 不能正常的实现滚动动画. 很是操蛋!!!")]})])}});export{e as default};
