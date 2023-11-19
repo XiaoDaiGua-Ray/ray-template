@@ -47,9 +47,21 @@ export default defineConfig(async ({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks: (id) => {
-            if (id.includes('node_modules')) {
-              const index = id.includes('pnpm') ? 1 : 0
+            const isUtils = () => id.includes('src/utils/')
+            const isHooks = () =>
+              id.includes('src/hooks/template') || id.includes('src/hooks/web')
+            const isNodeModules = () => id.includes('node_modules')
+            const index = id.includes('pnpm') ? 1 : 0
 
+            if (isUtils()) {
+              return 'utils'
+            }
+
+            if (isHooks()) {
+              return 'hooks'
+            }
+
+            if (isNodeModules()) {
               return id
                 .toString()
                 .split('node_modules/')[1]

@@ -1,7 +1,7 @@
 {
   "name": "ray-template",
   "private": false,
-  "version": "4.3.3",
+  "version": "4.3.4",
   "type": "module",
   "engines": {
     "node": "^18.0.0 || >=20.0.0",
@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build --mode production",
+    "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "test": "vue-tsc --noEmit && vite build --mode test",
     "dev-build": "vue-tsc --noEmit && vite build --mode development",

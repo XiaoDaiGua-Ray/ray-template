@@ -11,7 +11,7 @@
 
 import { useSettingActions } from '@/store'
 
-export function useApp() {
+export function useAppSetting() {
   /**
    *
    * @param theme 当前主题色

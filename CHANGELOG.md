@@ -1,5 +1,28 @@
 # CHANGE LOG
 
+## 4.3.4
+
+更新了 MenuTag 的样式，现在有更加细腻的过渡动画。
+
+针对 `utils` 下的方法，修复 `utils/element` 中的部分方法因为 `ref` 注册 `dom` 的时候不能正确的触发方法的问题。并且修复了部分方法类型的不准确问题；补充了一些示例。
+
+由于 vite 不再支持显式声明 .env=production 配置文件 NODE_ENV=production，所以该版本移除了配置文件的 NODE_ENV 声明。
+
+修复构建提示循环依赖问题。
+
+### Feats
+
+- 更新了 MenuTag 的动画效果
+- 基于 `print-js` 与 `vue hooks` 开发新 `print` 方法，存放于 `utils/basic`
+- 移除 .env.production 文件的 NODE_ENV 显式声明
+- 优化构建 chunk
+
+### Fixes
+
+- 修复 `utils/element` 方法不能正确获取 `ref` 绑定 `dom` 的问题
+- 修复设置界面抛出治毒警告问题
+- 修复构建提示循环依赖问题
+
 ## 4.3.3
 
 紧跟尤大大脚步，更新 `vite` 版本至 `5.0.0` 版本！与此同时，更新了配套所有插件！

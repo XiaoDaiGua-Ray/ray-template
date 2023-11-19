@@ -39,12 +39,8 @@ import { useVueRouter } from '@/hooks/web/index'
 import { throttle } from 'lodash-es'
 import { useKeepAliveActions } from '@/store'
 
-import type { AppRouteMeta, AppRouteRecordRaw } from '@/router/type'
-import type {
-  AppMenuOption,
-  MenuTagOptions,
-  AppMenuKey,
-} from '@/types/modules/app'
+import type { AppRouteRecordRaw } from '@/router/type'
+import type { AppMenuOption, MenuTagOptions } from '@/types/modules/app'
 import type { MenuState } from '@/store/modules/menu/type'
 
 export const piniaMenuStore = defineStore(

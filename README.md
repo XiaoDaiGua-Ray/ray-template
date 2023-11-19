@@ -9,12 +9,13 @@
 
 English | [简体中文](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/README-ZH.md)
 
-A middle and backend template based on vite4.x & ts(x) & pinia & vue3.x
+A `free`, `efficient`, `complete with features` middle and backend template based on the latest technologies such as vite4.x & ts(x) & pinia & vue3.x.
 
 </div>
 
 ## ✨ Feature
 
+- **Power by love**: Contains almost all common template features on the market and all are free to use.
 - **Latest Technology Stack**：Developed using front-end cutting-edge technologies such as vue3.x/vite4.x/pinia.
 - **TypeScript**：The language for application-level JavaScript.
 - **App Theme**：Configurable themes.

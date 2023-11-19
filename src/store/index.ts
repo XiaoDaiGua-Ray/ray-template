@@ -19,21 +19,36 @@
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 // 导出仓库实例，不建议直接使用 store
-export { piniaSettingStore } from './modules/setting/index' // import { piniaSettingStore } from '@/store' 即可使用
-export { piniaMenuStore } from './modules/menu/index'
-export { piniaSigningStore } from './modules/signing/index'
-export { piniaKeepAliveStore } from './modules/keep-alive/index'
+import { piniaSettingStore } from './modules/setting/index' // import { piniaSettingStore } from '@/store' 即可使用
+import { piniaMenuStore } from './modules/menu/index'
+import { piniaSigningStore } from './modules/signing/index'
+import { piniaKeepAliveStore } from './modules/keep-alive/index'
 
 // 导出 getters, actions
-export { useMenuGetters, useMenuActions } from './hooks/useMenuStore'
-export { useSettingGetters, useSettingActions } from './hooks/useSettingStore'
-export { useSigningGetters, useSigningActions } from './hooks/useSigningStore'
-export {
+import { useMenuGetters, useMenuActions } from './hooks/useMenuStore'
+import { useSettingGetters, useSettingActions } from './hooks/useSettingStore'
+import { useSigningGetters, useSigningActions } from './hooks/useSigningStore'
+import {
   useKeepAliveGetters,
   useKeepAliveActions,
 } from './hooks/useKeepAliveStore'
 
 import type { App } from 'vue'
+
+export {
+  piniaSettingStore,
+  piniaMenuStore,
+  piniaSigningStore,
+  piniaKeepAliveStore,
+  useMenuGetters,
+  useMenuActions,
+  useSettingGetters,
+  useSettingActions,
+  useSigningGetters,
+  useSigningActions,
+  useKeepAliveGetters,
+  useKeepAliveActions,
+}
 
 /**
  *

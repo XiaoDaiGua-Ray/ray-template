@@ -1,8 +1,13 @@
+import printJs from 'print-js'
+import { unrefElement } from '@/utils/vue/index'
+import { watchEffectWithTarget } from '@/utils/vue/index'
+
 import type {
   ValidateValueType,
   DownloadAnyFileDataType,
   BasicTypes,
 } from '@/types/modules/utils'
+import type { BasicTarget, TargetValue } from '@/types/modules/vue'
 
 /**
  *
@@ -18,7 +23,10 @@ export const getAppEnvironment = () => {
  *
  * @param data 二进制流数据
  *
- * @returns format binary to base64 of the image
+ * 将 base64 格式文件转换为图片
+ *
+ * @example
+ * arrayBufferToBase64Image('base64') => Image
  */
 export const arrayBufferToBase64Image = (data: ArrayBuffer): string | null => {
   if (!data || data.byteLength) {
@@ -42,7 +50,10 @@ export const arrayBufferToBase64Image = (data: ArrayBuffer): string | null => {
  * @param base64 base64
  * @param fileName file name
  *
- * @remark 下载 base64 文件
+ * 该方法仅能下载 base64 文件，如果有其他的文件类型需要下载，请看 downloadAnyFile 方法
+ *
+ * @example
+ * downloadBase64File('base64', 'file name')
  */
 export const downloadBase64File = (base64: string, fileName: string) => {
   const link = document.createElement('a')
@@ -61,6 +72,10 @@ export const downloadBase64File = (base64: string, fileName: string) => {
  *
  * @param value 目标值
  * @param type 类型
+ *
+ * @example
+ * isValueType<string>('123', 'String') => true
+ * isValueType<object>({}, 'Object') => true
  */
 export const isValueType = <T extends BasicTypes>(
   value: unknown,
@@ -73,9 +88,11 @@ export const isValueType = <T extends BasicTypes>(
 
 /**
  *
- * @param length `uuid` 长度
- * @param radix `uuid` 基数
- * @returns `uuid`
+ * @param length uuid 长度
+ * @param radix uuid 基数
+ *
+ * @example
+ * uuid(8) => 'B8tGcl0FCKJkpO0V'
  */
 export const uuid = (length = 16, radix = 62) => {
   // 定义可用的字符集，即 0-9, A-Z, a-z
@@ -109,7 +126,11 @@ export const uuid = (length = 16, radix = 62) => {
  * @param data base64, Blob, ArrayBuffer type
  * @param fileName file name
  *
- * @remark 支持下载任意类型的文件，包括 base64, Blob, ArrayBuffer
+ * 支持下载任意类型的文件，包括 base64, Blob, ArrayBuffer
+ *
+ * @example
+ * downloadAnyFile('base64', 'file name')
+ * downloadAnyFile('Blob', 'file name')
  */
 export const downloadAnyFile = (
   data: DownloadAnyFileDataType,
@@ -166,4 +187,25 @@ export const downloadAnyFile = (
       reject(error)
     }
   })
+}
+
+export function print<T extends BasicTarget<HTMLElement>>(
+  target: T,
+  options?: printJs.Configuration,
+) {
+  const element = computed(() => unrefElement(target))
+  const { printable, ...args } = options ?? {}
+
+  const $print = <T extends HTMLElement>(element: TargetValue<T>) => {
+    printJs({
+      ...args,
+      printable: element,
+    })
+  }
+
+  const watcher = watch(element, (ndata) => $print(ndata), {
+    immediate: true,
+  })
+
+  watchEffectWithTarget(watcher)
 }

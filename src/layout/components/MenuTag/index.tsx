@@ -31,11 +31,17 @@
 
 import './index.scss'
 
-import { NScrollbar, NTag, NSpace, NLayoutHeader, NDropdown } from 'naive-ui'
+import {
+  NScrollbar,
+  NSpace,
+  NLayoutHeader,
+  NDropdown,
+  NButton,
+  NIcon,
+} from 'naive-ui'
 import RIcon from '@/components/RIcon/index'
 import RMoreDropdown from '@/components/RMoreDropdown/index'
 
-// import Reload from '@/icons/reload.svg?component'
 import CloseRight from '@/icons/close_right.svg?component'
 import CloseLeft from '@/icons/close_left.svg?component'
 
@@ -43,7 +49,6 @@ import { useMenuGetters, useMenuActions } from '@/store'
 import { uuid } from '@/utils/basic'
 import { hasClass } from '@/utils/element'
 import { queryElements } from '@use-utils/element'
-import { renderNode } from '@/utils/vue/index'
 import { useMainPage } from '@/hooks/template/index'
 import { useMenuTag } from '@/hooks/template/index'
 import { throttle } from 'lodash-es'
@@ -180,7 +185,7 @@ export default defineComponent({
     const handleTagClick = (option: AppMenuOption) => {
       actionState.actionDropdownShow = false
 
-      changeMenuModelValue(option.key as string, option)
+      changeMenuModelValue(option.key, option)
     }
 
     /**
@@ -194,9 +199,11 @@ export default defineComponent({
         const scrollContentElement = Array.from(
           scroll.childNodes,
         ) as HTMLElement[]
-        const findElement = scrollContentElement.find((el) =>
-          hasClass(el, 'n-scrollbar-container'),
-        )
+        const findElement = scrollContentElement.find((el) => {
+          const has = hasClass(el, 'n-scrollbar-container')
+
+          return has.value
+        })
 
         return findElement
       }
@@ -411,11 +418,12 @@ export default defineComponent({
         height: 28,
       },
       maximize,
+      getRootPath,
     }
   },
   render() {
-    const { iconConfig } = this
-    const { maximize, closeCurrentMenuTag } = this
+    const { iconConfig, getRootPath, uuidScrollBar } = this
+    const { maximize, closeCurrentMenuTag, scrollX, $t } = this
 
     return (
       <NLayoutHeader>
@@ -453,7 +461,7 @@ export default defineComponent({
               xScrollable
               ref="scrollRef"
               {...{
-                id: this.uuidScrollBar,
+                id: uuidScrollBar,
               }}
             >
               <NSpace
@@ -464,13 +472,12 @@ export default defineComponent({
                 justify="start"
               >
                 {this.getMenuTagOptions.map((curr, idx) => (
-                  <NTag
+                  <NButton
                     key={curr.key}
+                    class={['menu-tag__btn']}
                     strong
-                    closable={curr.closeable}
-                    onClose={closeCurrentMenuTag.bind(this, idx)}
+                    secondary
                     type={curr.key === this.getMenuKey ? 'primary' : 'default'}
-                    bordered={false}
                     {...{
                       onClick: this.handleTagClick.bind(this, curr),
                       onContextmenu: this.handleContextMenu.bind(this, idx),
@@ -479,8 +486,53 @@ export default defineComponent({
                       [this.MENU_TAG_DATA]: curr.path,
                     }}
                   >
-                    {renderNode(curr.breadcrumbLabel)}
-                  </NTag>
+                    {{
+                      default: () => (
+                        <>
+                          <span>
+                            {{
+                              default: () => {
+                                const {
+                                  breadcrumbLabel,
+                                  meta: { i18nKey },
+                                } = curr
+
+                                if (i18nKey) {
+                                  return $t(i18nKey)
+                                } else {
+                                  return breadcrumbLabel
+                                }
+                              },
+                            }}
+                          </span>
+                          {(curr.closeable ||
+                            this.getMenuTagOptions.length === 1) &&
+                          curr.key !== getRootPath ? (
+                            <NIcon
+                              class="menu-tag__btn-icon"
+                              {...{
+                                onMousedown: closeCurrentMenuTag.bind(
+                                  this,
+                                  idx,
+                                ),
+                              }}
+                            >
+                              <RIcon name="close" size="14" />
+                            </NIcon>
+                          ) : (
+                            // 默认使用一个空 NIcon 占位，避免不能正确的触发动画
+                            <NIcon
+                              class={[
+                                curr.key !== getRootPath
+                                  ? 'menu-tag__btn-icon'
+                                  : 'menu-tag__btn-icon--hidden',
+                              ]}
+                            />
+                          )}
+                        </>
+                      ),
+                    }}
+                  </NButton>
                 ))}
               </NSpace>
             </NScrollbar>
@@ -497,7 +549,7 @@ export default defineComponent({
                 width={iconConfig.width}
                 height={iconConfig.height}
                 customClassName="menu-tag__right-arrow"
-                onClick={this.scrollX.bind(this, 'right')}
+                onClick={scrollX.bind(this, 'right')}
               />
               <RIcon
                 name="fullscreen_fold"

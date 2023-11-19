@@ -9,12 +9,13 @@
 
 简体中文 | [English](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/README.md)
 
-一个基于 vite4.x & ts(x) & pinia & vue3.x 的中后台模板
+一个 `免费`、`高效`、`特性完整` 并且基于 vite4.x & ts(x) & pinia & vue3.x 等最新技术的中后台模板。
 
 </div>
 
 ## ✨ 特性
 
+- **靠爱发电**：几乎包含市面常见的模板特性并且全部免费使用
 - **最新技术栈**：使用 vue3.x/vite4.x/pinia 等前端前沿技术开发
 - **TypeScript**：应用程序级 JavaScript 的语言
 - **主题**：可配置的主题

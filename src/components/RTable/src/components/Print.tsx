@@ -14,7 +14,7 @@ import RIcon from '@/components/RIcon/index'
 
 import config from '../config'
 import props from '../props'
-import print from 'print-js'
+import { print } from '@/utils/basic'
 
 import type { TableProvider } from '../type'
 
@@ -39,7 +39,7 @@ export default defineComponent({
           : '表格',
       })
 
-      print(options)
+      print(document.getElementById(uuidTable), options)
     }
 
     return {

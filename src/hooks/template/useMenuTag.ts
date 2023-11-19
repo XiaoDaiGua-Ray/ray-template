@@ -170,15 +170,16 @@ export function useMenuTag() {
     const normal = normalMenuTagOption(target, 'close')
 
     if (normal) {
-      const { index } = normal
+      const { index, option } = normal
 
       spliceMenTagOptions(index)
 
-      if (getMenuKey.value !== getRootPath.value) {
-        const length = getMenuTagOptions.value.length
-        const tag = getMenuTagOptions.value[length - 1]
+      if (option.key === getMenuKey.value) {
+        const tag = getMenuTagOptions.value[index - 1]
 
-        changeMenuModelValue(tag.key as string, tag)
+        if (tag) {
+          changeMenuModelValue(tag.key, tag)
+        }
       }
     }
   }
@@ -216,7 +217,7 @@ export function useMenuTag() {
 
       if (index <= currentIndex) {
         if (getMenuKey.value !== option.key) {
-          changeMenuModelValue(option.key as string, option)
+          changeMenuModelValue(option.key, option)
         }
       }
     }
@@ -245,7 +246,7 @@ export function useMenuTag() {
 
       if (currentIndex <= index) {
         if (getMenuKey.value !== option.key) {
-          changeMenuModelValue(option.key as string, option)
+          changeMenuModelValue(option.key, option)
         }
       }
     }

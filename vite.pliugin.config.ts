@@ -155,6 +155,7 @@ export default function (mode: string): PluginOption[] {
       customDomId: '__svg__icons__dom__',
     }),
     viteCDNPlugin({
+      // modules 顺序 vue, vue-demi 必须保持当前顺序加载，否则会出现加载错误问题
       modules: [
         'vue',
         'vue-demi',
