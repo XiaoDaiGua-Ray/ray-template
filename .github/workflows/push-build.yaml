@@ -2,13 +2,14 @@ on:
   - push
   - pull_request
 
+
 jobs:
   cache-and-install:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        node-version: [ 16.x, 18.x ]
+        node-version: [ 18.x ]
         os: [ ubuntu-latest, windows-latest, macos-latest ]
         experimental: [ true ]
 
