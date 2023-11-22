@@ -1,19 +1,11 @@
-FROM node:18-alpine AS base
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
+FROM debian:11
 COPY . /app
 WORKDIR /app
-
-FROM base AS prod-deps
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
-
-FROM base AS build
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm run build
-
-FROM base
-COPY --from=prod-deps /app/node_modules /app/node_modules
-COPY --from=build /app/dist /app/dist
-EXPOSE 3000
+RUN apt-get update
+RUN apt-get install -y wget curl make sudo unzip
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+RUN apt-get install -y nodejs
+RUN npm i -g pnpm
+RUN pnpm install
+EXPOSE 9527
 CMD [ "pnpm", "dev" ]
