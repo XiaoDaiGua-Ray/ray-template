@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  ray-template:
+    build: .
+    container_name: ray-template
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - "9527:9527"
+    # if you want to persist
+#    volumes:
+#      - ./app:/app
