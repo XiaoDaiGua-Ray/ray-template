@@ -1,6 +1,6 @@
 import printJs from 'print-js'
-import { unrefElement } from '@/utils/vue/index'
-import { watchEffectWithTarget } from '@/utils/vue/index'
+import { unrefElement } from '@/utils/vue'
+import { watchEffectWithTarget } from '@/utils/vue'
 
 import type {
   ValidateValueType,
@@ -11,7 +11,13 @@ import type { BasicTarget, TargetValue } from '@/types/modules/vue'
 
 /**
  *
- * @returns 获取当前项目环境
+ * 获取当前项目环境
+ *
+ * @example
+ * const { BASE_URL } = getAppEnvironment() 获取 BASE_URL
+ * const { MODE } = getAppEnvironment() 获取 MODE，当前环境
+ * const { SSR } = getAppEnvironment() 是否启用 SSR
+ * const { your config } = getAppEnvironment() 获取你自定义的配置项
  */
 export const getAppEnvironment = () => {
   const env = import.meta.env
@@ -189,6 +195,18 @@ export const downloadAnyFile = (
   })
 }
 
+/**
+ *
+ * @param target Ref Dom、Dom、Dom id
+ * @param options print 配置项
+ *
+ * 基于 print-js 封装，允许 Ref 注册 Dom 直接调用打印
+ *
+ * @example
+ * print(refDom, { printJs.Configuration })
+ * print(Dom id, { printJs.Configuration })
+ * print(Dom, { printJs.Configuration })
+ */
 export function print<T extends BasicTarget<HTMLElement>>(
   target: T,
   options?: printJs.Configuration,

@@ -1,5 +1,4 @@
-import RMoreDropdown from './src/index'
-import props from './src/props'
+import RMoreDropdown from './src'
+import moreDropdownProps from './src/props'
 
-export default RMoreDropdown
-export { props }
+export { RMoreDropdown, moreDropdownProps }

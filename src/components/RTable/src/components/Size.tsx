@@ -9,10 +9,10 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { NPopover, NCard, NPopselect } from 'naive-ui'
-import RIcon from '@/components/RIcon/index'
+import { NPopover, NPopselect } from 'naive-ui'
+import { RIcon } from '@/components'
 
-import { call } from '@/utils/vue/index'
+import { call } from '@/utils/vue'
 import props from '../props'
 import config from '../config'
 

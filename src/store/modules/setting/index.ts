@@ -2,13 +2,13 @@ import { getAppDefaultLanguage } from '@/locales/helper'
 import { setStorage } from '@use-utils/cache'
 import { set } from 'lodash-es'
 import { colorToRgba } from '@/utils/element'
-import { useI18n } from '@/hooks/web/index'
+import { useI18n } from '@/hooks/web'
 import { APP_THEME } from '@/app-config/designConfig'
-import { useDayjs } from '@/hooks/web/index'
+import { useDayjs } from '@/hooks/web'
 
 import type { ConditionalPick } from '@/types/modules/helper'
 import type { SettingState } from '@/store/modules/setting/type'
-import type { LocalKey } from '@/hooks/web/index'
+import type { LocalKey } from '@/hooks/web'
 
 export const piniaSettingStore = defineStore(
   'setting',

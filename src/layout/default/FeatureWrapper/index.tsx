@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import MenuTag from '@/layout/components/MenuTag/index'
+import MenuTag from '@/layout/components/MenuTag'
 
 export default defineComponent({
   name: 'LayoutFeatureWrapper',

@@ -18,13 +18,12 @@
 import './index.scss'
 
 import { NSpin } from 'naive-ui'
-import RTransitionComponent from '@/components/RTransitionComponent/index.vue'
-import AppRequestCancelerProvider from '@/app-components/provider/AppRequestCancelerProvider/index'
-import RIcon from '@/components/RIcon/index'
+import { RTransitionComponent, RIcon } from '@/components'
+import AppRequestCancelerProvider from '@/app-components/provider/AppRequestCancelerProvider'
 
-import { getVariableToRefs } from '@/global-variable/index'
+import { getVariableToRefs } from '@/global-variable'
 import { useSettingGetters } from '@/store'
-import { useMainPage } from '@/hooks/template/index'
+import { useMainPage } from '@/hooks/template'
 
 import type { GlobalThemeOverrides } from 'naive-ui'
 
@@ -33,6 +32,7 @@ export default defineComponent({
   setup() {
     const router = useRouter()
 
+    const { maximize } = useMainPage()
     const { getContentTransition } = useSettingGetters()
     const spinning = ref(false)
     const themeOverridesSpin: GlobalThemeOverrides['Spin'] = {
@@ -40,7 +40,7 @@ export default defineComponent({
     }
     const globalMainLayoutLoad = getVariableToRefs('globalMainLayoutLoad')
     const layoutContentMaximize = getVariableToRefs('layoutContentMaximize')
-    const { maximize } = useMainPage()
+    const layoutContentSpinning = getVariableToRefs('layoutContentSpinning')
 
     const setupLayoutContentSpin = () => {
       router.beforeEach(() => {
@@ -61,15 +61,20 @@ export default defineComponent({
       getContentTransition,
       layoutContentMaximize,
       maximize,
+      layoutContentSpinning,
     }
   },
   render() {
-    const { globalMainLayoutLoad, layoutContentMaximize } = this
+    const {
+      globalMainLayoutLoad,
+      layoutContentMaximize,
+      layoutContentSpinning,
+    } = this
     const { maximize } = this
 
     return (
       <NSpin
-        show={this.spinning || !globalMainLayoutLoad}
+        show={this.spinning || !globalMainLayoutLoad || layoutContentSpinning}
         description="loading..."
         size="large"
         themeOverrides={this.themeOverridesSpin}

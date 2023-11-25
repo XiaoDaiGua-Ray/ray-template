@@ -10,8 +10,8 @@ import {
   NP,
   NH6,
 } from 'naive-ui'
-import RIcon from '@/components/RIcon/index'
-import RayLink from '@/app-components/app/RayLink/index'
+import { RIcon } from '@/components'
+import RayLink from '@/app-components/app/RayLink'
 
 const Dashboard = defineComponent({
   name: 'RDashboard',

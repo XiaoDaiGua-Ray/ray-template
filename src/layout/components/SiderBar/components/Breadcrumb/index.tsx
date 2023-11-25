@@ -21,7 +21,7 @@
 import { NDropdown, NBreadcrumb, NBreadcrumbItem } from 'naive-ui'
 
 import { useMenuGetters, useMenuActions } from '@/store'
-import { useDevice } from '@/hooks/web/index'
+import { useDevice } from '@/hooks/web'
 
 import type { DropdownOption } from 'naive-ui'
 import type { AppMenuOption } from '@/types/modules/app'

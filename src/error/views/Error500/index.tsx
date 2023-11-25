@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import PageResult from '@/error/index'
+import PageResult from '@/error'
 
 const ErrorPage500 = defineComponent({
   name: 'ErrorPage500',

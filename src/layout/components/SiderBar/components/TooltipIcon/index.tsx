@@ -12,7 +12,7 @@
 import './index.scss'
 
 import { NTooltip } from 'naive-ui'
-import RIcon from '@/components/RIcon/index'
+import { RIcon } from '@/components'
 
 import { tooltipProps } from 'naive-ui'
 

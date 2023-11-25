@@ -33,9 +33,9 @@ import {
   hasMenuIcon,
   getCatchMenuKey,
 } from './helper'
-import { useI18n } from '@/hooks/web/index'
+import { useI18n } from '@/hooks/web'
 import { getAppRawRoutes } from '@/router/appRouteModules'
-import { useVueRouter } from '@/hooks/web/index'
+import { useVueRouter } from '@/hooks/web'
 import { throttle } from 'lodash-es'
 import { useKeepAliveActions } from '@/store'
 

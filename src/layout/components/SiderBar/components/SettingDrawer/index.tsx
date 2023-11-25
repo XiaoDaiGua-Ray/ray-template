@@ -21,7 +21,7 @@ import {
   NDescriptionsItem,
   NSelect,
 } from 'naive-ui'
-import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch/index'
+import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch'
 
 import { APP_THEME } from '@/app-config/designConfig'
 import { useSettingGetters, useSettingActions } from '@/store'

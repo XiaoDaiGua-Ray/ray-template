@@ -10,7 +10,7 @@
  */
 
 import { piniaMenuStore } from '../modules/menu'
-import { useRootRoute } from '@/hooks/template/index'
+import { useRootRoute } from '@/hooks/template'
 
 export const useMenuGetters = () => {
   const variable = piniaMenuStore()

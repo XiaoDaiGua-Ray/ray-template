@@ -21,13 +21,13 @@
 import './index.scss'
 
 import { NInput, NModal, NResult, NScrollbar, NSpace } from 'naive-ui'
-import RIcon from '@/components/RIcon/index'
+import { RIcon } from '@/components'
 
 import { on, off, queryElements, addClass, removeClass } from '@/utils/element'
 import { debounce } from 'lodash-es'
 import { useMenuGetters, useMenuActions } from '@/store'
 import { validMenuItemShow } from '@/router/helper/routerCopilot'
-import { useDevice } from '@/hooks/web/index'
+import { useDevice } from '@/hooks/web'
 
 import type { AppRouteMeta } from '@/router/type'
 import type { AppMenuOption } from '@/types/modules/app'

@@ -10,7 +10,7 @@
  */
 
 import { NSpace, NSwitch, NTooltip } from 'naive-ui'
-import RIcon from '@/components/RIcon'
+import { RIcon } from '@/components'
 
 import { useSettingGetters, useSettingActions } from '@/store'
 

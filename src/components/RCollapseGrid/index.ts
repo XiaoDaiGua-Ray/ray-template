@@ -1,5 +1,8 @@
-import RCollapseGrid from './src/index'
-import props from './src/props'
+import RCollapseGrid from './src'
+import collapseGridProps from './src/props'
 
-export default RCollapseGrid
-export { props }
+import type * as RCollapseGridType from './src/type'
+
+export type { RCollapseGridType }
+
+export { RCollapseGrid, collapseGridProps }

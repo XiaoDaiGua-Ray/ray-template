@@ -39,8 +39,7 @@ import {
   NButton,
   NIcon,
 } from 'naive-ui'
-import RIcon from '@/components/RIcon/index'
-import RMoreDropdown from '@/components/RMoreDropdown/index'
+import { RIcon, RMoreDropdown } from '@/components'
 
 import CloseRight from '@/icons/close_right.svg?component'
 import CloseLeft from '@/icons/close_left.svg?component'
@@ -49,10 +48,10 @@ import { useMenuGetters, useMenuActions } from '@/store'
 import { uuid } from '@/utils/basic'
 import { hasClass } from '@/utils/element'
 import { queryElements } from '@use-utils/element'
-import { useMainPage } from '@/hooks/template/index'
-import { useMenuTag } from '@/hooks/template/index'
+import { useMainPage } from '@/hooks/template'
+import { useMenuTag } from '@/hooks/template'
 import { throttle } from 'lodash-es'
-import { useRootRoute } from '@/hooks/template/index'
+import { useRootRoute } from '@/hooks/template'
 
 import type { ScrollbarInst } from 'naive-ui'
 import type { MenuTagOptions, AppMenuOption } from '@/types/modules/app'
@@ -101,14 +100,14 @@ export default defineComponent({
         key: 'd1',
       },
       {
-        label: '关闭右侧标签页',
-        key: 'closeRight',
-        icon: () => <CloseRight class="menu-tag__icon" />,
-      },
-      {
         label: '关闭左侧标签页',
         key: 'closeLeft',
         icon: () => <CloseLeft class="menu-tag__icon" />,
+      },
+      {
+        label: '关闭右侧标签页',
+        key: 'closeRight',
+        icon: () => <CloseRight class="menu-tag__icon" />,
       },
       {
         type: 'divider',
@@ -497,11 +496,7 @@ export default defineComponent({
                                   meta: { i18nKey },
                                 } = curr
 
-                                if (i18nKey) {
-                                  return $t(i18nKey)
-                                } else {
-                                  return breadcrumbLabel
-                                }
+                                return i18nKey ? $t(i18nKey) : breadcrumbLabel
                               },
                             }}
                           </span>

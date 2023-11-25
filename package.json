@@ -1,7 +1,7 @@
 {
   "name": "ray-template",
   "private": false,
-  "version": "4.3.4",
+  "version": "4.4.0",
   "type": "module",
   "engines": {
     "node": "^18.0.0 || >=20.0.0",
@@ -32,6 +32,7 @@
     "currency.js": "^2.0.4",
     "dayjs": "^1.11.10",
     "echarts": "^5.4.3",
+    "interactjs": "1.10.21",
     "lodash-es": "^4.17.21",
     "mockjs": "1.1.0",
     "naive-ui": "^2.35.0",
@@ -40,7 +41,7 @@
     "print-js": "^1.6.0",
     "vue": "^3.3.8",
     "vue-hooks-plus": "1.8.5",
-    "vue-i18n": "^9.7.0",
+    "vue-i18n": "^9.7.1",
     "vue-router": "^4.2.4",
     "xlsx": "^0.18.5"
   },
@@ -49,6 +50,7 @@
     "@babel/eslint-parser": "^7.22.11",
     "@commitlint/cli": "^17.7.1",
     "@commitlint/config-conventional": "^17.7.0",
+    "@interactjs/types": "1.10.21",
     "@intlify/unplugin-vue-i18n": "^1.5.0",
     "@types/crypto-js": "^4.1.1",
     "@types/lodash-es": "^4.17.11",

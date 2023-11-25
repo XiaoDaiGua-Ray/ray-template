@@ -5,8 +5,8 @@
 > router modules 包中的路由模块会与菜单一一映射，也就是说，路由模块的配置结构会影响菜单的展示。当你有子菜单需要配置时，你需要使用该组件。
 
 ```ts
-import { t } from '@/hooks/web/index'
-import { LAYOUT } from '@/router/constant/index'
+import { t } from '@/hooks/web'
+import { LAYOUT } from '@/router/constant'
 
 import type { AppRouteRecordRaw } from '@/router/type'
 

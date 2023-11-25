@@ -18,7 +18,7 @@ import C from './components/C'
 import Print from './components/Print'
 
 import props from './props'
-import { call, renderNode } from '@/utils/vue/index'
+import { call, renderNode } from '@/utils/vue'
 import { uuid } from '@/utils/basic'
 import config from './config'
 

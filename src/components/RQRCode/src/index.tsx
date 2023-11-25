@@ -12,12 +12,12 @@
 import './index.scss'
 
 import { NButton, NSpin } from 'naive-ui'
-import RIcon from '@/components/RIcon/index'
+import { RIcon } from '@/components'
 
 import props from './props'
 import { AwesomeQR } from 'awesome-qr'
 import { isValueType, downloadAnyFile } from '@/utils/basic'
-import { call } from '@/utils/vue/index'
+import { call } from '@/utils/vue'
 
 import type {
   QRCodeRenderResponse,

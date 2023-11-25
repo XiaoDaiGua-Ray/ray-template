@@ -11,7 +11,7 @@
 
 import './index.scss'
 
-import RayQRcode from '@/components/RQRCode/index'
+import { RQRCode } from '@/components'
 
 import LOGO from '@/assets/images/ray.svg'
 
@@ -36,7 +36,7 @@ const QRCodeSigning = defineComponent({
   render() {
     return (
       <div class="qrcode-signing">
-        <RayQRcode text="ray template yes" size={200} logoImage={LOGO} />
+        <RQRCode text="ray template yes" size={200} logoImage={LOGO} />
       </div>
     )
   },

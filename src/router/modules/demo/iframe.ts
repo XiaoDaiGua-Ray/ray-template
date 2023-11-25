@@ -1,4 +1,4 @@
-import { t } from '@/hooks/web/index'
+import { t } from '@/hooks/web'
 
 import type { AppRouteRecordRaw } from '@/router/type'
 

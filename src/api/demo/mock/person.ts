@@ -1,4 +1,4 @@
-import { request } from '@/axios/index'
+import { request } from '@/axios'
 
 import type { BasicResponse, PaginationResponse } from '@/types/modules/axios'
 

@@ -1,5 +1,32 @@
 # CHANGE LOG
 
+## 4.4.0
+
+补充了几个组件。并且更改了组件的导入、导出方式，由从前很恶心的一个个导入，变为 `import { RIcon } from '@/components'`。
+
+替换了过时的 `nvm`，使用 `fnm` 替代，并且配置了一些文件让你能够自动切换 `node` 版本，前提是你也装了对应的插件。
+
+由于 `WebStorm` 一直提示可以缩短路径，强迫症患者表示受不了了，就全部改了（可能遗漏）。
+
+升级 `node` 版本至 `18.18.2`。
+
+### Feats
+
+- 新增组件
+  - RModal
+    - width：配置 modal 宽度
+    - cardWidth：配置 preset 为 card 的宽度
+    - dialogWidth：配置 preset 为 dialog 的宽度
+    - fullscreen：配置 preset 为 card 并且配置 fullscreen 为 true 则可以获得全屏效果
+    - dad：启用拖拽效果。仅在 preset 为 card, dialog 时生效（基于 interactjs 实现）
+- 修改 `components` 包组件的导出方式，也修改组件的使用方式
+- 新增 `layoutContentSpinning` 全局属性，用于管理加载动画效果。区别于 `globalMainLayoutLoad` 会强制刷新页面，该属性仅会触发加载动画。并且基于该属性拓展 `openSpin`, `closeSpin` 方法
+
+### Fixes
+
+- 修复国际化切换，由于字段的错误配置导致缓存一直提示 `Fall back to translate` 的问题
+- 修复锁屏不能正常打开、关闭的问题
+
 ## 4.3.4
 
 更新了 MenuTag 的样式，现在有更加细腻的过渡动画。
@@ -20,7 +47,7 @@
 ### Fixes
 
 - 修复 `utils/element` 方法不能正确获取 `ref` 绑定 `dom` 的问题
-- 修复设置界面抛出治毒警告问题
+- 修复设置界面抛出只读警告问题
 - 修复构建提示循环依赖问题
 
 ## 4.3.3
@@ -306,7 +333,7 @@ const demo2 = null
   - 默认开启 autoChangeTheme 功能
   - 支持配置 throttleWait 节流等待时间，默认 500ms
   - 支持通过配置 `desginConfig.echartTheme` 属性指定 `echart theme`。并且只需按照约定方式注册的主题，只需要指定主题名称，即可完成 `light` `dark` 两种主题指定
-  - RayChartInst 新增 dispose render 方法，允许手动渲染与卸载 chart 图
+  - RChartInst 新增 dispose render 方法，允许手动渲染与卸载 chart 图
   - 新增 animation 属性，如果为 true 则会强制触发渲染过渡动画。该配置受 `options.animation` 属性影响，如果该配置为 false 则不会启用过渡动画
 - 移除反转色功能
 - 新增图标页面

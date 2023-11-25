@@ -53,8 +53,7 @@ export const piniaSigningStore = defineStore(
           state.signingCallback = {
             role: 'admin',
             name: SigningForm.name,
-            avatar:
-              'https://usc1.contabostorage.com/c2e495d7890844d392e8ec0c6e5d77eb:image/longmao.navigator.png',
+            avatar: 'https://r2chevereto.yka.moe/longmao.navigator.png',
           }
 
           resolve({

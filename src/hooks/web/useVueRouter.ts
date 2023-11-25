@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { router } from '@/router/index'
+import { router } from '@/router'
 
 /**
  *

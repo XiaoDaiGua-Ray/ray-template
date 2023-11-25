@@ -10,5 +10,6 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     RTransitionComponent: typeof import('./../src/components/RTransitionComponent/index.vue')['default']
+    Src: typeof import('./../src/components/RTransitionComponent/src/index.vue')['default']
   }
 }

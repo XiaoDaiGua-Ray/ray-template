@@ -22,34 +22,42 @@ import LockScreen from './components/LockScreen'
 import UnlockScreen from './components/UnlockScreen'
 
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
-import { useSettingGetters } from '@/store'
+import { useSettingGetters, useSettingActions } from '@/store'
 
 const AppLockScreen = defineComponent({
   name: 'AppLockScreen',
   setup() {
-    const { getLockScreenSwitch } = useSettingGetters()
-
     const { getLockAppScreen } = useAppLockScreen()
+    const { changeSwitcher } = useSettingActions()
+    const { getLockScreenSwitch } = useSettingGetters()
+    const lockScreenSwitchRef = computed({
+      get: () => getLockScreenSwitch.value,
+      set: (val) => {
+        changeSwitcher(val, 'lockScreenSwitch')
+      },
+    })
 
     return {
-      getLockScreenSwitch,
+      lockScreenSwitchRef,
       getLockAppScreen,
     }
   },
   render() {
+    const { getLockAppScreen } = this
+
     return (
       <NModal
-        v-model:show={this.getLockScreenSwitch}
+        v-model:show={this.lockScreenSwitchRef}
         transformOrigin="center"
         show
         autoFocus={false}
         maskClosable={false}
         closeOnEsc={false}
-        preset={!this.getLockAppScreen() ? 'dialog' : void 0}
+        preset={!getLockAppScreen() ? 'dialog' : void 0}
         title="锁定屏幕"
       >
         <div class="app-lock-screen__content">
-          {!this.getLockAppScreen() ? <LockScreen /> : <UnlockScreen />}
+          {!getLockAppScreen() ? <LockScreen /> : <UnlockScreen />}
         </div>
       </NModal>
     )

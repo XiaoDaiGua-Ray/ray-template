@@ -12,10 +12,10 @@
 /** 本方法感谢 <https://yunkuangao.me/> 的支持 */
 
 import { APP_MENU_CONFIG } from '@/app-config/appConfig'
-import RIcon from '@/components/RIcon/index'
+import { RIcon } from '@/components'
 import { isValueType } from '@/utils/basic'
 import { getStorage } from '@/utils/cache'
-import { useRootRoute } from '@/hooks/template/index'
+import { useRootRoute } from '@/hooks/template'
 
 import type {
   AppMenuOption,

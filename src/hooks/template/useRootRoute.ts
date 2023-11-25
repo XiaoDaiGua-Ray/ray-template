@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { setVariable, getVariableToRefs } from '@/global-variable/index'
+import { setVariable, getVariableToRefs } from '@/global-variable'
 
 import type { DeepMutable } from '@/types/modules/helper'
 

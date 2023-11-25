@@ -9,8 +9,8 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { NSpace, NDataTable, NButton } from 'naive-ui'
-import RTable from '@/components/RTable/index'
+import { NSpace, NButton } from 'naive-ui'
+import { RTable } from '@/components'
 
 import type { DataTableColumns } from 'naive-ui'
 

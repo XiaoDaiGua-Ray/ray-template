@@ -1,7 +1,7 @@
 import { isValueType } from '@/utils/basic'
 import { APP_REGEX } from '@/app-config/regexConfig'
-import { unrefElement } from '@/utils/vue/index'
-import { watchEffectWithTarget } from '@/utils/vue/index'
+import { unrefElement } from '@/utils/vue'
+import { watchEffectWithTarget } from '@/utils/vue'
 
 import type {
   EventListenerOrEventListenerObject,

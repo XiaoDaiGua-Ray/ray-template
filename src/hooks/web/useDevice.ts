@@ -15,7 +15,7 @@
  */
 
 import { useWindowSize } from '@vueuse/core'
-import { watchEffectWithTarget } from '@/utils/vue/index'
+import { watchEffectWithTarget } from '@/utils/vue'
 
 export function useDevice() {
   const { width, height } = useWindowSize()

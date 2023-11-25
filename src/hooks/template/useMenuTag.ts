@@ -11,7 +11,7 @@
 
 import { useMenuGetters, useMenuActions } from '@/store'
 import { redirectRouterToDashboard } from '@/router/helper/routerCopilot'
-import { useRootRoute } from '@/hooks/template/index'
+import { useRootRoute } from '@/hooks/template'
 
 import type { MenuTagOptions, Key } from '@/types/modules/app'
 

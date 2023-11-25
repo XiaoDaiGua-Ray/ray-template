@@ -35,9 +35,10 @@ import type { AnyFC } from '@/types/modules/utils'
 const variableState = reactive({
   globalSpinning: false, // 全局加载控制器
   globalDrawerValue: false, // 全局抽屉控制器（小尺寸设备可用）
-  globalMainLayoutLoad: true, // LayoutContent 区域加载控制器
+  globalMainLayoutLoad: true, // LayoutContent 区域加载控制器，会触发强制刷新
   layoutContentMaximize: false, // LayoutContent 区域全屏控制器
   globalRootRoute: cloneDeep(ROOT_ROUTE), // 全局根路由配置，同步至 ROOT_ROUTE
+  layoutContentSpinning: false, // LayoutContent 区域加载控制器，不会触发强制刷新
 })
 
 export type VariableState = typeof variableState

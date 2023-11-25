@@ -14,7 +14,7 @@ import './index.scss'
 import { NSpin } from 'naive-ui'
 
 import { completeSize, on, off } from '@use-utils/element'
-import { call } from '@/utils/vue/index'
+import { call } from '@/utils/vue'
 import props from './props'
 
 export default defineComponent({

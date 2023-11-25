@@ -26,7 +26,7 @@ import { redirectRouterToDashboard } from '@/router/helper/routerCopilot'
 import { WHITE_ROUTES } from '@/app-config/routerConfig'
 import { validRole } from '@/router/helper/routerCopilot'
 import { isValueType } from '@/utils/basic'
-import { useRootRoute } from '@/hooks/template/index'
+import { useRootRoute } from '@/hooks/template'
 
 import type { Router, RouteLocationNormalized } from 'vue-router'
 import type { AppRouteMeta } from '@/router/type'

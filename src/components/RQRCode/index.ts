@@ -1,9 +1,8 @@
-import RayQRcode from './src/index'
+import RQRCode from './src'
+import qrcodeProps from './src/props'
 
-export default RayQRcode
-export type {
-  QRCodeStatus,
-  QRCodeLevel,
-  QRCodeRenderResponse,
-  QRCodeInst,
-} from './src/type'
+import type * as RQRCodeType from './src/type'
+
+export type { RQRCodeType }
+
+export { RQRCode, qrcodeProps }

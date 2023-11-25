@@ -11,11 +11,11 @@
 
 import { permissionRouter } from './permission'
 import { SETUP_ROUTER_ACTION, SUPER_ADMIN } from '@/app-config/routerConfig'
-import { useVueRouter } from '@/hooks/web/index'
+import { useVueRouter } from '@/hooks/web'
 import { setStorage } from '@/utils/cache'
 import { getAppEnvironment } from '@/utils/basic'
 import { useSigningGetters } from '@/store'
-import { useRootRoute } from '@/hooks/template/index'
+import { useRootRoute } from '@/hooks/template'
 
 import type { Router } from 'vue-router'
 import type { AppRouteMeta } from '@/router/type'

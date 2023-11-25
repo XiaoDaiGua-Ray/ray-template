@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { i18n } from '@/locales/index'
+import { i18n } from '@/locales'
 
 import type { WritableComputedRef } from 'vue'
 

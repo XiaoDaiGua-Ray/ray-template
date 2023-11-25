@@ -21,13 +21,10 @@ import {
   NPopover,
   NCard,
 } from 'naive-ui'
-import RCollapseGrid from '@/components/RCollapseGrid/index'
-import RTable from '@/components/RTable/index'
-import RIcon from '@/components/RIcon/index'
-import RMoreDropdown from '@/components/RMoreDropdown/index'
+import { RCollapseGrid, RTable, RIcon, RMoreDropdown } from '@/components'
 
 import type { DataTableColumns } from 'naive-ui'
-import type { TableInst } from '@/components/RTable/index'
+import type { RTableType } from '@/components'
 
 type RowData = {
   key: number

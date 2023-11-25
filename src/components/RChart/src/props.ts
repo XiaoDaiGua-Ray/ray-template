@@ -5,7 +5,7 @@ import type {
   LoadingOptions,
   AutoResize,
   ChartTheme,
-} from '@/components/RChart/type'
+} from '@/components/RChart/src/type'
 import type { ECharts, SetOptionOpts } from 'echarts/core'
 import type { MaybeComputedElementRef, MaybeElement } from '@vueuse/core'
 import type {

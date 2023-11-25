@@ -11,6 +11,8 @@
 
 /**
  *
+ * 模板约定不直接操作 store 实例，所有操作都应在 hooks 中二次封装的 getters, actions
+ *
  * 持久化存储 pinia 数据
  * 但是不能正常持久化 function 属性
  *
@@ -18,11 +20,11 @@
  */
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
-// 导出仓库实例，不建议直接使用 store
-import { piniaSettingStore } from './modules/setting/index' // import { piniaSettingStore } from '@/store' 即可使用
-import { piniaMenuStore } from './modules/menu/index'
-import { piniaSigningStore } from './modules/signing/index'
-import { piniaKeepAliveStore } from './modules/keep-alive/index'
+// 该仓库导出，更多是为了 hooks 包中，在模板中尽量不直接操作 store 仓库
+import { piniaSettingStore } from './modules/setting'
+import { piniaMenuStore } from './modules/menu'
+import { piniaSigningStore } from './modules/signing'
+import { piniaKeepAliveStore } from './modules/keep-alive'
 
 // 导出 getters, actions
 import { useMenuGetters, useMenuActions } from './hooks/useMenuStore'

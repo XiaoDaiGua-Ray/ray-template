@@ -25,6 +25,7 @@
 <script lang="ts" setup>
 import { useKeepAliveGetters } from '@/store'
 import { APP_KEEP_ALIVE } from '@/app-config/appConfig'
+import props from './props'
 
 import type { TransitionProps } from './type'
 
@@ -36,11 +37,7 @@ import type { TransitionProps } from './type'
 defineOptions({
   name: 'RTransitionComponent',
 })
-withDefaults(defineProps<TransitionProps>(), {
-  transitionPropName: 'fade',
-  transitionMode: 'out-in',
-  transitionAppear: true,
-})
+withDefaults(defineProps<TransitionProps>(), props)
 
 const { getKeepAliveInclude } = useKeepAliveGetters()
 const { setupKeepAlive, maxKeepAliveLength, keepAliveExclude } = APP_KEEP_ALIVE

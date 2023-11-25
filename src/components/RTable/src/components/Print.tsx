@@ -10,7 +10,7 @@
  */
 
 import { NPopover } from 'naive-ui'
-import RIcon from '@/components/RIcon/index'
+import { RIcon } from '@/components'
 
 import config from '../config'
 import props from '../props'
@@ -19,7 +19,7 @@ import { print } from '@/utils/basic'
 import type { TableProvider } from '../type'
 
 export default defineComponent({
-  name: 'PrintTable',
+  name: 'TablePrint',
   props,
   setup(props) {
     const { uuidTable } = inject<TableProvider>(

@@ -1,11 +1,11 @@
 import { NForm, NFormItem, NInput, NButton } from 'naive-ui'
 
 import { setStorage } from '@/utils/cache'
-import { useI18n } from '@/hooks/web/index'
+import { useI18n } from '@/hooks/web'
 import { APP_CATCH_KEY } from '@/app-config/appConfig'
-import { setVariable, getVariableToRefs } from '@/global-variable/index'
+import { setVariable, getVariableToRefs } from '@/global-variable'
 import { useSigningActions } from '@/store'
-import { useRootRoute } from '@/hooks/template/index'
+import { useRootRoute } from '@/hooks/template'
 
 import type { FormInst } from 'naive-ui'
 

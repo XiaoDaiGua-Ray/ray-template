@@ -11,8 +11,8 @@
 
 import { NSpace, NCard, NButton } from 'naive-ui'
 
-import { useAppMenu, useMainPage } from '@/hooks/template/index'
-import { getVariableToRefs } from '@/global-variable/index'
+import { useAppMenu, useMainPage } from '@/hooks/template'
+import { getVariableToRefs } from '@/global-variable'
 
 export default defineComponent({
   name: 'TemplateHooks',
@@ -21,7 +21,7 @@ export default defineComponent({
     const maximizeRef = getVariableToRefs('layoutContentMaximize')
 
     const { navigationTo } = useAppMenu()
-    const { reload, maximize } = useMainPage()
+    const { reload, maximize, openSpin, closeSpin } = useMainPage()
 
     return {
       navigationTo,
@@ -29,10 +29,12 @@ export default defineComponent({
       currentMenuOption,
       maximize,
       maximizeRef,
+      openSpin,
+      closeSpin,
     }
   },
   render() {
-    const { navigationTo, reload, maximize } = this
+    const { navigationTo, reload, maximize, openSpin, closeSpin } = this
 
     return (
       <NSpace wrapItem={false} vertical>
@@ -62,7 +64,18 @@ export default defineComponent({
                 reload()
               }}
             >
-              刷新
+              刷新（强制刷新）
+            </NButton>
+            <NButton
+              onClick={() => {
+                openSpin()
+
+                setTimeout(() => {
+                  closeSpin()
+                }, 800)
+              }}
+            >
+              触发加载动画（不强制刷新）
             </NButton>
           </NCard>
           <NCard title="maximize 内容区域最大化">

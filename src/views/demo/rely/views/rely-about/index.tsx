@@ -13,7 +13,7 @@ interface TemplateOptions {
   url?: string
 }
 
-const RelyAbout = defineComponent({
+export default defineComponent({
   name: 'RelyAbout',
   setup() {
     const { pkg } = __APP_CFG__
@@ -135,5 +135,3 @@ const RelyAbout = defineComponent({
     )
   },
 })
-
-export default RelyAbout

@@ -21,5 +21,6 @@
   "Mock": "Mock 数据",
   "QRCode": "二维码",
   "SvgIcon": "SVG 图标",
-  "TemplateHooks": "模板内置 Api"
+  "TemplateHooks": "模板内置 Api",
+  "Modal": "模态框"
 }
