@@ -21,6 +21,7 @@
     - dad：启用拖拽效果。仅在 preset 为 card, dialog 时生效（基于 interactjs 实现）
 - 修改 `components` 包组件的导出方式，也修改组件的使用方式
 - 新增 `layoutContentSpinning` 全局属性，用于管理加载动画效果。区别于 `globalMainLayoutLoad` 会强制刷新页面，该属性仅会触发加载动画。并且基于该属性拓展 `openSpin`, `closeSpin` 方法
+- 更新 `vite` 版本至 `5.0.2`
 
 ### Fixes
 
