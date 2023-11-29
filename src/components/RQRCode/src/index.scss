@@ -22,5 +22,24 @@
       font-weight: 500;
       color: #ffffff;
     }
+
+    & .ray-qrcode__error-btn {
+      .ray-icon,
+      .n-button__content {
+        color: #fff;
+      }
+      .n-button:hover {
+        .ray-icon,
+        .n-button__content {
+          color: var(--n-text-color-hover);
+        }
+      }
+      .n-button:active {
+        .ray-icon,
+        .n-button__content {
+          color: var(--n-text-color-pressed);
+        }
+      }
+    }
   }
 }
