@@ -1,5 +1,27 @@
 # CHANGE LOG
 
+## 4.4.1
+
+更新 `vite` 版本至 `5.0.4`。同步修复了一些小问题。
+
+基础性能优化，根据开发模式与构建模式拆分插件启用。避免某些仅仅需要在构建模式的插件在开发模式下也被启用。
+
+新增预构建插件列表。
+
+### Feats
+
+- 补充 components 包组件的 `props` 类型导出
+- 补充 `__DEV__` 全局变量
+- 优化 `precision` 包中的基本运算方法，并且将小数点默认保留 `8` 位
+  - 新增 `isCurrency` 方法检测是否为 `currency.js` 对象
+- 按照构建模式与开发模式拆分插件启用
+- 新增预构建列表
+
+## Fixes
+
+- 修复 `i18n fallbackLocale` 错误配置为 `SYSTEM_DEFAULT_LOCAL` 的问题
+- 修复 `SYSTEM_DEFAULT_LOCAL` 类型定义错误问题
+
 ## 4.4.0
 
 补充了几个组件。并且更改了组件的导入、导出方式，由从前很恶心的一个个导入，变为 `import { RIcon } from '@/components'`。

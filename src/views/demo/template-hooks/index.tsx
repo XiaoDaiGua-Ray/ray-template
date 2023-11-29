@@ -50,7 +50,7 @@ export default defineComponent({
             参数为正整数时，会更具当前的菜单顺序进行自动导航匹配。但是此方法仅能导航一级菜单。并且如果导航菜单非根菜单项，会自动递归导航至一子菜单。
           </h3>
           <br />
-          <NButton onClick={() => navigationTo(14)}>跳转至多级菜单</NButton>
+          <NButton onClick={() => navigationTo(15)}>跳转至多级菜单</NButton>
         </NCard>
         <NCard title="useMainPage 主页面方法">
           <NCard title="reload 加载函数">

@@ -12,6 +12,8 @@ export declare global {
     [propName: string]: any
   }
 
+  declare const __DEV__: boolean
+
   declare const __APP_CFG__: AppConfig
 
   declare interface Window {

@@ -18,39 +18,21 @@
  *
  * 官网地址: https://prazdevs.github.io/pinia-plugin-persistedstate/zh/guide/
  */
+
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
-
-// 该仓库导出，更多是为了 hooks 包中，在模板中尽量不直接操作 store 仓库
-import { piniaSettingStore } from './modules/setting'
-import { piniaMenuStore } from './modules/menu'
-import { piniaSigningStore } from './modules/signing'
-import { piniaKeepAliveStore } from './modules/keep-alive'
-
-// 导出 getters, actions
-import { useMenuGetters, useMenuActions } from './hooks/useMenuStore'
-import { useSettingGetters, useSettingActions } from './hooks/useSettingStore'
-import { useSigningGetters, useSigningActions } from './hooks/useSigningStore'
-import {
-  useKeepAliveGetters,
-  useKeepAliveActions,
-} from './hooks/useKeepAliveStore'
 
 import type { App } from 'vue'
 
-export {
-  piniaSettingStore,
-  piniaMenuStore,
-  piniaSigningStore,
-  piniaKeepAliveStore,
-  useMenuGetters,
-  useMenuActions,
-  useSettingGetters,
-  useSettingActions,
-  useSigningGetters,
-  useSigningActions,
-  useKeepAliveGetters,
-  useKeepAliveActions,
-}
+// 该仓库导出，更多是为了 hooks 包中，在模板中尽量不直接操作 store 仓库
+export * from './modules/setting'
+export * from './modules/menu'
+export * from './modules/signing'
+export * from './modules/keep-alive'
+// 导出 getters, actions
+export * from './hooks/useMenuStore'
+export * from './hooks/useSettingStore'
+export * from './hooks/useSigningStore'
+export * from './hooks/useKeepAliveStore'
 
 /**
  *

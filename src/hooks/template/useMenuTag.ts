@@ -11,11 +11,74 @@
 
 import { useMenuGetters, useMenuActions } from '@/store'
 import { redirectRouterToDashboard } from '@/router/helper/routerCopilot'
-import { useRootRoute } from '@/hooks/template'
 
 import type { MenuTagOptions, Key } from '@/types/modules/app'
 
 export type CloseMenuTag = Key | MenuTagOptions
+
+/**
+ *
+ * @param target 标签页对象、索引、key
+ * @param fc 触发函数
+ *
+ * 该方法用于统一获取目标标签页方法
+ */
+const normalMenuTagOption = (target: CloseMenuTag, fc: string) => {
+  const { getMenuTagOptions } = useMenuGetters()
+
+  if (typeof target === 'number') {
+    // 判断是否为 NaN
+    if (isNaN(target)) {
+      console.warn(`${fc}: The ${target} is NaN, expect number.`)
+
+      return
+    }
+
+    // 判断是否超出当前标签页列表最大长度或者是否为负数
+    if (target > getMenuTagOptions.value.length || target < -1) {
+      console.warn(
+        `${fc}: The incoming index ${target} did not match the corresponding item.`,
+      )
+
+      return
+    }
+
+    return {
+      option: getMenuTagOptions.value[target],
+      index: target,
+    }
+  } else if (typeof target === 'string') {
+    // 查找符合条件的 key
+    const index = getMenuTagOptions.value.findIndex(
+      (curr) => curr.key === target,
+    )
+
+    return index > -1
+      ? {
+          option: getMenuTagOptions.value[index],
+          index,
+        }
+      : console.warn(
+          `${fc}: The incoming key ${target} did not match the corresponding item.`,
+        )
+  } else {
+    const { key } = target
+    const index = getMenuTagOptions.value.findIndex((curr) => curr.key === key)
+
+    if (index === -1) {
+      console.warn(
+        `${fc}: The incoming menuTag option ${target.key} did not match the corresponding item.`,
+      )
+
+      return
+    }
+
+    return {
+      option: target,
+      index,
+    }
+  }
+}
 
 export function useMenuTag() {
   const { getMenuTagOptions, getMenuKey } = useMenuGetters()
@@ -25,71 +88,6 @@ export function useMenuTag() {
     emptyMenuTagOptions,
     setMenuTagOptions,
   } = useMenuActions()
-  const { getRootPath } = useRootRoute()
-
-  /**
-   *
-   * @param target 标签页对象、索引、key
-   * @param fc 触发函数
-   *
-   * 该方法用于统一获取目标标签页方法
-   */
-  const normalMenuTagOption = (target: CloseMenuTag, fc: string) => {
-    if (typeof target === 'number') {
-      // 判断是否为 NaN
-      if (isNaN(target)) {
-        console.warn(`${fc}: The ${target} is NaN, expect number.`)
-
-        return
-      }
-
-      // 判断是否超出当前标签页列表最大长度或者是否为负数
-      if (target > getMenuTagOptions.value.length || target < -1) {
-        console.warn(
-          `${fc}: The incoming index ${target} did not match the corresponding item.`,
-        )
-
-        return
-      }
-
-      return {
-        option: getMenuTagOptions.value[target],
-        index: target,
-      }
-    } else if (typeof target === 'string') {
-      // 查找符合条件的 key
-      const index = getMenuTagOptions.value.findIndex(
-        (curr) => curr.key === target,
-      )
-
-      return index > -1
-        ? {
-            option: getMenuTagOptions.value[index],
-            index,
-          }
-        : console.warn(
-            `${fc}: The incoming key ${target} did not match the corresponding item.`,
-          )
-    } else {
-      const { key } = target
-      const index = getMenuTagOptions.value.findIndex(
-        (curr) => curr.key === key,
-      )
-
-      if (index === -1) {
-        console.warn(
-          `${fc}: The incoming menuTag option ${target.key} did not match the corresponding item.`,
-        )
-
-        return
-      }
-
-      return {
-        option: target,
-        index,
-      }
-    }
-  }
 
   /**
    *

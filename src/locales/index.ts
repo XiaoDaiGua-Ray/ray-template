@@ -26,7 +26,7 @@
 import { createI18n } from 'vue-i18n'
 import { LOCAL_OPTIONS } from '@/app-config/localConfig'
 import { getAppDefaultLanguage, getAppLocalMessages } from '@/locales/helper'
-import { SYSTEM_DEFAULT_LOCAL } from '@/app-config/localConfig'
+import { SYSTEM_FALLBACK_LOCALE } from '@/app-config/localConfig'
 
 import type { App } from 'vue'
 import type { I18n, I18nOptions } from 'vue-i18n'
@@ -49,7 +49,7 @@ const createI18nOptions = async () => {
     sync: true,
     missingWarn: false,
     silentFallbackWarn: true,
-    fallbackLocale: SYSTEM_DEFAULT_LOCAL,
+    fallbackLocale: SYSTEM_FALLBACK_LOCALE,
   })
 
   return i18nInstance

@@ -16,9 +16,11 @@ export function useAppSetting() {
    *
    * @param theme 当前主题色
    *
-   * 当前主题仅有明暗两套
-   * - true: 暗色
-   * - false: 亮色
+   * 当前主题有明暗两套
+   *
+   * @example
+   * changeTheme(true) 切换至暗色主题
+   * changeTheme(false) 切换至明色主题
    */
   const changeTheme = (theme: boolean) => {
     const { changeSwitcher } = useSettingActions()

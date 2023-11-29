@@ -50,7 +50,7 @@ export const SYSTEM_DEFAULT_LOCAL: TemplateLocale<LocalOptions> = 'zh-CN'
  *
  * 配置时应该与 LOCAL_OPTIONS 的 key 一致
  */
-export const SYSTEM_FALLBACK_LOCALE = 'zh-CN'
+export const SYSTEM_FALLBACK_LOCALE: TemplateLocale<LocalOptions> = 'zh-CN'
 
 /**
  *

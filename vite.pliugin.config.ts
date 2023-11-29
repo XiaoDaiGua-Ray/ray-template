@@ -33,7 +33,44 @@ import config from './cfg'
 
 import type { PluginOption } from 'vite'
 
-export default function (mode: string): PluginOption[] {
+// 仅适用于构建模式（任何构建模式：preview、build、report...）
+function onlyBuildOptions(mode: string) {
+  return [
+    visualizer({
+      gzipSize: true, // 搜集 `gzip` 压缩包
+      brotliSize: true, // 搜集 `brotli` 压缩包
+      emitFile: false, // 生成文件在根目录下
+      filename: 'visualizer.html',
+      open: mode === 'report' ? true : false, // 以默认服务器代理打开文件
+    }),
+    viteCDNPlugin({
+      // modules 顺序 vue, vue-demi 必须保持当前顺序加载，否则会出现加载错误问题
+      modules: [
+        'vue',
+        'vue-demi',
+        'pinia',
+        'naive-ui',
+        'vue-router',
+        'vue-i18n',
+        'dayjs',
+        'echarts',
+        'xlsx',
+        'axios',
+        'print-js',
+        'clipboard',
+        'lodash-es',
+      ],
+    }),
+  ]
+}
+
+// 仅适用于开发模式
+function onlyDevOptions(mode: string) {
+  return []
+}
+
+// 基础插件配置
+function baseOptions(mode: string) {
   const { title, appPrimaryColor, preloadingConfig } = config
 
   return [
@@ -111,23 +148,6 @@ export default function (mode: string): PluginOption[] {
         },
       ],
     }),
-    {
-      include: [
-        'src/**/*.ts',
-        'src/**/*.tsx',
-        'src/**/*.vue',
-        'src/*.ts',
-        'src/*.tsx',
-        'src/*.vue',
-      ],
-    },
-    visualizer({
-      gzipSize: true, // 搜集 `gzip` 压缩包
-      brotliSize: true, // 搜集 `brotli` 压缩包
-      emitFile: false, // 生成文件在根目录下
-      filename: 'visualizer.html',
-      open: mode === 'report' ? true : false, // 以默认服务器代理打开文件
-    }),
     viteEjsPlugin({
       preloadingConfig,
       appPrimaryColor,
@@ -154,23 +174,12 @@ export default function (mode: string): PluginOption[] {
       inject: 'body-last',
       customDomId: '__svg__icons__dom__',
     }),
-    viteCDNPlugin({
-      // modules 顺序 vue, vue-demi 必须保持当前顺序加载，否则会出现加载错误问题
-      modules: [
-        'vue',
-        'vue-demi',
-        'pinia',
-        'naive-ui',
-        'vue-router',
-        'vue-i18n',
-        'dayjs',
-        'echarts',
-        'xlsx',
-        'axios',
-        'print-js',
-        'clipboard',
-        'lodash-es',
-      ],
-    }),
   ]
+}
+
+export default function (mode: string): PluginOption[] {
+  const plugins =
+    mode === 'development' ? onlyDevOptions(mode) : onlyBuildOptions(mode)
+
+  return [...baseOptions(mode), ...plugins]
 }

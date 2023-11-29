@@ -13,6 +13,11 @@ import type { BasicTarget, TargetValue } from '@/types/modules/vue'
  *
  * 获取当前项目环境
  *
+ * 如果你只是想单纯的判断是否为开发环境，可以直接使用: __DEV__
+ *
+ * @example
+ * 是否为开发环境: __DEV__
+ *
  * @example
  * const { BASE_URL } = getAppEnvironment() 获取 BASE_URL
  * const { MODE } = getAppEnvironment() 获取 MODE，当前环境
