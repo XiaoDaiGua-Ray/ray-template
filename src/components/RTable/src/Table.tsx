@@ -35,13 +35,23 @@ export default defineComponent({
     const rTableInst = ref<DataTableInst | null>(null)
     const wrapperRef = ref<HTMLElement | null>(null)
 
-    const uuidWrapper = uuid(16)
-    const uuidTable = uuid(16)
+    const uuidWrapper = uuid(16) // wrapper id
+    const uuidTable = uuid(16) // table id
+    /**
+     *
+     * x: 横坐标
+     * y: 纵坐标
+     * showContextMenu: 是否显示右键菜单
+     */
     const contextMenuReactive = reactive({
       x: 0,
       y: 0,
       showContextMenu: false,
     })
+    /**
+     *
+     * size: table size，内部私有状态管理
+     */
     const privateReactive = reactive({
       size: props.size,
     })
@@ -90,10 +100,22 @@ export default defineComponent({
       }
     }
 
+    /**
+     *
+     * @param size table size
+     *
+     * 修改 table size
+     */
     const changeTableSize = (size: ComponentSize) => {
       privateReactive.size = size
     }
 
+    /**
+     *
+     * @param options table columns
+     *
+     * 更新 table columns，同时触发 onUpdateColumns 和 onUpdate:columns 事件
+     */
     const updateTableColumn = (options: CType[]) => {
       const { onUpdateColumns, 'onUpdate:columns': $onUpdateColumns } = props
 
@@ -105,6 +127,11 @@ export default defineComponent({
       }
     }
 
+    /**
+     *
+     * 处理自定义的 toolOptions
+     * 匹配所有符合条件的 toolOptions，然后执行
+     */
     const renderToolOptions = () => {
       const { toolOptions } = props
 
@@ -113,6 +140,12 @@ export default defineComponent({
         .map((curr) => (typeof curr === 'function' ? curr() : curr))
     }
 
+    /**
+     *
+     * @param p props
+     *
+     * 处理 toolOptions，合并渲染所有的 toolOptions
+     */
     const tool = (p: typeof props) => {
       const renderDefaultToolOptions = () => (
         <>
@@ -163,7 +196,6 @@ export default defineComponent({
     }
   },
   render() {
-    /* eslint-disable @typescript-eslint/no-explicit-any */
     const { tool } = this
 
     return (
@@ -208,6 +240,7 @@ export default defineComponent({
           }),
           'header-extra': () => (
             <NSpace wrapItem={false} align="center">
+              {/* eslint-disable @typescript-eslint/no-explicit-any */}
               {tool(this.$props as any)}
             </NSpace>
           ),

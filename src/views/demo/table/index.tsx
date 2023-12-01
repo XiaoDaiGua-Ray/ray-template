@@ -55,18 +55,10 @@ const TableView = defineComponent({
         key: 'tags',
         render: (row: RowData) => {
           const tags = row.tags.map((tagKey) => {
-            return h(
-              NTag,
-              {
-                style: {
-                  marginRight: '6px',
-                },
-                type: 'info',
-                bordered: false,
-              },
-              {
-                default: () => tagKey,
-              },
+            return (
+              <NTag type="info" bordered={false} style="margin-right: 6px">
+                {tagKey}
+              </NTag>
             )
           })
 
@@ -138,7 +130,7 @@ const TableView = defineComponent({
         key: 'edit',
       },
       {
-        label: () => h('span', { style: { color: 'red' } }, '删除'),
+        label: () => <span style="color: red;">删除</span>,
         key: 'delete',
       },
     ]

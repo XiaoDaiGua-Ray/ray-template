@@ -80,7 +80,7 @@ const normalMenuTagOption = (target: CloseMenuTag, fc: string) => {
   }
 }
 
-export function useMenuTag() {
+export function useSiderBar() {
   const { getMenuTagOptions, getMenuKey } = useMenuGetters()
   const {
     changeMenuModelValue,
@@ -287,3 +287,5 @@ export function useMenuTag() {
     checkCloseLeft,
   }
 }
+
+export type UseSiderBarReturnType = ReturnType<typeof useSiderBar>

@@ -65,6 +65,12 @@ export const useSettingGetters = () => {
    */
   const getWatermarkSwitch = computed(() => variable.watermarkSwitch)
 
+  /**
+   *
+   * @remark 获取水印配置
+   */
+  const getWatermarkConfig = computed(() => variable.watermarkConfig)
+
   return {
     getDrawerPlacement,
     getPrimaryColorOverride,
@@ -76,21 +82,17 @@ export const useSettingGetters = () => {
     getCopyrightSwitch,
     getContentTransition,
     getWatermarkSwitch,
+    getWatermarkConfig,
   }
 }
 
 export const useSettingActions = () => {
-  const {
-    updateLocale,
-    changePrimaryColor,
-    changeSwitcher,
-    updateContentTransition,
-  } = piniaSettingStore()
+  const { updateLocale, changePrimaryColor, updateSettingState } =
+    piniaSettingStore()
 
   return {
     updateLocale,
     changePrimaryColor,
-    changeSwitcher,
-    updateContentTransition,
+    updateSettingState,
   }
 }

@@ -5,7 +5,7 @@ import { useI18n } from '@/hooks/web'
 import { APP_CATCH_KEY } from '@/app-config/appConfig'
 import { setVariable, getVariableToRefs } from '@/global-variable'
 import { useSigningActions } from '@/store'
-import { useRootRoute } from '@/hooks/template'
+import { useAppRoot } from '@/hooks/template'
 
 import type { FormInst } from 'naive-ui'
 
@@ -16,7 +16,7 @@ export default defineComponent({
 
     const { t } = useI18n()
     const { signing } = useSigningActions()
-    const { getRootPath } = useRootRoute()
+    const { getRootPath } = useAppRoot()
     const globalSpinning = getVariableToRefs('globalSpinning')
 
     const useSigningForm = () => ({

@@ -28,12 +28,12 @@ const AppLockScreen = defineComponent({
   name: 'AppLockScreen',
   setup() {
     const { getLockAppScreen } = useAppLockScreen()
-    const { changeSwitcher } = useSettingActions()
+    const { updateSettingState } = useSettingActions()
     const { getLockScreenSwitch } = useSettingGetters()
     const lockScreenSwitchRef = computed({
       get: () => getLockScreenSwitch.value,
       set: (val) => {
-        changeSwitcher(val, 'lockScreenSwitch')
+        updateSettingState('lockScreenSwitch', val)
       },
     })
 

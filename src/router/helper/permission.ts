@@ -26,7 +26,7 @@ import { redirectRouterToDashboard } from '@/router/helper/routerCopilot'
 import { WHITE_ROUTES } from '@/app-config/routerConfig'
 import { validRole } from '@/router/helper/routerCopilot'
 import { isValueType } from '@/utils/basic'
-import { useRootRoute } from '@/hooks/template'
+import { useAppRoot } from '@/hooks/template'
 
 import type { Router, RouteLocationNormalized } from 'vue-router'
 import type { AppRouteMeta } from '@/router/type'
@@ -34,7 +34,7 @@ import type { AppRouteMeta } from '@/router/type'
 /** 路由守卫 */
 export const permissionRouter = (router: Router) => {
   const { beforeEach } = router
-  const { getRootPath } = useRootRoute()
+  const { getRootPath } = useAppRoot()
 
   const isToLogin = (
     to: RouteLocationNormalized,

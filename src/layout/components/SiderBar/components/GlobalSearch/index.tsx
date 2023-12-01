@@ -23,11 +23,12 @@ import './index.scss'
 import { NInput, NModal, NResult, NScrollbar, NSpace } from 'naive-ui'
 import { RIcon } from '@/components'
 
-import { on, off, queryElements, addClass, removeClass } from '@/utils/element'
+import { queryElements, addClass, removeClass } from '@/utils/element'
 import { debounce } from 'lodash-es'
 import { useMenuGetters, useMenuActions } from '@/store'
 import { validMenuItemShow } from '@/router/helper/routerCopilot'
 import { useDevice } from '@/hooks/web'
+import { useEventListener } from '@vueuse/core'
 
 import type { AppRouteMeta } from '@/router/type'
 import type { AppMenuOption } from '@/types/modules/app'
@@ -275,17 +276,9 @@ export default defineComponent({
       }
     })
 
-    onMounted(() => {
-      on(window, 'keydown', (e: Event) => {
-        registerArouseKeyboard(e as KeyboardEvent)
-        registerChangeSearchElementIndex(e as KeyboardEvent)
-      })
-    })
-    onBeforeUnmount(() => {
-      off(window, 'keydown', (e: Event) => {
-        registerArouseKeyboard(e as KeyboardEvent)
-        registerChangeSearchElementIndex(e as KeyboardEvent)
-      })
+    useEventListener(window, 'keydown', (e: KeyboardEvent) => {
+      registerArouseKeyboard(e)
+      registerChangeSearchElementIndex(e)
     })
 
     return {

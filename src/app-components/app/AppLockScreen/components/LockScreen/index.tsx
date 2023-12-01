@@ -27,7 +27,7 @@ const LockScreen = defineComponent({
     const inputInstRef = ref<InputInst | null>(null)
 
     const { setLockAppScreen } = useAppLockScreen()
-    const { changeSwitcher } = useSettingActions()
+    const { updateSettingState } = useSettingActions()
 
     const state = reactive({
       lockCondition: useCondition(),
@@ -38,7 +38,7 @@ const LockScreen = defineComponent({
       formInstRef.value?.validate((error) => {
         if (!error) {
           setLockAppScreen(true)
-          changeSwitcher(true, 'lockScreenSwitch')
+          updateSettingState('lockScreenSwitch', true)
 
           state.lockCondition = useCondition()
         }

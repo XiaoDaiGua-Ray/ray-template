@@ -1,5 +1,36 @@
 # CHANGE LOG
 
+## 4.4.2
+
+这是一个具有破坏性更新的版本，如果你使用了该模板，那么你需要做一些改动。
+
+详细拆分 `hooks` 包的方法。以前的划分方式不太合理，所以进行了一次大的重构。并且新增了一些方法。现在按照方法功能进行分包，更加详细。
+
+剔除 `h` 函数渲染，因为该方法不会受到 `vue` 的编译优化。
+
+补充了一些代码的注释（慢慢还账-，-）。
+
+### Feats
+
+- 重新划分 `hooks` 包，按照功能进行拆分，并且新增一些包
+  - `useAppMenu` 方法更名为 `useAppNavigation`
+  - `useMenuTag` 方法更名为 `useSiderBar`
+  - `useRootRoute` 方法更名为 `useAppRoot`
+  - `useMainPage` 包移除
+  - 新增 `useMaximize`, `useSpinning`, `useTheme`, `useWatermark` 方法
+  - 新增 `components` 包，用于存放模板二次封装组件、`NaiveUI` 组件的一些 `hooks` 方法
+  - 每个方法包导出对应的 `ReturnType` 类型
+- `Breadcrumb` 组件新增过渡效果，现在切换路由时会有过渡动画，视觉效果更友好
+- 移除 `getVariable` 方法
+- 移除 `utils/element` 包部分方法
+  - `on`
+  - `off`
+- 移除 `changeSwitcher` 方法，使用 `updateSettingState` 方法代替
+
+## Fixes
+
+- 修复 `setRootRoute` 方法执行时提示只读错误导致不能正常修改的问题
+
 ## 4.4.1
 
 更新 `vite` 版本至 `5.0.4`。同步修复了一些小问题。
@@ -77,7 +108,7 @@
 
 紧跟尤大大脚步，更新 `vite` 版本至 `5.0.0` 版本！与此同时，更新了配套所有插件！
 
-更新 ROOT_ROUTE 的一些使用方法，该配置方法与原有的方式不变，但是有一个新的功能点则是，该配置项会传递给 global-variable 的 globalRootRoute 属性。并且更改模板原有获取 path 的方法，改为响应式获取。当你要进行动态的维护 Root Route 的时候，该方法可能可以帮助到你 `useRootRoute`。
+更新 ROOT_ROUTE 的一些使用方法，该配置方法与原有的方式不变，但是有一个新的功能点则是，该配置项会传递给 global-variable 的 globalRootRoute 属性。并且更改模板原有获取 path 的方法，改为响应式获取。当你要进行动态的维护 Root Route 的时候，该方法可能可以帮助到你 `useAppRoot`。
 
 如果你在更新版本后出现一些奇奇怪怪的问题，不要犹豫，直接删除 `node_modules` 后再重新安装依赖，这是缓存导致的问题。
 

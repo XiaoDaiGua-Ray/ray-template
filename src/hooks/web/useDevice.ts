@@ -33,3 +33,5 @@ export function useDevice() {
     isTabletOrSmaller,
   }
 }
+
+export type UseDeviceReturnType = ReturnType<typeof useDevice>

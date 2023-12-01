@@ -15,7 +15,7 @@ import { APP_MENU_CONFIG } from '@/app-config/appConfig'
 import { RIcon } from '@/components'
 import { isValueType } from '@/utils/basic'
 import { getStorage } from '@/utils/cache'
-import { useRootRoute } from '@/hooks/template'
+import { useAppRoot } from '@/hooks/template'
 
 import type {
   AppMenuOption,
@@ -174,7 +174,7 @@ export const hasMenuIcon = (option: AppMenuOption) => {
 
 /** 获取缓存的 menu key, 如果未获取到则使用 getRootPath 当作默认激活路由菜单 */
 export const getCatchMenuKey = () => {
-  const { getRootPath } = useRootRoute()
+  const { getRootPath } = useAppRoot()
   const cacheMenuKey = getStorage<AppMenuKey>(
     'menuKey',
     'sessionStorage',

@@ -48,10 +48,10 @@ import { useMenuGetters, useMenuActions } from '@/store'
 import { uuid } from '@/utils/basic'
 import { hasClass } from '@/utils/element'
 import { queryElements } from '@use-utils/element'
-import { useMainPage } from '@/hooks/template'
-import { useMenuTag } from '@/hooks/template'
+import { useMaximize, useSpinning } from '@/hooks/template'
+import { useSiderBar } from '@/hooks/template'
 import { throttle } from 'lodash-es'
-import { useRootRoute } from '@/hooks/template'
+import { useAppRoot } from '@/hooks/template'
 
 import type { ScrollbarInst } from 'naive-ui'
 import type { MenuTagOptions, AppMenuOption } from '@/types/modules/app'
@@ -63,15 +63,16 @@ export default defineComponent({
 
     const { getMenuKey, getMenuTagOptions } = useMenuGetters()
     const { changeMenuModelValue } = useMenuActions()
-    const { getRootPath } = useRootRoute()
-    const { reload, maximize } = useMainPage()
+    const { getRootPath } = useAppRoot()
+    const { maximize } = useMaximize()
+    const { reload } = useSpinning()
     const {
       close,
       closeAll: $closeAll,
       closeRight: $closeRight,
       closeLeft: $closeLeft,
       closeOther: $closeOther,
-    } = useMenuTag()
+    } = useSiderBar()
 
     const canDisabledOptions = [
       'closeAll',

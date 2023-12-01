@@ -2,7 +2,7 @@
  *
  * @author Ray <https://github.com/XiaoDaiGua-Ray>
  *
- * @date 2023-11-03
+ * @date 2023-11-30
  *
  * @workspace ray-template
  *
@@ -15,50 +15,11 @@ import { addStyle, removeStyle } from '@/utils/element'
 import { unrefElement } from '@/utils/vue'
 import { useWindowSize } from '@vueuse/core'
 
-import type { Ref } from 'vue'
-
 export interface MaximizeOptions {
   zIndex?: string
 }
 
-export function useMainPage() {
-  /**
-   *
-   * @param wait 延迟时长
-   *
-   * 刷新当前路由（强制触发刷新）
-   *
-   * @example
-   * reload(1200)
-   */
-  const reload = (wait = 800) => {
-    setVariable('globalMainLayoutLoad', false)
-
-    setTimeout(() => setVariable('globalMainLayoutLoad', true), wait)
-  }
-
-  /**
-   *
-   * 打开加载动画（不触发强制刷新）
-   *
-   * @example
-   * openSpin()
-   */
-  const openSpin = () => {
-    setVariable('layoutContentSpinning', true)
-  }
-
-  /**
-   *
-   * 关闭加载动画（不触发强制刷新）
-   *
-   * @example
-   * closeSpin()
-   */
-  const closeSpin = () => {
-    setVariable('layoutContentSpinning', false)
-  }
-
+export const useMaximize = () => {
   /**
    *
    * 当前 LayoutContent 是处于否全屏状态
@@ -68,8 +29,9 @@ export function useMainPage() {
    * @example
    * isLayoutContentMaximized() // true or false
    */
-  const isLayoutContentMaximized = () =>
-    computed(() => getVariableToRefs('layoutContentMaximize').value)
+  const isLayoutContentMaximized = computed(
+    () => getVariableToRefs('layoutContentMaximize').value,
+  )
 
   /**
    *
@@ -113,10 +75,9 @@ export function useMainPage() {
   }
 
   return {
-    reload,
-    maximize,
     isLayoutContentMaximized,
-    openSpin,
-    closeSpin,
+    maximize,
   }
 }
+
+export type UseMaximizeReturnType = ReturnType<typeof useMaximize>

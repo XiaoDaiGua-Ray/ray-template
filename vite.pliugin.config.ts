@@ -33,8 +33,8 @@ import config from './cfg'
 
 import type { PluginOption } from 'vite'
 
-// 仅适用于构建模式（任何构建模式：preview、build、report...）
-function onlyBuildOptions(mode: string) {
+// 仅适用于报告模式
+function onlyReportOptions(mode: string) {
   return [
     visualizer({
       gzipSize: true, // 搜集 `gzip` 压缩包
@@ -43,6 +43,12 @@ function onlyBuildOptions(mode: string) {
       filename: 'visualizer.html',
       open: mode === 'report' ? true : false, // 以默认服务器代理打开文件
     }),
+  ]
+}
+
+// 仅适用于构建模式（任何构建模式：preview、build、report...）
+function onlyBuildOptions(mode: string) {
+  return [
     viteCDNPlugin({
       // modules 顺序 vue, vue-demi 必须保持当前顺序加载，否则会出现加载错误问题
       modules: [
@@ -180,6 +186,7 @@ function baseOptions(mode: string) {
 export default function (mode: string): PluginOption[] {
   const plugins =
     mode === 'development' ? onlyDevOptions(mode) : onlyBuildOptions(mode)
+  const reportPlugins = mode === 'report' ? onlyReportOptions(mode) : []
 
-  return [...baseOptions(mode), ...plugins]
+  return [...baseOptions(mode), ...plugins, ...reportPlugins]
 }

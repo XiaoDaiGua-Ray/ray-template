@@ -232,3 +232,27 @@ export function print<T extends BasicTarget<HTMLElement>>(
 
   watchEffectWithTarget(watcher)
 }
+
+/**
+ *
+ * @param targetObject 对象
+ * @param targetKeys 待删除的 key
+ *
+ * 删除对象中的指定 key
+ *
+ * @example
+ * omit({ a: 1, b: 2, c: 3 }, 'a') => { b: 2, c: 3 }
+ * omit({ a: 1, b: 2, c: 3 }, ['a', 'b']) => { c: 3 }
+ */
+export const omit = <T extends Record<string, unknown>, K extends keyof T>(
+  targetObject: T,
+  targetKeys: K | K[],
+): Omit<T, K> => {
+  const keys = Array.isArray(targetKeys) ? targetKeys : [targetKeys]
+
+  keys.forEach((key) => {
+    delete targetObject[key]
+  })
+
+  return targetObject
+}

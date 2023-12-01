@@ -10,10 +10,11 @@
  */
 
 import { setVariable, getVariableToRefs } from '@/global-variable'
+import { cloneDeep } from 'lodash-es'
 
 import type { DeepMutable } from '@/types/modules/helper'
 
-export function useRootRoute() {
+export function useAppRoot() {
   const globalRootRoute = getVariableToRefs('globalRootRoute')
 
   /**
@@ -32,11 +33,20 @@ export function useRootRoute() {
    */
   const getRootName = computed(() => globalRootRoute.value.name)
 
+  /**
+   *
+   * @param route 根路由配置内容
+   *
+   * 设置根路由
+   *
+   * @example
+   * setRootRoute({ path: '/your root path', name: 'your root name' })
+   */
   const setRootRoute = (route: DeepMutable<typeof globalRootRoute.value>) => {
-    setVariable(
-      'globalRootRoute',
-      Object.assign({}, globalRootRoute.value, route),
-    )
+    const routeRef = getVariableToRefs('globalRootRoute')
+    const assignRoute = Object.assign(cloneDeep(routeRef.value), route)
+
+    setVariable('globalRootRoute', assignRoute)
   }
 
   return {
@@ -46,3 +56,5 @@ export function useRootRoute() {
     setRootRoute,
   }
 }
+
+export type UseAppRootReturnType = ReturnType<typeof useAppRoot>

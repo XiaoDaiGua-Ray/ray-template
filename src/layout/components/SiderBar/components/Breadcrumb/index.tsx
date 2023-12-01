@@ -18,7 +18,10 @@
  * 添加 <span> 标签, 避免 Runtime directive used on component... 警告
  */
 
+import './index.scss'
+
 import { NDropdown, NBreadcrumb, NBreadcrumbItem } from 'naive-ui'
+import { TransitionGroup } from 'vue'
 
 import { useMenuGetters, useMenuActions } from '@/store'
 import { useDevice } from '@/hooks/web'
@@ -61,36 +64,41 @@ export default defineComponent({
     }
   },
   render() {
-    const { isTabletOrSmaller } = this
+    const { isTabletOrSmaller, getBreadcrumbOptions } = this
+    const { dropdownSelect, breadcrumbItemClick } = this
 
     return isTabletOrSmaller ? (
-      <div></div>
+      <div style="display: none;"></div>
     ) : (
       <NBreadcrumb>
-        {this.getBreadcrumbOptions.map((curr) => (
-          <NBreadcrumbItem
-            key={curr.key}
-            onClick={this.breadcrumbItemClick.bind(this, curr)}
-          >
-            <NDropdown
-              labelField="breadcrumbLabel"
-              options={
-                curr.children && curr.children?.length > 1 ? curr.children : []
-              }
-              onSelect={this.dropdownSelect.bind(this)}
+        <TransitionGroup tag="li" name="breadcrumb" appear>
+          {getBreadcrumbOptions.map((curr) => (
+            <NBreadcrumbItem
+              key={curr.path}
+              onClick={breadcrumbItemClick.bind(this, curr)}
             >
-              {{
-                default: () => (
-                  <span>
-                    {curr.label && typeof curr.label === 'function'
-                      ? curr.label()
-                      : curr.breadcrumbLabel}
-                  </span>
-                ),
-              }}
-            </NDropdown>
-          </NBreadcrumbItem>
-        ))}
+              <NDropdown
+                labelField="breadcrumbLabel"
+                options={
+                  curr.children && curr.children?.length > 1
+                    ? curr.children
+                    : []
+                }
+                onSelect={dropdownSelect.bind(this)}
+              >
+                {{
+                  default: () => (
+                    <span>
+                      {curr.label && typeof curr.label === 'function'
+                        ? curr.label()
+                        : curr.breadcrumbLabel}
+                    </span>
+                  ),
+                }}
+              </NDropdown>
+            </NBreadcrumbItem>
+          ))}
+        </TransitionGroup>
       </NBreadcrumb>
     )
   },

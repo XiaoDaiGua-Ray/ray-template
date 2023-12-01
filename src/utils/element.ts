@@ -2,82 +2,13 @@ import { isValueType } from '@/utils/basic'
 import { APP_REGEX } from '@/app-config/regexConfig'
 import { unrefElement } from '@/utils/vue'
 import { watchEffectWithTarget } from '@/utils/vue'
+import { useCurrentElement } from '@vueuse/core'
 
 import type {
-  EventListenerOrEventListenerObject,
   PartialCSSStyleDeclaration,
   ElementSelector,
 } from '@/types/modules/utils'
-import type { EventListenerTarget } from '@/types/modules/utils'
 import type { BasicTarget, TargetValue } from '@/types/modules/vue'
-
-/**
- *
- * @param target Target element dom
- * @param event 绑定事件类型
- * @param handler 事件触发方法
- * @param useCapture 是否冒泡
- *
- * @remark 给元素绑定某个事件柄方法
- */
-export const on = (
-  target: EventListenerTarget,
-  event: string,
-  handler: EventListenerOrEventListenerObject,
-  useCapture: boolean | AddEventListenerOptions = false,
-) => {
-  const targetElement = computed(() => unrefElement(target, window))
-
-  const update = <
-    T extends TargetValue<HTMLElement | Element | Window | Document>,
-  >(
-    element: T,
-  ) => {
-    if (element && event && handler) {
-      element.addEventListener(event, handler, useCapture)
-    }
-  }
-
-  const watcher = watch(targetElement, (ndata) => update(ndata), {
-    immediate: true,
-  })
-
-  watchEffectWithTarget(watcher)
-}
-
-/**
- *
- * @param target Target element dom
- * @param event 卸载事件类型
- * @param handler 所需卸载方法
- * @param useCapture 是否冒泡
- *
- * @remark 卸载元素上某个事件柄方法
- */
-export const off = (
-  target: EventListenerTarget,
-  event: string,
-  handler: EventListenerOrEventListenerObject,
-  useCapture: boolean | AddEventListenerOptions = false,
-) => {
-  const targetElement = computed(() => unrefElement(target, window))
-
-  const update = <
-    T extends TargetValue<HTMLElement | Element | Window | Document>,
-  >(
-    element: T,
-  ) => {
-    if (element && event && handler) {
-      element.removeEventListener(event, handler, useCapture)
-    }
-  }
-
-  const watcher = watch(targetElement, (ndata) => update(ndata), {
-    immediate: true,
-  })
-
-  watchEffectWithTarget(watcher)
-}
 
 /**
  *

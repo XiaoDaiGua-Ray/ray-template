@@ -22,5 +22,6 @@
   "QRCode": "二维码",
   "SvgIcon": "SVG 图标",
   "TemplateHooks": "模板内置 Api",
-  "Modal": "模态框"
+  "Modal": "模态框",
+  "ContextMenu": "右键菜单"
 }

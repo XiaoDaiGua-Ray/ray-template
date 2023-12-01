@@ -20,7 +20,7 @@ export type Target = number | AppMenuOption
  * 导航函数
  * 但是该方法仅限于在登入后调用
  */
-export function useAppMenu() {
+export function useAppNavigation() {
   const { changeMenuModelValue } = useMenuActions()
 
   /**
@@ -32,6 +32,10 @@ export function useAppMenu() {
    * - 如果传递参数需要导航的菜单项为非根菜单项，会自动的递归导航至第一个子菜单项
    *
    * 当传递参数为 AppMenuOption 类型，会直接导航至目标页面。该方法可以不区分菜单层级
+   *
+   * @example
+   * navigationTo(1) // 导航至第二个菜单项，如果为根菜单项，会自动的递归导航至第一个子菜单项
+   * navigationTo({ AppMenuOption }) // 导航至目标菜单项
    */
   const navigationTo = (target: Target) => {
     if (typeof target === 'number') {
@@ -80,3 +84,5 @@ export function useAppMenu() {
     navigationTo,
   }
 }
+
+export type UseAppNavigationReturnType = ReturnType<typeof useAppNavigation>

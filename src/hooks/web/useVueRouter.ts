@@ -33,3 +33,5 @@ export const useVueRouter = () => {
     throw new Error('router is not defined')
   }
 }
+
+export type UseVueRouterReturnType = ReturnType<typeof useVueRouter>

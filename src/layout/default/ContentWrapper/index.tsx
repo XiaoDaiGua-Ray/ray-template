@@ -23,7 +23,7 @@ import AppRequestCancelerProvider from '@/app-components/provider/AppRequestCanc
 
 import { getVariableToRefs } from '@/global-variable'
 import { useSettingGetters } from '@/store'
-import { useMainPage } from '@/hooks/template'
+import { useMaximize } from '@/hooks/template'
 
 import type { GlobalThemeOverrides } from 'naive-ui'
 
@@ -32,7 +32,7 @@ export default defineComponent({
   setup() {
     const router = useRouter()
 
-    const { maximize } = useMainPage()
+    const { maximize } = useMaximize()
     const { getContentTransition } = useSettingGetters()
     const spinning = ref(false)
     const themeOverridesSpin: GlobalThemeOverrides['Spin'] = {

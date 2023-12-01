@@ -12,16 +12,17 @@
 import { NSpace, NSwitch, NTooltip } from 'naive-ui'
 import { RIcon } from '@/components'
 
-import { useSettingGetters, useSettingActions } from '@/store'
+import { useSettingGetters } from '@/store'
+import { useTheme } from '@/hooks/template'
 
 export default defineComponent({
   name: 'ThemeSwitch',
   setup() {
-    const { changeSwitcher } = useSettingActions()
+    const { changeDarkTheme, changeLightTheme } = useTheme()
     const { getAppTheme } = useSettingGetters()
     const modelAppThemeRef = ref(getAppTheme.value)
 
-    const handleRailStyle = ({ checked }: { checked: boolean }) => {
+    const railStyle = ({ checked }: { checked: boolean }) => {
       return checked
         ? {
             backgroundColor: '#000000',
@@ -32,14 +33,15 @@ export default defineComponent({
     }
 
     return {
-      changeSwitcher,
+      changeDarkTheme,
+      changeLightTheme,
       getAppTheme,
-      handleRailStyle,
+      railStyle,
       modelAppThemeRef,
     }
   },
   render() {
-    const { $t } = this
+    const { $t, changeDarkTheme, changeLightTheme, railStyle } = this
 
     return (
       <NSpace justify="center">
@@ -48,28 +50,14 @@ export default defineComponent({
             trigger: () => (
               <NSwitch
                 v-model:value={this.modelAppThemeRef}
-                railStyle={this.handleRailStyle.bind(this)}
+                railStyle={railStyle.bind(this)}
                 onUpdateValue={(bool: boolean) =>
-                  this.changeSwitcher(bool, 'appTheme')
+                  bool ? changeDarkTheme() : changeLightTheme()
                 }
               >
                 {{
-                  'checked-icon': () =>
-                    h(
-                      RIcon,
-                      {
-                        name: 'dark',
-                      },
-                      {},
-                    ),
-                  'unchecked-icon': () =>
-                    h(
-                      RIcon,
-                      {
-                        name: 'light',
-                      },
-                      {},
-                    ),
+                  'checked-icon': () => <RIcon name="dark" />,
+                  'unchecked-icon': () => <RIcon name="light" />,
                   checked: () => '亮',
                   unchecked: () => '暗',
                 }}

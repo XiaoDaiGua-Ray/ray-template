@@ -29,7 +29,7 @@ export default defineComponent({
     const inputInstRef = ref<InputInst | null>(null)
 
     const { logout } = useSigningActions()
-    const { changeSwitcher } = useSettingActions()
+    const { updateSettingState } = useSettingActions()
     const { setLockAppScreen } = useAppLockScreen()
     const { isTabletOrSmaller } = useDevice()
 
@@ -64,7 +64,7 @@ export default defineComponent({
         onPositiveClick: () => {
           logout()
           setTimeout(() => {
-            changeSwitcher(false, 'lockScreenSwitch')
+            updateSettingState('lockScreenSwitch', false)
           })
         },
       })
@@ -75,7 +75,7 @@ export default defineComponent({
       formRef.value?.validate((error) => {
         if (!error) {
           setLockAppScreen(false)
-          changeSwitcher(false, 'lockScreenSwitch')
+          updateSettingState('lockScreenSwitch', false)
 
           state.lockCondition = useCondition()
         }

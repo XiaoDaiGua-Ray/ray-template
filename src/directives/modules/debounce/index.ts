@@ -15,7 +15,7 @@
  */
 
 import { debounce } from 'lodash-es'
-import { on, off } from '@use-utils/element'
+import { useEventListener } from '@vueuse/core'
 
 import type { DebounceBindingOptions } from './type'
 import type { AnyFC } from '@/types/modules/utils'
@@ -27,6 +27,7 @@ const debounceDirective: CustomDirectiveFC<
   DebounceBindingOptions
 > = () => {
   let debounceFunction: DebouncedFunc<AnyFC> | null
+  let cleanup: () => void
 
   return {
     beforeMount: (el, { value }) => {
@@ -38,14 +39,14 @@ const debounceDirective: CustomDirectiveFC<
 
       debounceFunction = debounce(func, wait, Object.assign({}, options))
 
-      on(el, trigger, debounceFunction)
+      cleanup = useEventListener(el, trigger, debounceFunction)
     },
     beforeUnmount: (el, { value }) => {
       const { trigger = 'click' } = value
 
       if (debounceFunction) {
         debounceFunction.cancel()
-        off(el, trigger, debounceFunction)
+        cleanup?.()
       }
 
       debounceFunction = null

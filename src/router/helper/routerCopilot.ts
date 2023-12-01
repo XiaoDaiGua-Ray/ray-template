@@ -15,7 +15,7 @@ import { useVueRouter } from '@/hooks/web'
 import { setStorage } from '@/utils/cache'
 import { getAppEnvironment } from '@/utils/basic'
 import { useSigningGetters } from '@/store'
-import { useRootRoute } from '@/hooks/template'
+import { useAppRoot } from '@/hooks/template'
 
 import type { Router } from 'vue-router'
 import type { AppRouteMeta } from '@/router/type'
@@ -132,7 +132,7 @@ export const redirectRouterToDashboard = (isReplace = true) => {
   const { router } = useVueRouter()
 
   const { push, replace } = router
-  const { getRootPath } = useRootRoute()
+  const { getRootPath } = useAppRoot()
 
   setStorage('menuKey', getRootPath.value)
 

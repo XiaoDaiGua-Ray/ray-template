@@ -9,6 +9,8 @@ import type { ModalProps } from 'naive-ui'
  *
  * 根据预设模态框设置拖拽效果
  * 但是该效果有且仅有 card, dialog 有效
+ *
+ * 默认添加 30ms 延迟，避免诡异问题
  */
 export const setupDraggable = (
   bindModal: HTMLElement,

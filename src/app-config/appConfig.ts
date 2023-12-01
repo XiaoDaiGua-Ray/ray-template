@@ -52,7 +52,7 @@ export const PRE_LOADING_CONFIG: PreloadingConfig = {
  * 该变量的值，会传递给 globalRootRoute
  * 这么做也是为了能够在兼容老版本的模板，并且也是为了能够动态的维护根路由信息
  *
- * 有些时候，如果你希望动态的维护 Root Route 信息，可以使用 useRootRoute 方法
+ * 有些时候，如果你希望动态的维护 Root Route 信息，可以使用 useAppRoot 方法
  */
 export const ROOT_ROUTE: RootRoute = {
   name: 'Dashboard',

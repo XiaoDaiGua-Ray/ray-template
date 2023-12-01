@@ -38,7 +38,7 @@ import { useDevice } from '@/hooks/web'
 import { getVariableToRefs, setVariable } from '@/global-variable'
 import { useFullscreen } from 'vue-hooks-plus'
 import { useI18n } from '@/hooks/web'
-import { useMainPage } from '@/hooks/template'
+import { useSpinning } from '@/hooks/template'
 import { useSettingGetters, useSettingActions } from '@/store'
 
 import type { IconEventMapOptions, IconEventMap } from './type'
@@ -46,9 +46,9 @@ import type { IconEventMapOptions, IconEventMap } from './type'
 export default defineComponent({
   name: 'AppSiderBar',
   setup() {
-    const { updateLocale, changeSwitcher } = useSettingActions()
+    const { updateLocale, updateSettingState } = useSettingActions()
     const { t } = useI18n()
-    const { reload } = useMainPage()
+    const { reload } = useSpinning()
 
     const [isFullscreen, { toggleFullscreen, isEnabled }] = useFullscreen(
       document.getElementsByTagName('html')[0],
@@ -107,7 +107,7 @@ export default defineComponent({
         globalSearchShown.value = true
       },
       lock: () => {
-        changeSwitcher(true, 'lockScreenSwitch')
+        updateSettingState('lockScreenSwitch', true)
       },
       menu: () => {
         setVariable('globalDrawerValue', !globalDrawerValue.value)

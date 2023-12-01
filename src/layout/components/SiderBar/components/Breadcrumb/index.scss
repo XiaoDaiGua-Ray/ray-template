@@ -1,0 +1,20 @@
+.n-breadcrumb .n-breadcrumb-item {
+  &.breadcrumb-enter-active,
+  &.breadcrumb-leave-active {
+    transition: all 0.5s;
+  }
+
+  & .breadcrumb-move {
+    transition: all 0.5s;
+  }
+
+  &.breadcrumb-enter-from,
+  &.breadcrumb-leave-active {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  &.breadcrumb-leave-active {
+    position: absolute;
+  }
+}

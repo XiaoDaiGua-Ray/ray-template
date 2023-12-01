@@ -22,5 +22,6 @@
   "QRCode": "QRCode",
   "SvgIcon": "SVG Icon",
   "TemplateHooks": "Template Api",
-  "Modal": "Modal"
+  "Modal": "Modal",
+  "ContextMenu": "Right Click Menu"
 }
