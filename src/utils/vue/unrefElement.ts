@@ -12,6 +12,22 @@
 import type { BasicTarget, TargetType, TargetValue } from '@/types/modules/vue'
 import type { ComponentPublicInstance } from 'vue'
 
+/**
+ *
+ * @param target 获取 ref dom, vue instance 的 dom
+ * @param defaultTarget 默认值
+ *
+ * @example
+ * <template>
+ *  <div ref="refDom"></div>
+ * </template>
+ *
+ * const refDom = ref<HTMLElement | null>(null)
+ * const computedDom = computed(() => refDom.value)
+ *
+ * unrefElement(refDom) => div
+ * unrefElement(computedDom) => div
+ */
 export function unrefElement<T extends TargetType>(
   target: BasicTarget<T>,
   defaultTarget?: T,

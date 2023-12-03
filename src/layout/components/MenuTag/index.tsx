@@ -353,7 +353,10 @@ export default defineComponent({
           const [menuTag] = tags
 
           nextTick().then(() => {
-            menuTag.scrollIntoView?.(true)
+            scrollRef.value?.scrollTo({
+              left: menuTag.offsetLeft,
+              behavior: 'smooth',
+            })
           })
         }
       })

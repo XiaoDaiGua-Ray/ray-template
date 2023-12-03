@@ -33,6 +33,18 @@ export interface RenderNodeOptions<T extends DefaultElement> {
 
 export type RenderNodeReturn = ReturnType<typeof renderNode>
 
+/**
+ *
+ * @param vnode 将 jsx element, slot, h, string 等渲染为 vnode
+ * @param options 配置项
+ *
+ * 可以将常见的类型转换为 vnode
+ *
+ * @example
+ * renderNode('hello world') => () => 'hello world'
+ * renderNode(<div>hello world</div>) => () => <div>hello world</div>
+ * renderNode(() => <div>hello world</div>) => () => <div>hello world</div>
+ */
 export function renderNode<T extends DefaultElement>(
   vnode: RenderVNodeType,
   options?: RenderNodeOptions<T>,

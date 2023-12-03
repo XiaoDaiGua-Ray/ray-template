@@ -10,8 +10,6 @@
  */
 
 import { useSettingActions, useSettingGetters } from '@/store'
-import { setVariable, getVariableToRefs } from '@/global-variable'
-import { cloneDeep } from 'lodash-es'
 
 export const useWatermark = () => {
   /**

@@ -8,6 +8,8 @@
 
 剔除 `h` 函数渲染，因为该方法不会受到 `vue` 的编译优化。
 
+针对 `MenuTag` 的定位滚动效果做了优化，现在滚动效果更加平滑。
+
 补充了一些代码的注释（慢慢还账-，-）。
 
 ### Feats
@@ -26,6 +28,8 @@
   - `on`
   - `off`
 - 移除 `changeSwitcher` 方法，使用 `updateSettingState` 方法代替
+- `useContextmenuCoordinate` 方法支持配置项
+- `MenuTag` 的定位滚动现在支持过渡效果
 
 ## Fixes
 

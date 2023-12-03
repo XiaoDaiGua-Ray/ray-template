@@ -12,7 +12,12 @@
 import { useEventListener, onClickOutside } from '@vueuse/core'
 
 import type { BasicTarget } from '@/types/modules/vue'
-import type { MaybeElementRef, MaybeElement } from '@vueuse/core'
+import type {
+  MaybeElementRef,
+  MaybeElement,
+  UseEventSourceOptions,
+  MaybeRefOrGetter,
+} from '@vueuse/core'
 
 /**
  *
@@ -29,7 +34,10 @@ import type { MaybeElementRef, MaybeElement } from '@vueuse/core'
  *
  * <NDropdown show={show} x={x} y={y} trigger="manual" placement="bottom-start" />
  */
-export const useContextmenuCoordinate = (target: BasicTarget) => {
+export const useContextmenuCoordinate = (
+  target: BasicTarget,
+  options?: MaybeRefOrGetter<boolean | AddEventListenerOptions>,
+) => {
   const x = ref(0) // 鼠标 x 坐标
   const y = ref(0) // 鼠标 y 坐标
   const show = ref(false) // 是否显示右键菜单
@@ -63,6 +71,7 @@ export const useContextmenuCoordinate = (target: BasicTarget) => {
     target,
     'contextmenu',
     bindContextMenuEvent,
+    options,
   )
   const cleanupClick = useEventListener(target, 'click', () => {
     show.value = false
