@@ -53,7 +53,7 @@ const RouterDemoHome = defineComponent({
                   router.push({
                     path: '/router-demo/router-demo-detail',
                     query: {
-                      name: '23',
+                      name: row.name,
                     },
                   })
                 }}
