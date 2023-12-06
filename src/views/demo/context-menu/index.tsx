@@ -16,7 +16,7 @@ import { useContextmenuCoordinate } from '@/hooks/components'
 export default defineComponent({
   name: 'ContextMenuDemo',
   setup() {
-    const demoOneRef = ref<HTMLElement | null>(null)
+    const demoOneRef = ref<HTMLElement>()
     const demoOneShow = ref(false)
     const options = ref([
       {
