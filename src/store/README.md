@@ -63,7 +63,7 @@ export const useMenuActions = () => {
 - 最后在 index.ts 中暴露
 
 ```ts
-export { useDemoGetters, useMenuActions } from './modules/demo/index'
+export { useDemoGetters, useMenuActions } from './modules/demo'
 ```
 
 - 使用

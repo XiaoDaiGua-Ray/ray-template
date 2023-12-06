@@ -39,7 +39,7 @@ const CalculatePrecision = defineComponent({
       divideOptions: divide,
     }
 
-    const copilotFunc = (value: string[], path: string) => {
+    const copilotFunc = (value: string[], path: keyof typeof actionMap) => {
       const action = actionMap[path]
       const result = action(...value)
 
@@ -66,13 +66,14 @@ const CalculatePrecision = defineComponent({
     return (
       <NLayout>
         <h2 style="margin: 0 0 20px 0">
-          计算方法，默认都保留两位小数与四舍五入，可以根据 format 方法自行转换
+          计算方法，默认都保留八位小数与四舍五入，可以根据 format 方法自行转换
         </h2>
         <h3 style="margin: 0 0 20px 0">
           示例方法都基于 currency.js
           封装，利用其精度处理能力封装了常用的一些计算方法，解决精度问题。如果需要其他的方法请阅读官方文档
           https://currency.js.org/#subtract
         </h3>
+
         <NSpace vertical>
           <NCard title="加法">
             {{

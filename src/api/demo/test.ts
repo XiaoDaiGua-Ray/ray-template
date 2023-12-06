@@ -19,7 +19,7 @@
  * 3. 如果该方法在 setup 环境中使用，则可以使用 useHookPlusRequest 包裹该方法，即可便捷使用该请求函数。如果请求方法在非 setup 环境中使用，直接使用即可
  */
 
-import { request } from '@/axios/index'
+import { request } from '@/axios'
 
 import type { BasicResponse } from '@/types/modules/axios'
 

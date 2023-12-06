@@ -10,7 +10,7 @@
  */
 
 import { piniaMenuStore } from '../modules/menu'
-import { ROOT_ROUTE } from '@/app-config/appConfig'
+import { useAppRoot } from '@/hooks/template'
 
 export const useMenuGetters = () => {
   const variable = piniaMenuStore()
@@ -35,16 +35,16 @@ export const useMenuGetters = () => {
    * @remark 获取菜单标签列表
    */
   const getMenuTagOptions = computed(() => {
-    const { path } = ROOT_ROUTE
+    const { getRootPath } = useAppRoot()
 
     return variable.menuTagOptions.map((curr, _idx, currentArray) => {
-      if (curr.key === getMenuKey.value && curr.key !== path) {
+      if (curr.key === getMenuKey.value && curr.key !== getRootPath.value) {
         curr.closeable = true
       } else {
         curr.closeable = false
       }
 
-      if (curr.key === path) {
+      if (curr.key === getRootPath.value) {
         curr.closeable = false
       }
 

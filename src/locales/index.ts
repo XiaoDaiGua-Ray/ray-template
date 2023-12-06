@@ -26,6 +26,7 @@
 import { createI18n } from 'vue-i18n'
 import { LOCAL_OPTIONS } from '@/app-config/localConfig'
 import { getAppDefaultLanguage, getAppLocalMessages } from '@/locales/helper'
+import { SYSTEM_FALLBACK_LOCALE } from '@/app-config/localConfig'
 
 import type { App } from 'vue'
 import type { I18n, I18nOptions } from 'vue-i18n'
@@ -33,7 +34,10 @@ import type { I18n, I18nOptions } from 'vue-i18n'
 /** i18n 实例 */
 export let i18n: I18n
 
-/** 创建 i18n 实例 */
+/**
+ *
+ * 获取所有语言包，创建 i18n 实例
+ */
 const createI18nOptions = async () => {
   const locale = getAppDefaultLanguage()
   const messages = await getAppLocalMessages(LOCAL_OPTIONS)
@@ -45,12 +49,18 @@ const createI18nOptions = async () => {
     sync: true,
     missingWarn: false,
     silentFallbackWarn: true,
+    fallbackLocale: SYSTEM_FALLBACK_LOCALE,
   })
 
   return i18nInstance
 }
 
-/** 注册 i18n */
+/**
+ *
+ * @param app vue app instance
+ *
+ * 注册 i18n，并且缓存实例
+ */
 export const setupI18n = async (app: App<Element>) => {
   const i18nInstance = await createI18nOptions()
 

@@ -10,13 +10,77 @@
  */
 
 import { useMenuGetters, useMenuActions } from '@/store'
-import { ROOT_ROUTE } from '@/app-config/appConfig'
+import { redirectRouterToDashboard } from '@/router/helper/routerCopilot'
 
 import type { MenuTagOptions, Key } from '@/types/modules/app'
 
 export type CloseMenuTag = Key | MenuTagOptions
 
-export function useMenuTag() {
+/**
+ *
+ * @param target 标签页对象、索引、key
+ * @param fc 触发函数
+ *
+ * 该方法用于统一获取目标标签页方法
+ */
+const normalMenuTagOption = (target: CloseMenuTag, fc: string) => {
+  const { getMenuTagOptions } = useMenuGetters()
+
+  if (typeof target === 'number') {
+    // 判断是否为 NaN
+    if (isNaN(target)) {
+      console.warn(`${fc}: The ${target} is NaN, expect number.`)
+
+      return
+    }
+
+    // 判断是否超出当前标签页列表最大长度或者是否为负数
+    if (target > getMenuTagOptions.value.length || target < -1) {
+      console.warn(
+        `${fc}: The incoming index ${target} did not match the corresponding item.`,
+      )
+
+      return
+    }
+
+    return {
+      option: getMenuTagOptions.value[target],
+      index: target,
+    }
+  } else if (typeof target === 'string') {
+    // 查找符合条件的 key
+    const index = getMenuTagOptions.value.findIndex(
+      (curr) => curr.key === target,
+    )
+
+    return index > -1
+      ? {
+          option: getMenuTagOptions.value[index],
+          index,
+        }
+      : console.warn(
+          `${fc}: The incoming key ${target} did not match the corresponding item.`,
+        )
+  } else {
+    const { key } = target
+    const index = getMenuTagOptions.value.findIndex((curr) => curr.key === key)
+
+    if (index === -1) {
+      console.warn(
+        `${fc}: The incoming menuTag option ${target.key} did not match the corresponding item.`,
+      )
+
+      return
+    }
+
+    return {
+      option: target,
+      index,
+    }
+  }
+}
+
+export function useSiderBar() {
   const { getMenuTagOptions, getMenuKey } = useMenuGetters()
   const {
     changeMenuModelValue,
@@ -24,71 +88,6 @@ export function useMenuTag() {
     emptyMenuTagOptions,
     setMenuTagOptions,
   } = useMenuActions()
-  const { path } = ROOT_ROUTE
-
-  /**
-   *
-   * @param target 标签页对象、索引、key
-   * @param fc 触发函数
-   *
-   * 该方法用于统一获取目标标签页方法
-   */
-  const normalMenuTagOption = (target: CloseMenuTag, fc: string) => {
-    if (typeof target === 'number') {
-      // 判断是否为 NaN
-      if (isNaN(target)) {
-        console.warn(`${fc}: The ${target} is NaN, expect number.`)
-
-        return
-      }
-
-      // 判断是否超出当前标签页列表最大长度或者是否为负数
-      if (target > getMenuTagOptions.value.length || target < -1) {
-        console.warn(
-          `${fc}: The incoming index ${target} did not match the corresponding item.`,
-        )
-
-        return
-      }
-
-      return {
-        option: getMenuTagOptions.value[target],
-        index: target,
-      }
-    } else if (typeof target === 'string') {
-      // 查找符合条件的 key
-      const index = getMenuTagOptions.value.findIndex(
-        (curr) => curr.key === target,
-      )
-
-      return index > -1
-        ? {
-            option: getMenuTagOptions.value[index],
-            index,
-          }
-        : console.warn(
-            `${fc}: The incoming key ${target} did not match the corresponding item.`,
-          )
-    } else {
-      const { key } = target
-      const index = getMenuTagOptions.value.findIndex(
-        (curr) => curr.key === key,
-      )
-
-      if (index === -1) {
-        console.warn(
-          `${fc}: The incoming menuTag option ${target.key} did not match the corresponding item.`,
-        )
-
-        return
-      }
-
-      return {
-        option: target,
-        index,
-      }
-    }
-  }
 
   /**
    *
@@ -169,9 +168,17 @@ export function useMenuTag() {
     const normal = normalMenuTagOption(target, 'close')
 
     if (normal) {
-      const { option } = normal
+      const { index, option } = normal
 
-      changeMenuModelValue(option.key, option)
+      spliceMenTagOptions(index)
+
+      if (option.key === getMenuKey.value) {
+        const tag = getMenuTagOptions.value[index - 1]
+
+        if (tag) {
+          changeMenuModelValue(tag.key, tag)
+        }
+      }
     }
   }
 
@@ -180,13 +187,8 @@ export function useMenuTag() {
    * 关闭所有标签并且导航至 root path
    */
   const closeAll = () => {
-    const option = getMenuTagOptions.value.find((curr) => curr.key === path)
-
-    if (option) {
-      changeMenuModelValue(path, option)
-    }
-
     emptyMenuTagOptions()
+    redirectRouterToDashboard()
   }
 
   /**
@@ -213,7 +215,7 @@ export function useMenuTag() {
 
       if (index <= currentIndex) {
         if (getMenuKey.value !== option.key) {
-          changeMenuModelValue(option.key as string, option)
+          changeMenuModelValue(option.key, option)
         }
       }
     }
@@ -242,7 +244,7 @@ export function useMenuTag() {
 
       if (currentIndex <= index) {
         if (getMenuKey.value !== option.key) {
-          changeMenuModelValue(option.key as string, option)
+          changeMenuModelValue(option.key, option)
         }
       }
     }
@@ -285,3 +287,5 @@ export function useMenuTag() {
     checkCloseLeft,
   }
 }
+
+export type UseSiderBarReturnType = ReturnType<typeof useSiderBar>

@@ -12,11 +12,11 @@
 import './index.scss'
 
 import { NMenu, NLayoutSider, NDrawer } from 'naive-ui'
-import SiderBarLogo from './components/SiderBarLogo/index'
+import SiderBarLogo from './components/SiderBarLogo'
 
 import { APP_MENU_CONFIG } from '@/app-config/appConfig'
-import { useDevice } from '@/hooks/web/index'
-import { getVariableToRefs, setVariable } from '@/global-variable/index'
+import { useDevice } from '@/hooks/web'
+import { getVariableToRefs, setVariable } from '@/global-variable'
 import { useMenuGetters, useMenuActions } from '@/store'
 
 import type { MenuInst } from 'naive-ui'

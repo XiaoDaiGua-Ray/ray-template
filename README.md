@@ -1,5 +1,5 @@
 <div align="center">
- <a href="https://github.com/XiaoDaiGua-Ray/ray-template"> <img alt="Ray Template" width="200" height="200" src="https://usc1.contabostorage.com/c2e495d7890844d392e8ec0c6e5d77eb:alist/ray/ray.svg?sign=ZklU9Bh5b6oKp1X0LOhGwkx4g5mW4wk_w9Jt5zlZ5EQ=:0"> </a> <br> <br>
+ <a href="https://github.com/XiaoDaiGua-Ray/ray-template"> <img alt="Ray Template" width="200" height="200" src="https://r2chevereto.yka.moe/longmao.navigator.th.png"> </a> <br> <br>
  <a href="https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/LICENSE"><img src="https://img.shields.io/github/license/XiaoDaiGua-Ray/ray-template" alt="LICENSE"></a>
 </div>
 
@@ -9,23 +9,25 @@
 
 English | [简体中文](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/README-ZH.md)
 
-A middle and backend template based on vite4.x & ts(x) & pinia & vue3.x
+A `free`, `efficient`, `complete with features` middle and backend template based on the latest technologies such as vite5.x & ts(x) & pinia & vue3.x.
 
 </div>
 
 ## ✨ Feature
 
-- **Latest Technology Stack**：Developed using front-end cutting-edge technologies such as vue3.x/vite4.x/pinia
-- **TypeScript**：The language for application-level JavaScript
-- **App Theme**：Configurable themes
-- **Globalization**：Built-in complete internationalization solution
-- **Mock Data**：Built-in Mock data scheme
-- **Permissions**：Built-in complete dynamic routing permission generation solution
-- **Components**：Secondary encapsulation of multiple commonly used components
+- **Power by love**: Contains almost all common template features on the market and all are free to use.
+- **Latest Technology Stack**：Developed using front-end cutting-edge technologies such as vue3.x/vite5.x/pinia.
+- **TypeScript**：The language for application-level JavaScript.
+- **App Theme**：Configurable themes.
+- **Globalization**：Built-in complete internationalization solution.
+- **Mock Data**：Built-in Mock data scheme.
+- **Permissions**：Built-in complete dynamic routing permission generation solution.
+- **Components**：Secondary encapsulation of multiple commonly used components.
 - **Axios Request**：Secondary encapsulation of the axios library, supporting functions such as cancellation, anti-shake, automatic repeat cancellation, etc.
-- **Page Cache**：Arbitrarily deep page cache
-- **SVG**：Built-in svg icon solution
-- **Standalone Data Methods Views**：Decoupled management of data, methods, and views allows for secondary development with confidence
+- **Page Cache**：Arbitrarily deep page cache.
+- **SVG**：Built-in svg icon solution.
+- **Standalone Data Methods Views**：Decoupled management of data, methods, and views allows for secondary development with confidence.
+- **Template Specific Hooks** : Hooks based on the template feature package make it easier to use some of the features of the template.
 
 ## 🪄 Preview
 

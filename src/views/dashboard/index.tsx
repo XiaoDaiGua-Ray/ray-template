@@ -10,8 +10,8 @@ import {
   NP,
   NH6,
 } from 'naive-ui'
-import RIcon from '@/components/RIcon/index'
-import RayLink from '@/app-components/app/RayLink/index'
+import { RIcon } from '@/components'
+import RayLink from '@/app-components/app/RayLink'
 
 const Dashboard = defineComponent({
   name: 'RDashboard',
@@ -90,15 +90,7 @@ const Dashboard = defineComponent({
       <NLayout class="dashboard-layout layout-full">
         <NCard>
           {{
-            header: () =>
-              h(
-                RIcon,
-                {
-                  name: 'ray',
-                  size: '64',
-                },
-                {},
-              ),
+            header: () => <RIcon name="ray" size="64" />,
             default: () => '当你看见这个页面后, 就说明项目已经启动成功了~',
           }}
         </NCard>

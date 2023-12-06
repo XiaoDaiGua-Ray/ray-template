@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { i18n } from '@/locales/index'
+import { i18n } from '@/locales'
 
 import type { WritableComputedRef } from 'vue'
 
@@ -63,3 +63,5 @@ export const useI18n = (namespace?: string) => {
  * 该插件识别 t 方法包裹 path 进行提示文案内容
  */
 export const t = (key: string) => key
+
+export type UseI18nReturnType = ReturnType<typeof useI18n>

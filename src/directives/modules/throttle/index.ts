@@ -15,7 +15,7 @@
  */
 
 import { throttle } from 'lodash-es'
-import { on, off } from '@use-utils/element'
+import { useEventListener } from '@vueuse/core'
 
 import type { ThrottleBindingOptions } from './type'
 import type { AnyFC } from '@/types/modules/utils'
@@ -27,6 +27,7 @@ const throttleDirective: CustomDirectiveFC<
   ThrottleBindingOptions
 > = () => {
   let throttleFunction: DebouncedFunc<AnyFC> | null
+  let cleanup: () => void
 
   return {
     beforeMount: (el, { value }) => {
@@ -38,14 +39,12 @@ const throttleDirective: CustomDirectiveFC<
 
       throttleFunction = throttle(func, wait, Object.assign({}, options))
 
-      on(el, trigger, throttleFunction)
+      useEventListener(el, trigger, throttleFunction)
     },
-    beforeUnmount: (el, { value }) => {
-      const { trigger = 'click' } = value
-
+    beforeUnmount: () => {
       if (throttleFunction) {
         throttleFunction.cancel()
-        off(el, trigger, throttleFunction)
+        cleanup?.()
       }
 
       throttleFunction = null

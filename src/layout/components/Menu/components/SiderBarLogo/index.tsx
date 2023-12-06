@@ -12,7 +12,7 @@
 import './index.scss'
 
 import { NEllipsis, NPopover } from 'naive-ui'
-import RIcon from '@/components/RIcon/index'
+import { RIcon } from '@/components'
 
 export default defineComponent({
   name: 'SiderBarLogo',

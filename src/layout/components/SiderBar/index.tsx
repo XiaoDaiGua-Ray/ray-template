@@ -20,12 +20,12 @@
 import './index.scss'
 
 import { NLayoutHeader, NSpace, NDropdown } from 'naive-ui'
-import RIcon from '@/components/RIcon/index'
-import TooltipIcon from '@/layout/components/SiderBar/components/TooltipIcon/index'
-import SettingDrawer from './components/SettingDrawer/index'
-import Breadcrumb from './components/Breadcrumb/index'
-import GlobalSearch from './components/GlobalSearch/index'
-import AppAvatar from '@/app-components/app/AppAvatar/index'
+import { RIcon } from '@/components'
+import TooltipIcon from '@/layout/components/SiderBar/components/TooltipIcon'
+import SettingDrawer from './components/SettingDrawer'
+import Breadcrumb from './components/Breadcrumb'
+import GlobalSearch from './components/GlobalSearch'
+import AppAvatar from '@/app-components/app/AppAvatar'
 
 import { LOCAL_OPTIONS } from '@/app-config/localConfig'
 import {
@@ -34,11 +34,11 @@ import {
   createLeftIconOptions,
   createRightIconOptions,
 } from './shared'
-import { useDevice } from '@/hooks/web/index'
-import { getVariableToRefs, setVariable } from '@/global-variable/index'
+import { useDevice } from '@/hooks/web'
+import { getVariableToRefs, setVariable } from '@/global-variable'
 import { useFullscreen } from 'vue-hooks-plus'
-import { useI18n } from '@/hooks/web/index'
-import { useMainPage } from '@/hooks/template/index'
+import { useI18n } from '@/hooks/web'
+import { useSpinning } from '@/hooks/template'
 import { useSettingGetters, useSettingActions } from '@/store'
 
 import type { IconEventMapOptions, IconEventMap } from './type'
@@ -46,9 +46,9 @@ import type { IconEventMapOptions, IconEventMap } from './type'
 export default defineComponent({
   name: 'AppSiderBar',
   setup() {
-    const { updateLocale, changeSwitcher } = useSettingActions()
+    const { updateLocale, updateSettingState } = useSettingActions()
     const { t } = useI18n()
-    const { reload } = useMainPage()
+    const { reload } = useSpinning()
 
     const [isFullscreen, { toggleFullscreen, isEnabled }] = useFullscreen(
       document.getElementsByTagName('html')[0],
@@ -107,7 +107,7 @@ export default defineComponent({
         globalSearchShown.value = true
       },
       lock: () => {
-        changeSwitcher(true, 'lockScreenSwitch')
+        updateSettingState('lockScreenSwitch', true)
       },
       menu: () => {
         setVariable('globalDrawerValue', !globalDrawerValue.value)

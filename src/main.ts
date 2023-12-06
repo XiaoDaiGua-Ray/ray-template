@@ -4,11 +4,11 @@ import '@/styles/base.scss'
 
 import 'virtual:svg-icons-register' // vite-plugin-svg-icons 脚本，启用 svg 雪碧图
 
-import { setupRouter } from './router/index'
-import { setupStore } from './store/index'
-import { setupI18n } from './locales/index'
-import { setupDayjs } from './dayjs/index'
-import { setupDirectives } from './directives/index'
+import { setupRouter } from './router'
+import { setupStore } from './store'
+import { setupI18n } from './locales'
+import { setupDayjs } from './dayjs'
+import { setupDirectives } from './directives'
 
 import type { App as AppType } from 'vue'
 

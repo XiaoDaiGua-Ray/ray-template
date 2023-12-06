@@ -1,12 +1,28 @@
+import printJs from 'print-js'
+import { unrefElement } from '@/utils/vue'
+import { watchEffectWithTarget } from '@/utils/vue'
+
 import type {
   ValidateValueType,
   DownloadAnyFileDataType,
   BasicTypes,
 } from '@/types/modules/utils'
+import type { BasicTarget, TargetValue } from '@/types/modules/vue'
 
 /**
  *
- * @returns 获取当前项目环境
+ * 获取当前项目环境
+ *
+ * 如果你只是想单纯的判断是否为开发环境，可以直接使用: __DEV__
+ *
+ * @example
+ * 是否为开发环境: __DEV__
+ *
+ * @example
+ * const { BASE_URL } = getAppEnvironment() 获取 BASE_URL
+ * const { MODE } = getAppEnvironment() 获取 MODE，当前环境
+ * const { SSR } = getAppEnvironment() 是否启用 SSR
+ * const { your config } = getAppEnvironment() 获取你自定义的配置项
  */
 export const getAppEnvironment = () => {
   const env = import.meta.env
@@ -18,7 +34,10 @@ export const getAppEnvironment = () => {
  *
  * @param data 二进制流数据
  *
- * @returns format binary to base64 of the image
+ * 将 base64 格式文件转换为图片
+ *
+ * @example
+ * arrayBufferToBase64Image('base64') => Image
  */
 export const arrayBufferToBase64Image = (data: ArrayBuffer): string | null => {
   if (!data || data.byteLength) {
@@ -42,7 +61,10 @@ export const arrayBufferToBase64Image = (data: ArrayBuffer): string | null => {
  * @param base64 base64
  * @param fileName file name
  *
- * @remark 下载 base64 文件
+ * 该方法仅能下载 base64 文件，如果有其他的文件类型需要下载，请看 downloadAnyFile 方法
+ *
+ * @example
+ * downloadBase64File('base64', 'file name')
  */
 export const downloadBase64File = (base64: string, fileName: string) => {
   const link = document.createElement('a')
@@ -61,6 +83,10 @@ export const downloadBase64File = (base64: string, fileName: string) => {
  *
  * @param value 目标值
  * @param type 类型
+ *
+ * @example
+ * isValueType<string>('123', 'String') => true
+ * isValueType<object>({}, 'Object') => true
  */
 export const isValueType = <T extends BasicTypes>(
   value: unknown,
@@ -73,9 +99,11 @@ export const isValueType = <T extends BasicTypes>(
 
 /**
  *
- * @param length `uuid` 长度
- * @param radix `uuid` 基数
- * @returns `uuid`
+ * @param length uuid 长度
+ * @param radix uuid 基数
+ *
+ * @example
+ * uuid(8) => 'B8tGcl0FCKJkpO0V'
  */
 export const uuid = (length = 16, radix = 62) => {
   // 定义可用的字符集，即 0-9, A-Z, a-z
@@ -109,7 +137,11 @@ export const uuid = (length = 16, radix = 62) => {
  * @param data base64, Blob, ArrayBuffer type
  * @param fileName file name
  *
- * @remark 支持下载任意类型的文件，包括 base64, Blob, ArrayBuffer
+ * 支持下载任意类型的文件，包括 base64, Blob, ArrayBuffer
+ *
+ * @example
+ * downloadAnyFile('base64', 'file name')
+ * downloadAnyFile('Blob', 'file name')
  */
 export const downloadAnyFile = (
   data: DownloadAnyFileDataType,
@@ -166,4 +198,61 @@ export const downloadAnyFile = (
       reject(error)
     }
   })
+}
+
+/**
+ *
+ * @param target Ref Dom、Dom、Dom id
+ * @param options print 配置项
+ *
+ * 基于 print-js 封装，允许 Ref 注册 Dom 直接调用打印
+ *
+ * @example
+ * print(refDom, { printJs.Configuration })
+ * print(Dom id, { printJs.Configuration })
+ * print(Dom, { printJs.Configuration })
+ */
+export function print<T extends BasicTarget<HTMLElement>>(
+  target: T,
+  options?: printJs.Configuration,
+) {
+  const element = computed(() => unrefElement(target))
+  const { printable, ...args } = options ?? {}
+
+  const $print = <T extends HTMLElement>(element: TargetValue<T>) => {
+    printJs({
+      ...args,
+      printable: element,
+    })
+  }
+
+  const watcher = watch(element, (ndata) => $print(ndata), {
+    immediate: true,
+  })
+
+  watchEffectWithTarget(watcher)
+}
+
+/**
+ *
+ * @param targetObject 对象
+ * @param targetKeys 待删除的 key
+ *
+ * 删除对象中的指定 key
+ *
+ * @example
+ * omit({ a: 1, b: 2, c: 3 }, 'a') => { b: 2, c: 3 }
+ * omit({ a: 1, b: 2, c: 3 }, ['a', 'b']) => { c: 3 }
+ */
+export const omit = <T extends Record<string, unknown>, K extends keyof T>(
+  targetObject: T,
+  targetKeys: K | K[],
+): Omit<T, K> => {
+  const keys = Array.isArray(targetKeys) ? targetKeys : [targetKeys]
+
+  keys.forEach((key) => {
+    delete targetObject[key]
+  })
+
+  return targetObject
 }

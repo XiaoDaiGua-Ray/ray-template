@@ -10,18 +10,18 @@
  */
 
 import { NSpace, NCard, NButton } from 'naive-ui'
-import RayQRcode from '@/components/RQRCode/index'
+import { RQRCode } from '@/components'
 
 import LOGO from '@/assets/images/ray.svg'
 
-import type { QRCodeStatus, QRCodeInst } from '@/components/RQRCode/index'
+import type { RQRCodeType } from '@/components'
 
-const RQRCode = defineComponent({
-  name: 'RQRCode',
+export default defineComponent({
+  name: 'RQRCodeDemo',
   setup() {
     const qrcodeText = ref('ray template yes')
-    const qrcodeStatus = ref<QRCodeStatus | undefined>()
-    const rayQRCodeRef = ref<QRCodeInst>()
+    const qrcodeStatus = ref<RQRCodeType.QRCodeStatus | undefined>()
+    const rayQRCodeRef = ref<RQRCodeType.QRCodeInst>()
 
     return {
       qrcodeText,
@@ -41,9 +41,9 @@ const RQRCode = defineComponent({
         </NCard>
         <NCard title="基础二维码">
           <NSpace>
-            <RayQRcode text="ray template yes" />
-            <RayQRcode text="ray template yes" logoImage={LOGO} />
-            <RayQRcode
+            <RQRCode text="ray template yes" />
+            <RQRCode text="ray template yes" logoImage={LOGO} />
+            <RQRCode
               text="ray template yes"
               gifBackgroundURL="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80"
               dotScale={0.5}
@@ -53,7 +53,7 @@ const RQRCode = defineComponent({
         </NCard>
         <NCard title="状态二维码">
           <NSpace>
-            <RayQRcode
+            <RQRCode
               text="ray template yes"
               logoImage={LOGO}
               status="error"
@@ -61,7 +61,7 @@ const RQRCode = defineComponent({
                 window.$message.error('relod props')
               }}
             />
-            <RayQRcode
+            <RQRCode
               text="ray template yes"
               logoImage={LOGO}
               status="loading"
@@ -92,7 +92,7 @@ const RQRCode = defineComponent({
               </NButton>
             </NSpace>
             <NSpace>
-              <RayQRcode
+              <RQRCode
                 text={this.qrcodeText}
                 status={this.qrcodeStatus}
                 logoImage={LOGO}
@@ -106,5 +106,3 @@ const RQRCode = defineComponent({
     )
   },
 })
-
-export default RQRCode

@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 
 import config from './cfg'
 import pkg from './package.json'
-import vitePlugins from './vite.pliugin.config'
+import vitePlugins from './vite.plugin.config'
 
 // https://vitejs.dev/config/
 export default defineConfig(async ({ mode }) => {
@@ -31,13 +31,35 @@ export default defineConfig(async ({ mode }) => {
     base: base || '/',
     define: {
       __APP_CFG__: JSON.stringify(__APP_CFG__),
+      __DEV__: mode === 'development',
     },
     resolve: {
       alias: alias,
     },
     plugins: vitePlugins(mode),
     optimizeDeps: {
-      include: ['vue', 'vue-router', 'pinia', 'vue-i18n', '@vueuse/core'],
+      include: [
+        'vue',
+        'vue-router',
+        'pinia',
+        'vue-i18n',
+        'naive-ui',
+        '@vueuse/core',
+        'vue-demi',
+        'dayjs',
+        'echarts',
+        'xlsx',
+        'axios',
+        'print-js',
+        'clipboard',
+        'lodash-es',
+        'vue-hooks-plus',
+        'interactjs',
+        'awesome-qr',
+        'pinia-plugin-persistedstate',
+        'currency.js',
+        'mockjs',
+      ],
     },
     esbuild: {
       pure: ['console.log'],
@@ -47,9 +69,21 @@ export default defineConfig(async ({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks: (id) => {
-            if (id.includes('node_modules')) {
-              const index = id.includes('pnpm') ? 1 : 0
+            const isUtils = () => id.includes('src/utils/')
+            const isHooks = () =>
+              id.includes('src/hooks/template') || id.includes('src/hooks/web')
+            const isNodeModules = () => id.includes('node_modules')
+            const index = id.includes('pnpm') ? 1 : 0
 
+            if (isUtils()) {
+              return 'utils'
+            }
+
+            if (isHooks()) {
+              return 'hooks'
+            }
+
+            if (isNodeModules()) {
               return id
                 .toString()
                 .split('node_modules/')[1]

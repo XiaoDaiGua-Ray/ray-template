@@ -22,9 +22,9 @@
 import './index.scss'
 
 import { NCard, NGrid, NGridItem, NSpace } from 'naive-ui'
-import RIcon from '@/components/RIcon'
+import { RIcon } from '@/components'
 
-import { call } from '@/utils/vue/index'
+import { call } from '@/utils/vue'
 import props from './props'
 
 export default defineComponent({

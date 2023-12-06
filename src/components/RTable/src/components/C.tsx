@@ -9,13 +9,21 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
+/**
+ *
+ * 自定义表格列的顺序
+ *
+ * 但是该方法有几个缺陷地方:
+ * 1. 只能代理第一层的数据，也就意味着深层次的子列不支持配置操作，只会跟随根列更新
+ * 2. 大量数据的时候，可能会出现性能问题
+ */
+
 import { NPopover, NSpace, NTree } from 'naive-ui'
-import RIcon from '@/components/RIcon/index'
+import { RIcon } from '@/components'
 
 import config from '../config'
 import props from '../props'
-import { h } from 'vue'
-import { call } from '@/utils/vue/index'
+import { call } from '@/utils/vue'
 
 import type { TreeOption, TreeDropInfo } from 'naive-ui'
 import type { C } from '../type'
@@ -24,11 +32,9 @@ import type { MaybeArray } from '@/types/modules/utils'
 
 type FixedClick = (type: 'left' | 'right', option: C, index: number) => void
 
-const renderSwitcherIcon = () =>
-  h(RIcon, {
-    name: 'draggable',
-    size: config.tableIconSize,
-  })
+const renderSwitcherIcon = () => (
+  <RIcon name="draggable" size={config.tableIconSize} />
+)
 
 const RowIconRender = ({
   icon,

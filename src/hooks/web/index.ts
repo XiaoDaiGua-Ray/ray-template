@@ -9,11 +9,8 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { useI18n, t } from './useI18n'
-import { useVueRouter } from '../web/useVueRouter'
-import { useDayjs } from '../web/useDayjs'
-import { useDevice } from './useDevice'
-
-export type { FormatOption, DateRange, LocalKey } from './useDayjs'
-
-export { useI18n, useVueRouter, useDayjs, t, useDevice }
+export * from './useI18n'
+export * from './useVueRouter'
+export * from './useDayjs'
+export * from './useDevice'
+export * from './useElementFullscreen'

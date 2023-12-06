@@ -155,3 +155,5 @@ export const useDayjs = () => {
     isDateInRange,
   }
 }
+
+export type UseDayjsReturnType = ReturnType<typeof useDayjs>

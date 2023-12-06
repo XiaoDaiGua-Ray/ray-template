@@ -2,13 +2,15 @@ import { getAppDefaultLanguage } from '@/locales/helper'
 import { setStorage } from '@use-utils/cache'
 import { set } from 'lodash-es'
 import { colorToRgba } from '@/utils/element'
-import { useI18n } from '@/hooks/web/index'
+import { useI18n } from '@/hooks/web'
 import { APP_THEME } from '@/app-config/designConfig'
-import { useDayjs } from '@/hooks/web/index'
+import { useDayjs } from '@/hooks/web'
+import { APP_WATERMARK_CONFIG } from '@/app-config/appConfig'
+import { cloneDeep } from 'lodash-es'
 
-import type { ConditionalPick } from '@/types/modules/helper'
 import type { SettingState } from '@/store/modules/setting/type'
-import type { LocalKey } from '@/hooks/web/index'
+import type { LocalKey } from '@/hooks/web'
+import type { AnyFC } from '@/types/modules/utils'
 
 export const piniaSettingStore = defineStore(
   'setting',
@@ -36,12 +38,8 @@ export const piniaSettingStore = defineStore(
       copyrightSwitch: true, // 底部区域开关
       contentTransition: 'scale', // 切换过渡效果
       watermarkSwitch: false, // 水印开关,
+      watermarkConfig: cloneDeep(APP_WATERMARK_CONFIG),
     })
-
-    /** 更新过渡效果 */
-    const updateContentTransition = (value: string) => {
-      settingState.contentTransition = value
-    }
 
     /** 修改当前语言 */
     const updateLocale = (key: string) => {
@@ -73,29 +71,38 @@ export const piniaSettingStore = defineStore(
 
     /**
      *
-     * @param bool 开关当前值
-     * @param key `settingState` 对应开关属性值
+     * @param key settingState 的 key
+     * @param value settingState 的 value
+     * @param cb 回调函数
      *
-     * @remark 仅适用于值为 `boolean` 的切换
+     * 更新 settingState 的值，如果 key 不存在与 settingState 中，则不会更新
+     * 但是不论是否更新成功，都会执行回调函数
+     *
+     * @example
+     * updateSettingState('drawerPlacement', 'left')
+     * updateSettingState('appTheme', true)
      */
-    const changeSwitcher = (
-      bool: boolean,
-      key: keyof ConditionalPick<SettingState, boolean>,
+    const updateSettingState = <
+      T extends keyof SettingState,
+      V extends typeof settingState,
+      C extends AnyFC,
+    >(
+      key: T,
+      value: V[T],
+      cb?: C,
     ) => {
-      if (
-        Object.hasOwn(settingState, key) &&
-        typeof settingState[key] === 'boolean'
-      ) {
-        settingState[key] = bool
+      if (Object.hasOwn(settingState, key)) {
+        settingState[key] = value
       }
+
+      cb?.()
     }
 
     return {
       ...toRefs(settingState),
       updateLocale,
       changePrimaryColor,
-      changeSwitcher,
-      updateContentTransition,
+      updateSettingState,
     }
   },
   {

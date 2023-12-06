@@ -10,7 +10,7 @@
  */
 
 import { NPopover } from 'naive-ui'
-import RIcon from '@/components/RIcon/index'
+import { RIcon } from '@/components'
 
 import config from '../config'
 import { useFullscreen } from 'vue-hooks-plus'

@@ -11,13 +11,13 @@ import {
   NGrid,
   NGridItem,
 } from 'naive-ui'
-import Signing from './components/Signing/index'
-import Register from './components/Register/index'
-import QRCodeSigning from './components/QRCodeSigning/index'
-import SSOSigning from './components/SSOSigning/index'
-import RIcon from '@/components/RIcon'
-import RayLink from '@/app-components/app/RayLink/index'
-import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch/index'
+import Signing from './components/Signing'
+import Register from './components/Register'
+import QRCodeSigning from './components/QRCodeSigning'
+import SSOSigning from './components/SSOSigning'
+import { RIcon } from '@/components'
+import RayLink from '@/app-components/app/RayLink'
+import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch'
 
 import { LOCAL_OPTIONS } from '@/app-config/localConfig'
 import { useWindowSize } from '@vueuse/core'
@@ -80,6 +80,7 @@ const Login = defineComponent({
               <NDropdown
                 options={LOCAL_OPTIONS}
                 onSelect={(key) => this.updateLocale(key)}
+                trigger="click"
               >
                 <RIcon
                   customClassName="login-icon"

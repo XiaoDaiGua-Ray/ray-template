@@ -1,5 +1,154 @@
 # CHANGE LOG
 
+## 4.4.3
+
+更新 `vue` 版本至 `3.3.10`。
+
+补充了一些代码的注释（慢慢还账-，-）。
+
+## Feats
+
+- 更新 `vue` 版本至 `3.3.10`
+- 新增 `useElementFullscreen` 方法，用于全屏元素。但是该全屏区别于浏览器全屏元素，仅是网页全屏效果
+- 使用 `useElementFullscreen` 方法重构 `maximize` 方法
+- `changeMenuModelValue`
+  - 现在方法支持第三个参数配置跳转时，是否携带参数
+  - 避免递归查找的时候，一些不必要的操作，优化性能
+
+## Fixes
+
+- 修复了通过 `url` 携带参数跳转页面，参数可能会被拦截并且丢失的问题
+- 修复了 `url` 跳转页面导致多次更新的问题
+
+## 4.4.2
+
+这是一个具有破坏性更新的版本，如果你使用了该模板，那么你需要做一些改动。
+
+详细拆分 `hooks` 包的方法。以前的划分方式不太合理，所以进行了一次大的重构。并且新增了一些方法。现在按照方法功能进行分包，更加详细。
+
+剔除 `h` 函数渲染，因为该方法不会受到 `vue` 的编译优化。
+
+针对 `MenuTag` 的定位滚动效果做了优化，现在滚动效果更加平滑。
+
+补充了一些代码的注释（慢慢还账-，-）。
+
+### Feats
+
+- 重新划分 `hooks` 包，按照功能进行拆分，并且新增一些包
+  - `useAppMenu` 方法更名为 `useAppNavigation`
+  - `useMenuTag` 方法更名为 `useSiderBar`
+  - `useRootRoute` 方法更名为 `useAppRoot`
+  - `useMainPage` 包移除
+  - 新增 `useMaximize`, `useSpinning`, `useTheme`, `useWatermark` 方法
+  - 新增 `components` 包，用于存放模板二次封装组件、`NaiveUI` 组件的一些 `hooks` 方法
+  - 每个方法包导出对应的 `ReturnType` 类型
+- `Breadcrumb` 组件新增过渡效果，现在切换路由时会有过渡动画，视觉效果更友好
+- 移除 `getVariable` 方法
+- 移除 `utils/element` 包部分方法
+  - `on`
+  - `off`
+- 移除 `changeSwitcher` 方法，使用 `updateSettingState` 方法代替
+- `useContextmenuCoordinate` 方法支持配置项
+- `MenuTag` 的定位滚动现在支持过渡效果
+
+## Fixes
+
+- 修复 `setRootRoute` 方法执行时提示只读错误导致不能正常修改的问题
+
+## 4.4.1
+
+更新 `vite` 版本至 `5.0.4`。同步修复了一些小问题。
+
+基础性能优化，根据开发模式与构建模式拆分插件启用。避免某些仅仅需要在构建模式的插件在开发模式下也被启用。
+
+新增预构建插件列表。
+
+### Feats
+
+- 补充 components 包组件的 `props` 类型导出
+- 补充 `__DEV__` 全局变量
+- 优化 `precision` 包中的基本运算方法，并且将小数点默认保留 `8` 位
+  - 新增 `isCurrency` 方法检测是否为 `currency.js` 对象
+- 按照构建模式与开发模式拆分插件启用
+- 新增预构建列表
+
+## Fixes
+
+- 修复 `i18n fallbackLocale` 错误配置为 `SYSTEM_DEFAULT_LOCAL` 的问题
+- 修复 `SYSTEM_DEFAULT_LOCAL` 类型定义错误问题
+
+## 4.4.0
+
+补充了几个组件。并且更改了组件的导入、导出方式，由从前很恶心的一个个导入，变为 `import { RIcon } from '@/components'`。
+
+替换了过时的 `nvm`，使用 `fnm` 替代，并且配置了一些文件让你能够自动切换 `node` 版本，前提是你也装了对应的插件。
+
+由于 `WebStorm` 一直提示可以缩短路径，强迫症患者表示受不了了，就全部改了（可能遗漏）。
+
+升级 `node` 版本至 `18.18.2`。
+
+### Feats
+
+- 新增组件
+  - RModal
+    - width：配置 modal 宽度
+    - cardWidth：配置 preset 为 card 的宽度
+    - dialogWidth：配置 preset 为 dialog 的宽度
+    - fullscreen：配置 preset 为 card 并且配置 fullscreen 为 true 则可以获得全屏效果
+    - dad：启用拖拽效果。仅在 preset 为 card, dialog 时生效（基于 interactjs 实现）
+- 修改 `components` 包组件的导出方式，也修改组件的使用方式
+- 新增 `layoutContentSpinning` 全局属性，用于管理加载动画效果。区别于 `globalMainLayoutLoad` 会强制刷新页面，该属性仅会触发加载动画。并且基于该属性拓展 `openSpin`, `closeSpin` 方法
+- 更新 `vite` 版本至 `5.0.2`
+
+### Fixes
+
+- 修复国际化切换，由于字段的错误配置导致缓存一直提示 `Fall back to translate` 的问题
+- 修复锁屏不能正常打开、关闭的问题
+
+## 4.3.4
+
+更新了 MenuTag 的样式，现在有更加细腻的过渡动画。
+
+针对 `utils` 下的方法，修复 `utils/element` 中的部分方法因为 `ref` 注册 `dom` 的时候不能正确的触发方法的问题。并且修复了部分方法类型的不准确问题；补充了一些示例。
+
+由于 vite 不再支持显式声明 .env=production 配置文件 NODE_ENV=production，所以该版本移除了配置文件的 NODE_ENV 声明。
+
+修复构建提示循环依赖问题。
+
+### Feats
+
+- 更新了 MenuTag 的动画效果
+- 基于 `print-js` 与 `vue hooks` 开发新 `print` 方法，存放于 `utils/basic`
+- 移除 .env.production 文件的 NODE_ENV 显式声明
+- 优化构建 chunk
+
+### Fixes
+
+- 修复 `utils/element` 方法不能正确获取 `ref` 绑定 `dom` 的问题
+- 修复设置界面抛出只读警告问题
+- 修复构建提示循环依赖问题
+
+## 4.3.3
+
+紧跟尤大大脚步，更新 `vite` 版本至 `5.0.0` 版本！与此同时，更新了配套所有插件！
+
+更新 ROOT_ROUTE 的一些使用方法，该配置方法与原有的方式不变，但是有一个新的功能点则是，该配置项会传递给 global-variable 的 globalRootRoute 属性。并且更改模板原有获取 path 的方法，改为响应式获取。当你要进行动态的维护 Root Route 的时候，该方法可能可以帮助到你 `useAppRoot`。
+
+如果你在更新版本后出现一些奇奇怪怪的问题，不要犹豫，直接删除 `node_modules` 后再重新安装依赖，这是缓存导致的问题。
+
+### Feats
+
+- 更新 `vite` 版本至 `5.0.0`
+- 升级所有配套插件
+- 升级 ROOT_ROUTE 配置与使用
+
+### Fixes
+
+- 修复不能正确关闭标签页问题
+- 修复不能正确识别是否能关闭标签页问题
+- 修复 `closeAll` 方法导致标签页闪烁问题
+- 修改 useVueRouter 注册时机，避免该方法使用的 HMR 报错问题
+
 ## 4.3.2
 
 升级 `vue` 版本至最新 `v3.3.8`。
@@ -262,7 +411,7 @@ const demo2 = null
   - 默认开启 autoChangeTheme 功能
   - 支持配置 throttleWait 节流等待时间，默认 500ms
   - 支持通过配置 `desginConfig.echartTheme` 属性指定 `echart theme`。并且只需按照约定方式注册的主题，只需要指定主题名称，即可完成 `light` `dark` 两种主题指定
-  - RayChartInst 新增 dispose render 方法，允许手动渲染与卸载 chart 图
+  - RChartInst 新增 dispose render 方法，允许手动渲染与卸载 chart 图
   - 新增 animation 属性，如果为 true 则会强制触发渲染过渡动画。该配置受 `options.animation` 属性影响，如果该配置为 false 则不会启用过渡动画
 - 移除反转色功能
 - 新增图标页面

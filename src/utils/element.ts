@@ -1,74 +1,25 @@
 import { isValueType } from '@/utils/basic'
 import { APP_REGEX } from '@/app-config/regexConfig'
-import { unrefElement } from '@/utils/vue/index'
-import { watchEffectWithTarget } from '@/utils/vue/index'
+import { unrefElement } from '@/utils/vue'
+import { watchEffectWithTarget } from '@/utils/vue'
+import { useCurrentElement } from '@vueuse/core'
 
 import type {
-  EventListenerOrEventListenerObject,
   PartialCSSStyleDeclaration,
   ElementSelector,
 } from '@/types/modules/utils'
-import type { EventListenerTarget } from '@/types/modules/utils'
-import type { BasicTarget } from '@/types/modules/vue'
-
-/**
- *
- * @param target Target element dom
- * @param event 绑定事件类型
- * @param handler 事件触发方法
- * @param useCapture 是否冒泡
- *
- * @remark 给元素绑定某个事件柄方法
- */
-export const on = (
-  target: EventListenerTarget,
-  event: string,
-  handler: EventListenerOrEventListenerObject,
-  useCapture: boolean | AddEventListenerOptions = false,
-) => {
-  const targetElement = computed(() => unrefElement(target, window))
-
-  const update = () => {
-    if (targetElement.value && event && handler) {
-      targetElement.value.addEventListener(event, handler, useCapture)
-    }
-  }
-
-  watchEffectWithTarget(update)
-}
-
-/**
- *
- * @param target Target element dom
- * @param event 卸载事件类型
- * @param handler 所需卸载方法
- * @param useCapture 是否冒泡
- *
- * @remark 卸载元素上某个事件柄方法
- */
-export const off = (
-  target: EventListenerTarget,
-  event: string,
-  handler: EventListenerOrEventListenerObject,
-  useCapture: boolean | AddEventListenerOptions = false,
-) => {
-  const targetElement = computed(() => unrefElement(target, window))
-
-  const update = () => {
-    if (targetElement.value && event && handler) {
-      targetElement.value.removeEventListener(event, handler, useCapture)
-    }
-  }
-
-  watchEffectWithTarget(update)
-}
+import type { BasicTarget, TargetValue } from '@/types/modules/vue'
 
 /**
  *
  * @param target Target element dom
  * @param className 所需添加className，可: 'xxx xxx' | 'xxx' 格式添加(参考向元素绑定 css 语法)
  *
- * @remark 添加元素className(可: 'xxx xxx' | 'xxx'格式添加)
+ * 添加元素className(可: 'xxx xxx' | 'xxx'格式添加)
+ *
+ * @example
+ * targetDom 当前 class: a-class b-class
+ * addClass(targetDom, 'c-class') => a-class b-class c-class
  */
 export const addClass = (
   target: BasicTarget<Element | HTMLElement | SVGAElement>,
@@ -76,19 +27,25 @@ export const addClass = (
 ) => {
   const targetElement = computed(() => unrefElement(target))
 
-  const update = () => {
-    if (targetElement.value) {
+  const update = (
+    element: TargetValue<Element | HTMLElement | SVGAElement>,
+  ) => {
+    if (element) {
       const classes = className.trim().split(' ')
 
       classes.forEach((item) => {
         if (item) {
-          targetElement.value!.classList.add(item)
+          element.classList.add(item)
         }
       })
     }
   }
 
-  watchEffectWithTarget(update)
+  const watcher = watch(targetElement, (ndata) => update(ndata), {
+    immediate: true,
+  })
+
+  watchEffectWithTarget(watcher)
 }
 
 /**
@@ -96,8 +53,12 @@ export const addClass = (
  * @param target Target element dom
  * @param className 所需删除className，可: 'xxx xxx' | 'xxx' 格式删除(参考向元素绑定 css 语法)
  *
- * @remark 删除元素className(可: 'xxx xxx' | 'xxx'格式删除)
- * @remark 如果输入值为 removeAllClass 则会删除该元素所有 class name
+ * 删除元素className(可: 'xxx xxx' | 'xxx'格式删除)
+ * 如果输入值为 removeAllClass 则会删除该元素所有 class name
+ *
+ * @example
+ * targetDom 当前 class: a-class b-class
+ * removeClass(targetDom, 'a-class') => b-class
  */
 export const removeClass = (
   target: BasicTarget<Element | HTMLElement | SVGAElement>,
@@ -105,10 +66,12 @@ export const removeClass = (
 ) => {
   const targetElement = computed(() => unrefElement(target))
 
-  const update = () => {
-    if (targetElement.value) {
+  const update = (
+    element: TargetValue<Element | HTMLElement | SVGAElement>,
+  ) => {
+    if (element) {
       if (className === 'removeAllClass') {
-        const classList = targetElement.value.classList
+        const classList = element.classList
 
         classList.forEach((curr) => classList.remove(curr))
       } else {
@@ -116,14 +79,18 @@ export const removeClass = (
 
         classes.forEach((item) => {
           if (item) {
-            targetElement.value!.classList.remove(item)
+            element.classList.remove(item)
           }
         })
       }
     }
   }
 
-  watchEffectWithTarget(update)
+  const watcher = watch(targetElement, (ndata) => update(ndata), {
+    immediate: true,
+  })
+
+  watchEffectWithTarget(watcher)
 }
 
 /**
@@ -131,32 +98,43 @@ export const removeClass = (
  * @param target Target element dom
  * @param className 查询元素是否含有此className，可: 'xxx xxx' | 'xxx' 格式查询(参考向元素绑定 css 语法)
  *
- * @returns 返回boolean
+ * 元素是否含有某个className(可: 'xxx xxx' | 'xxx' 格式查询)
  *
- * @remark 元素是否含有某个className(可: 'xxx xxx' | 'xxx' 格式查询)
+ * @example
+ * hasClass(targetDom, 'matchClassName') => Ref<true> | Ref<false>
  */
-export const hasClass = (target: BasicTarget, className: string) => {
-  const targetElement = unrefElement(target)
+export const hasClass = (target: BasicTarget<Element>, className: string) => {
+  const targetElement = computed(() => unrefElement(target))
+  const hasClassRef = ref(false)
 
-  if (!targetElement) {
-    return false
+  const update = <E extends TargetValue<Element>>(element: E) => {
+    if (!element) {
+      hasClassRef.value = false
+    } else {
+      const elementClassName = element.className
+
+      const classes = className
+        .trim()
+        .split(' ')
+        .filter((item: string) => item !== '')
+
+      hasClassRef.value = elementClassName.includes(classes.join(' '))
+    }
   }
 
-  const elementClassName = targetElement.className
+  const watcher = watch(targetElement, (ndata) => update(ndata), {
+    immediate: true,
+  })
 
-  const classes = className
-    .trim()
-    .split(' ')
-    .filter((item: string) => item !== '')
+  watchEffectWithTarget(watcher)
 
-  return elementClassName.includes(classes.join(' '))
+  return hasClassRef
 }
 
 /**
  *
  * @param target Target element dom
  * @param styles 所需绑定样式(如果为字符串, 则必须以分号结尾每个行内样式描述)
- *
  *
  * @example
  * style of string
@@ -180,14 +158,13 @@ export const addStyle = (
   styles: PartialCSSStyleDeclaration | string,
 ) => {
   const targetElement = computed(() => unrefElement(target))
-
-  if (!targetElement.value) {
-    return
-  }
-
   let styleObj: PartialCSSStyleDeclaration
 
-  const update = () => {
+  const update = (element: TargetValue<HTMLElement | SVGAElement>) => {
+    if (!element) {
+      return
+    }
+
     if (isValueType<string>(styles, 'String')) {
       styleObj = styles.split(';').reduce((pre, curr) => {
         const [key, value] = curr.split(':').map((s) => s.trim())
@@ -205,13 +182,17 @@ export const addStyle = (
     Object.keys(styleObj).forEach((key) => {
       const value = styleObj[key]
 
-      if (key in targetElement.value!.style) {
-        targetElement.value!.style[key] = value
+      if (key in element!.style) {
+        element!.style[key] = value
       }
     })
   }
 
-  watchEffectWithTarget(update)
+  const watcher = watch(targetElement, (ndata) => update(ndata), {
+    immediate: true,
+  })
+
+  watchEffectWithTarget(watcher)
 }
 
 /**
@@ -220,6 +201,7 @@ export const addStyle = (
  * @param styles 所需卸载样式
  *
  * 当你发现不能正常的移除某些样式的时候，应该考虑是否是样式表兼容问题
+ *
  * @example
  * removeStyle(['zIndex', 'z-index'])
  */
@@ -229,26 +211,36 @@ export const removeStyle = (
 ) => {
   const targetElement = computed(() => unrefElement(target))
 
-  if (!targetElement.value) {
-    return
-  }
+  const update = (element: TargetValue<HTMLElement | SVGAElement>) => {
+    if (!element) {
+      return
+    }
 
-  const update = () => {
     styles.forEach((curr) => {
-      targetElement.value!.style.removeProperty(curr)
+      element.style.removeProperty(curr)
     })
   }
 
-  watchEffectWithTarget(update)
+  const watcher = watch(targetElement, (ndata) => update(ndata), {
+    immediate: true,
+  })
+
+  watchEffectWithTarget(watcher)
 }
 
 /**
  *
  * @param color 颜色格式
  * @param alpha 透明度
- * @returns 转换后的 rgba 颜色值
  *
- * @remark 将任意颜色值转为 rgba
+ * 将任意颜色值转为 rgba，如果本身为 rgba, rgb 或者其它非法颜色值则直接返回
+ *
+ * @example
+ * colorToRgba('#123632', 0.8) => rgba(18, 54, 50, 0.8)
+ * colorToRgba('rgb(18, 54, 50)', 0.8) => rgb(18, 54, 50)
+ * colorToRgba('#ee4f12', 0.3) => rgba(238, 79, 18, 0.3)
+ * colorToRgba('rgba(238, 79, 18, 0.3)', 0.3) => rgba(238, 79, 18, 0.3)
+ * colorToRgba('not a color', 0.3) => not a color
  */
 export const colorToRgba = (color: string, alpha = 1) => {
   const hexPattern = /^#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i
@@ -268,11 +260,11 @@ export const colorToRgba = (color: string, alpha = 1) => {
 
     result = 'rgb(' + rgb.join(', ') + ')'
   } else if (rgbPattern.test(color)) {
-    result = color
+    return color
   } else if (rgbaPattern.test(color)) {
-    result = color
+    return color
   } else {
-    result = color
+    return color
   }
 
   if (result && !result.startsWith('rgba')) {

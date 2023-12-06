@@ -11,8 +11,8 @@
 
 /** 锁屏界面 */
 
-import { NInput, NForm, NFormItem, NButton, NSpace } from 'naive-ui'
-import AppAvatar from '@/app-components/app/AppAvatar/index'
+import { NInput, NForm, NFormItem, NButton } from 'naive-ui'
+import AppAvatar from '@/app-components/app/AppAvatar'
 
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
 import { rules, useCondition } from '@/app-components/app/AppLockScreen/shared'
@@ -27,7 +27,7 @@ const LockScreen = defineComponent({
     const inputInstRef = ref<InputInst | null>(null)
 
     const { setLockAppScreen } = useAppLockScreen()
-    const { changeSwitcher } = useSettingActions()
+    const { updateSettingState } = useSettingActions()
 
     const state = reactive({
       lockCondition: useCondition(),
@@ -38,7 +38,7 @@ const LockScreen = defineComponent({
       formInstRef.value?.validate((error) => {
         if (!error) {
           setLockAppScreen(true)
-          changeSwitcher(true, 'lockScreenSwitch')
+          updateSettingState('lockScreenSwitch', true)
 
           state.lockCondition = useCondition()
         }

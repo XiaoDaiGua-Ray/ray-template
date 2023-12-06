@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import type { ECharts, EChartsCoreOption } from 'echarts/core'
+import type { ECharts } from 'echarts/core'
 import type { CanvasRenderer } from 'echarts/renderers' // `echarts` 渲染器
 
 export interface ChartThemeRawModules {
@@ -50,7 +50,7 @@ export type ChartTheme =
   | string
   | null
 
-export interface RayChartInst {
+export interface RChartInst {
   /**
    *
    * echart 实例

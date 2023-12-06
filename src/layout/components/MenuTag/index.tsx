@@ -31,23 +31,27 @@
 
 import './index.scss'
 
-import { NScrollbar, NTag, NSpace, NLayoutHeader, NDropdown } from 'naive-ui'
-import RIcon from '@/components/RIcon/index'
-import RMoreDropdown from '@/components/RMoreDropdown/index'
+import {
+  NScrollbar,
+  NSpace,
+  NLayoutHeader,
+  NDropdown,
+  NButton,
+  NIcon,
+} from 'naive-ui'
+import { RIcon, RMoreDropdown } from '@/components'
 
-// import Reload from '@/icons/reload.svg?component'
 import CloseRight from '@/icons/close_right.svg?component'
 import CloseLeft from '@/icons/close_left.svg?component'
 
 import { useMenuGetters, useMenuActions } from '@/store'
 import { uuid } from '@/utils/basic'
 import { hasClass } from '@/utils/element'
-import { ROOT_ROUTE } from '@/app-config/appConfig'
 import { queryElements } from '@use-utils/element'
-import { renderNode } from '@/utils/vue/index'
-import { useMainPage } from '@/hooks/template/index'
-import { useMenuTag } from '@/hooks/template/index'
+import { useMaximize, useSpinning } from '@/hooks/template'
+import { useSiderBar } from '@/hooks/template'
 import { throttle } from 'lodash-es'
+import { useAppRoot } from '@/hooks/template'
 
 import type { ScrollbarInst } from 'naive-ui'
 import type { MenuTagOptions, AppMenuOption } from '@/types/modules/app'
@@ -59,15 +63,16 @@ export default defineComponent({
 
     const { getMenuKey, getMenuTagOptions } = useMenuGetters()
     const { changeMenuModelValue } = useMenuActions()
-    const { path } = ROOT_ROUTE
-    const { reload, maximize } = useMainPage()
+    const { getRootPath } = useAppRoot()
+    const { maximize } = useMaximize()
+    const { reload } = useSpinning()
     const {
       close,
       closeAll: $closeAll,
       closeRight: $closeRight,
       closeLeft: $closeLeft,
       closeOther: $closeOther,
-    } = useMenuTag()
+    } = useSiderBar()
 
     const canDisabledOptions = [
       'closeAll',
@@ -96,14 +101,14 @@ export default defineComponent({
         key: 'd1',
       },
       {
-        label: '关闭右侧标签页',
-        key: 'closeRight',
-        icon: () => <CloseRight class="menu-tag__icon" />,
-      },
-      {
         label: '关闭左侧标签页',
         key: 'closeLeft',
         icon: () => <CloseLeft class="menu-tag__icon" />,
+      },
+      {
+        label: '关闭右侧标签页',
+        key: 'closeRight',
+        icon: () => <CloseRight class="menu-tag__icon" />,
       },
       {
         type: 'divider',
@@ -124,7 +129,7 @@ export default defineComponent({
     const uuidScrollBar = uuid(16) // scroll bar uuid
     const actionMap = {
       closeCurrentPage: () => {
-        getMenuKey.value !== path && close(currentContextmenuIndex)
+        getMenuKey.value !== getRootPath.value && close(currentContextmenuIndex)
       },
       reloadCurrentPage: () => {
         reload()
@@ -180,7 +185,7 @@ export default defineComponent({
     const handleTagClick = (option: AppMenuOption) => {
       actionState.actionDropdownShow = false
 
-      changeMenuModelValue(option.key as string, option)
+      changeMenuModelValue(option.key, option)
     }
 
     /**
@@ -194,9 +199,11 @@ export default defineComponent({
         const scrollContentElement = Array.from(
           scroll.childNodes,
         ) as HTMLElement[]
-        const findElement = scrollContentElement.find((el) =>
-          hasClass(el, 'n-scrollbar-container'),
-        )
+        const findElement = scrollContentElement.find((el) => {
+          const has = hasClass(el, 'n-scrollbar-container')
+
+          return has.value
+        })
 
         return findElement
       }
@@ -262,20 +269,12 @@ export default defineComponent({
      */
     const setDisabledAccordionToIndex = () => {
       const length = getMenuTagOptions.value.length - 1
+      const { closeable } =
+        getMenuTagOptions.value[currentContextmenuIndex] ??
+        ({} as MenuTagOptions)
 
       // 是否需要禁用关闭当前标签页
-      if (getMenuKey.value === path) {
-        setMoreOptionsDisabled('closeCurrentPage', true)
-      } else {
-        const isRoot = moreOptions.value[currentContextmenuIndex]
-
-        // 避免 isRoot 为 undefined
-        if (isRoot?.key === 'closeCurrentPage') {
-          setMoreOptionsDisabled('closeCurrentPage', true)
-        } else {
-          setMoreOptionsDisabled('closeCurrentPage', false)
-        }
-      }
+      setMoreOptionsDisabled('closeCurrentPage', !closeable ?? false)
 
       // 是否需要禁用关闭右侧标签页
       if (currentContextmenuIndex === length) {
@@ -310,7 +309,10 @@ export default defineComponent({
 
     /** 仅有 getMenuTagOptions 长度大于 1 并且非 root path 时, 才激活关闭按钮 */
     const menuTagMouseenter = (option: MenuTagOptions) => {
-      if (getMenuTagOptions.value.length > 1 && option.key !== path) {
+      if (
+        getMenuTagOptions.value.length > 1 &&
+        option.key !== getRootPath.value
+      ) {
         option.closeable = true
       }
     }
@@ -351,7 +353,10 @@ export default defineComponent({
           const [menuTag] = tags
 
           nextTick().then(() => {
-            menuTag.scrollIntoView?.(true)
+            scrollRef.value?.scrollTo({
+              left: menuTag.offsetLeft,
+              behavior: 'smooth',
+            })
           })
         }
       })
@@ -360,21 +365,19 @@ export default defineComponent({
     /** 如果有且只有一个标签页时, 禁止全部关闭操作 */
     watch(
       () => getMenuTagOptions.value,
-      (newData, oldData) => {
+      (ndata, odata) => {
         // 当 menuTagOptions 长度为 1时，禁用所有 canDisabledOptions 匹配的项
         moreOptions.value.forEach((curr) => {
           if (canDisabledOptions.includes(curr.key)) {
-            newData.length > 1
-              ? (curr.disabled = false)
-              : (curr.disabled = true)
+            ndata.length > 1 ? (curr.disabled = false) : (curr.disabled = true)
           }
         })
 
         // 更新当前激活标签定位
-        if (oldData?.length) {
-          if (newData.length > oldData?.length) {
+        if (odata?.length) {
+          if (ndata.length > odata?.length) {
             updateScrollBarPosition()
-          } else if (newData.length === oldData?.length) {
+          } else if (ndata.length === odata?.length) {
             positionMenuTag()
           }
         }
@@ -418,11 +421,12 @@ export default defineComponent({
         height: 28,
       },
       maximize,
+      getRootPath,
     }
   },
   render() {
-    const { iconConfig } = this
-    const { maximize } = this
+    const { iconConfig, getRootPath, uuidScrollBar } = this
+    const { maximize, closeCurrentMenuTag, scrollX, $t } = this
 
     return (
       <NLayoutHeader>
@@ -460,7 +464,7 @@ export default defineComponent({
               xScrollable
               ref="scrollRef"
               {...{
-                id: this.uuidScrollBar,
+                id: uuidScrollBar,
               }}
             >
               <NSpace
@@ -471,13 +475,12 @@ export default defineComponent({
                 justify="start"
               >
                 {this.getMenuTagOptions.map((curr, idx) => (
-                  <NTag
+                  <NButton
                     key={curr.key}
+                    class={['menu-tag__btn']}
                     strong
-                    closable={curr.closeable}
-                    onClose={this.closeCurrentMenuTag.bind(this, idx)}
+                    secondary
                     type={curr.key === this.getMenuKey ? 'primary' : 'default'}
-                    bordered={false}
                     {...{
                       onClick: this.handleTagClick.bind(this, curr),
                       onContextmenu: this.handleContextMenu.bind(this, idx),
@@ -486,8 +489,49 @@ export default defineComponent({
                       [this.MENU_TAG_DATA]: curr.path,
                     }}
                   >
-                    {renderNode(curr.breadcrumbLabel)}
-                  </NTag>
+                    {{
+                      default: () => (
+                        <>
+                          <span>
+                            {{
+                              default: () => {
+                                const {
+                                  breadcrumbLabel,
+                                  meta: { i18nKey },
+                                } = curr
+
+                                return i18nKey ? $t(i18nKey) : breadcrumbLabel
+                              },
+                            }}
+                          </span>
+                          {(curr.closeable ||
+                            this.getMenuTagOptions.length === 1) &&
+                          curr.key !== getRootPath ? (
+                            <NIcon
+                              class="menu-tag__btn-icon"
+                              {...{
+                                onMousedown: closeCurrentMenuTag.bind(
+                                  this,
+                                  idx,
+                                ),
+                              }}
+                            >
+                              <RIcon name="close" size="14" />
+                            </NIcon>
+                          ) : (
+                            // 默认使用一个空 NIcon 占位，避免不能正确的触发动画
+                            <NIcon
+                              class={[
+                                curr.key !== getRootPath
+                                  ? 'menu-tag__btn-icon'
+                                  : 'menu-tag__btn-icon--hidden',
+                              ]}
+                            />
+                          )}
+                        </>
+                      ),
+                    }}
+                  </NButton>
                 ))}
               </NSpace>
             </NScrollbar>
@@ -504,7 +548,7 @@ export default defineComponent({
                 width={iconConfig.width}
                 height={iconConfig.height}
                 customClassName="menu-tag__right-arrow"
-                onClick={this.scrollX.bind(this, 'right')}
+                onClick={scrollX.bind(this, 'right')}
               />
               <RIcon
                 name="fullscreen_fold"

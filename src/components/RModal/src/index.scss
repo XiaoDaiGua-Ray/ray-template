@@ -1,0 +1,18 @@
+.r-modal.n-card.r-modal__preset-card--fullscreen {
+  width: 100%;
+
+  // 当设置全屏时，启用滚动
+  & .n-card__content {
+    overflow: scroll;
+  }
+}
+
+.r-modal {
+  &.n-card {
+    width: var(--r-modal-card-width);
+  }
+
+  &.n-dialog {
+    width: var(--r-modal-dialog-width);
+  }
+}

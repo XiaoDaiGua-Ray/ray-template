@@ -9,10 +9,6 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { setVariable, getVariable, getVariableToRefs } from './variable'
+export * from './variable'
 
-import type { VariableState, VariableStateKey } from './variable'
-
-export { setVariable, getVariable, getVariableToRefs }
-
-export type { VariableState, VariableStateKey }
+export type * from './variable'

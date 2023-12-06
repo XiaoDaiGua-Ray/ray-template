@@ -15,8 +15,19 @@
  */
 
 import { useWindowSize } from '@vueuse/core'
-import { watchEffectWithTarget } from '@/utils/vue/index'
+import { watchEffectWithTarget } from '@/utils/vue'
 
+/**
+ *
+ * 检测当前尺寸是否为平板或者更小
+ * 默认主流平板尺寸为 768px
+ *
+ * @example
+ * const { width, height, isTabletOrSmaller } = useDevice()
+ *
+ * isTabletOrSmaller.value => true // 当前尺寸为平板或者更小
+ * isTabletOrSmaller.value => false // 当前尺寸为桌面或者更大
+ */
 export function useDevice() {
   const { width, height } = useWindowSize()
   const isTabletOrSmaller = ref(false)
@@ -33,3 +44,5 @@ export function useDevice() {
     isTabletOrSmaller,
   }
 }
+
+export type UseDeviceReturnType = ReturnType<typeof useDevice>

@@ -19,7 +19,7 @@
 import './index.scss'
 
 import { NSpace, NPopover } from 'naive-ui'
-import RIcon from '@/components/RIcon/index'
+import { RIcon } from '@/components'
 
 interface SSOSigningOptions {
   icon: string

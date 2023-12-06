@@ -21,13 +21,10 @@ import {
   NPopover,
   NCard,
 } from 'naive-ui'
-import RCollapseGrid from '@/components/RCollapseGrid/index'
-import RTable from '@/components/RTable/index'
-import RIcon from '@/components/RIcon/index'
-import RMoreDropdown from '@/components/RMoreDropdown/index'
+import { RCollapseGrid, RTable, RIcon, RMoreDropdown } from '@/components'
 
 import type { DataTableColumns } from 'naive-ui'
-import type { TableInst } from '@/components/RTable/index'
+import type { RTableType } from '@/components'
 
 type RowData = {
   key: number
@@ -58,18 +55,10 @@ const TableView = defineComponent({
         key: 'tags',
         render: (row: RowData) => {
           const tags = row.tags.map((tagKey) => {
-            return h(
-              NTag,
-              {
-                style: {
-                  marginRight: '6px',
-                },
-                type: 'info',
-                bordered: false,
-              },
-              {
-                default: () => tagKey,
-              },
+            return (
+              <NTag type="info" bordered={false} style="margin-right: 6px">
+                {tagKey}
+              </NTag>
             )
           })
 
@@ -141,7 +130,7 @@ const TableView = defineComponent({
         key: 'edit',
       },
       {
-        label: () => h('span', { style: { color: 'red' } }, '删除'),
+        label: () => <span style="color: red;">删除</span>,
         key: 'delete',
       },
     ]

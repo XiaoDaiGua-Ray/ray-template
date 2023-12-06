@@ -33,19 +33,16 @@ import {
   hasMenuIcon,
   getCatchMenuKey,
 } from './helper'
-import { useI18n } from '@/hooks/web/index'
+import { useI18n } from '@/hooks/web'
 import { getAppRawRoutes } from '@/router/appRouteModules'
-import { useVueRouter } from '@/hooks/web/index'
+import { useVueRouter } from '@/hooks/web'
 import { throttle } from 'lodash-es'
 import { useKeepAliveActions } from '@/store'
 
-import type { AppRouteMeta, AppRouteRecordRaw } from '@/router/type'
-import type {
-  AppMenuOption,
-  MenuTagOptions,
-  AppMenuKey,
-} from '@/types/modules/app'
+import type { AppRouteRecordRaw } from '@/router/type'
+import type { AppMenuOption, MenuTagOptions } from '@/types/modules/app'
 import type { MenuState } from '@/store/modules/menu/type'
+import type { LocationQuery } from 'vue-router'
 
 export const piniaMenuStore = defineStore(
   'menu',
@@ -148,6 +145,7 @@ export const piniaMenuStore = defineStore(
     const changeMenuModelValue = (
       key: string | number,
       option: AppMenuOption,
+      query?: LocationQuery,
     ) => {
       const { meta, path } = option
 
@@ -167,10 +165,16 @@ export const piniaMenuStore = defineStore(
             .map((curr) => curr.key)
             .join('/')
 
-          router.push(_path)
+          router.push({
+            path: _path,
+            query,
+          })
         } else {
           /** 根路由直接跳转 */
-          router.push(path)
+          router.push({
+            path,
+            query,
+          })
         }
 
         /** 检查是否为根路由 */
@@ -205,14 +209,18 @@ export const piniaMenuStore = defineStore(
      * @remark 监听路由地址变化更新菜单状态
      * @remark 递归查找匹配项
      */
-    const updateMenuKeyWhenRouteUpdate = async (path: string) => {
-      // 获取 `/` 出现次数(如果为 1 则表示该路径为根路由路径)
-      const count = (path.match(new RegExp('/', 'g')) || []).length
-      let combinePath = path
+    const updateMenuKeyWhenRouteUpdate = async (
+      path: string,
+      query: LocationQuery,
+    ) => {
+      const [routePath] = path.split('?')
+      const count = (routePath.match(new RegExp('/', 'g')) || []).length // 如果获取长度为 1，则视为根路由
+
+      let combinePath = routePath
 
       if (count > 1) {
         // 如果不是跟路径则取出最后一项字符
-        const splitPath = path.split('/').filter((curr) => curr)
+        const splitPath = routePath.split('/').filter((curr) => curr)
 
         combinePath = splitPath[splitPath.length - 1]
       }
@@ -221,10 +229,12 @@ export const piniaMenuStore = defineStore(
         for (const curr of options) {
           if (curr.children?.length) {
             findMenuOption(pathKey, curr.children)
+
+            continue
           }
 
           if (pathKey === curr.key && !curr?.children?.length) {
-            changeMenuModelValue(pathKey, curr)
+            changeMenuModelValue(pathKey, curr, query)
 
             break
           }
@@ -335,9 +345,11 @@ export const piniaMenuStore = defineStore(
      * 该方法仅执行一次
      */
     const setupPiniaMenuStore = async () => {
-      if (isSetupAppMenuLock.value) {
-        await setupAppMenu()
+      if (!isSetupAppMenuLock.value) {
+        return
       }
+
+      await setupAppMenu()
 
       isSetupAppMenuLock.value = false
     }
@@ -345,12 +357,12 @@ export const piniaMenuStore = defineStore(
     /** 监听路由变化并且更新路由菜单与菜单标签 */
     watch(
       () => route.fullPath,
-      async (newData) => {
-        const reg = /^([^?]+)/
-        const match = newData.match(reg)?.[1]
-
+      async (ndata, odata) => {
         await setupPiniaMenuStore()
-        await updateMenuKeyWhenRouteUpdate(match || '')
+
+        if (ndata !== odata) {
+          await updateMenuKeyWhenRouteUpdate(ndata, route.query)
+        }
       },
       {
         immediate: true,

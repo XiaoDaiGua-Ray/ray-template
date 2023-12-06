@@ -11,29 +11,28 @@
 
 /**
  *
+ * 模板约定不直接操作 store 实例，所有操作都应在 hooks 中二次封装的 getters, actions
+ *
  * 持久化存储 pinia 数据
  * 但是不能正常持久化 function 属性
  *
  * 官网地址: https://prazdevs.github.io/pinia-plugin-persistedstate/zh/guide/
  */
+
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
-// 导出仓库实例，不建议直接使用 store
-export { piniaSettingStore } from './modules/setting/index' // import { piniaSettingStore } from '@/store' 即可使用
-export { piniaMenuStore } from './modules/menu/index'
-export { piniaSigningStore } from './modules/signing/index'
-export { piniaKeepAliveStore } from './modules/keep-alive/index'
-
-// 导出 getters, actions
-export { useMenuGetters, useMenuActions } from './hooks/useMenuStore'
-export { useSettingGetters, useSettingActions } from './hooks/useSettingStore'
-export { useSigningGetters, useSigningActions } from './hooks/useSigningStore'
-export {
-  useKeepAliveGetters,
-  useKeepAliveActions,
-} from './hooks/useKeepAliveStore'
-
 import type { App } from 'vue'
+
+// 该仓库导出，更多是为了 hooks 包中，在模板中尽量不直接操作 store 仓库
+export * from './modules/setting'
+export * from './modules/menu'
+export * from './modules/signing'
+export * from './modules/keep-alive'
+// 导出 getters, actions
+export * from './hooks/useMenuStore'
+export * from './hooks/useSettingStore'
+export * from './hooks/useSigningStore'
+export * from './hooks/useKeepAliveStore'
 
 /**
  *

@@ -33,6 +33,7 @@ module.exports = {
     defineExpose: 'readonly',
     withDefaults: 'readonly',
     defineOptions: 'readonly',
+    defineModel: 'readonly',
   },
   rules: {
     'no-undefined': ['error'],

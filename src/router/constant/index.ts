@@ -16,4 +16,4 @@
  * }
  * ```
  */
-export const LAYOUT = () => import('@/layout/default/ContentWrapper/index')
+export const LAYOUT = () => import('@/layout/default/ContentWrapper')

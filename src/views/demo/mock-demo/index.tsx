@@ -10,10 +10,9 @@
  */
 
 import { NSpace, NCard, NButton, NFormItemGi, NInput, NForm } from 'naive-ui'
-import RTable from '@/components/RTable/index'
-import RCollapseGrid from '@/components/RCollapseGrid/index'
+import { RCollapseGrid, RTable } from '@/components'
 
-import { useHookPlusRequest } from '@/axios/index'
+import { useHookPlusRequest } from '@/axios'
 import { getPersonList } from '@/api/demo/mock/person'
 
 import type { Person } from '@/api/demo/mock/person'

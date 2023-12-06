@@ -21,7 +21,7 @@ import {
   NDescriptionsItem,
   NSelect,
 } from 'naive-ui'
-import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch/index'
+import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch'
 
 import { APP_THEME } from '@/app-config/designConfig'
 import { useSettingGetters, useSettingActions } from '@/store'
@@ -47,8 +47,7 @@ const SettingDrawer = defineComponent({
   },
   emits: ['update:show'],
   setup(props, { emit }) {
-    const { changePrimaryColor, changeSwitcher, updateContentTransition } =
-      useSettingActions()
+    const { changePrimaryColor, updateSettingState } = useSettingActions()
     const {
       getAppTheme,
       getPrimaryColorOverride,
@@ -84,20 +83,22 @@ const SettingDrawer = defineComponent({
         value: 'opacity',
       },
     ]
+    const modelSwitchReactive = reactive({
+      getMenuTagSwitch: getMenuTagSwitch.value,
+      getBreadcrumbSwitch: getBreadcrumbSwitch.value,
+      getCopyrightSwitch: getCopyrightSwitch.value,
+      getContentTransition: getContentTransition.value,
+      getWatermarkSwitch: getWatermarkSwitch.value,
+    })
 
     return {
       modelShow,
       changePrimaryColor,
       getAppTheme,
       getPrimaryColorOverride,
-      getMenuTagSwitch,
-      changeSwitcher,
-      getBreadcrumbSwitch,
-      getCopyrightSwitch,
       contentTransitionOptions,
-      getContentTransition,
-      updateContentTransition,
-      getWatermarkSwitch,
+      updateSettingState,
+      modelSwitchReactive,
     }
   },
   render() {
@@ -127,10 +128,10 @@ const SettingDrawer = defineComponent({
               {$t('headerSettingOptions.ContentTransition')}
             </NDivider>
             <NSelect
-              v-model:value={this.getContentTransition}
+              v-model:value={this.modelSwitchReactive.getContentTransition}
               options={this.contentTransitionOptions}
               onUpdateValue={(value) => {
-                this.updateContentTransition(value)
+                this.updateSettingState('contentTransition', value)
               }}
             />
             <NDivider titlePlacement="center">
@@ -139,33 +140,33 @@ const SettingDrawer = defineComponent({
             <NDescriptions labelPlacement="left" column={1}>
               <NDescriptionsItem label="多标签">
                 <NSwitch
-                  v-model:value={this.getMenuTagSwitch}
+                  v-model:value={this.modelSwitchReactive.getMenuTagSwitch}
                   onUpdateValue={(bool: boolean) =>
-                    this.changeSwitcher(bool, 'menuTagSwitch')
+                    this.updateSettingState('menuTagSwitch', bool)
                   }
                 />
               </NDescriptionsItem>
               <NDescriptionsItem label="面包屑">
                 <NSwitch
-                  v-model:value={this.getBreadcrumbSwitch}
+                  v-model:value={this.modelSwitchReactive.getBreadcrumbSwitch}
                   onUpdateValue={(bool: boolean) =>
-                    this.changeSwitcher(bool, 'breadcrumbSwitch')
+                    this.updateSettingState('breadcrumbSwitch', bool)
                   }
                 />
               </NDescriptionsItem>
               <NDescriptionsItem label="水印">
                 <NSwitch
-                  v-model:value={this.getWatermarkSwitch}
+                  v-model:value={this.modelSwitchReactive.getWatermarkSwitch}
                   onUpdateValue={(bool: boolean) =>
-                    this.changeSwitcher(bool, 'watermarkSwitch')
+                    this.updateSettingState('watermarkSwitch', bool)
                   }
                 />
               </NDescriptionsItem>
               <NDescriptionsItem label="版权信息">
                 <NSwitch
-                  v-model:value={this.getCopyrightSwitch}
+                  v-model:value={this.modelSwitchReactive.getCopyrightSwitch}
                   onUpdateValue={(bool: boolean) =>
-                    this.changeSwitcher(bool, 'copyrightSwitch')
+                    this.updateSettingState('copyrightSwitch', bool)
                   }
                 />
               </NDescriptionsItem>

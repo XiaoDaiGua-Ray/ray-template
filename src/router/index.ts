@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { scrollViewToTop } from '@/router/helper/setupHelper'
 import { vueRouterRegister } from '@/router/helper/routerCopilot'
-import { useVueRouter } from '@/hooks/web/index'
+import { useVueRouter } from '@/hooks/web'
 
 import constantRoutes from './routes'
 
@@ -35,7 +35,7 @@ export const setupRouter = async (app: App<Element>) => {
   router = await createVueRouter()
 
   vueRouterRegister(router)
-  useVueRouter()
-
   app.use(router)
+  // 等待 router 挂载后，初始化 useRouter 方法
+  useVueRouter()
 }

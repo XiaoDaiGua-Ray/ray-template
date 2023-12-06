@@ -1,11 +1,11 @@
 import { NForm, NFormItem, NInput, NButton } from 'naive-ui'
 
 import { setStorage } from '@/utils/cache'
-import { useI18n } from '@/hooks/web/index'
-import { APP_CATCH_KEY, ROOT_ROUTE } from '@/app-config/appConfig'
-import { useVueRouter } from '@/hooks/web/index'
-import { setVariable, getVariableToRefs } from '@/global-variable/index'
-import { useSigningActions, useSigningGetters } from '@/store'
+import { useI18n } from '@/hooks/web'
+import { APP_CATCH_KEY } from '@/app-config/appConfig'
+import { setVariable, getVariableToRefs } from '@/global-variable'
+import { useSigningActions } from '@/store'
+import { useAppRoot } from '@/hooks/template'
 
 import type { FormInst } from 'naive-ui'
 
@@ -16,7 +16,7 @@ export default defineComponent({
 
     const { t } = useI18n()
     const { signing } = useSigningActions()
-    const { path } = ROOT_ROUTE
+    const { getRootPath } = useAppRoot()
     const globalSpinning = getVariableToRefs('globalSpinning')
 
     const useSigningForm = () => ({
@@ -24,7 +24,7 @@ export default defineComponent({
       pwd: '123456',
     })
 
-    const { router } = useVueRouter()
+    const router = useRouter()
     const signingForm = ref(useSigningForm())
 
     const rules = {
@@ -57,7 +57,7 @@ export default defineComponent({
                   setStorage(APP_CATCH_KEY.token, 'tokenValue')
                   setStorage(APP_CATCH_KEY.signing, res.data)
 
-                  router.push(path)
+                  router.push(getRootPath.value)
                 }, 2 * 1000)
               }
             })

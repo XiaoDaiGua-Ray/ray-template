@@ -1,6 +1,10 @@
 import RTable from './src/Table'
-import props from './src/props'
+import tableProps from './src/props'
 
-export default RTable
-export { props }
-export type { TableInst } from './src/type'
+import type * as RTableType from './src/type'
+import type { ExtractPublicPropTypes } from 'vue'
+
+export type TableProps = ExtractPublicPropTypes<typeof tableProps>
+export type { RTableType }
+
+export { RTable, tableProps }

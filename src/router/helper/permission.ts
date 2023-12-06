@@ -21,11 +21,12 @@
  */
 
 import { getStorage } from '@/utils/cache'
-import { APP_CATCH_KEY, ROOT_ROUTE } from '@/app-config/appConfig'
+import { APP_CATCH_KEY } from '@/app-config/appConfig'
 import { redirectRouterToDashboard } from '@/router/helper/routerCopilot'
 import { WHITE_ROUTES } from '@/app-config/routerConfig'
 import { validRole } from '@/router/helper/routerCopilot'
 import { isValueType } from '@/utils/basic'
+import { useAppRoot } from '@/hooks/template'
 
 import type { Router, RouteLocationNormalized } from 'vue-router'
 import type { AppRouteMeta } from '@/router/type'
@@ -33,6 +34,7 @@ import type { AppRouteMeta } from '@/router/type'
 /** 路由守卫 */
 export const permissionRouter = (router: Router) => {
   const { beforeEach } = router
+  const { getRootPath } = useAppRoot()
 
   const isToLogin = (
     to: RouteLocationNormalized,
@@ -44,7 +46,7 @@ export const permissionRouter = (router: Router) => {
     const catchRoutePath = getStorage(
       'menuKey',
       'sessionStorage',
-      ROOT_ROUTE.path,
+      getRootPath.value,
     )
     const { meta, name } = to
 

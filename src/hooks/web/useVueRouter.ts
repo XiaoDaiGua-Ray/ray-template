@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { router } from '@/router/index'
+import { router } from '@/router'
 
 /**
  *
@@ -33,3 +33,5 @@ export const useVueRouter = () => {
     throw new Error('router is not defined')
   }
 }
+
+export type UseVueRouterReturnType = ReturnType<typeof useVueRouter>

@@ -12,13 +12,13 @@
 /** 解锁界面 */
 
 import { NInput, NForm, NFormItem, NButton, NSpace } from 'naive-ui'
-import AppAvatar from '@/app-components/app/AppAvatar/index'
+import AppAvatar from '@/app-components/app/AppAvatar'
 
 import dayjs from 'dayjs'
 import { useSigningActions, useSettingActions } from '@/store'
 import { rules, useCondition } from '@/app-components/app/AppLockScreen/shared'
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
-import { useDevice } from '@/hooks/web/index'
+import { useDevice } from '@/hooks/web'
 
 import type { FormInst, InputInst } from 'naive-ui'
 
@@ -29,7 +29,7 @@ export default defineComponent({
     const inputInstRef = ref<InputInst | null>(null)
 
     const { logout } = useSigningActions()
-    const { changeSwitcher } = useSettingActions()
+    const { updateSettingState } = useSettingActions()
     const { setLockAppScreen } = useAppLockScreen()
     const { isTabletOrSmaller } = useDevice()
 
@@ -64,7 +64,7 @@ export default defineComponent({
         onPositiveClick: () => {
           logout()
           setTimeout(() => {
-            changeSwitcher(false, 'lockScreenSwitch')
+            updateSettingState('lockScreenSwitch', false)
           })
         },
       })
@@ -75,7 +75,7 @@ export default defineComponent({
       formRef.value?.validate((error) => {
         if (!error) {
           setLockAppScreen(false)
-          changeSwitcher(false, 'lockScreenSwitch')
+          updateSettingState('lockScreenSwitch', false)
 
           state.lockCondition = useCondition()
         }

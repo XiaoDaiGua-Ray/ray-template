@@ -1,14 +1,14 @@
 import './index.scss'
 
 import { NCard, NSwitch, NSpace, NH2, NButton } from 'naive-ui'
-import RChart from '@/components/RChart/index'
+import { RChart } from '@/components'
 
-import type { RayChartInst } from '@/components/RChart/type'
+import type { RChartType } from '@/components'
 
 const Echart = defineComponent({
   name: 'REchart',
   setup() {
-    const baseChartRef = ref<RayChartInst>()
+    const baseChartRef = ref<RChartType.RChartInst>()
     const chartLoading = ref(false)
     const chartAria = ref(false)
     const state = reactive({

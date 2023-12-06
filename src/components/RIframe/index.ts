@@ -1,8 +1,10 @@
-import RIframe from './src/index'
-import props from './src/props'
+import RIframe from './src'
+import iframeProps from './src/props'
 
-import type { RIframeInst } from './src/type'
+import type * as RIframeType from './src/type'
+import type { ExtractPublicPropTypes } from 'vue'
 
-export default RIframe
-export { props }
-export type { RIframeInst }
+export type IframeProps = ExtractPublicPropTypes<typeof iframeProps>
+export type { RIframeType }
+
+export { RIframe, iframeProps }

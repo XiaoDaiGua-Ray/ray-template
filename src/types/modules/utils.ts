@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type CryptoJS from 'crypto-js'
-import type { BasicTarget } from './vue'
 
 export type StorageLike = 'sessionStorage' | 'localStorage'
 
@@ -9,10 +8,6 @@ export type RemoveStorageKey =
   | 'all'
   | 'all-sessionStorage'
   | 'all-localStorage'
-
-export type EventListenerOrEventListenerObject =
-  | EventListener
-  | EventListenerObject
 
 export type ValidateValueType =
   | 'BigUint64Array'
@@ -93,7 +88,3 @@ export type ElementSelector = string | `attr:${string}`
 export type MaybeArray<T> = T | T[]
 
 export type DownloadAnyFileDataType = Blob | File | string | ArrayBuffer
-
-export type EventListenerTarget = BasicTarget<
-  HTMLElement | Element | Window | Document
->

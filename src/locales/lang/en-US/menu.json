@@ -21,5 +21,7 @@
   "Mock": "Mock",
   "QRCode": "QRCode",
   "SvgIcon": "SVG Icon",
-  "TemplateHooks": "Template Api"
+  "TemplateHooks": "Template Api",
+  "Modal": "Modal",
+  "ContextMenu": "Right Click Menu"
 }

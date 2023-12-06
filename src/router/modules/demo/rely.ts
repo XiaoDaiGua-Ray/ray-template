@@ -1,16 +1,16 @@
-import { t } from '@/hooks/web/index'
-import { LAYOUT } from '@/router/constant/index'
+import { t } from '@/hooks/web'
+import { LAYOUT } from '@/router/constant'
 
 import type { AppRouteRecordRaw } from '@/router/type'
 
 const rely: AppRouteRecordRaw = {
   path: '/rely',
-  name: 'RelyAbout',
+  name: 'Rely',
   component: LAYOUT,
   meta: {
     i18nKey: t('menu.Rely'),
     icon: 'rely',
-    order: 7,
+    order: 999,
   },
   children: [
     {
@@ -18,7 +18,7 @@ const rely: AppRouteRecordRaw = {
       name: 'RelyAbout',
       component: () => import('@/views/demo/rely/views/rely-about/index'),
       meta: {
-        i18nKey: 'RelyAbout',
+        i18nKey: t('menu.RelyAbout'),
       },
     },
   ],

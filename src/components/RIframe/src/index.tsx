@@ -13,9 +13,10 @@ import './index.scss'
 
 import { NSpin } from 'naive-ui'
 
-import { completeSize, on, off } from '@use-utils/element'
-import { call } from '@/utils/vue/index'
+import { completeSize } from '@use-utils/element'
+import { call } from '@/utils/vue'
 import props from './props'
+import { useEventListener } from '@vueuse/core'
 
 export default defineComponent({
   name: 'RIframe',
@@ -53,17 +54,11 @@ export default defineComponent({
       }
     }
 
+    useEventListener(iframeRef, 'load', iframeLoadSuccess)
+    useEventListener(iframeRef, 'error', iframeLoadError)
+
     expose({
       iframeInst: iframeRef,
-    })
-
-    onMounted(() => {
-      on(iframeRef.value, 'load', iframeLoadSuccess.bind(this))
-      on(iframeRef.value, 'error', iframeLoadError)
-    })
-    onBeforeUnmount(() => {
-      off(iframeRef.value, 'load', iframeLoadSuccess)
-      off(iframeRef.value, 'error', iframeLoadError)
     })
 
     return {

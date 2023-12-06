@@ -10,7 +10,7 @@
  */
 
 import { NSpace } from 'naive-ui'
-import SiderBar from '@/layout/components/SiderBar/index'
+import SiderBar from '@/layout/components/SiderBar'
 
 export default defineComponent({
   name: 'LayoutHeaderWrapper',

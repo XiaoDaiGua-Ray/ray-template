@@ -21,7 +21,6 @@
  *   - pattern default: `!#`(!: 货币符号代替, #: 货币金额代替)
  *   - negativePattern default: `!#`(!: 货币符号代替, #: 货币金额代替)
  *   - format default: `null`(默认格式化方法替代, 看文档)
- *   - fromCents default: `false`
  *   - fromCents default: `false`(尊重精度选项)
  *   - errorOnInvalid default: `false`(传入 null undefined 直接抛出错误)
  *   - increment default: `null`(四舍五入增量值)
@@ -30,6 +29,7 @@
 
 import currency from 'currency.js'
 import { cloneDeep } from 'lodash-es'
+import { isValueType } from '@/utils/basic'
 
 import type { Options } from 'currency.js'
 import type { AnyFC } from '@/types/modules/utils'
@@ -37,6 +37,29 @@ import type { AnyFC } from '@/types/modules/utils'
 export type CurrencyArguments = string | number | currency
 
 export type OriginalValueType = 'string' | 'number'
+
+// currency.js 默认配置
+const defaultOptions: Partial<Options> = {
+  precision: 8,
+  decimal: '.',
+}
+// currency.js 原型属性集合
+const currencyPrototypeKeys = [
+  's',
+  'intValue',
+  'p',
+  'value',
+  'toJSON',
+  'add',
+  'cents',
+  'distribute',
+  'divide',
+  'dollars',
+  'format',
+  'multiply',
+  'subtract',
+  'toString',
+]
 
 /**
  *
@@ -56,7 +79,7 @@ const basic = (
   }
 
   if (valueOptions.length === 1) {
-    return currency(valueOptions[0])
+    return currency(valueOptions[0], defaultOptions)
   }
 
   const result = valueOptions.reduce((pre, curr, idx, arr) => {
@@ -66,6 +89,31 @@ const basic = (
   }, dividend)
 
   return result
+}
+
+/**
+ *
+ * @param value 待判断值
+ *
+ * 检查一个对象是否为 currency.js 的对象
+ * 当该对象含有 s, intValue, p, value... 属性时, 则认为该对象为 currency.js 的对象
+ *
+ * @example
+ * isCurrency(1.23) => false
+ * isCurrency('1.23') => false
+ * isCurrency({ s: 1, intValue: 1, p: 1, value: 1 }) => false
+ * isCurrency(currency(1)) => true
+ */
+export const isCurrency = (value: unknown) => {
+  if (typeof value === 'string' || typeof value === 'number') {
+    return false
+  }
+
+  if (isValueType<object>(value, 'Object')) {
+    return currencyPrototypeKeys.every((key) => Reflect.has(value, key))
+  }
+
+  return false
 }
 
 /**
@@ -80,9 +128,10 @@ export const format = (
   options?: Options,
   type: OriginalValueType = 'number',
 ) => {
-  return type === 'number'
-    ? currency(value, options).value
-    : currency(value, options).toString()
+  const assignOptions = Object.assign({}, defaultOptions, options)
+  const v = currency(value, assignOptions)
+
+  return type === 'number' ? v.value : v.toString()
 }
 
 /**
@@ -94,8 +143,12 @@ export const format = (
  * format(add(0.2, 0.33)) => 0.53
  */
 export const add = (...args: CurrencyArguments[]) => {
+  if (args.length === 1) {
+    return currency(args[0], defaultOptions).add(0)
+  }
+
   return basic(args, 0, (pre, curr) => {
-    return currency(pre).add(curr)
+    return currency(pre, defaultOptions).add(curr)
   })
 }
 
@@ -108,10 +161,14 @@ export const add = (...args: CurrencyArguments[]) => {
  * format(subtract(0.2, 0.33)) => -0.13
  */
 export const subtract = (...args: CurrencyArguments[]) => {
+  if (args.length === 1) {
+    return currency(args[0], defaultOptions).subtract(0)
+  }
+
   if (args.length === 2) {
     const [one, two] = args
 
-    return currency(one).subtract(two)
+    return currency(one, defaultOptions).subtract(two)
   }
 
   const cloneDeepArgs = cloneDeep(args)
@@ -122,7 +179,7 @@ export const subtract = (...args: CurrencyArguments[]) => {
   }
 
   return basic(cloneDeepArgs, dividend, (pre, curr) => {
-    return currency(pre).subtract(curr)
+    return currency(pre, defaultOptions).subtract(curr)
   })
 }
 
@@ -135,8 +192,12 @@ export const subtract = (...args: CurrencyArguments[]) => {
  * format(multiply(0.2, 0.33)) => 0.07
  */
 export const multiply = (...args: CurrencyArguments[]) => {
+  if (args.length === 1) {
+    return currency(args[0], defaultOptions).multiply(1)
+  }
+
   return basic(args, 1, (pre, curr) => {
-    return currency(pre).multiply(curr)
+    return currency(pre, defaultOptions).multiply(curr)
   })
 }
 
@@ -149,21 +210,21 @@ export const multiply = (...args: CurrencyArguments[]) => {
  * format(divide(0.2, 0.33)) => 0.61
  */
 export const divide = (...args: CurrencyArguments[]) => {
+  if (args.length === 1) {
+    return currency(args[0], defaultOptions).divide(1)
+  }
+
   if (args.length === 2) {
     const [one, two] = args
 
-    return currency(one).divide(two)
+    return currency(one, defaultOptions).divide(two)
   }
 
   const cloneDeepArgs = cloneDeep(args)
   const dividend = cloneDeepArgs.shift() as CurrencyArguments
 
-  if (!cloneDeepArgs.length) {
-    return dividend
-  }
-
   return basic(cloneDeepArgs, dividend, (pre, curr) => {
-    return currency(pre).divide(curr)
+    return currency(pre, defaultOptions).divide(curr)
   })
 }
 
@@ -176,11 +237,7 @@ export const divide = (...args: CurrencyArguments[]) => {
  * distribute(0, 1) => [0]
  * distribute(0, 3) => [0, 0, 0]
  */
-export const distribute = (
-  value: CurrencyArguments,
-  length: number,
-  options?: Options,
-) => {
+export const distribute = (value: CurrencyArguments, length: number) => {
   if (length <= 1) {
     return [value ? value : 0]
   } else {
@@ -189,10 +246,10 @@ export const distribute = (
     }
   }
 
-  const result = currency(value, options)
+  const result = currency(value, defaultOptions)
     .distribute(length)
     .map((curr) => {
-      return format(curr, options)
+      return format(curr)
     })
 
   return result

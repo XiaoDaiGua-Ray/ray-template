@@ -1,5 +1,5 @@
 <div align="center">
- <a href="https://github.com/XiaoDaiGua-Ray/ray-template"> <img alt="Ray Template" width="200" height="200" src="https://usc1.contabostorage.com/c2e495d7890844d392e8ec0c6e5d77eb:alist/ray/ray.svg?sign=ZklU9Bh5b6oKp1X0LOhGwkx4g5mW4wk_w9Jt5zlZ5EQ=:0"> </a> <br> <br>
+ <a href="https://github.com/XiaoDaiGua-Ray/ray-template"> <img alt="Ray Template" width="200" height="200" src="https://r2chevereto.yka.moe/longmao.navigator.th.png"> </a> <br> <br>
  <a href="https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/LICENSE"><img src="https://img.shields.io/github/license/XiaoDaiGua-Ray/ray-template" alt="LICENSE"></a>
 </div>
 
@@ -9,13 +9,14 @@
 
 简体中文 | [English](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/README.md)
 
-一个基于 vite4.x & ts(x) & pinia & vue3.x 的中后台模板
+一个 `免费`、`高效`、`特性完整` 并且基于 vite5.x & ts(x) & pinia & vue3.x 等最新技术的中后台模板。
 
 </div>
 
 ## ✨ 特性
 
-- **最新技术栈**：使用 vue3.x/vite4.x/pinia 等前端前沿技术开发
+- **靠爱发电**：几乎包含市面常见的模板特性并且全部免费使用
+- **最新技术栈**：使用 vue3.x/vite5.x/pinia 等前端前沿技术开发
 - **TypeScript**：应用程序级 JavaScript 的语言
 - **主题**：可配置的主题
 - **国际化**：内置完善的国际化方案
@@ -26,6 +27,7 @@
 - **缓存**：任意深度页面缓存
 - **SVG**：内置 svg icon 解决方案
 - **独立的 Data Methods Views**：解耦管理的数据、方法、视图，放心二次开发
+- **模板专属 hooks**：基于模板特性封装的 hooks 让你更加方便的使用模板一些功能
 
 ## 🪄 预览地址
 
