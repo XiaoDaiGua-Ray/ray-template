@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 
 import config from './cfg'
 import pkg from './package.json'
-import vitePlugins from './vite.pliugin.config'
+import vitePlugins from './vite.plugin.config'
 
 // https://vitejs.dev/config/
 export default defineConfig(async ({ mode }) => {
