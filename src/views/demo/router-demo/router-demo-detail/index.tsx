@@ -14,6 +14,7 @@ import { NCard, NSpace } from 'naive-ui'
 const RouterDemoDetail = defineComponent({
   name: 'RouterDemoDetail',
   render() {
+    console.log(this.$route.query)
     return (
       <NSpace wrapItem={false}>
         <NCard title="平层路由详情页面">我是平层路由详情页面</NCard>

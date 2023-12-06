@@ -118,7 +118,7 @@ export const APP_CATCH_KEY = {
  * 具体配置信息查看官网: https://www.naiveui.com/zh-CN/dark/components/watermark#API
  */
 export const APP_WATERMARK_CONFIG = {
-  content: 'Tring be better~',
+  content: 'Trying be better~',
   fontSize: 16,
   lineHeight: 16,
   width: 384,

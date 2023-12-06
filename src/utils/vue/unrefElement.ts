@@ -28,12 +28,12 @@ import type { ComponentPublicInstance } from 'vue'
  * unrefElement(refDom) => div
  * unrefElement(computedDom) => div
  */
-export function unrefElement<T extends TargetType>(
+function unrefElement<T extends TargetType>(
   target: BasicTarget<T>,
-  defaultTarget?: T,
+  defaultElement?: T,
 ) {
   if (!target) {
-    return defaultTarget
+    return defaultElement
   }
 
   let targetElement: TargetValue<T>
@@ -49,3 +49,5 @@ export function unrefElement<T extends TargetType>(
 
   return targetElement
 }
+
+export { unrefElement }

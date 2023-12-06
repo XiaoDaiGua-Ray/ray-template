@@ -33,7 +33,7 @@ import config from './cfg'
 
 import type { PluginOption } from 'vite'
 
-// 仅适用于报告模式
+// 仅适用于报告模式（report）
 function onlyReportOptions(mode: string) {
   return [
     visualizer({

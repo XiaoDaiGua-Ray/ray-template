@@ -11,13 +11,10 @@
 
 import { setVariable, getVariableToRefs } from '@/global-variable'
 import { LAYOUT_CONTENT_REF } from '@/app-config/routerConfig'
-import { addStyle, removeStyle } from '@/utils/element'
 import { unrefElement } from '@/utils/vue'
-import { useWindowSize } from '@vueuse/core'
+import { useElementFullscreen } from '../web'
 
-export interface MaximizeOptions {
-  zIndex?: string
-}
+import type { UseElementFullscreenOptions } from '../web'
 
 export const useMaximize = () => {
   /**
@@ -40,38 +37,15 @@ export const useMaximize = () => {
    * 该方法仅针对于 LayoutContent 区域，并且依赖全局属性 layoutContentMaximize
    *
    * @example
-   * maximize(true, { MaximizeOptions }) 全屏内容区域
-   * maximize(false, { MaximizeOptions }) 取消全屏内容区域
+   * maximize(true, { UseElementFullscreenOptions }) 全屏内容区域
+   * maximize(false, { UseElementFullscreenOptions }) 取消全屏内容区域
    */
-  const maximize = (full: boolean, options?: MaximizeOptions) => {
+  const maximize = (full: boolean, options?: UseElementFullscreenOptions) => {
     const contentEl = unrefElement(LAYOUT_CONTENT_REF as Ref<HTMLElement>)
-
-    if (contentEl) {
-      const { left, top } = contentEl.getBoundingClientRect() // 使用 left, top 计算 translate 偏移
-      const { height } = useWindowSize() // 获取实际高度避免 100vh 会导致手机端浏览器获取不准确问题
-      const { zIndex = '99' } = options ?? {}
-
-      full
-        ? addStyle(contentEl, {
-            position: 'fixed',
-            width: '100%',
-            height: `${height.value}px`,
-            transform: `translate(-${left}px, -${top}px)`,
-            transition: 'all 0.3s var(--r-bezier)',
-            zIndex,
-          })
-        : removeStyle(contentEl, [
-            'position',
-            'width',
-            'height',
-            'transform',
-            // 为了兼容浏览器 zIndex 的样式表
-            'zIndex',
-            'z-index',
-          ])
-    }
+    const { toggleFullscreen } = useElementFullscreen(contentEl, options)
 
     setVariable('layoutContentMaximize', full)
+    toggleFullscreen()
   }
 
   return {

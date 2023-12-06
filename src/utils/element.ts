@@ -232,12 +232,15 @@ export const removeStyle = (
  *
  * @param color 颜色格式
  * @param alpha 透明度
- * @returns 转换后的 rgba 颜色值
  *
- * @remark 将任意颜色值转为 rgba
+ * 将任意颜色值转为 rgba，如果本身为 rgba, rgb 或者其它非法颜色值则直接返回
  *
  * @example
  * colorToRgba('#123632', 0.8) => rgba(18, 54, 50, 0.8)
+ * colorToRgba('rgb(18, 54, 50)', 0.8) => rgb(18, 54, 50)
+ * colorToRgba('#ee4f12', 0.3) => rgba(238, 79, 18, 0.3)
+ * colorToRgba('rgba(238, 79, 18, 0.3)', 0.3) => rgba(238, 79, 18, 0.3)
+ * colorToRgba('not a color', 0.3) => not a color
  */
 export const colorToRgba = (color: string, alpha = 1) => {
   const hexPattern = /^#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i
@@ -257,11 +260,11 @@ export const colorToRgba = (color: string, alpha = 1) => {
 
     result = 'rgb(' + rgb.join(', ') + ')'
   } else if (rgbPattern.test(color)) {
-    result = color
+    return color
   } else if (rgbaPattern.test(color)) {
-    result = color
+    return color
   } else {
-    result = color
+    return color
   }
 
   if (result && !result.startsWith('rgba')) {
