@@ -14,6 +14,9 @@
 - `changeMenuModelValue`
   - 现在方法支持第三个参数配置跳转时，是否携带参数
   - 避免递归查找的时候，一些不必要的操作，优化性能
+- 核心模块 `Menu` 的优化细节
+  - 使用 `router.getRoutes` 方法替代以前的递归查找（`updateMenuKeyWhenRouteUpdate` 方法）
+  - 优化当菜单更新时、url 地址更新时都会重复检查的问题，现在检查是惰性的
 
 ## Fixes
 

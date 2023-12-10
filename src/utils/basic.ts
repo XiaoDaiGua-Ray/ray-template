@@ -6,6 +6,7 @@ import type {
   ValidateValueType,
   DownloadAnyFileDataType,
   BasicTypes,
+  AnyFC,
 } from '@/types/modules/utils'
 import type { BasicTarget, TargetValue } from '@/types/modules/vue'
 
@@ -255,4 +256,85 @@ export const omit = <T extends Record<string, unknown>, K extends keyof T>(
   })
 
   return targetObject
+}
+
+/**
+ *
+ * @param value 待判断的值
+ *
+ * 判断是否为 Promise 函数
+ *
+ * @example
+ * isPromise(Promise.resolve(123)) => true
+ * isPromise(() => {}) => false
+ * isPromise(123) => false
+ */
+export const isPromise = <T>(value: unknown): value is Promise<T> => {
+  return (
+    !!value &&
+    (typeof value === 'object' || typeof value === 'function') &&
+    typeof (value as Promise<T>).then === 'function'
+  )
+}
+
+/**
+ *
+ * @param fc 正常执行的函数
+ * @param errorCallback 错误回调
+ * @param args 当前传递函数参数
+ *
+ * 用于捕获函数执行时的错误，如果有错误，则执行错误回调
+ *
+ * @example
+ * callWithErrorHandling((x: number) => { return x }, () => {}, [123]) => 123
+ * callWithErrorHandling((x: number) => { throw new Error('error') }, (error) => { console.log(error) }, [123]) => undefined
+ */
+export const callWithErrorHandling = <T extends AnyFC, E extends Error>(
+  fc: T,
+  errorCallback: AnyFC<E, void>,
+  args?: Parameters<T>,
+) => {
+  let result: ReturnType<T> | undefined
+
+  try {
+    result = args ? fc(...args) : fc()
+  } catch (error) {
+    errorCallback(error as E)
+  }
+
+  return result
+}
+
+/**
+ *
+ * @param fn 正常执行的函数
+ * @param errorCallback 错误回调
+ * @param args 当前传递函数参数
+ *
+ * 用于捕获异步函数执行时的错误，如果有错误，则执行错误回调
+ *
+ * @example
+ * callWithAsyncErrorHandling(async () => { console.log('A') }, () => {}, []) => Promise { undefined }
+ * callWithAsyncErrorHandling(() => { throw new Error('error') }, (error) => { console.log(error) }, []) => undefined
+ * callWithAsyncErrorHandling(async () => { return Promise.resolve('hello') }, () => {}, []) => Promise { 'hello' }
+ */
+export const callWithAsyncErrorHandling = async <
+  T extends AnyFC,
+  E extends Error,
+>(
+  fc: T,
+  errorCallback: (error: E) => void,
+  args?: Parameters<T>,
+) => {
+  try {
+    if (!isPromise(fc)) {
+      return Promise.resolve(callWithErrorHandling(fc, errorCallback, args))
+    }
+
+    return await fc(...(args as Parameters<T>))
+  } catch (error) {
+    errorCallback(error as E)
+
+    return void 0
+  }
 }

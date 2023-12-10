@@ -28,4 +28,4 @@ import { expandRoutes } from '@/router/helper/expandRoutes'
 export const getAppRawRoutes = () => orderRoutes(combineRawRouteModules())
 
 /** 获取所有平铺展开的路由 */
-export const appExpandRoutes = expandRoutes(getAppRawRoutes())
+export const appExpandRoutes = () => expandRoutes(getAppRawRoutes())

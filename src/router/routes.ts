@@ -25,7 +25,7 @@ export default async () => {
       name: 'layout',
       redirect: getRootPath.value,
       component: Layout,
-      children: appExpandRoutes,
+      children: appExpandRoutes(),
     },
   ]
 }
