@@ -4,6 +4,7 @@ name: ray-template documents deploy
 on: [push, pull_request]
 
 jobs:
+  build-and-deploy:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
