@@ -1,0 +1,32 @@
+
+name: ray-template documents deploy
+
+on: [push, pull_request]
+
+jobs:
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Pnpm build
+        run: pnpm build
+
+      - name: Deploy to dist branch
+        uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          branch: dist
+          folder: dist/production-dist
