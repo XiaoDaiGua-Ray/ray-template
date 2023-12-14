@@ -23,7 +23,7 @@ import { RIcon } from '@/components'
 
 import config from '../config'
 import props from '../props'
-import { call } from '@/utils/vue'
+import { call } from '@/utils'
 
 import type { TreeOption, TreeDropInfo } from 'naive-ui'
 import type { C } from '../type'

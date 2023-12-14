@@ -21,7 +21,7 @@
  */
 
 import RequestCanceler from '@/axios/helper/RequestCanceler'
-import { getAppEnvironment } from '@/utils/basic'
+import { getAppEnvironment } from '@/utils'
 
 import type {
   RequestInterceptorConfig,

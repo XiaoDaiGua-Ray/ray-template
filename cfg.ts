@@ -142,9 +142,8 @@ const config: AppConfigExport = {
    *
    * 预设别名
    * - `@`: `src` 根目录
-   * - `@use-utils`: `src/utils` 根目录
-   * - `@use-api`: `src/axios/api` 根目录
-   * - `@use-images`: `src/assets/images` 根目录
+   * - `@api`: `src/axios/api` 根目录
+   * - `@images`: `src/assets/images` 根目录
    */
   alias: [
     {
@@ -152,15 +151,11 @@ const config: AppConfigExport = {
       replacement: path.resolve(__dirname, './src'),
     },
     {
-      find: '@use-utils',
-      replacement: path.resolve(__dirname, './src/utils'),
-    },
-    {
-      find: '@use-api',
+      find: '@api',
       replacement: path.resolve(__dirname, './src/axios/api'),
     },
     {
-      find: '@use-images',
+      find: '@images',
       replacement: path.resolve(__dirname, './src/assets/images'),
     },
     {

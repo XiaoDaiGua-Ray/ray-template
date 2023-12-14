@@ -20,12 +20,11 @@
  * 当然, 你可以指定一个超级管理员角色, 默认获取全部路由
  */
 
-import { getStorage } from '@/utils/cache'
 import { APP_CATCH_KEY } from '@/app-config/appConfig'
 import { redirectRouterToDashboard } from '@/router/helper/routerCopilot'
 import { WHITE_ROUTES } from '@/app-config/routerConfig'
 import { validRole } from '@/router/helper/routerCopilot'
-import { isValueType } from '@/utils/basic'
+import { isValueType, getStorage } from '@/utils'
 import { useAppRoot } from '@/hooks/template'
 
 import type { Router, RouteLocationNormalized } from 'vue-router'

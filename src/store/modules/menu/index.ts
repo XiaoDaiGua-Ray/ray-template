@@ -25,7 +25,7 @@
 
 import { NEllipsis } from 'naive-ui'
 
-import { setStorage } from '@/utils/cache'
+import { setStorage } from '@/utils'
 import { validRole, validMenuItemShow } from '@/router/helper/routerCopilot'
 import {
   parseAndFindMatchingNodes,

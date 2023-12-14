@@ -11,9 +11,14 @@
 
 import './index.scss'
 
-import { getStorage } from '@/utils/cache'
 import { get } from 'lodash-es'
-import { addClass, removeClass, addStyle, colorToRgba } from '@/utils/element'
+import {
+  addClass,
+  removeClass,
+  addStyle,
+  colorToRgba,
+  getStorage,
+} from '@/utils'
 import { useSettingGetters } from '@/store'
 
 import type { SettingState } from '@/store/modules/setting/type'

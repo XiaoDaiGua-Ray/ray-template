@@ -20,11 +20,14 @@
   "alias-skip.rootpath": "package.json",
   "cSpell.words": [
     "Clickoutside",
+    "commitmsg",
+    "EDITMSG",
     "macarons",
     "menutag",
     "ndata",
     "persistedstate",
     "Popselect",
+    "precommit",
     "siderbar",
     "WUJIE",
     "zlevel"

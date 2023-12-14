@@ -12,7 +12,7 @@
 import { NPopover, NPopselect } from 'naive-ui'
 import { RIcon } from '@/components'
 
-import { call } from '@/utils/vue'
+import { call } from '@/utils'
 import props from '../props'
 import config from '../config'
 

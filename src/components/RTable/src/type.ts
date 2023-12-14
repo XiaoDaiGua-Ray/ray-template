@@ -7,9 +7,9 @@ import type {
   DataTableColumn,
   DataTableBaseColumn,
 } from 'naive-ui'
-import type { VNode, VNodeChild } from 'vue'
-import type PrintConfiguration from 'print-js'
+import type { VNode } from 'vue'
 import type { Recordable } from '@/types/modules/helper'
+import type { PrintDomOptions } from '@/utils'
 
 export type TableActionIcon = string | (() => VNode)
 
@@ -23,15 +23,13 @@ export interface DownloadTableOptions {
   fileName?: string
 }
 
-export interface PrintTableOptions {
-  printOptions?: Omit<PrintConfiguration.Configuration, 'printable' | 'type'>
-  type?: PrintConfiguration.PrintTypes
-}
+export interface PrintTableOptions extends PrintDomOptions {}
 
 export interface TableProvider {
   uuidWrapper: string
   uuidTable: string
-  wrapperRef: Ref<HTMLElement | null>
+  wrapperRef: Ref<HTMLElement | undefined>
+  tableRef: Ref<HTMLElement | undefined>
 }
 
 export interface C extends DataTableBaseColumn {

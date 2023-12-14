@@ -13,8 +13,7 @@
 
 import { APP_MENU_CONFIG } from '@/app-config/appConfig'
 import { RIcon } from '@/components'
-import { isValueType } from '@/utils/basic'
-import { getStorage } from '@/utils/cache'
+import { getStorage, isValueType } from '@/utils'
 import { useAppRoot } from '@/hooks/template'
 
 import type {

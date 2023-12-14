@@ -1,14 +1,10 @@
-import printJs from 'print-js'
-import { unrefElement } from '@/utils/vue'
-import { watchEffectWithTarget } from '@/utils/vue'
-
 import type {
   ValidateValueType,
   DownloadAnyFileDataType,
   BasicTypes,
   AnyFC,
 } from '@/types/modules/utils'
-import type { BasicTarget, TargetValue } from '@/types/modules/vue'
+import type { Recordable } from '@/types/modules/helper'
 
 /**
  *
@@ -203,59 +199,70 @@ export const downloadAnyFile = (
 
 /**
  *
- * @param target Ref Dom、Dom、Dom id
- * @param options print 配置项
- *
- * 基于 print-js 封装，允许 Ref 注册 Dom 直接调用打印
- *
- * @example
- * print(refDom, { printJs.Configuration })
- * print(Dom id, { printJs.Configuration })
- * print(Dom, { printJs.Configuration })
- */
-export function print<T extends BasicTarget<HTMLElement>>(
-  target: T,
-  options?: printJs.Configuration,
-) {
-  const element = computed(() => unrefElement(target))
-  const { printable, ...args } = options ?? {}
-
-  const $print = <T extends HTMLElement>(element: TargetValue<T>) => {
-    printJs({
-      ...args,
-      printable: element,
-    })
-  }
-
-  const watcher = watch(element, (ndata) => $print(ndata), {
-    immediate: true,
-  })
-
-  watchEffectWithTarget(watcher)
-}
-
-/**
- *
  * @param targetObject 对象
  * @param targetKeys 待删除的 key
  *
  * 删除对象中的指定 key
+ * 如果传递的 targetObject 为 null 或者 undefined，则返回空对象
  *
  * @example
  * omit({ a: 1, b: 2, c: 3 }, 'a') => { b: 2, c: 3 }
  * omit({ a: 1, b: 2, c: 3 }, ['a', 'b']) => { c: 3 }
  */
-export const omit = <T extends Record<string, unknown>, K extends keyof T>(
+export const omit = <T extends Recordable, K extends keyof T>(
   targetObject: T,
   targetKeys: K | K[],
 ): Omit<T, K> => {
+  if (!targetObject) {
+    return {} as Omit<T, K>
+  }
+
   const keys = Array.isArray(targetKeys) ? targetKeys : [targetKeys]
+
+  if (!keys.length) {
+    return targetObject
+  }
 
   keys.forEach((key) => {
     delete targetObject[key]
   })
 
   return targetObject
+}
+
+/**
+ *
+ * @param targetObject target object
+ * @param targetKeys target keys
+ *
+ * 从对象中提取指定的 key
+ * 如果传递的 targetObject 为 null 或者 undefined，则返回空对象
+ *
+ * @example
+ * pick({ a: 1, b: 2, c: 3 }, 'a') => { a: 1 }
+ * pick({ a: 1, b: 2, c: 3 }, ['a', 'b']) => { a: 1, b: 2 }
+ * pick({ a: 1, b: 2, c: 3 }, []) => {}
+ */
+export const pick = <T extends Recordable, K extends keyof T>(
+  targetObject: T,
+  targetKeys: K | K[],
+): Pick<T, K> => {
+  if (!targetObject) {
+    return {} as Pick<T, K>
+  }
+
+  const keys = Array.isArray(targetKeys) ? targetKeys : [targetKeys]
+  const result = {} as Pick<T, K>
+
+  if (!keys.length) {
+    return result
+  }
+
+  keys.forEach((key) => {
+    result[key] = targetObject[key]
+  })
+
+  return result
 }
 
 /**
@@ -325,7 +332,7 @@ export const callWithAsyncErrorHandling = async <
   fc: T,
   errorCallback: (error: E) => void,
   args?: Parameters<T>,
-) => {
+): Promise<ReturnType<T> | undefined> => {
   try {
     if (!isPromise(fc)) {
       return Promise.resolve(callWithErrorHandling(fc, errorCallback, args))

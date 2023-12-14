@@ -20,7 +20,7 @@
  */
 
 import { isEmpty } from 'lodash-es'
-import { removeStorage } from '@/utils/cache'
+import { removeStorage } from '@/utils'
 
 import type {
   SigningForm,

@@ -23,7 +23,7 @@ import './index.scss'
 import { NInput, NModal, NResult, NScrollbar, NSpace } from 'naive-ui'
 import { RIcon } from '@/components'
 
-import { queryElements, addClass, removeClass } from '@/utils/element'
+import { queryElements, addClass, removeClass } from '@/utils'
 import { debounce } from 'lodash-es'
 import { useMenuGetters, useMenuActions } from '@/store'
 import { validMenuItemShow } from '@/router/helper/routerCopilot'

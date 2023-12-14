@@ -14,7 +14,7 @@
  * directive name: disabled
  */
 
-import { addClass, removeClass } from '@/utils/element'
+import { addClass, removeClass } from '@/utils'
 
 import type { CustomDirectiveFC } from '@/directives/type'
 

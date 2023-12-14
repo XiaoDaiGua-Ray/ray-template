@@ -11,8 +11,7 @@
 
 import './index.scss'
 
-import { call } from '@/utils/vue'
-import { completeSize } from '@/utils/element'
+import { completeSize, call } from '@/utils'
 import props from './props'
 
 export default defineComponent({

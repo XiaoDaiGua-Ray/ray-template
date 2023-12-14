@@ -18,8 +18,7 @@ import C from './components/C'
 import Print from './components/Print'
 
 import props from './props'
-import { call, renderNode } from '@/utils/vue'
-import { uuid } from '@/utils/basic'
+import { call, renderNode, uuid } from '@/utils'
 import config from './config'
 
 import type { DropdownOption, DataTableInst } from 'naive-ui'
@@ -32,8 +31,8 @@ export default defineComponent({
   setup(props, ctx) {
     const { expose } = ctx
 
-    const rTableInst = ref<DataTableInst | null>(null)
-    const wrapperRef = ref<HTMLElement | null>(null)
+    const rTableInst = ref<DataTableInst>()
+    const wrapperRef = ref<HTMLElement>()
 
     const uuidWrapper = uuid(16) // wrapper id
     const uuidTable = uuid(16) // table id
@@ -176,6 +175,7 @@ export default defineComponent({
       uuidTable,
       uuidWrapper,
       wrapperRef,
+      tableRef: rTableInst,
     })
     expose({
       rTableInst,

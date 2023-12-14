@@ -11,14 +11,7 @@
 
 import { NLayout, NCard, NDynamicTags, NSpace, NInputNumber } from 'naive-ui'
 
-import {
-  add,
-  subtract,
-  multiply,
-  divide,
-  distribute,
-  format,
-} from '@use-utils/precision'
+import { add, subtract, multiply, divide, distribute, format } from '@/utils'
 
 const CalculatePrecision = defineComponent({
   name: 'CalculatePrecision',

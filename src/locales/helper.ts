@@ -18,7 +18,7 @@
 
 import { set } from 'lodash-es'
 import { zhCN, dateZhCN } from 'naive-ui' // 导入 `naive ui` 中文包
-import { getStorage } from '@use-utils/cache'
+import { getStorage } from '@/utils'
 import { SYSTEM_DEFAULT_LOCAL } from '@/app-config/localConfig'
 import { APP_CATCH_KEY } from '@/app-config/appConfig'
 

@@ -14,9 +14,8 @@ import './index.scss'
 import { NModal } from 'naive-ui'
 
 import props from './props'
-import { completeSize } from '@/utils/element'
+import { completeSize, uuid } from '@/utils'
 import { useWindowSize } from '@vueuse/core'
-import { uuid } from '@/utils/basic'
 import { setupDraggable } from './utils'
 
 import type interact from 'interactjs'

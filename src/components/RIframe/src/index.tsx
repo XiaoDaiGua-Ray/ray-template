@@ -13,8 +13,7 @@ import './index.scss'
 
 import { NSpin } from 'naive-ui'
 
-import { completeSize } from '@use-utils/element'
-import { call } from '@/utils/vue'
+import { call, completeSize } from '@/utils'
 import props from './props'
 import { useEventListener } from '@vueuse/core'
 

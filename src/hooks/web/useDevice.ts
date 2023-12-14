@@ -15,7 +15,7 @@
  */
 
 import { useWindowSize } from '@vueuse/core'
-import { watchEffectWithTarget } from '@/utils/vue'
+import { watchEffectWithTarget } from '@/utils'
 
 /**
  *

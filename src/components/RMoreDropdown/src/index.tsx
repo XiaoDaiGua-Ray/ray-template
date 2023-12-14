@@ -13,7 +13,7 @@ import { NDropdown } from 'naive-ui'
 import { RIcon } from '@/components'
 
 import props from './props'
-import { renderNode } from '@use-utils/vue'
+import { renderNode } from '@/utils'
 
 export default defineComponent({
   name: 'RMoreDropdown',

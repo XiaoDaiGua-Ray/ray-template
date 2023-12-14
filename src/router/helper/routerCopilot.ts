@@ -12,8 +12,7 @@
 import { permissionRouter } from './permission'
 import { SETUP_ROUTER_ACTION, SUPER_ADMIN } from '@/app-config/routerConfig'
 import { useVueRouter } from '@/hooks/web'
-import { setStorage } from '@/utils/cache'
-import { getAppEnvironment } from '@/utils/basic'
+import { getAppEnvironment, setStorage } from '@/utils'
 import { useSigningGetters } from '@/store'
 import { useAppRoot } from '@/hooks/template'
 
@@ -91,15 +90,15 @@ export const validMenuItemShow = (option: AppMenuOption) => {
  */
 export const setupRouterLoadingBar = (router: Router) => {
   router.beforeEach(() => {
-    window?.$loadingBar?.start()
+    window?.$loadingBar.start()
   })
 
   router.afterEach(() => {
-    window?.$loadingBar?.finish()
+    window?.$loadingBar.finish()
   })
 
   router.onError(() => {
-    window?.$loadingBar?.error()
+    window?.$loadingBar.error()
   })
 }
 

@@ -14,7 +14,7 @@ import { RIcon } from '@/components'
 
 import config from '../config'
 import props from '../props'
-import { print } from '@/utils/basic'
+import { printDom } from '@/utils/dom'
 
 import type { TableProvider } from '../type'
 
@@ -22,24 +22,29 @@ export default defineComponent({
   name: 'TablePrint',
   props,
   setup(props) {
-    const { uuidTable } = inject<TableProvider>(
+    const { tableRef } = inject<TableProvider>(
       config.tableKey,
       {} as TableProvider,
     )
 
     const printTableClick = () => {
-      const { printTableOptions } = props
-      const { type = 'html', printOptions = {} } = printTableOptions ?? {}
+      const {
+        printTableOptions: { printOptions = {}, domToImageOptions } = {},
+        title,
+      } = props
 
-      const options = Object.assign(printOptions, {
-        printable: uuidTable,
-        type: type,
-        documentTitle: printOptions.documentTitle
-          ? printOptions.documentTitle
-          : '表格',
+      if (
+        printOptions.documentTitle === '' ||
+        printOptions.documentTitle === void 0 ||
+        printOptions.documentTitle === null
+      ) {
+        printOptions.documentTitle = typeof title === 'string' ? title : ''
+      }
+
+      printDom(tableRef, {
+        printOptions,
+        domToImageOptions,
       })
-
-      print(document.getElementById(uuidTable), options)
     }
 
     return {

@@ -9,9 +9,8 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { unrefElement, effectDispose } from '@/utils/vue'
+import { unrefElement, effectDispose, isValueType } from '@/utils'
 import { useWindowSize } from '@vueuse/core'
-import { isValueType } from '@/utils/basic'
 
 import type { BasicTarget } from '@/types/modules/vue'
 

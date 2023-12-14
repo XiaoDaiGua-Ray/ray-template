@@ -1,14 +1,11 @@
-import { isValueType } from '@/utils/basic'
 import { APP_REGEX } from '@/app-config/regexConfig'
-import { unrefElement } from '@/utils/vue'
-import { watchEffectWithTarget } from '@/utils/vue'
-import { useCurrentElement } from '@vueuse/core'
+import { effectDispose, unrefElement, isValueType } from '@/utils'
 
 import type {
   PartialCSSStyleDeclaration,
   ElementSelector,
 } from '@/types/modules/utils'
-import type { BasicTarget, TargetValue } from '@/types/modules/vue'
+import type { BasicTarget } from '@/types/modules/vue'
 
 /**
  *
@@ -25,11 +22,9 @@ export const addClass = (
   target: BasicTarget<Element | HTMLElement | SVGAElement>,
   className: string,
 ) => {
-  const targetElement = computed(() => unrefElement(target))
+  const update = () => {
+    const element = unrefElement(target)
 
-  const update = (
-    element: TargetValue<Element | HTMLElement | SVGAElement>,
-  ) => {
     if (element) {
       const classes = className.trim().split(' ')
 
@@ -41,11 +36,11 @@ export const addClass = (
     }
   }
 
-  const watcher = watch(targetElement, (ndata) => update(ndata), {
+  const watcher = watch(() => unrefElement(target), update, {
     immediate: true,
   })
 
-  watchEffectWithTarget(watcher)
+  effectDispose(watcher)
 }
 
 /**
@@ -64,11 +59,9 @@ export const removeClass = (
   target: BasicTarget<Element | HTMLElement | SVGAElement>,
   className: string | 'removeAllClass',
 ) => {
-  const targetElement = computed(() => unrefElement(target))
+  const update = () => {
+    const element = unrefElement(target)
 
-  const update = (
-    element: TargetValue<Element | HTMLElement | SVGAElement>,
-  ) => {
     if (element) {
       if (className === 'removeAllClass') {
         const classList = element.classList
@@ -86,11 +79,11 @@ export const removeClass = (
     }
   }
 
-  const watcher = watch(targetElement, (ndata) => update(ndata), {
+  const watcher = watch(() => unrefElement(target), update, {
     immediate: true,
   })
 
-  watchEffectWithTarget(watcher)
+  effectDispose(watcher)
 }
 
 /**
@@ -104,10 +97,11 @@ export const removeClass = (
  * hasClass(targetDom, 'matchClassName') => Ref<true> | Ref<false>
  */
 export const hasClass = (target: BasicTarget<Element>, className: string) => {
-  const targetElement = computed(() => unrefElement(target))
   const hasClassRef = ref(false)
 
-  const update = <E extends TargetValue<Element>>(element: E) => {
+  const update = () => {
+    const element = unrefElement(target)
+
     if (!element) {
       hasClassRef.value = false
     } else {
@@ -122,11 +116,11 @@ export const hasClass = (target: BasicTarget<Element>, className: string) => {
     }
   }
 
-  const watcher = watch(targetElement, (ndata) => update(ndata), {
+  const watcher = watch(() => unrefElement(target), update, {
     immediate: true,
   })
 
-  watchEffectWithTarget(watcher)
+  effectDispose(watcher)
 
   return hasClassRef
 }
@@ -157,10 +151,11 @@ export const addStyle = (
   target: BasicTarget<HTMLElement | SVGAElement>,
   styles: PartialCSSStyleDeclaration | string,
 ) => {
-  const targetElement = computed(() => unrefElement(target))
   let styleObj: PartialCSSStyleDeclaration
 
-  const update = (element: TargetValue<HTMLElement | SVGAElement>) => {
+  const update = () => {
+    const element = unrefElement(target)
+
     if (!element) {
       return
     }
@@ -188,11 +183,11 @@ export const addStyle = (
     })
   }
 
-  const watcher = watch(targetElement, (ndata) => update(ndata), {
+  const watcher = watch(() => unrefElement(target), update, {
     immediate: true,
   })
 
-  watchEffectWithTarget(watcher)
+  effectDispose(watcher)
 }
 
 /**
@@ -209,9 +204,9 @@ export const removeStyle = (
   target: BasicTarget<HTMLElement | SVGAElement>,
   styles: ((keyof CSSStyleDeclaration & string) | string)[],
 ) => {
-  const targetElement = computed(() => unrefElement(target))
+  const update = () => {
+    const element = unrefElement(target)
 
-  const update = (element: TargetValue<HTMLElement | SVGAElement>) => {
     if (!element) {
       return
     }
@@ -221,11 +216,11 @@ export const removeStyle = (
     })
   }
 
-  const watcher = watch(targetElement, (ndata) => update(ndata), {
+  const watcher = watch(() => unrefElement(target), update, {
     immediate: true,
   })
 
-  watchEffectWithTarget(watcher)
+  effectDispose(watcher)
 }
 
 /**

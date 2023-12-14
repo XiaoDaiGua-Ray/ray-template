@@ -16,8 +16,7 @@ import { RIcon } from '@/components'
 
 import props from './props'
 import { AwesomeQR } from 'awesome-qr'
-import { isValueType, downloadAnyFile } from '@/utils/basic'
-import { call } from '@/utils/vue'
+import { isValueType, downloadAnyFile, call } from '@/utils'
 
 import type {
   QRCodeRenderResponse,

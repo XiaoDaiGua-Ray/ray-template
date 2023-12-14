@@ -11,7 +11,7 @@
 
 import { setVariable, getVariableToRefs } from '@/global-variable'
 import { LAYOUT_CONTENT_REF } from '@/app-config/routerConfig'
-import { unrefElement } from '@/utils/vue'
+import { unrefElement } from '@/utils'
 import { useElementFullscreen } from '../web'
 
 import type { UseElementFullscreenOptions } from '../web'

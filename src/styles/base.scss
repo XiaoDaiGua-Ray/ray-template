@@ -1,6 +1,6 @@
-@import "@/styles/animate.scss";
-@import "@/styles/root.scss";
-@import "@/styles/naive.scss";
+@import '@/styles/animate.scss';
+@import '@/styles/root.scss';
+@import '@/styles/naive.scss';
 
 body,
 h1,
@@ -77,20 +77,21 @@ body {
     Inter,
     -apple-system,
     BlinkMacSystemFont,
-    "Segoe UI",
+    'Segoe UI',
     Roboto,
     Oxygen,
     Ubuntu,
     Cantarell,
-    "Fira Sans",
-    "Droid Sans",
-    "Helvetica Neue",
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
     sans-serif;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+// 配合 v-disabled 指令使用
 body .ray-template__directive--disabled {
   opacity: 0.3 !important;
   pointer-events: none !important;

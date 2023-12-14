@@ -1,5 +1,36 @@
 # CHANGE LOG
 
+## 4.4.4
+
+升级 `vite` 版本至 `5.0.8`。提升构建速度，并且消除了烦人的 `terser` 警告（未配置该项都会被警告，确实很烦）。
+
+现在能自动的根据 `main` 分支更新构建发布了。
+
+新增 `pre-commit` 检查。现在在提交代码前，会自动检查代码规范，如果不符合规范则会阻止提交。
+
+## Feats
+
+- 更新 `vite` 版本至 `5.0.8`
+- `tsconfig` 文件 `compilerOptions.moduleResolution` 选项由 `Node` 改为 `bundler`
+- `utils` 包相关改动
+  - 统一导出、导入行为，现在统一使用 `import { xxx } from '@/utils'` 导入
+  - 剔除 `basic 包 print` 方法，现在使用 `utils/dom` 包中的 `usePrint` 替代
+  - `utils/dom` 包相关细节
+    - 新增 `printDom` 方法，取代直接调用 `print-js` 方法调用打印。该方法会先将 dom 转换为 `base64` 再调用 `print-js` 方法，避免一些诡异问题。`RTable` 组件打印功能已经由该方法重写。并且可以配置 `printDom` 方法的所有参数，细节请查看 `PrintDomOptions` 类型
+  - `utils/element` 包中一些方法，改为 `effectDispose` 方法注销 `effect`
+- `husky` 相关
+  - 新增 `commit-msg`, `common.sh` 文件，用于检查 `commit` 信息
+  - 新增工作流程，自动构建发布
+- `alias` 别名相关
+  - 移除 `@use-utils` 别名
+  - `@use-images` 更改为 `@images`
+  - `@use-api` 更改为 `@api`
+- `hooks` 包相关
+  - 新增 `usePrint` 方法，允许 ref dom 直接调用打印
+  - 新增 `useDomToImage` 方法，用于直接输出 dom 为 `base64`, `blob` 等
+- `components` 包相关
+  - `RTable` 打印时，如果未手动配置 `documentTitle` 属性，则会自动获取 `title`，如果 `title` 属性为 `string` 类型，则会默认使用该值作为 `documentTitle` 属性。但是如果未获取到 `title` 并且未配置 `documentTitle` 属性，则会默认的将 `documentTitle` 赋值为 `''`，也就是说默认输出浏览器标题
+
 ## 4.4.3
 
 更新 `vue` 版本至 `3.3.10`。

@@ -1,6 +1,6 @@
 import { NForm, NFormItem, NInput, NButton } from 'naive-ui'
 
-import { setStorage } from '@/utils/cache'
+import { setStorage } from '@/utils'
 import { useI18n } from '@/hooks/web'
 import { APP_CATCH_KEY } from '@/app-config/appConfig'
 import { setVariable, getVariableToRefs } from '@/global-variable'
