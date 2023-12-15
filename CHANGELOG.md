@@ -1,5 +1,11 @@
 # CHANGE LOG
 
+## 4.4.5
+
+## Feats
+
+- 切换 `cdn` 源至 `https://www.staticfile.org/`
+
 ## 4.4.4
 
 升级 `vite` 版本至 `5.0.8`。提升构建速度，并且消除了烦人的 `terser` 警告（未配置该项都会被警告，确实很烦）。

@@ -50,6 +50,7 @@ function onlyReportOptions(mode: string) {
 function onlyBuildOptions(mode: string) {
   return [
     viteCDNPlugin({
+      url: 'https://www.staticfile.org/',
       // modules 顺序 vue, vue-demi 必须保持当前顺序加载，否则会出现加载错误问题
       modules: [
         'vue',
