@@ -17,6 +17,8 @@ import type { BasicTarget, TargetType } from '@/types/modules/vue'
 
 export type ImageType = keyof typeof domToImageMethods
 
+export type DomToImageResult = string | Blob | Uint8ClampedArray | undefined
+
 export interface UseDomToImageOptions extends ReDomToImageOptions {
   /**
    *
@@ -25,7 +27,7 @@ export interface UseDomToImageOptions extends ReDomToImageOptions {
    *
    * @default jpeg
    */
-  imageType: ImageType
+  imageType?: ImageType
   /**
    *
    *
@@ -44,27 +46,23 @@ export interface UseDomToImageOptions extends ReDomToImageOptions {
    * 在 dom 转换为图片之后执行
    */
   created?: <T extends TargetType = Element>(
+    result: DomToImageResult,
     element: T,
-    result: string | Blob | Uint8ClampedArray | undefined,
   ) => void
   /**
    *
-   * @param element current dom
    * @param error dom to image error
    *
    * 在 dom 转换为图片失败时执行
    */
-  createdError?: <T extends TargetType = Element>(
-    element: T,
-    error: Error,
-  ) => void
+  createdError?: (error?: Error) => void
   /**
    *
    * @param element current dom
    *
    * 无论 dom 转换为图片成功或失败，都会执行
    */
-  finally?: <T extends TargetType = Element>(element: T) => void
+  finally?: () => void
 }
 
 const domToImageMethods = {
@@ -99,29 +97,45 @@ export const useDomToImage = <T extends HTMLElement>(
   target: BasicTarget<T>,
   options?: UseDomToImageOptions,
 ) => {
-  const { beforeCreate, created, createdError } = options ?? {}
+  const {
+    beforeCreate,
+    created,
+    createdError,
+    finally: _finally,
+  } = options ?? {}
 
-  const run = (imageType: UseDomToImageOptions['imageType'] = 'jpeg') => {
-    const element = unrefElement(target)
+  const run = (
+    imageType: UseDomToImageOptions['imageType'] = 'jpeg',
+  ): Promise<DomToImageResult> => {
+    return new Promise((resolve, reject) => {
+      const element = unrefElement(target)
 
-    beforeCreate?.(element)
+      beforeCreate?.(element)
 
-    if (element) {
+      if (!element) {
+        createdError?.()
+
+        return reject('useDomToImage: element is undefined.')
+      }
+
       const type = imageType ?? options?.imageType
       const matchFc = domToImageMethods[type] || domToImageMethods['jpeg']
 
-      return matchFc(element, options)
+      matchFc(element, options)
         .then((res) => {
-          created?.(element, res)
+          created?.(res, element)
 
-          return Promise.resolve(res)
+          return resolve(res)
         })
-        .catch((error) => {
-          createdError?.(element, error as Error)
+        .catch((error: Error) => {
+          createdError?.(error)
 
-          return Promise.reject(error as Error)
+          return reject(error)
         })
-    }
+        .finally(() => {
+          _finally?.()
+        })
+    })
   }
 
   return {

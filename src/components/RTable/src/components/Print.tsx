@@ -22,7 +22,7 @@ export default defineComponent({
   name: 'TablePrint',
   props,
   setup(props) {
-    const { tableRef } = inject<TableProvider>(
+    const { wrapperRef } = inject<TableProvider>(
       config.tableKey,
       {} as TableProvider,
     )
@@ -41,7 +41,7 @@ export default defineComponent({
         printOptions.documentTitle = typeof title === 'string' ? title : ''
       }
 
-      printDom(tableRef, {
+      printDom(wrapperRef, {
         printOptions,
         domToImageOptions,
       })

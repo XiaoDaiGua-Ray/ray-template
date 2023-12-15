@@ -87,11 +87,6 @@ function onlyBuildOptions(mode: string) {
             'https://cdn.staticfile.org/vue-i18n/9.8.0/vue-i18n.global.min.js',
         },
         {
-          name: 'dayjs',
-          global: 'dayjs',
-          resolve: 'https://cdn.staticfile.org/dayjs/1.11.10/dayjs.min.js',
-        },
-        {
           name: 'echarts',
           global: 'echarts',
           resolve: 'https://cdn.staticfile.org/echarts/5.4.3/echarts.min.js',
@@ -105,28 +100,6 @@ function onlyBuildOptions(mode: string) {
           name: 'axios',
           global: 'axios',
           resolve: 'https://cdn.staticfile.org/axios/1.6.2/axios.min.js',
-        },
-        {
-          name: 'print-js',
-          global: 'printJS',
-          resolve: 'https://cdn.staticfile.org/print-js/1.6.0/print.min.js',
-        },
-        {
-          name: 'dom-to-image',
-          global: 'domtoimage',
-          resolve:
-            'https://cdn.staticfile.org/dom-to-image/2.6.0/dom-to-image.min.js',
-        },
-        {
-          name: 'clipboard',
-          global: 'ClipboardJS',
-          resolve:
-            'https://cdn.staticfile.org/clipboard.js/2.0.11/clipboard.min.js',
-        },
-        {
-          name: 'lodash-es',
-          global: '_',
-          resolve: 'https://cdn.staticfile.org/lodash.js/4.17.21/lodash.min.js',
         },
       ],
     }),

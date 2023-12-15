@@ -56,9 +56,6 @@ dependencies:
   vue:
     specifier: ^3.3.11
     version: 3.3.11(typescript@5.2.2)
-  vue-demi:
-    specifier: 0.14.6
-    version: 0.14.6(vue@3.3.11)
   vue-hooks-plus:
     specifier: 1.8.5
     version: 1.8.5(vue@3.3.11)

@@ -27,7 +27,7 @@ export type UsePrintTarget<T = any> =
  * const { print } = usePrint(refDom, {})
  * @example
  * const { print } = usePrint('#id', {})
- * const { print } = usePrint('base64', {})
+ * const { print } = usePrint('base64', {}) // 设置为 base64 时，一定要设置配置项 base64 为 true
  * const { print } = usePrint('https://xxx.com/xxx.png', {})
  * const { print } = usePrint(new Blob(), {})
  */

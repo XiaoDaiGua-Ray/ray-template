@@ -199,7 +199,6 @@ const TableView = defineComponent({
           }}
         </RCollapseGrid>
         <RTable
-          style="margin-top: 18px"
           scrollX={2000}
           title={
             <NSpace align="center">

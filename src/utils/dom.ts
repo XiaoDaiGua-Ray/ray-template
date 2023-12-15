@@ -16,7 +16,7 @@ import type { UsePrintOptions, UseDomToImageOptions } from '@/hooks/web'
 import type { BasicTarget } from '@/types/modules/vue'
 
 export interface PrintDomOptions {
-  printOptions?: Omit<UsePrintOptions, 'printable' | 'type'>
+  printOptions?: Omit<UsePrintOptions, 'printable' | 'type' | 'base64'>
   domToImageOptions?: Omit<UseDomToImageOptions, 'imageType'>
 }
 
@@ -28,7 +28,7 @@ export interface PrintDomOptions {
  * 基于 useDomToImage 和 print-js 封装，允许 Ref 注册 Dom 直接调用打印
  * 避免直接打印 dom 时出现一些诡异的问题
  *
- * 该方法会强制剔除 printOptions 中的 printable 和 type 属性，即使忽略了 ts 的类型检查
+ * 该方法会强制剔除 printOptions 中的 printable, type, base64 属性，即使忽略了 ts 的类型检查
  * 并且在绘制图片的时候，强制使用 jpeg 格式，即使是指定了其他格式
  *
  * 支持 useDomToImage 方法的所有配置项，除了 imageType
@@ -59,7 +59,9 @@ export const printDom = <T extends HTMLElement>(
     ?.then((res) => {
       const { print } = usePrint(res, {
         type: 'image',
-        ...omit(printOptions as UsePrintOptions, ['type']),
+        base64: true,
+        targetStyles: ['*'],
+        ...omit(printOptions as UsePrintOptions, ['type', 'base64']),
       })
 
       print()

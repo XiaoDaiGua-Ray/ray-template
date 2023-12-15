@@ -1,5 +1,32 @@
 # CHANGE LOG
 
+## 4.4.6
+
+## Feats
+
+- `vite` 配置项
+  - `cdn`
+    - 移除不能被 `cdn` 引入的包配置
+- 移除 `vue-demi` 本地包依赖，仅在 `cdn` 引入。因为某些插件依赖改包
+
+## Fixes
+
+- `hooks` 相关
+  - `UseDomToImageOptions` 方法
+    - 修复 `options.imageType` 必填的错误
+    - 修复该方法在执行失败时，没有正确的返回错误状态与执行错误钩子方法。现在在执行失败或者获取未正确获取到元素的时候，会返回 `Promise.reject` 状态，并且会执行 `createdError` 钩子方法
+    - 修改 `createdError` 钩子方法回调参数类型
+    - 修改 `created` 钩子方法回调参数类型
+    - 修复 `finally` 方法不能正确执行的问题
+- `utils` 相关
+  - `printDom` 方法
+    - 新增配置项 `base64` 为 `true`
+    - 修改 `printOptions` 类型，剔除 `base64` 属性，因为该配置项始终应该为 `true`，即使你手动配置为 `false`，也会被强制转换为 `true`
+- `components` 相关
+  - `RTable`
+    - 修复打印的时候，可能会出现颜色不正确的问题
+    - 现在打印的时候，会将整个表格（包括：表头、表格、表格分页、表格底部区域）全部打印
+
 ## 4.4.5
 
 ## Feats
