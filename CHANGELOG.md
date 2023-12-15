@@ -30,6 +30,20 @@
   - 新增 `useDomToImage` 方法，用于直接输出 dom 为 `base64`, `blob` 等
 - `components` 包相关
   - `RTable` 打印时，如果未手动配置 `documentTitle` 属性，则会自动获取 `title`，如果 `title` 属性为 `string` 类型，则会默认使用该值作为 `documentTitle` 属性。但是如果未获取到 `title` 并且未配置 `documentTitle` 属性，则会默认的将 `documentTitle` 赋值为 `''`，也就是说默认输出浏览器标题
+- 移除 `ReactiveTransform` 所有支持
+- 相关插件更新
+  - `pinia` 版本更新至 `2.1.7`
+  - `vue-router` 版本更新至 `4.2.5`
+  - `interactjs` 版本更新至 `1.10.26`
+  - `axios` 版本更新至 `1.6.2`
+- `Echarts Themes` 更新背景色默认为 `transparent`。如果需要更新配置，只需要在配置 `options` 时增 `backgroundColor` 属性即可
+
+```ts
+const options = {
+  backgroundColor: 'your color',
+  ...your options
+}
+```
 
 ## 4.4.3
 
