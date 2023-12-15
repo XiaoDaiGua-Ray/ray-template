@@ -21,11 +21,6 @@ const createVueRouter = async () => {
     routes: (await constantRoutes()) as unknown as RouteRecordRaw[],
     scrollBehavior: (to) => {
       scrollViewToTop(to)
-
-      return {
-        top: 0,
-        left: 0,
-      }
     },
   })
 }

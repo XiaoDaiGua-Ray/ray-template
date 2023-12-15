@@ -93,10 +93,14 @@ export const orderRoutes = (routes: AppRouteRecordRaw[]) => {
 
 /**
  *
- * 切换路由时, 手动将容器区域回归默认值
+ * @param route 路由对象
  *
- * 由于官方不支持这个方法了, 所以自己手写了一个
- * 如果需要忽略恢复默认位置, 仅需要在 meta 中配置 ignoreAutoResetScroll 属性即可
+ * 当路由切换后自动将内容区域滚动到顶部（x、y都会归于 0），如果需要忽略该功能，可以在路由的 meta 中配置 ignoreAutoResetScroll 属性
+ *
+ * @example
+ * scrollViewToTop({
+ *   meta: { ignoreAutoResetScroll: true }
+ * }) // 不会滚动到顶部，维持上一次的滚动位置
  */
 export const scrollViewToTop = (route: RouteLocationNormalized) => {
   const { meta } = route
