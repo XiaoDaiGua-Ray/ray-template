@@ -48,9 +48,10 @@
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.0",
     "print-js": "^1.6.0",
-    "vue": "^3.3.10",
+    "vue": "^3.3.11",
+    "vue-demi": "0.14.6",
     "vue-hooks-plus": "1.8.5",
-    "vue-i18n": "^9.7.1",
+    "vue-i18n": "^9.8.0",
     "vue-router": "^4.2.5",
     "xlsx": "^0.18.5"
   },

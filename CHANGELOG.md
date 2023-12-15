@@ -5,6 +5,7 @@
 ## Feats
 
 - 切换 `cdn` 源至 `https://www.staticfile.org/`
+- 更新 `vue` 版本至 `3.3.11`
 
 ## 4.4.4
 
