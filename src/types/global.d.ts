@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+export {}
+
 import type { AppConfig } from './modules/cfg'
 import type {
   MessageApi,
