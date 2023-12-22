@@ -9,29 +9,29 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { setVariable, getVariableToRefs } from '@/global-variable'
-import { cloneDeep } from 'lodash-es'
+import { useSettingGetters, useSettingActions } from '@/store'
 
-import type { DeepMutable } from '@/types/modules/helper'
+import type { AppRootRoute } from '@/store/modules/setting/type'
 
 export function useAppRoot() {
-  const globalRootRoute = getVariableToRefs('globalRootRoute')
+  const { getAppRootRoute } = useSettingGetters()
+  const { updateSettingState } = useSettingActions()
 
   /**
    *
    * @remark 获取根路由
    */
-  const getRootRoute = computed(() => globalRootRoute.value)
+  const getRootRoute = getAppRootRoute
   /**
    *
    * @remark 获取根路由 path
    */
-  const getRootPath = computed(() => globalRootRoute.value.path)
+  const getRootPath = computed(() => getAppRootRoute.value.path)
   /**
    *
    * @remark 获取根路由 name
    */
-  const getRootName = computed(() => globalRootRoute.value.name)
+  const getRootName = computed(() => getAppRootRoute.value.name)
 
   /**
    *
@@ -42,11 +42,11 @@ export function useAppRoot() {
    * @example
    * setRootRoute({ path: '/your root path', name: 'your root name' })
    */
-  const setRootRoute = (route: DeepMutable<typeof globalRootRoute.value>) => {
-    const routeRef = getVariableToRefs('globalRootRoute')
-    const assignRoute = Object.assign(cloneDeep(routeRef.value), route)
-
-    setVariable('globalRootRoute', assignRoute)
+  const setRootRoute = (route: AppRootRoute) => {
+    updateSettingState(
+      'appRootRoute',
+      Object.assign({}, getAppRootRoute.value, route),
+    )
   }
 
   return {

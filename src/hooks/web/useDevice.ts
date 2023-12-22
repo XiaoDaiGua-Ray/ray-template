@@ -17,6 +17,10 @@
 import { useWindowSize } from '@vueuse/core'
 import { watchEffectWithTarget } from '@/utils'
 
+import type { UseWindowSizeOptions } from '@vueuse/core'
+
+export interface UseDeviceOptions extends UseWindowSizeOptions {}
+
 /**
  *
  * 检测当前尺寸是否为平板或者更小
@@ -28,8 +32,8 @@ import { watchEffectWithTarget } from '@/utils'
  * isTabletOrSmaller.value => true // 当前尺寸为平板或者更小
  * isTabletOrSmaller.value => false // 当前尺寸为桌面或者更大
  */
-export function useDevice() {
-  const { width, height } = useWindowSize()
+export function useDevice(options?: UseDeviceOptions) {
+  const { width, height } = useWindowSize(options)
   const isTabletOrSmaller = ref(false)
 
   const update = () => {

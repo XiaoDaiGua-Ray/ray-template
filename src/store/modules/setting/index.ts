@@ -4,8 +4,6 @@ import { colorToRgba, setStorage } from '@/utils'
 import { useI18n } from '@/hooks/web'
 import { APP_THEME } from '@/app-config/designConfig'
 import { useDayjs } from '@/hooks/web'
-import { APP_WATERMARK_CONFIG } from '@/app-config/appConfig'
-import { cloneDeep } from 'lodash-es'
 
 import type { SettingState } from '@/store/modules/setting/type'
 import type { LocalKey } from '@/hooks/web'
@@ -37,7 +35,20 @@ export const piniaSettingStore = defineStore(
       copyrightSwitch: true, // 底部区域开关
       contentTransition: 'scale', // 切换过渡效果
       watermarkSwitch: false, // 水印开关,
-      watermarkConfig: cloneDeep(APP_WATERMARK_CONFIG),
+      watermarkConfig: {
+        content: 'Trying be better~',
+        fontSize: 16,
+        lineHeight: 16,
+        width: 384,
+        height: 384,
+        xOffset: 12,
+        yOffset: 60,
+        rotate: -15,
+      },
+      appRootRoute: {
+        name: 'Dashboard',
+        path: '/dashboard',
+      },
     })
 
     /** 修改当前语言 */

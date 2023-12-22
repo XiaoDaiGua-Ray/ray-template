@@ -60,7 +60,7 @@ export default defineComponent({
 
     const qrcodeURL = ref<QRCodeRenderResponse>()
     const spinOverrides = {
-      opacitySpinning: '0.1',
+      opacitySpinning: '0.01',
     }
     let gifBuffer: GIFBuffer
     let watchCallback!: WatchStopHandle
@@ -119,10 +119,12 @@ export default defineComponent({
 
     const downloadQRCode = (fileName?: DownloadFilenameType) => {
       if (qrcodeURL.value && isValueType<string>(qrcodeURL.value, 'String')) {
-        downloadAnyFile(
+        return downloadAnyFile(
           qrcodeURL.value,
           fileName || new Date().getTime() + '.png',
         )
+      } else {
+        return Promise.reject()
       }
     }
 

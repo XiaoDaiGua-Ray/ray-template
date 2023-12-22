@@ -1,5 +1,27 @@
 # CHANGE LOG
 
+## 4.4.7
+
+## Feats
+
+- 更新 `vue` 版本至 `3.3.13` 版本
+- 更新 `naive-ui` 版本至 `3.36.0`。新增了几个新组件
+- 更新 `vite` 版本至 `5.0.10`
+- `appConfig` 相关
+  - 移除 `APP_WATERMARK_CONFIG` 配置项，现在水印配置项会被 `watermarkConfig` 替代
+  - 移除 `ROOT_ROUTE` 配置项，现在根路由配置项会被 `appRootRoute` 替代
+- `variable` 相关
+  - 移除 `variable` 管理 `ROO_ROUTE` 配置项
+- `commit-message` 新增 `plugin` 更新相关前缀配置
+- `RQRCode` 组件
+  - 调整 `loading` 透明度
+  - `downloadQRCode` 方法将会返回一个 `Promise` 对象
+- `basic` 包
+  - `downloadAnyFile` 方法将会返回一个 `Promise` 对象
+- `types` 包
+  - 新增 `ReturnPromiseType` 工具类型，用于获取函数返回值的 `Promise` 类型
+  - 新增 `ConditionalExclude` 工具类型，用于条件排除指定类型
+
 ## 4.4.6
 
 ## Feats

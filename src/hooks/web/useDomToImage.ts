@@ -102,10 +102,11 @@ export const useDomToImage = <T extends HTMLElement>(
     created,
     createdError,
     finally: _finally,
+    imageType: _imageType,
   } = options ?? {}
 
   const run = (
-    imageType: UseDomToImageOptions['imageType'] = 'jpeg',
+    imageType?: UseDomToImageOptions['imageType'],
   ): Promise<DomToImageResult> => {
     return new Promise((resolve, reject) => {
       const element = unrefElement(target)
@@ -118,10 +119,7 @@ export const useDomToImage = <T extends HTMLElement>(
         return reject('useDomToImage: element is undefined.')
       }
 
-      const type = imageType ?? options?.imageType
-      const matchFc = domToImageMethods[type] || domToImageMethods['jpeg']
-
-      matchFc(element, options)
+      domToImageMethods[imageType ?? _imageType ?? 'jpeg']?.(element, options)
         .then((res) => {
           created?.(res, element)
 
