@@ -4,7 +4,7 @@ var __export = (target, all) => {
     __defProp(target, name, { get: all[name], enumerable: true });
 };
 
-// mock-data-1702650479378.js
+// mock-data-1703468822553.js
 import { transformMockData } from "vite-plugin-mock-dev-server";
 
 // mock/demo/person.mock.ts
@@ -85,7 +85,7 @@ var getPersonList = defineMock({
   }
 });
 
-// mock-data-1702650479378.js
+// mock-data-1703468822553.js
 var exporters = [person_mock_exports];
 var mockList = exporters.map((raw) => {
   let mockConfig;
@@ -99,7 +99,7 @@ var mockList = exporters.map((raw) => {
   }
   return mockConfig;
 });
-var mock_data_1702650479378_default = transformMockData(mockList);
+var mock_data_1703468822553_default = transformMockData(mockList);
 export {
-  mock_data_1702650479378_default as default
+  mock_data_1703468822553_default as default
 };
