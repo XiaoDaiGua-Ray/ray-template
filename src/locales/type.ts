@@ -4,7 +4,7 @@ import type {
   DropdownDividerOption,
   DropdownRenderOption,
 } from 'naive-ui'
-import type { Recordable } from '@/types/modules/helper'
+import type { Recordable } from '@/types'
 
 export interface AppCurrentAppMessages {
   'zh-CN': object

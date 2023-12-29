@@ -11,7 +11,7 @@
 
 /** 系统颜色风格配置入口 */
 
-import type { AppTheme } from '@/types/modules/cfg'
+import type { AppTheme } from '@/types'
 
 export const APP_THEME: AppTheme = {
   /**

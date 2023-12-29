@@ -18,7 +18,7 @@ import { debounce } from 'lodash-es'
 import { useEventListener } from '@vueuse/core'
 
 import type { DebounceBindingOptions } from './type'
-import type { AnyFC } from '@/types/modules/utils'
+import type { AnyFC } from '@/types'
 import type { DebouncedFunc } from 'lodash-es'
 import type { CustomDirectiveFC } from '@/directives/type'
 

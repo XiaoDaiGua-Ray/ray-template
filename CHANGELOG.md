@@ -1,5 +1,46 @@
 # CHANGE LOG
 
+## 4.5.0
+
+破坏性更新。
+
+更新 `vue` 版本至 `3.4.0`，请查看相关变更：[Vue 3.4.0](https://github.com/vuejs/core/blob/main/CHANGELOG.md)。该版本破坏性更新了一些东西，例如：
+
+- `JSX` 命名空间默认移除
+- `ReactiveTransform` 移除
+- `v-is` 指令移除
+
+更新 `@vitejs/plugin-vue` 版本至 `5.0.0`，请查看相关变更：[vite-plugin-vue](https://github.com/vitejs/vite-plugin-vue/blob/main/packages/plugin-vue/CHANGELOG.md)。该版本破坏性更新了一些东西，例如：
+
+- 放弃 `ReactivityTransform` 支持
+- 放弃 `node14, 16` 版本支持
+- 放弃 `vite4.x` 版本支持
+- 弃用 `defineModel` 方法
+
+主要是解决 `sameLevel` 问题与核心包 `store/men` 的一些问题。提高了性能，避免了潜在的空引用问题。
+
+然后就是统一 `types` 包的导入导出行为。
+
+## Feats
+
+- 统一 `types` 包下的导出方式，现在统一为 `import type { xxx } from '@/types'` 导入
+- `RQRCode` 组件
+  - 在 `loading` 状态下会模糊显示二维码，并且展示 `loading` 状态
+  - 优化显示 `error` 状态下默认按钮样式
+- 更新 `README.md`, `README-ZH.md` 文档
+- 取消 `changeModelValue` 节流锁
+- 优化 `changeModelValue`, `updateMenuKeyWhenRouteUpdate` 方法，避免潜在的空引用问题
+- 插件相关
+  - 更新 `vue` 版本至 `3.4.0`
+  - 更新 `@vitejs/plugin-vue-jsx` 版本至 `3.1.0`
+- `RModal` 组件相关
+  - 新增 `memoryPosition` 配置项，用于配置是否记忆上一次的位置
+
+## Fixes
+
+- 修复初始化的时候面包屑为空的问题
+- 修复 `sameLevel` 平级模式面包屑追加问题
+
 ## 4.4.7
 
 ## Feats

@@ -27,7 +27,7 @@ import type {
   BeforeFetchFunction,
   FetchErrorFunction,
 } from '@/axios/type'
-import type { Recordable } from '@/types/modules/helper'
+import type { Recordable } from '@/types'
 
 /**
  *

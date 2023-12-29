@@ -11,11 +11,10 @@
 
 import { useEventListener, onClickOutside } from '@vueuse/core'
 
-import type { BasicTarget } from '@/types/modules/vue'
+import type { BasicTarget } from '@/types'
 import type {
   MaybeElementRef,
   MaybeElement,
-  UseEventSourceOptions,
   MaybeRefOrGetter,
 } from '@vueuse/core'
 

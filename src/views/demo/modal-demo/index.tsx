@@ -28,6 +28,16 @@ export default defineComponent({
   render() {
     return (
       <NSpace vertical wrapItem={false}>
+        <NCard title="props">
+          <NSpace vertical>
+            <h3>
+              memoryPosition: 是否记住上一次被拖拽的位置，如果设置为
+              true，那么下一次打开的时候会自动定位到上一次的位置。
+            </h3>
+            <h3>fullscreen: 全屏模态框。</h3>
+            <h3>dad: 启用拖拽，当配置为 false 时，会禁用拖拽效果。</h3>
+          </NSpace>
+        </NCard>
         <RModal
           v-model:show={this.modal1}
           title="全屏模态框"

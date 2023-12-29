@@ -1,6 +1,6 @@
 import type * as echarts from 'echarts/core' // `echarts` 核心模块
 import type { PropType, VNode } from 'vue'
-import type { MaybeArray } from '@/types/modules/utils'
+import type { MaybeArray } from '@/types'
 import type {
   LoadingOptions,
   AutoResize,

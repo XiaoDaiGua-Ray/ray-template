@@ -3,8 +3,8 @@ import type {
   DownloadAnyFileDataType,
   BasicTypes,
   AnyFC,
-} from '@/types/modules/utils'
-import type { Recordable } from '@/types/modules/helper'
+} from '@/types'
+import type { Recordable } from '@/types'
 
 /**
  *

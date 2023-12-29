@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import type { StorageLike, RemoveStorageKey } from '@/types/modules/utils'
+import type { StorageLike, RemoveStorageKey } from '@/types'
 
 /**
  *

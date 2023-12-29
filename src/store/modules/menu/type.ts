@@ -1,8 +1,4 @@
-import type {
-  AppMenuOption,
-  MenuTagOptions,
-  AppMenuKey,
-} from '@/types/modules/app'
+import type { AppMenuOption, MenuTagOptions, AppMenuKey } from '@/types'
 
 export interface MenuState {
   menuKey: AppMenuKey

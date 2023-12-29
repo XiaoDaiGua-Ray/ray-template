@@ -32,7 +32,7 @@ import type {
   AxiosFetchInstance,
   AxiosFetchError,
 } from '@/axios/type'
-import type { AnyFC } from '@/types/modules/utils'
+import type { AnyFC } from '@/types'
 
 /** 当前请求的实例 */
 const axiosFetchInstance: AxiosFetchInstance = {

@@ -21,7 +21,7 @@
 
 import { request } from '@/axios'
 
-import type { BasicResponse } from '@/types/modules/axios'
+import type { BasicResponse } from '@/types'
 
 interface AxiosTestResponse extends UnknownObjectKey {
   data: UnknownObjectKey[]

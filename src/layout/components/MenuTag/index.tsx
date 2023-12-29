@@ -52,7 +52,7 @@ import { throttle } from 'lodash-es'
 import { useAppRoot } from '@/hooks/template'
 
 import type { ScrollbarInst } from 'naive-ui'
-import type { MenuTagOptions, AppMenuOption } from '@/types/modules/app'
+import type { MenuTagOptions, AppMenuOption } from '@/types'
 
 export default defineComponent({
   name: 'AppMenuTag',
@@ -423,7 +423,7 @@ export default defineComponent({
     }
   },
   render() {
-    const { iconConfig, getRootPath, uuidScrollBar } = this
+    const { iconConfig, getRootPath, uuidScrollBar, getMenuTagOptions } = this
     const { maximize, closeCurrentMenuTag, scrollX, $t } = this
 
     return (
@@ -472,7 +472,7 @@ export default defineComponent({
                 align="center"
                 justify="start"
               >
-                {this.getMenuTagOptions.map((curr, idx) => (
+                {getMenuTagOptions.map((curr, idx) => (
                   <NButton
                     key={curr.key}
                     class={['menu-tag__btn']}
@@ -502,8 +502,7 @@ export default defineComponent({
                               },
                             }}
                           </span>
-                          {(curr.closeable ||
-                            this.getMenuTagOptions.length === 1) &&
+                          {(curr.closeable || getMenuTagOptions.length === 1) &&
                           curr.key !== getRootPath ? (
                             <NIcon
                               class="menu-tag__btn-icon"

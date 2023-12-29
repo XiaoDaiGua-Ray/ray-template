@@ -22,7 +22,7 @@ import { call, renderNode, uuid } from '@/utils'
 import config from './config'
 
 import type { DropdownOption, DataTableInst } from 'naive-ui'
-import type { ComponentSize } from '@/types/modules/component'
+import type { ComponentSize } from '@/types'
 import type { C as CType } from './type'
 
 export default defineComponent({

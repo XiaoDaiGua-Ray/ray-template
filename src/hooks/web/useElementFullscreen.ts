@@ -12,7 +12,7 @@
 import { unrefElement, effectDispose, isValueType } from '@/utils'
 import { useWindowSize } from '@vueuse/core'
 
-import type { BasicTarget } from '@/types/modules/vue'
+import type { BasicTarget } from '@/types'
 
 export interface UseElementFullscreenOptions {
   beforeEnter?: () => void
@@ -159,3 +159,7 @@ export const useElementFullscreen = (
     toggleFullscreen,
   }
 }
+
+export type UseElementFullscreenReturnTypes = ReturnType<
+  typeof useElementFullscreen
+>

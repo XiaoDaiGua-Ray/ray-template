@@ -27,7 +27,7 @@
  * createVariableState({ your state })
  */
 
-import type { AnyFC } from '@/types/modules/utils'
+import type { AnyFC } from '@/types'
 
 /**
  *

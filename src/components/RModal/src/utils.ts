@@ -1,6 +1,11 @@
 import interact from 'interactjs'
 
 import type { ModalProps } from 'naive-ui'
+import type { AnyFC } from '@/types'
+
+interface SetupDraggableOptions {
+  scheduler?: AnyFC
+}
 
 /**
  *
@@ -15,7 +20,10 @@ import type { ModalProps } from 'naive-ui'
 export const setupDraggable = (
   bindModal: HTMLElement,
   preset: ModalProps['preset'],
+  options?: SetupDraggableOptions,
 ): Promise<ReturnType<typeof interact>> => {
+  const { scheduler } = options ?? {}
+
   return new Promise((resolve) => {
     setTimeout(() => {
       const allowFromStr =
@@ -35,16 +43,7 @@ export const setupDraggable = (
             ],
             listeners: {
               move: (event) => {
-                const target = event.target
-                const x =
-                  (parseFloat(target.getAttribute('data-x')) || 0) + event.dx
-                const y =
-                  (parseFloat(target.getAttribute('data-y')) || 0) + event.dy
-
-                target.style.transform = 'translate(' + x + 'px, ' + y + 'px)'
-
-                target.setAttribute('data-x', x)
-                target.setAttribute('data-y', y)
+                scheduler?.(event)
               },
             },
           })

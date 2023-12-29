@@ -1,7 +1,7 @@
 {
   "name": "ray-template",
   "private": false,
-  "version": "4.4.7",
+  "version": "4.5.0",
   "type": "module",
   "engines": {
     "node": "^18.0.0 || >=20.0.0",
@@ -48,7 +48,7 @@
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.0",
     "print-js": "^1.6.0",
-    "vue": "^3.3.13",
+    "vue": "^3.4.0",
     "vue-hooks-plus": "1.8.5",
     "vue-i18n": "^9.8.0",
     "vue-router": "^4.2.5",
@@ -67,8 +67,8 @@
     "@types/mockjs": "1.0.7",
     "@typescript-eslint/eslint-plugin": "^6.5.0",
     "@typescript-eslint/parser": "^6.5.0",
-    "@vitejs/plugin-vue": "^4.4.1",
-    "@vitejs/plugin-vue-jsx": "^3.0.2",
+    "@vitejs/plugin-vue": "^5.0.0",
+    "@vitejs/plugin-vue-jsx": "^3.1.0",
     "@vue-hooks-plus/resolvers": "1.2.4",
     "@vue/eslint-config-prettier": "^8.0.0",
     "@vue/eslint-config-typescript": "^11.0.3",

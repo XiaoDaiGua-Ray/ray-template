@@ -27,7 +27,7 @@ import { APP_THEME } from '@/app-config/designConfig'
 import { useSettingGetters, useSettingActions } from '@/store'
 
 import type { PropType } from 'vue'
-import type { Placement } from '@/types/modules/component'
+import type { Placement } from '@/types'
 
 const SettingDrawer = defineComponent({
   name: 'SettingDrawer',

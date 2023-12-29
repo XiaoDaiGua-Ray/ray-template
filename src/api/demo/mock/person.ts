@@ -1,6 +1,6 @@
 import { request } from '@/axios'
 
-import type { BasicResponse, PaginationResponse } from '@/types/modules/axios'
+import type { PaginationResponse } from '@/types'
 
 export interface MockListParams {
   page: number

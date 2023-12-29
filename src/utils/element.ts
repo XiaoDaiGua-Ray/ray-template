@@ -1,11 +1,8 @@
 import { APP_REGEX } from '@/app-config/regexConfig'
 import { effectDispose, unrefElement, isValueType } from '@/utils'
 
-import type {
-  PartialCSSStyleDeclaration,
-  ElementSelector,
-} from '@/types/modules/utils'
-import type { BasicTarget } from '@/types/modules/vue'
+import type { PartialCSSStyleDeclaration, ElementSelector } from '@/types'
+import type { BasicTarget } from '@/types'
 
 /**
  *

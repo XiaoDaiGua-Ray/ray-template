@@ -79,7 +79,6 @@ export const useMenuGetters = () => {
 export const useMenuActions = () => {
   const {
     changeMenuModelValue,
-    setupAppMenu,
     collapsedMenu,
     spliceMenTagOptions,
     emptyMenuTagOptions,
@@ -88,7 +87,6 @@ export const useMenuActions = () => {
 
   return {
     changeMenuModelValue,
-    setupAppMenu,
     collapsedMenu,
     spliceMenTagOptions,
     emptyMenuTagOptions,

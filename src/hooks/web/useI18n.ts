@@ -18,7 +18,7 @@ const getI18nKey = (namespace: string | undefined, key: string) => {
     return key
   }
 
-  if (key.startsWith(namespace)) {
+  if (key[0] === namespace) {
     return key
   }
 

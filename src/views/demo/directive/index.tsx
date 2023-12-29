@@ -20,7 +20,7 @@ import {
   NFormItem,
 } from 'naive-ui'
 
-import type { ConditionalPick } from '@/types/modules/helper'
+import type { ConditionalPick } from '@/types'
 import type {
   DebounceBindingOptions,
   ThrottleBindingOptions,

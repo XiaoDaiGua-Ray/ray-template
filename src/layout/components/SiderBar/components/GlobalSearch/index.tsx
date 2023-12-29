@@ -31,7 +31,7 @@ import { useDevice } from '@/hooks/web'
 import { useEventListener } from '@vueuse/core'
 
 import type { AppRouteMeta } from '@/router/type'
-import type { AppMenuOption } from '@/types/modules/app'
+import type { AppMenuOption } from '@/types'
 
 export default defineComponent({
   name: 'GlobalSearch',

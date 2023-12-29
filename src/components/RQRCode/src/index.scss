@@ -23,4 +23,8 @@
       color: #ffffff;
     }
   }
+
+  & .n-spin-content--spinning img {
+    filter: blur(6px);
+  }
 }

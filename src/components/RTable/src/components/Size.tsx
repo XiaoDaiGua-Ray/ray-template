@@ -16,8 +16,8 @@ import { call } from '@/utils'
 import props from '../props'
 import config from '../config'
 
-import type { ComponentSize } from '@/types/modules/component'
-import type { MaybeArray } from '@/types/modules/utils'
+import type { ComponentSize } from '@/types'
+import type { MaybeArray } from '@/types'
 
 export default defineComponent({
   name: 'TableSizeSelect',

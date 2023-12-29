@@ -13,7 +13,7 @@ import domToImage from 'dom-to-image'
 import { unrefElement } from '@/utils'
 
 import type { Options as ReDomToImageOptions } from 'dom-to-image'
-import type { BasicTarget, TargetType } from '@/types/modules/vue'
+import type { BasicTarget, TargetType } from '@/types'
 
 export type ImageType = keyof typeof domToImageMethods
 

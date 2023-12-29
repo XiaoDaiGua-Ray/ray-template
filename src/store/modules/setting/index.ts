@@ -7,7 +7,7 @@ import { useDayjs } from '@/hooks/web'
 
 import type { SettingState } from '@/store/modules/setting/type'
 import type { LocalKey } from '@/hooks/web'
-import type { AnyFC } from '@/types/modules/utils'
+import type { AnyFC } from '@/types'
 
 export const piniaSettingStore = defineStore(
   'setting',

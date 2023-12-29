@@ -1,5 +1,5 @@
 import type { GlobalThemeOverrides } from 'naive-ui'
-import type { Placement } from '@/types/modules/component'
+import type { Placement } from '@/types'
 
 export interface WatermarkConfig {
   content: string

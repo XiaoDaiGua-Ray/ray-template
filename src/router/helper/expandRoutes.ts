@@ -21,7 +21,8 @@ import { cloneDeep } from 'lodash-es'
 
 import type { AppRouteRecordRaw } from '@/router/type'
 
-const isRootPath = (path: string) => path.startsWith('/')
+// 是否为根路由
+const isRootPath = (path: string) => path[0] === '/'
 
 /**
  *
@@ -41,31 +42,25 @@ const routePromotion = (
     return []
   }
 
-  const sourceArr = arr
+  for (const curr of arr) {
+    const newPath = path + (isRootPath(curr.path) ? curr.path : '/' + curr.path)
 
-  sourceArr.forEach((curr) => {
     if (curr.children?.length) {
-      routePromotion(
-        curr.children,
-        result,
-        path + (isRootPath(curr.path) ? curr.path : '/' + curr.path),
-      )
-    } else {
-      const newPath =
-        path + (isRootPath(curr.path) ? curr.path : '/' + curr.path)
+      routePromotion(curr.children, result, newPath)
 
-      const newCurr: AppRouteRecordRaw = {
+      continue
+    } else {
+      result.push({
         ...curr,
         path: newPath,
-      }
-
-      result.push(newCurr)
+      })
     }
-  })
+  }
 
   return result
 }
 
+// 获取所有已展开的路由
 export const expandRoutes = (arr: AppRouteRecordRaw[]) => {
   if (!Array.isArray(arr)) {
     return []

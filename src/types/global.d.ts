@@ -8,10 +8,26 @@ import type {
   LoadingBarApi,
   NotificationApi,
 } from 'naive-ui'
+import type { NativeElements, ReservedProps, VNode } from 'vue'
 
 export declare global {
   declare interface UnknownObjectKey {
     [propName: string]: any
+  }
+
+  namespace JSX {
+    export interface Element extends VNode {}
+    export interface ElementClass {
+      $props: {}
+    }
+    export interface ElementAttributesProperty {
+      $props: {}
+    }
+    export interface IntrinsicElements extends NativeElements {
+      // allow arbitrary elements
+      [name: string]: any
+    }
+    export interface IntrinsicAttributes extends ReservedProps {}
   }
 
   declare const __DEV__: boolean

@@ -49,7 +49,7 @@ import { RMoreDropdown } from '@/components'
 import { useSettingGetters } from '@/store'
 
 import type { WatchStopHandle } from 'vue'
-import type { AnyFC } from '@/types/modules/utils'
+import type { AnyFC } from '@/types'
 import type { DebouncedFunc } from 'lodash-es'
 import type { UseResizeObserverReturn } from '@vueuse/core'
 import type { ECharts, EChartsCoreOption } from 'echarts/core'
@@ -124,9 +124,7 @@ export default defineComponent({
       try {
         echarts.use(props.use?.filter(Boolean))
       } catch (e) {
-        console.error(
-          'register chart Core error: wrong property and method passed in extend attribute',
-        )
+        console.error('RChart register error: ', e)
       }
     }
 

@@ -11,8 +11,8 @@
 
 /** 系统配置 */
 
-import type { LayoutSideBarLogo, PreloadingConfig } from '@/types/modules/cfg'
-import type { AppMenuConfig, AppKeepAlive } from '@/types/modules/appConfig'
+import type { LayoutSideBarLogo, PreloadingConfig } from '@/types'
+import type { AppMenuConfig, AppKeepAlive } from '@/types'
 
 /**
  *

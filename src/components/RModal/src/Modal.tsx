@@ -32,6 +32,11 @@ export default defineComponent({
     }))
     const uuidEl = uuid()
     let intractable: null | ReturnType<typeof interact>
+    // 记录拖拽的位置
+    const position = {
+      x: 0,
+      y: 0,
+    }
 
     /**
      *
@@ -44,7 +49,16 @@ export default defineComponent({
       const target = document.getElementById(uuidEl)
 
       if (target) {
-        setupDraggable(target, props.preset).then((res) => {
+        setupDraggable(target, props.preset, {
+          scheduler: (event) => {
+            const target = event.target
+
+            position.x += event.dx
+            position.y += event.dy
+
+            target.style.transform = `translate(${position.x}px, ${position.y}px)`
+          },
+        }).then((res) => {
           intractable = res
         })
       }
@@ -60,6 +74,12 @@ export default defineComponent({
         ) {
           nextTick(() => {
             setupInteract()
+
+            const target = document.getElementById(uuidEl)
+
+            if (props.memoryPosition && target) {
+              target.style.transform = `translate(${position.x}px, ${position.y}px)`
+            }
           })
         } else {
           intractable?.unset()

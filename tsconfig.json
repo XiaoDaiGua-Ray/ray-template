@@ -12,6 +12,7 @@
     "esModuleInterop": true,
     "lib": ["ESNext", "DOM", "es5", "es6", "dom.iterable", "es2022"],
     "skipLibCheck": true,
+    "jsxImportSource": "vue",
     "baseUrl": "./",
     "rootDir": "./",
     "paths": {
