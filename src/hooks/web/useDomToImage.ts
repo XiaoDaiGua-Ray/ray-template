@@ -90,7 +90,8 @@ const domToImageMethods = {
  * const { create, stop } = useDomToImage(refDom, {
  *   beforeCreate: (element) => { ... },
  *   created: (element, result) => { ... },
- *   createdError: (element, error) => { ... },
+ *   createdError: (error) => { ... },
+ *   finally: () => { ... },
  * })
  */
 export const useDomToImage = <T extends HTMLElement>(

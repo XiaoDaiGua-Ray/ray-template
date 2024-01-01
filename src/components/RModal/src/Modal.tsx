@@ -77,7 +77,7 @@ export default defineComponent({
 
             const target = document.getElementById(uuidEl)
 
-            if (props.memoryPosition && target) {
+            if (props.memo && target) {
               target.style.transform = `translate(${position.x}px, ${position.y}px)`
             }
           })
@@ -86,6 +86,9 @@ export default defineComponent({
 
           intractable = null
         }
+      },
+      {
+        immediate: true,
       },
     )
 

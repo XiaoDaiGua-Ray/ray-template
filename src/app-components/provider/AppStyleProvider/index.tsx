@@ -9,8 +9,6 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import './index.scss'
-
 import { get } from 'lodash-es'
 import {
   addClass,

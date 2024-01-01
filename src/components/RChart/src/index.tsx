@@ -247,6 +247,7 @@ export default defineComponent({
       }
     }
 
+    // chart 是否已经销毁
     const isDispose = () => !!(echartInst && echartInst.getDom())
 
     /**
@@ -268,6 +269,14 @@ export default defineComponent({
       }
     }
 
+    /**
+     *
+     * @param key moreDropDownOptions key
+     * @param option moreDropDownOptions current click option
+     *
+     * 预设 card 风格下拉框点击
+     * 当前仅实现下载图片功能
+     */
     const dropdownSelect = (key: string | number, option: DropdownOption) => {
       if (key === 'downloadChart' && isDispose()) {
         const { filename, ...args } = props.downloadOptions
@@ -301,7 +310,6 @@ export default defineComponent({
       if (props.autoResize) {
         resizeThrottleReturn = throttle(resizeChart, props.throttleWait)
         /** 监听内容区域尺寸变化更新 chart */
-
         resizeObserverReturn = useResizeObserver(
           props.observer || rayChartWrapperRef,
           resizeThrottleReturn,
@@ -334,7 +342,6 @@ export default defineComponent({
         }
       },
     )
-
     /**
      *
      * 贴花跟随主题渲染
@@ -348,7 +355,6 @@ export default defineComponent({
         updateChartTheme()
       },
     )
-
     watchEffect(() => {
       /** 监听 options 变化 */
       if (props.watchOptions) {
@@ -365,6 +371,7 @@ export default defineComponent({
             echartInst?.setOption(options, setOpt)
           },
           {
+            // 深度监听 options
             deep: true,
           },
         )
@@ -381,6 +388,7 @@ export default defineComponent({
       echart: echartInstanceRef,
       dispose: unmount,
       render: mount,
+      isDispose,
     })
 
     onBeforeMount(async () => {

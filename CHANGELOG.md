@@ -15,11 +15,11 @@
 - 放弃 `ReactivityTransform` 支持
 - 放弃 `node14, 16` 版本支持
 - 放弃 `vite4.x` 版本支持
-- 弃用 `defineModel` 方法
+- 弃用 `defineModel` 配置，`vue3.4.0` 版本该功能已经稳定
 
-主要是解决 `sameLevel` 问题与核心包 `store/men` 的一些问题。提高了性能，避免了潜在的空引用问题。
+解决 `sameLevel` 问题与核心包 `store/men` 的一些问题。提高了性能，避免了潜在的空引用问题。
 
-然后就是统一 `types` 包的导入导出行为。
+是统一 `types` 包的导入导出行为。
 
 ## Feats
 
@@ -34,12 +34,18 @@
   - 更新 `vue` 版本至 `3.4.0`
   - 更新 `@vitejs/plugin-vue-jsx` 版本至 `3.1.0`
 - `RModal` 组件相关
-  - 新增 `memoryPosition` 配置项，用于配置是否记忆上一次的位置
+  - 新增 `memo` 配置项，用于配置是否记忆上一次的位置
+- `RChart` 组件
+  - 补充部分注释
+  - 新增 `isDispose` 方法，检测当前图表是否被卸载
+- 新增 `AppVersionProvider` 注入器，用于注入 `appVersion` 全局变量，检测是否需要重新加载页面
 
 ## Fixes
 
 - 修复初始化的时候面包屑为空的问题
 - 修复 `sameLevel` 平级模式面包屑追加问题
+- `RModal` 组件
+  - 修复初始化配置 `show = true` 时，`dad` 属性不生效的问题
 
 ## 4.4.7
 

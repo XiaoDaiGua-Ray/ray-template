@@ -13,7 +13,7 @@ import { modalProps } from 'naive-ui'
 
 const props = {
   ...modalProps,
-  memoryPosition: {
+  memo: {
     /**
      *
      * 是否记住上一次的位置
