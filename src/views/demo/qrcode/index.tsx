@@ -58,7 +58,7 @@ export default defineComponent({
               logoImage={LOGO}
               status="error"
               onReload={() => {
-                window.$message.error('relod props')
+                window.$message.info('reload event')
               }}
             />
             <RQRCode

@@ -12,10 +12,10 @@
 import { dataTableProps } from 'naive-ui'
 
 import type { PropType, VNode, VNodeChild } from 'vue'
-import type { MaybeArray } from '@/types/modules/utils'
+import type { MaybeArray } from '@/types'
 import type { DropdownOption, DataTableColumn } from 'naive-ui'
 import type { DownloadTableOptions, PrintTableOptions } from './type'
-import type { Recordable } from '@/types/modules/helper'
+import type { Recordable } from '@/types'
 
 const props = {
   ...dataTableProps,

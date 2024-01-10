@@ -5,7 +5,7 @@ import type {
   AliasOptions,
   UserConfigExport,
 } from 'vite'
-import type { Recordable } from '@/types/modules/helper'
+import type { Recordable } from '@/types'
 import type { GlobalThemeOverrides } from 'naive-ui'
 
 export interface LayoutSideBarLogo {

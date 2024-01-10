@@ -11,12 +11,8 @@
 
 /** 国际化相关配置 */
 
-import type {
-  TemplateLocale,
-  LocalOptions,
-  DayjsLocalMap,
-} from '@/types/modules/appConfig'
-import type { ValueOf } from '@/types/modules/helper'
+import type { TemplateLocale, LocalOptions, DayjsLocalMap } from '@/types'
+import type { ValueOf } from '@/types'
 
 /**
  *

@@ -2,7 +2,7 @@
 import print from 'print-js'
 import { unrefElement } from '@/utils'
 
-import type { BasicTarget } from '@/types/modules/vue'
+import type { BasicTarget } from '@/types'
 
 export interface UsePrintOptions
   extends Omit<print.Configuration, 'printable'> {}

@@ -27,7 +27,7 @@ import { useMenuGetters, useMenuActions } from '@/store'
 import { useDevice } from '@/hooks/web'
 
 import type { DropdownOption } from 'naive-ui'
-import type { AppMenuOption } from '@/types/modules/app'
+import type { AppMenuOption } from '@/types'
 
 export default defineComponent({
   name: 'SiderBarBreadcrumb',

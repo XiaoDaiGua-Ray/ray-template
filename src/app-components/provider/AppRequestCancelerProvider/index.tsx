@@ -29,13 +29,7 @@ const AppRequestCancelerProvider = defineComponent({
     expose()
   },
   render() {
-    return (
-      <div
-        style={{
-          display: 'none',
-        }}
-      ></div>
-    )
+    return <div class="app-style-provider"></div>
   },
 })
 

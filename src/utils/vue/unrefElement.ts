@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import type { BasicTarget, TargetType, TargetValue } from '@/types/modules/vue'
+import type { BasicTarget, TargetType, TargetValue } from '@/types'
 import type { ComponentPublicInstance } from 'vue'
 
 /**

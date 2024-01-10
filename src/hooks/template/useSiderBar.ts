@@ -12,7 +12,7 @@
 import { useMenuGetters, useMenuActions } from '@/store'
 import { redirectRouterToDashboard } from '@/router/helper/routerCopilot'
 
-import type { MenuTagOptions, Key } from '@/types/modules/app'
+import type { MenuTagOptions, Key } from '@/types'
 
 export type CloseMenuTag = Key | MenuTagOptions
 

@@ -20,8 +20,8 @@ import { getVariableToRefs, setVariable } from '@/global-variable'
 import { useMenuGetters, useMenuActions } from '@/store'
 
 import type { MenuInst } from 'naive-ui'
-import type { NaiveMenuOptions } from '@/types/modules/component'
-import type { AppMenuOption } from '@/types/modules/app'
+import type { NaiveMenuOptions } from '@/types'
+import type { AppMenuOption } from '@/types'
 
 export default defineComponent({
   name: 'AppMenu',

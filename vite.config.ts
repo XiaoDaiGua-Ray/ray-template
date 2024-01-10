@@ -5,7 +5,7 @@ import pkg from './package.json'
 import vitePlugins from './vite.plugin.config'
 
 // https://vitejs.dev/config/
-export default defineConfig(async ({ mode }) => {
+export default defineConfig(({ mode }) => {
   const { dependencies, devDependencies, name, version } = pkg
   const {
     server,

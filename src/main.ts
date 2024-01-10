@@ -1,6 +1,7 @@
 import App from './App'
 
 import '@/styles/base.scss'
+import './app-components/provider/provider.scss'
 
 import 'virtual:svg-icons-register' // vite-plugin-svg-icons 脚本，启用 svg 雪碧图
 

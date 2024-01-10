@@ -27,8 +27,8 @@ import { call } from '@/utils'
 
 import type { TreeOption, TreeDropInfo } from 'naive-ui'
 import type { C } from '../type'
-import type { AnyFC } from '@/types/modules/utils'
-import type { MaybeArray } from '@/types/modules/utils'
+import type { AnyFC } from '@/types'
+import type { MaybeArray } from '@/types'
 
 type FixedClick = (type: 'left' | 'right', option: C, index: number) => void
 

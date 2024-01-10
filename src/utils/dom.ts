@@ -13,7 +13,7 @@ import { omit } from './basic'
 import { useDomToImage, usePrint } from '@/hooks/web'
 
 import type { UsePrintOptions, UseDomToImageOptions } from '@/hooks/web'
-import type { BasicTarget } from '@/types/modules/vue'
+import type { BasicTarget } from '@/types'
 
 export interface PrintDomOptions {
   printOptions?: Omit<UsePrintOptions, 'printable' | 'type' | 'base64'>

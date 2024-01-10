@@ -8,6 +8,7 @@
 // style: 代码格式（不影响功能，例如空格、分号等格式修正） | Code format (no functional impact, such as space, semicolon, etc.)
 // version: 更新迭代 package.json 版本号 | Update the package.json version number
 // build: 构建 | Build
+// plugin: 更新插件版本 | Update plugin version
 
 module.exports = {
   ignores: [(commit) => commit.includes('init')],
@@ -33,6 +34,7 @@ module.exports = {
         'style',
         'version',
         'build',
+        'plugin',
       ],
     ],
   },

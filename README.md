@@ -1,6 +1,22 @@
 <div align="center">
- <a href="https://github.com/XiaoDaiGua-Ray/ray-template"> <img alt="Ray Template" width="200" height="200" src="https://r2chevereto.yka.moe/longmao.navigator.th.png"> </a> <br> <br>
- <a href="https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/LICENSE"><img src="https://img.shields.io/github/license/XiaoDaiGua-Ray/ray-template" alt="LICENSE"></a>
+  <a href="https://github.com/XiaoDaiGua-Ray/ray-template">
+    <img
+      alt="Ray Template"
+      width="200"
+      height="200"
+      src="https://r2chevereto.yka.moe/longmao.navigator.th.png"
+    />
+  </a>
+  <br />
+  <br />
+  <a href="https://nodejs.org/en/about/previous-releases"><img src="https://img.shields.io/node/v/vite.svg" alt="node compatibility"></a>
+  <a href="https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/LICENSE"
+    ><img
+      src="https://img.shields.io/github/license/XiaoDaiGua-Ray/ray-template"
+      alt="LICENSE"
+  /></a>
+  <a href="#badge"><img src="https://img.shields.io/github/languages/top/XiaoDaiGua-Ray/ray-template" alt="language"></a>
+  <a href="https://www.npmjs.com/package/ray-template"><img src="https://img.shields.io/npm/v/ray-template" alt="npm package"></a>
 </div>
 
 <div align="center">
@@ -9,35 +25,43 @@
 
 English | [简体中文](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/README-ZH.md)
 
-A `free`, `efficient`, `complete with features` middle and backend template based on the latest technologies such as vite5.x & ts(x) & pinia & vue3.x.
+A `completely free`, `efficient`, `feature complete` and based on vite5. x & ts(x) & pinia & vue3. x and other latest technology in the background template.
 
 </div>
 
-## ✨ Feature
+## 🌻 Intro
 
-- **Power by love**: Contains almost all common template features on the market and all are free to use.
-- **Latest Technology Stack**：Developed using front-end cutting-edge technologies such as vue3.x/vite5.x/pinia.
-- **TypeScript**：The language for application-level JavaScript.
-- **App Theme**：Configurable themes.
-- **Globalization**：Built-in complete internationalization solution.
-- **Mock Data**：Built-in Mock data scheme.
-- **Permissions**：Built-in complete dynamic routing permission generation solution.
-- **Components**：Secondary encapsulation of multiple commonly used components.
-- **Axios Request**：Secondary encapsulation of the axios library, supporting functions such as cancellation, anti-shake, automatic repeat cancellation, etc.
-- **Page Cache**：Arbitrarily deep page cache.
-- **SVG**：Built-in svg icon solution.
-- **Standalone Data Methods Views**：Decoupled management of data, methods, and views allows for secondary development with confidence.
-- **Template Specific Hooks** : Hooks based on the template feature package make it easier to use some of the features of the template.
+`Ray Template` uses cutting-edge front-end technology, abandoning complexity and bloat, using modular design, decoupling data, methods and views, focusing on business development. Provide rich configuration and rich template `Hooks`, support personalized customization, to meet your project needs.
 
-## 🪄 Preview
+## ✨ Features
 
-- [Click to preview](https://xiaodaigua-ray.github.io/ray-template/#/)
-- [Click to preview(Acceleration address)](https://ray-template.yunkuangao.com/#/)
+- `New technology stack:` using ts(x), vite5. x, vue3. x, pinia and other front-end cutting-edge technology development
+- `Theme:` configurable theme
+- `Internationalization:` built-in perfect internationalization solution
+- `Permissions:` built-in perfect dynamic routing permission generation solution
+- `Components:` secondary encapsulation of multiple common components
+- `Toolkit:` common tool function packaging
+- `Cache:` arbitrary depth page caching
+- `Modular design:` decoupling management data, methods, views, rest assured secondary development
+- `Configurable:` support rich configuration items
+- `Code style:` built-in prettier, eslint and other code style tools
+- `Multi-terminal adaptation:` support pc, phone, pad
+- `Documentation:` complete documentation
+- `Mock data:` built-in Mock data solution
+- `Axios request:` secondary encapsulation of axios library, support: cancel, jitter, automatic repeat cancellation and other functions
+- `SVG:` built-in svg icon solution
+- `Hooks:` based on the template characteristics of the encapsulated hooks to make it easier to use some functions of the template
+- `TypeScript:` provide a complete type
 
-## 🦾 Document
+## 👀 Preview
 
-- [Document](https://xiaodaigua-ray.github.io/ray-template-doc/)
-- [Document(Acceleration address)](https://ray-template.yunkuangao.com/ray-template-doc/)
+- [Preview](https://xiaodaigua-ray.github.io/ray-template/#/)
+- [Preview(Acceleration address)](https://ray-template.yunkuangao.com/#/)
+
+## 📌 Documentation
+
+- [Documentation](https://xiaodaigua-ray.github.io/ray-template-doc/)
+- [Documentation(Acceleration address)](https://ray-template.yunkuangao.com/ray-template-doc/)
 
 ## 🔋 Change Log
 
@@ -45,16 +69,17 @@ A `free`, `efficient`, `complete with features` middle and backend template base
 
 ## 🪴 Prepare
 
-- [Node](http://nodejs.org/) and [git](https://git-scm.com/) - Project development environment
-- [Vite](https://vitejs.dev/) - Familiar with vite features
-- [Vue3](https://v3.vuejs.org/) - Familiar with Vue3.x basic syntax
-- [TypeScript](https://www.typescriptlang.org/) - Familiar with TypeScript basic syntax
-- [Es6+](http://es6.ruanyifeng.com/) - Familiar with es6 basic syntax
-- [Vue-Router-Next](https://next.router.vuejs.org/) - Familiar with the basic use of vue-router4.x
-- [Naive-UI](https://www.naiveui.com) - UI basic usage
-- [Mock.js](https://github.com/nuysoft/Mock) - Mockjs basic syntax
-- [Pinia](https://pinia.vuejs.org/zh/introduction.html) - State manager pinia uses
-- [TSX](https://github.com/vuejs/babel-plugin-jsx/blob/main/packages/babel-plugin-jsx/README-zh_CN.md) - TSX basic syntax
+- [Node](http://nodejs.org/) and [git](https://git-scm.com/) - project development environment
+- [Vite](https://vitejs.dev/) - familiar with vite features
+- [Vue3](https://v3.vuejs.org/) - familiar with Vue basic syntax
+- [TypeScript](https://www.typescriptlang.org/) - familiar with TypeScript basic syntax
+- [Es6+](http://es6.ruanyifeng.com/) - familiar with es6 basic syntax
+- [Vue-Hooks-Plus] - familiar with vue-hooks-plus useRequest method basic use
+- [Vue-Router-Next](https://next.router.vuejs.org/) - familiar with vue-router4.x basic use
+- [Naive-UI](https://www.naiveui.com) - naive ui basic use
+- [Mock.js](https://github.com/nuysoft/Mock) - mockjs basic syntax
+- [Pinia](https://pinia.vuejs.org/zh/introduction.html) - state manager pinia usage
+- [TSX](https://github.com/vuejs/babel-plugin-jsx/blob/main/packages/babel-plugin-jsx/README-zh_CN.md) - tsx basic syntax
 
 ## 📦 Setup
 
@@ -80,7 +105,7 @@ pnpm i
 pnpm dev
 ```
 
-### Project packaging
+### Build project
 
 ```sh
 pnpm build
@@ -92,23 +117,23 @@ pnpm build
 pnpm preview
 ```
 
-### Volumetric analysis
+### Report project
 
 ```sh
 pnpm report
 ```
 
-### Develop
+### Development
 
-Introduction and ease of use are the core ideas of this template. So you can safely delete all files under `views/demo` and `router/moduels/demo`, and you will have a clean project.
+Just delete the files under `views/demo`, `router/modules/demo` to get a clean project template.
 
 ## 🪴 Project Activities
 
 ![Alt](https://repobeats.axiom.co/api/embed/fab6071297ab281913a42f07a2779b488cfd62b8.svg 'Repobeats analytics image')
 
-### Contributor
+### Contributors
 
-Thanks for all their contributions 🐝!
+Thanks for all their contributions 🐝 !
 
 <a href="https://github.com/XiaoDaiGua-Ray/ray-template/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=XiaoDaiGua-Ray/ray-template" />

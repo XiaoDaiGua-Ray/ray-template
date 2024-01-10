@@ -1,5 +1,5 @@
 import type { DebounceSettings } from 'lodash-es'
-import type { AnyFC } from '@/types/modules/utils'
+import type { AnyFC } from '@/types'
 
 export interface DebounceBindingOptions {
   func: AnyFC

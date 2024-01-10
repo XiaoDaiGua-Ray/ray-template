@@ -69,7 +69,7 @@ const RouterDemoHome = defineComponent({
 
     for (let i = 0; i < 10; i++) {
       dataSource.push({
-        name: '张三',
+        name: '张三' + i,
         address: 'New York No. 1 Lake Park',
         phone: '010-121212',
         key: i,

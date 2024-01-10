@@ -13,6 +13,16 @@ import { modalProps } from 'naive-ui'
 
 const props = {
   ...modalProps,
+  memo: {
+    /**
+     *
+     * 是否记住上一次的位置
+     *
+     * @default true
+     */
+    type: Boolean,
+    default: true,
+  },
   /**
    *
    * 是否全屏

@@ -11,12 +11,8 @@
 
 /** 系统配置 */
 
-import type {
-  LayoutSideBarLogo,
-  PreloadingConfig,
-  RootRoute,
-} from '@/types/modules/cfg'
-import type { AppMenuConfig, AppKeepAlive } from '@/types/modules/appConfig'
+import type { LayoutSideBarLogo, PreloadingConfig } from '@/types'
+import type { AppMenuConfig, AppKeepAlive } from '@/types'
 
 /**
  *
@@ -42,21 +38,6 @@ export const PRE_LOADING_CONFIG: PreloadingConfig = {
   title: 'Ray Template',
   tagColor: '#ff6700',
   titleColor: '#2d8cf0',
-}
-
-/**
- *
- * 配置根路由信息
- * 模板维护一个根路由 ROOT_ROUTE，所有的重定向操作、回到 Layout Root Path 操作都依赖该 path
- *
- * 该变量的值，会传递给 globalRootRoute
- * 这么做也是为了能够在兼容老版本的模板，并且也是为了能够动态的维护根路由信息
- *
- * 有些时候，如果你希望动态的维护 Root Route 信息，可以使用 useAppRoot 方法
- */
-export const ROOT_ROUTE: RootRoute = {
-  name: 'Dashboard',
-  path: '/dashboard',
 }
 
 /**
@@ -110,20 +91,4 @@ export const APP_CATCH_KEY = {
   signing: 'signing',
   localeLanguage: 'localeLanguage',
   token: 'token',
-} as const
-
-/**
- *
- * 系统水印配置
- * 具体配置信息查看官网: https://www.naiveui.com/zh-CN/dark/components/watermark#API
- */
-export const APP_WATERMARK_CONFIG = {
-  content: 'Trying be better~',
-  fontSize: 16,
-  lineHeight: 16,
-  width: 384,
-  height: 384,
-  xOffset: 12,
-  yOffset: 60,
-  rotate: -15,
 } as const

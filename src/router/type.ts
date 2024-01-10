@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { RouteRecordRaw } from 'vue-router'
-import type { Recordable } from '@/types/modules/helper'
+import type { Recordable } from '@/types'
 import type { DefineComponent, VNode } from 'vue'
 
 export type Component<T = any> =

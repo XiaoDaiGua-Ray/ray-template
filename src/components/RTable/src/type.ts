@@ -8,7 +8,7 @@ import type {
   DataTableBaseColumn,
 } from 'naive-ui'
 import type { VNode } from 'vue'
-import type { Recordable } from '@/types/modules/helper'
+import type { Recordable } from '@/types'
 import type { PrintDomOptions } from '@/utils'
 
 export type TableActionIcon = string | (() => VNode)

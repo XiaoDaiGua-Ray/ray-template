@@ -25,7 +25,7 @@
 
 import { NEllipsis } from 'naive-ui'
 
-import { setStorage } from '@/utils'
+import { setStorage, pick } from '@/utils'
 import { validRole, validMenuItemShow } from '@/router/helper/routerCopilot'
 import {
   parseAndFindMatchingNodes,
@@ -35,18 +35,16 @@ import {
 } from './helper'
 import { useI18n } from '@/hooks/web'
 import { getAppRawRoutes } from '@/router/appRouteModules'
-import { throttle } from 'lodash-es'
 import { useKeepAliveActions } from '@/store'
 
-import type { AppRouteRecordRaw } from '@/router/type'
-import type { AppMenuOption, MenuTagOptions } from '@/types/modules/app'
+import type { AppMenuOption, MenuTagOptions } from '@/types'
 import type { MenuState } from '@/store/modules/menu/type'
 import type { LocationQuery } from 'vue-router'
 
 export const piniaMenuStore = defineStore(
   'menu',
   () => {
-    const router = useRouter()
+    const { push, getRoutes } = useRouter()
     const route = useRoute()
     const { t } = useI18n()
     const { setKeepAliveInclude } = useKeepAliveActions()
@@ -86,8 +84,7 @@ export const piniaMenuStore = defineStore(
       })
 
       if (option.path === getCatchMenuKey()) {
-        /** 设置标签页(初始化时执行设置一次, 避免含有平级路由模式情况时出现不能正确设置标签页的情况) */
-        setMenuTagOptionsWhenMenuValueChange(option.path, attr)
+        menuState.currentMenuOption = attr
       }
 
       attr.show = validMenuItemShow(attr)
@@ -121,21 +118,7 @@ export const piniaMenuStore = defineStore(
       key: string | number,
       option: AppMenuOption,
     ) => {
-      const { meta } = option as unknown as AppRouteRecordRaw
-
       menuState.breadcrumbOptions = getCompleteRoutePath(menuState.options, key)
-
-      if (meta.sameLevel) {
-        nextTick().then(() => {
-          const fd = menuState.breadcrumbOptions.find((curr) => {
-            return curr.path === option.path
-          })
-
-          if (!fd) {
-            menuState.breadcrumbOptions.push(option as unknown as AppMenuOption)
-          }
-        })
-      }
     }
 
     /**
@@ -204,46 +187,68 @@ export const piniaMenuStore = defineStore(
          *
          * 但是, 缓存 key 都以当前点击 key 为准
          */
-        if (!String(key).startsWith('/')) {
+        if (String(key)[0] === '/') {
+          /** 根路由直接跳转 */
+          push({
+            path,
+            query,
+          })
+        } else {
           /** 如果不是根路由, 则拼接完整路由并跳转 */
           const _path = getCompleteRoutePath(menuState.options, key)
             .map((curr) => curr.key)
             .join('/')
 
-          router.push({
+          push({
             path: _path,
-            query,
-          })
-        } else {
-          /** 根路由直接跳转 */
-          router.push({
-            path,
             query,
           })
         }
 
         /** 检查是否为根路由 */
         const count = (path.match(isRootPathReg) || []).length
+        const { sameLevel } = meta
 
         /** 更新缓存队列 */
-        setKeepAliveInclude(option as unknown as AppMenuOption)
+        setKeepAliveInclude(option)
         /** 更新浏览器标题 */
-        updateDocumentTitle(option as unknown as AppMenuOption)
+        updateDocumentTitle(option)
 
-        if (!meta.sameLevel || (meta.sameLevel && count === 1)) {
+        // 如果不为 sameLevel，则会执行更新：覆盖更新面包屑、添加标签菜单、更新缓存
+        if (!sameLevel || (sameLevel && count === 1)) {
           /** 更新标签菜单 */
           setMenuTagOptionsWhenMenuValueChange(key, option)
           /** 更新面包屑 */
           setBreadcrumbOptions(key, option)
 
           menuState.menuKey = key
+          menuState.currentMenuOption = option
+
           /** 缓存菜单 key(sessionStorage) */
           setStorage('menuKey', key)
         } else {
-          setBreadcrumbOptions(menuState.menuKey || '', option)
-        }
+          // 使用 pick 提取仅需要的字段，避免 vue 抛错空引用，导致性能损耗
+          const breadcrumbOption = pick(resolveOption(option), [
+            'breadcrumbLabel',
+            'children',
+            'key',
+            'meta',
+            'name',
+            'path',
+            'show',
+          ])
+          // 查看是否重复
+          const find = menuState.breadcrumbOptions.find(
+            (curr) => curr.key === breadcrumbOption.key,
+          )
 
-        menuState.currentMenuOption = option
+          // 如果未重复追加
+          if (!find) {
+            menuState.breadcrumbOptions.push(
+              breadcrumbOption as unknown as AppMenuOption,
+            )
+          }
+        }
       }
     }
 
@@ -270,21 +275,22 @@ export const piniaMenuStore = defineStore(
         combinePath = splitPath[splitPath.length - 1]
       }
 
-      // 如果当前菜单 key 与路由地址相同，说明不是手动更新 url， 则不会触发更新
-      if (combinePath === menuState.menuKey) {
-        return
-      }
-
-      const findMenuOption = router
-        .getRoutes()
-        .find((curr) =>
-          count > 1 ? path === curr.path : combinePath === curr.path,
-        )
+      // 直接使用完整 url，检查是否在 routes 中
+      const findMenuOption = getRoutes().find((curr) => curr.path === routePath)
 
       if (findMenuOption) {
+        // 使用 pick 提取仅需要的字段，避免 vue 抛错空引用，导致性能损耗
+        const pickOption = pick(findMenuOption, [
+          'children',
+          'meta',
+          'path',
+          'name',
+          'redirect',
+        ]) as unknown as AppMenuOption
+
         changeMenuModelValue(
           count > 1 ? combinePath : path,
-          resolveOption(findMenuOption as unknown as AppMenuOption),
+          resolveOption(pickOption),
           query,
         )
       }
@@ -319,6 +325,17 @@ export const piniaMenuStore = defineStore(
           getAppRawRoutes() as AppMenuOption[],
           0,
         )
+
+        // 初始化后更新面包屑、标签菜单
+        if (menuState.currentMenuOption) {
+          const { currentMenuOption } = menuState
+
+          setBreadcrumbOptions(currentMenuOption.key, currentMenuOption)
+          setMenuTagOptionsWhenMenuValueChange(
+            currentMenuOption.key,
+            currentMenuOption,
+          )
+        }
 
         resolve()
       })
@@ -384,8 +401,7 @@ export const piniaMenuStore = defineStore(
 
     return {
       ...toRefs(menuState),
-      changeMenuModelValue: throttle(changeMenuModelValue, 500),
-      setupAppMenu,
+      changeMenuModelValue,
       collapsedMenu,
       spliceMenTagOptions,
       emptyMenuTagOptions,

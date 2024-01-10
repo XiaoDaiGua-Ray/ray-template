@@ -27,11 +27,7 @@
  * createVariableState({ your state })
  */
 
-import { ROOT_ROUTE, APP_WATERMARK_CONFIG } from '@/app-config/appConfig'
-import { cloneDeep } from 'lodash-es'
-
-import type { AnyFC } from '@/types/modules/utils'
-import type { Mutable } from '@/types/modules/helper'
+import type { AnyFC } from '@/types'
 
 /**
  *
@@ -47,7 +43,6 @@ const variableState = reactive({
   globalDrawerValue: false, // 全局抽屉控制器（小尺寸设备可用）
   globalMainLayoutLoad: true, // LayoutContent 区域加载控制器，会触发强制刷新
   layoutContentMaximize: false, // LayoutContent 区域全屏控制器
-  globalRootRoute: cloneDeep(ROOT_ROUTE), // 全局根路由配置，同步至 ROOT_ROUTE
   layoutContentSpinning: false, // LayoutContent 区域加载控制器，不会触发强制刷新
 })
 

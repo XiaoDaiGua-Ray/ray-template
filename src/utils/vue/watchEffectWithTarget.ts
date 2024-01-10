@@ -12,7 +12,7 @@
 import { effectDispose } from './effectDispose'
 
 import type { WatchOptionsBase } from 'vue'
-import type { AnyFC } from '@/types/modules/utils'
+import type { AnyFC } from '@/types'
 
 /**
  *

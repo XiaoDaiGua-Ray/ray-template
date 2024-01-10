@@ -18,7 +18,7 @@ import { useAppRoot } from '@/hooks/template'
 
 import type { Router } from 'vue-router'
 import type { AppRouteMeta } from '@/router/type'
-import type { AppMenuOption } from '@/types/modules/app'
+import type { AppMenuOption } from '@/types'
 
 /**
  *

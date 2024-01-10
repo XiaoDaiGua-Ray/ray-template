@@ -42,7 +42,7 @@ import { htmlTitlePlugin, mixinCSSPlugin } from './vite-plugins/index'
 import { APP_THEME } from './src/app-config/designConfig'
 import { PRE_LOADING_CONFIG, SIDE_BAR_LOGO } from './src/app-config/appConfig'
 
-import type { AppConfigExport } from '@/types/modules/cfg'
+import type { AppConfigExport } from '@/types'
 import type { BuildOptions } from 'vite'
 
 const config: AppConfigExport = {

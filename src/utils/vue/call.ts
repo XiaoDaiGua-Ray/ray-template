@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { AnyFC, MaybeArray } from '@/types/modules/utils'
+import type { AnyFC, MaybeArray } from '@/types'
 
 function call(funcs: MaybeArray<() => void>): void
 

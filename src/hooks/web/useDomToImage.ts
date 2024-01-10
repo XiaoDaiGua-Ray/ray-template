@@ -13,7 +13,7 @@ import domToImage from 'dom-to-image'
 import { unrefElement } from '@/utils'
 
 import type { Options as ReDomToImageOptions } from 'dom-to-image'
-import type { BasicTarget, TargetType } from '@/types/modules/vue'
+import type { BasicTarget, TargetType } from '@/types'
 
 export type ImageType = keyof typeof domToImageMethods
 
@@ -90,7 +90,8 @@ const domToImageMethods = {
  * const { create, stop } = useDomToImage(refDom, {
  *   beforeCreate: (element) => { ... },
  *   created: (element, result) => { ... },
- *   createdError: (element, error) => { ... },
+ *   createdError: (error) => { ... },
+ *   finally: () => { ... },
  * })
  */
 export const useDomToImage = <T extends HTMLElement>(
@@ -102,10 +103,11 @@ export const useDomToImage = <T extends HTMLElement>(
     created,
     createdError,
     finally: _finally,
+    imageType: _imageType,
   } = options ?? {}
 
   const run = (
-    imageType: UseDomToImageOptions['imageType'] = 'jpeg',
+    imageType?: UseDomToImageOptions['imageType'],
   ): Promise<DomToImageResult> => {
     return new Promise((resolve, reject) => {
       const element = unrefElement(target)
@@ -118,10 +120,7 @@ export const useDomToImage = <T extends HTMLElement>(
         return reject('useDomToImage: element is undefined.')
       }
 
-      const type = imageType ?? options?.imageType
-      const matchFc = domToImageMethods[type] || domToImageMethods['jpeg']
-
-      matchFc(element, options)
+      domToImageMethods[imageType ?? _imageType ?? 'jpeg']?.(element, options)
         .then((res) => {
           created?.(res, element)
 

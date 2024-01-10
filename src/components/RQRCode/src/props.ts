@@ -11,7 +11,7 @@
 
 import type { QRCodeStatus, QRCodeLevel } from './type'
 import type { PropType, VNode } from 'vue'
-import type { MaybeArray } from '@/types/modules/utils'
+import type { MaybeArray } from '@/types'
 import type { Options } from 'awesome-qr'
 
 const props = {

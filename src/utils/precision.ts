@@ -32,7 +32,7 @@ import { cloneDeep } from 'lodash-es'
 import { isValueType } from '@/utils'
 
 import type { Options } from 'currency.js'
-import type { AnyFC } from '@/types/modules/utils'
+import type { AnyFC } from '@/types'
 
 export type CurrencyArguments = string | number | currency
 

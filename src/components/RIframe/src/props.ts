@@ -10,7 +10,7 @@
  */
 
 import type { PropType } from 'vue'
-import type { MaybeArray } from '@/types/modules/utils'
+import type { MaybeArray } from '@/types'
 import type { SpinProps } from 'naive-ui'
 
 const props = {

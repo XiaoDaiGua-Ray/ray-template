@@ -7,7 +7,7 @@ import type {
   Axios,
   AxiosResponse,
 } from 'axios'
-import type { AnyFC } from '@/types/modules/utils'
+import type { AnyFC } from '@/types'
 
 export type AxiosHeaderValue =
   | AxiosHeaders

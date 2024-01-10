@@ -11,7 +11,7 @@
 
 import { useMenuGetters, useMenuActions } from '@/store'
 
-import type { AppMenuOption } from '@/types/modules/app'
+import type { AppMenuOption } from '@/types'
 
 export type Target = number | AppMenuOption
 

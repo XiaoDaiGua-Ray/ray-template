@@ -39,11 +39,7 @@ const isMatch = (
     return false
   }
 
-  if (node[key] === value) {
-    return true
-  }
-
-  return false
+  return node[key] === value
 }
 
 /**
@@ -95,7 +91,7 @@ export const parseAndFindMatchingNodes = (
   key: string | number,
   value: string | number,
 ) => {
-  const temp = []
+  const temp: AppMenuOption[] = []
 
   for (const it of options) {
     const innerTemp = findMatchingNodes(it, key, value)

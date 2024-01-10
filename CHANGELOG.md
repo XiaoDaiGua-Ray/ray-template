@@ -1,5 +1,74 @@
 # CHANGE LOG
 
+## 4.5.0
+
+破坏性更新。
+
+更新 `vue` 版本至 `3.4.0`，请查看相关变更：[Vue 3.4.0](https://github.com/vuejs/core/blob/main/CHANGELOG.md)。该版本破坏性更新了一些东西，例如：
+
+- `JSX` 命名空间默认移除
+- `ReactiveTransform` 移除
+- `v-is` 指令移除
+
+更新 `@vitejs/plugin-vue` 版本至 `5.0.0`，请查看相关变更：[vite-plugin-vue](https://github.com/vitejs/vite-plugin-vue/blob/main/packages/plugin-vue/CHANGELOG.md)。该版本破坏性更新了一些东西，例如：
+
+- 放弃 `ReactivityTransform` 支持
+- 放弃 `node14, 16` 版本支持
+- 放弃 `vite4.x` 版本支持
+- 弃用 `defineModel` 配置，`vue3.4.0` 版本该功能已经稳定
+
+解决 `sameLevel` 问题与核心包 `store/men` 的一些问题。提高了性能，避免了潜在的空引用问题。
+
+是统一 `types` 包的导入导出行为。
+
+## Feats
+
+- 统一 `types` 包下的导出方式，现在统一为 `import type { xxx } from '@/types'` 导入
+- `RQRCode` 组件
+  - 在 `loading` 状态下会模糊显示二维码，并且展示 `loading` 状态
+  - 优化显示 `error` 状态下默认按钮样式
+- 更新 `README.md`, `README-ZH.md` 文档
+- 取消 `changeModelValue` 节流锁
+- 优化 `changeModelValue`, `updateMenuKeyWhenRouteUpdate` 方法，避免潜在的空引用问题
+- 插件相关
+  - 更新 `vue` 版本至 `3.4.0`
+  - 更新 `@vitejs/plugin-vue-jsx` 版本至 `3.1.0`
+- `RModal` 组件相关
+  - 新增 `memo` 配置项，用于配置是否记忆上一次的位置
+- `RChart` 组件
+  - 补充部分注释
+  - 新增 `isDispose` 方法，检测当前图表是否被卸载
+- 新增 `AppVersionProvider` 注入器，用于注入 `appVersion` 全局变量，检测是否需要重新加载页面
+
+## Fixes
+
+- 修复初始化的时候面包屑为空的问题
+- 修复 `sameLevel` 平级模式面包屑追加问题
+- `RModal` 组件
+  - 修复初始化配置 `show = true` 时，`dad` 属性不生效的问题
+
+## 4.4.7
+
+## Feats
+
+- 更新 `vue` 版本至 `3.3.13` 版本
+- 更新 `naive-ui` 版本至 `3.36.0`。新增了几个新组件
+- 更新 `vite` 版本至 `5.0.10`
+- `appConfig` 相关
+  - 移除 `APP_WATERMARK_CONFIG` 配置项，现在水印配置项会被 `watermarkConfig` 替代
+  - 移除 `ROOT_ROUTE` 配置项，现在根路由配置项会被 `appRootRoute` 替代
+- `variable` 相关
+  - 移除 `variable` 管理 `ROO_ROUTE` 配置项
+- `commit-message` 新增 `plugin` 更新相关前缀配置
+- `RQRCode` 组件
+  - 调整 `loading` 透明度
+  - `downloadQRCode` 方法将会返回一个 `Promise` 对象
+- `basic` 包
+  - `downloadAnyFile` 方法将会返回一个 `Promise` 对象
+- `types` 包
+  - 新增 `ReturnPromiseType` 工具类型，用于获取函数返回值的 `Promise` 类型
+  - 新增 `ConditionalExclude` 工具类型，用于条件排除指定类型
+
 ## 4.4.6
 
 ## Feats

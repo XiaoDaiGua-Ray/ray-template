@@ -4,7 +4,7 @@
 // import MD5 from 'crypto-js/md5'
 // import BASE64 from 'crypto-js/enc-base64'
 
-// import type { WordArray, CipherParams } from '@/types/modules/utils'
+// import type { WordArray, CipherParams } from '@/types'
 
 /**
  *

@@ -15,6 +15,18 @@ export type ConditionalKeys<Base, Condition> = NonNullable<
 
 /**
  *
+ * 从目标类型中排除符合条件的属性
+ *
+ * @example
+ * ConditionalExclude<{ a: string, b: number }, string> // { b: number }
+ */
+export type ConditionalExclude<Base, Condition> = Omit<
+  Base,
+  ConditionalKeys<Base, Condition>
+>
+
+/**
+ *
  * 从目标类型中挑选出符合条件的属性
  *
  * @example
@@ -68,3 +80,17 @@ export type DeepMutable<T> = {
     ? DeepMutable<T[P]>
     : T[P]
 }
+
+/**
+ *
+ * 获取 Promise 返回值类型
+ *
+ * @example
+ * ReturnPromiseType<Promise<string>> // string
+ * ReturnPromiseType<Promise<string> | Promise<number>> // string | number
+ */
+export type ReturnPromiseType<T extends Promise<any>> = T extends Promise<
+  infer U
+>
+  ? U
+  : never

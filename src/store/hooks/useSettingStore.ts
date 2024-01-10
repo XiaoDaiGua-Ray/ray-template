@@ -71,6 +71,12 @@ export const useSettingGetters = () => {
    */
   const getWatermarkConfig = computed(() => variable.watermarkConfig)
 
+  /**
+   *
+   * @remark 获取 app 根路由
+   */
+  const getAppRootRoute = computed(() => variable.appRootRoute)
+
   return {
     getDrawerPlacement,
     getPrimaryColorOverride,
@@ -83,6 +89,7 @@ export const useSettingGetters = () => {
     getContentTransition,
     getWatermarkSwitch,
     getWatermarkConfig,
+    getAppRootRoute,
   }
 }
 

@@ -1,6 +1,6 @@
 import type * as echarts from 'echarts/core' // `echarts` 核心模块
 import type { PropType, VNode } from 'vue'
-import type { MaybeArray } from '@/types/modules/utils'
+import type { MaybeArray } from '@/types'
 import type {
   LoadingOptions,
   AutoResize,
@@ -52,6 +52,7 @@ const props = {
     type: Array as PropType<DropdownProps['options']>,
   },
   preset: {
+    // 是否启用预设样式
     type: String as PropType<RChartPresetType>,
   },
   contentStyle: {
@@ -153,6 +154,8 @@ const props = {
      *
      * 拓展 `echarts` 图表
      * 用于自己手动拓展相关的包
+     *
+     * 注意，该方法不支持动态调用，及时动态更新了该属性，也不会生效
      */
     type: Array as PropType<EChartsExtensionInstallRegisters[]>,
     default: () => [],

@@ -59,9 +59,6 @@ export default defineComponent({
     const { expose } = ctx
 
     const qrcodeURL = ref<QRCodeRenderResponse>()
-    const spinOverrides = {
-      opacitySpinning: '0.1',
-    }
     let gifBuffer: GIFBuffer
     let watchCallback!: WatchStopHandle
 
@@ -119,10 +116,12 @@ export default defineComponent({
 
     const downloadQRCode = (fileName?: DownloadFilenameType) => {
       if (qrcodeURL.value && isValueType<string>(qrcodeURL.value, 'String')) {
-        downloadAnyFile(
+        return downloadAnyFile(
           qrcodeURL.value,
           fileName || new Date().getTime() + '.png',
         )
+      } else {
+        return Promise.reject()
       }
     }
 
@@ -151,7 +150,6 @@ export default defineComponent({
 
     return {
       qrcodeURL,
-      spinOverrides,
       errorActionClick,
     }
   },
@@ -160,7 +158,6 @@ export default defineComponent({
       <div class="ray-qrcode">
         <NSpin
           show={this.status === 'loading'}
-          themeOverrides={this.spinOverrides}
           description={this.loadingDescription}
         >
           <img src={this.qrcodeURL as string | undefined} />
@@ -180,7 +177,7 @@ export default defineComponent({
                 this.$slots.errorAction()
               ) : (
                 <>
-                  <NButton text>
+                  <NButton text type="primary" color="#ffffff">
                     {{
                       default: () => this.errorActionDescription,
                       icon: () => (
