@@ -65,7 +65,7 @@ A `free`, `efficient`, `complete with features` middle and backend template base
 git clone https://github.com/XiaoDaiGua-Ray/ray-template.git
 
 # If your download speed is very slow, you can switch to the proxy address below
-git clone https://gh.yka.moe/https://github.com/XiaoDaiGua-Ray/ray-template.git
+git clone https://mirror.ghproxy.com/https://github.com/XiaoDaiGua-Ray/ray-template.git
 ```
 
 ### Pull dependencies
