@@ -73,7 +73,7 @@ A `completely free`, `efficient`, `feature complete` and based on vite5. x & ts(
 - [Vite](https://vitejs.dev/) - familiar with vite features
 - [Vue3](https://v3.vuejs.org/) - familiar with Vue basic syntax
 - [TypeScript](https://www.typescriptlang.org/) - familiar with TypeScript basic syntax
-- [Es6+](http://es6.ruanyifeng.com/) - familiar with es6 basic syntax
+- [ES6+](http://es6.ruanyifeng.com/) - familiar with es6 basic syntax
 - [Vue-Hooks-Plus] - familiar with vue-hooks-plus useRequest method basic use
 - [Vue-Router-Next](https://next.router.vuejs.org/) - familiar with vue-router4.x basic use
 - [Naive-UI](https://www.naiveui.com) - naive ui basic use
@@ -90,7 +90,7 @@ A `completely free`, `efficient`, `feature complete` and based on vite5. x & ts(
 git clone https://github.com/XiaoDaiGua-Ray/ray-template.git
 
 # If your download speed is very slow, you can switch to the proxy address below
-git clone https://gh.yka.moe/https://github.com/XiaoDaiGua-Ray/ray-template.git
+git clone https://mirror.ghproxy.com/https://github.com/XiaoDaiGua-Ray/ray-template.git
 ```
 
 ### Pull dependencies
