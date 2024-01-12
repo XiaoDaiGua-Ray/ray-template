@@ -56,7 +56,7 @@ function onlyBuildOptions(mode: string) {
         {
           name: 'vue',
           global: 'Vue',
-          resolve: 'https://cdn.staticfile.org/vue/3.3.11/vue.global.min.js',
+          resolve: 'https://cdn.staticfile.org/vue/3.4.7/vue.global.min.js',
         },
         {
           name: 'vue-demi',
@@ -84,7 +84,7 @@ function onlyBuildOptions(mode: string) {
           name: 'vue-i18n',
           global: 'VueI18n',
           resolve:
-            'https://cdn.staticfile.org/vue-i18n/9.8.0/vue-i18n.global.min.js',
+            'https://cdn.staticfile.org/vue-i18n/9.9.0/vue-i18n.global.min.js',
         },
         {
           name: 'echarts',
