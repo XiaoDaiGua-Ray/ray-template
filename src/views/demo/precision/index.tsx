@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { NLayout, NCard, NDynamicTags, NFlex, NInputNumber } from 'naive-ui'
+import { NLayout, NCard, NDynamicTags, NSpace, NInputNumber } from 'naive-ui'
 
 import { add, subtract, multiply, divide, distribute, format } from '@/utils'
 
@@ -67,7 +67,7 @@ const CalculatePrecision = defineComponent({
           https://currency.js.org/#subtract
         </h3>
 
-        <NFlex vertical>
+        <NSpace vertical>
           <NCard title="加法">
             {{
               default: () => (
@@ -131,7 +131,7 @@ const CalculatePrecision = defineComponent({
           <NCard title="平分一个值">
             {{
               default: () => (
-                <NFlex>
+                <NSpace>
                   <NInputNumber
                     v-model:value={this.distributeValue}
                     onUpdateValue={() => {
@@ -144,14 +144,14 @@ const CalculatePrecision = defineComponent({
                       this.updateDistributeValue()
                     }}
                   />
-                </NFlex>
+                </NSpace>
               ),
               footer: () => {
                 return '结果: ' + this.distributeOutputValue.join(', ')
               },
             }}
           </NCard>
-        </NFlex>
+        </NSpace>
       </NLayout>
     )
   },

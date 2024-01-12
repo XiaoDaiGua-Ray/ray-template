@@ -11,7 +11,7 @@
 
 import './index.scss'
 
-import { NFlex, NCard, NPopover } from 'naive-ui'
+import { NSpace, NCard, NPopover } from 'naive-ui'
 import { RIcon } from '@/components'
 
 const PreviewSVGIcons = defineComponent({
@@ -38,7 +38,7 @@ const PreviewSVGIcons = defineComponent({
         {{
           'header-extra': () => '点击图标复制代码',
           default: () => (
-            <NFlex>
+            <NSpace>
               {this.icons.map((curr) => (
                 <div
                   class="pre-view-icons__card"
@@ -55,7 +55,7 @@ const PreviewSVGIcons = defineComponent({
                   </NPopover>
                 </div>
               ))}
-            </NFlex>
+            </NSpace>
           ),
         }}
       </NCard>

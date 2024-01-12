@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { NFlex, NCard, NDropdown } from 'naive-ui'
+import { NSpace, NCard, NDropdown } from 'naive-ui'
 
 import { useContextmenuCoordinate } from '@/hooks'
 
@@ -52,9 +52,9 @@ export default defineComponent({
     const { x, y, show } = this
 
     return (
-      <NFlex vertical>
+      <NSpace vertical>
         <NCard title="useContextmenuCoordinate + NDropdown 实现右键菜单">
-          <NFlex vertical>
+          <NSpace vertical>
             <h3>默认点击元素外部会关闭菜单。</h3>
             <div
               ref="demoOneRef"
@@ -62,7 +62,7 @@ export default defineComponent({
             >
               右击
             </div>
-          </NFlex>
+          </NSpace>
         </NCard>
         <NDropdown
           show={show}
@@ -72,7 +72,7 @@ export default defineComponent({
           trigger="manual"
           placement="bottom-start"
         />
-      </NFlex>
+      </NSpace>
     )
   },
 })

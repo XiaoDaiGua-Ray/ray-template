@@ -18,7 +18,7 @@
 
 import './index.scss'
 
-import { NFlex, NPopover } from 'naive-ui'
+import { NSpace, NPopover } from 'naive-ui'
 import { RIcon } from '@/components'
 
 interface SSOSigningOptions {
@@ -59,7 +59,7 @@ const SSOSigning = defineComponent({
   },
   render() {
     return (
-      <NFlex class="sso-signing" align="center">
+      <NSpace class="sso-signing" align="center">
         {this.ssoSigningOptions.map((curr) => (
           <NPopover key={curr.key}>
             {{
@@ -75,7 +75,7 @@ const SSOSigning = defineComponent({
             }}
           </NPopover>
         ))}
-      </NFlex>
+      </NSpace>
     )
   },
 })

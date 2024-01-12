@@ -33,7 +33,7 @@ import './index.scss'
 
 import {
   NScrollbar,
-  NFlex,
+  NSpace,
   NLayoutHeader,
   NDropdown,
   NButton,
@@ -456,12 +456,13 @@ export default defineComponent({
               this.actionState.actionDropdownShow = false
             }}
           />
-          <NFlex
+          <NSpace
             class="menu-tag-space"
             wrap={false}
             align="center"
             justify="space-between"
             inline
+            wrapItem={false}
           >
             <RIcon
               name="expanded"
@@ -477,7 +478,7 @@ export default defineComponent({
                 id: uuidScrollBar,
               }}
             >
-              <NFlex
+              <NSpace
                 ref="menuTagSpaceRef"
                 class="menu-tag-wrapper"
                 wrap={false}
@@ -544,9 +545,9 @@ export default defineComponent({
                     }}
                   </NButton>
                 ))}
-              </NFlex>
+              </NSpace>
             </NScrollbar>
-            <NFlex
+            <NSpace
               class="menu-tag__right-wrapper"
               align="center"
               inline
@@ -585,8 +586,8 @@ export default defineComponent({
                   onClick={this.setCurrentContextmenuIndex.bind(this)}
                 />
               </RMoreDropdown>
-            </NFlex>
-          </NFlex>
+            </NSpace>
+          </NSpace>
         </div>
       </NLayoutHeader>
     )

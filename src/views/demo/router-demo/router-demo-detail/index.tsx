@@ -9,13 +9,13 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { NCard, NFlex } from 'naive-ui'
+import { NCard, NSpace } from 'naive-ui'
 
 const RouterDemoDetail = defineComponent({
   name: 'RouterDemoDetail',
   render() {
     return (
-      <NFlex>
+      <NSpace>
         <NCard title={(this.$route.query.name as string) || 'hello'}>
           你好 {this.$route.query.name}
         </NCard>
@@ -27,7 +27,7 @@ const RouterDemoDetail = defineComponent({
             中，将所需页面配置为 sameLevel 即可。
           </h2>
         </NCard>
-      </NFlex>
+      </NSpace>
     )
   },
 })

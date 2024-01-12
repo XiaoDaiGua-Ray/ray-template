@@ -1,7 +1,7 @@
 import './index.scss'
 
 import {
-  NFlex,
+  NSpace,
   NCard,
   NTabs,
   NTabPane,
@@ -63,13 +63,13 @@ const Login = defineComponent({
           ]}
         >
           <div class={['login-wrapper__content']}>
-            <NFlex align="center" class="login-title__wrapper">
+            <NSpace align="center" class="login-title__wrapper">
               <RIcon name="ray" size="48" />
               <NGradientText class="login-title" type="info" size={28}>
                 Ray Template
               </NGradientText>
-            </NFlex>
-            <NFlex align="center" class="login-action__wrapper">
+            </NSpace>
+            <NSpace align="center" class="login-action__wrapper">
               <ThemeSwitch />
               <NDropdown
                 options={LOCAL_OPTIONS}
@@ -83,7 +83,7 @@ const Login = defineComponent({
                   cursor="pointer"
                 />
               </NDropdown>
-            </NFlex>
+            </NSpace>
             <NGrid
               cols={'s:1 m:1 l:2 xl:2 2xl:2'}
               itemResponsive={false}
@@ -93,12 +93,12 @@ const Login = defineComponent({
                 span={'s:0 m:0 l:1 xl:1 2xl:1'}
                 class="login__left-wrapper"
               >
-                <NFlex align="center" vertical>
+                <NSpace align="center" vertical>
                   <RIcon name="login_bg" width="368" height="368" />
                   <NGradientText class="login-title" type="info" size={36}>
                     开箱即用的中后台管理系统
                   </NGradientText>
-                </NFlex>
+                </NSpace>
               </NGridItem>
               <NGridItem span={1} class="login__right-wrapper">
                 <NCard
@@ -144,13 +144,13 @@ const Login = defineComponent({
                 </NCard>
               </NGridItem>
             </NGrid>
-            <NFlex
+            <NSpace
               align="center"
               justify="center"
               class="login-copyright__wrapper"
             >
               {this.copyright}
-            </NFlex>
+            </NSpace>
           </div>
         </div>
       </div>

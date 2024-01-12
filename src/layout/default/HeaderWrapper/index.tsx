@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { NFlex } from 'naive-ui'
+import { NSpace } from 'naive-ui'
 import SiderBar from '@/layout/components/SiderBar'
 
 export default defineComponent({
@@ -19,9 +19,9 @@ export default defineComponent({
   },
   render() {
     return (
-      <NFlex size={[0, 0]}>
+      <NSpace size={[0, 0]} wrapItem={false}>
         <SiderBar />
-      </NFlex>
+      </NSpace>
     )
   },
 })

@@ -13,12 +13,26 @@ $positionY: 24px;
       position: relative;
 
       &::before {
-        content: "";
+        content: '';
         position: absolute;
         width: var(--login-height);
         height: 2px;
-        background: linear-gradient(135deg, transparent, transparent 75%, #2080f0, transparent 80%, transparent 100%),
-          linear-gradient(45deg, transparent, transparent 75%, #2080f0, transparent 80%, transparent 100%);
+        background: linear-gradient(
+            135deg,
+            transparent,
+            transparent 75%,
+            #2080f0,
+            transparent 80%,
+            transparent 100%
+          ),
+          linear-gradient(
+            45deg,
+            transparent,
+            transparent 75%,
+            #2080f0,
+            transparent 80%,
+            transparent 100%
+          );
         background-size: 1em 1em;
         background-repeat: repeat-x, repeat-x;
         transform: rotate(90deg);

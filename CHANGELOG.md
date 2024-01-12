@@ -11,7 +11,6 @@
 - 更新 `vue` 版本至 `3.4.7`
 - 更新 `naive-ui` 版本至 `2.37.3`
 - 更新最新版本 `vue` 后，更新 `createDiscreteApi` 方法注册上下文，改为函数包裹，避免 `slot default invoked outside of render` 警告
-- 使用 [`NFlex`](https://www.naiveui.com/zh-CN/dark/components/flex) 组件替换 `NSpace` 组件，根据官方建议，尽量使用该组件
 - `menu store` 相关
   - 优化 `setupAppMenu` 方法，初始化时会拼接完整的 `fullPath`，避免 `url`, `menu value` 更新路由时重复处理 `path`，提高性能
   - 优化 `updateMenuKeyWhenRouteUpdate` 方法，减少 `path` 处理操作

@@ -19,9 +19,9 @@
 
 import './index.scss'
 
-import { NAvatar, NFlex } from 'naive-ui'
+import { NAvatar, NSpace } from 'naive-ui'
 
-import { avatarProps, flexProps } from 'naive-ui'
+import { avatarProps, spaceProps } from 'naive-ui'
 import { APP_CATCH_KEY } from '@/app-config'
 import { getStorage } from '@/utils'
 
@@ -33,7 +33,7 @@ const AppAvatar = defineComponent({
   name: 'AppAvatar',
   props: {
     ...avatarProps,
-    ...flexProps,
+    ...spaceProps,
     cursor: {
       type: String,
       default: 'auto',
@@ -64,11 +64,12 @@ const AppAvatar = defineComponent({
   },
   render() {
     return (
-      <NFlex
+      <NSpace
         class="app-avatar"
         {...this.$props}
         style={this.cssVars}
         size={this.spaceSize}
+        wrapItem={false}
       >
         <NAvatar
           // eslint-disable-next-line prettier/prettier, @typescript-eslint/no-explicit-any
@@ -79,7 +80,7 @@ const AppAvatar = defineComponent({
           size={this.avatarSize}
         />
         <div class="app-avatar__name">{this.signing?.name}</div>
-      </NFlex>
+      </NSpace>
     )
   },
 })

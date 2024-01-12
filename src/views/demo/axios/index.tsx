@@ -1,6 +1,6 @@
 import './index.scss'
 
-import { NCard, NLayout, NFlex, NInput, NButton } from 'naive-ui'
+import { NCard, NLayout, NSpace, NInput, NButton } from 'naive-ui'
 import { getWeather, getTypicode } from '@/api/demo/test'
 import { useRequest, useHookPlusRequest } from '@/axios'
 
@@ -77,7 +77,7 @@ const Axios = defineComponent({
   render() {
     return (
       <NLayout>
-        <NFlex vertical>
+        <NSpace vertical>
           <h1>请求</h1>
           <NCard>
             <h2>useRequest</h2>
@@ -100,17 +100,17 @@ const Axios = defineComponent({
             <h3>3.详情请查看文档</h3>
           </NCard>
           <NCard title="useRequest示例（手动触发）">
-            <NFlex vertical>
+            <NSpace vertical>
               <NButton onClick={this.demoRun.bind(this)}>获取数据</NButton>
               <h3>
                 结果:&nbsp;
                 {this.demoLoading ? '获取中...' : this.demoData?.title}
               </h3>
-            </NFlex>
+            </NSpace>
           </NCard>
           <h1>使用 useHookPlusRequest 获取</h1>
           <NCard title="节流">
-            <NFlex vertical>
+            <NSpace vertical>
               <NInput
                 v-model:value={this.throttleDemoInputValue}
                 onUpdateValue={() => {
@@ -122,10 +122,10 @@ const Axios = defineComponent({
                 当前状态:&nbsp;
                 {this.throttleDemoLoading ? '获取中...' : '获取成功!!!'}
               </h3>
-            </NFlex>
+            </NSpace>
           </NCard>
           <NCard title="防抖">
-            <NFlex vertical>
+            <NSpace vertical>
               <NInput
                 v-model:value={this.debounceDemoInputValue}
                 onUpdateValue={() => {
@@ -137,10 +137,10 @@ const Axios = defineComponent({
                 当前状态:&nbsp;
                 {this.debounceDemoLoading ? '获取中...' : '获取成功!!!'}
               </h3>
-            </NFlex>
+            </NSpace>
           </NCard>
           <NCard title="获取气候">
-            <NFlex vertical>
+            <NSpace vertical>
               <NInput
                 v-model:value={this.weatherDemoInputValue}
                 onUpdateValue={(val) => {
@@ -152,9 +152,9 @@ const Axios = defineComponent({
                 当前状态:&nbsp;
                 {this.weatherDemoLoading ? '获取中...' : '获取成功!!!'}
               </h3>
-            </NFlex>
+            </NSpace>
           </NCard>
-        </NFlex>
+        </NSpace>
       </NLayout>
     )
   },

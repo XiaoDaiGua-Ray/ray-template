@@ -18,7 +18,7 @@
  * 2. 大量数据的时候，可能会出现性能问题
  */
 
-import { NPopover, NFlex, NTree } from 'naive-ui'
+import { NPopover, NSpace, NTree } from 'naive-ui'
 import { RIcon } from '@/components'
 
 import config from '../config'
@@ -129,7 +129,7 @@ export default defineComponent({
           return {
             ...attr,
             suffix: () => (
-              <NFlex style="padding-left: 32px;">
+              <NSpace style="padding-left: 32px;">
                 <RowIconRender
                   icon="row_head"
                   title="固定在列首"
@@ -162,7 +162,7 @@ export default defineComponent({
                   }
                   onClick={fixedClick.bind(this, 'right', attr, idx)}
                 />
-              </NFlex>
+              </NSpace>
             ),
           }
         }) as C[]

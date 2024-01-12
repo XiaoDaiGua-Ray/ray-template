@@ -21,7 +21,7 @@
 
 import './index.scss'
 
-import { NCard, NGrid, NGridItem, NFlex } from 'naive-ui'
+import { NCard, NGrid, NGridItem, NSpace } from 'naive-ui'
 import { RIcon } from '@/components'
 
 import { call } from '@/utils'
@@ -85,10 +85,10 @@ export default defineComponent({
             >
               {this.$slots.default?.()}
               <NGridItem suffix class="ray-collapse-grid__suffix--btn">
-                <NFlex justify="end">
+                <NSpace justify="end">
                   {this.$slots.action?.()}
                   {this.CollapseIcon()}
-                </NFlex>
+                </NSpace>
               </NGridItem>
             </NGrid>
           ),

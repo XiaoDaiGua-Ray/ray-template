@@ -8,7 +8,7 @@
 #### 示例
 
 ```tsx
-import { NFlex, NCard, NInput, NInputGroup, NButton, NSwitch } from 'naive-ui'
+import { NSpace, NCard, NInput, NInputGroup, NButton, NSwitch } from 'naive-ui'
 
 const Demo = defineComponent({
   name: 'Demo',
@@ -46,7 +46,7 @@ const Demo = defineComponent({
 #### 示例
 
 ```tsx
-import { NFlex, NCard, NInput, NInputGroup, NButton, NSwitch } from 'naive-ui'
+import { NSpace, NCard, NInput, NInputGroup, NButton, NSwitch } from 'naive-ui'
 
 const Demo = defineComponent({
   name: 'Demo',
@@ -64,7 +64,7 @@ const Demo = defineComponent({
   },
   render() {
     return (
-      <NFlex wrapItem={true} vertical>
+      <NSpace wrapItem={true} vertical>
         <NButton
           v-debounce={{
             func: this.updateDemoValue,
@@ -77,7 +77,7 @@ const Demo = defineComponent({
         </NButton>
         <p>我执行了{this.demoValue}次</p>
         <p>该方法将延迟 1s 执行</p>
-      </NFlex>
+      </NSpace>
     )
   },
 })
@@ -99,7 +99,7 @@ const Demo = defineComponent({
 #### 示例
 
 ```tsx
-import { NFlex, NCard, NInput, NInputGroup, NButton, NSwitch } from 'naive-ui'
+import { NSpace, NCard, NInput, NInputGroup, NButton, NSwitch } from 'naive-ui'
 
 const Demo = defineComponent({
   name: 'Demo',
@@ -117,7 +117,7 @@ const Demo = defineComponent({
   },
   render() {
     return (
-      <NFlex wrapItem={true} vertical>
+      <NSpace wrapItem={true} vertical>
         <NButton
           v-throttle={{
             func: this.updateDemoValue,
@@ -130,7 +130,7 @@ const Demo = defineComponent({
         </NButton>
         <p>我执行了{this.demoValue}次</p>
         <p>该方法 1s 内仅会执行一次</p>
-      </NFlex>
+      </NSpace>
     )
   },
 })
@@ -149,7 +149,7 @@ const Demo = defineComponent({
 
 ```tsx
 import {
-  NFlex,
+  NSpace,
   NCard,
   NInput,
   NInputGroup,
@@ -170,7 +170,7 @@ const Demo = defineComponent({
   },
   render() {
     return (
-      <NFlex vertical>
+      <NSpace vertical>
         <NSwitch v-model:value={this.disabledValue}>
           {{
             checked: () => '取消',
@@ -182,22 +182,22 @@ const Demo = defineComponent({
           组件提供了完整的 disabled
           属性，所以在组件库有禁用需求时，直接调用组件库 disabled 属性即可
         </p>
-        <NFlex vertical wrapItem={false}>
+        <NSpace vertical wrapItem={false}>
           <NCard title="原生表单" bordered={false}>
-            <NFlex vertical wrapItem={false}>
+            <NSpace vertical wrapItem={false}>
               <form v-disabled={this.disabledValue}>
                 <input type="text" placeholder="请输入" />
                 <button>提交</button>
               </form>
-            </NFlex>
+            </NSpace>
           </NCard>
           <NCard title="文本内容" bordered={false}>
-            <NFlex vertical wrapItem={false}>
+            <NSpace vertical wrapItem={false}>
               <p v-disabled={this.disabledValue}>我是可以被禁用的文本内容</p>
-            </NFlex>
+            </NSpace>
           </NCard>
           <NCard title="naive 组件" bordered={false}>
-            <NFlex vertical wrapItem={false} justify="start">
+            <NSpace vertical wrapItem={false} justify="start">
               <NButton v-disabled={this.disabledValue}>按钮</NButton>
               <NForm v-disabled={this.disabledValue}>
                 <NFormItem label="名称">
@@ -205,10 +205,10 @@ const Demo = defineComponent({
                 </NFormItem>
               </NForm>
               <NSwitch v-disabled={this.disabledValue}></NSwitch>
-            </NFlex>
+            </NSpace>
           </NCard>
-        </NFlex>
-      </NFlex>
+        </NSpace>
+      </NSpace>
     )
   },
 })

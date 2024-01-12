@@ -11,7 +11,7 @@
 
 import './index.scss'
 
-import { NCard, NDataTable, NDropdown, NFlex } from 'naive-ui'
+import { NCard, NDataTable, NDropdown, NSpace } from 'naive-ui'
 import Size from './components/Size'
 import Fullscreen from './components/Fullscreen'
 import C from './components/C'
@@ -238,10 +238,10 @@ export default defineComponent({
             defaultElement: <div style="display: none;"></div>,
           }),
           'header-extra': () => (
-            <NFlex align="center">
+            <NSpace align="center">
               {/* eslint-disable @typescript-eslint/no-explicit-any */}
               {tool(this.$props as any)}
-            </NFlex>
+            </NSpace>
           ),
           footer: () => this.$slots.tableFooter?.(),
           action: () => this.$slots.tableAction?.(),

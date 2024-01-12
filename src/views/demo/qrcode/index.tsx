@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { NFlex, NCard, NButton } from 'naive-ui'
+import { NSpace, NCard, NButton } from 'naive-ui'
 import { RQRCode } from '@/components'
 
 import LOGO from '@/assets/images/ray.svg'
@@ -31,7 +31,7 @@ export default defineComponent({
   },
   render() {
     return (
-      <NFlex>
+      <NSpace wrapItem={false}>
         <NCard>
           <h2>
             基于 awesome-qr 进行封装，支持 LOGO、gif、backgroundImage 等属性。
@@ -40,7 +40,7 @@ export default defineComponent({
           <h2>具体使用请参考 props 配置项</h2>
         </NCard>
         <NCard title="基础二维码">
-          <NFlex>
+          <NSpace>
             <RQRCode text="ray template yes" />
             <RQRCode text="ray template yes" logoImage={LOGO} />
             <RQRCode
@@ -49,10 +49,10 @@ export default defineComponent({
               dotScale={0.5}
               colorDark="#64d9d6"
             />
-          </NFlex>
+          </NSpace>
         </NCard>
         <NCard title="状态二维码">
-          <NFlex>
+          <NSpace>
             <RQRCode
               text="ray template yes"
               logoImage={LOGO}
@@ -66,11 +66,11 @@ export default defineComponent({
               logoImage={LOGO}
               status="loading"
             />
-          </NFlex>
+          </NSpace>
         </NCard>
         <NCard title="监听内容变化">
-          <NFlex vertical>
-            <NFlex>
+          <NSpace vertical>
+            <NSpace>
               <NButton
                 onClick={() => {
                   this.qrcodeStatus = 'loading'
@@ -90,8 +90,8 @@ export default defineComponent({
               >
                 下载二维码
               </NButton>
-            </NFlex>
-            <NFlex>
+            </NSpace>
+            <NSpace>
               <RQRCode
                 text={this.qrcodeText}
                 status={this.qrcodeStatus}
@@ -99,10 +99,10 @@ export default defineComponent({
                 ref="rayQRCodeRef"
               />
               当前二维码内容：{this.qrcodeText}
-            </NFlex>
-          </NFlex>
+            </NSpace>
+          </NSpace>
         </NCard>
-      </NFlex>
+      </NSpace>
     )
   },
 })
