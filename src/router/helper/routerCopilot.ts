@@ -10,11 +10,10 @@
  */
 
 import { permissionRouter } from './permission'
-import { SETUP_ROUTER_ACTION, SUPER_ADMIN } from '@/app-config/routerConfig'
-import { useVueRouter } from '@/hooks/web'
+import { SETUP_ROUTER_ACTION, SUPER_ADMIN, APP_CATCH_KEY } from '@/app-config'
+import { useVueRouter, useAppRoot } from '@/hooks'
 import { getAppEnvironment, setStorage } from '@/utils'
 import { useSigningGetters } from '@/store'
-import { useAppRoot } from '@/hooks/template'
 
 import type { Router } from 'vue-router'
 import type { AppRouteMeta } from '@/router/type'
@@ -133,7 +132,7 @@ export const redirectRouterToDashboard = (isReplace = true) => {
   const { push, replace } = router
   const { getRootPath } = useAppRoot()
 
-  setStorage('menuKey', getRootPath.value)
+  setStorage(APP_CATCH_KEY.appMenuKey, getRootPath.value)
 
   isReplace ? replace(getRootPath.value) : push(getRootPath.value)
 }

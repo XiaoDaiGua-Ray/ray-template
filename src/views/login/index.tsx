@@ -1,7 +1,7 @@
 import './index.scss'
 
 import {
-  NSpace,
+  NFlex,
   NCard,
   NTabs,
   NTabPane,
@@ -19,7 +19,7 @@ import { RIcon } from '@/components'
 import RayLink from '@/app-components/app/RayLink'
 import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch'
 
-import { LOCAL_OPTIONS } from '@/app-config/localConfig'
+import { LOCAL_OPTIONS } from '@/app-config'
 import { useWindowSize } from '@vueuse/core'
 import { useSettingActions } from '@/store'
 
@@ -63,19 +63,13 @@ const Login = defineComponent({
           ]}
         >
           <div class={['login-wrapper__content']}>
-            <NSpace align="center" class="login-title__wrapper">
+            <NFlex align="center" class="login-title__wrapper">
               <RIcon name="ray" size="48" />
               <NGradientText class="login-title" type="info" size={28}>
                 Ray Template
               </NGradientText>
-            </NSpace>
-            <NSpace
-              align="center"
-              class="login-action__wrapper"
-              itemStyle={{
-                display: 'flex',
-              }}
-            >
+            </NFlex>
+            <NFlex align="center" class="login-action__wrapper">
               <ThemeSwitch />
               <NDropdown
                 options={LOCAL_OPTIONS}
@@ -89,7 +83,7 @@ const Login = defineComponent({
                   cursor="pointer"
                 />
               </NDropdown>
-            </NSpace>
+            </NFlex>
             <NGrid
               cols={'s:1 m:1 l:2 xl:2 2xl:2'}
               itemResponsive={false}
@@ -99,12 +93,12 @@ const Login = defineComponent({
                 span={'s:0 m:0 l:1 xl:1 2xl:1'}
                 class="login__left-wrapper"
               >
-                <NSpace align="center" vertical>
+                <NFlex align="center" vertical>
                   <RIcon name="login_bg" width="368" height="368" />
                   <NGradientText class="login-title" type="info" size={36}>
                     开箱即用的中后台管理系统
                   </NGradientText>
-                </NSpace>
+                </NFlex>
               </NGridItem>
               <NGridItem span={1} class="login__right-wrapper">
                 <NCard
@@ -150,14 +144,13 @@ const Login = defineComponent({
                 </NCard>
               </NGridItem>
             </NGrid>
-            <NSpace
+            <NFlex
               align="center"
               justify="center"
               class="login-copyright__wrapper"
-              wrapItem={false}
             >
               {this.copyright}
-            </NSpace>
+            </NFlex>
           </div>
         </div>
       </div>

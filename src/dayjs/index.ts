@@ -10,7 +10,7 @@
  */
 
 import dayjs from 'dayjs'
-import { DEFAULT_DAYJS_LOCAL } from '@/app-config/localConfig'
+import { DEFAULT_DAYJS_LOCAL } from '@/app-config'
 import 'dayjs/locale/zh-cn'
 
 export const setupDayjs = () => {

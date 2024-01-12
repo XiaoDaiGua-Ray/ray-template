@@ -19,7 +19,7 @@
 
 import './index.scss'
 
-import { NLayoutHeader, NSpace, NDropdown } from 'naive-ui'
+import { NLayoutHeader, NFlex, NDropdown } from 'naive-ui'
 import { RIcon } from '@/components'
 import TooltipIcon from '@/layout/components/SiderBar/components/TooltipIcon'
 import SettingDrawer from './components/SettingDrawer'
@@ -27,18 +27,16 @@ import Breadcrumb from './components/Breadcrumb'
 import GlobalSearch from './components/GlobalSearch'
 import AppAvatar from '@/app-components/app/AppAvatar'
 
-import { LOCAL_OPTIONS } from '@/app-config/localConfig'
+import { LOCAL_OPTIONS } from '@/app-config'
 import {
   createAvatarOptions,
   avatarDropdownClick,
   createLeftIconOptions,
   createRightIconOptions,
 } from './shared'
-import { useDevice } from '@/hooks/web'
+import { useDevice, useSpinning, useI18n } from '@/hooks'
 import { getVariableToRefs, setVariable } from '@/global-variable'
 import { useFullscreen } from 'vue-hooks-plus'
-import { useI18n } from '@/hooks/web'
-import { useSpinning } from '@/hooks/template'
 import { useSettingGetters, useSettingActions } from '@/store'
 
 import type { IconEventMapOptions, IconEventMap } from './type'
@@ -55,9 +53,6 @@ export default defineComponent({
     )
     const { getDrawerPlacement, getBreadcrumbSwitch } = useSettingGetters()
     const showSettings = ref(false) // 是否显示设置抽屉
-    const spaceItemStyle = {
-      display: 'flex',
-    }
     const globalSearchShown = ref(false) // 是否展示全局搜索
     const { isTabletOrSmaller } = useDevice()
     const globalDrawerValue = getVariableToRefs('globalDrawerValue')
@@ -124,7 +119,6 @@ export default defineComponent({
       toolIconClick,
       showSettings,
       updateLocale,
-      spaceItemStyle,
       getDrawerPlacement,
       getBreadcrumbSwitch,
       globalSearchShown,
@@ -134,16 +128,12 @@ export default defineComponent({
     return (
       <NLayoutHeader class="layout-header" bordered>
         <GlobalSearch v-model:show={this.globalSearchShown} />
-        <NSpace
+        <NFlex
           class="layout-header__method"
           align="center"
           justify="space-between"
         >
-          <NSpace
-            align="center"
-            wrapItem={false}
-            itemStyle={this.spaceItemStyle}
-          >
+          <NFlex align="center">
             {this.leftIconOptions.map((curr) => (
               <TooltipIcon
                 key={curr.name}
@@ -156,12 +146,8 @@ export default defineComponent({
               />
             ))}
             {this.getBreadcrumbSwitch ? <Breadcrumb /> : null}
-          </NSpace>
-          <NSpace
-            align="center"
-            wrapItem={false}
-            itemStyle={this.spaceItemStyle}
-          >
+          </NFlex>
+          <NFlex align="center">
             {this.rightTooltipIconOptions.map((curr) => (
               <TooltipIcon
                 key={curr.name}
@@ -194,8 +180,8 @@ export default defineComponent({
             >
               <AppAvatar avatarSize="small" align="center" cursor="pointer" />
             </NDropdown>
-          </NSpace>
-        </NSpace>
+          </NFlex>
+        </NFlex>
         <SettingDrawer
           v-model:show={this.showSettings}
           placement={this.getDrawerPlacement}

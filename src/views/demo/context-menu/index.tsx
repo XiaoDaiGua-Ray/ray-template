@@ -9,9 +9,9 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { NSpace, NCard, NDropdown } from 'naive-ui'
+import { NFlex, NCard, NDropdown } from 'naive-ui'
 
-import { useContextmenuCoordinate } from '@/hooks/components'
+import { useContextmenuCoordinate } from '@/hooks'
 
 export default defineComponent({
   name: 'ContextMenuDemo',
@@ -52,9 +52,9 @@ export default defineComponent({
     const { x, y, show } = this
 
     return (
-      <NSpace vertical wrapItem={false}>
+      <NFlex vertical>
         <NCard title="useContextmenuCoordinate + NDropdown 实现右键菜单">
-          <NSpace vertical>
+          <NFlex vertical>
             <h3>默认点击元素外部会关闭菜单。</h3>
             <div
               ref="demoOneRef"
@@ -62,7 +62,7 @@ export default defineComponent({
             >
               右击
             </div>
-          </NSpace>
+          </NFlex>
         </NCard>
         <NDropdown
           show={show}
@@ -72,7 +72,7 @@ export default defineComponent({
           trigger="manual"
           placement="bottom-start"
         />
-      </NSpace>
+      </NFlex>
     )
   },
 })

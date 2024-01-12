@@ -12,6 +12,7 @@ export interface AppMenuOption extends AppRouteRecordRaw {
   children?: AppMenuOption[]
   meta: AppRouteMeta
   breadcrumbLabel?: string
+  fullPath: string
 }
 
 export interface MenuTagOptions extends AppMenuOption {

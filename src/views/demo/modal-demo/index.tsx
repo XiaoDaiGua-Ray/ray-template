@@ -10,7 +10,7 @@
  */
 
 import { RModal } from '@/components'
-import { NButton, NCard, NSpace } from 'naive-ui'
+import { NButton, NCard, NFlex } from 'naive-ui'
 
 export default defineComponent({
   name: 'ModalDemo',
@@ -27,16 +27,16 @@ export default defineComponent({
   },
   render() {
     return (
-      <NSpace vertical wrapItem={false}>
+      <NFlex vertical>
         <NCard title="props">
-          <NSpace vertical>
+          <NFlex vertical>
             <h3>
               memoryPosition: 是否记住上一次被拖拽的位置，如果设置为
               true，那么下一次打开的时候会自动定位到上一次的位置。
             </h3>
             <h3>fullscreen: 全屏模态框。</h3>
             <h3>dad: 启用拖拽，当配置为 false 时，会禁用拖拽效果。</h3>
-          </NSpace>
+          </NFlex>
         </NCard>
         <RModal
           v-model:show={this.modal1}
@@ -67,13 +67,13 @@ export default defineComponent({
           <NButton onClick={() => (this.modal3 = true)}>对话框模态框</NButton>
         </NCard>
         <NCard title="全屏模态框">
-          <NSpace vertical>
+          <NFlex vertical>
             <h4>
               全屏模态框需要同时设置：fullscreen 为 true，并且 preset 为 card
               时才会生效。
             </h4>
             <NButton onClick={() => (this.modal1 = true)}>打开</NButton>
-          </NSpace>
+          </NFlex>
         </NCard>
         <NCard title="手动设置宽度">
           <h4>
@@ -91,7 +91,7 @@ export default defineComponent({
             所有的宽度配置属性都会注入一个对应的 `css variable`，有时候会用上。
           </h4>
         </NCard>
-      </NSpace>
+      </NFlex>
     )
   },
 })

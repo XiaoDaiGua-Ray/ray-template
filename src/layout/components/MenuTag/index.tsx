@@ -33,7 +33,7 @@ import './index.scss'
 
 import {
   NScrollbar,
-  NSpace,
+  NFlex,
   NLayoutHeader,
   NDropdown,
   NButton,
@@ -46,10 +46,8 @@ import CloseLeft from '@/icons/close_left.svg?component'
 
 import { useMenuGetters, useMenuActions } from '@/store'
 import { hasClass, uuid, queryElements } from '@/utils'
-import { useMaximize, useSpinning } from '@/hooks/template'
-import { useSiderBar } from '@/hooks/template'
+import { useMaximize, useSpinning, useAppRoot, useSiderBar } from '@/hooks'
 import { throttle } from 'lodash-es'
-import { useAppRoot } from '@/hooks/template'
 
 import type { ScrollbarInst } from 'naive-ui'
 import type { MenuTagOptions, AppMenuOption } from '@/types'
@@ -180,10 +178,10 @@ export default defineComponent({
      *
      * @param option 当前菜单值
      */
-    const handleTagClick = (option: AppMenuOption) => {
+    const menuTagClick = (option: AppMenuOption) => {
       actionState.actionDropdownShow = false
 
-      changeMenuModelValue(option.key, option)
+      changeMenuModelValue(option.fullPath, option)
     }
 
     /**
@@ -248,7 +246,7 @@ export default defineComponent({
      *
      * 缓存当前点击标签页索引值(用于关闭左或者右侧标签页操作)
      */
-    const handleContextMenu = (idx: number, e: MouseEvent) => {
+    const menuTagContextMenu = (idx: number, e: MouseEvent) => {
       e.preventDefault()
 
       actionState.actionDropdownShow = false
@@ -399,17 +397,16 @@ export default defineComponent({
 
     return {
       getMenuTagOptions,
-      changeMenuModelValue,
       closeCurrentMenuTag,
       getMenuKey,
-      handleTagClick,
+      menuTagClick,
       moreOptions,
       scrollX,
       scrollRef,
       uuidScrollBar,
       actionDropdownSelect,
       actionState,
-      handleContextMenu,
+      menuTagContextMenu,
       setCurrentContextmenuIndex,
       menuTagMouseenter,
       menuTagMouseleave,
@@ -423,8 +420,24 @@ export default defineComponent({
     }
   },
   render() {
-    const { iconConfig, getRootPath, uuidScrollBar, getMenuTagOptions } = this
-    const { maximize, closeCurrentMenuTag, scrollX, $t } = this
+    const {
+      iconConfig,
+      getRootPath,
+      uuidScrollBar,
+      getMenuTagOptions,
+      MENU_TAG_DATA,
+    } = this
+    const {
+      maximize,
+      closeCurrentMenuTag,
+      scrollX,
+      $t,
+      menuTagClick,
+      menuTagContextMenu,
+      menuTagMouseenter,
+      menuTagMouseleave,
+      actionDropdownSelect,
+    } = this
 
     return (
       <NLayoutHeader>
@@ -438,18 +451,17 @@ export default defineComponent({
             show={this.actionState.actionDropdownShow}
             trigger="manual"
             placement="bottom-start"
-            onSelect={this.actionDropdownSelect.bind(this)}
+            onSelect={actionDropdownSelect.bind(this)}
             onClickoutside={() => {
               this.actionState.actionDropdownShow = false
             }}
           />
-          <NSpace
+          <NFlex
             class="menu-tag-space"
             wrap={false}
             align="center"
             justify="space-between"
             inline
-            wrapItem={false}
           >
             <RIcon
               name="expanded"
@@ -465,7 +477,7 @@ export default defineComponent({
                 id: uuidScrollBar,
               }}
             >
-              <NSpace
+              <NFlex
                 ref="menuTagSpaceRef"
                 class="menu-tag-wrapper"
                 wrap={false}
@@ -474,17 +486,19 @@ export default defineComponent({
               >
                 {getMenuTagOptions.map((curr, idx) => (
                   <NButton
-                    key={curr.key}
+                    key={curr.fullPath}
                     class={['menu-tag__btn']}
                     strong
                     secondary
-                    type={curr.key === this.getMenuKey ? 'primary' : 'default'}
+                    type={
+                      curr.fullPath === this.getMenuKey ? 'primary' : 'default'
+                    }
                     {...{
-                      onClick: this.handleTagClick.bind(this, curr),
-                      onContextmenu: this.handleContextMenu.bind(this, idx),
-                      onMouseenter: this.menuTagMouseenter.bind(this, curr),
-                      onMouseleave: this.menuTagMouseleave.bind(this, curr),
-                      [this.MENU_TAG_DATA]: curr.path,
+                      onClick: menuTagClick.bind(this, curr),
+                      onContextmenu: menuTagContextMenu.bind(this, idx),
+                      onMouseenter: menuTagMouseenter.bind(this, curr),
+                      onMouseleave: menuTagMouseleave.bind(this, curr),
+                      [MENU_TAG_DATA]: curr.path,
                     }}
                   >
                     {{
@@ -530,11 +544,10 @@ export default defineComponent({
                     }}
                   </NButton>
                 ))}
-              </NSpace>
+              </NFlex>
             </NScrollbar>
-            <NSpace
+            <NFlex
               class="menu-tag__right-wrapper"
-              wrapItem={false}
               align="center"
               inline
               wrap={false}
@@ -572,8 +585,8 @@ export default defineComponent({
                   onClick={this.setCurrentContextmenuIndex.bind(this)}
                 />
               </RMoreDropdown>
-            </NSpace>
-          </NSpace>
+            </NFlex>
+          </NFlex>
         </div>
       </NLayoutHeader>
     )

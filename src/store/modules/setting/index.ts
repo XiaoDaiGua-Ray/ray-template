@@ -1,12 +1,11 @@
 import { getAppDefaultLanguage } from '@/locales/helper'
 import { set } from 'lodash-es'
 import { colorToRgba, setStorage } from '@/utils'
-import { useI18n } from '@/hooks/web'
-import { APP_THEME } from '@/app-config/designConfig'
-import { useDayjs } from '@/hooks/web'
+import { useI18n, useDayjs } from '@/hooks'
+import { APP_THEME } from '@/app-config'
 
 import type { SettingState } from '@/store/modules/setting/type'
-import type { LocalKey } from '@/hooks/web'
+import type { LocalKey } from '@/hooks'
 import type { AnyFC } from '@/types'
 
 export const piniaSettingStore = defineStore(

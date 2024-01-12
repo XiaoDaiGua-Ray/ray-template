@@ -14,8 +14,8 @@ import './index.scss'
 import { NMenu, NLayoutSider, NDrawer } from 'naive-ui'
 import SiderBarLogo from './components/SiderBarLogo'
 
-import { APP_MENU_CONFIG } from '@/app-config/appConfig'
-import { useDevice } from '@/hooks/web'
+import { APP_MENU_CONFIG } from '@/app-config'
+import { useDevice } from '@/hooks'
 import { getVariableToRefs, setVariable } from '@/global-variable'
 import { useMenuGetters, useMenuActions } from '@/store'
 
@@ -78,6 +78,7 @@ export default defineComponent({
         <NMenu
           ref={menuRef}
           class="r-menu--app"
+          keyField="fullPath"
           v-model:value={modelMenuKey.value}
           options={getMenuOptions.value as NaiveMenuOptions[]}
           indent={APP_MENU_CONFIG.menuCollapsedIndent}

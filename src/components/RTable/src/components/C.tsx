@@ -18,7 +18,7 @@
  * 2. 大量数据的时候，可能会出现性能问题
  */
 
-import { NPopover, NSpace, NTree } from 'naive-ui'
+import { NPopover, NFlex, NTree } from 'naive-ui'
 import { RIcon } from '@/components'
 
 import config from '../config'
@@ -65,6 +65,13 @@ const RowIconRender = ({
   )
 }
 
+/**
+ * 查找节点的兄弟节点和索引
+ *
+ * @param node 要查找的节点
+ * @param nodes 节点列表
+ * @returns 如果找到节点，则返回包含兄弟节点列表和索引的元组，否则返回 [null, null]
+ */
 const findSiblingsAndIndex = (
   node: TreeOption,
   nodes?: TreeOption[],
@@ -122,7 +129,7 @@ export default defineComponent({
           return {
             ...attr,
             suffix: () => (
-              <NSpace wrapItem={false} style="padding-left: 32px;">
+              <NFlex style="padding-left: 32px;">
                 <RowIconRender
                   icon="row_head"
                   title="固定在列首"
@@ -155,7 +162,7 @@ export default defineComponent({
                   }
                   onClick={fixedClick.bind(this, 'right', attr, idx)}
                 />
-              </NSpace>
+              </NFlex>
             ),
           }
         }) as C[]
@@ -192,6 +199,7 @@ export default defineComponent({
       event(treeDataSource.value)
     }
 
+    // 拖拽节点的处理函数
     const treeDrop = ({ node, dragNode, dropPosition }: TreeDropInfo) => {
       const [dragNodeSiblings, dragNodeIndex] = findSiblingsAndIndex(
         dragNode,
@@ -202,6 +210,7 @@ export default defineComponent({
         return
       }
 
+      // 从兄弟节点中移除拖拽节点
       dragNodeSiblings.splice(dragNodeIndex, 1)
 
       const [nodeSiblings, nodeIndex] = findSiblingsAndIndex(
@@ -213,10 +222,12 @@ export default defineComponent({
         return
       }
 
+      // 根据拖拽位置将拖拽节点插入到目标节点的前面或后面
       dropPosition === 'before'
         ? nodeSiblings.splice(nodeIndex, 0, dragNode)
         : nodeSiblings.splice(nodeIndex + 1, 0, dragNode)
 
+      // 触发事件，更新树形数据源
       event(nodeSiblings as C[])
     }
 

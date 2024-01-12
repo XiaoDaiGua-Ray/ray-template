@@ -6,7 +6,7 @@ import {
   NDescriptions,
   NDescriptionsItem,
   NTag,
-  NSpace,
+  NFlex,
   NP,
   NH6,
 } from 'naive-ui'
@@ -20,34 +20,34 @@ const Dashboard = defineComponent({
       {
         label: '掌握搬砖框架',
         des: () => (
-          <NSpace>
+          <NFlex>
             <NTag type="success">Vue3.x</NTag>
             <NTag type="info">React</NTag>
-          </NSpace>
+          </NFlex>
         ),
       },
       {
         label: '从事搬砖时长',
         des: () => (
-          <NSpace>
+          <NFlex>
             <NTag type="success">练习时长两年半的小白前端搬砖师</NTag>
-          </NSpace>
+          </NFlex>
         ),
       },
       {
         label: '个人',
         des: () => (
-          <NSpace align="center">
+          <NFlex align="center">
             <RIcon name="ray" size="22" />
             努力搬砖、努力摸鱼, 建设美丽家园
-          </NSpace>
+          </NFlex>
         ),
         span: 2,
       },
       {
         label: '补充说明',
         des: () => (
-          <NSpace align="center">
+          <NFlex align="center">
             如果有希望补充的功能可以在
             <a
               class="dashboard-link"
@@ -56,7 +56,7 @@ const Dashboard = defineComponent({
               GitHub
             </a>
             提一个 Issues
-          </NSpace>
+          </NFlex>
         ),
         span: 2,
       },
@@ -110,13 +110,13 @@ const Dashboard = defineComponent({
         <NCard title="项目介绍">
           <NH6>技术栈</NH6>
           <NP>
-            <NSpace>
+            <NFlex>
               {this.technologyTagOptions.map((curr) => (
                 <NTag key={curr.value} type="info">
                   {curr.label}
                 </NTag>
               ))}
-            </NSpace>
+            </NFlex>
           </NP>
           <NH6>项目介绍</NH6>
           <NP>

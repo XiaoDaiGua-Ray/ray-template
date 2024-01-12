@@ -86,9 +86,11 @@ export const APP_MENU_CONFIG: Readonly<AppMenuConfig> = {
  *   - signing: 登陆信息缓存 key
  *   - localeLanguage: 国际化默认缓存 key
  *   - token: token key
+ *   - appMenuKey: 菜单缓存 key
  */
 export const APP_CATCH_KEY = {
   signing: 'signing',
   localeLanguage: 'localeLanguage',
   token: 'token',
+  appMenuKey: 'menuKey',
 } as const

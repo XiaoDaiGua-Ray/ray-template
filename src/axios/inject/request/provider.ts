@@ -22,7 +22,7 @@
 
 import { axiosCanceler } from '@/axios/helper/interceptor'
 import { appendRequestHeaders } from '@/axios/helper/axiosCopilot'
-import { APP_CATCH_KEY } from '@/app-config/appConfig'
+import { APP_CATCH_KEY } from '@/app-config'
 import { getStorage } from '@/utils'
 
 import type {

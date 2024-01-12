@@ -11,10 +11,10 @@
 
 /** 本方法感谢 <https://yunkuangao.me/> 的支持 */
 
-import { APP_MENU_CONFIG } from '@/app-config/appConfig'
+import { APP_MENU_CONFIG, APP_CATCH_KEY } from '@/app-config'
 import { RIcon } from '@/components'
 import { getStorage, isValueType } from '@/utils'
-import { useAppRoot } from '@/hooks/template'
+import { useAppRoot } from '@/hooks'
 
 import type {
   AppMenuOption,
@@ -171,7 +171,7 @@ export const hasMenuIcon = (option: AppMenuOption) => {
 export const getCatchMenuKey = () => {
   const { getRootPath } = useAppRoot()
   const cacheMenuKey = getStorage<AppMenuKey>(
-    'menuKey',
+    APP_CATCH_KEY.appMenuKey,
     'sessionStorage',
     getRootPath.value,
   )

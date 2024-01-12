@@ -62,20 +62,37 @@ export const useContextmenuCoordinate = (
     })
   }
 
+  /**
+   *
+   * 点击元素外部时，隐藏右键菜单
+   */
   onClickOutside(target as MaybeElementRef<MaybeElement>, () => {
     show.value = false
   })
 
+  /**
+   *
+   * 为传递 ref dom 绑定右键菜单事件
+   */
   const cleanupContextmenu = useEventListener(
     target,
     'contextmenu',
     bindContextMenuEvent,
     options,
   )
+  /**
+   *
+   * 为传递 ref dom 绑定点击事件
+   */
   const cleanupClick = useEventListener(target, 'click', () => {
     show.value = false
   })
 
+  /**
+   *
+   * 注销绑定的右键菜单事件、点击事件
+   * 仅注销该方法绑定的事件
+   */
   const stop = () => {
     cleanupContextmenu()
     cleanupClick()
@@ -85,7 +102,7 @@ export const useContextmenuCoordinate = (
     stop,
     x: readonly(x),
     y: readonly(y),
-    show,
+    show: readonly(show),
   }
 }
 

@@ -16,7 +16,8 @@
  * 持久化存储 pinia 数据
  * 但是不能正常持久化 function 属性
  *
- * 官网地址: https://prazdevs.github.io/pinia-plugin-persistedstate/zh/guide/
+ * 官网地址:
+ * @see https://prazdevs.github.io/pinia-plugin-persistedstate/zh/guide/
  */
 
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'

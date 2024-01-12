@@ -4,7 +4,7 @@
  * 所以暂时隐藏该页面
  */
 
-import { t } from '@/hooks/web'
+import { t } from '@/hooks'
 import { LAYOUT } from '@/router/constant'
 
 import type { AppRouteRecordRaw } from '@/router/type'

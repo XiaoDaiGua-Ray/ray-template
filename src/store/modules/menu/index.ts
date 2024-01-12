@@ -33,9 +33,10 @@ import {
   hasMenuIcon,
   getCatchMenuKey,
 } from './helper'
-import { useI18n } from '@/hooks/web'
+import { useI18n } from '@/hooks'
 import { getAppRawRoutes } from '@/router/appRouteModules'
 import { useKeepAliveActions } from '@/store'
+import { APP_CATCH_KEY } from '@/app-config'
 
 import type { AppMenuOption, MenuTagOptions } from '@/types'
 import type { MenuState } from '@/store/modules/menu/type'
@@ -58,7 +59,6 @@ export const piniaMenuStore = defineStore(
       currentMenuOption: null, // 当前激活菜单项
     })
     const isSetupAppMenuLock = ref(true)
-    const isRootPathReg = new RegExp('/', 'g')
 
     const resolveOption = (option: AppMenuOption) => {
       const { meta } = option
@@ -67,10 +67,14 @@ export const piniaMenuStore = defineStore(
       const label = computed(() =>
         meta?.i18nKey ? t(`${meta!.i18nKey}`) : meta?.noLocalTitle,
       )
-      /** 拼装菜单项 */
+      /**
+       *
+       * 拼装菜单项
+       * 容错处理，兼容以前版本 key 选取为 path 的情况
+       */
       const route = {
         ...option,
-        key: option.path,
+        key: option.fullPath,
         label: () =>
           h(NEllipsis, null, {
             default: () => label.value,
@@ -83,7 +87,7 @@ export const piniaMenuStore = defineStore(
         icon: hasMenuIcon(option),
       })
 
-      if (option.path === getCatchMenuKey()) {
+      if (option.fullPath === getCatchMenuKey()) {
         menuState.currentMenuOption = attr
       }
 
@@ -94,31 +98,16 @@ export const piniaMenuStore = defineStore(
 
     /**
      *
-     * @param options menu options
-     * @param key target key
-     *
-     * @remark 获取完整菜单项
-     */
-    const getCompleteRoutePath = (
-      options: AppMenuOption[],
-      key: string | number,
-    ) => {
-      const ops = parseAndFindMatchingNodes(options, 'key', key)
-
-      return ops
-    }
-
-    /**
-     *
      * 设置面包屑
      *
      * 如果识别到为平级模式, 则会自动追加一层面包屑
      */
-    const setBreadcrumbOptions = (
-      key: string | number,
-      option: AppMenuOption,
-    ) => {
-      menuState.breadcrumbOptions = getCompleteRoutePath(menuState.options, key)
+    const setBreadcrumbOptions = (key: string | number) => {
+      menuState.breadcrumbOptions = parseAndFindMatchingNodes(
+        menuState.options,
+        'fullPath',
+        key,
+      )
     }
 
     /**
@@ -143,7 +132,7 @@ export const piniaMenuStore = defineStore(
       key: string | number,
       option: AppMenuOption,
     ) => {
-      const tag = menuState.menuTagOptions.find((curr) => curr.path === key)
+      const tag = menuState.menuTagOptions.find((curr) => curr.fullPath === key)
 
       if (!tag) {
         menuState.menuTagOptions.push(option as MenuTagOptions)
@@ -175,38 +164,16 @@ export const piniaMenuStore = defineStore(
       option: AppMenuOption,
       query?: LocationQuery,
     ) => {
-      const { meta, path } = option
+      const { meta } = option
 
       if (meta.windowOpen) {
         window.open(meta.windowOpen)
       } else {
-        /**
-         *
-         * key 以 `/` 开头, 则说明为根路由, 直接跳转
-         * key 开头未匹配到 `/`, 则需要获取到完整路由后再进行跳转
-         *
-         * 但是, 缓存 key 都以当前点击 key 为准
-         */
-        if (String(key)[0] === '/') {
-          /** 根路由直接跳转 */
-          push({
-            path,
-            query,
-          })
-        } else {
-          /** 如果不是根路由, 则拼接完整路由并跳转 */
-          const _path = getCompleteRoutePath(menuState.options, key)
-            .map((curr) => curr.key)
-            .join('/')
+        push({
+          path: String(key),
+          query,
+        })
 
-          push({
-            path: _path,
-            query,
-          })
-        }
-
-        /** 检查是否为根路由 */
-        const count = (path.match(isRootPathReg) || []).length
         const { sameLevel } = meta
 
         /** 更新缓存队列 */
@@ -215,17 +182,17 @@ export const piniaMenuStore = defineStore(
         updateDocumentTitle(option)
 
         // 如果不为 sameLevel，则会执行更新：覆盖更新面包屑、添加标签菜单、更新缓存
-        if (!sameLevel || (sameLevel && count === 1)) {
+        if (!sameLevel) {
           /** 更新标签菜单 */
           setMenuTagOptionsWhenMenuValueChange(key, option)
           /** 更新面包屑 */
-          setBreadcrumbOptions(key, option)
+          setBreadcrumbOptions(key)
 
           menuState.menuKey = key
           menuState.currentMenuOption = option
 
           /** 缓存菜单 key(sessionStorage) */
-          setStorage('menuKey', key)
+          setStorage(APP_CATCH_KEY.appMenuKey, key)
         } else {
           // 使用 pick 提取仅需要的字段，避免 vue 抛错空引用，导致性能损耗
           const breadcrumbOption = pick(resolveOption(option), [
@@ -264,16 +231,6 @@ export const piniaMenuStore = defineStore(
       query: LocationQuery,
     ) => {
       const [routePath] = path.split('?')
-      const count = (routePath.match(new RegExp('/', 'g')) || []).length // 如果获取长度为 1，则视为根路由
-
-      let combinePath = routePath
-
-      if (count > 1) {
-        // 如果不是跟路径则取出最后一项字符
-        const splitPath = routePath.split('/').filter((curr) => curr)
-
-        combinePath = splitPath[splitPath.length - 1]
-      }
 
       // 直接使用完整 url，检查是否在 routes 中
       const findMenuOption = getRoutes().find((curr) => curr.path === routePath)
@@ -289,8 +246,11 @@ export const piniaMenuStore = defineStore(
         ]) as unknown as AppMenuOption
 
         changeMenuModelValue(
-          count > 1 ? combinePath : path,
-          resolveOption(pickOption),
+          routePath,
+          resolveOption({
+            ...pickOption,
+            fullPath: pickOption.path,
+          }),
           query,
         )
       }
@@ -298,41 +258,49 @@ export const piniaMenuStore = defineStore(
 
     /**
      *
-     * @remark 初始化菜单列表, 并且按照权限过滤
-     * @remark 如果权限发生变动, 则会触发强制弹出页面并且重新登陆
+     * 初始化系统菜单列表，该方法仅执行一次
+     * 会在初始化时拼接完整的 url 地址为 fullPath
      */
     const setupAppMenu = () => {
       return new Promise<void>((resolve) => {
-        const resolveRoutes = (routes: AppMenuOption[], index: number) => {
+        const resolveRoutes = (routes: AppMenuOption[], parentPath: string) => {
           const catchArr: AppMenuOption[] = []
 
           for (const curr of routes) {
+            let fullPath = `${
+              parentPath.endsWith('/') ? parentPath : parentPath + '/'
+            }${curr.path}`
+            // 使用正则表达式替换重复的 '/'
+            fullPath = fullPath.replace(/\/+/g, '/')
+
             if (curr.children?.length) {
-              curr.children = resolveRoutes(curr.children, index++)
+              curr.children = resolveRoutes(curr.children, fullPath)
             } else if (!validRole(curr.meta)) {
-              /** 如果校验失败, 则不会添加进 menu options */
               continue
             }
 
-            catchArr.push(resolveOption(curr))
+            catchArr.push(
+              resolveOption({
+                ...curr,
+                fullPath,
+              }),
+            )
           }
 
           return catchArr
         }
 
-        /** 缓存菜单列表 */
         menuState.options = resolveRoutes(
           getAppRawRoutes() as AppMenuOption[],
-          0,
+          '',
         )
 
-        // 初始化后更新面包屑、标签菜单
         if (menuState.currentMenuOption) {
           const { currentMenuOption } = menuState
 
-          setBreadcrumbOptions(currentMenuOption.key, currentMenuOption)
+          setBreadcrumbOptions(currentMenuOption.key)
           setMenuTagOptionsWhenMenuValueChange(
-            currentMenuOption.key,
+            currentMenuOption.fullPath,
             currentMenuOption,
           )
         }
@@ -357,17 +325,6 @@ export const piniaMenuStore = defineStore(
      */
     const spliceMenTagOptions = (idx: number, length = 1) =>
       menuState.menuTagOptions.splice(idx, length)
-
-    /**
-     *
-     * @remark 置空 menuTagOptions
-     *
-     * Q: 为什么不直接使用 spliceMenTagOptions 方法置空菜单标签?
-     * A: 因为直接将 menuTagOptions 指向新的地址会快一点
-     */
-    const emptyMenuTagOptions = () => {
-      menuState.menuTagOptions = []
-    }
 
     /**
      *
@@ -404,7 +361,6 @@ export const piniaMenuStore = defineStore(
       changeMenuModelValue,
       collapsedMenu,
       spliceMenTagOptions,
-      emptyMenuTagOptions,
       setMenuTagOptions,
     }
   },

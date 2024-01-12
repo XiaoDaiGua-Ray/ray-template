@@ -1,6 +1,6 @@
 import Layout from '@/layout'
 import { appExpandRoutes } from './appRouteModules'
-import { useAppRoot } from '@/hooks/template'
+import { useAppRoot } from '@/hooks'
 
 export default async () => {
   const { getRootPath } = useAppRoot()

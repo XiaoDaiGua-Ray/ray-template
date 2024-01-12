@@ -43,20 +43,29 @@ export default defineComponent({
       return naiveLocales(key)
     })
 
-    const { message, notification, dialog, loadingBar } = createDiscreteApi(
-      ['message', 'dialog', 'notification', 'loadingBar'],
-      {
-        configProviderProps: computed(() => ({
-          theme: getAppTheme.value ? darkTheme : null,
-        })),
-        notificationProviderProps: {},
-      },
-    )
+    /**
+     *
+     * 使用 createDiscreteApi 脱离上下文 api 注入一些常用的组件
+     * 通过 window.$message、window.$notification、window.$dialog、window.$loadingBar 访问
+     * 但是，使用该组件注册后，使用 window.$notification 组件时不能更改 placement 位置（只能默认右上角弹出）
+     *
+     * 改为函数包裹，避免 `slot default invoked outside of render` 警告
+     */
+    const discreteApi = () => {
+      const { message, notification, dialog, loadingBar } = createDiscreteApi(
+        ['message', 'dialog', 'notification', 'loadingBar'],
+        {
+          configProviderProps: computed(() => ({
+            theme: getAppTheme.value ? darkTheme : null,
+          })),
+        },
+      )
 
-    window.$dialog = dialog // 注入 `dialog`
-    window.$message = message // 注入 `message`
-    window.$loadingBar = loadingBar // 注入 `loadingBar`
-    window.$notification = notification // 注入 `notification`
+      window.$dialog = dialog // 注入 `dialog`
+      window.$message = message // 注入 `message`
+      window.$loadingBar = loadingBar // 注入 `loadingBar`
+      window.$notification = notification // 注入 `notification`
+    }
 
     expose()
 
@@ -64,22 +73,30 @@ export default defineComponent({
       getPrimaryColorOverride,
       localePackage,
       getAppTheme,
+      discreteApi,
     }
   },
   render() {
+    const {
+      $slots: { default: slotDefault },
+      discreteApi,
+    } = this
+    const { getPrimaryColorOverride, getAppTheme, localePackage } = this
+
     return (
       <NConfigProvider
-        themeOverrides={this.getPrimaryColorOverride}
-        theme={this.getAppTheme ? darkTheme : null}
-        locale={this.localePackage.locale}
-        dateLocale={this.localePackage.dateLocal}
+        themeOverrides={getPrimaryColorOverride}
+        theme={getAppTheme ? darkTheme : null}
+        locale={localePackage.locale}
+        dateLocale={localePackage.dateLocal}
       >
         <NLoadingBarProvider>
           <NMessageProvider>
             <NDialogProvider>
               <NNotificationProvider>
                 <NGlobalStyle />
-                {this.$slots.default?.()}
+                {slotDefault?.()}
+                {discreteApi()}
               </NNotificationProvider>
             </NDialogProvider>
           </NMessageProvider>

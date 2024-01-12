@@ -18,7 +18,7 @@
  * 依赖 APP_KEEP_ALIVE 配置
  */
 
-import { APP_KEEP_ALIVE } from '@/app-config/appConfig'
+import { APP_KEEP_ALIVE } from '@/app-config'
 
 import type { KeepAliveStoreState } from './type'
 import type { AppMenuOption } from '@/types'

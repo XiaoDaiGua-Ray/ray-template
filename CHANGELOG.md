@@ -1,5 +1,48 @@
 # CHANGE LOG
 
+## 4.6.0
+
+破坏性更新，请谨慎更新。
+
+提升了模板整体性能。
+
+## Feats
+
+- 更新 `vue` 版本至 `3.4.7`
+- 更新 `naive-ui` 版本至 `2.37.3`
+- 更新最新版本 `vue` 后，更新 `createDiscreteApi` 方法注册上下文，改为函数包裹，避免 `slot default invoked outside of render` 警告
+- 使用 [`NFlex`](https://www.naiveui.com/zh-CN/dark/components/flex) 组件替换 `NSpace` 组件，根据官方建议，尽量使用该组件
+- `menu store` 相关
+  - 优化 `setupAppMenu` 方法，初始化时会拼接完整的 `fullPath`，避免 `url`, `menu value` 更新路由时重复处理 `path`，提高性能
+  - 优化 `updateMenuKeyWhenRouteUpdate` 方法，减少 `path` 处理操作
+  - 优化 `changeMenuModelValue` 方法，减少 `path` 处理操作
+  - 移除 `emptyMenuTagOptions` 方法，使用 `spliceMenTagOptions` 方法替代
+- 由于更新了 `path` 逻辑，所以 `menu store`, `AppMenu` 等相关也同步更新
+  - `AppMenu` 更新 `key` 绑定字段为 `fullPath`
+  - `menu store` 更新 `menuKey` 绑定字段为 `fullPath`
+  - 更新 `parseAndFindMatchingNodes` 绑定字段为 `fullPath`
+- `useAppNavigation` 相关
+  - `navigationTo` 相关
+    - 重构该方法
+    - 支持传递完整路径跳转
+    - 支持传递参数 `vue-router query` 对象
+    - 支持配置项，详情请看 `NavigationToOptions`
+- `useSiderBar` 相关
+  - 同步更新所有方法，使用 `fullPath` 代替 `path`
+- `useContextmenuCoordinate` 方法
+  - 使用 `readonly` 方法包裹 `show` 属性
+  - 补充一些注释
+- 统一 `app-config` 的导入导出方式，现在统一为 `import { xxx } from '@/app-config'` 导入
+- 统一 `hooks` 包的导入导出方式，现在统一为 `import { xxx } from '@/hooks'` 导入
+- `app-config` 相关
+  - 开放 `APP_CATCH_KEY.appMenuKey` 属性，配置缓存读取字段
+- `useMaximize` 相关
+  - 优化 `maximize` 方法，现在支持配置滚动位置
+
+## Fixes
+
+- 修复 `RChart` 组件 `RChartInst` 类型不完整的问题
+
 ## 4.5.0
 
 破坏性更新。

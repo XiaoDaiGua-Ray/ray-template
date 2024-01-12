@@ -17,7 +17,7 @@
  * 做了简单的一个组件封装, 希望有用
  */
 
-import { NCard, NSpace } from 'naive-ui'
+import { NCard, NFlex } from 'naive-ui'
 import { RIframe } from '@/components'
 
 const IframeDemo = defineComponent({
@@ -27,7 +27,7 @@ const IframeDemo = defineComponent({
   },
   render() {
     return (
-      <NSpace vertical size={[20, 20]}>
+      <NFlex vertical size={[20, 20]}>
         <NCard title="naive ui（延迟加载）">
           <RIframe
             src="https://www.naiveui.com/zh-CN/dark"
@@ -42,7 +42,7 @@ const IframeDemo = defineComponent({
             lazy={false}
           />
         </NCard>
-      </NSpace>
+      </NFlex>
     )
   },
 })

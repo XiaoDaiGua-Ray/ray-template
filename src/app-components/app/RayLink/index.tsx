@@ -1,4 +1,9 @@
-import { NAvatar, NTooltip, NSpace } from 'naive-ui'
+/**
+ *
+ * 友情链接组件，无实际项目意义
+ */
+
+import { NAvatar, NTooltip, NFlex } from 'naive-ui'
 
 interface AvatarOptions {
   key: string
@@ -7,7 +12,7 @@ interface AvatarOptions {
   icon: string
 }
 
-const RayLink = defineComponent({
+export default defineComponent({
   name: 'RayLink',
   setup() {
     const avatarOptions: AvatarOptions[] = [
@@ -60,7 +65,7 @@ const RayLink = defineComponent({
   },
   render() {
     return (
-      <NSpace>
+      <NFlex>
         {this.avatarOptions.map((curr) => (
           <NTooltip key={curr.key}>
             {{
@@ -80,16 +85,7 @@ const RayLink = defineComponent({
             }}
           </NTooltip>
         ))}
-      </NSpace>
+      </NFlex>
     )
   },
 })
-
-export default RayLink
-
-/**
- *
- * 友链组件
- *
- * 这个组件用作初试模板中, 不喜欢自行删除
- */

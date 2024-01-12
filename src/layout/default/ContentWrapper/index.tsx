@@ -23,7 +23,7 @@ import AppRequestCancelerProvider from '@/app-components/provider/AppRequestCanc
 
 import { getVariableToRefs } from '@/global-variable'
 import { useSettingGetters } from '@/store'
-import { useMaximize } from '@/hooks/template'
+import { useMaximize } from '@/hooks'
 
 import type { GlobalThemeOverrides } from 'naive-ui'
 

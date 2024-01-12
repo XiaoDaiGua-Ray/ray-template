@@ -16,7 +16,7 @@
  * 基于 Naive UI Spin 组件
  *
  * 使用方法
- *   1. import { setVariable } from '@/hooks/variable'
+ *   1. import { setVariable } from '@/hooks'
  *   2. setVariable('globalSpinning', true) | setVariable('globalSpinning', false)
  *
  * 仅需按照上述步骤实现全屏加载动画

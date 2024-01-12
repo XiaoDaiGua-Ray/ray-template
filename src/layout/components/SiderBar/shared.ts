@@ -1,4 +1,4 @@
-import { useI18n } from '@/hooks/web'
+import { useI18n } from '@/hooks'
 import { useSigningActions, useSettingActions } from '@/store'
 
 import type { IconOptionsFC, IconOptions } from './type'

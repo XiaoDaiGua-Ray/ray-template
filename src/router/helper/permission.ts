@@ -20,12 +20,11 @@
  * 当然, 你可以指定一个超级管理员角色, 默认获取全部路由
  */
 
-import { APP_CATCH_KEY } from '@/app-config/appConfig'
+import { WHITE_ROUTES, APP_CATCH_KEY } from '@/app-config'
 import { redirectRouterToDashboard } from '@/router/helper/routerCopilot'
-import { WHITE_ROUTES } from '@/app-config/routerConfig'
 import { validRole } from '@/router/helper/routerCopilot'
 import { isValueType, getStorage } from '@/utils'
-import { useAppRoot } from '@/hooks/template'
+import { useAppRoot } from '@/hooks'
 
 import type { Router, RouteLocationNormalized } from 'vue-router'
 import type { AppRouteMeta } from '@/router/type'
@@ -43,7 +42,7 @@ export const permissionRouter = (router: Router) => {
   beforeEach((to, from, next) => {
     const token = getStorage<string>(APP_CATCH_KEY.token)
     const catchRoutePath = getStorage(
-      'menuKey',
+      APP_CATCH_KEY.appMenuKey,
       'sessionStorage',
       getRootPath.value,
     )

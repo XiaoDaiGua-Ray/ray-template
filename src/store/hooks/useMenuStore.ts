@@ -10,7 +10,7 @@
  */
 
 import { piniaMenuStore } from '../modules/menu'
-import { useAppRoot } from '@/hooks/template'
+import { useAppRoot } from '@/hooks'
 
 export const useMenuGetters = () => {
   const variable = piniaMenuStore()
@@ -81,7 +81,6 @@ export const useMenuActions = () => {
     changeMenuModelValue,
     collapsedMenu,
     spliceMenTagOptions,
-    emptyMenuTagOptions,
     setMenuTagOptions,
   } = piniaMenuStore()
 
@@ -89,7 +88,6 @@ export const useMenuActions = () => {
     changeMenuModelValue,
     collapsedMenu,
     spliceMenTagOptions,
-    emptyMenuTagOptions,
     setMenuTagOptions,
   }
 }

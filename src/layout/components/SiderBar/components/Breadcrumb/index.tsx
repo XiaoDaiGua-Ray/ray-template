@@ -24,7 +24,7 @@ import { NDropdown, NBreadcrumb, NBreadcrumbItem } from 'naive-ui'
 import { TransitionGroup } from 'vue'
 
 import { useMenuGetters, useMenuActions } from '@/store'
-import { useDevice } from '@/hooks/web'
+import { useDevice } from '@/hooks'
 
 import type { DropdownOption } from 'naive-ui'
 import type { AppMenuOption } from '@/types'
@@ -51,7 +51,7 @@ export default defineComponent({
         const { meta = {} } = option
 
         if (!meta.sameLevel) {
-          changeMenuModelValue(option.key, option)
+          changeMenuModelValue(option.fullPath, option)
         }
       }
     }
@@ -74,11 +74,12 @@ export default defineComponent({
         <TransitionGroup tag="li" name="breadcrumb" appear>
           {getBreadcrumbOptions.map((curr) => (
             <NBreadcrumbItem
-              key={curr.path}
+              key={curr.fullPath}
               onClick={breadcrumbItemClick.bind(this, curr)}
             >
               <NDropdown
                 labelField="breadcrumbLabel"
+                keyField="fullPath"
                 options={
                   curr.children && curr.children?.length > 1
                     ? curr.children

@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { NSpace, NButton } from 'naive-ui'
+import { NFlex, NButton } from 'naive-ui'
 import { RTable } from '@/components'
 
 import type { DataTableColumns } from 'naive-ui'
@@ -44,7 +44,7 @@ const RouterDemoHome = defineComponent({
         key: '',
         render: (row) => {
           return (
-            <NSpace align="center">
+            <NFlex align="center">
               <NButton
                 type="info"
                 text
@@ -60,7 +60,7 @@ const RouterDemoHome = defineComponent({
               >
                 详情
               </NButton>
-            </NSpace>
+            </NFlex>
           )
         },
       },
@@ -83,9 +83,9 @@ const RouterDemoHome = defineComponent({
   },
   render() {
     return (
-      <NSpace wrapItem={false}>
+      <NFlex>
         <RTable v-model:columns={this.columns} data={this.dataSource} />
-      </NSpace>
+      </NFlex>
     )
   },
 })

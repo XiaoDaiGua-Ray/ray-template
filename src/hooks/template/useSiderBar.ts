@@ -50,7 +50,7 @@ const normalMenuTagOption = (target: CloseMenuTag, fc: string) => {
   } else if (typeof target === 'string') {
     // 查找符合条件的 key
     const index = getMenuTagOptions.value.findIndex(
-      (curr) => curr.key === target,
+      (curr) => curr.fullPath === target,
     )
 
     return index > -1
@@ -62,12 +62,14 @@ const normalMenuTagOption = (target: CloseMenuTag, fc: string) => {
           `${fc}: The incoming key ${target} did not match the corresponding item.`,
         )
   } else {
-    const { key } = target
-    const index = getMenuTagOptions.value.findIndex((curr) => curr.key === key)
+    const { fullPath } = target
+    const index = getMenuTagOptions.value.findIndex(
+      (curr) => curr.fullPath === fullPath,
+    )
 
     if (index === -1) {
       console.warn(
-        `${fc}: The incoming menuTag option ${target.key} did not match the corresponding item.`,
+        `${fc}: The incoming menuTag option ${target.fullPath} did not match the corresponding item.`,
       )
 
       return
@@ -82,12 +84,8 @@ const normalMenuTagOption = (target: CloseMenuTag, fc: string) => {
 
 export function useSiderBar() {
   const { getMenuTagOptions, getMenuKey } = useMenuGetters()
-  const {
-    changeMenuModelValue,
-    spliceMenTagOptions,
-    emptyMenuTagOptions,
-    setMenuTagOptions,
-  } = useMenuActions()
+  const { changeMenuModelValue, spliceMenTagOptions, setMenuTagOptions } =
+    useMenuActions()
 
   /**
    *
@@ -95,7 +93,7 @@ export function useSiderBar() {
    */
   const getCurrentTagIndex = () => {
     return getMenuTagOptions.value.findIndex(
-      (curr) => curr.key === getMenuKey.value,
+      (curr) => curr.fullPath === getMenuKey.value,
     )
   }
 
@@ -172,11 +170,11 @@ export function useSiderBar() {
 
       spliceMenTagOptions(index)
 
-      if (option.key === getMenuKey.value) {
+      if (option.fullPath === getMenuKey.value) {
         const tag = getMenuTagOptions.value[index - 1]
 
         if (tag) {
-          changeMenuModelValue(tag.key, tag)
+          changeMenuModelValue(tag.fullPath, tag)
         }
       }
     }
@@ -187,8 +185,8 @@ export function useSiderBar() {
    * 关闭所有标签并且导航至 root path
    */
   const closeAll = () => {
-    emptyMenuTagOptions()
-    redirectRouterToDashboard()
+    spliceMenTagOptions(0, getMenuTagOptions.value.length)
+    nextTick(redirectRouterToDashboard)
   }
 
   /**
@@ -214,8 +212,8 @@ export function useSiderBar() {
       spliceMenTagOptions(index + 1, spliceLength)
 
       if (index <= currentIndex) {
-        if (getMenuKey.value !== option.key) {
-          changeMenuModelValue(option.key, option)
+        if (getMenuKey.value !== option.fullPath) {
+          changeMenuModelValue(option.fullPath, option)
         }
       }
     }
@@ -243,8 +241,8 @@ export function useSiderBar() {
       spliceMenTagOptions(0, index)
 
       if (currentIndex <= index) {
-        if (getMenuKey.value !== option.key) {
-          changeMenuModelValue(option.key, option)
+        if (getMenuKey.value !== option.fullPath) {
+          changeMenuModelValue(option.fullPath, option)
         }
       }
     }
@@ -267,9 +265,9 @@ export function useSiderBar() {
     if (normal) {
       const { option } = normal
 
-      if (getMenuKey.value !== option.key) {
-        emptyMenuTagOptions()
-        changeMenuModelValue(option.key, option)
+      if (getMenuKey.value !== option.fullPath) {
+        spliceMenTagOptions(0, getMenuTagOptions.value.length)
+        changeMenuModelValue(option.fullPath, option)
       } else {
         setMenuTagOptions(option, false)
       }

@@ -10,9 +10,9 @@
  */
 
 import { omit } from './basic'
-import { useDomToImage, usePrint } from '@/hooks/web'
+import { useDomToImage, usePrint } from '@/hooks'
 
-import type { UsePrintOptions, UseDomToImageOptions } from '@/hooks/web'
+import type { UsePrintOptions, UseDomToImageOptions } from '@/hooks'
 import type { BasicTarget } from '@/types'
 
 export interface PrintDomOptions {

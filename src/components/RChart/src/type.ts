@@ -75,6 +75,13 @@ export interface RChartInst {
    * @default () => void
    */
   render: () => void
+  /**
+   *
+   * 判断图表是否已经卸载
+   *
+   * @returns 图表是否已经卸载
+   */
+  isDispose: () => boolean
 }
 
 export type EChartsExtensionInstallRegisters = typeof CanvasRenderer

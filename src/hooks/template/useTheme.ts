@@ -10,7 +10,7 @@
  */
 
 import { useSettingActions, useSettingGetters } from '@/store'
-import { useI18n } from '@/hooks/web'
+import { useI18n } from '@/hooks'
 
 export const useTheme = () => {
   /**

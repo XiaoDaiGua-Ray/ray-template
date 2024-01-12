@@ -1,4 +1,4 @@
-import { APP_REGEX } from '@/app-config/regexConfig'
+import { APP_REGEX } from '@/app-config'
 import { effectDispose, unrefElement, isValueType } from '@/utils'
 
 import type { PartialCSSStyleDeclaration, ElementSelector } from '@/types'

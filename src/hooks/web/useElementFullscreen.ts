@@ -15,9 +15,39 @@ import { useWindowSize } from '@vueuse/core'
 import type { BasicTarget } from '@/types'
 
 export interface UseElementFullscreenOptions {
+  /**
+   *
+   * 进入全屏前的回调
+   */
   beforeEnter?: () => void
+  /**
+   *
+   * 进入全屏后的回调
+   */
+  enter?: () => void
+  /**
+   *
+   * 退出全屏前的回调
+   */
   beforeExit?: () => void
+  /**
+   *
+   * 退出全屏后的回调
+   */
+  exit?: () => void
+  /**
+   *
+   * 全屏时的 z-index
+   *
+   * @default 999
+   */
   zIndex?: number
+  /**
+   *
+   * 全屏时的背景色
+   *
+   * @default null
+   */
   backgroundColor?: string
 }
 
@@ -54,7 +84,14 @@ export const useElementFullscreen = (
   target: BasicTarget,
   options?: UseElementFullscreenOptions,
 ) => {
-  const { beforeEnter, beforeExit, backgroundColor, zIndex } = options ?? {}
+  const {
+    beforeEnter,
+    beforeExit,
+    enter: _enter,
+    exit: _exit,
+    backgroundColor,
+    zIndex,
+  } = options ?? {}
   const cacheStyle: Partial<CSSStyleDeclaration> = {} // 缓存一些需要被覆盖的样式，例如: transition
   let isSetup = false
 
@@ -114,6 +151,8 @@ export const useElementFullscreen = (
 
       cacheStyle.transition = element.style.transition
       element.style.transition = 'all 0.3s var(--r-bezier)'
+
+      _enter?.()
     }
   }
 
@@ -125,6 +164,8 @@ export const useElementFullscreen = (
     if (element) {
       element.removeAttribute(ID_TAG)
     }
+
+    _exit?.()
   }
 
   const toggleFullscreen = () => {

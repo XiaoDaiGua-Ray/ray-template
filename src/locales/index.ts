@@ -24,9 +24,8 @@
  */
 
 import { createI18n } from 'vue-i18n'
-import { LOCAL_OPTIONS } from '@/app-config/localConfig'
 import { getAppDefaultLanguage, getAppLocalMessages } from '@/locales/helper'
-import { SYSTEM_FALLBACK_LOCALE } from '@/app-config/localConfig'
+import { SYSTEM_FALLBACK_LOCALE, LOCAL_OPTIONS } from '@/app-config'
 
 import type { App } from 'vue'
 import type { I18n, I18nOptions } from 'vue-i18n'

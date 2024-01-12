@@ -24,7 +24,7 @@
 </template>
 <script lang="ts" setup>
 import { useKeepAliveGetters } from '@/store'
-import { APP_KEEP_ALIVE } from '@/app-config/appConfig'
+import { APP_KEEP_ALIVE } from '@/app-config'
 import props from './props'
 
 import type { TransitionProps } from './type'

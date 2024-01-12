@@ -18,7 +18,7 @@ import FooterWrapper from '@/layout/default/FooterWrapper'
 import HeaderWrapper from './default/HeaderWrapper'
 import FeatureWrapper from './default/FeatureWrapper'
 
-import { LAYOUT_CONTENT_REF } from '@/app-config/routerConfig'
+import { LAYOUT_CONTENT_REF } from '@/app-config'
 import { layoutHeaderCssVars } from '@/layout/layoutResize'
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
 import { useSettingGetters } from '@/store'
