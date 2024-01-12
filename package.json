@@ -32,7 +32,7 @@
     ]
   },
   "dependencies": {
-    "@vueuse/core": "^10.6.1",
+    "@vueuse/core": "^10.7.1",
     "awesome-qr": "2.1.5-rc.0",
     "axios": "^1.6.2",
     "clipboard": "^2.0.11",
