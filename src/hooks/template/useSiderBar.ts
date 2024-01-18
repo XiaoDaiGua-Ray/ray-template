@@ -10,9 +10,10 @@
  */
 
 import { useMenuGetters, useMenuActions } from '@/store'
-import { redirectRouterToDashboard } from '@/router/helper/routerCopilot'
+import { useVueRouter, useAppRoot } from '@/hooks'
+import { pick } from '@/utils'
 
-import type { MenuTagOptions, Key } from '@/types'
+import type { MenuTagOptions, Key, AppMenuOption } from '@/types'
 
 export type CloseMenuTag = Key | MenuTagOptions
 
@@ -84,8 +85,12 @@ const normalMenuTagOption = (target: CloseMenuTag, fc: string) => {
 
 export function useSiderBar() {
   const { getMenuTagOptions, getMenuKey } = useMenuGetters()
-  const { changeMenuModelValue, spliceMenTagOptions, setMenuTagOptions } =
-    useMenuActions()
+  const {
+    changeMenuModelValue,
+    spliceMenTagOptions,
+    setMenuTagOptions,
+    resolveOption,
+  } = useMenuActions()
 
   /**
    *
@@ -186,7 +191,33 @@ export function useSiderBar() {
    */
   const closeAll = () => {
     spliceMenTagOptions(0, getMenuTagOptions.value.length)
-    nextTick(redirectRouterToDashboard)
+
+    const { getRootPath } = useAppRoot()
+    const {
+      router: { getRoutes },
+    } = useVueRouter()
+
+    const findMenuOption = getRoutes().find(
+      (curr) => curr.path === getRootPath.value,
+    )
+
+    if (findMenuOption) {
+      const pickOption = pick(findMenuOption, [
+        'children',
+        'meta',
+        'path',
+        'name',
+        'redirect',
+      ]) as unknown as AppMenuOption
+
+      changeMenuModelValue(
+        pickOption.path,
+        resolveOption({
+          ...pickOption,
+          fullPath: pickOption.path,
+        }),
+      )
+    }
   }
 
   /**

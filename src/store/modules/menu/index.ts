@@ -363,6 +363,7 @@ export const piniaMenuStore = defineStore(
       collapsedMenu,
       spliceMenTagOptions,
       setMenuTagOptions,
+      resolveOption,
     }
   },
   {

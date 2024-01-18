@@ -82,6 +82,7 @@ export const useMenuActions = () => {
     collapsedMenu,
     spliceMenTagOptions,
     setMenuTagOptions,
+    resolveOption,
   } = piniaMenuStore()
 
   return {
@@ -89,5 +90,6 @@ export const useMenuActions = () => {
     collapsedMenu,
     spliceMenTagOptions,
     setMenuTagOptions,
+    resolveOption,
   }
 }

@@ -54,6 +54,7 @@
 - 修复读取默认缓存语言的时候没有正确使用 `APP_CATCH_KEY.localeLanguage` 的问题
 - 修复 `RTable` 全屏没有正确弹出提示信息问题
 - 修复面包屑 `fullPath` 在平级模式下追加时为绑定问题
+- 修复 `closeAll` 方法在特殊情况下不能正确的关闭标签页并且跳转至 `root path` 的问题
 
 ## 4.5.0
 
