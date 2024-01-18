@@ -203,7 +203,7 @@ export const piniaMenuStore = defineStore(
             'name',
             'path',
             'show',
-          ])
+          ]) as unknown as AppMenuOption
           // 查看是否重复
           const find = menuState.breadcrumbOptions.find(
             (curr) => curr.key === breadcrumbOption.key,
@@ -211,9 +211,10 @@ export const piniaMenuStore = defineStore(
 
           // 如果未重复追加
           if (!find) {
-            menuState.breadcrumbOptions.push(
-              breadcrumbOption as unknown as AppMenuOption,
-            )
+            menuState.breadcrumbOptions.push({
+              ...breadcrumbOption,
+              fullPath: String(breadcrumbOption.key),
+            })
           }
         }
       }
