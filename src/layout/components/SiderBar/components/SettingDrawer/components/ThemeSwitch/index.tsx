@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { NSpace, NSwitch, NTooltip } from 'naive-ui'
+import { NFlex, NSwitch, NTooltip } from 'naive-ui'
 import { RIcon } from '@/components'
 
 import { useSettingGetters } from '@/store'
@@ -44,7 +44,7 @@ export default defineComponent({
     const { $t, changeDarkTheme, changeLightTheme, railStyle } = this
 
     return (
-      <NSpace justify="center">
+      <NFlex justify="center">
         <NTooltip>
           {{
             trigger: () => (
@@ -69,7 +69,7 @@ export default defineComponent({
                 : $t('headerSettingOptions.ThemeOptions.Light'),
           }}
         </NTooltip>
-      </NSpace>
+      </NFlex>
     )
   },
 })

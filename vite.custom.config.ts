@@ -18,7 +18,7 @@
  *   - 系统: 根路由、标题、浏览器标题、别名等
  *   - 请求: 代理配置
  *
- * 如果需要新增相关内容, 需要在 src/types/modules/cfg.ts 中进行类型配置
+ * 如果需要新增相关内容, 需要在 src/types/modules/viteCustomConfig.ts 中进行类型配置
  * ```
  * interface Config // config 内容类型配置
  *

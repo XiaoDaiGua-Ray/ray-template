@@ -8,8 +8,11 @@
 
 ## Feats
 
-- 更新 `vue` 版本至 `3.4.7`
-- 更新 `naive-ui` 版本至 `2.37.3`
+- 更新 `vue` 版本至 `3.4.14`
+- `naive-ui` 相关
+  - 更新 `naive-ui` 版本至 `2.37.3`
+  - 更替 `naive-ui` `cdn` 为 `https://cdnjs.cloudflare.com/ajax/libs/naive-ui/2.37.3/index.prod.js`
+  - 使用 `NFlex` 组件替换 `NSpace` 组件，查看 [官方文档](https://www.naiveui.com/zh-CN/dark/components/flex)
 - 更新最新版本 `vue` 后，更新 `createDiscreteApi` 方法注册上下文，改为函数包裹，避免 `slot default invoked outside of render` 警告
 - `menu store` 相关
   - 优化 `setupAppMenu` 方法，初始化时会拼接完整的 `fullPath`，避免 `url`, `menu value` 更新路由时重复处理 `path`，提高性能
@@ -30,6 +33,9 @@
   - 同步更新所有方法，使用 `fullPath` 代替 `path`
 - `useContextmenuCoordinate` 方法
   - 使用 `readonly` 方法包裹 `show` 属性
+  - 新增返回 `updateShow` 方法，允许手动更新 `show` 属性
+  - 新增 `options` 配置项 `clickOutside` 方法，允许配置点击元素外部区域的回调函数
+  - 更新对应 demo
   - 补充一些注释
 - 统一 `app-config` 的导入导出方式，现在统一为 `import { xxx } from '@/app-config'` 导入
 - 统一 `hooks` 包的导入导出方式，现在统一为 `import { xxx } from '@/hooks'` 导入
@@ -37,10 +43,16 @@
   - 开放 `APP_CATCH_KEY.appMenuKey` 属性，配置缓存读取字段
 - `useMaximize` 相关
   - 优化 `maximize` 方法，现在支持配置滚动位置
+- `cfg.ts` 相关
+  - `cfg.ts` 更名为 `vite.custom.config.ts`
+  - `cfg.ts` 类型包更名为 `viteCustomConfig.ts`
+- 由于 `cdn.staticfile.org` 停止服务，所以切换至 `cdnjs`
 
 ## Fixes
 
 - 修复 `RChart` 组件 `RChartInst` 类型不完整的问题
+- 修复读取默认缓存语言的时候没有正确使用 `APP_CATCH_KEY.localeLanguage` 的问题
+- 修复 `RTable` 全屏没有正确弹出提示信息问题
 
 ## 4.5.0
 

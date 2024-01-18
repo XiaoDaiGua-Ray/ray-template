@@ -6,5 +6,6 @@
   "PasswordPlaceholder": "please enter password",
   "Login": "Login",
   "Name": "User Name",
-  "Password": "User Password"
+  "Password": "User Password",
+  "RayTemplate": "Fast Background Template"
 }

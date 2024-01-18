@@ -11,7 +11,7 @@
 
 /** 解锁界面 */
 
-import { NInput, NForm, NFormItem, NButton, NSpace } from 'naive-ui'
+import { NInput, NForm, NFormItem, NButton, NFlex } from 'naive-ui'
 import AppAvatar from '@/app-components/app/AppAvatar'
 
 import dayjs from 'dayjs'
@@ -137,14 +137,14 @@ export default defineComponent({
                   }}
                 />
               </NFormItem>
-              <NSpace justify="space-between">
+              <NFlex justify="space-between">
                 <NButton type="primary" text onClick={backToSigning.bind(this)}>
                   返回登陆
                 </NButton>
                 <NButton type="primary" text onClick={unlockScreen.bind(this)}>
                   进入系统
                 </NButton>
-              </NSpace>
+              </NFlex>
             </NForm>
           </div>
           <div class="app-lock-screen__unlock__content-date">

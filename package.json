@@ -34,7 +34,7 @@
   "dependencies": {
     "@vueuse/core": "^10.7.1",
     "awesome-qr": "2.1.5-rc.0",
-    "axios": "^1.6.2",
+    "axios": "^1.6.5",
     "clipboard": "^2.0.11",
     "crypto-js": "^4.1.1",
     "currency.js": "^2.0.4",
@@ -48,7 +48,7 @@
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.0",
     "print-js": "^1.6.0",
-    "vue": "^3.4.7",
+    "vue": "^3.4.14",
     "vue-hooks-plus": "1.8.5",
     "vue-i18n": "^9.9.0",
     "vue-router": "^4.2.5",

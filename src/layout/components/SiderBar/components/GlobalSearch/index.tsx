@@ -20,7 +20,7 @@
 
 import './index.scss'
 
-import { NInput, NModal, NResult, NScrollbar, NSpace } from 'naive-ui'
+import { NInput, NModal, NResult, NScrollbar, NFlex } from 'naive-ui'
 import { RIcon } from '@/components'
 
 import { queryElements, addClass, removeClass } from '@/utils'
@@ -255,7 +255,7 @@ export default defineComponent({
     }
 
     const SearchItem = ({ menuOption }: { menuOption: AppMenuOption }) => (
-      <NSpace
+      <NFlex
         align="center"
         class="content-item"
         {...{
@@ -265,7 +265,7 @@ export default defineComponent({
       >
         <div class="content-item-icon">{RenderPreIcon(menuOption.meta)}</div>
         <div class="content-item-label">{menuOption.breadcrumbLabel}</div>
-      </NSpace>
+      </NFlex>
     )
 
     watchEffect(() => {
@@ -320,30 +320,30 @@ export default defineComponent({
               </div>
               <NScrollbar class="global-search__card-content">
                 {searchOptions.length ? (
-                  <NSpace vertical size={[8, 8]}>
+                  <NFlex vertical size={[8, 8]}>
                     {searchOptions.map((curr) => (
                       <SearchItem menuOption={curr} key={curr.fullPath} />
                     ))}
-                  </NSpace>
+                  </NFlex>
                 ) : (
                   <NResult size="large" class="global-search__empty">
                     {{
                       icon: () => null,
                       default: () => (
-                        <NSpace
+                        <NFlex
                           justify="center"
                           class="global-search__empty-content"
                         >
                           <RIcon name="empty" size="24" />
                           暂无搜索结果
-                        </NSpace>
+                        </NFlex>
                       ),
                     }}
                   </NResult>
                 )}
               </NScrollbar>
               <div class="global-search__card-footer">
-                <NSpace
+                <NFlex
                   class="card-footer__tip-wrapper"
                   align="center"
                   size={[24, 8]}
@@ -360,7 +360,7 @@ export default defineComponent({
                       <div class="item-label">{curr.label}</div>
                     </div>
                   ))}
-                </NSpace>
+                </NFlex>
               </div>
             </div>
           </div>

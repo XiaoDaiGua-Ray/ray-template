@@ -19,7 +19,7 @@
 
 import './index.scss'
 
-import { NLayoutHeader, NSpace, NDropdown } from 'naive-ui'
+import { NLayoutHeader, NFlex, NDropdown } from 'naive-ui'
 import { RIcon } from '@/components'
 import TooltipIcon from '@/layout/components/SiderBar/components/TooltipIcon'
 import SettingDrawer from './components/SettingDrawer'
@@ -128,12 +128,12 @@ export default defineComponent({
     return (
       <NLayoutHeader class="layout-header" bordered>
         <GlobalSearch v-model:show={this.globalSearchShown} />
-        <NSpace
+        <NFlex
           class="layout-header__method"
           align="center"
           justify="space-between"
         >
-          <NSpace align="center">
+          <NFlex align="center">
             {this.leftIconOptions.map((curr) => (
               <TooltipIcon
                 key={curr.name}
@@ -146,8 +146,8 @@ export default defineComponent({
               />
             ))}
             {this.getBreadcrumbSwitch ? <Breadcrumb /> : null}
-          </NSpace>
-          <NSpace align="center">
+          </NFlex>
+          <NFlex align="center">
             {this.rightTooltipIconOptions.map((curr) => (
               <TooltipIcon
                 key={curr.name}
@@ -180,8 +180,8 @@ export default defineComponent({
             >
               <AppAvatar avatarSize="small" align="center" cursor="pointer" />
             </NDropdown>
-          </NSpace>
-        </NSpace>
+          </NFlex>
+        </NFlex>
         <SettingDrawer
           v-model:show={this.showSettings}
           placement={this.getDrawerPlacement}

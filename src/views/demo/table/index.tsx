@@ -17,7 +17,7 @@ import {
   NInput,
   NDatePicker,
   NSwitch,
-  NSpace,
+  NFlex,
   NPopover,
   NCard,
 } from 'naive-ui'
@@ -74,7 +74,7 @@ const TableView = defineComponent({
         title: 'Action',
         key: 'actions',
         render: (row: RowData) => (
-          <NSpace align="center">
+          <NFlex align="center">
             <NButton size="tiny">查看</NButton>
             <RMoreDropdown
               options={[
@@ -91,7 +91,7 @@ const TableView = defineComponent({
                 window.$message.info(`当前选择: ${key}`)
               }}
             />
-          </NSpace>
+          </NFlex>
         ),
       },
     ]
@@ -155,7 +155,7 @@ const TableView = defineComponent({
   },
   render() {
     return (
-      <NSpace vertical>
+      <NFlex vertical>
         <NCard title="RTable">
           基于 NDataTable 封装，继承该组件所有 props 属性。查看 RTable props
           文件即可查看该组件拓展项
@@ -201,12 +201,12 @@ const TableView = defineComponent({
         <RTable
           scrollX={2000}
           title={
-            <NSpace align="center">
+            <NFlex align="center">
               <span>标题插槽:</span>
               <NSwitch
                 onUpdateValue={(value: boolean) => (this.tableLoading = value)}
               ></NSwitch>
-            </NSpace>
+            </NFlex>
           }
           data={this.tableData}
           v-model:columns={this.actionColumns}
@@ -239,7 +239,7 @@ const TableView = defineComponent({
             tableAction: () => '表格的操作区域内容插槽，有时候可能会用上',
           }}
         </RTable>
-      </NSpace>
+      </NFlex>
     )
   },
 })

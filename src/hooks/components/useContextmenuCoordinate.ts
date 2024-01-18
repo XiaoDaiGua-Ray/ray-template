@@ -16,7 +16,19 @@ import type {
   MaybeElementRef,
   MaybeElement,
   MaybeRefOrGetter,
+  OnClickOutsideHandler,
 } from '@vueuse/core'
+
+export interface UseContextmenuCoordinateOptions {
+  /**
+   *
+   * 自定义点击元素外部时的回调函数。
+   * 但是值得注意的事，该方法的优先级很高，可能会优先于其他方法执行
+   *
+   * @default null
+   */
+  clickOutside?: OnClickOutsideHandler
+}
 
 /**
  *
@@ -35,11 +47,17 @@ import type {
  */
 export const useContextmenuCoordinate = (
   target: BasicTarget,
-  options?: MaybeRefOrGetter<boolean | AddEventListenerOptions>,
+  options?: UseContextmenuCoordinateOptions &
+    MaybeRefOrGetter<boolean | AddEventListenerOptions>,
 ) => {
   const x = ref(0) // 鼠标 x 坐标
   const y = ref(0) // 鼠标 y 坐标
   const show = ref(false) // 是否显示右键菜单
+  const { clickOutside } = options ?? {}
+
+  const updateShow = (value: boolean) => {
+    show.value = value
+  }
 
   /**
    *
@@ -51,24 +69,27 @@ export const useContextmenuCoordinate = (
   const bindContextMenuEvent = (evt: Event) => {
     evt.preventDefault()
 
-    show.value = false
+    updateShow(false)
 
     nextTick().then(() => {
       const { clientX, clientY } = evt as MouseEvent
 
       x.value = clientX
       y.value = clientY
-      show.value = true
+
+      updateShow(true)
     })
   }
 
-  /**
-   *
-   * 点击元素外部时，隐藏右键菜单
-   */
-  onClickOutside(target as MaybeElementRef<MaybeElement>, () => {
-    show.value = false
-  })
+  if (clickOutside) {
+    /**
+     *
+     * 自定义点击元素外部时的回调函数
+     */
+    onClickOutside(target as MaybeElementRef<MaybeElement>, (detectIframe) => {
+      clickOutside(detectIframe)
+    })
+  }
 
   /**
    *
@@ -85,7 +106,7 @@ export const useContextmenuCoordinate = (
    * 为传递 ref dom 绑定点击事件
    */
   const cleanupClick = useEventListener(target, 'click', () => {
-    show.value = false
+    updateShow(false)
   })
 
   /**
@@ -103,6 +124,7 @@ export const useContextmenuCoordinate = (
     x: readonly(x),
     y: readonly(y),
     show: readonly(show),
+    updateShow,
   }
 }
 

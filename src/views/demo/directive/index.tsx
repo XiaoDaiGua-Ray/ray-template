@@ -10,7 +10,7 @@
  */
 
 import {
-  NSpace,
+  NFlex,
   NCard,
   NInput,
   NInputGroup,
@@ -50,7 +50,7 @@ const RDirective = defineComponent({
   },
   render() {
     return (
-      <NSpace wrapItem={false}>
+      <NFlex>
         <NCard title="指令">该页面展示如何使用已封装好的指令</NCard>
         <NCard title="文本复制示例一">
           <NInputGroup>
@@ -65,7 +65,7 @@ const RDirective = defineComponent({
           </NInputGroup>
         </NCard>
         <NCard title="节流">
-          <NSpace vertical>
+          <NFlex vertical>
             <NButton
               v-throttle={{
                 func: this.updateDemoValue.bind(null, 'throttleBtnClickCount'),
@@ -78,10 +78,10 @@ const RDirective = defineComponent({
             </NButton>
             <p>我执行了{this.throttleBtnClickCount}次</p>
             <p>该方法 1s 内仅会执行一次</p>
-          </NSpace>
+          </NFlex>
         </NCard>
         <NCard title="防抖">
-          <NSpace vertical>
+          <NFlex vertical>
             <NButton
               v-debounce={{
                 func: this.updateDemoValue.bind(null, 'debounceBtnClickCount'),
@@ -94,10 +94,10 @@ const RDirective = defineComponent({
             </NButton>
             <p>我执行了{this.debounceBtnClickCount}次</p>
             <p>该方法将延迟 1s 执行</p>
-          </NSpace>
+          </NFlex>
         </NCard>
         <NCard title="禁用">
-          <NSpace vertical>
+          <NFlex vertical>
             <NSwitch v-model:value={this.disabledValue}>
               {{
                 checked: () => '取消',
@@ -120,12 +120,12 @@ const RDirective = defineComponent({
               </form>
             </NCard>
             <NCard title="文本内容">
-              <NSpace vertical>
+              <NFlex vertical>
                 <p v-disabled={this.disabledValue}>我是可以被禁用的文本内容</p>
-              </NSpace>
+              </NFlex>
             </NCard>
             <NCard title="naive 组件">
-              <NSpace vertical justify="start">
+              <NFlex vertical justify="start">
                 <NForm v-disabled={this.disabledValue}>
                   <NFormItem>
                     <NInput />
@@ -133,11 +133,11 @@ const RDirective = defineComponent({
                 </NForm>
                 <NButton v-disabled={this.disabledValue}>按钮</NButton>
                 <NSwitch v-disabled={this.disabledValue}></NSwitch>
-              </NSpace>
+              </NFlex>
             </NCard>
-          </NSpace>
+          </NFlex>
         </NCard>
-      </NSpace>
+      </NFlex>
     )
   },
 })

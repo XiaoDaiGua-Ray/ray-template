@@ -18,7 +18,7 @@
  * 2. 大量数据的时候，可能会出现性能问题
  */
 
-import { NPopover, NSpace, NTree } from 'naive-ui'
+import { NPopover, NFlex, NTree } from 'naive-ui'
 import { RIcon } from '@/components'
 
 import config from '../config'
@@ -97,6 +97,8 @@ const findSiblingsAndIndex = (
   return [null, null]
 }
 
+const R_TABLE_C_TOOL_ICON_ACTIVE = 'r-table__c-tool-icon--active'
+
 export default defineComponent({
   name: 'TableC',
   props: {
@@ -129,12 +131,12 @@ export default defineComponent({
           return {
             ...attr,
             suffix: () => (
-              <NSpace style="padding-left: 32px;">
+              <NFlex style="padding-left: 32px;">
                 <RowIconRender
                   icon="row_head"
                   title="固定在列首"
                   customClassName={
-                    isLeftFixedActivated ? 'r-table__c-tool-icon--active' : ''
+                    isLeftFixedActivated ? R_TABLE_C_TOOL_ICON_ACTIVE : ''
                   }
                   onClick={fixedClick.bind(this, 'left', attr, idx)}
                 />
@@ -146,7 +148,7 @@ export default defineComponent({
                         size={config.tableIconSize}
                         cursor="pointer"
                         customClassName={
-                          isResizable ? 'r-table__c-tool-icon--active' : ''
+                          isResizable ? R_TABLE_C_TOOL_ICON_ACTIVE : ''
                         }
                         onClick={resizableClick.bind(this, attr, idx)}
                       />
@@ -158,11 +160,11 @@ export default defineComponent({
                   icon="row_end"
                   title="固定在列尾"
                   customClassName={
-                    isRightFixedActivated ? 'r-table__c-tool-icon--active' : ''
+                    isRightFixedActivated ? R_TABLE_C_TOOL_ICON_ACTIVE : ''
                   }
                   onClick={fixedClick.bind(this, 'right', attr, idx)}
                 />
-              </NSpace>
+              </NFlex>
             ),
           }
         }) as C[]

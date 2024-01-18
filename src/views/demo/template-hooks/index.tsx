@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { NSpace, NCard, NButton, NInput } from 'naive-ui'
+import { NFlex, NCard, NButton, NInput } from 'naive-ui'
 
 import {
   useAppNavigation,
@@ -79,7 +79,7 @@ export default defineComponent({
     } = this
 
     return (
-      <NSpace vertical>
+      <NFlex vertical>
         <NCard title="接口说明">
           <h3>
             hooks/template 包存放模板专属 hook
@@ -87,29 +87,29 @@ export default defineComponent({
           </h3>
         </NCard>
         <NCard title="useTheme 主题">
-          <NSpace vertical>
+          <NFlex vertical>
             <h3>getAppTheme 获取当前主题色: {getAppTheme().themeLabel}</h3>
-            <NSpace>
+            <NFlex>
               <NButton onClick={() => changeDarkTheme()}>切换暗黑主题</NButton>
               <NButton onClick={() => changeLightTheme()}>切换明亮主题</NButton>
               <NButton onClick={() => toggleTheme()}>切换主题</NButton>
-            </NSpace>
-          </NSpace>
+            </NFlex>
+          </NFlex>
         </NCard>
         <NCard title="useWatermark 水印">
-          <NSpace vertical>
+          <NFlex vertical>
             <NInput
               v-model:value={this.watermark}
               onInput={(val) => {
                 setWatermarkContent(val)
               }}
             />
-            <NSpace>
+            <NFlex>
               <NButton onClick={() => showWatermark()}>显示水印</NButton>
               <NButton onClick={() => hiddenWatermark()}>隐藏水印</NButton>
               <NButton onClick={() => toggleWatermark()}>切换水印</NButton>
-            </NSpace>
-          </NSpace>
+            </NFlex>
+          </NFlex>
         </NCard>
         <NCard title="useSpinning">
           <h3>
@@ -117,7 +117,7 @@ export default defineComponent({
             vue 生命周期）。默认 800ms 延迟。
           </h3>
           <br />
-          <NSpace>
+          <NFlex>
             <NButton
               onClick={() => {
                 reload()
@@ -136,7 +136,7 @@ export default defineComponent({
             >
               触发加载动画（不强制刷新）
             </NButton>
-          </NSpace>
+          </NFlex>
         </NCard>
         <NCard title="useMaximize 内容区域最大化">
           <h3>
@@ -167,7 +167,7 @@ export default defineComponent({
             跳转至多级菜单
           </NButton>
         </NCard>
-      </NSpace>
+      </NFlex>
     )
   },
 })

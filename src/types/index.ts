@@ -1,7 +1,7 @@
 export type * from './modules/app'
 export type * from './modules/appConfig'
 export type * from './modules/axios'
-export type * from './modules/cfg'
+export type * from './modules/viteCustomConfig'
 export type * from './modules/component'
 export type * from './modules/helper'
 export type * from './modules/utils'

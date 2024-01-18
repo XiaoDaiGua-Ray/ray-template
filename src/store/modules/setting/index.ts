@@ -3,6 +3,7 @@ import { set } from 'lodash-es'
 import { colorToRgba, setStorage } from '@/utils'
 import { useI18n, useDayjs } from '@/hooks'
 import { APP_THEME } from '@/app-config'
+import { APP_CATCH_KEY } from '@/app-config'
 
 import type { SettingState } from '@/store/modules/setting/type'
 import type { LocalKey } from '@/hooks'
@@ -57,7 +58,7 @@ export const piniaSettingStore = defineStore(
 
       settingState.localeLanguage = key
 
-      setStorage('localeLanguage', key, 'localStorage')
+      setStorage(APP_CATCH_KEY.localeLanguage, key, 'localStorage')
     }
 
     /** 切换主题色 */

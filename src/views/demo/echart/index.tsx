@@ -1,6 +1,6 @@
 import './index.scss'
 
-import { NCard, NSwitch, NSpace, NH2, NButton } from 'naive-ui'
+import { NCard, NSwitch, NFlex, NH2, NButton } from 'naive-ui'
 import { RChart } from '@/components'
 
 import type { RChartType } from '@/components'
@@ -239,13 +239,13 @@ const Echart = defineComponent({
           </ul>
         </NCard>
         <NH2>强制渲染过渡动画（animation），预设 card 风格图表</NH2>
-        <NSpace style={['padding: 18px 0']}>
+        <NFlex style={['padding: 18px 0']}>
           <NButton onClick={this.mountChart.bind(this)}>渲染</NButton>
           <NButton onClick={this.unmountChart.bind(this)}>卸载</NButton>
           <NButton onClick={this.handleUpdateTitle.bind(this)}>
             更新配置项
           </NButton>
-        </NSpace>
+        </NFlex>
         <div class="chart--container">
           <RChart
             title="周销售量"

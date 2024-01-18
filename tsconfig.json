@@ -35,7 +35,7 @@
     "vite.config.ts",
     "vite-plugins/index.ts",
     "vite-plugins/type.ts",
-    "cfg.ts",
+    "vite.custom.config.ts",
     "package.json",
     "vite-env.d.ts",
     "./unplugin/**/*",

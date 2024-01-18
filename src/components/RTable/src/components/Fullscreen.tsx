@@ -46,7 +46,9 @@ export default defineComponent({
               cursor="pointer"
               onClick={() => {
                 if (!isEnabled) {
-                  $t('globalMessage.isEnabledFullscreen')
+                  window.$message.warning(
+                    $t('globalMessage.isEnabledFullscreen'),
+                  )
                 }
 
                 toggleFullscreen()

@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { NSpace, NCard, NButton, NFormItemGi, NInput, NForm } from 'naive-ui'
+import { NFlex, NCard, NButton, NFormItemGi, NInput, NForm } from 'naive-ui'
 import { RCollapseGrid, RTable } from '@/components'
 
 import { useHookPlusRequest } from '@/axios'
@@ -78,7 +78,7 @@ const MockDemo = defineComponent({
         key: 'action',
         render: (row: Person) => {
           return (
-            <NSpace align="center">
+            <NFlex align="center">
               <NButton
                 type="primary"
                 text
@@ -106,7 +106,7 @@ const MockDemo = defineComponent({
               >
                 删除
               </NButton>
-            </NSpace>
+            </NFlex>
           )
         },
       },
@@ -147,7 +147,7 @@ const MockDemo = defineComponent({
   },
   render() {
     return (
-      <NSpace vertical>
+      <NFlex vertical>
         <NCard title="Mock 数据">
           <h2>
             mock
@@ -187,7 +187,7 @@ const MockDemo = defineComponent({
           pagination={this.paginationRef}
           remote
         />
-      </NSpace>
+      </NFlex>
     )
   },
 })

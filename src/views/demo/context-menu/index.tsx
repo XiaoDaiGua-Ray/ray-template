@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { NSpace, NCard, NDropdown } from 'naive-ui'
+import { NFlex, NCard, NDropdown } from 'naive-ui'
 
 import { useContextmenuCoordinate } from '@/hooks'
 
@@ -33,11 +33,17 @@ export default defineComponent({
       },
       {
         label: '尼克·卡拉威',
-        key: 'nick carraway',
+        key: 'nick caraway',
       },
     ])
 
-    const { x, y, show } = useContextmenuCoordinate(demoOneRef)
+    const { x, y, show, updateShow } = useContextmenuCoordinate(demoOneRef)
+
+    const clickOutside = (e: MouseEvent) => {
+      e.preventDefault()
+
+      updateShow(false)
+    }
 
     return {
       demoOneRef,
@@ -46,15 +52,18 @@ export default defineComponent({
       y,
       show,
       options,
+      clickOutside,
+      updateShow,
     }
   },
   render() {
     const { x, y, show } = this
+    const { clickOutside, updateShow } = this
 
     return (
-      <NSpace vertical>
+      <NFlex vertical>
         <NCard title="useContextmenuCoordinate + NDropdown 实现右键菜单">
-          <NSpace vertical>
+          <NFlex vertical>
             <h3>默认点击元素外部会关闭菜单。</h3>
             <div
               ref="demoOneRef"
@@ -62,7 +71,7 @@ export default defineComponent({
             >
               右击
             </div>
-          </NSpace>
+          </NFlex>
         </NCard>
         <NDropdown
           show={show}
@@ -71,8 +80,14 @@ export default defineComponent({
           options={this.options}
           trigger="manual"
           placement="bottom-start"
+          onSelect={(value, option) => {
+            window.$message.info(`选中了 ${option.label}`)
+
+            updateShow(false)
+          }}
+          onClickoutside={clickOutside.bind(this)}
         />
-      </NSpace>
+      </NFlex>
     )
   },
 })

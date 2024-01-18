@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 
-import config from './cfg'
+import config from './vite.custom.config'
 import pkg from './package.json'
 import vitePlugins from './vite.plugin.config'
 

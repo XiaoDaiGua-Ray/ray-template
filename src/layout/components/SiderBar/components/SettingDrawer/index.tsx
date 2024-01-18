@@ -14,7 +14,7 @@ import {
   NDrawer,
   NDrawerContent,
   NDivider,
-  NSpace,
+  NFlex,
   NSwitch,
   NColorPicker,
   NDescriptions,
@@ -111,7 +111,7 @@ const SettingDrawer = defineComponent({
         width={this.width}
       >
         <NDrawerContent title={$t('headerSettingOptions.Title')}>
-          <NSpace class="setting-drawer__space" vertical>
+          <NFlex class="setting-drawer__space" vertical>
             <NDivider titlePlacement="center">
               {$t('headerSettingOptions.ThemeOptions.Title')}
             </NDivider>
@@ -171,7 +171,7 @@ const SettingDrawer = defineComponent({
                 />
               </NDescriptionsItem>
             </NDescriptions>
-          </NSpace>
+          </NFlex>
         </NDrawerContent>
       </NDrawer>
     )
