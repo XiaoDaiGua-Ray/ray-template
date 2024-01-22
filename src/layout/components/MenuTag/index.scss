@@ -83,3 +83,7 @@ $menuTagWrapperWidth: 76px;
     height: 18px;
   }
 }
+
+.menu-tag__right-setting--spinning {
+  animation: elementRotate 0.8s linear infinite;
+}

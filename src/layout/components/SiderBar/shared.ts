@@ -76,18 +76,9 @@ export const avatarDropdownClick = (key: string | number) => {
  *   - false: 刷新按钮
  */
 export const createLeftIconOptions = (opts: IconOptionsFC) => {
-  const { isTabletOrSmaller, globalMainLayoutLoad } = opts
-  const { t } = useI18n()
+  const { isTabletOrSmaller } = opts
 
-  const notTableOrSmallerOptions: IconOptions[] = [
-    {
-      name: 'reload',
-      size: 18,
-      tooltip: t('headerTooltip.Reload'),
-      iconClass: !globalMainLayoutLoad.value ? 'ray-icon__reload--loading' : '',
-      eventKey: 'reload',
-    },
-  ]
+  const notTableOrSmallerOptions: IconOptions[] = []
   const tableOrSmallerOptions: IconOptions[] = [
     {
       name: 'menu',

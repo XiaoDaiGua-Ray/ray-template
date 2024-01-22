@@ -34,7 +34,7 @@ import {
   createLeftIconOptions,
   createRightIconOptions,
 } from './shared'
-import { useDevice, useSpinning, useI18n } from '@/hooks'
+import { useDevice, useI18n } from '@/hooks'
 import { getVariableToRefs, setVariable } from '@/global-variable'
 import { useFullscreen } from 'vue-hooks-plus'
 import { useSettingGetters, useSettingActions } from '@/store'
@@ -46,7 +46,6 @@ export default defineComponent({
   setup() {
     const { updateLocale, updateSettingState } = useSettingActions()
     const { t } = useI18n()
-    const { reload } = useSpinning()
 
     const [isFullscreen, { toggleFullscreen, isEnabled }] = useFullscreen(
       document.getElementsByTagName('html')[0],
@@ -56,7 +55,6 @@ export default defineComponent({
     const globalSearchShown = ref(false) // 是否展示全局搜索
     const { isTabletOrSmaller } = useDevice()
     const globalDrawerValue = getVariableToRefs('globalDrawerValue')
-    const globalMainLayoutLoad = getVariableToRefs('globalMainLayoutLoad')
 
     /**
      *
@@ -66,7 +64,6 @@ export default defineComponent({
       createLeftIconOptions({
         isFullscreen,
         isTabletOrSmaller,
-        globalMainLayoutLoad,
       }),
     )
     /**
@@ -77,14 +74,9 @@ export default defineComponent({
       createRightIconOptions({
         isFullscreen,
         isTabletOrSmaller,
-        globalMainLayoutLoad,
       }),
     )
     const iconEventMap: IconEventMapOptions = {
-      // 刷新组件重新加载，手动设置 800ms loading 时长
-      reload: () => {
-        reload()
-      },
       setting: () => {
         showSettings.value = true
       },

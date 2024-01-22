@@ -48,6 +48,7 @@ import { useMenuGetters, useMenuActions } from '@/store'
 import { hasClass, uuid, queryElements } from '@/utils'
 import { useMaximize, useSpinning, useAppRoot, useSiderBar } from '@/hooks'
 import { throttle } from 'lodash-es'
+import { getVariableToRefs } from '@/global-variable'
 
 import type { ScrollbarInst } from 'naive-ui'
 import type { MenuTagOptions, AppMenuOption } from '@/types'
@@ -150,6 +151,7 @@ export default defineComponent({
       actionDropdownShow: false,
     })
     const MENU_TAG_DATA = 'menu_tag_data' // 注入 tag 前缀
+    const globalMainLayoutLoad = getVariableToRefs('globalMainLayoutLoad')
 
     /**
      *
@@ -412,11 +414,13 @@ export default defineComponent({
       menuTagMouseleave,
       MENU_TAG_DATA,
       iconConfig: {
-        width: 20,
-        height: 28,
+        width: 22,
+        height: 22,
       },
       maximize,
       getRootPath,
+      reload,
+      globalMainLayoutLoad,
     }
   },
   render() {
@@ -426,6 +430,7 @@ export default defineComponent({
       uuidScrollBar,
       getMenuTagOptions,
       MENU_TAG_DATA,
+      globalMainLayoutLoad,
     } = this
     const {
       maximize,
@@ -437,6 +442,7 @@ export default defineComponent({
       menuTagMouseenter,
       menuTagMouseleave,
       actionDropdownSelect,
+      reload,
     } = this
 
     return (
@@ -567,6 +573,19 @@ export default defineComponent({
                 customClassName="menu-tag__right-setting"
                 onClick={() => {
                   maximize(true)
+                }}
+              />
+              <RIcon
+                name="reload"
+                width={iconConfig.width}
+                height={iconConfig.height}
+                customClassName={`menu-tag__right-setting ${
+                  !globalMainLayoutLoad
+                    ? 'menu-tag__right-setting--spinning'
+                    : ''
+                }`}
+                onClick={() => {
+                  reload()
                 }}
               />
               <RMoreDropdown

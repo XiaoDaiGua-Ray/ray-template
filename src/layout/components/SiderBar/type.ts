@@ -26,5 +26,4 @@ export interface IconOptions {
 export interface IconOptionsFC {
   isTabletOrSmaller: Ref<boolean>
   isFullscreen: Ref<boolean>
-  globalMainLayoutLoad: Ref<boolean>
 }

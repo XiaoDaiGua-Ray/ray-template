@@ -17,6 +17,7 @@
 - 路由切换过渡动画优化，新增两个新过渡动画。默认绑定过渡动画更改为 `fade-slide`
 - `app-config` 暴露 `CONTENT_TRANSITION_OPTIONS` 配置项，用于配置路由切换过渡动画
 - 变更 `regexConfig` 配置项 `validCSSUnit` 为 `cssUnit`
+- 调整 `reload` 方法位置，现在调整为在 `MenuTag` 栏
 
 ## 4.6.0
 
