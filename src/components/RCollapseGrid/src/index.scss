@@ -10,10 +10,13 @@
 
     > .collapse-icon--arrow {
       margin-left: 0.5em;
-      transition: color 0.3s var(--r-bezier), transform 0.3s var(--r-bezier);
+      transition:
+        color 0.3s var(--r-bezier),
+        transform 0.3s var(--r-bezier);
+      transform: rotate(270deg);
 
       &.collapse-icon--arrow__expanded {
-        transform: rotate(180deg);
+        transform: rotate(90deg);
       }
     }
   }

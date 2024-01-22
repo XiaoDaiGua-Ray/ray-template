@@ -50,7 +50,7 @@ const Axios = defineComponent({
         url: 'https://jsonplaceholder.typicode.com/todos/1',
         method: 'get',
         cancelConfig: {
-          needCancel: true,
+          cancel: true,
         },
       },
       {

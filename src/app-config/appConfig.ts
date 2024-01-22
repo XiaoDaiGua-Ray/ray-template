@@ -94,3 +94,34 @@ export const APP_CATCH_KEY = {
   token: 'token',
   appMenuKey: 'menuKey',
 } as const
+
+/**
+ *
+ * 系统内容切换动画配置
+ */
+export const CONTENT_TRANSITION_OPTIONS = [
+  {
+    label: '无',
+    value: 'none',
+  },
+  {
+    label: '缩放出现',
+    value: 'scale',
+  },
+  {
+    label: '缩放消退',
+    value: 'fade-scale',
+  },
+  {
+    label: '滑入出现',
+    value: 'fade-slide',
+  },
+  {
+    label: '淡入消退',
+    value: 'opacity',
+  },
+  {
+    label: '底部消退',
+    value: 'fade-bottom',
+  },
+]

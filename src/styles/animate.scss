@@ -1,72 +1,48 @@
-// 采用 NSpin 组件进行 loading 效果，移除之前的 Transition 组件的国度
-// 避免闪烁添加此动画
-.layout-content-enter-active,
-.layout-content-leave-active {
-  transition: all 0.35s;
+// 模糊匹配内容区域切换过渡动画包含: transform-leave-active 的 class
+[class*='transform-leave-active'] {
+  position: absolute;
 }
 
-.layout-content-enter-from,
-.layout-content-enter-to {
+/* fade-slide-transform */
+.fade-slide-transform-leave-active,
+.fade-slide-transform-enter-active {
+  transition:
+    transform 0.48s var(--r-bezier),
+    opacity 0.48s var(--r-bezier);
+}
+
+.fade-slide-transform-enter-from {
   opacity: 0;
+  transform: translateX(-30px);
 }
 
-.layout-content-leave-from,
-.layout-content-leave-to {
+.fade-slide-transform-leave-to {
   opacity: 0;
-}
-
-/* fade-transform */
-.fade-transform-leave-active,
-.fade-transform-enter-active {
-  transition: all 0.5s;
-}
-
-.fade-transform-enter-from {
-  opacity: 0;
-  transform: translateX(-50px);
-}
-
-.fade-transform-leave-to {
-  opacity: 0;
-  transform: translateX(50px);
-}
-
-/* down-transform */
-.down-transform-leave-active,
-.down-transform-enter-active {
-  transition: all 0.5s;
-}
-
-.down-transform-enter-from {
-  opacity: 0;
-  transform: translateY(-50px);
-}
-
-.down-transform-leave-to {
-  opacity: 0;
-  transform: translateY(50px);
+  transform: translateX(30px);
 }
 
 /* scale-transform */
-.scale-transform-leave-active,
-.scale-transform-enter-active {
-  transition: all 0.5s;
+.scale-transform-enter-active,
+.scale-transform-leave-active {
+  transition:
+    transform 0.4s var(--r-bezier),
+    opacity 0.45s var(--r-bezier);
 }
 
 .scale-transform-enter-from {
   opacity: 0;
-  transform: scale(2);
+  transform: scale(0.92);
 }
 
 .scale-transform-leave-to {
   opacity: 0;
-  transform: scale(0.5);
+  transform: scale(1.06);
 }
 
 /* opacity-transform */
 .opacity-transform-leave-active,
 .opacity-transform-enter-active {
-  transition: all 0.5s;
+  transition: opacity 0.55s var(--r-bezier);
 }
 
 .opacity-transform-enter-from {
@@ -75,4 +51,38 @@
 
 .opacity-transform-leave-to {
   opacity: 0;
+}
+
+/* fade-bottom-transform */
+.fade-bottom-transform-enter-active,
+.fade-bottom-transform-leave-active {
+  transition:
+    opacity 0.55s var(--r-bezier),
+    transform 0.45s var(--r-bezier);
+}
+
+.fade-bottom-transform-enter-from {
+  opacity: 0;
+  transform: translateY(-10%);
+}
+
+.fade-bottom-transform-leave-to {
+  opacity: 0;
+  transform: translateY(10%);
+}
+
+/* fade-scale-transform */
+.fade-scale-transform-leave-active,
+.fade-scale-transform-enter-active {
+  transition: all 0.48s var(--r-bezier);
+}
+
+.fade-scale-transform-enter-from {
+  opacity: 0;
+  transform: scale(1.2);
+}
+
+.fade-scale-transform-leave-to {
+  opacity: 0;
+  transform: scale(0.8);
 }

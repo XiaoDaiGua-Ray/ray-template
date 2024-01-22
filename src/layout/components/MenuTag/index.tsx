@@ -295,7 +295,7 @@ export default defineComponent({
      */
     const setCurrentContextmenuIndex = () => {
       const index = getMenuTagOptions.value.findIndex(
-        (curr) => curr.key === getMenuKey.value,
+        (curr) => curr.fullPath === getMenuKey.value,
       )
 
       currentContextmenuIndex = index
@@ -307,7 +307,7 @@ export default defineComponent({
     const menuTagMouseenter = (option: MenuTagOptions) => {
       if (
         getMenuTagOptions.value.length > 1 &&
-        option.key !== getRootPath.value
+        option.fullPath !== getRootPath.value
       ) {
         option.closeable = true
       }
@@ -315,7 +315,7 @@ export default defineComponent({
 
     /** 移出 MenuTag 时, 判断是否为当前已激活 key */
     const menuTagMouseleave = (option: MenuTagOptions) => {
-      if (option.key !== getMenuKey.value) {
+      if (option.fullPath !== getMenuKey.value) {
         option.closeable = false
       }
     }
@@ -517,7 +517,7 @@ export default defineComponent({
                             }}
                           </span>
                           {(curr.closeable || getMenuTagOptions.length === 1) &&
-                          curr.key !== getRootPath ? (
+                          curr.fullPath !== getRootPath ? (
                             <NIcon
                               class="menu-tag__btn-icon"
                               {...{
@@ -533,7 +533,7 @@ export default defineComponent({
                             // 默认使用一个空 NIcon 占位，避免不能正确的触发动画
                             <NIcon
                               class={[
-                                curr.key !== getRootPath
+                                curr.fullPath !== getRootPath
                                   ? 'menu-tag__btn-icon'
                                   : 'menu-tag__btn-icon--hidden',
                               ]}

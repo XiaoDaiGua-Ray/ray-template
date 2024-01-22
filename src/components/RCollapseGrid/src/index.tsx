@@ -85,7 +85,7 @@ export default defineComponent({
             >
               {this.$slots.default?.()}
               <NGridItem suffix class="ray-collapse-grid__suffix--btn">
-                <NFlex justify="end">
+                <NFlex justify="end" align="center">
                   {this.$slots.action?.()}
                   {this.CollapseIcon()}
                 </NFlex>

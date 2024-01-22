@@ -31,10 +31,13 @@ export default defineComponent({
     const modalShow = ref(false)
     const { logout } = useSigningActions()
 
-    if (version !== cacheVersion || !cacheVersion) {
-      modalShow.value = true
+    // 如果获取缓存版本号为 null，则说明是第一次访问，直接缓存版本号
+    if (cacheVersion !== null) {
+      if (version !== cacheVersion) {
+        modalShow.value = true
 
-      setStorage<string>(storageKey, version, 'localStorage')
+        setStorage<string>(storageKey, version, 'localStorage')
+      }
     }
 
     return {

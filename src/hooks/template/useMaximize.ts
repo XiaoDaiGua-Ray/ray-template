@@ -27,6 +27,10 @@ export interface MaximizeOptions extends UseElementFullscreenOptions {
    *
    * 配置全屏后滚动的位置，left、top、behavior
    * 基于 LAYOUT_CONTENT_REF 实现
+   *
+   * 但是，该配置项仅在传递 true 时生效
+   *
+   * @default undefined
    */
   scrollToOptions?: ScrollToOptions
 }
@@ -63,7 +67,7 @@ export const useMaximize = () => {
     setVariable('layoutContentMaximize', full)
     toggleFullscreen()
 
-    if (scrollToOptions) {
+    if (scrollToOptions && full) {
       LAYOUT_CONTENT_REF?.value?.scrollTo(scrollToOptions)
     }
   }

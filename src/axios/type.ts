@@ -23,7 +23,7 @@ export interface RequestHeaderOptions {
 }
 
 export interface CancelConfig {
-  needCancel?: boolean
+  cancel?: boolean
 }
 
 export interface AppRawRequestConfig<T = any> extends AxiosRequestConfig<T> {

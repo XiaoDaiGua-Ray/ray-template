@@ -1,6 +1,5 @@
-<svg t="1672122187346" class="icon" viewBox="0 0 1024 1024" version="1.1"
-  xmlns="http://www.w3.org/2000/svg" p-id="6246" width="64" height="64">
-  <path fill="currentColor"
-    d="M806.4 319.2L512 613.6 221.6 323.2 176 368l290.4 290.4L512 704l45.6-45.6 294.4-294.4z"
-    p-id="6247"></path>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  viewBox="0 0 512 512" data-v-5de898af="">
+  <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+    stroke-width="48" d="M328 112L184 256l144 144"></path>
 </svg>

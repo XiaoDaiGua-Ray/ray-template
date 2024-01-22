@@ -37,9 +37,7 @@ const { createAxiosInstance, beforeFetch, fetchError } = useAxiosInterceptor()
 server.interceptors.request.use(
   (request) => {
     createAxiosInstance(request, 'requestInstance') // 生成 request instance
-
     setupRequestInterceptor() // 初始化拦截器所有已注入方法
-
     beforeFetch('requestInstance', 'implementRequestInterceptorArray', 'ok') // 执行拦截器所有已注入方法
 
     return request

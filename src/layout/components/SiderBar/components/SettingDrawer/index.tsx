@@ -23,7 +23,7 @@ import {
 } from 'naive-ui'
 import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch'
 
-import { APP_THEME } from '@/app-config'
+import { APP_THEME, CONTENT_TRANSITION_OPTIONS } from '@/app-config'
 import { useSettingGetters, useSettingActions } from '@/store'
 
 import type { PropType } from 'vue'
@@ -64,25 +64,6 @@ const SettingDrawer = defineComponent({
         emit('update:show', bool)
       },
     })
-    // 过渡效果下拉
-    const contentTransitionOptions = [
-      {
-        label: '无',
-        value: 'none',
-      },
-      {
-        label: '缩放效果',
-        value: 'scale',
-      },
-      {
-        label: '淡入淡出',
-        value: 'fade',
-      },
-      {
-        label: '闪入效果',
-        value: 'opacity',
-      },
-    ]
     const modelSwitchReactive = reactive({
       getMenuTagSwitch: getMenuTagSwitch.value,
       getBreadcrumbSwitch: getBreadcrumbSwitch.value,
@@ -96,7 +77,6 @@ const SettingDrawer = defineComponent({
       changePrimaryColor,
       getAppTheme,
       getPrimaryColorOverride,
-      contentTransitionOptions,
       updateSettingState,
       modelSwitchReactive,
     }
@@ -129,7 +109,7 @@ const SettingDrawer = defineComponent({
             </NDivider>
             <NSelect
               v-model:value={this.modelSwitchReactive.getContentTransition}
-              options={this.contentTransitionOptions}
+              options={CONTENT_TRANSITION_OPTIONS}
               onUpdateValue={(value) => {
                 this.updateSettingState('contentTransition', value)
               }}

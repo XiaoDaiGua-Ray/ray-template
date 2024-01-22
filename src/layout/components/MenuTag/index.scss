@@ -20,13 +20,9 @@ $menuTagWrapperWidth: 76px;
       cursor: pointer;
     }
 
-    & .menu-tag__left-arrow {
-      transform: rotate(90deg);
-    }
-
     & .menu-tag__right-wrapper {
       & .menu-tag__right-arrow {
-        transform: rotate(270deg);
+        transform: rotate(180deg);
       }
 
       & .menu-tag__right-setting {

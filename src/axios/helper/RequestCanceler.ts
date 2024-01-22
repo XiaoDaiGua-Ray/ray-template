@@ -27,7 +27,7 @@ export default class RequestCanceler {
 
   /** 是否需要加入取消请求表中 */
   private isAppending(config: AppRawRequestConfig) {
-    return config.cancelConfig?.needCancel ?? true
+    return config.cancelConfig?.cancel ?? true
   }
 
   /**

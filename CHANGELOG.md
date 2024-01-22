@@ -1,5 +1,23 @@
 # CHANGE LOG
 
+## 4.6.1
+
+## Feats
+
+- 更新 `vite` 版本至 `5.0.11`
+- 更新 `@vitejs/plugin-vue` 版本至 `5.0.3`
+- `maximize` 方法 `options.scrollToOptions` 配置项现在仅在放大状态才会生效
+- 更新 `AppVersionProvider` 版本刷新逻辑
+- `axios` 相关
+  - `cancelConfig`
+    - `needCancel` 配置项变更 为 `cancel`
+- `icons` 相关
+  - 变更 `reload` 图标
+  - 变更 `expanded` 图标
+- 路由切换过渡动画优化，新增两个新过渡动画。默认绑定过渡动画更改为 `fade-slide`
+- `app-config` 暴露 `CONTENT_TRANSITION_OPTIONS` 配置项，用于配置路由切换过渡动画
+- 变更 `regexConfig` 配置项 `validCSSUnit` 为 `cssUnit`
+
 ## 4.6.0
 
 破坏性更新，请谨慎更新。
@@ -676,7 +694,7 @@ const demo2 = null
 
 ### Feats
 
-- 新增切换路由自动取消上一路由所有请求。但是可以通过配置 `useRequest` 与 `request` 方法的 `cancelConfig.needCancel` 属性控制是否需要自动取消该请求。该配置默认为 `true`，当配置为 `false` 时，则不会被取消器取消
+- 新增切换路由自动取消上一路由所有请求。但是可以通过配置 `useRequest` 与 `request` 方法的 `cancelConfig.cancel` 属性控制是否需要自动取消该请求。该配置默认为 `true`，当配置为 `false` 时，则不会被取消器取消
 
 ```ts
 import { useRequest, useHookPlusRequest } from '@/axios/index'
@@ -689,7 +707,7 @@ const { data, loading, run } = useRequest<{
     url: 'https://jsonplaceholder.typicode.com/todos/1',
     method: 'get',
     cancelConfig: {
-      needCancel: true,
+      cancel: true,
     },
   },
   {
@@ -702,7 +720,7 @@ request({
   url: 'https://jsonplaceholder.typicode.com/todos/1',
   method: 'get',
   cancelConfig: {
-    needCancel: true,
+    cancel: true,
   },
 })
 ```
