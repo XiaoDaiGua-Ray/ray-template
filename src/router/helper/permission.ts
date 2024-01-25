@@ -44,7 +44,9 @@ export const permissionRouter = (router: Router) => {
     const catchRoutePath = getStorage(
       APP_CATCH_KEY.appMenuKey,
       'sessionStorage',
-      getRootPath.value,
+      {
+        defaultValue: getRootPath.value,
+      },
     )
     const { meta, name } = to
 

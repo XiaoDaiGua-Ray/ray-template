@@ -15,12 +15,14 @@ import { APP_MENU_CONFIG, APP_CATCH_KEY } from '@/app-config'
 import { RIcon } from '@/components'
 import { getStorage, isValueType } from '@/utils'
 import { useAppRoot } from '@/hooks'
+import { NTag } from 'naive-ui'
 
 import type {
   AppMenuOption,
   MenuTagOptions,
   AppMenuKey,
 } from '@/types/modules/app'
+import type { TagProps } from 'naive-ui'
 
 /**
  *
@@ -143,28 +145,72 @@ export const updateDocumentTitle = (option: AppMenuOption) => {
   document.title = breadcrumbLabel + ' - ' + spliceTitle
 }
 
-export const hasMenuIcon = (option: AppMenuOption) => {
-  const { meta } = option
+export const createMenuIcon = (option: AppMenuOption) => {
+  const {
+    meta: { icon },
+  } = option
 
-  if (!meta.icon) {
+  if (!icon) {
     return
   }
 
-  if (isValueType<object>(meta.icon, 'Object')) {
-    return () => meta.icon
+  if (isValueType<object>(icon, 'Object')) {
+    return () => icon
   }
 
-  const icon = h(
+  const _icon = h(
     RIcon,
     {
-      name: meta!.icon as string,
+      name: icon,
       size: APP_MENU_CONFIG.menuCollapsedIconSize,
       cursor: 'pointer',
     },
     {},
   )
 
-  return () => icon
+  return () => _icon
+}
+
+export const createMenuExtra = (option: AppMenuOption) => {
+  const {
+    meta: { extra },
+  } = option
+
+  if (!extra) {
+    return
+  }
+
+  const tagProps: TagProps = {
+    type: 'primary',
+    size: 'small',
+    round: true,
+    bordered: false,
+    strong: true,
+  }
+
+  if (isValueType<object>(extra, 'Object')) {
+    const { extraLabel, extraIcon, extraType } = extra
+
+    return () => {
+      return h(
+        NTag,
+        {
+          ...tagProps,
+          type: extraType || 'primary',
+        },
+        {
+          default: () => extraLabel,
+          icon: () => extraIcon,
+        },
+      )
+    }
+  }
+
+  return () => {
+    return h(NTag, tagProps, {
+      default: () => extra,
+    })
+  }
 }
 
 /** 获取缓存的 menu key, 如果未获取到则使用 getRootPath 当作默认激活路由菜单 */
@@ -173,7 +219,9 @@ export const getCatchMenuKey = () => {
   const cacheMenuKey = getStorage<AppMenuKey>(
     APP_CATCH_KEY.appMenuKey,
     'sessionStorage',
-    getRootPath.value,
+    {
+      defaultValue: getRootPath.value,
+    },
   )
 
   return cacheMenuKey

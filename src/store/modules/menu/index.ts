@@ -30,8 +30,9 @@ import { validRole, validMenuItemShow } from '@/router/helper/routerCopilot'
 import {
   parseAndFindMatchingNodes,
   updateDocumentTitle,
-  hasMenuIcon,
+  createMenuIcon,
   getCatchMenuKey,
+  createMenuExtra,
 } from './helper'
 import { useI18n } from '@/hooks'
 import { getAppRawRoutes } from '@/router/appRouteModules'
@@ -60,13 +61,23 @@ export const piniaMenuStore = defineStore(
     })
     const isSetupAppMenuLock = ref(true)
 
+    /**
+     *
+     * @param option 菜单项（类似于菜单项的数据结构也可以）
+     * @returns 转换后的菜单项
+     *
+     * 将路由项或者类似于菜单项的数据结构转换为菜单项（AppMenu）
+     *
+     * @example
+     * resolveOption({ path: '/dashboard', name: 'Dashboard', meta: { i18nKey: 'menu.Dashboard' } })
+     * resolveOption({ ...VueRouterRouteOption })
+     */
     const resolveOption = (option: AppMenuOption) => {
       const { meta } = option
+      const { i18nKey, noLocalTitle } = meta
 
       /** 设置 label, i18nKey 优先级最高 */
-      const label = computed(() =>
-        meta?.i18nKey ? t(`${meta!.i18nKey}`) : meta?.noLocalTitle,
-      )
+      const label = computed(() => (i18nKey ? t(`${i18nKey}`) : noLocalTitle))
       /**
        *
        * 拼装菜单项
@@ -84,7 +95,8 @@ export const piniaMenuStore = defineStore(
       } as AppMenuOption
       /** 合并 icon */
       const attr: AppMenuOption = Object.assign({}, route, {
-        icon: hasMenuIcon(option),
+        icon: createMenuIcon(option),
+        extra: createMenuExtra(option),
       })
 
       if (option.fullPath === getCatchMenuKey()) {
@@ -368,7 +380,7 @@ export const piniaMenuStore = defineStore(
   },
   {
     persist: {
-      key: 'piniaMenuStore',
+      key: APP_CATCH_KEY.appPiniaMenuStore,
       storage: window.sessionStorage,
       paths: ['breadcrumbOptions', 'menuKey', 'menuTagOptions'],
     },

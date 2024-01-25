@@ -2,8 +2,9 @@ import { getAppDefaultLanguage } from '@/locales/helper'
 import { set } from 'lodash-es'
 import { colorToRgba, setStorage } from '@/utils'
 import { useI18n, useDayjs } from '@/hooks'
-import { APP_THEME } from '@/app-config'
 import { APP_CATCH_KEY } from '@/app-config'
+import { watchOnce } from '@vueuse/core'
+import { APP_THEME } from '@/app-config'
 
 import type { SettingState } from '@/store/modules/setting/type'
 import type { LocalKey } from '@/hooks'
@@ -21,9 +22,8 @@ export const piniaSettingStore = defineStore(
     const settingState = reactive<SettingState>({
       drawerPlacement: 'right',
       primaryColorOverride: {
-        ...APP_THEME.appNaiveUIThemeOverrides,
         common: {
-          primaryColor: primaryColor, // 主题色
+          primaryColor: primaryColor,
           primaryColorHover: primaryColor,
         },
       },
@@ -61,22 +61,24 @@ export const piniaSettingStore = defineStore(
       setStorage(APP_CATCH_KEY.localeLanguage, key, 'localStorage')
     }
 
-    /** 切换主题色 */
+    /**
+     *
+     * 切换主题色，传递对应颜色即可更新 naive-ui 的主题色
+     */
     const changePrimaryColor = (value: string, alpha = 0.3) => {
-      set(
-        settingState,
-        'settingState.primaryColorOverride.common.primaryColorHover',
-        value,
-      )
+      const alphaColor = colorToRgba(value, alpha)
+      const themeOverrides = {
+        primaryColor: value,
+        primaryColorHover: value,
+      }
+
+      settingState.primaryColorOverride.common = themeOverrides
 
       const body = document.body
 
       /** 设置主题色变量 */
       body.style.setProperty('--ray-theme-primary-color', value)
-      body.style.setProperty(
-        '--ray-theme-primary-fade-color',
-        colorToRgba(value, alpha),
-      )
+      body.style.setProperty('--ray-theme-primary-fade-color', alphaColor)
     }
 
     /**
@@ -108,6 +110,33 @@ export const piniaSettingStore = defineStore(
       cb?.()
     }
 
+    /**
+     *
+     * 初始化合并自定义主题色
+     * 该方法会在初始化时执行一次，之后会在切换主题色时执行
+     */
+    watchOnce(
+      () => settingState.appTheme,
+      (ndata) => {
+        ndata
+          ? Object.assign(
+              {},
+              settingState.primaryColorOverride,
+              APP_THEME.appNaiveUIThemeOverrides.dark,
+              APP_THEME.appNaiveUIThemeOverridesCommon.dark,
+            )
+          : Object.assign(
+              {},
+              settingState.primaryColorOverride,
+              APP_THEME.appNaiveUIThemeOverrides.light,
+              APP_THEME.appNaiveUIThemeOverridesCommon.light,
+            )
+      },
+      {
+        immediate: true,
+      },
+    )
+
     return {
       ...toRefs(settingState),
       updateLocale,
@@ -117,7 +146,7 @@ export const piniaSettingStore = defineStore(
   },
   {
     persist: {
-      key: 'piniaSettingStore',
+      key: APP_CATCH_KEY.appPiniaSettingStore,
     },
   },
 )

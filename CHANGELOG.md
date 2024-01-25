@@ -1,5 +1,73 @@
 # CHANGE LOG
 
+## 4.6.2
+
+为了支持同域名下同时部署多套系统，重构了 `cache` 工具包支持前缀配置。并且暴露重构所有的缓存 `key` 配置项，为了便捷的进行私有数据缓存。
+
+## Feats
+
+- 更新 `vue` 版本至 `3.4.15`，核心性能优化更新
+- `cache` 工具包相关
+  - 重构 `getStorage` 方法，支持前缀配置
+  - 重构 `setStorage` 方法，支持前缀配置
+  - 重构 `hasStorage` 方法，支持前缀配置
+  - 重构 `removeStorage` 方法 - 支持前缀配置 - 更新预留 `key`，现在更新为：`__all__`, `__all_sessionStorage__`, `__all_localStorage__`
+
+> 默认不启用该功能，如果需要启用，可以在调用 `cache` 包方法的时候手动配置 `prefix` 属性为 `true`，默认会读取 `prefixKey` 配置项，如果未设置则会尝试读取 `APP_CATCH_KEY_PREFIX`。并且 `useStorage` 之类的第三方工具库并未集成该方法。
+
+- 暴露所有缓存 `key`，允许自定义所有缓存 `key`
+- `designConfig` 配置相关
+  - `appNaiveUIThemeOverrides` 配置项支持按照 `dark`, `light` 两个主题分别配置
+  - 新增 `appNaiveUIThemeOverridesCommon` 配置项
+- 优化 `GlobalSearch` 组件样式
+- 更新搜索按钮样式，由图标变为按钮样式（`GlobalSearchButton`）
+- 更新 `appThemeColors` 色盘
+- `hasMenuIcon` 更名为 `createMenuIcon`
+- 默认绑定过渡动画更改为 `scale`
+- 更新内容区域背景色（`$layoutContentBackgroundColorDark`、`$layoutContentBackgroundColorLight`）
+- 更新底部区域背景色（`$layoutFooterBackgroundColorDark`、`$layoutFooterBackgroundColorLight`）
+- `RouteMeta` 配置项相关
+  - 新增 `extra` 配置项，用于配置标记
+
+```ts
+import { t } from '@/hooks'
+import { LAYOUT } from '@/router/constant'
+
+import type { AppRouteRecordRaw } from '@/router/type'
+
+const cacheDemo: AppRouteRecordRaw = {
+  // ...your route config,
+  meta: {
+    // ...other meta config,
+    extra: 'new',
+  },
+}
+
+// 当然你也可以配置 extra 为一个对象
+
+AppMenuExtraOptions {
+  extraLabel?: string
+  extraIcon?: string | VNode
+  extraType?: TagProps['type']
+}
+
+const cacheDemo: AppRouteRecordRaw = {
+  ...your route config,
+  meta: {
+    ...other meta config,
+    extra: {
+      extraLabel: 'new',
+      extraIcon: 'icon' || <Icon />,
+      extraType: 'primary' || 'success' || 'warning' || 'error' || 'info' || 'default',
+    },
+  },
+}
+```
+
+## Fixes
+
+- 修复 `naive-ui` 修改主题色不能准确的同步到全局的问题
+
 ## 4.6.1
 
 ## Feats

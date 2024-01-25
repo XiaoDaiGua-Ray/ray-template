@@ -29,7 +29,7 @@ import { useSettingGetters, useSettingActions } from '@/store'
 import type { PropType } from 'vue'
 import type { Placement } from '@/types'
 
-const SettingDrawer = defineComponent({
+export default defineComponent({
   name: 'SettingDrawer',
   props: {
     show: {
@@ -82,7 +82,7 @@ const SettingDrawer = defineComponent({
     }
   },
   render() {
-    const { $t } = this
+    const { $t, changePrimaryColor, updateSettingState } = this
 
     return (
       <NDrawer
@@ -102,7 +102,7 @@ const SettingDrawer = defineComponent({
             <NColorPicker
               swatches={APP_THEME.appThemeColors}
               v-model:value={this.getPrimaryColorOverride.common!.primaryColor}
-              onUpdateValue={this.changePrimaryColor.bind(this)}
+              onUpdateValue={changePrimaryColor.bind(this)}
             />
             <NDivider titlePlacement="center">
               {$t('headerSettingOptions.ContentTransition')}
@@ -111,7 +111,7 @@ const SettingDrawer = defineComponent({
               v-model:value={this.modelSwitchReactive.getContentTransition}
               options={CONTENT_TRANSITION_OPTIONS}
               onUpdateValue={(value) => {
-                this.updateSettingState('contentTransition', value)
+                updateSettingState('contentTransition', value)
               }}
             />
             <NDivider titlePlacement="center">
@@ -122,7 +122,7 @@ const SettingDrawer = defineComponent({
                 <NSwitch
                   v-model:value={this.modelSwitchReactive.getMenuTagSwitch}
                   onUpdateValue={(bool: boolean) =>
-                    this.updateSettingState('menuTagSwitch', bool)
+                    updateSettingState('menuTagSwitch', bool)
                   }
                 />
               </NDescriptionsItem>
@@ -130,7 +130,7 @@ const SettingDrawer = defineComponent({
                 <NSwitch
                   v-model:value={this.modelSwitchReactive.getBreadcrumbSwitch}
                   onUpdateValue={(bool: boolean) =>
-                    this.updateSettingState('breadcrumbSwitch', bool)
+                    updateSettingState('breadcrumbSwitch', bool)
                   }
                 />
               </NDescriptionsItem>
@@ -138,7 +138,7 @@ const SettingDrawer = defineComponent({
                 <NSwitch
                   v-model:value={this.modelSwitchReactive.getWatermarkSwitch}
                   onUpdateValue={(bool: boolean) =>
-                    this.updateSettingState('watermarkSwitch', bool)
+                    updateSettingState('watermarkSwitch', bool)
                   }
                 />
               </NDescriptionsItem>
@@ -146,7 +146,7 @@ const SettingDrawer = defineComponent({
                 <NSwitch
                   v-model:value={this.modelSwitchReactive.getCopyrightSwitch}
                   onUpdateValue={(bool: boolean) =>
-                    this.updateSettingState('copyrightSwitch', bool)
+                    updateSettingState('copyrightSwitch', bool)
                   }
                 />
               </NDescriptionsItem>
@@ -157,5 +157,3 @@ const SettingDrawer = defineComponent({
     )
   },
 })
-
-export default SettingDrawer

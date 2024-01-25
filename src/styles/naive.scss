@@ -1,4 +1,4 @@
-// layout content 区域默认开启继承宽高，避免 global lodaing 丢失高度
+// layout content 区域默认开启继承宽高，避免 global loading 丢失高度
 .r-layout-full__viewer-content .n-spin-container,
 .r-layout-full__viewer-content .n-spin-container .n-spin-content {
   width: 100%;
@@ -6,8 +6,18 @@
 }
 
 // 拓展 AppMenu Item样式
-.r-menu--app:not(.n-menu--collapsed) .n-menu-item-content.n-menu-item-content--selected:before,
+.r-menu--app:not(.n-menu--collapsed)
+  .n-menu-item-content.n-menu-item-content--selected:before,
 .r-menu--app:not(.n-menu--collapsed) .n-menu-item-content:hover:before {
   border-left: 4px solid var(--ray-theme-primary-color);
   transition: border-left 0.1s;
+}
+
+// 手动设置 AppMenu Item Header 样式，兼容 extra 的情况
+.r-menu--app
+  .n-menu-item-content.n-menu-item-content--selected
+  .n-menu-item-content-header,
+.r-menu--app .n-menu-item-content .n-menu-item-content-header {
+  display: flex;
+  gap: 0 6px;
 }

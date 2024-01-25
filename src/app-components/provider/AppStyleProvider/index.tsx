@@ -18,6 +18,7 @@ import {
   getStorage,
 } from '@/utils'
 import { useSettingGetters } from '@/store'
+import { APP_CATCH_KEY } from '@/app-config'
 
 import type { SettingState } from '@/store/modules/setting/type'
 
@@ -34,7 +35,7 @@ export default defineComponent({
       const body = document.body
 
       const primaryColorOverride = getStorage<SettingState>(
-        'piniaSettingStore',
+        APP_CATCH_KEY.appPiniaSettingStore,
         'localStorage',
       ) // 获取缓存 naive ui 配置项
 

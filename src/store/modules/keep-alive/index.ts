@@ -19,6 +19,7 @@
  */
 
 import { APP_KEEP_ALIVE } from '@/app-config'
+import { APP_CATCH_KEY } from '@/app-config'
 
 import type { KeepAliveStoreState } from './type'
 import type { AppMenuOption } from '@/types'
@@ -76,7 +77,7 @@ export const piniaKeepAliveStore = defineStore(
   },
   {
     persist: {
-      key: 'piniaKeepAliveStore',
+      key: APP_CATCH_KEY.appPiniaKeepAliveStore,
       storage: window.sessionStorage,
       paths: ['keepAliveInclude'],
     },

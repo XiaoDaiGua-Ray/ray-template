@@ -1,4 +1,13 @@
 .layout-footer-wrapper {
-  padding: 0 20px 8px 20px;
+  height: 48px;
   text-align: center;
+  line-height: 48px;
+}
+
+.ray-template--dark .layout-footer-wrapper {
+  background-color: $layoutFooterBackgroundColorDark;
+}
+
+.ray-template--light .layout-footer-wrapper {
+  background-color: $layoutFooterBackgroundColorLight;
 }

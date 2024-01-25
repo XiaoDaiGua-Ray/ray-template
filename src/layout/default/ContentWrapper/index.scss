@@ -16,7 +16,9 @@
   right: -40px;
   top: -40px;
   @include flexCenter;
-  transition: color 0.3s var(--r-bezier), background-color 0.3s var(--r-bezier);
+  transition:
+    color 0.3s var(--r-bezier),
+    background-color 0.3s var(--r-bezier);
 
   & .ray-icon {
     transform: translate(-14px, 14px);
@@ -49,4 +51,12 @@
       }
     }
   }
+}
+
+.ray-template--dark .r-layout-full__viewer-content {
+  background-color: $layoutContentBackgroundColorDark;
+}
+
+.ray-template--light .r-layout-full__viewer-content {
+  background-color: $layoutContentBackgroundColorLight;
 }

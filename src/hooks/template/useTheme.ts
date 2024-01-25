@@ -11,6 +11,29 @@
 
 import { useSettingActions, useSettingGetters } from '@/store'
 import { useI18n } from '@/hooks'
+import { APP_THEME } from '@/app-config'
+
+const setThemeOverrides = (theme: boolean) => {
+  const { getPrimaryColorOverride } = useSettingGetters()
+  const { updateSettingState } = useSettingActions()
+
+  updateSettingState(
+    'primaryColorOverride',
+    theme
+      ? Object.assign(
+          {},
+          getPrimaryColorOverride.value,
+          APP_THEME.appNaiveUIThemeOverrides.dark,
+          APP_THEME.appNaiveUIThemeOverridesCommon.dark,
+        )
+      : Object.assign(
+          {},
+          getPrimaryColorOverride.value,
+          APP_THEME.appNaiveUIThemeOverrides.light,
+          APP_THEME.appNaiveUIThemeOverridesCommon.light,
+        ),
+  )
+}
 
 export const useTheme = () => {
   /**
@@ -45,6 +68,7 @@ export const useTheme = () => {
     const { updateSettingState } = useSettingActions()
 
     updateSettingState('appTheme', true)
+    setThemeOverrides(true)
   }
 
   /**
@@ -58,6 +82,7 @@ export const useTheme = () => {
     const { updateSettingState } = useSettingActions()
 
     updateSettingState('appTheme', false)
+    setThemeOverrides(false)
   }
 
   /**
@@ -77,6 +102,7 @@ export const useTheme = () => {
     const { updateSettingState } = useSettingActions()
 
     updateSettingState('appTheme', !theme)
+    setThemeOverrides(!theme)
   }
 
   return {

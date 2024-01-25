@@ -21,10 +21,13 @@ import './index.scss'
 
 import { NLayoutHeader, NFlex, NDropdown } from 'naive-ui'
 import { RIcon } from '@/components'
-import TooltipIcon from '@/layout/components/SiderBar/components/TooltipIcon'
-import SettingDrawer from './components/SettingDrawer'
-import Breadcrumb from './components/Breadcrumb'
-import GlobalSearch from './components/GlobalSearch'
+import {
+  TooltipIcon,
+  SettingDrawer,
+  Breadcrumb,
+  GlobalSearch,
+  GlobalSearchButton,
+} from './components'
 import AppAvatar from '@/app-components/app/AppAvatar'
 
 import { LOCAL_OPTIONS } from '@/app-config'
@@ -39,7 +42,8 @@ import { getVariableToRefs, setVariable } from '@/global-variable'
 import { useFullscreen } from 'vue-hooks-plus'
 import { useSettingGetters, useSettingActions } from '@/store'
 
-import type { IconEventMapOptions, IconEventMap } from './type'
+import type { IconEventMapOptions } from './type'
+import type { VNode } from 'vue'
 
 export default defineComponent({
   name: 'AppSiderBar',
@@ -77,6 +81,9 @@ export default defineComponent({
       }),
     )
     const iconEventMap: IconEventMapOptions = {
+      search: () => {
+        globalSearchShown.value = true
+      },
       setting: () => {
         showSettings.value = true
       },
@@ -90,9 +97,6 @@ export default defineComponent({
 
         toggleFullscreen()
       },
-      search: () => {
-        globalSearchShown.value = true
-      },
       lock: () => {
         updateSettingState('lockScreenSwitch', true)
       },
@@ -105,6 +109,15 @@ export default defineComponent({
       iconEventMap[key]?.()
     }
 
+    /**
+     *
+     * @param vnode 需要渲染的节点
+     * @returns 如果是平板或者更小的设备, 就返回 null, 否则返回 vnode
+     */
+    const isRenderVNode = (vnode: VNode) => {
+      return isTabletOrSmaller.value ? null : vnode
+    }
+
     return {
       leftIconOptions,
       rightTooltipIconOptions,
@@ -114,9 +127,18 @@ export default defineComponent({
       getDrawerPlacement,
       getBreadcrumbSwitch,
       globalSearchShown,
+      isRenderVNode,
     }
   },
   render() {
+    const {
+      rightTooltipIconOptions,
+      leftIconOptions,
+      getDrawerPlacement,
+      getBreadcrumbSwitch,
+    } = this
+    const { toolIconClick, updateLocale, isRenderVNode } = this
+
     return (
       <NLayoutHeader class="layout-header" bordered>
         <GlobalSearch v-model:show={this.globalSearchShown} />
@@ -126,7 +148,7 @@ export default defineComponent({
           justify="space-between"
         >
           <NFlex align="center">
-            {this.leftIconOptions.map((curr) => (
+            {leftIconOptions.map((curr) => (
               <TooltipIcon
                 key={curr.name}
                 iconName={curr.name}
@@ -134,13 +156,22 @@ export default defineComponent({
                   isRef(curr.tooltip) ? curr.tooltip.value : curr.tooltip
                 }
                 customClassName={curr.iconClass}
-                onClick={this.toolIconClick.bind(this, curr.name)}
+                onClick={toolIconClick.bind(this, curr.name)}
               />
             ))}
-            {this.getBreadcrumbSwitch ? <Breadcrumb /> : null}
+            {getBreadcrumbSwitch ? <Breadcrumb /> : null}
           </NFlex>
-          <NFlex align="center">
-            {this.rightTooltipIconOptions.map((curr) => (
+          <NFlex align="center" size={[16, 0]}>
+            {isRenderVNode(
+              <GlobalSearchButton
+                onClick={(e) => {
+                  e.stopPropagation()
+
+                  this.globalSearchShown = true
+                }}
+              />,
+            )}
+            {rightTooltipIconOptions.map((curr) => (
               <TooltipIcon
                 key={curr.name}
                 iconName={curr.name}
@@ -148,14 +179,12 @@ export default defineComponent({
                   isRef(curr.tooltip) ? curr.tooltip.value : curr.tooltip
                 }
                 customClassName={curr.iconClass}
-                onClick={this.toolIconClick.bind(this, curr.name)}
+                onClick={toolIconClick.bind(this, curr.name)}
               />
             ))}
             <NDropdown
               options={LOCAL_OPTIONS}
-              onSelect={(key: string | number) =>
-                this.updateLocale(String(key))
-              }
+              onSelect={(key: string | number) => updateLocale(String(key))}
               trigger="click"
             >
               <RIcon
@@ -176,7 +205,7 @@ export default defineComponent({
         </NFlex>
         <SettingDrawer
           v-model:show={this.showSettings}
-          placement={this.getDrawerPlacement}
+          placement={getDrawerPlacement}
         />
       </NLayoutHeader>
     )

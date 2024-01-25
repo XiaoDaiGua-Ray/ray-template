@@ -21,12 +21,11 @@ export const APP_THEME: AppTheme = {
    */
   appThemeColors: [
     '#2d8cf0',
-    '#0960bd',
-    '#536dfe',
-    '#ff5c93',
+    '#3f9eff',
+    '#ff42bc',
     '#ee4f12',
-    '#9c27b0',
-    '#ff9800',
+    '#a6e4f7',
+    '#dbcb02',
     '#18A058',
   ],
   /** 系统主题色 */
@@ -60,7 +59,14 @@ export const APP_THEME: AppTheme = {
    * }
    * ```
    */
-  appNaiveUIThemeOverrides: {},
+  appNaiveUIThemeOverrides: {
+    dark: {},
+    light: {},
+  },
+  appNaiveUIThemeOverridesCommon: {
+    dark: {},
+    light: {},
+  },
   /**
    *
    * 配置 echart 主题颜色

@@ -13,10 +13,12 @@ import './index.scss'
 
 import { NLayout, NLayoutContent } from 'naive-ui'
 import Menu from './components/Menu'
-import ContentWrapper from '@/layout/default/ContentWrapper'
-import FooterWrapper from '@/layout/default/FooterWrapper'
-import HeaderWrapper from './default/HeaderWrapper'
-import FeatureWrapper from './default/FeatureWrapper'
+import {
+  ContentWrapper,
+  FooterWrapper,
+  HeaderWrapper,
+  FeatureWrapper,
+} from './default'
 
 import { LAYOUT_CONTENT_REF } from '@/app-config'
 import { layoutHeaderCssVars } from '@/layout/layoutResize'

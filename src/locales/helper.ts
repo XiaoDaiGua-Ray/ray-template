@@ -125,11 +125,9 @@ export const naiveLocales = (key: string) => {
  * @remark 未避免出现加载语言错误问题, 故而在 `main.ts` 注册时, 应优先加载 `i18n` 避免出现该问题
  */
 export const getAppDefaultLanguage = () => {
-  const language = getStorage(
-    APP_CATCH_KEY.localeLanguage,
-    'localStorage',
-    SYSTEM_DEFAULT_LOCAL,
-  )
+  const language = getStorage(APP_CATCH_KEY.localeLanguage, 'localStorage', {
+    defaultValue: SYSTEM_DEFAULT_LOCAL,
+  })
 
   return language as keyof AppCurrentAppMessages
 }

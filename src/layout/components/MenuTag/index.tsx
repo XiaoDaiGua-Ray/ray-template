@@ -468,6 +468,7 @@ export default defineComponent({
             align="center"
             justify="space-between"
             inline
+            size={[16, 0]}
           >
             <RIcon
               name="expanded"
@@ -557,7 +558,7 @@ export default defineComponent({
               align="center"
               inline
               wrap={false}
-              size={[6, 6]}
+              size={[8, 0]}
             >
               <RIcon
                 name="expanded"

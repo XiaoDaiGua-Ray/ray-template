@@ -79,25 +79,51 @@ export const APP_MENU_CONFIG: Readonly<AppMenuConfig> = {
 
 /**
  *
+ * 系统缓存 key 前缀
+ * 可以选择自定义缓存 key 前缀，在使用 getStorage 和 setStorage 时可以考虑是否启用前缀的方式来避免缓存 key 冲突
+ *
+ * 默认不启用
+ *
+ * @example
+ * export const APP_CATCH_KEY_PREFIX: = 'ray-template:'
+ *
+ * 会自动拼接为 'ray-template:signing'
+ */
+export const APP_CATCH_KEY_PREFIX = ''
+
+/**
+ *
  * 系统默认缓存 key 配置
- * 仅暴露部分系统获取缓存配置, 其余 key 暂不开放
  *
  * 说明:
  *   - signing: 登陆信息缓存 key
  *   - localeLanguage: 国际化默认缓存 key
  *   - token: token key
  *   - appMenuKey: 菜单缓存 key
+ *   - appPiniaSettingStore: pinia setting store key
+ *   - appPiniaKeepAliveStore: pinia keep alive store key
+ *   - appPiniaMenuStore: pinia menu store key
+ *   - appPiniaSigningStore: pinia signing store key
+ *   - appVersionProvider: 版本信息缓存 key
  */
 export const APP_CATCH_KEY = {
   signing: 'signing',
   localeLanguage: 'localeLanguage',
   token: 'token',
   appMenuKey: 'menuKey',
+  appPiniaSettingStore: 'piniaSettingStore',
+  appPiniaKeepAliveStore: 'piniaKeepAliveStore',
+  appPiniaMenuStore: 'piniaMenuStore',
+  appPiniaSigningStore: 'piniaSigningStore',
+  appVersionProvider: 'appVersionProvider',
+  isAppLockScreen: 'isAppLockScreen',
 } as const
 
 /**
  *
  * 系统内容切换动画配置
+ * 但是在配置的时候，会自动拼接一个 `transform` 前缀
+ * 例如: `transform-fade-bottom`
  */
 export const CONTENT_TRANSITION_OPTIONS = [
   {

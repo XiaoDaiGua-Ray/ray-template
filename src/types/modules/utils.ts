@@ -5,9 +5,11 @@ export type StorageLike = 'sessionStorage' | 'localStorage'
 
 export type RemoveStorageKey =
   | string
-  | 'all'
-  | 'all-sessionStorage'
-  | 'all-localStorage'
+  | '__all__'
+  | '__all_sessionStorage__'
+  | '__all_localStorage__'
+
+export type RemoveStorageType = StorageLike
 
 export type ValidateValueType =
   | 'BigUint64Array'
@@ -88,3 +90,18 @@ export type ElementSelector = string | `attr:${string}`
 export type MaybeArray<T> = T | T[]
 
 export type DownloadAnyFileDataType = Blob | File | string | ArrayBuffer
+
+export enum OperatingSystem {
+  Windows = 'Windows',
+  MacOS = 'MacOS',
+  Linux = 'Linux',
+  Android = 'Android',
+  IOS = 'IOS',
+  Unknown = 'Unknown',
+}
+
+export interface StorageOptions<T = any> {
+  prefix?: boolean
+  prefixKey?: string
+  defaultValue?: T
+}

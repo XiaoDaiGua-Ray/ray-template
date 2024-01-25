@@ -19,15 +19,18 @@ import { RModal } from '@/components'
 
 import { getStorage, setStorage } from '@/utils'
 import { useSigningActions } from '@/store'
+import { APP_CATCH_KEY } from '@/app-config'
 
 export default defineComponent({
   name: 'AppVersionProvider',
   setup() {
-    const storageKey = 'appVersionProvider'
     const {
       pkg: { version },
     } = __APP_CFG__
-    const cacheVersion = getStorage<string>(storageKey, 'localStorage')
+    const cacheVersion = getStorage<string>(
+      APP_CATCH_KEY.appVersionProvider,
+      'localStorage',
+    )
     const modalShow = ref(false)
     const { logout } = useSigningActions()
 
@@ -36,7 +39,11 @@ export default defineComponent({
       if (version !== cacheVersion) {
         modalShow.value = true
 
-        setStorage<string>(storageKey, version, 'localStorage')
+        setStorage<string>(
+          APP_CATCH_KEY.appVersionProvider,
+          version,
+          'localStorage',
+        )
       }
     }
 

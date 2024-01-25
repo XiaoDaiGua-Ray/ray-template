@@ -126,15 +126,7 @@ export const createRightIconOptions = (opts: IconOptionsFC) => {
       eventKey: 'setting',
     },
   ]
-  const notTableOrSmallerOptions: IconOptions[] = [
-    {
-      name: 'search',
-      size: 18,
-      tooltip: t('headerTooltip.Search'),
-      eventKey: 'search',
-    },
-    ...basicOptions,
-  ]
+  const notTableOrSmallerOptions: IconOptions[] = [...basicOptions]
   const tableOrSmallerOptions: IconOptions[] = [...basicOptions]
 
   return isTabletOrSmaller!.value

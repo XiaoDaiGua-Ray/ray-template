@@ -1,3 +1,5 @@
+import { OperatingSystem } from '@/types'
+
 import type {
   ValidateValueType,
   DownloadAnyFileDataType,
@@ -340,4 +342,38 @@ export const callWithAsyncErrorHandling = async <
 
     return void 0
   }
+}
+
+/**
+ *
+ * 获取当前操作系统
+ * 如果无法识别，则返回 Unknown
+ *
+ * @example
+ * detectOperatingSystem() => 'Windows' | 'MacOS' | 'Linux' | 'Android' | 'IOS' | 'Unknown'
+ */
+export const detectOperatingSystem = () => {
+  const userAgent = navigator.userAgent
+
+  if (/windows/i.test(userAgent)) {
+    return OperatingSystem.Windows
+  }
+
+  if (/macintosh|mac os x/i.test(userAgent)) {
+    return OperatingSystem.MacOS
+  }
+
+  if (/linux/i.test(userAgent)) {
+    return OperatingSystem.Linux
+  }
+
+  if (/android/i.test(userAgent)) {
+    return OperatingSystem.Android
+  }
+
+  if (/iphone|ipad|ipod/i.test(userAgent)) {
+    return OperatingSystem.IOS
+  }
+
+  return OperatingSystem.Unknown
 }
