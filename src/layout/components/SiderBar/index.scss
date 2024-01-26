@@ -8,3 +8,11 @@
     width: 100%;
   }
 }
+
+.ray-template--light .layout-header {
+  box-shadow: 0 1px 2px $layoutShadowColorLight;
+}
+
+.ray-template--dark .layout-header {
+  box-shadow: 0 1px 2px $layoutShadowColorDark;
+}

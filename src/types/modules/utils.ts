@@ -9,7 +9,17 @@ export type RemoveStorageKey =
   | '__all_sessionStorage__'
   | '__all_localStorage__'
 
-export type RemoveStorageType = StorageLike
+export type RemoveStorageFC = <T extends RemoveStorageKey>(
+  key: T,
+  storageType: T extends '__all__'
+    ? 'all'
+    : T extends '__all_sessionStorage__'
+    ? 'sessionStorage'
+    : T extends '__all_localStorage__'
+    ? 'localStorage'
+    : StorageLike,
+  options?: StorageOptions,
+) => void
 
 export type ValidateValueType =
   | 'BigUint64Array'

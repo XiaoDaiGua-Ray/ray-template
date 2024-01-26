@@ -21,3 +21,11 @@
     }
   }
 }
+
+.ray-template--light .r-layout-full__viewer-content {
+  box-shadow: 0 -1px 2px $layoutShadowColorLight;
+}
+
+.ray-template--dark .r-layout-full__viewer-content {
+  box-shadow: 0 -1px 2px $layoutShadowColorDark;
+}

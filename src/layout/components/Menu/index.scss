@@ -5,3 +5,11 @@
     height: 100%;
   }
 }
+
+.ray-template--light .app-menu__sider {
+  box-shadow: 2px 0 8px $layoutShadowColorLight;
+}
+
+.ray-template--dark .app-menu__sider {
+  box-shadow: 2px 0 8px $layoutShadowColorDark;
+}

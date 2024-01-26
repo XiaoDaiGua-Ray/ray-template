@@ -11,12 +11,7 @@
 
 import { APP_CATCH_KEY_PREFIX } from '@/app-config'
 
-import type {
-  StorageLike,
-  RemoveStorageKey,
-  StorageOptions,
-  RemoveStorageType,
-} from '@/types'
+import type { StorageLike, StorageOptions, RemoveStorageFC } from '@/types'
 
 /**
  *
@@ -24,6 +19,7 @@ import type {
  * @param storageType 需要删除的缓存类型
  * @param options 配置项
  *
+ * @description
  * 查找当前缓存中是否含有某个 key
  * 默认查找 sessionStorage
  */
@@ -46,6 +42,7 @@ function hasStorage(
  * @param type 需要删除的缓存类型
  * @param options 配置项
  *
+ * @description
  * 设置缓存值，默认设置 sessionStorage
  */
 function setStorage<T = unknown>(
@@ -97,6 +94,7 @@ function getStorage<T = unknown>(
  * @param type 需要删除的缓存类型
  * @param options 配置项
  *
+ * @description
  * 获取缓存值，默认获取 sessionStorage
  */
 function getStorage<T = unknown>(
@@ -134,27 +132,23 @@ function getStorage<T = unknown>(
  * @param type 需要删除的缓存类型
  * @param options 配置项
  *
+ * @description
  * 删除缓存值，默认删除 sessionStorage
  *
  * 预保留了 __all__、__all_sessionStorage__、__all_localStorage__ 三个 key
  * 分别代表清空所有缓存、清空 sessionStorage 缓存、清空 localStorage 缓存
  *
  * @example
- * removeStorage('__all__') // 清空所有缓存
- * removeStorage('__all_sessionStorage__') // 清空 sessionStorage 缓存
- * removeStorage('__all_localStorage__') // 清空 localStorage 缓存
- * removeStorage('signing') // 清空 session 中 signing 缓存字段
+ * removeStorage('__all__', 'all') // 清空所有缓存
+ * removeStorage('__all_sessionStorage__', 'sessionStorage') // 清空 sessionStorage 缓存
+ * removeStorage('__all_localStorage__', 'localStorage') // 清空 localStorage 缓存
+ * removeStorage('signing', 'sessionStorage' || 'localStorage') // 清空 session 中 signing 缓存字段
  */
-function removeStorage(
-  key: RemoveStorageKey,
-  storageType: RemoveStorageType = 'sessionStorage',
-  options?: StorageOptions,
-) {
+const removeStorage: RemoveStorageFC = (key, storageType, options) => {
   if (!key) {
     console.error(
       `[removeStorage]: Failed to remove stored data: key ${key} is empty or undefined`,
     )
-
     return
   }
 
@@ -169,7 +163,6 @@ function removeStorage(
       : removeType === 'localStorage'
       ? localStorageKeys
       : sessionStorageKeys
-
     keys.forEach((curr) => {
       if (key === '__all__') {
         window.sessionStorage.removeItem(_prefix + curr)

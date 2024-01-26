@@ -4,7 +4,7 @@
       alt="Ray Template"
       width="200"
       height="200"
-      src="https://r2chevereto.yka.moe/longmao.navigator.th.png"
+      src="https://avatars.githubusercontent.com/u/51957438?v=4"
     />
   </a>
   <br />

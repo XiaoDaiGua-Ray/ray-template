@@ -1,6 +1,37 @@
 # CHANGE LOG
 
-## 4.6.2-beta
+## 4.6.2-beta1.1
+
+## Feats
+
+- `cache` 工具包相关
+  - 优化 `removeStorage` 方法类型推导，当 `key` 为预留字关键字时，强制绑定 `storageType` 为对应的类型值
+
+```ts
+import { removeStorage } from '@/utils'
+
+// 正确
+removeStorage('__all__', 'all')
+removeStorage('__all_sessionStorage__', 'sessionStorage')
+removeStorage('__all_localStorage__', 'localStorage')
+remove('your key', 'sessionStorage' || 'localStorage')
+
+// 错误
+removeStorage('__all__', 'sessionStorage')
+removeStorage('__all_sessionStorage__', 'localStorage')
+removeStorage('__all_localStorage__', 'all')
+removeStorage('__all_localStorage__', 'sessionStorage')
+remove('your key', 'all')
+```
+
+- 优化 `Layout` 布局样式，移除 `border` 边框，添加 `box-shadow` 阴影
+
+## Fixes
+
+- 修复 `copy` 指令复制的时候不能正确的提示的问题
+- 修复 `AppVersionProvider` 组件不能正确的注入 `appVersion` 的问题
+
+## 4.6.2-beta1.0
 
 为了支持同域名下同时部署多套系统，重构了 `cache` 工具包支持前缀配置。并且暴露重构所有的缓存 `key` 配置项，为了便捷的进行私有数据缓存。
 

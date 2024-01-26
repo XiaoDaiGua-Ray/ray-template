@@ -140,7 +140,7 @@ export default defineComponent({
     const { toolIconClick, updateLocale, isRenderVNode } = this
 
     return (
-      <NLayoutHeader class="layout-header" bordered>
+      <NLayoutHeader class="layout-header">
         <GlobalSearch v-model:show={this.globalSearchShown} />
         <NFlex
           class="layout-header__method"

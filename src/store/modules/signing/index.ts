@@ -54,7 +54,7 @@ export const piniaSigningStore = defineStore(
           state.signingCallback = {
             role: 'admin',
             name: SigningForm.name,
-            avatar: 'https://r2chevereto.yka.moe/longmao.navigator.png',
+            avatar: 'https://avatars.githubusercontent.com/u/51957438?v=4',
           }
 
           resolve({
@@ -79,7 +79,7 @@ export const piniaSigningStore = defineStore(
      */
     const logout = () => {
       window.$message.info('账号退出中...')
-      removeStorage('__all_sessionStorage__')
+      removeStorage('__all_sessionStorage__', 'sessionStorage')
 
       setTimeout(() => window.location.reload())
     }

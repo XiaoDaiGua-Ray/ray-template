@@ -45,6 +45,12 @@ export default defineComponent({
           'localStorage',
         )
       }
+    } else {
+      setStorage<string>(
+        APP_CATCH_KEY.appVersionProvider,
+        version,
+        'localStorage',
+      )
     }
 
     return {

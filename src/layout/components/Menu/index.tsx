@@ -67,7 +67,7 @@ export default defineComponent({
 
     const BasicMenu = () => (
       <NLayoutSider
-        bordered
+        class="app-menu__sider"
         showTrigger={!isTabletOrSmaller.value}
         collapseMode={APP_MENU_CONFIG.menuCollapsedMode}
         collapsedWidth={APP_MENU_CONFIG.menuCollapsedWidth}
@@ -95,7 +95,7 @@ export default defineComponent({
 
     return {
       isTabletOrSmaller,
-      BasicMenu: BasicMenu,
+      BasicMenu,
       modelGlobalDrawerValue,
     }
   },

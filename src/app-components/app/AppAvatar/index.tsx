@@ -63,22 +63,24 @@ const AppAvatar = defineComponent({
     }
   },
   render() {
+    const { signing, cssVars, spaceSize, avatarSize, $props } = this
+
     return (
       <NFlex
         class="app-avatar"
         {...this.$props}
-        style={this.cssVars}
-        size={this.spaceSize}
+        style={cssVars}
+        size={spaceSize}
       >
         <NAvatar
           // eslint-disable-next-line prettier/prettier, @typescript-eslint/no-explicit-any
-          {...(this.$props as any)}
-          src={this.signing?.avatar}
+          {...($props as any)}
+          src={signing?.avatar}
           objectFit="cover"
           round
-          size={this.avatarSize}
+          size={avatarSize}
         />
-        <div class="app-avatar__name">{this.signing?.name}</div>
+        <div class="app-avatar__name">{signing?.name}</div>
       </NFlex>
     )
   },
