@@ -170,6 +170,10 @@ export function useSiderBar() {
   const close = (target: CloseMenuTag) => {
     const normal = normalMenuTagOption(target, 'close')
 
+    if (getMenuTagOptions.value.length === 1) {
+      return
+    }
+
     if (normal) {
       const { index, option } = normal
 

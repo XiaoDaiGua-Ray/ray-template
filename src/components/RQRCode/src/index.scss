@@ -15,6 +15,7 @@
     @include flexCenter;
     flex-direction: column;
     gap: 18px 0;
+    border-radius: 3px;
 
     & .ray-qrcode__error-content {
       text-align: center;
@@ -23,8 +24,14 @@
       color: #ffffff;
     }
   }
+}
 
-  & .n-spin-content--spinning img {
-    filter: blur(6px);
+.ray-qrcode {
+  &.ray-qrcode--loading img {
+    filter: blur(4px);
+  }
+
+  &.ray-qrcode--error img {
+    filter: blur(4px);
   }
 }

@@ -154,32 +154,39 @@ export default defineComponent({
     }
   },
   render() {
+    const {
+      qrcodeURL,
+      status,
+      loadingDescription,
+      errorDescription,
+      $slots,
+      errorActionDescription,
+    } = this
+    const { errorActionClick } = this
+
     return (
-      <div class="ray-qrcode">
-        <NSpin
-          show={this.status === 'loading'}
-          description={this.loadingDescription}
-        >
-          <img src={this.qrcodeURL as string | undefined} />
+      <div class={['ray-qrcode', `ray-qrcode--${status}`]}>
+        <NSpin show={status === 'loading'} description={loadingDescription}>
+          <img src={qrcodeURL as string | undefined} />
         </NSpin>
-        {this.status === 'error' ? (
+        {status === 'error' ? (
           <div class="ray-qrcode__error">
             <div class="ray-qrcode__error-content">
-              {isValueType<string>(this.errorDescription, 'String')
-                ? this.errorDescription
-                : () => this.errorDescription}
+              {isValueType<string>(errorDescription, 'String')
+                ? errorDescription
+                : () => errorDescription}
             </div>
             <div
               class="ray-qrcode__error-btn"
-              onClick={this.errorActionClick.bind(this)}
+              onClick={errorActionClick.bind(this)}
             >
-              {this.$slots.errorAction ? (
-                this.$slots.errorAction()
+              {$slots.errorAction ? (
+                $slots.errorAction()
               ) : (
                 <>
                   <NButton text type="primary" color="#ffffff">
                     {{
-                      default: () => this.errorActionDescription,
+                      default: () => errorActionDescription,
                       icon: () => (
                         <RIcon name="reload" size="16" color="#ffffff" />
                       ),

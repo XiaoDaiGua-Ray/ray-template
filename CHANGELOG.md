@@ -1,5 +1,16 @@
 # CHANGE LOG
 
+## 4.6.2-beta1.2
+
+## Feats
+
+- 优化 `AppMenu Extra` 标记样式，现在不会因为菜单标题过长将标记挤出去
+- 优化 `RQRCode` 组件样式，在 `error` 状态下会模糊显示二维码
+
+## Fixes
+
+- 修复 `close` 方法会关闭最后一个标签的问题，现在如果当前的 `getMenuTagOptions` 长度为 `1`，则不会关闭标签页
+
 ## 4.6.2-beta1.1
 
 ## Feats

@@ -11,7 +11,7 @@ export type Component<T = any> =
   | (() => Promise<T>)
 
 export interface AppMenuExtraOptions {
-  extraLabel?: string
+  extraLabel?: string | number
   extraIcon?: string | VNode
   extraType?: TagProps['type']
 }

@@ -21,3 +21,14 @@
   display: flex;
   gap: 0 6px;
 }
+
+.r-menu--app {
+  // 手动设置 label 宽度，兼容 extra 的情况
+  .n-menu-item-content-header .n-ellipsis {
+    width: calc(100% - 41px);
+  }
+
+  .n-menu-item-content-header__extra {
+    margin-right: 8px;
+  }
+}

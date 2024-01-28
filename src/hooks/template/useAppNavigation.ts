@@ -76,7 +76,7 @@ export function useAppNavigation() {
     if (typeof target === 'number') {
       // 校验是否为 NaN
       if (isNaN(target)) {
-        console.warn(`navigationTo: The ${target} is NaN, expect number.`)
+        console.warn(`[navigationTo]: The ${target} is NaN, expect number.`)
 
         return
       }
@@ -86,7 +86,7 @@ export function useAppNavigation() {
       // 校验是否超出最大菜单长度
       if (target > getMenuOptions.value.length) {
         console.warn(
-          `navigationTo: The current ${target} exceeds the maximum number of menus.`,
+          `[navigationTo]: The current ${target} exceeds the maximum number of menus.`,
         )
 
         return
@@ -116,7 +116,7 @@ export function useAppNavigation() {
       if (fd) {
         isPushNavigation(fd.path)
       } else {
-        console.warn(`navigationTo: The path "${target}" is not found.`)
+        console.warn(`[navigationTo]: The path "${target}" is not found.`)
       }
     } else {
       isPushNavigation(target.fullPath)
