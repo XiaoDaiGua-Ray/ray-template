@@ -13,6 +13,7 @@ export interface AppMenuOption extends AppRouteRecordRaw {
   meta: AppRouteMeta
   breadcrumbLabel?: string
   fullPath: string
+  extra?: string | (() => VNode)
 }
 
 export interface MenuTagOptions extends AppMenuOption {

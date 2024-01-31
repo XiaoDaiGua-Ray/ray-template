@@ -9,10 +9,9 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { NPopover } from 'naive-ui'
 import { RIcon } from '@/components'
 
-import config from '../config'
+import { config } from '../shared'
 import { useFullscreen } from 'vue-hooks-plus'
 
 import type { TableProvider } from '../type'
@@ -29,7 +28,6 @@ export default defineComponent({
 
     return {
       toggleFullscreen,
-      isFullscreen,
       isEnabled,
     }
   },
@@ -37,27 +35,18 @@ export default defineComponent({
     const { toggleFullscreen, isEnabled, $t } = this
 
     return (
-      <NPopover showArrow={false}>
-        {{
-          trigger: () => (
-            <RIcon
-              name="fullscreen"
-              size={config.tableIconSize}
-              cursor="pointer"
-              onClick={() => {
-                if (!isEnabled) {
-                  window.$message.warning(
-                    $t('globalMessage.isEnabledFullscreen'),
-                  )
-                }
+      <RIcon
+        name="fullscreen"
+        size={config.tableIconSize}
+        cursor="pointer"
+        onClick={() => {
+          if (!isEnabled) {
+            window.$message.warning($t('globalMessage.isEnabledFullscreen'))
+          }
 
-                toggleFullscreen()
-              }}
-            />
-          ),
-          default: () => (this.isFullscreen ? '取消全屏' : '全屏表格'),
+          toggleFullscreen()
         }}
-      </NPopover>
+      />
     )
   },
 })

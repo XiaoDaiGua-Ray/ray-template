@@ -23,7 +23,7 @@
 
 # Ray Template
 
-English | [简体中文](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/README-ZH.md)
+English | [简体中文](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/README.zh-CN.md)
 
 A `completely free`, `efficient`, `feature complete` and based on vite5. x & ts(x) & pinia & vue3. x and other latest technology in the background template.
 

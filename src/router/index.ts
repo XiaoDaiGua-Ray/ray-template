@@ -29,8 +29,8 @@ const createVueRouter = async () => {
 export const setupRouter = async (app: App<Element>) => {
   router = await createVueRouter()
 
-  vueRouterRegister(router)
   app.use(router)
   // 等待 router 挂载后，初始化 useRouter 方法
   useVueRouter()
+  vueRouterRegister(router)
 }

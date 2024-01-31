@@ -21,7 +21,7 @@
 import { NPopover, NFlex, NTree } from 'naive-ui'
 import { RIcon } from '@/components'
 
-import config from '../config'
+import { config } from '../shared'
 import props from '../props'
 import { call } from '@/utils'
 
@@ -33,7 +33,7 @@ import type { MaybeArray } from '@/types'
 type FixedClick = (type: 'left' | 'right', option: C, index: number) => void
 
 const renderSwitcherIcon = () => (
-  <RIcon name="draggable" size={config.tableIconSize} cursor="all-scroll" />
+  <RIcon name="draggable" size={14} cursor="all-scroll" />
 )
 
 const RowIconRender = ({

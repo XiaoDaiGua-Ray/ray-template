@@ -10,6 +10,7 @@
  */
 
 import { NFlex, NCard, NButton, NInput } from 'naive-ui'
+import { RIcon } from '@/components'
 
 import {
   useAppNavigation,
@@ -17,6 +18,7 @@ import {
   useSpinning,
   useWatermark,
   useTheme,
+  useBadge,
 } from '@/hooks'
 import { getVariableToRefs } from '@/global-variable'
 import { useSettingGetters } from '@/store'
@@ -27,6 +29,7 @@ export default defineComponent({
     const currentMenuOption = ref('')
     const maximizeRef = getVariableToRefs('layoutContentMaximize')
     const watermark = ref(useSettingGetters().getWatermarkConfig.value.content)
+    const badgeValue = ref('new')
 
     const { navigationTo } = useAppNavigation()
     const { maximize, isLayoutContentMaximized } = useMaximize()
@@ -39,6 +42,11 @@ export default defineComponent({
     } = useWatermark()
     const { changeDarkTheme, changeLightTheme, toggleTheme, getAppTheme } =
       useTheme()
+    const {
+      hidden: badgeHidden,
+      show: badgeShow,
+      update: badgeUpdateLabel,
+    } = useBadge()
 
     return {
       navigationTo,
@@ -58,6 +66,10 @@ export default defineComponent({
       toggleTheme,
       getAppTheme,
       isLayoutContentMaximized,
+      badgeHidden,
+      badgeShow,
+      badgeUpdateLabel,
+      badgeValue,
     }
   },
   render() {
@@ -76,6 +88,9 @@ export default defineComponent({
       toggleTheme,
       getAppTheme,
       isLayoutContentMaximized,
+      badgeHidden,
+      badgeShow,
+      badgeUpdateLabel,
     } = this
 
     return (
@@ -85,6 +100,48 @@ export default defineComponent({
             hooks/template 包存放模板专属 hook
             方法。这里不做过多的赘述，可以查看文档具体描述。
           </h3>
+        </NCard>
+        <NCard title="useBadge 菜单标记">
+          <NFlex vertical>
+            <NInput v-model:value={this.badgeValue} />
+            <NFlex>
+              <NButton onClick={() => badgeHidden('/template-hooks')}>
+                隐藏当前菜单标记
+              </NButton>
+              <NButton onClick={() => badgeShow('/template-hooks')}>
+                显示当前菜单标记
+              </NButton>
+              <NButton
+                onClick={() =>
+                  badgeUpdateLabel('/template-hooks', {
+                    label: this.badgeValue,
+                  })
+                }
+              >
+                更新当前菜单标记
+              </NButton>
+              <NButton
+                onClick={() => {
+                  badgeUpdateLabel('/template-hooks', {
+                    label: this.badgeValue,
+                    icon: <RIcon name="error" size="18" />,
+                  })
+                }}
+              >
+                添加标记图标
+              </NButton>
+              <NButton
+                onClick={() => {
+                  badgeUpdateLabel('/template-hooks', {
+                    label: this.badgeValue,
+                    icon: void 0,
+                  })
+                }}
+              >
+                隐藏标记图标
+              </NButton>
+            </NFlex>
+          </NFlex>
         </NCard>
         <NCard title="useTheme 主题">
           <NFlex vertical>

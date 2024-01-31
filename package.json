@@ -1,7 +1,7 @@
 {
   "name": "ray-template",
   "private": false,
-  "version": "4.6.2-beta1.2",
+  "version": "4.6.2",
   "type": "module",
   "engines": {
     "node": "^18.0.0 || >=20.0.0",
@@ -34,7 +34,7 @@
   "dependencies": {
     "@vueuse/core": "^10.7.1",
     "awesome-qr": "2.1.5-rc.0",
-    "axios": "^1.6.5",
+    "axios": "^1.6.7",
     "clipboard": "^2.0.11",
     "crypto-js": "^4.1.1",
     "currency.js": "^2.0.4",

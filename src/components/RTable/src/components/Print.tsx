@@ -9,10 +9,9 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { NPopover } from 'naive-ui'
 import { RIcon } from '@/components'
 
-import config from '../config'
+import { config } from '../shared'
 import props from '../props'
 import { printDom } from '@/utils/dom'
 
@@ -53,19 +52,12 @@ export default defineComponent({
   },
   render() {
     return (
-      <NPopover showArrow={false}>
-        {{
-          trigger: () => (
-            <RIcon
-              name="print"
-              size={config.tableIconSize}
-              cursor="pointer"
-              onClick={this.printTableClick.bind(this)}
-            />
-          ),
-          default: () => '打印表格',
-        }}
-      </NPopover>
+      <RIcon
+        name="print"
+        size={config.tableIconSize}
+        cursor="pointer"
+        onClick={this.printTableClick.bind(this)}
+      />
     )
   },
 })

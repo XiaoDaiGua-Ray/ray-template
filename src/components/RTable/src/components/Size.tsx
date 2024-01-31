@@ -9,12 +9,12 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { NPopover, NPopselect } from 'naive-ui'
+import { NPopselect } from 'naive-ui'
 import { RIcon } from '@/components'
 
 import { call } from '@/utils'
 import props from '../props'
-import config from '../config'
+import { config } from '../shared'
 
 import type { ComponentSize } from '@/types'
 import type { MaybeArray } from '@/types'
@@ -31,7 +31,6 @@ export default defineComponent({
     ...props,
   },
   setup(props) {
-    const popoverShow = ref(false)
     const size = ref(props.size)
     const sizeOptions = [
       {
@@ -59,7 +58,6 @@ export default defineComponent({
     return {
       size,
       sizeOptions,
-      popoverShow,
       updatePopselectValue,
     }
   },
@@ -71,18 +69,7 @@ export default defineComponent({
         trigger="click"
         onUpdateValue={this.updatePopselectValue.bind(this)}
       >
-        <NPopover showArrow={false}>
-          {{
-            trigger: () => (
-              <RIcon
-                name="adjustment"
-                size={config.tableIconSize}
-                cursor="pointer"
-              />
-            ),
-            default: () => '密度',
-          }}
-        </NPopover>
+        <RIcon name="adjustment" size={config.tableIconSize} cursor="pointer" />
       </NPopselect>
     )
   },

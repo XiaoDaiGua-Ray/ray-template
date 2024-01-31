@@ -11,9 +11,11 @@ export type Component<T = any> =
   | (() => Promise<T>)
 
 export interface AppMenuExtraOptions {
-  extraLabel?: string | number
-  extraIcon?: string | VNode
-  extraType?: TagProps['type']
+  label?: string | number
+  icon?: VNode
+  type?: TagProps['type']
+  show?: boolean
+  i18nLabel?: string
 }
 
 export interface AppRouteMeta {
@@ -28,7 +30,7 @@ export interface AppRouteMeta {
   keepAlive?: boolean
   sameLevel?: boolean
   env?: string | string[]
-  extra?: string | AppMenuExtraOptions
+  extra?: AppMenuExtraOptions
 }
 
 // @ts-ignore

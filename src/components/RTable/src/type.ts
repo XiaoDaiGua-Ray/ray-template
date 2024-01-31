@@ -19,8 +19,9 @@ export type DropdownMixedOption =
   | DropdownDividerOption
   | DropdownRenderOption
 
-export interface DownloadTableOptions {
+export interface DownloadCsvTableOptions {
   fileName?: string
+  keepOriginalData?: boolean
 }
 
 export interface PrintTableOptions extends PrintDomOptions {}
@@ -29,7 +30,6 @@ export interface TableProvider {
   uuidWrapper: string
   uuidTable: string
   wrapperRef: Ref<HTMLElement | undefined>
-  tableRef: Ref<HTMLElement | undefined>
 }
 
 export interface C extends DataTableBaseColumn {
@@ -44,6 +44,8 @@ export interface C extends DataTableBaseColumn {
 
 export type OverridesTableColumn<T = Recordable> = C | DataTableColumn<T>
 
-export interface TableInst extends TableProvider {
+export interface TableInst extends Omit<TableProvider, 'wrapperRef'> {
   rTableInst: Omit<DataTableInst, 'clearFilter'>
 }
+
+export type PropsComponentPopselectKeys = 'striped' | 'bordered'

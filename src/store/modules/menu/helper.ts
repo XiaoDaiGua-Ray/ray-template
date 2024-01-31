@@ -11,17 +11,14 @@
 
 /** 本方法感谢 <https://yunkuangao.me/> 的支持 */
 
-import { APP_MENU_CONFIG, APP_CATCH_KEY } from '@/app-config'
 import { RIcon } from '@/components'
+
+import { APP_MENU_CONFIG, APP_CATCH_KEY } from '@/app-config'
 import { getStorage, isValueType } from '@/utils'
-import { useAppRoot } from '@/hooks'
+import { useAppRoot, useI18n } from '@/hooks'
 import { NTag } from 'naive-ui'
 
-import type {
-  AppMenuOption,
-  MenuTagOptions,
-  AppMenuKey,
-} from '@/types/modules/app'
+import type { AppMenuOption, AppMenuKey } from '@/types/modules/app'
 import type { TagProps } from 'naive-ui'
 
 /**
@@ -108,28 +105,6 @@ export const parseAndFindMatchingNodes = (
 
 /**
  *
- * @param item menu options
- * @param key current menu key
- * @param menuTagOptions menu tag options
- *
- * @remark 查找当前菜单项
- */
-export const matchMenuOption = (
-  item: AppMenuOption,
-  key: AppMenuKey,
-  menuTagOptions: MenuTagOptions[],
-) => {
-  if (item.path !== key) {
-    const tag = menuTagOptions.find((curr) => curr.path === item.path)
-
-    if (!tag) {
-      menuTagOptions.push(item)
-    }
-  }
-}
-
-/**
- *
  * @param option menu option
  *
  * @remark 动态修改浏览器标题
@@ -145,6 +120,18 @@ export const updateDocumentTitle = (option: AppMenuOption) => {
   document.title = breadcrumbLabel + ' - ' + spliceTitle
 }
 
+/**
+ *
+ * @param option menu option
+ *
+ * @returns 创建菜单图标
+ *
+ * @description
+ * 创建菜单图标，接受一个 AppMenuOption 类型的参数，或者一个包含 AppMenuOption 核心数据的对象
+ *
+ * @example
+ * createMenuIcon({ ...AppMenuOption })
+ */
 export const createMenuIcon = (option: AppMenuOption) => {
   const {
     meta: { icon },
@@ -171,6 +158,18 @@ export const createMenuIcon = (option: AppMenuOption) => {
   return () => _icon
 }
 
+/**
+ *
+ * @param option menu option
+ *
+ * @returns 创建菜单额外内容
+ *
+ * @description
+ * 创建菜单额外内容，接受一个 AppMenuOption 类型的参数，或者一个包含 AppMenuOption 核心数据的对象
+ *
+ * @example
+ * createMenuExtra({ ...AppMenuOption })
+ */
 export const createMenuExtra = (option: AppMenuOption) => {
   const {
     meta: { extra },
@@ -180,6 +179,14 @@ export const createMenuExtra = (option: AppMenuOption) => {
     return
   }
 
+  const { show } = extra
+
+  if (show === false) {
+    return
+  }
+
+  const { t } = useI18n()
+  const { label, icon, type, i18nLabel } = extra
   const tagProps: TagProps = {
     type: 'primary',
     size: 'small',
@@ -188,32 +195,58 @@ export const createMenuExtra = (option: AppMenuOption) => {
     strong: true,
   }
 
-  if (isValueType<object>(extra, 'Object')) {
-    const { extraLabel, extraIcon, extraType } = extra
+  // 渲染文案，优先级：i18nLabel > label
+  const renderLabel = () => {
+    if (i18nLabel) {
+      return t(i18nLabel)
+    }
 
+    if (label) {
+      return label
+    }
+
+    return null
+  }
+
+  // 如果没有文案，但是设置了 icon，则将 padding-right 设置为 0
+  const style = () => {
+    if ((icon && (i18nLabel || label)) || (!icon && (i18nLabel || label))) {
+      return null
+    }
+
+    return {
+      'padding-right': '0',
+    }
+  }
+
+  if (isValueType<object>(extra, 'Object')) {
     return () => {
       return h(
         NTag,
         {
           ...tagProps,
-          type: extraType || 'primary',
+          type: type || 'primary',
+          style: style(),
         },
         {
-          default: () => extraLabel,
-          icon: () => extraIcon,
+          default: () => renderLabel(),
+          icon: () => icon,
         },
       )
     }
   }
-
-  return () => {
-    return h(NTag, tagProps, {
-      default: () => extra,
-    })
-  }
 }
 
-/** 获取缓存的 menu key, 如果未获取到则使用 getRootPath 当作默认激活路由菜单 */
+/**
+ *
+ * @returns 获取缓存的菜单 key
+ *
+ * @description
+ * 获取缓存的菜单 key，如果没有缓存，则返回根路径
+ *
+ * @example
+ * getCatchMenuKey() // '/dashboard'
+ */
 export const getCatchMenuKey = () => {
   const { getRootPath } = useAppRoot()
   const cacheMenuKey = getStorage<AppMenuKey>(

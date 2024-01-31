@@ -11,14 +11,22 @@
 
 import { dataTableProps } from 'naive-ui'
 
-import type { PropType, VNode, VNodeChild } from 'vue'
+import type { PropType, VNode } from 'vue'
 import type { MaybeArray } from '@/types'
 import type { DropdownOption, DataTableColumn } from 'naive-ui'
-import type { DownloadTableOptions, PrintTableOptions } from './type'
+import type { DownloadCsvTableOptions, PrintTableOptions } from './type'
 import type { Recordable } from '@/types'
 
 const props = {
   ...dataTableProps,
+  downloadCsvTableOptions: {
+    /**
+     *
+     * 配置下载表格配置项
+     */
+    type: Object as PropType<DownloadCsvTableOptions>,
+    default: () => ({}),
+  },
   title: {
     /**
      *
@@ -61,14 +69,6 @@ const props = {
     >,
     default: null,
   },
-  downloadTableOptions: {
-    /**
-     *
-     * 配置下载表格内容为 excel 的配置项
-     */
-    type: Object as PropType<DownloadTableOptions>,
-    default: () => ({}),
-  },
   wrapperBordered: {
     /**
      *
@@ -85,16 +85,6 @@ const props = {
      */
     type: Object as PropType<PrintTableOptions>,
     default: () => ({}),
-  },
-  onDownloadSuccess: {
-    /** 导出表格成功回调 */
-    type: [Function, Array] as PropType<MaybeArray<() => void>>,
-    default: null,
-  },
-  onDownloadError: {
-    /** 导出表格失败回调 */
-    type: [Function, Array] as PropType<MaybeArray<() => void>>,
-    default: null,
   },
   onUpdateColumns: {
     type: [Function, Array] as PropType<

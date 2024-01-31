@@ -20,35 +20,7 @@ import type { Person } from '@/api/demo/mock/person'
 const MockDemo = defineComponent({
   name: 'MockDemo',
   setup() {
-    const paginationRef = reactive({
-      page: 1,
-      pageSize: 10,
-      itemCount: 0,
-      pageSizes: [10, 20, 30, 40, 50],
-      showSizePicker: true,
-      onUpdatePage: (page: number) => {
-        paginationRef.page = page
-
-        getPerson()
-      },
-      onUpdatePageSize: (pageSize: number) => {
-        paginationRef.pageSize = pageSize
-        paginationRef.page = 1
-
-        getPerson()
-      },
-    })
-    const {
-      data: personData,
-      loading: personLoading,
-      run: personFetchRun,
-    } = useHookPlusRequest(getPersonList, {
-      manual: true,
-      onSuccess: (data) => {
-        console.log(data)
-      },
-    })
-    const columns = ref([
+    const columns = [
       {
         title: 'id',
         key: 'id',
@@ -110,9 +82,45 @@ const MockDemo = defineComponent({
           )
         },
       },
-    ])
+    ]
     const condition = reactive({
       email: null,
+    })
+    const paginationRef = reactive({
+      page: 1,
+      pageSize: 10,
+      itemCount: 0,
+      pageSizes: [10, 20, 30, 40, 50],
+      showSizePicker: true,
+      onUpdatePage: (page: number) => {
+        paginationRef.page = page
+
+        getPerson()
+      },
+      onUpdatePageSize: (pageSize: number) => {
+        paginationRef.pageSize = pageSize
+        paginationRef.page = 1
+
+        getPerson()
+      },
+    })
+    const {
+      data: personData,
+      loading: personLoading,
+      run: personFetchRun,
+    } = useHookPlusRequest(getPersonList, {
+      defaultParams: [
+        {
+          page: paginationRef.page,
+          pageSize: paginationRef.pageSize,
+          email: condition.email,
+        },
+      ],
+      onSuccess: (res) => {
+        const { total } = res
+
+        paginationRef.itemCount = total
+      },
     })
 
     const getPerson = () => {
@@ -125,16 +133,6 @@ const MockDemo = defineComponent({
         email,
       })
     }
-
-    watchEffect(() => {
-      if (personData.value) {
-        paginationRef.itemCount = personData.value.total
-      }
-    })
-
-    onBeforeMount(() => {
-      getPerson()
-    })
 
     return {
       personData,
@@ -180,7 +178,7 @@ const MockDemo = defineComponent({
           </RCollapseGrid>
         </NForm>
         <RTable
-          title="分页表格"
+          title="Mock数据表格"
           data={this.personData?.data}
           loading={this.personLoading}
           v-model:columns={this.columns}

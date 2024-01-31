@@ -81,13 +81,16 @@ export const APP_MENU_CONFIG: Readonly<AppMenuConfig> = {
  *
  * 系统缓存 key 前缀
  * 可以选择自定义缓存 key 前缀，在使用 getStorage 和 setStorage 时可以考虑是否启用前缀的方式来避免缓存 key 冲突
+ * 该配置项也可以结合 APP_CATCH_KEY 使用
+ *
+ * 值得注意的是，该方法整合进了 cache.ts 方法包中。也就是说只要该配置项不为空字符串则会自动启用缓存前缀
  *
  * 默认不启用
  *
  * @example
- * export const APP_CATCH_KEY_PREFIX: = 'ray-template:'
+ * export const APP_CATCH_KEY_PREFIX = 'ray-template:'
  *
- * 会自动拼接为 'ray-template:signing'
+ * 'ray-template:signing' // 会自动拼接为
  */
 export const APP_CATCH_KEY_PREFIX = ''
 

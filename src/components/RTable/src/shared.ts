@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-export default {
+export const config = {
   tableIconSize: '18',
   tableKey: Symbol('r-table'),
 }

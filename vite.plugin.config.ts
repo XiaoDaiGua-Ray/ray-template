@@ -104,7 +104,7 @@ function onlyBuildOptions(mode: string) {
           name: 'axios',
           global: 'axios',
           resolve:
-            'https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/axios.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js',
         },
       ],
     }),

@@ -16,14 +16,15 @@ import Size from './components/Size'
 import Fullscreen from './components/Fullscreen'
 import C from './components/C'
 import Print from './components/Print'
+import TablePropsSelect from './components/Props'
 
 import props from './props'
 import { call, renderNode, uuid } from '@/utils'
-import config from './config'
+import { config } from './shared'
 
 import type { DropdownOption, DataTableInst } from 'naive-ui'
 import type { ComponentSize } from '@/types'
-import type { C as CType } from './type'
+import type { C as CType, PropsComponentPopselectKeys } from './type'
 
 export default defineComponent({
   name: 'RTable',
@@ -53,6 +54,10 @@ export default defineComponent({
      */
     const privateReactive = reactive({
       size: props.size,
+    })
+    const propsPopselectValue = ref({
+      striped: false,
+      bordered: false,
     })
 
     /**
@@ -139,6 +144,16 @@ export default defineComponent({
         .map((curr) => (typeof curr === 'function' ? curr() : curr))
     }
 
+    const popselectChange = (value: PropsComponentPopselectKeys[]) => {
+      const keys = Object.keys(propsPopselectValue.value)
+
+      keys.forEach((key) => {
+        propsPopselectValue.value[key] = value.includes(
+          key as PropsComponentPopselectKeys,
+        )
+      })
+    }
+
     /**
      *
      * @param p props
@@ -152,6 +167,11 @@ export default defineComponent({
           <Size {...p} onChangeSize={changeTableSize.bind(this)} />
           <Fullscreen />
           <C {...p} onUpdateColumn={updateTableColumn.bind(this)} />
+          <TablePropsSelect
+            {...p}
+            onPopselectChange={popselectChange.bind(this)}
+            onInitialed={popselectChange.bind(this)}
+          />
         </>
       )
 
@@ -192,59 +212,75 @@ export default defineComponent({
       privateReactive,
       tool,
       wrapperRef,
+      propsPopselectValue,
     }
   },
   render() {
-    const { tool } = this
+    const {
+      $props,
+      $attrs,
+      wrapperBordered,
+      uuidWrapper,
+      privateReactive,
+      disabledContextMenu,
+      contextMenuReactive,
+      contextMenuOptions,
+      uuidTable,
+      title,
+      $slots,
+      propsPopselectValue,
+    } = this
+    const { tool, combineRowProps, contextMenuSelect } = this
 
     return (
       <NCard
         ref="wrapperRef"
-        bordered={this.wrapperBordered}
-        {...{ id: this.uuidWrapper }}
+        bordered={wrapperBordered}
+        {...{ id: uuidWrapper }}
       >
         {{
           default: () => (
             <>
               <NDataTable
                 ref="rTableInst"
-                {...{ id: this.uuidTable }}
-                {...this.$props}
-                {...this.$attrs}
-                rowProps={this.combineRowProps.bind(this)}
-                size={this.privateReactive.size}
+                {...{ id: uuidTable }}
+                {...$attrs}
+                {...$props}
+                {...propsPopselectValue}
+                rowProps={combineRowProps.bind(this)}
+                size={privateReactive.size}
               >
                 {{
-                  ...this.$slots,
+                  ...$slots,
                 }}
               </NDataTable>
-              {!this.disabledContextMenu ? (
+              {!disabledContextMenu ? (
                 <NDropdown
-                  show={this.contextMenuReactive.showContextMenu}
+                  show={contextMenuReactive.showContextMenu}
                   placement="bottom-start"
                   trigger="manual"
-                  x={this.contextMenuReactive.x}
-                  y={this.contextMenuReactive.y}
-                  options={this.contextMenuOptions}
+                  x={contextMenuReactive.x}
+                  y={contextMenuReactive.y}
+                  options={contextMenuOptions}
                   onClickoutside={() =>
-                    (this.contextMenuReactive.showContextMenu = false)
+                    (contextMenuReactive.showContextMenu = false)
                   }
-                  onSelect={this.contextMenuSelect.bind(this)}
+                  onSelect={contextMenuSelect.bind(this)}
                 />
               ) : null}
             </>
           ),
-          header: renderNode(this.title, {
+          header: renderNode(title, {
             defaultElement: <div style="display: none;"></div>,
           }),
           'header-extra': () => (
             <NFlex align="center">
               {/* eslint-disable @typescript-eslint/no-explicit-any */}
-              {tool(this.$props as any)}
+              {tool($props as any)}
             </NFlex>
           ),
-          footer: () => this.$slots.tableFooter?.(),
-          action: () => this.$slots.tableAction?.(),
+          footer: () => $slots.tableFooter?.(),
+          action: () => $slots.tableAction?.(),
         }}
       </NCard>
     )

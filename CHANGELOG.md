@@ -1,5 +1,31 @@
 # CHANGE LOG
 
+## 4.6.2
+
+## Feats
+
+- `AppMenu Extra` 已经稳定发布，现在你可以在菜单标题后面添加标记了，相关变更
+  - `extraIcon` 类型变为 `VNode`
+  - 新增 `show` 配置项，用于配置是否显示 `extra` 标记，如果默认为 `false`，则不会显示 `extra` 标记，如果未配置或者配置为 `true`，则会显示 `extra` 标记。意味着只要你配置了 `label` 则会显示标记
+  - 新增 `useBadge hooks` 方法，便捷操作菜单标记
+    - `update`：更新标记
+    - `show`：显示标记
+    - `hidden`：隐藏标记
+  - 新增 `i18nLabel` 配置项，当你希望该标签能够跟随模板语言切换动态切换的时候你可能用的上，该配置项优先级高于 `label`
+
+> 该配置项仅在 `collapsed` 为 `false` 时生效。
+
+- 更新 `axios` 版本至 `1.6.7`
+- 移除 `matchMenuOption` 方法
+- 调整 `vueRouterRegister` 方法的运行时机，现在会在 `router` 注册完成后再执行该方法
+- 优化一些试例页面代码
+- `RTable` 相关
+  - 新增 `Props` 组件，支持勾选配置一些表格的配置项，目前仅支持：边框、条纹
+  - 优化 `Size` 组件，取消没必要的响应式代理数据
+  - 取消自定义工具组件的 `Popover` 提示
+  - 更改 `config.ts` 文件名为 `shared.ts`，并且 `config` 配置导入导出方式更改为 `import { config } from '@/shared'`
+- 更改 `README-ZH.md` 文件名为 `README.zh-CN.md`
+
 ## 4.6.2-beta1.2
 
 ## Feats
