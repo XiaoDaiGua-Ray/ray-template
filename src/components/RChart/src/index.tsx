@@ -298,7 +298,7 @@ export default defineComponent({
       // 避免重复渲染
       if (echartInst?.getDom()) {
         console.warn(
-          'RChart mount: There is a chart instance already initialized on the dom. Execution was interrupted.',
+          '[RChart mount]: There is a chart instance already initialized on the dom. Execution was interrupted.',
         )
 
         return

@@ -11,6 +11,9 @@ const multiMenu: AppRouteRecordRaw = {
     i18nKey: t('menu.MultiMenu'),
     icon: 'other',
     order: 4,
+    extra: {
+      label: 'cache',
+    },
   },
   children: [
     {

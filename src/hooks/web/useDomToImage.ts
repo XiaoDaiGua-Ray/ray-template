@@ -34,6 +34,8 @@ export interface UseDomToImageOptions extends ReDomToImageOptions {
    * 在 dom 转换为图片之前执行
    *
    * @param element current dom
+   *
+   * @default undefined
    */
   beforeCreate?: <T extends TargetType = Element>(
     element: T | null | undefined,
@@ -44,6 +46,8 @@ export interface UseDomToImageOptions extends ReDomToImageOptions {
    * @param result dom to image result
    *
    * 在 dom 转换为图片之后执行
+   *
+   * @default undefined
    */
   created?: <T extends TargetType = Element>(
     result: DomToImageResult,
@@ -54,6 +58,8 @@ export interface UseDomToImageOptions extends ReDomToImageOptions {
    * @param error dom to image error
    *
    * 在 dom 转换为图片失败时执行
+   *
+   * @default undefined
    */
   createdError?: (error?: Error) => void
   /**
@@ -61,6 +67,8 @@ export interface UseDomToImageOptions extends ReDomToImageOptions {
    * @param element current dom
    *
    * 无论 dom 转换为图片成功或失败，都会执行
+   *
+   * @default undefined
    */
   finally?: () => void
 }
@@ -78,12 +86,15 @@ const domToImageMethods = {
  * @param target ref dom
  * @param options dom-to-image options
  *
- * 使用 dom-to-image 将 dom 转换为图片，基于 dom-to-image v2.6.0
- * 拓展了 imageType 参数，用于指定图片类型
+ * @see https://github.com/tsayen/dom-to-image
  *
- * create 方法支持在执行时传递 imageType 参数，用于指定图片类型。并且优先级大于 options.imageType
- * 当然，你也可以不传递 imageType 参数，此时会使用 options.imageType
- * 如果都未传递，则默认使用 jpeg
+ * @description
+ * 使用 dom-to-image 将 dom 转换为图片，基于 dom-to-image v2.6.0。
+ * 拓展了 imageType 参数，用于指定图片类型。
+ *
+ * create 方法支持在执行时传递 imageType 参数，用于指定图片类型。并且优先级大于 options.imageType；
+ * 当然，你也可以不传递 imageType 参数，此时会使用 options.imageType，
+ * 如果都未传递，则默认使用 jpeg。
  *
  * @example
  * const refDom = ref<HTMLElement>()

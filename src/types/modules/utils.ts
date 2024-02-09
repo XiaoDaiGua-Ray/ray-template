@@ -115,3 +115,11 @@ export interface StorageOptions<T = any> {
   prefixKey?: string
   defaultValue?: T
 }
+
+export interface QueryElementsOptions<T extends Element = Element> {
+  defaultElement?: T
+}
+
+export type PropertyName = string | number | symbol
+
+export type Many<T> = T | ReadonlyArray<T>

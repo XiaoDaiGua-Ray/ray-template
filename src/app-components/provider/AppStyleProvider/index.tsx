@@ -11,9 +11,9 @@
 
 import { get } from 'lodash-es'
 import {
-  addClass,
+  setClass,
   removeClass,
-  addStyle,
+  setStyle,
   colorToRgba,
   getStorage,
 } from '@/utils'
@@ -62,7 +62,7 @@ export default defineComponent({
       const el = document.getElementById('pre-loading-animation')
 
       if (el) {
-        addStyle(el, {
+        setStyle(el, {
           display: 'none',
         })
       }
@@ -84,7 +84,7 @@ export default defineComponent({
         ? removeClass(body, lightClassName)
         : removeClass(body, darkClassName)
 
-      addClass(body, bool ? darkClassName : lightClassName)
+      setClass(body, bool ? darkClassName : lightClassName)
     }
 
     syncPrimaryColorToBody()

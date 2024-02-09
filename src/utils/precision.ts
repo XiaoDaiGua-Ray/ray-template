@@ -67,7 +67,8 @@ const currencyPrototypeKeys = [
  * @param dividend 初始值
  * @param cb 回调方法
  *
- * @remark 计算基础方法, 仅限于该处使用
+ * @description
+ * 计算基础方法, 仅限于该处使用。
  */
 const basic = (
   valueOptions: CurrencyArguments[],
@@ -99,10 +100,10 @@ const basic = (
  * 当该对象含有 s, intValue, p, value... 属性时, 则认为该对象为 currency.js 的对象
  *
  * @example
- * isCurrency(1.23) => false
- * isCurrency('1.23') => false
- * isCurrency({ s: 1, intValue: 1, p: 1, value: 1 }) => false
- * isCurrency(currency(1)) => true
+ * isCurrency(1.23) // false
+ * isCurrency('1.23') // false
+ * isCurrency({ s: 1, intValue: 1, p: 1, value: 1 }) // false
+ * isCurrency(currency(1)) // true
  */
 export const isCurrency = (value: unknown) => {
   if (typeof value === 'string' || typeof value === 'number') {
@@ -118,10 +119,16 @@ export const isCurrency = (value: unknown) => {
 
 /**
  *
- * 格式化一个数据值, 并且返回其原始值
- * 默认以 number 格式返回
+ * @description
+ * 格式化一个数据值, 并且返回其原始值。
  *
- * 如果需要格式化为其他格式(如: 货币单位、分组、分隔符等), 请使用 currency format 方法格式
+ * 默认以 number 格式返回。
+ *
+ * 如果需要格式化为其他格式(如: 货币单位、分组、分隔符等), 请使用 currency format 方法格式。
+ *
+ * @example
+ * format(0.1) // 0.1
+ * format(0.1, { symbol: '¥' }) // ¥0.1
  */
 export const format = (
   value: CurrencyArguments,
@@ -136,11 +143,12 @@ export const format = (
 
 /**
  *
- * 加法
+ * @description
+ * 加法。
  *
  * @example
- * format(add(0.1, 0.2)) => 0.3
- * format(add(0.2, 0.33)) => 0.53
+ * format(add(0.1, 0.2)) // 0.3
+ * format(add(0.2, 0.33)) // 0.53
  */
 export const add = (...args: CurrencyArguments[]) => {
   if (args.length === 1) {
@@ -154,11 +162,12 @@ export const add = (...args: CurrencyArguments[]) => {
 
 /**
  *
- * 减法
+ * @description
+ * 减法。
  *
  * @example
- * format(subtract(0.1, 0.12312)) => -0.02
- * format(subtract(0.2, 0.33)) => -0.13
+ * format(subtract(0.1, 0.12312)) // -0.02
+ * format(subtract(0.2, 0.33)) // -0.13
  */
 export const subtract = (...args: CurrencyArguments[]) => {
   if (args.length === 1) {
@@ -185,11 +194,12 @@ export const subtract = (...args: CurrencyArguments[]) => {
 
 /**
  *
- * 乘法
+ * @description
+ * 乘法。
  *
  * @example
- * format(multiply(1, 0.2)) => 0.2
- * format(multiply(0.2, 0.33)) => 0.07
+ * format(multiply(1, 0.2)) // 0.2
+ * format(multiply(0.2, 0.33)) // 0.07
  */
 export const multiply = (...args: CurrencyArguments[]) => {
   if (args.length === 1) {
@@ -203,11 +213,12 @@ export const multiply = (...args: CurrencyArguments[]) => {
 
 /**
  *
- * 除法
+ * @description
+ * 除法。
  *
  * @example
- * format(divide(1, 0.2)) => 5
- * format(divide(0.2, 0.33)) => 0.61
+ * format(divide(1, 0.2)) // 5
+ * format(divide(0.2, 0.33)) // 0.61
  */
 export const divide = (...args: CurrencyArguments[]) => {
   if (args.length === 1) {
@@ -230,12 +241,13 @@ export const divide = (...args: CurrencyArguments[]) => {
 
 /**
  *
- * 平分(将一个数值平均分配到一个数组中)
+ * @description
+ * 平分(将一个数值平均分配到一个数组中)，
  * 如果值为 undefined null 会自动转换为 0
  *
  * @example
- * distribute(0, 1) => [0]
- * distribute(0, 3) => [0, 0, 0]
+ * distribute(0, 1) // [0]
+ * distribute(0, 3) // [0, 0, 0]
  */
 export const distribute = (value: CurrencyArguments, length: number) => {
   if (length <= 1) {

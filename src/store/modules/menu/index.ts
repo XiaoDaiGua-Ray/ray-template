@@ -25,7 +25,7 @@
 
 import { NEllipsis } from 'naive-ui'
 
-import { setStorage, pick } from '@/utils'
+import { setStorage, pick, equalRouterPath } from '@/utils'
 import { validRole, validMenuItemShow } from '@/router/helper/routerCopilot'
 import {
   parseAndFindMatchingNodes,
@@ -42,6 +42,47 @@ import { APP_CATCH_KEY } from '@/app-config'
 import type { AppMenuOption, MenuTagOptions } from '@/types'
 import type { MenuState } from '@/store/modules/menu/type'
 import type { LocationQuery } from 'vue-router'
+
+let cachePreNormal: AppMenuOption | undefined = void 0
+
+/**
+ *
+ * @param options 菜单列表或者类似菜单列表的数据结构
+ * @param target 目标路径
+ *
+ * @returns 匹配的菜单项
+ *
+ * @description
+ * 递归查找匹配的菜单项，缓存上一次的匹配项。
+ * 并且该方法一旦匹配成功就会立即返回。
+ *
+ * 通过 fullPath 进行匹配。
+ *
+ * @example
+ * depthSearchAppMenu([{ path: '/dashboard', name: 'Dashboard', meta: { i18nKey: 'menu.Dashboard' } }], '/dashboard')
+ */
+export const depthSearchAppMenu = (
+  options: AppMenuOption[],
+  target: string,
+) => {
+  if (cachePreNormal && equalRouterPath(cachePreNormal.fullPath, target)) {
+    return cachePreNormal
+  }
+
+  for (const curr of options) {
+    if (equalRouterPath(curr.fullPath, target)) {
+      cachePreNormal = curr
+
+      return curr
+    }
+
+    if (curr.children?.length) {
+      depthSearchAppMenu(curr.children, target)
+
+      continue
+    }
+  }
+}
 
 export const piniaMenuStore = defineStore(
   'menu',
@@ -64,9 +105,13 @@ export const piniaMenuStore = defineStore(
     /**
      *
      * @param option 菜单项（类似于菜单项的数据结构也可以）
+     *
      * @returns 转换后的菜单项
      *
-     * 将路由项或者类似于菜单项的数据结构转换为菜单项（AppMenu）
+     * @description
+     * 将路由项或者类似于菜单项的数据结构转换为菜单项（AppMenu）。
+     * 但是，该方法有一个地方需要注意，那就是需要手动设置一下准确的 fullPath，
+     * 其实这是一个设计的失误，因为该方法不能准确的感知到 fullPath 应该是什么。
      *
      * @example
      * resolveOption({ path: '/dashboard', name: 'Dashboard', meta: { i18nKey: 'menu.Dashboard' } })

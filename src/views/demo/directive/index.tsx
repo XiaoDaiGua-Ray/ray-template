@@ -70,14 +70,14 @@ const RDirective = defineComponent({
               v-throttle={{
                 func: this.updateDemoValue.bind(null, 'throttleBtnClickCount'),
                 trigger: 'click',
-                wait: 1000,
+                wait: 3000,
                 options: {},
               }}
             >
               点击执行
             </NButton>
             <p>我执行了{this.throttleBtnClickCount}次</p>
-            <p>该方法 1s 内仅会执行一次</p>
+            <p>该方法 3s 内仅会执行一次</p>
           </NFlex>
         </NCard>
         <NCard title="防抖">
@@ -86,14 +86,14 @@ const RDirective = defineComponent({
               v-debounce={{
                 func: this.updateDemoValue.bind(null, 'debounceBtnClickCount'),
                 trigger: 'click',
-                wait: 1000,
+                wait: 3000,
                 options: {},
               }}
             >
               点击执行
             </NButton>
             <p>我执行了{this.debounceBtnClickCount}次</p>
-            <p>该方法将延迟 1s 执行</p>
+            <p>该方法将延迟 3s 执行</p>
           </NFlex>
         </NCard>
         <NCard title="禁用">

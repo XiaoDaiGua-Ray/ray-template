@@ -25,14 +25,15 @@ export interface PrintDomOptions {
  * @param target ref dom
  * @param options print-dom options, dom-to-image options
  *
- * 基于 useDomToImage 和 print-js 封装，允许 Ref 注册 Dom 直接调用打印
- * 避免直接打印 dom 时出现一些诡异的问题
+ * @description
+ * 基于 useDomToImage 和 print-js 封装，允许 Ref 注册 Dom 直接调用打印。
+ * 避免直接打印 dom 时出现一些诡异的问题。
  *
- * 该方法会强制剔除 printOptions 中的 printable, type, base64 属性，即使忽略了 ts 的类型检查
- * 并且在绘制图片的时候，强制使用 jpeg 格式，即使是指定了其他格式
+ * 该方法会强制剔除 printOptions 中的 printable, type, base64 属性，即使忽略了 ts 的类型检查。
+ * 并且在绘制图片的时候，强制使用 jpeg 格式，即使是指定了其他格式。
  *
- * 支持 useDomToImage 方法的所有配置项，除了 imageType
- * 支持 print-js 的所有配置项，除了 printable 和 type
+ * 支持 useDomToImage 方法的所有配置项，除了 imageType。
+ * 支持 print-js 的所有配置项，除了 printable 和 type。
  *
  * @example
  * const refDom = ref<HTMLElement>()

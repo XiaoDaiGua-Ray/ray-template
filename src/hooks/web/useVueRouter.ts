@@ -30,7 +30,9 @@ export const useVueRouter = () => {
       throw new Error()
     }
   } catch (e) {
-    throw new Error('router is not defined')
+    throw new Error(
+      `[useVueRouter]: An error occurred during registration of vue-router. ${e}`,
+    )
   }
 }
 

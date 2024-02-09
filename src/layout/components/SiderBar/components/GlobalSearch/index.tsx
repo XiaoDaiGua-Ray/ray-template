@@ -31,9 +31,9 @@ import {
 } from 'naive-ui'
 import { RIcon } from '@/components'
 
-import { queryElements, addClass, removeClass } from '@/utils'
+import { queryElements, setClass, removeClass, pick } from '@/utils'
 import { debounce } from 'lodash-es'
-import { useMenuGetters, useMenuActions } from '@/store'
+import { useMenuActions } from '@/store'
 import { validMenuItemShow } from '@/router/helper/routerCopilot'
 import { useDevice } from '@/hooks'
 import { useEventListener } from '@vueuse/core'
@@ -51,7 +51,9 @@ export default defineComponent({
   },
   emits: ['update:show'],
   setup(props, { emit }) {
-    const { changeMenuModelValue } = useMenuActions()
+    const { changeMenuModelValue, resolveOption } = useMenuActions()
+    const { getRoutes } = useRouter()
+
     const modelShow = computed({
       get: () => props.show,
       set: (val) => {
@@ -62,8 +64,6 @@ export default defineComponent({
         }
       },
     })
-    const { getMenuOptions } = useMenuGetters()
-
     const state = reactive({
       searchValue: null,
       searchOptions: [] as AppMenuOption[],
@@ -102,6 +102,10 @@ export default defineComponent({
 
     /** 按下 ctrl + k 或者 command + k 激活搜索栏 */
     const registerArouseKeyboard = (e: KeyboardEvent) => {
+      if (modelShow.value) {
+        return
+      }
+
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault()
         e.stopPropagation()
@@ -113,8 +117,6 @@ export default defineComponent({
 
     /** 根据输入值模糊检索菜单 */
     const fuzzySearchMenuOptions = (value: string) => {
-      const arr: AppMenuOption[] = []
-
       if (value) {
         loading.value = true
       } else {
@@ -124,37 +126,35 @@ export default defineComponent({
         return
       }
 
-      const filterArr = (options: AppMenuOption[]) => {
-        for (const curr of options) {
-          if (curr.children?.length && validMenuItemShow(curr)) {
-            filterArr(curr.children)
+      const arr = getRoutes().reduce((pre, curr) => {
+        const pickOption = pick(curr, [
+          'children',
+          'meta',
+          'path',
+          'name',
+        ]) as unknown as AppMenuOption
 
-            continue
-          }
+        const res = resolveOption({
+          ...pickOption,
+          fullPath: curr.path,
+        })
+        const { breadcrumbLabel } = res
 
-          /** 处理菜单名与输入值, 不区分大小写 */
-          const $breadcrumbLabel = curr.breadcrumbLabel?.toLocaleLowerCase()
-          const $value = String(value).toLocaleLowerCase()
-
-          // 是否模糊匹配字符、满足展示条件
-          if (
-            $breadcrumbLabel?.includes($value) &&
-            validMenuItemShow(curr) &&
-            !curr.children?.length
-          ) {
-            arr.push(curr)
-          }
+        // 是否模糊匹配字符、满足展示条件
+        if (
+          breadcrumbLabel
+            ?.toLocaleLowerCase()
+            ?.includes(value.toLocaleLowerCase()) &&
+          validMenuItemShow(res)
+        ) {
+          pre.push(res)
         }
-      }
+
+        return pre
+      }, [] as AppMenuOption[])
 
       setTimeout(() => {
-        if (value) {
-          filterArr(getMenuOptions.value)
-
-          state.searchOptions = arr
-        } else {
-          state.searchOptions = []
-        }
+        state.searchOptions = arr
 
         nextTick().then(() => {
           autoFocusingSearchItem()
@@ -203,7 +203,7 @@ export default defineComponent({
           if (searchElementOptions?.length) {
             const [el] = searchElementOptions
 
-            addClass(el, activeClass)
+            setClass(el, activeClass)
           }
         })
       }
@@ -218,7 +218,7 @@ export default defineComponent({
       } else if (typeof icon === 'function') {
         return () => icon
       } else {
-        return <RIcon name="table" size="24" />
+        return <RIcon name="search" size="24" />
       }
     }
 
@@ -381,8 +381,7 @@ export default defineComponent({
                                 justify="center"
                                 class="global-search__empty-content"
                               >
-                                <RIcon name="empty" size="24" />
-                                暂无搜索结果
+                                没有搜索结果
                               </NFlex>
                             ),
                           }}

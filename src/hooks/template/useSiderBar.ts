@@ -212,13 +212,14 @@ export function useSiderBar() {
         'path',
         'name',
         'redirect',
-      ]) as unknown as AppMenuOption
+      ])
+      const res = resolveOption(pickOption as unknown as AppMenuOption)
 
       changeMenuModelValue(
-        pickOption.path,
+        res.path,
         resolveOption({
-          ...pickOption,
-          fullPath: pickOption.path,
+          ...res,
+          fullPath: res.path,
         }),
       )
     }

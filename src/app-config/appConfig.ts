@@ -120,6 +120,7 @@ export const APP_CATCH_KEY = {
   appPiniaSigningStore: 'piniaSigningStore',
   appVersionProvider: 'appVersionProvider',
   isAppLockScreen: 'isAppLockScreen',
+  appGlobalSearchOptions: 'appGlobalSearchOptions',
 } as const
 
 /**

@@ -1,4 +1,4 @@
-import { useMenuGetters } from '@/store'
+import { useMenuGetters, depthSearchAppMenu } from '@/store'
 import { isValueType } from '@/utils'
 import { createMenuExtra } from '@/store/modules/menu/helper'
 
@@ -25,64 +25,16 @@ const renderExtra = (
   cachePreNormal = option
 }
 
-/**
- *
- * @param path1 待比较的路径1
- * @param path2 待比较的路径2
- *
- * @description
- * 判断两个路径是否相等，忽略最后的斜杠
- *
- * @example
- * equal('/a/', '/a') // true
- * equal('/a', '/a') // true
- */
-const equal = (path1: string, path2: string) => {
-  const path1End = path1.endsWith('/')
-  const path2End = path2.endsWith('/')
-
-  if (path1End && path2End) {
-    return path1.slice(0, -1) === path2.slice(0, -1)
-  }
-
-  if (!path1End && !path2End) {
-    return path1 === path2
-  }
-
-  return (
-    path1 === path2 ||
-    path1.slice(0, -1) === path2 ||
-    path1 === path2.slice(0, -1)
-  )
-}
-
-// 递归查找匹配的菜单项，缓存上一次的匹配项
-const deep = (
+// 根据匹配的菜单项渲染 extra
+const renderExtraWithNormalMenuOption = (
   options: AppMenuOption[],
   target: string,
-  fn: string,
   assignExtra: AppMenuExtraOptions,
 ) => {
-  if (cachePreNormal && equal(cachePreNormal.fullPath, target)) {
-    renderExtra(cachePreNormal, assignExtra)
+  const menuOption = depthSearchAppMenu(options, target)
 
-    return cachePreNormal
-  }
-
-  for (const curr of options) {
-    if (equal(curr.fullPath, target)) {
-      renderExtra(curr, assignExtra)
-
-      cachePreNormal = curr
-
-      return curr
-    }
-
-    if (curr.children?.length) {
-      deep(curr.children, target, fn, assignExtra)
-
-      continue
-    }
+  if (menuOption) {
+    renderExtra(menuOption, assignExtra)
   }
 }
 
@@ -95,11 +47,11 @@ const normalOption = (
   const { getMenuOptions } = useMenuGetters()
 
   if (typeof target === 'string') {
-    deep(getMenuOptions.value, target, fn, assignExtra)
+    renderExtraWithNormalMenuOption(getMenuOptions.value, target, assignExtra)
   } else if (isValueType<'object'>(target, 'Object')) {
     const { fullPath } = target
 
-    deep(getMenuOptions.value, fullPath, fn, assignExtra)
+    renderExtraWithNormalMenuOption(getMenuOptions.value, fullPath, assignExtra)
   } else {
     console.warn(`[useBadge ${fn}]: target expect string or object.`)
   }

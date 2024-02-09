@@ -64,12 +64,18 @@ export default defineComponent({
         emit('update:show', bool)
       },
     })
-    const modelSwitchReactive = reactive({
-      getMenuTagSwitch: getMenuTagSwitch.value,
-      getBreadcrumbSwitch: getBreadcrumbSwitch.value,
-      getCopyrightSwitch: getCopyrightSwitch.value,
-      getContentTransition: getContentTransition.value,
-      getWatermarkSwitch: getWatermarkSwitch.value,
+    // 为了方便管理多个 computed，因为 computed 不能被逆向修改
+    const modelSwitchReactive = computed({
+      get: () => {
+        return {
+          getMenuTagSwitch: getMenuTagSwitch.value,
+          getBreadcrumbSwitch: getBreadcrumbSwitch.value,
+          getCopyrightSwitch: getCopyrightSwitch.value,
+          getContentTransition: getContentTransition.value,
+          getWatermarkSwitch: getWatermarkSwitch.value,
+        }
+      },
+      set: (value) => {},
     })
 
     return {

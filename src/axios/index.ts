@@ -29,12 +29,14 @@ import type { AppRawRequestConfig } from '@/axios/type'
 
 /**
  *
+ * @param fetchOption axios 请求配置
+ * @param option useRequest 配置项
+ *
+ * @description
  * 该方法有一定的局限性，仅可在 effect 作用域中使用
  * 如果在非 vue effect scope 中使用，会抛出一些警告
  *
- * 非 vue effect 中使用
  * @example
- *
  * // 请求函数
  * const getUser = () => request({ url: 'http://localhost:3000/user' })
  *

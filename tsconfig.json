@@ -5,6 +5,7 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "strict": true,
+    "newLine": "LF",
     "jsx": "preserve",
     "sourceMap": true,
     "resolveJsonModule": true,

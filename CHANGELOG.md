@@ -1,5 +1,57 @@
 # CHANGE LOG
 
+## 4.6.3
+
+## Feats
+
+- `GlobalSearch` 相关
+  - 取消递归查找，使用 `getRoutes` 方法替代查找，提高查找速度
+  - 现在是用快捷键激活搜索框的时候，如果再次按下快捷键并且搜索框已经是激活状态，则不会重新渲染搜索框
+- 补充 `resolveOption` 方法注释。在使用该方法的时候，需要开发者自己手动补充当前项的 `fullPath` 字段。因为该方法在处理的时候，并不能准确的感知到当前项的 `fullPath` 字段，所以需要手动补充
+
+```ts
+import { useMenuActions } from '@/store'
+
+const { resolveOption } = useMenuActions()
+
+resolveOption({
+  // ...your option
+  fullPath: '/your path',
+})
+```
+
+- 优化 `GlobalSearch` 组件样式
+- `addStyle` 方法相关
+  - 方法重写并且更名为 `setStyle`
+  - 支持自动补全内核前缀
+  - 支持识别样式变量（css var）方式插入
+  - 支持字符串数组形式插入样式
+- `queryElements` 方法支持默认值配置项
+- `addClass` 相关
+  - 方法更名为 `setClass`
+  - 支持数组传参
+- `hasClass`, `removeClass` 方法支持数组传参
+- 补充 `pick`, `omit` 方法类型重载
+- `menu store` 相关
+  - 新增 `depthSearchAppMenu` 方法，用于深度搜索菜单，并且该方法会缓存上一次的搜索结果
+- 新增 `isAsyncFunction` 方法，用于判断是否为 `async` 函数
+
+```ts
+import { depthSearchAppMenu } from '@/store'
+
+const result = depthSearchAppMenu(appMenuOptions, 'target fullPath')
+```
+
+- `useBadge` 相关
+  - 使用 `depthSearchAppMenu` 方法替代原查找方法
+  - 将 `equal` 方法提取到 `utils` 包中，并且更名为 `equalRouterPath`，用于判断两个路径是否相等
+
+## Fixes
+
+- 修复 `SettingDrawer` 组件某些开关不能正确同步状态问题
+- 修复 `usePrint` 方法在 `unrefElement` 方法获取失败后不执行的问题。在 `print-js` 逻辑中，如果未获取到 `dom`，会视为其他的打印方式，不符合 `print-js` 的设计
+- `isPromise` 方法修正，现在会正确的识别 `async` 标记d的函数
+
 ## 4.6.2
 
 ## Feats

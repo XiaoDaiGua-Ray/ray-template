@@ -30,7 +30,7 @@ export default defineComponent({
       const operatingSystem = detectOperatingSystem()
 
       if (operatingSystem === 'MacOS') {
-        return '⌘ K'
+        return '⌘ + K'
       }
 
       if (operatingSystem === 'Windows') {

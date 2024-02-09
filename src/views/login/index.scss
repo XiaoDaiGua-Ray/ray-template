@@ -4,6 +4,7 @@ $positionY: 24px;
 .login {
   width: 100%;
   display: flex;
+  overflow: hidden;
 
   & .login-wrapper {
     position: relative;

@@ -13,8 +13,8 @@ export default async () => {
      */
     {
       path: '/',
-      name: 'login',
-      component: () => import('@/views/login/index'),
+      name: 'RLogin',
+      component: () => import('@/views/login'),
     },
     /**
      *
@@ -22,7 +22,7 @@ export default async () => {
      */
     {
       path: '/',
-      name: 'layout',
+      name: 'RLayout',
       redirect: getRootPath.value,
       component: Layout,
       children: appExpandRoutes(),

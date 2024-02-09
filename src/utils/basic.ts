@@ -5,23 +5,30 @@ import type {
   DownloadAnyFileDataType,
   BasicTypes,
   AnyFC,
+  PropertyName,
+  Recordable,
+  Many,
 } from '@/types'
-import type { Recordable } from '@/types'
 
 /**
  *
- * 获取当前项目环境
+ * @description
+ * 获取当前项目环境。
  *
- * 如果你只是想单纯的判断是否为开发环境，可以直接使用: __DEV__
+ * 如果你只是想单纯的判断是否为开发环境，可以直接使用: __DEV__。
  *
  * @example
  * 是否为开发环境: __DEV__
  *
  * @example
- * const { BASE_URL } = getAppEnvironment() 获取 BASE_URL
- * const { MODE } = getAppEnvironment() 获取 MODE，当前环境
- * const { SSR } = getAppEnvironment() 是否启用 SSR
- * const { your config } = getAppEnvironment() 获取你自定义的配置项
+ * // 获取 BASE_URL
+ * const { BASE_URL } = getAppEnvironment()
+ * // 获取 MODE，当前环境
+ * const { MODE } = getAppEnvironment()
+ * // 是否启用 SSR
+ * const { SSR } = getAppEnvironment()
+ * // 获取你自定义的配置项
+ * const { your config } = getAppEnvironment()
  */
 export const getAppEnvironment = () => {
   const env = import.meta.env
@@ -33,10 +40,11 @@ export const getAppEnvironment = () => {
  *
  * @param data 二进制流数据
  *
- * 将 base64 格式文件转换为图片
+ * @description
+ * 将二进制流数据转换为 base64 图片。
  *
  * @example
- * arrayBufferToBase64Image('base64') => Image
+ * const Image = arrayBufferToBase64Image('base64')
  */
 export const arrayBufferToBase64Image = (data: ArrayBuffer): string | null => {
   if (!data || data.byteLength) {
@@ -60,7 +68,8 @@ export const arrayBufferToBase64Image = (data: ArrayBuffer): string | null => {
  * @param base64 base64
  * @param fileName file name
  *
- * 该方法仅能下载 base64 文件，如果有其他的文件类型需要下载，请看 downloadAnyFile 方法
+ * @description
+ * 该方法仅能下载 base64 文件，如果有其他的文件类型需要下载，请看 downloadAnyFile 方法。
  *
  * @example
  * downloadBase64File('base64', 'file name')
@@ -84,8 +93,10 @@ export const downloadBase64File = (base64: string, fileName: string) => {
  * @param type 类型
  *
  * @example
- * isValueType<string>('123', 'String') => true
- * isValueType<object>({}, 'Object') => true
+ * isValueType<string>('123', 'String') // true
+ * isValueType<object>({}, 'Object') // true
+ * isValueType<number>([], 'Array') // true
+ * isValueType<number>([], 'Object') // false
  */
 export const isValueType = <T extends BasicTypes>(
   value: unknown,
@@ -100,6 +111,9 @@ export const isValueType = <T extends BasicTypes>(
  *
  * @param length uuid 长度
  * @param radix uuid 基数
+ *
+ * @description
+ * 生成指定长度的 uuid。
  *
  * @example
  * uuid(8) => 'B8tGcl0FCKJkpO0V'
@@ -136,7 +150,8 @@ export const uuid = (length = 16, radix = 62) => {
  * @param data base64, Blob, ArrayBuffer type
  * @param fileName file name
  *
- * 支持下载任意类型的文件，包括 base64, Blob, ArrayBuffer
+ * @description
+ * 支持下载任意类型的文件，包括 base64, Blob, ArrayBuffer。
  *
  * @example
  * downloadAnyFile('base64', 'file name')
@@ -195,24 +210,40 @@ export const downloadAnyFile = (
   })
 }
 
+export function omit<T extends Recordable, K extends PropertyName[]>(
+  targetObject: T,
+  ...paths: K
+): Pick<T, Exclude<keyof T, K[number]>>
+
+export function omit<T extends object>(
+  object: T | null | undefined,
+  ...paths: Array<Many<PropertyName>>
+): Partial<T>
+
 /**
  *
  * @param targetObject 对象
  * @param targetKeys 待删除的 key
  *
- * 删除对象中的指定 key
- * 如果传递的 targetObject 为 null 或者 undefined，则返回空对象
+ * @description
+ * 删除对象中的指定 key，
+ * 如果传递的 targetObject 为 null 或者 undefined，则返回空对象。
  *
  * @example
- * omit({ a: 1, b: 2, c: 3 }, 'a') => { b: 2, c: 3 }
- * omit({ a: 1, b: 2, c: 3 }, ['a', 'b']) => { c: 3 }
+ * omit({ a: 1, b: 2, c: 3 }, 'a') // { b: 2, c: 3 }
+ * omit({ a: 1, b: 2, c: 3 }, ['a', 'b']) // { c: 3 }
+ * omit(null) // {}
  */
-export const omit = <T extends Recordable, K extends keyof T>(
+export function omit<T extends Recordable, K extends keyof T>(
   targetObject: T,
   targetKeys: K | K[],
-): Omit<T, K> => {
+) {
   if (!targetObject) {
-    return {} as Omit<T, K>
+    console.warn(
+      `[omit]: The targetObject is expected to be an object, but got ${targetObject}.`,
+    )
+
+    return {}
   }
 
   const keys = Array.isArray(targetKeys) ? targetKeys : [targetKeys]
@@ -228,53 +259,94 @@ export const omit = <T extends Recordable, K extends keyof T>(
   return targetObject
 }
 
+export function pick<T extends object>(
+  object: T | null | undefined,
+  ...paths: Array<Many<PropertyName>>
+): Partial<T>
+
 /**
  *
  * @param targetObject target object
  * @param targetKeys target keys
  *
- * 从对象中提取指定的 key
- * 如果传递的 targetObject 为 null 或者 undefined，则返回空对象
+ * @description
+ * 从对象中提取指定的 key，
+ * 如果传递的 targetObject 为 null 或者 undefined，则返回空对象。
  *
  * @example
- * pick({ a: 1, b: 2, c: 3 }, 'a') => { a: 1 }
- * pick({ a: 1, b: 2, c: 3 }, ['a', 'b']) => { a: 1, b: 2 }
- * pick({ a: 1, b: 2, c: 3 }, []) => {}
+ * pick({ a: 1, b: 2, c: 3 }, 'a') // { a: 1 }
+ * pick({ a: 1, b: 2, c: 3 }, ['a', 'b']) // { a: 1, b: 2 }
+ * pick({ a: 1, b: 2, c: 3 }, []) // {}
+ * pick(null) // {}
  */
-export const pick = <T extends Recordable, K extends keyof T>(
+export function pick<T extends object, K extends keyof T>(
   targetObject: T,
   targetKeys: K | K[],
-): Pick<T, K> => {
+) {
   if (!targetObject) {
-    return {} as Pick<T, K>
+    console.warn(
+      `[pick]: The targetObject is expected to be an object, but got ${targetObject}.`,
+    )
+
+    return {}
   }
 
   const keys = Array.isArray(targetKeys) ? targetKeys : [targetKeys]
-  const result = {} as Pick<T, K>
 
   if (!keys.length) {
-    return result
+    return targetObject
   }
 
-  keys.forEach((key) => {
-    result[key] = targetObject[key]
-  })
+  const result = keys.reduce(
+    (pre, curr) => {
+      if (Reflect.has(targetObject, curr)) {
+        pre[curr] = targetObject[curr]
+      }
+
+      return pre
+    },
+    {} as Pick<T, K>,
+  )
 
   return result
 }
 
 /**
  *
- * @param value 待判断的值
+ * @param func 待判断的函数
+ * @returns 是否为 async 函数
  *
- * 判断是否为 Promise 函数
+ * @description
+ * 判断是否为 async 函数。
  *
  * @example
- * isPromise(Promise.resolve(123)) => true
- * isPromise(() => {}) => false
- * isPromise(123) => false
+ * isAsyncFunction(() => {}) // false
+ * isAsyncFunction(async () => {}) // true
+ * isAsyncFunction(function() {}) // false
+ * isAsyncFunction(async function() {}) // true
+ */
+export const isAsyncFunction = <T>(func: T) => {
+  return func instanceof Function && func.constructor.name === 'AsyncFunction'
+}
+
+/**
+ *
+ * @param value 待判断的值
+ *
+ * @description
+ * 判断是否为 Promise 函数。
+ *
+ * @example
+ * isPromise(Promise.resolve(123)) // true
+ * isPromise(() => {}) // false
+ * isPromise(123) // false
+ * isPromise(async () => {}) // true
  */
 export const isPromise = <T>(value: unknown): value is Promise<T> => {
+  if (isAsyncFunction(value)) {
+    return true
+  }
+
   return (
     !!value &&
     (typeof value === 'object' || typeof value === 'function') &&
@@ -288,7 +360,8 @@ export const isPromise = <T>(value: unknown): value is Promise<T> => {
  * @param errorCallback 错误回调
  * @param args 当前传递函数参数
  *
- * 用于捕获函数执行时的错误，如果有错误，则执行错误回调
+ * @description
+ * 用于捕获函数执行时的错误，如果有错误，则执行错误回调。
  *
  * @example
  * callWithErrorHandling((x: number) => { return x }, () => {}, [123]) => 123
@@ -316,7 +389,8 @@ export const callWithErrorHandling = <T extends AnyFC, E extends Error>(
  * @param errorCallback 错误回调
  * @param args 当前传递函数参数
  *
- * 用于捕获异步函数执行时的错误，如果有错误，则执行错误回调
+ * @description
+ * 用于捕获异步函数执行时的错误，如果有错误，则执行错误回调。
  *
  * @example
  * callWithAsyncErrorHandling(async () => { console.log('A') }, () => {}, []) => Promise { undefined }
@@ -346,8 +420,10 @@ export const callWithAsyncErrorHandling = async <
 
 /**
  *
- * 获取当前操作系统
- * 如果无法识别，则返回 Unknown
+ * @description
+ * 获取当前操作系统。
+ *
+ * 如果无法识别，则返回 Unknown。
  *
  * @example
  * detectOperatingSystem() => 'Windows' | 'MacOS' | 'Linux' | 'Android' | 'IOS' | 'Unknown'
@@ -376,4 +452,37 @@ export const detectOperatingSystem = () => {
   }
 
   return OperatingSystem.Unknown
+}
+
+/**
+ *
+ * @param path1 待比较的路径1
+ * @param path2 待比较的路径2
+ *
+ * @returns 比较两个路径是否相等
+ *
+ * @description
+ * 判断两个路径是否相等，忽略最后的斜杠。
+ *
+ * @example
+ * equal('/a/', '/a') // true
+ * equal('/a', '/a') // true
+ */
+export const equalRouterPath = (path1: string, path2: string) => {
+  const path1End = path1.endsWith('/')
+  const path2End = path2.endsWith('/')
+
+  if (path1End && path2End) {
+    return path1.slice(0, -1) === path2.slice(0, -1)
+  }
+
+  if (!path1End && !path2End) {
+    return path1 === path2
+  }
+
+  return (
+    path1 === path2 ||
+    path1.slice(0, -1) === path2 ||
+    path1 === path2.slice(0, -1)
+  )
 }

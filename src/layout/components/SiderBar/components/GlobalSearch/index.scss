@@ -12,7 +12,7 @@ $globalSearchWidth: 650px;
 
     & .global-search__card {
       border-radius: 6px;
-      min-width: 800px;
+      min-width: 560px;
 
       & .ray-icon {
         color: var(--ray-theme-primary-color);
@@ -22,8 +22,9 @@ $globalSearchWidth: 650px;
         padding: 16px 12px 12px 12px;
       }
 
-      & .n-card__content {
-        min-height: 115px;
+      & .n-card__content,
+      & .n-spin-content {
+        min-height: 90px;
       }
 
       & .content-item {

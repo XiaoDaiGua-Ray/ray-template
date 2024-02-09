@@ -14,7 +14,7 @@
  * directive name: disabled
  */
 
-import { addClass, removeClass } from '@/utils'
+import { setClass, removeClass } from '@/utils'
 
 import type { CustomDirectiveFC } from '@/directives/type'
 
@@ -25,7 +25,7 @@ const updateElementDisabledType = (el: HTMLElement, value: boolean) => {
     if (value) {
       el.setAttribute('disabled', 'disabled')
 
-      addClass(el, classes)
+      setClass(el, classes)
     } else {
       el.removeAttribute('disabled')
 
