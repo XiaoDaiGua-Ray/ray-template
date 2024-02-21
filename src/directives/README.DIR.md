@@ -13,17 +13,17 @@ import { NFlex, NCard, NInput, NInputGroup, NButton, NSwitch } from 'naive-ui'
 const Demo = defineComponent({
   name: 'Demo',
   setup() {
-    const dmeoCopyValue = ref('hello copy')
+    const demoCopyValue = ref('hello copy')
 
     return {
-      dmeoCopyValue,
+      demoCopyValue,
     }
   },
   render() {
     return (
       <NInputGroup>
-        <NInput v-model:value={this.dmeoCopyValue} />
-        <NButton v-copy={this.dmeoCopyValue}>复制</NButton>
+        <NInput v-model:value={this.demoCopyValue} />
+        <NButton v-copy={this.demoCopyValue}>复制</NButton>
       </NInputGroup>
     )
   },

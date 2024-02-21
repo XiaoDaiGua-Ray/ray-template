@@ -1,7 +1,7 @@
 import App from './App'
 
-import '@/styles/base.scss'
-import './app-components/provider/provider.scss'
+import '@/styles/base.scss' // 初始化一些基础样式
+import './app-components/provider/provider.scss' // 初始化 provider 包注入组件样式
 
 import 'virtual:svg-icons-register' // vite-plugin-svg-icons 脚本，启用 svg 雪碧图
 
@@ -10,15 +10,28 @@ import { setupStore } from './store'
 import { setupI18n } from './locales'
 import { setupDayjs } from './dayjs'
 import { setupDirectives } from './directives'
+import { validAppRootPath, validLocal } from './__ray-template'
 
 import type { App as AppType } from 'vue'
 
 /**
  *
+ * @description
+ * 该方法用于初始化 ray-template 配置。
+ */
+const setupRayTemplateCore = async () => {
+  await validAppRootPath()
+  await validLocal()
+}
+
+/**
+ *
  * @param inst vue instance
  *
- * 该方法注册所有模板插件
- * 注册时应该注意每个插件的加载顺序
+ * @description
+ * 该方法注册所有模板插件。
+ *
+ * 注册时应该注意每个插件的加载顺序。
  */
 const setupPlugins = async (inst: AppType<Element>) => {
   await setupI18n(inst)
@@ -30,19 +43,23 @@ const setupPlugins = async (inst: AppType<Element>) => {
 
 /**
  *
- * 普通应用注册方法
+ * @description
+ * 普通应用注册方法。
  */
 const setupTemplate = async () => {
   const app = createApp(App)
 
   await setupPlugins(app)
   app.mount('#app')
+  await setupRayTemplateCore()
 }
 
 /**
  *
- * 作为 wujie-micro 子应用注册应用方法
- * 并且挂载一个 __WUJIE_MOUNT 实例
+ * @description
+ * 作为 wujie-micro 子应用注册应用方法。
+ *
+ * 并且挂载一个 __WUJIE_MOUNT 实例。
  */
 const setupWujieTemplate = async () => {
   let instance: AppType<Element>
@@ -52,6 +69,7 @@ const setupWujieTemplate = async () => {
 
     await setupPlugins(instance)
     instance.mount('#app')
+    await setupRayTemplateCore()
   }
 
   window.__WUJIE_UNMOUNT = () => {
@@ -63,7 +81,8 @@ const setupWujieTemplate = async () => {
 
 /**
  *
- * 如果项目启用无界微服务, 会自动识别并且启动以无界微服务方法启动该项目
+ * @description
+ * 如果项目启用无界微服务, 会自动识别并且启动以无界微服务方法启动该项目。
  *
  * @example
  * 作为主应用

@@ -33,8 +33,8 @@ import type { AppRawRequestConfig } from '@/axios/type'
  * @param option useRequest 配置项
  *
  * @description
- * 该方法有一定的局限性，仅可在 effect 作用域中使用
- * 如果在非 vue effect scope 中使用，会抛出一些警告
+ * 该方法有一定的局限性，仅可在 effect 作用域中使用，
+ * 如果在非 vue effect scope 中使用，会抛出一些警告。
  *
  * @example
  * // 请求函数

@@ -38,6 +38,7 @@ const setThemeOverrides = (theme: boolean) => {
 export const useTheme = () => {
   /**
    *
+   * @description
    * 获取当前主题色与主题色描述
    * 并且描述会根据当前语言环境自动切换
    *
@@ -59,6 +60,7 @@ export const useTheme = () => {
 
   /**
    *
+   * @description
    * 切换至暗色主题
    *
    * @example
@@ -73,6 +75,7 @@ export const useTheme = () => {
 
   /**
    *
+   * @description
    * 切换至明色主题
    *
    * @example
@@ -89,6 +92,7 @@ export const useTheme = () => {
    *
    * @param theme 当前主题色
    *
+   * @description
    * 当前主题有明暗两套
    *
    * @example

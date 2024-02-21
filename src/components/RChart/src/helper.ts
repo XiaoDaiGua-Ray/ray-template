@@ -17,6 +17,7 @@ import type {
 
 /**
  *
+ * @description
  * 自动注册所有主题
  *
  * 默认以文件名当作主题名称
@@ -26,7 +27,7 @@ import type {
  * 1. 配置、选择主题
  * 2. 点击下载主题
  * 3. 选择 json 类型，然后复制
- * 4. 在 @/echart-themes 包中创建对应的 json 文件，文件名为主题名称
+ * 4. 在 echart-themes 包中创建对应的 json 文件，文件名为主题名称
  */
 export const setupChartTheme = () => {
   // 获取所有主题
@@ -47,7 +48,7 @@ export const setupChartTheme = () => {
 
       return pre
     } else {
-      throw new Error('theme name is not found')
+      throw new Error(`[RChart Theme Error]: name ${curr} is invalid!`)
     }
   }, [] as ChartThemeRawArray[])
 
@@ -56,8 +57,7 @@ export const setupChartTheme = () => {
 
 /**
  *
- * @returns LoadingOptions
- *
+ * @description
  * 为了方便使用加载动画, 写了此方法, 虽然没啥用
  */
 export const loadingOptions = (options?: LoadingOptions) =>

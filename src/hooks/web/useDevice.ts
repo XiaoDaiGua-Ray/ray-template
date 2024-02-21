@@ -45,7 +45,7 @@ export function useDevice(options?: UseDeviceOptions) {
   return {
     width,
     height,
-    isTabletOrSmaller,
+    isTabletOrSmaller: readonly(isTabletOrSmaller),
   }
 }
 

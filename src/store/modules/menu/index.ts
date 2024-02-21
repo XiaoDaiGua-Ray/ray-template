@@ -202,15 +202,16 @@ export const piniaMenuStore = defineStore(
      * @param option 菜单当前 option 项
      * @param query 路由参数
      *
-     * @remark 修改 `menu key` 后的回调函数
-     * @remark 修改后, 缓存当前选择 key 并且存储标签页与跳转页面(router push 操作)
+     * @description
+     * 修改 `menu key` 后的回调函数。
+     * 修改后，缓存当前选择 key 并且存储标签页与跳转页面(router push 操作)。
      *
-     * 如果 windowOpen 存在, 则直接打开新窗口，不会更新当前菜单状态，也不会做其他的操作
-     * 如果 sameLevel 存在，则会追加一层面包屑，并不会触发菜单更新与标签页更新
+     * 如果 windowOpen 存在, 则直接打开新窗口，不会更新当前菜单状态，也不会做其他的操作。
+     * 如果 sameLevel 存在，则会追加一层面包屑，并不会触发菜单更新与标签页更新。
      *
-     * 在执行更新操作后会做一些缓存操作
+     * 在执行更新操作后会做一些缓存操作。
      *
-     * 该方法是整个模板的核心驱动: 菜单、标签页、面包屑、浏览器标题等等的更新方法
+     * 该方法是整个模板的核心驱动: 菜单、标签页、面包屑、浏览器标题等等的更新方法。
      *
      * @example
      * changeMenuModelValue('/dashboard',{ dashboard option  }) // 跳转页面至 dashboard，并且更新菜单状态、标签页、面包屑、浏览器标题等等
@@ -281,8 +282,8 @@ export const piniaMenuStore = defineStore(
      *
      * @param path 路由地址
      *
-     * @remark 监听路由地址变化更新菜单状态
-     * @remark 递归查找匹配项
+     * @description
+     * 监听路由地址变化更新菜单状态。
      */
     const updateMenuKeyWhenRouteUpdate = async (
       path: string,

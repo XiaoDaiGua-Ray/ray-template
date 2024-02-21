@@ -182,16 +182,18 @@ export const useElementFullscreen = (
 
   const stopWatch = watch(() => height.value, updateStyle)
 
-  effectDispose(() => {
-    const element = unrefElement(target) as HTMLElement | null
+  effectDispose({
+    fc: () => {
+      const element = unrefElement(target) as HTMLElement | null
 
-    if (element) {
-      element.style.transition = cacheStyle.transition ?? ''
+      if (element) {
+        element.style.transition = cacheStyle.transition ?? ''
 
-      element.removeAttribute(ID_TAG)
-    }
+        element.removeAttribute(ID_TAG)
+      }
 
-    stopWatch()
+      stopWatch()
+    },
   })
 
   return {

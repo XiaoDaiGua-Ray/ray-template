@@ -1,5 +1,31 @@
 # CHANGE LOG
 
+## 4.6.4-beta1.0
+
+更新了核心依赖插件：`vite`, `vue`。
+
+新增 `__ray-template` 包，用于模板启动时的一些检查或者其他钩子的启动。
+
+## Feats
+
+- 更新了一些注释
+- 更新 `vue` 版本至 `3.4.19`
+- 更新 `vite` 版本至 `5.1.3`；最新版本 `vite` 优化了 `HMR` 逻辑
+- 新增检查器功能（存于 `__ray-template` 包），用于在模板启动后，做一些检查工作
+- 使用 `checkRightClose`, `checkLeftClose` 方法替换原有检查关闭按钮禁用逻辑
+- `useDevice` 方法返回属性 `isTabletOrSmaller` 使用 `readonly` 方法包裹
+- `RChart` 组件相关
+  - 移除 `animation` 配置项，该配置项在使用的时候可能会有潜在的性能问题
+  - 新增 `nextTick` 配置项，是否将渲染图标内容放置到下一个队列中
+    > 该配置项启用后，会先渲染一个空的图表，然后在下一个队列中渲染图表内容。这样做的好处是，可以避免一些图表渲染的性能问题，但是会导致图表渲染的时候会有一个空白的过程。
+  - 修改 `registerTheme` 方法调用时机，并且该方法仅会执行一次
+  - 预设 `Card` 风格的下载功能下拉框预留字段由 `downloadChart` 更名为 `__DOWN_LOAD_CHART__`
+
+## Fixes
+
+- 修复更新主题色时 `preset` 没有被正确更新问题。现在在更新主题色后，会正确的更新 `primaryColorPressed`
+- 修复 `README.md` 描述文件中的一些错误描述
+
 ## 4.6.3
 
 ## Feats

@@ -231,67 +231,71 @@ const Echart = defineComponent({
               <h3>3. 默认启用 watchOptions，自动监听配置项变化</h3>
             </li>
             <li>
-              <h3>4. 默认启用 animation，强制启用渲染过渡动画</h3>
+              <h3>4. 默认启用 nextTick，强制在下一队列渲染图标内容</h3>
             </li>
             <li>
               <h3>5. 配置 setChartOptions 属性，可以定制化合并模式</h3>
             </li>
           </ul>
         </NCard>
-        <NH2>强制渲染过渡动画（animation），预设 card 风格图表</NH2>
-        <NFlex style={['padding: 18px 0']}>
-          <NButton onClick={this.mountChart.bind(this)}>渲染</NButton>
-          <NButton onClick={this.unmountChart.bind(this)}>卸载</NButton>
-          <NButton onClick={this.handleUpdateTitle.bind(this)}>
-            更新配置项
-          </NButton>
-        </NFlex>
-        <div class="chart--container">
-          <RChart
-            title="周销售量"
-            ref="baseChartRef"
-            autoChangeTheme
-            options={this.baseLineOptions}
-            showAria={this.chartAria}
-            preset="card"
-          />
-        </div>
-        <NH2>不跟随主题切换的暗色主题可视化图，并且手动指定原始主题色</NH2>
-        <div class="chart--container">
-          <RChart
-            autoChangeTheme={false}
-            theme="default"
-            options={this.baseOptions}
-          />
-        </div>
-        <NH2>加载动画</NH2>
-        <NSwitch
-          v-model:value={this.chartLoading}
-          onUpdateValue={this.handleLoadingShow.bind(this)}
-          style={['padding: 18px 0']}
-        >
-          {{
-            checked: () => '隐藏加载动画',
-            unchecked: () => '显示加载动画',
-          }}
-        </NSwitch>
-        <div class="chart--container">
-          <RChart loading={this.loading} options={this.baseOptions} />
-        </div>
-        <NH2>贴画可视化图</NH2>
-        <NSwitch
-          v-model:value={this.chartAria}
-          onUpdateValue={this.handleAriaShow.bind(this)}
-          style={['padding: 18px 0']}
-        >
-          {{
-            checked: () => '隐藏贴花',
-            unchecked: () => '显示贴花',
-          }}
-        </NSwitch>
-        <div class="chart--container">
-          <RChart options={this.baseOptions} showAria={this.chartAria} />
-        </div>
+        <NCard title="预设 card 风格图表">
+          <NFlex style={['padding: 18px 0']}>
+            <NButton onClick={this.mountChart.bind(this)}>渲染</NButton>
+            <NButton onClick={this.unmountChart.bind(this)}>卸载</NButton>
+            <NButton onClick={this.handleUpdateTitle.bind(this)}>
+              更新配置项
+            </NButton>
+          </NFlex>
+          <div class="chart--container">
+            <RChart
+              title="周销售量"
+              ref="baseChartRef"
+              autoChangeTheme
+              options={this.baseLineOptions}
+              showAria={this.chartAria}
+              preset="card"
+            />
+          </div>
+        </NCard>
+        <NCard title="不跟随主题切换的暗色主题可视化图，并且手动指定原始主题色">
+          <div class="chart--container">
+            <RChart
+              autoChangeTheme={false}
+              theme="default"
+              options={this.baseOptions}
+            />
+          </div>
+        </NCard>
+        <NCard title="加载动画">
+          <NSwitch
+            v-model:value={this.chartLoading}
+            onUpdateValue={this.handleLoadingShow.bind(this)}
+            style={['padding: 18px 0']}
+          >
+            {{
+              checked: () => '隐藏加载动画',
+              unchecked: () => '显示加载动画',
+            }}
+          </NSwitch>
+          <div class="chart--container">
+            <RChart loading={this.loading} options={this.baseOptions} />
+          </div>
+        </NCard>
+        <NCard title="贴画可视化图">
+          <NSwitch
+            v-model:value={this.chartAria}
+            onUpdateValue={this.handleAriaShow.bind(this)}
+            style={['padding: 18px 0']}
+          >
+            {{
+              checked: () => '隐藏贴花',
+              unchecked: () => '显示贴花',
+            }}
+          </NSwitch>
+          <div class="chart--container">
+            <RChart options={this.baseOptions} showAria={this.chartAria} />
+          </div>
+        </NCard>
       </div>
     )
   },

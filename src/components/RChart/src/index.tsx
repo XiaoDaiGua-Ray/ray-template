@@ -1,19 +1,3 @@
-/**
- *
- * 基于 `echarts` 的组件. 意在便捷的使用 `chart` 图
- *
- * 暂时不支持自动解析导入 `chart` 组件, 如果使用未注册的组件, 需要在顶部手动导入并且再使用 `use` 注册
- *
- * 预引入: 柱状图, 折线图, 饼图, k线图, 散点图等
- * 预引入: 提示框, 标题, 直角坐标系, 数据集, 内置数据转换器等
- *
- * 如果需要大批量数据渲染, 可以通过获取实例后阶段性调用 `setOption` 方法注入数据
- *
- * 该组件会在卸载组件时, 自动释放资源
- *
- * 注意: 尽量别一次性倒入全部 `chart` 会造成打包体积异常大
- */
-
 import './index.scss'
 
 import * as echarts from 'echarts/core' // `echarts` 核心模块
@@ -63,6 +47,31 @@ const defaultChartOptions = {
 }
 const echartThemes = setupChartTheme()
 
+/** 注册主题 */
+echartThemes.forEach((curr) => {
+  echarts.registerTheme(curr.name, curr.theme)
+})
+
+/**
+ *
+ * @description
+ * 基于 echarts 的图表组件。
+ *
+ * 让你仅需要关注 echarts options 的配置管理，而不需要关心 echarts 的初始化、销毁、主题切换等操作。
+ *
+ * 如果需要拓展配置项，进需要在使用该组件的时候使用 use 方法注册对应 chart 组件即可。
+ *
+ * @example
+ * <template>
+ *  <RChart :options="options" />
+ * </template>
+ *
+ * <script setup>
+ * import { RChart } from '@/components'
+ * import { ref } from 'vue'
+ *
+ * const options = ref({ ... })
+ */
 export default defineComponent({
   name: 'RChart',
   props,
@@ -79,7 +88,7 @@ export default defineComponent({
     const moreDropDownOptions = computed<DropdownProps['options']>(() => [
       {
         label: '下载图片',
-        key: 'downloadChart',
+        key: '__DOWN_LOAD_CHART__',
         disabled: !(
           echartInstanceRef.value && echartInstanceRef.value.getDom()
         ),
@@ -124,7 +133,7 @@ export default defineComponent({
       try {
         echarts.use(props.use?.filter(Boolean))
       } catch (e) {
-        console.error('RChart register error: ', e)
+        console.error('[RChart register error]: ', e)
       }
     }
 
@@ -168,14 +177,7 @@ export default defineComponent({
     const combineChartOptions = (ops: EChartsCoreOption) => {
       let options = unref(ops)
 
-      const assign = (opts: object) =>
-        Object.assign(
-          {
-            animation: true,
-          },
-          options,
-          opts,
-        )
+      const assign = (opts: object) => Object.assign({}, options, opts)
 
       if (props.showAria) {
         options = assign({
@@ -208,11 +210,6 @@ export default defineComponent({
       const { onSuccess, onError } = props
 
       try {
-        /** 注册主题 */
-        echartThemes.forEach((curr) => {
-          echarts.registerTheme(curr.name, curr.theme)
-        })
-
         /** 注册 chart */
         echartInst = echarts.init(element, theme, {
           /** 如果款度为 0, 则以 200px 填充 */
@@ -223,10 +220,10 @@ export default defineComponent({
         echartInstanceRef.value = echartInst
 
         /** 设置 options 配置项 */
-        if (props.animation) {
+        if (props.nextTick) {
           echartInst.setOption({})
 
-          setTimeout(() => {
+          nextTick(() => {
             options && echartInst?.setOption(options)
           })
         } else {
@@ -258,6 +255,7 @@ export default defineComponent({
       if (isDispose()) {
         echartInst!.clear()
         echartInst!.dispose()
+
         echartInstanceRef.value = void 0
       }
     }
@@ -278,7 +276,7 @@ export default defineComponent({
      * 当前仅实现下载图片功能
      */
     const dropdownSelect = (key: string | number, option: DropdownOption) => {
-      if (key === 'downloadChart' && isDispose()) {
+      if (key === '__DOWN_LOAD_CHART__' && isDispose()) {
         const { filename, ...args } = props.downloadOptions
 
         downloadBase64File(

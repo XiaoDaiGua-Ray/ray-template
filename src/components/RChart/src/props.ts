@@ -111,11 +111,7 @@ const props = {
   onSuccess: {
     /**
      *
-     * 返回 chart 实例
-     *
      * 渲染成功回调函数
-     *
-     * () => ECharts
      */
     type: [Function, Array] as PropType<MaybeArray<(e: ECharts) => void>>,
     default: null,
@@ -124,8 +120,6 @@ const props = {
     /**
      *
      * 渲染失败回调函数
-     *
-     * () => void
      */
     type: [Function, Array] as PropType<MaybeArray<() => void>>,
     default: null,
@@ -190,8 +184,11 @@ const props = {
     type: Number,
     default: 500,
   },
-  animation: {
-    /** 是否强制启用渲染动画 */
+  nextTick: {
+    /**
+     *
+     * 是否将渲染放置下一个队列
+     */
     type: Boolean,
     default: true,
   },

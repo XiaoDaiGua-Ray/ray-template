@@ -63,7 +63,7 @@ const createI18nOptions = async () => {
 export const setupI18n = async (app: App<Element>) => {
   const i18nInstance = await createI18nOptions()
 
-  i18n = i18nInstance
-
   app.use(i18nInstance)
+
+  i18n = i18nInstance
 }

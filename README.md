@@ -74,7 +74,7 @@ A `completely free`, `efficient`, `feature complete` and based on vite5. x & ts(
 - [Vue3](https://v3.vuejs.org/) - familiar with Vue basic syntax
 - [TypeScript](https://www.typescriptlang.org/) - familiar with TypeScript basic syntax
 - [ES6+](http://es6.ruanyifeng.com/) - familiar with es6 basic syntax
-- [Vue-Hooks-Plus] - familiar with vue-hooks-plus useRequest method basic use
+- [Vue-Hooks-Plus](https://inhiblabcore.github.io/docs/hooks/) - familiar with vue-hooks-plus useRequest method basic use
 - [Vue-Router-Next](https://next.router.vuejs.org/) - familiar with vue-router4.x basic use
 - [Naive-UI](https://www.naiveui.com) - naive ui basic use
 - [Mock.js](https://github.com/nuysoft/Mock) - mockjs basic syntax

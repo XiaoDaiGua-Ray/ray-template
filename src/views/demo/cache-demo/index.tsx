@@ -9,7 +9,14 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { NButton, NCard, NFlex, NInput } from 'naive-ui'
+import {
+  NButton,
+  NCard,
+  NFlex,
+  NInput,
+  NInputGroup,
+  NInputGroupLabel,
+} from 'naive-ui'
 
 import { getStorage, setStorage, removeStorage, hasStorage } from '@/utils'
 
@@ -31,11 +38,20 @@ export default defineComponent({
           default: () => (
             <NFlex vertical>
               <h3>点击 setStorage 按钮，设置缓存示例</h3>
-              <NInput v-model:value={this.nameValue} placeholder="请输入姓名" />
-              <NInput
-                v-model:value={this.currentPrefix}
-                placeholder="请输入前缀"
-              />
+              <NInputGroup>
+                <NInputGroupLabel>设置缓存内容</NInputGroupLabel>
+                <NInput
+                  v-model:value={this.nameValue}
+                  placeholder="请输入姓名"
+                />
+              </NInputGroup>
+              <NInputGroup>
+                <NInputGroupLabel>设置前缀</NInputGroupLabel>
+                <NInput
+                  v-model:value={this.currentPrefix}
+                  placeholder="请输入前缀"
+                />
+              </NInputGroup>
             </NFlex>
           ),
           action: () => (

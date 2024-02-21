@@ -69,6 +69,8 @@ export default defineComponent({
       closeRight: $closeRight,
       closeLeft: $closeLeft,
       closeOther: $closeOther,
+      checkCloseLeft,
+      checkCloseRight,
     } = useSiderBar()
 
     const canDisabledOptions = [
@@ -266,7 +268,6 @@ export default defineComponent({
      * 动态设置某些项禁用
      */
     const setDisabledAccordionToIndex = () => {
-      const length = getMenuTagOptions.value.length - 1
       const { closeable } =
         getMenuTagOptions.value[currentContextmenuIndex] ??
         ({} as MenuTagOptions)
@@ -275,18 +276,14 @@ export default defineComponent({
       setMoreOptionsDisabled('closeCurrentPage', !closeable ?? false)
 
       // 是否需要禁用关闭右侧标签页
-      if (currentContextmenuIndex === length) {
-        setMoreOptionsDisabled('closeRight', true)
-      } else if (currentContextmenuIndex < length) {
-        setMoreOptionsDisabled('closeRight', false)
-      }
+      checkCloseRight(currentContextmenuIndex)
+        ? setMoreOptionsDisabled('closeRight', false)
+        : setMoreOptionsDisabled('closeRight', true)
 
       // 是否需要禁用关闭左侧标签页
-      if (currentContextmenuIndex === 0) {
-        setMoreOptionsDisabled('closeLeft', true)
-      } else if (currentContextmenuIndex > 0) {
-        setMoreOptionsDisabled('closeLeft', false)
-      }
+      checkCloseLeft(currentContextmenuIndex)
+        ? setMoreOptionsDisabled('closeLeft', false)
+        : setMoreOptionsDisabled('closeLeft', true)
     }
 
     /**

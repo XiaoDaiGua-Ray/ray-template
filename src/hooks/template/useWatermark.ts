@@ -16,8 +16,9 @@ export const useWatermark = () => {
    *
    * @param content 水印内容
    *
-   * 设置水印内容
-   * 如果覆盖的水印内容为: '', undefined, null, 0, false, NaN，则会沿用上次一次的水印内容
+   * @description
+   * 设置水印内容。
+   * 如果覆盖的水印内容为: '', undefined, null, 0, false, NaN，则会沿用上次一次的水印内容。
    *
    * @example
    * setWatermarkContent('Ray Template Yes!')
@@ -36,10 +37,11 @@ export const useWatermark = () => {
 
   /**
    *
-   * 显示水印
+   * @description
+   * 显示水印。
    *
    * @example
-   * showWatermark()
+   * showWatermark() // 水印切换至显示状态
    */
   const showWatermark = () => {
     const { updateSettingState } = useSettingActions()
@@ -49,10 +51,11 @@ export const useWatermark = () => {
 
   /**
    *
-   * 隐藏水印
+   * @description
+   * 隐藏水印。
    *
    * @example
-   * hiddenWatermark()
+   * hiddenWatermark() // 水印切换至隐藏状态
    */
   const hiddenWatermark = () => {
     const { updateSettingState } = useSettingActions()
@@ -64,7 +67,8 @@ export const useWatermark = () => {
    *
    * @param value 是否显示水印
    *
-   * 切换水印显示状态
+   * @description
+   * 切换水印显示状态。
    *
    * @example
    * 假设当前水印显示状态为隐藏

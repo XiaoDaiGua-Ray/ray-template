@@ -1,5 +1,4 @@
 import { getAppDefaultLanguage } from '@/locales/helper'
-import { set } from 'lodash-es'
 import { colorToRgba, setStorage } from '@/utils'
 import { useI18n, useDayjs } from '@/hooks'
 import { APP_CATCH_KEY } from '@/app-config'
@@ -25,6 +24,7 @@ export const piniaSettingStore = defineStore(
         common: {
           primaryColor: primaryColor,
           primaryColorHover: primaryColor,
+          primaryColorPressed: primaryColor,
         },
       },
       appTheme: false, // `true` 为黑夜主题, `false` 为白色主题
@@ -70,6 +70,7 @@ export const piniaSettingStore = defineStore(
       const themeOverrides = {
         primaryColor: value,
         primaryColorHover: value,
+        primaryColorPressed: value,
       }
 
       settingState.primaryColorOverride.common = themeOverrides
@@ -103,7 +104,7 @@ export const piniaSettingStore = defineStore(
       value: V[T],
       cb?: C,
     ) => {
-      if (Object.hasOwn(settingState, key)) {
+      if (Reflect.has(settingState, key)) {
         settingState[key] = value
       }
 
