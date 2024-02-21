@@ -45,7 +45,7 @@ export const setClass = (
     immediate: true,
   })
 
-  effectDispose({ fc: watcher })
+  effectDispose(watcher)
 }
 
 /**
@@ -93,7 +93,7 @@ export const removeClass = (
     immediate: true,
   })
 
-  effectDispose({ fc: watcher })
+  effectDispose(watcher)
 }
 
 /**
@@ -140,7 +140,7 @@ export const hasClass = (
     immediate: true,
   })
 
-  effectDispose({ fc: watcher })
+  effectDispose(watcher)
 
   return hasClassRef
 }
@@ -250,7 +250,7 @@ export const setStyle = (
     immediate: true,
   })
 
-  effectDispose({ fc: watcher })
+  effectDispose(watcher)
 }
 
 /**
@@ -286,7 +286,7 @@ export const removeStyle = (
     immediate: true,
   })
 
-  effectDispose({ fc: watcher })
+  effectDispose(watcher)
 }
 
 /**

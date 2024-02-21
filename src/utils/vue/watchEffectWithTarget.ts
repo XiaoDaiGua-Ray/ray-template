@@ -34,5 +34,5 @@ export function watchEffectWithTarget<T extends AnyFC>(
 ) {
   const stop = watchEffect(fc, watchOptions)
 
-  effectDispose({ fc: stop })
+  effectDispose(stop)
 }
