@@ -38,7 +38,7 @@
 
 import path from 'node:path'
 
-import { htmlTitlePlugin, mixinCSSPlugin } from './vite-plugins/index'
+import { htmlTitlePlugin, mixinCSSPlugin } from './vite-helper/index'
 import { APP_THEME } from './src/app-config/designConfig'
 import { PRE_LOADING_CONFIG, SIDE_BAR_LOGO } from './src/app-config/appConfig'
 

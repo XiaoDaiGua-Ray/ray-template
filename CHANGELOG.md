@@ -1,5 +1,19 @@
 # CHANGE LOG
 
+## 4.6.4-beta1.1
+
+更新了一大波的开发依赖。
+
+## Feats
+
+- 更新 `vue` 版本至 `3.4.20`
+- 更新 `vite` 版本至 `5.1.4`
+- 更新了开发依赖
+- 移除 `utils/xlsx` 工具包与 `xlsx` 依赖
+- 更新了 `viteCDNPlugin` 配置形式，现在会自动读取版本号
+- 更新 `vue-hooks-plus` 版本至 `1.8.8`
+- 更改 `vite-plugins` 包名称为 `vite-helper`
+
 ## 4.6.4-beta1.0
 
 更新了核心依赖插件：`vite`, `vue`。

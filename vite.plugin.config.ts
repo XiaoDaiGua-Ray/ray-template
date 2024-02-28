@@ -26,12 +26,14 @@ import mockDevServerPlugin from 'vite-plugin-mock-dev-server'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import unpluginViteComponents from 'unplugin-vue-components/vite'
 import { cdn as viteCDNPlugin } from 'vite-plugin-cdn2'
+import { getDependenciesVersion } from './vite-helper'
 
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 
 import config from './vite.custom.config'
 
 import type { PluginOption } from 'vite'
+import type pkg from './package.json'
 
 // 仅适用于报告模式（report）
 function onlyReportOptions(mode: string) {
@@ -48,65 +50,55 @@ function onlyReportOptions(mode: string) {
 
 // 仅适用于构建模式（任何构建模式：preview、build、report...）
 function onlyBuildOptions(mode: string) {
+  // cdn 列表
+  const cdnOptions: Array<{
+    name: keyof typeof pkg.dependencies
+    global: string
+  }> = [
+    {
+      name: 'vue',
+      global: 'Vue',
+    },
+    {
+      name: 'vue-demi',
+      global: 'VueDemi',
+    },
+    {
+      name: 'naive-ui',
+      global: 'naive',
+    },
+    {
+      name: 'pinia',
+      global: 'Pinia',
+    },
+    {
+      name: 'vue-router',
+      global: 'VueRouter',
+    },
+    {
+      name: 'vue-i18n',
+      global: 'VueI18n',
+    },
+    {
+      name: 'echarts',
+      global: 'echarts',
+    },
+    {
+      name: 'axios',
+      global: 'axios',
+    },
+  ]
+
   return [
     viteCDNPlugin({
       // modules 顺序 vue, vue-demi 必须保持当前顺序加载，否则会出现加载错误问题
-      modules: [
-        {
-          name: 'vue',
-          global: 'Vue',
-          resolve:
-            'https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.14/vue.global.min.js',
-        },
-        {
-          name: 'vue-demi',
-          global: 'VueDemi',
-          resolve:
-            'https://cdnjs.cloudflare.com/ajax/libs/vue-demi/0.14.6/index.iife.min.js',
-        },
-        {
-          name: 'naive-ui',
-          global: 'naive',
-          resolve:
-            'https://cdnjs.cloudflare.com/ajax/libs/naive-ui/2.37.3/index.prod.js',
-        },
-        {
-          name: 'pinia',
-          global: 'Pinia',
-          resolve:
-            'https://cdnjs.cloudflare.com/ajax/libs/pinia/2.1.7/pinia.iife.min.js',
-        },
-        {
-          name: 'vue-router',
-          global: 'VueRouter',
-          resolve:
-            'https://cdnjs.cloudflare.com/ajax/libs/vue-router/4.2.5/vue-router.global.min.js',
-        },
-        {
-          name: 'vue-i18n',
-          global: 'VueI18n',
-          resolve:
-            'https://cdnjs.cloudflare.com/ajax/libs/vue-i18n/9.9.0/vue-i18n.global.min.js',
-        },
-        {
-          name: 'echarts',
-          global: 'echarts',
-          resolve:
-            'https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js',
-        },
-        {
-          name: 'xlsx',
-          global: 'XLSX',
-          resolve:
-            'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
-        },
-        {
-          name: 'axios',
-          global: 'axios',
-          resolve:
-            'https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js',
-        },
-      ],
+      modules: cdnOptions.map((curr) => {
+        return {
+          name: curr.name,
+          global: curr.global,
+          resolve: `https://cdnjs.cloudflare.com/ajax/libs/${curr.name}/${getDependenciesVersion(curr.name)}/${curr.name}.min.js`,
+        }
+      }),
     }),
   ]
 }

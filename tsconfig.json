@@ -34,8 +34,8 @@
   },
   "include": [
     "vite.config.ts",
-    "vite-plugins/index.ts",
-    "vite-plugins/type.ts",
+    "vite-helper/index.ts",
+    "vite-helper/type.ts",
     "vite.custom.config.ts",
     "package.json",
     "vite-env.d.ts",

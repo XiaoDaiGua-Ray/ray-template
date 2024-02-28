@@ -1,9 +1,8 @@
 import { getAppDefaultLanguage } from '@/locales/helper'
 import { colorToRgba, setStorage } from '@/utils'
 import { useI18n, useDayjs } from '@/hooks'
-import { APP_CATCH_KEY } from '@/app-config'
 import { watchOnce } from '@vueuse/core'
-import { APP_THEME } from '@/app-config'
+import { APP_CATCH_KEY, APP_THEME } from '@/app-config'
 
 import type { SettingState } from '@/store/modules/setting/type'
 import type { LocalKey } from '@/hooks'

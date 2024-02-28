@@ -77,8 +77,8 @@ export type DeepMutable<T> = {
   -readonly [P in keyof T]: T[P] extends ReadonlyArray<infer U>
     ? Array<DeepMutable<U>>
     : T[P] extends object
-    ? DeepMutable<T[P]>
-    : T[P]
+      ? DeepMutable<T[P]>
+      : T[P]
 }
 
 /**
@@ -89,8 +89,5 @@ export type DeepMutable<T> = {
  * ReturnPromiseType<Promise<string>> // string
  * ReturnPromiseType<Promise<string> | Promise<number>> // string | number
  */
-export type ReturnPromiseType<T extends Promise<any>> = T extends Promise<
-  infer U
->
-  ? U
-  : never
+export type ReturnPromiseType<T extends Promise<any>> =
+  T extends Promise<infer U> ? U : never

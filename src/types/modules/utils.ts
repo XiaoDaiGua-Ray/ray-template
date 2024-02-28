@@ -14,10 +14,10 @@ export type RemoveStorageFC = <T extends RemoveStorageKey>(
   storageType: T extends '__all__'
     ? 'all'
     : T extends '__all_sessionStorage__'
-    ? 'sessionStorage'
-    : T extends '__all_localStorage__'
-    ? 'localStorage'
-    : StorageLike,
+      ? 'sessionStorage'
+      : T extends '__all_localStorage__'
+        ? 'localStorage'
+        : StorageLike,
   options?: StorageOptions,
 ) => void
 

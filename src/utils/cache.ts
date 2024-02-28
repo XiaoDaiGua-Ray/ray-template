@@ -20,8 +20,12 @@ import type { StorageLike, StorageOptions, RemoveStorageFC } from '@/types'
  * @param options 配置项
  *
  * @description
- * 查找当前缓存中是否含有某个 key
- * 默认查找 sessionStorage
+ * 查找当前缓存中是否含有某个 key。
+ *
+ * 默认查找 sessionStorage。
+ *
+ * @example
+ * hasStorage('signing') // 查找 session 中 signing 缓存字段
  */
 function hasStorage(
   key: string,
@@ -43,7 +47,14 @@ function hasStorage(
  * @param options 配置项
  *
  * @description
- * 设置缓存值，默认设置 sessionStorage
+ * 设置缓存值，默认设置 sessionStorage。
+ *
+ * 如果 key 为空，则会打印错误信息。
+ *
+ * @example
+ * setStorage('demo', 'hi') // 设置 session 中 demo 缓存字段
+ * setStorage('demo', 'hi', 'localStorage') // 设置 local 中 demo 缓存字段
+ * setStorage('demo', 'hi', 'sessionStorage', { prefix: true, prefixKey: 'ray' }) // 设置 session 中 ray_demo 缓存字段
  */
 function setStorage<T = unknown>(
   key: string,
@@ -95,7 +106,16 @@ function getStorage<T = unknown>(
  * @param options 配置项
  *
  * @description
- * 获取缓存值，默认获取 sessionStorage
+ * 获取缓存值。
+ *
+ * 默认获取 sessionStorage。
+ *
+ * 如果 key 为空，则会打印错误信息。
+ *
+ * @example
+ * getStorage('demo') // 获取 session 中 demo 缓存字段
+ * getStorage('demo', 'localStorage') // 获取 local 中 demo 缓存字段
+ * getStorage('demo', 'sessionStorage', { prefix: true, prefixKey: 'ray' }) // 获取 session 中 ray_demo 缓存字段
  */
 function getStorage<T = unknown>(
   key: string,
@@ -133,10 +153,12 @@ function getStorage<T = unknown>(
  * @param options 配置项
  *
  * @description
- * 删除缓存值，默认删除 sessionStorage
+ * 删除缓存值。
  *
- * 预保留了 __all__、__all_sessionStorage__、__all_localStorage__ 三个 key
- * 分别代表清空所有缓存、清空 sessionStorage 缓存、清空 localStorage 缓存
+ * 默认删除 sessionStorage。
+ *
+ * 预保留了 __all__、__all_sessionStorage__、__all_localStorage__ 三个 key，
+ * 分别代表清空所有缓存、清空 sessionStorage 缓存、清空 localStorage 缓存。
  *
  * @example
  * removeStorage('__all__', 'all') // 清空所有缓存
@@ -161,8 +183,8 @@ const removeStorage: RemoveStorageFC = (key, storageType, options) => {
     const keys = isAll
       ? [...sessionStorageKeys, ...localStorageKeys]
       : removeType === 'localStorage'
-      ? localStorageKeys
-      : sessionStorageKeys
+        ? localStorageKeys
+        : sessionStorageKeys
     keys.forEach((curr) => {
       if (key === '__all__') {
         window.sessionStorage.removeItem(_prefix + curr)
