@@ -33,7 +33,6 @@ import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 import config from './vite.custom.config'
 
 import type { PluginOption } from 'vite'
-import type pkg from './package.json'
 
 // 仅适用于报告模式（report）
 function onlyReportOptions(mode: string) {
@@ -50,55 +49,53 @@ function onlyReportOptions(mode: string) {
 
 // 仅适用于构建模式（任何构建模式：preview、build、report...）
 function onlyBuildOptions(mode: string) {
-  // cdn 列表
-  const cdnOptions: Array<{
-    name: keyof typeof pkg.dependencies
-    global: string
-  }> = [
-    {
-      name: 'vue',
-      global: 'Vue',
-    },
-    {
-      name: 'vue-demi',
-      global: 'VueDemi',
-    },
-    {
-      name: 'naive-ui',
-      global: 'naive',
-    },
-    {
-      name: 'pinia',
-      global: 'Pinia',
-    },
-    {
-      name: 'vue-router',
-      global: 'VueRouter',
-    },
-    {
-      name: 'vue-i18n',
-      global: 'VueI18n',
-    },
-    {
-      name: 'echarts',
-      global: 'echarts',
-    },
-    {
-      name: 'axios',
-      global: 'axios',
-    },
-  ]
+  const url = 'https://cdnjs.cloudflare.com/ajax/libs'
 
   return [
     viteCDNPlugin({
       // modules 顺序 vue, vue-demi 必须保持当前顺序加载，否则会出现加载错误问题
-      modules: cdnOptions.map((curr) => {
-        return {
-          name: curr.name,
-          global: curr.global,
-          resolve: `https://cdnjs.cloudflare.com/ajax/libs/${curr.name}/${getDependenciesVersion(curr.name)}/${curr.name}.min.js`,
-        }
-      }),
+      modules: [
+        {
+          name: 'vue',
+          global: 'Vue',
+          resolve: `${url}/vue/${getDependenciesVersion('vue')}/vue.global.min.js`,
+        },
+        {
+          name: 'vue-demi',
+          global: 'VueDemi',
+          resolve: `${url}/vue-demi/${getDependenciesVersion('vue-demi')}/index.iife.min.js`,
+        },
+        {
+          name: 'naive-ui',
+          global: 'naive',
+          resolve: `${url}/naive-ui/${getDependenciesVersion('naive-ui')}/index.prod.js`,
+        },
+        {
+          name: 'pinia',
+          global: 'Pinia',
+          resolve: `${url}/pinia/${getDependenciesVersion('pinia')}/pinia.iife.min.js`,
+        },
+        {
+          name: 'vue-router',
+          global: 'VueRouter',
+          resolve: `${url}/vue-router/${getDependenciesVersion('vue-router')}/vue-router.global.min.js`,
+        },
+        {
+          name: 'vue-i18n',
+          global: 'VueI18n',
+          resolve: `${url}/vue-i18n/${getDependenciesVersion('vue-i18n')}/vue-i18n.global.min.js`,
+        },
+        {
+          name: 'echarts',
+          global: 'echarts',
+          resolve: `${url}/echarts/${getDependenciesVersion('echarts')}/echarts.min.js`,
+        },
+        {
+          name: 'axios',
+          global: 'axios',
+          resolve: `${url}/axios/${getDependenciesVersion('axios')}/axios.min.js`,
+        },
+      ],
     }),
   ]
 }
