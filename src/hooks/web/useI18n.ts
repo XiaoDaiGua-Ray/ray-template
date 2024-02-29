@@ -11,7 +11,13 @@
 
 import { i18n } from '@/locales'
 
-import type { WritableComputedRef } from 'vue'
+import type { I18n } from 'vue-i18n'
+
+export interface OverrideUseI18nReturnType
+  extends Omit<I18n['global'], 't' | 'locale'> {
+  t: <T = unknown>(key: string, ...args: T[]) => T
+  locale: (lang: string) => void
+}
 
 const getI18nKey = (namespace: string | undefined, key: string) => {
   if (!namespace) {
@@ -26,7 +32,21 @@ const getI18nKey = (namespace: string | undefined, key: string) => {
 }
 
 export const useI18n = (namespace?: string) => {
-  const { t, locale, ...methods } = i18n.global
+  /**
+   *
+   * 避免 HMR 时 i18n 未初始化导致报错。
+   * 但是在开发环境下，i18n 始终会被初始化，所以不会影响其正常使用。
+   */
+  if (!i18n) {
+    return {
+      t: (key: string) => {
+        return getI18nKey(namespace, key)
+      },
+      locale: (lang: string) => {},
+    } as OverrideUseI18nReturnType
+  }
+
+  const { t, ...methods } = i18n.global
 
   const overridesTFunc = (key: string, ...args: any[]) => {
     if (!key) {
@@ -43,9 +63,15 @@ export const useI18n = (namespace?: string) => {
 
   /** 重写 locale 方法 */
   const overrideLocaleFunc = (lang: string) => {
-    const localeRef = locale as WritableComputedRef<string>
-
-    localeRef.value = lang
+    if (i18n.mode === 'legacy') {
+      i18n.global.locale = lang
+    } else {
+      if (isRef(i18n.global.locale)) {
+        i18n.global.locale.value = lang
+      } else {
+        i18n.global.locale = lang
+      }
+    }
   }
 
   return {
@@ -57,11 +83,11 @@ export const useI18n = (namespace?: string) => {
 
 /**
  *
- * 该方法为纯函数, 无任何副作用
- * 单纯为了配合 i18n-ally 插件使用
+ * @description
+ * 该方法为纯函数，无任何副作用，单纯为了配合 i18n-ally 插件使用。
  *
- * 该插件识别 t 方法包裹 path 进行提示文案内容
+ * 该插件识别 t 方法包裹 path 进行提示文案内容。
  */
 export const t = (key: string) => key
 
-export type UseI18nReturnType = ReturnType<typeof useI18n>
+export type UseI18nReturnType = OverrideUseI18nReturnType

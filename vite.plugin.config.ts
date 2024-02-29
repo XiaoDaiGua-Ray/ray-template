@@ -33,6 +33,7 @@ import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 import config from './vite.custom.config'
 
 import type { PluginOption } from 'vite'
+import type { DependenciesKey } from './vite-helper/type'
 
 // 仅适用于报告模式（report）
 function onlyReportOptions(mode: string) {
@@ -49,7 +50,11 @@ function onlyReportOptions(mode: string) {
 
 // 仅适用于构建模式（任何构建模式：preview、build、report...）
 function onlyBuildOptions(mode: string) {
-  const url = 'https://cdnjs.cloudflare.com/ajax/libs'
+  const cdnBaseUrl = 'https://cdnjs.cloudflare.com/ajax/libs'
+
+  const resolve = (dependenciesKey: DependenciesKey) => {
+    return `${cdnBaseUrl}/${dependenciesKey}/${getDependenciesVersion(dependenciesKey)}`
+  }
 
   return [
     viteCDNPlugin({
@@ -58,42 +63,42 @@ function onlyBuildOptions(mode: string) {
         {
           name: 'vue',
           global: 'Vue',
-          resolve: `${url}/vue/${getDependenciesVersion('vue')}/vue.global.min.js`,
+          resolve: `${resolve('vue')}/vue.global.min.js`,
         },
         {
           name: 'vue-demi',
           global: 'VueDemi',
-          resolve: `${url}/vue-demi/${getDependenciesVersion('vue-demi')}/index.iife.min.js`,
+          resolve: `${resolve('vue-demi')}/index.iife.min.js`,
         },
         {
           name: 'naive-ui',
           global: 'naive',
-          resolve: `${url}/naive-ui/${getDependenciesVersion('naive-ui')}/index.prod.js`,
+          resolve: `${resolve('naive-ui')}/index.prod.js`,
         },
         {
           name: 'pinia',
           global: 'Pinia',
-          resolve: `${url}/pinia/${getDependenciesVersion('pinia')}/pinia.iife.min.js`,
+          resolve: `${resolve('pinia')}/pinia.iife.min.js`,
         },
         {
           name: 'vue-router',
           global: 'VueRouter',
-          resolve: `${url}/vue-router/${getDependenciesVersion('vue-router')}/vue-router.global.min.js`,
+          resolve: `${resolve('vue-router')}/vue-router.global.min.js`,
         },
         {
           name: 'vue-i18n',
           global: 'VueI18n',
-          resolve: `${url}/vue-i18n/${getDependenciesVersion('vue-i18n')}/vue-i18n.global.min.js`,
+          resolve: `${resolve('vue-i18n')}/vue-i18n.global.min.js`,
         },
         {
           name: 'echarts',
           global: 'echarts',
-          resolve: `${url}/echarts/${getDependenciesVersion('echarts')}/echarts.min.js`,
+          resolve: `${resolve('echarts')}/echarts.min.js`,
         },
         {
           name: 'axios',
           global: 'axios',
-          resolve: `${url}/axios/${getDependenciesVersion('axios')}/axios.min.js`,
+          resolve: `${resolve('axios')}/axios.min.js`,
         },
       ],
     }),

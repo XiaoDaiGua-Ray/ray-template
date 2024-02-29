@@ -1,5 +1,7 @@
 import pkg from '../package.json'
 
+import type { DependenciesKey } from './type'
+
 /**
  *
  * @param title 浏览器 title 名称
@@ -50,9 +52,7 @@ export const mixinCSSPlugin = (options?: string[]) => {
  * const vueVersion = getDependenciesVersion('vue') // vue version
  * const unknownVersion = getDependenciesVersion('unknown package') // Error
  */
-export const getDependenciesVersion = (
-  dependenciesKey: keyof typeof pkg.dependencies,
-) => {
+export const getDependenciesVersion = (dependenciesKey: DependenciesKey) => {
   const { dependencies } = pkg
   const result = dependencies[dependenciesKey]
 

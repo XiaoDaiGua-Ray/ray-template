@@ -26,6 +26,7 @@ import {
   createDiscreteApi,
   darkTheme,
   NGlobalStyle,
+  NModalProvider,
 } from 'naive-ui'
 
 import { naiveLocales } from '@/locales/helper'
@@ -93,11 +94,13 @@ export default defineComponent({
         <NLoadingBarProvider>
           <NMessageProvider>
             <NDialogProvider>
-              <NNotificationProvider>
-                <NGlobalStyle />
-                {slotDefault?.()}
-                {discreteApi()}
-              </NNotificationProvider>
+              <NModalProvider>
+                <NNotificationProvider>
+                  <NGlobalStyle />
+                  {slotDefault?.()}
+                  {discreteApi()}
+                </NNotificationProvider>
+              </NModalProvider>
             </NDialogProvider>
           </NMessageProvider>
         </NLoadingBarProvider>

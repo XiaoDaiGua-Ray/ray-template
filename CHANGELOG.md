@@ -1,5 +1,20 @@
 # CHANGE LOG
 
+## 4.6.4
+
+稳定了 `4.6.4` 版本。
+
+## Feats
+
+- 更新 `naive-ui` 版本至 `2.38.1`，详细更细请查看 [CHANGELOG.zh-CN](https://github.com/tusen-ai/naive-ui/blob/main/CHANGELOG.zh-CN.md)
+  - 同步更新 `ModalProvider` 在顶层的注入（但是 `resolver` 暂为更新，所以需要手动导入）
+- `useI18n` 方法
+  - 重写 `overrideLocaleFunc` 方法
+
+## Fixes
+
+- 修复 `useI18n` 方法在 `HMR` 时可能会报错的问题
+
 ## 4.6.4-beta1.1
 
 更新了一大波的开发依赖。
