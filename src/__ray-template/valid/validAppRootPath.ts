@@ -11,6 +11,10 @@ import { useVueRouter } from '@/hooks'
  * 该方法会通过调用 getRoutes 方法获取所有路由，也就意味着检查的路由格式是铺开之后的格式。当你的路由是嵌套路由时，需要注意检查完整的路径。
  */
 export const validAppRootPath = async () => {
+  if (!__DEV__) {
+    return
+  }
+
   const { getAppRootRoute } = useSettingGetters()
   const {
     router: { getRoutes },

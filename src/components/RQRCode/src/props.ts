@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import type { QRCodeStatus, QRCodeLevel } from './type'
+import type { QRCodeStatus, QRCodeLevel } from './types'
 import type { PropType, VNode } from 'vue'
 import type { MaybeArray } from '@/types'
 import type { Options } from 'awesome-qr'

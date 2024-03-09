@@ -21,7 +21,7 @@
 import { LAYOUT_CONTENT_REF } from '@/app-config'
 
 import type { RouteLocationNormalized } from 'vue-router'
-import type { AppRouteRecordRaw, RouteModules } from '@/router/type'
+import type { AppRouteRecordRaw, RouteModules } from '@/router/types'
 
 /**
  *

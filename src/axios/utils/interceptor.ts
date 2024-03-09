@@ -20,7 +20,7 @@
  * 所以在使用的时候, 需要按照约定格式进行参数传递
  */
 
-import RequestCanceler from '@/axios/helper/RequestCanceler'
+import RequestCanceler from '@/axios/utils/RequestCanceler'
 import { getAppEnvironment } from '@/utils'
 
 import type {
@@ -31,8 +31,9 @@ import type {
   FetchType,
   AxiosFetchInstance,
   AxiosFetchError,
-} from '@/axios/type'
+} from '@/axios/types'
 import type { AnyFC } from '@/types'
+import type { AxiosError } from 'axios'
 
 /** 当前请求的实例 */
 const axiosFetchInstance: AxiosFetchInstance = {
@@ -40,7 +41,7 @@ const axiosFetchInstance: AxiosFetchInstance = {
   responseInstance: null,
 }
 /** 请求失败返回值 */
-const axiosFetchError: AxiosFetchError = {
+const axiosFetchError: AxiosFetchError<AxiosError<unknown, unknown>> = {
   requestError: null,
   responseError: null,
 }
@@ -94,7 +95,7 @@ export const useAxiosInterceptor = () => {
   /** 队列执行器 */
   const implementer = (funcs: AnyFC[], ...args: any[]) => {
     if (Array.isArray(funcs)) {
-      funcs?.forEach((curr) => {
+      funcs.forEach((curr) => {
         if (typeof curr === 'function') {
           curr(...args)
         }
@@ -123,7 +124,7 @@ export const useAxiosInterceptor = () => {
   /** 请求、响应错误时执行队列中所有方法 */
   const fetchError = (
     key: keyof AxiosFetchError,
-    error: unknown,
+    error: AxiosError<unknown, unknown>,
     errorImplementKey: keyof ErrorImplementQueue,
   ) => {
     axiosFetchError[key] = error
@@ -143,3 +144,5 @@ export const useAxiosInterceptor = () => {
     fetchError,
   }
 }
+
+export type UseAxiosInterceptor = ReturnType<typeof useAxiosInterceptor>

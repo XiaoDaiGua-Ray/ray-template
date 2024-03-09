@@ -16,7 +16,7 @@ import { getAppEnvironment, setStorage } from '@/utils'
 import { useSigningGetters } from '@/store'
 
 import type { Router } from 'vue-router'
-import type { AppRouteMeta } from '@/router/type'
+import type { AppRouteMeta } from '@/router/types'
 import type { AppMenuOption } from '@/types'
 
 /**

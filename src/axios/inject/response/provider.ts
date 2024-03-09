@@ -20,13 +20,13 @@
  * 其中 injectResponseCanceler responseErrorCanceler 方法是注入的 axios response interceptor 方法
  */
 
-import { axiosCanceler } from '@/axios/helper/interceptor'
+import { axiosCanceler } from '@/axios/utils/interceptor'
 
 import type {
   ResponseInterceptorConfig,
-  BeforeFetchFunction,
+  FetchFunction,
   FetchErrorFunction,
-} from '@/axios/type'
+} from '@/axios/types'
 import type { Recordable } from '@/types'
 
 /**
@@ -34,13 +34,11 @@ import type { Recordable } from '@/types'
  * @param ins 当前响应实例
  * @param mode 当前环境
  *
- * 响应成功后注销请求取消器
+ * @description
+ * 响应成功后注销请求取消器。
  */
-const injectResponseCanceler: BeforeFetchFunction<ResponseInterceptorConfig> = (
-  ins,
-  mode,
-) => {
-  axiosCanceler.removePendingRequest(ins.config)
+const injectResponseCanceler: FetchFunction = (ins, mode) => {
+  axiosCanceler.removePendingRequest(ins)
 }
 
 /**
@@ -48,10 +46,11 @@ const injectResponseCanceler: BeforeFetchFunction<ResponseInterceptorConfig> = (
  * @param error 错误信息
  * @param mode 当前环境
  *
- * 注销失败请求取消器
+ * @description
+ * 注销失败请求取消器。
  */
-const responseErrorCanceler: FetchErrorFunction<Recordable> = (error, mode) => {
-  axiosCanceler.removePendingRequest(error.config)
+const responseErrorCanceler: FetchErrorFunction = (error, mode) => {
+  axiosCanceler.removePendingRequest(error)
 }
 
 /**

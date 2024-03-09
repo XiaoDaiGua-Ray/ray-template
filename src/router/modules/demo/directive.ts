@@ -1,7 +1,7 @@
 import { t } from '@/hooks'
 import { LAYOUT } from '@/router/constant'
 
-import type { AppRouteRecordRaw } from '@/router/type'
+import type { AppRouteRecordRaw } from '@/router/types'
 
 const directive: AppRouteRecordRaw = {
   path: '/directive',
@@ -11,6 +11,9 @@ const directive: AppRouteRecordRaw = {
     i18nKey: t('menu.Directive'),
     icon: 'other',
     order: 2,
+    extra: {
+      label: 'ellipsis',
+    },
   },
 }
 

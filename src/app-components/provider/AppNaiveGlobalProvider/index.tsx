@@ -29,7 +29,7 @@ import {
   NModalProvider,
 } from 'naive-ui'
 
-import { naiveLocales } from '@/locales/helper'
+import { getNaiveLocales } from '@/locales/utils'
 import { useSettingGetters } from '@/store'
 
 export default defineComponent({
@@ -41,7 +41,7 @@ export default defineComponent({
     const localePackage = computed(() => {
       const key = getLocaleLanguage.value
 
-      return naiveLocales(key)
+      return getNaiveLocales(key)
     })
 
     /**

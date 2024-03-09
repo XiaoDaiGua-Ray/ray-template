@@ -26,7 +26,7 @@ import props from '../props'
 import { call } from '@/utils'
 
 import type { TreeOption, TreeDropInfo } from 'naive-ui'
-import type { C } from '../type'
+import type { C } from '../types'
 import type { AnyFC } from '@/types'
 import type { MaybeArray } from '@/types'
 

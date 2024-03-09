@@ -22,7 +22,11 @@ import type { Ref } from 'vue'
  * 不建议滥用该方法, 对页面渲染有一定的影响
  */
 export const layoutHeaderCssVars = (
-  element: Ref<HTMLElement | undefined>[],
+  element: [
+    Ref<HTMLElement | undefined>,
+    Ref<HTMLElement | undefined>,
+    Ref<HTMLElement | undefined>,
+  ],
 ) => {
   const siderBar = useElementBounding(element[0])
   const menuTag = useElementBounding(element[1])

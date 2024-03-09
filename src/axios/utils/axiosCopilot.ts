@@ -12,7 +12,7 @@
 /** axios 拦截器工具 */
 
 import type { RawAxiosRequestHeaders, AxiosRequestConfig } from 'axios'
-import type { RequestHeaderOptions } from '../type'
+import type { RequestHeaderOptions } from '../types'
 
 /**
  *

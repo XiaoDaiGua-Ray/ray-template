@@ -6,6 +6,7 @@ import type {
   AxiosDefaults,
   Axios,
   AxiosResponse,
+  AxiosError,
 } from 'axios'
 import type { AnyFC } from '@/types'
 
@@ -28,7 +29,12 @@ export interface CancelConfig {
 
 export interface AppRawRequestConfig<T = any> extends AxiosRequestConfig<T> {
   cancelConfig?: CancelConfig
+  __CANCELER_TAG_RAY_TEMPLATE__?: '__CANCELER_TAG_RAY_TEMPLATE__'
 }
+
+export interface CancelerParams<T = any, D = any>
+  extends AppRawRequestConfig<T>,
+    AxiosError<T, D> {}
 
 export interface AxiosInstanceExpand extends Axios {
   <T = any, D = any>(config: AppRawRequestConfig<D>): Promise<T>
@@ -104,14 +110,15 @@ export interface ErrorImplementQueue {
   implementResponseInterceptorErrorArray: AnyFC[]
 }
 
-export type BeforeFetchFunction<
-  T = RequestInterceptorConfig | ResponseInterceptorConfig,
-> = <K extends T>(ins: K, mode: string) => void
+export type FetchFunction = <T = any, K = any>(
+  ins: RequestInterceptorConfig<T> & ResponseInterceptorConfig<T, K>,
+  mode: string,
+) => void
 
 export type FetchType = 'ok' | 'error'
 
-export type FetchErrorFunction<T = any> = <K extends T>(
-  error: K,
+export type FetchErrorFunction<T = any, D = any> = (
+  error: AxiosError<T, D>,
   mode: string,
 ) => void
 
@@ -120,7 +127,7 @@ export interface AxiosFetchInstance {
   responseInstance: ResponseInterceptorConfig | null
 }
 
-export interface AxiosFetchError<T = unknown> {
+export interface AxiosFetchError<T = any> {
   requestError: T | null
   responseError: T | null
 }

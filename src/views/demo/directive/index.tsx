@@ -18,13 +18,14 @@ import {
   NSwitch,
   NForm,
   NFormItem,
+  NInputNumber,
 } from 'naive-ui'
 
 import type { ConditionalPick } from '@/types'
 import type {
   DebounceBindingOptions,
   ThrottleBindingOptions,
-} from '@/directives/type'
+} from '@/directives/types'
 
 const RDirective = defineComponent({
   name: 'RDirective',
@@ -36,6 +37,7 @@ const RDirective = defineComponent({
       debounceBtnClickCount: 0,
       disabledValue: false,
     })
+    const ellipsisLineClamp = ref(2)
 
     const updateDemoValue = (
       key: keyof ConditionalPick<typeof state, number>,
@@ -46,12 +48,46 @@ const RDirective = defineComponent({
     return {
       ...toRefs(state),
       updateDemoValue,
+      ellipsisLineClamp,
     }
   },
   render() {
     return (
       <NFlex>
         <NCard title="指令">该页面展示如何使用已封装好的指令</NCard>
+        <NCard title="文本省略">
+          <NFlex vertical>
+            <NCard title="单行省略">
+              <div
+                v-ellipsis={{
+                  type: 'block',
+                  width: '100px',
+                }}
+              >
+                我是一段很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长的文本。
+              </div>
+            </NCard>
+            <NCard title="多行省略">
+              <NFlex vertical>
+                <h3>
+                  该方法基于非标准属性实现（-webkit-line-clamp），可能会有兼容性问题，所以请谨慎使用。
+                  详情参考：
+                  <a href="https://caniuse.com/?search=line-clamp">can i use</a>
+                </h3>
+                <div
+                  v-ellipsis={{
+                    type: 'line',
+                    width: '100px',
+                    line: this.ellipsisLineClamp,
+                  }}
+                >
+                  我是一段很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长的文本。
+                </div>
+                <NInputNumber v-model:value={this.ellipsisLineClamp} min={1} />
+              </NFlex>
+            </NCard>
+          </NFlex>
+        </NCard>
         <NCard title="文本复制示例一">
           <NInputGroup>
             <NInput v-model:value={this.copyValueOne} />

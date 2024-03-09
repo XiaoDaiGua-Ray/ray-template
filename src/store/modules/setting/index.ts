@@ -1,4 +1,4 @@
-import { getAppDefaultLanguage } from '@/locales/helper'
+import { getAppDefaultLanguage } from '@/locales/utils'
 import { colorToRgba, setStorage } from '@/utils'
 import { useI18n, useDayjs } from '@/hooks'
 import { watchOnce } from '@vueuse/core'

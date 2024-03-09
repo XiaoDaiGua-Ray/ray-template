@@ -40,7 +40,7 @@ export * from './hooks/useKeepAliveStore'
  * 设置并且注册 pinia
  * pinia 天生支持在非 setup 环境中使用，只要在调用时已经注册
  */
-export const setupStore = async (app: App<Element>) => {
+export const setupStore = (app: App<Element>) => {
   const store = createPinia()
 
   app.use(store)

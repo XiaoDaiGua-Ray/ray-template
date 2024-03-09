@@ -5,7 +5,7 @@
 
 ## 工具函数
 
-- BeforeFetchFunction
+- FetchFunction
 - FetchErrorFunction
 
 > 两个工具函数方便类型推导。
@@ -28,13 +28,14 @@ import { appendRequestHeaders } from '@/axios/helper/axiosCopilot'
 
 import type {
   RequestInterceptorConfig,
-  BeforeFetchFunction,
+  FetchFunction,
   FetchErrorFunction,
-} from '@/axios/type'
+} from '@/axios/types'
 
-const injectRequestHeaderOfEnv: BeforeFetchFunction<
-  RequestInterceptorConfig
-> = (ins, mode) => {
+const injectRequestHeaderOfEnv: FetchFunction<RequestInterceptorConfig> = (
+  ins,
+  mode,
+) => {
   if (mode === 'development') {
     appendRequestHeaders(ins, [
       {

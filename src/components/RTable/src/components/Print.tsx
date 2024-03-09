@@ -15,7 +15,7 @@ import { config } from '../shared'
 import props from '../props'
 import { printDom } from '@/utils/dom'
 
-import type { TableProvider } from '../type'
+import type { TableProvider } from '../types'
 
 export default defineComponent({
   name: 'TablePrint',

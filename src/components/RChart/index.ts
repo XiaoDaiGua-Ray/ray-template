@@ -3,7 +3,7 @@ import chartProps from './src/props'
 
 import type { ExtractPublicPropTypes } from 'vue'
 
-import type * as RChartType from './src/type'
+import type * as RChartType from './src/types'
 
 export type ChartProps = ExtractPublicPropTypes<typeof chartProps>
 export type { RChartType }

@@ -1,5 +1,5 @@
 import print from 'print-js'
-import { unrefElement } from '@/utils'
+import { unrefElement, omit } from '@/utils'
 
 import type { BasicTarget } from '@/types'
 
@@ -40,7 +40,7 @@ export const usePrint = (target: UsePrintTarget, options?: UsePrintOptions) => {
     const _target = unrefElement(target as BasicTarget) || target
 
     print({
-      ...options,
+      ...omit(options, ['printable']),
       printable: _target,
     })
   }

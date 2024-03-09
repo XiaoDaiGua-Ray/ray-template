@@ -1,9 +1,9 @@
 import { useMenuGetters, depthSearchAppMenu } from '@/store'
 import { isValueType } from '@/utils'
-import { createMenuExtra } from '@/store/modules/menu/helper'
+import { createMenuExtra } from '@/store/modules/menu/utils'
 
 import type { AppMenuOption } from '@/types'
-import type { AppMenuExtraOptions } from '@/router/type'
+import type { AppMenuExtraOptions } from '@/router/types'
 
 export type BadgeKey = string | AppMenuOption
 

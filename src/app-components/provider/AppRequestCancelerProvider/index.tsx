@@ -17,7 +17,7 @@
  * beforeRouteUpdate -> cancelAllRequest -> routeUpdate
  */
 
-import { axiosCanceler } from '@/axios/helper/interceptor'
+import { axiosCanceler } from '@/axios/utils/interceptor'
 
 const AppRequestCancelerProvider = defineComponent({
   name: 'AppRequestCancelerProvider',

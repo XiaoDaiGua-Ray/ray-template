@@ -27,7 +27,7 @@ import { useKeepAliveGetters } from '@/store'
 import { APP_KEEP_ALIVE } from '@/app-config'
 import props from './props'
 
-import type { TransitionProps } from './type'
+import type { TransitionProps } from './types'
 
 /**
  *
@@ -42,3 +42,4 @@ withDefaults(defineProps<TransitionProps>(), props)
 const { getKeepAliveInclude } = useKeepAliveGetters()
 const { setupKeepAlive, maxKeepAliveLength, keepAliveExclude } = APP_KEEP_ALIVE
 </script>
+./types

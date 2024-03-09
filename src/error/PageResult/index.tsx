@@ -21,7 +21,7 @@ import './index.scss'
 
 import { NResult, NButton } from 'naive-ui'
 
-import { redirectRouterToDashboard } from '@/router/helper/routerCopilot'
+import { redirectRouterToDashboard } from '@/router/utils/routerCopilot'
 import { resultProps } from 'naive-ui'
 
 const PageResult = defineComponent({

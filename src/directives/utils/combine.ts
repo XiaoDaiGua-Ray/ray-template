@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import type { DirectiveModules, CustomDirectiveFC } from '@/directives/type'
+import type { DirectiveModules, CustomDirectiveFC } from '@/directives/types'
 
 export const combineDirective = <
   T extends Record<string, DirectiveModules>,

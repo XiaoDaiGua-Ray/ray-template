@@ -1,4 +1,4 @@
-import type { TransitionProps } from './type'
+import type { TransitionProps } from './types'
 
 const props: TransitionProps = {
   transitionPropName: 'fade',

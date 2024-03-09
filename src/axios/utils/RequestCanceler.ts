@@ -16,7 +16,7 @@
  * 可以根据自己项目进行定制化配置
  */
 
-import type { AppRawRequestConfig } from '@/axios/type'
+import type { AppRawRequestConfig, CancelerParams } from '@/axios/types'
 
 export default class RequestCanceler {
   private pendingRequest: Map<string, AbortController>
@@ -26,7 +26,7 @@ export default class RequestCanceler {
   }
 
   /** 是否需要加入取消请求表中 */
-  private isAppending(config: AppRawRequestConfig) {
+  private isAppending(config: AppRawRequestConfig | CancelerParams) {
     return config.cancelConfig?.cancel ?? true
   }
 
@@ -37,7 +37,7 @@ export default class RequestCanceler {
    *
    * @remark 将当前请求 config 生成 request key
    */
-  private generateRequestKey(config: AppRawRequestConfig) {
+  private generateRequestKey(config: AppRawRequestConfig | CancelerParams) {
     const { method, url } = config
 
     return [
@@ -54,8 +54,10 @@ export default class RequestCanceler {
    *
    * @remark 给请求体添加 signal 属性, 用于取消请求
    */
-  addPendingRequest(config: AppRawRequestConfig) {
+  addPendingRequest(config: AppRawRequestConfig | CancelerParams) {
     if (this.isAppending(config)) {
+      config.__CANCELER_TAG_RAY_TEMPLATE__ = '__CANCELER_TAG_RAY_TEMPLATE__'
+
       const requestKey = this.generateRequestKey(config)
 
       if (!this.pendingRequest.has(requestKey)) {
@@ -77,7 +79,7 @@ export default class RequestCanceler {
    *
    * @remark 取消该请求, 并且清除 map 中对应 generateRequestKey value
    */
-  removePendingRequest(config: AppRawRequestConfig) {
+  removePendingRequest(config: AppRawRequestConfig | CancelerParams) {
     const requestKey = this.generateRequestKey(config)
 
     if (this.pendingRequest.has(requestKey)) {

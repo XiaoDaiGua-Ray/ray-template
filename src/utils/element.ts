@@ -6,6 +6,7 @@ import type {
   QueryElementsOptions,
   ElementSelector,
 } from '@/types'
+import type { CSSProperties } from 'vue'
 
 /**
  *
@@ -195,9 +196,9 @@ export const autoPrefixStyle = (style: string) => {
  * setStyle(styles)
  * ```
  */
-export const setStyle = (
+export const setStyle = <Style extends CSSProperties>(
   target: BasicTarget<HTMLElement | SVGAElement>,
-  styles: Partial<CSSStyleDeclaration> | string | string[],
+  styles: Partial<Style> | string | string[],
 ) => {
   const set = (styleStr: string, element: HTMLElement | SVGAElement) => {
     styleStr.split(';').forEach((curr) => {
@@ -210,6 +211,8 @@ export const setStyle = (
         // 是否为 css variable
         if (key.startsWith('--')) {
           element.style.setProperty(trimKey, trimValue)
+        } else if (key.startsWith('-')) {
+          element.style[key] = value
         } else {
           // 兼容浏览器前缀
           const kitFix = autoPrefixStyle(trimKey)
@@ -268,7 +271,7 @@ export const setStyle = (
  */
 export const removeStyle = (
   target: BasicTarget<HTMLElement | SVGAElement>,
-  styles: ((keyof CSSStyleDeclaration & string) | string)[],
+  styles: ((keyof CSSProperties & string) | string)[],
 ) => {
   const update = () => {
     const element = unrefElement(target)

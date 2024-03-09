@@ -13,6 +13,7 @@ import { unrefElement, effectDispose, isValueType } from '@/utils'
 import { useWindowSize } from '@vueuse/core'
 
 import type { BasicTarget } from '@/types'
+import type { CSSProperties } from 'vue'
 
 export interface UseElementFullscreenOptions {
   /**
@@ -92,7 +93,7 @@ export const useElementFullscreen = (
     backgroundColor,
     zIndex,
   } = options ?? {}
-  const cacheStyle: Partial<CSSStyleDeclaration> = {} // 缓存一些需要被覆盖的样式，例如: transition
+  const cacheStyle: Partial<CSSProperties> = {} // 缓存一些需要被覆盖的样式，例如: transition
   let isSetup = false
 
   const updateStyle = () => {

@@ -25,6 +25,7 @@
     "domtoimage",
     "EDITMSG",
     "iife",
+    "linebreak",
     "macarons",
     "menutag",
     "ndata",
@@ -32,6 +33,7 @@
     "Popselect",
     "precommit",
     "siderbar",
+    "stylelint",
     "WUJIE",
     "zlevel"
   ]

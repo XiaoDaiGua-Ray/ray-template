@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type CryptoJS from 'crypto-js'
+import type { CSSProperties } from 'vue'
 
 export type StorageLike = 'sessionStorage' | 'localStorage'
 
@@ -92,7 +93,7 @@ export type CipherParams = CryptoJS.lib.CipherParams
 export type AnyFC<P = any, R = any> = (...args: P[]) => R
 
 export type PartialCSSStyleDeclaration = Partial<
-  Record<keyof CSSStyleDeclaration, string>
+  Record<keyof CSSProperties, string>
 >
 
 export type ElementSelector = string | `attr:${string}`

@@ -23,6 +23,9 @@ export interface UseDeviceOptions extends UseWindowSizeOptions {}
 
 /**
  *
+ * @param options 配置项
+ *
+ * @description
  * 检测当前尺寸是否为平板或者更小
  * 默认主流平板尺寸为 768px
  *

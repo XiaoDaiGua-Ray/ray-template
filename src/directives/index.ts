@@ -9,11 +9,11 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { combineDirective } from './helper/combine'
+import { combineDirective } from './utils/combine'
 import { forIn } from 'lodash-es'
 
 import type { App } from 'vue'
-import type { DirectiveModules } from '@/directives/type'
+import type { DirectiveModules } from '@/directives/types'
 
 /**
  *

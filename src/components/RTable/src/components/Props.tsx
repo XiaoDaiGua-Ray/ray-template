@@ -17,7 +17,7 @@ import { config } from '../shared'
 import props from '../props'
 
 import type { MaybeArray } from '@/types'
-import type { PropsComponentPopselectKeys } from '../type'
+import type { PropsComponentPopselectKeys } from '../types'
 
 export default defineComponent({
   name: 'TablePropsSelect',

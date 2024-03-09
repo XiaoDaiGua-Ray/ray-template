@@ -49,28 +49,30 @@ export const printDom = <T extends HTMLElement>(
 ) => {
   const { domToImageOptions, printOptions } = options ?? {}
 
-  const { create } = useDomToImage(
-    target,
-    domToImageOptions as UseDomToImageOptions,
-  )
-
-  window?.$loadingBar.start()
-
-  create('jpeg')
-    ?.then((res) => {
-      const { print } = usePrint(res, {
-        type: 'image',
-        base64: true,
-        targetStyles: ['*'],
-        ...omit(printOptions as UsePrintOptions, ['type', 'base64']),
-      })
-
-      print()
-    })
-    .catch(() => {
-      window?.$loadingBar.error()
-    })
-    .finally(() => {
+  const { create } = useDomToImage<T>(target, {
+    ...domToImageOptions,
+    beforeCreate: (element) => {
+      domToImageOptions?.beforeCreate?.(element)
+      window?.$loadingBar.start()
+    },
+    created(result, element) {
+      domToImageOptions?.created?.(result, element)
       window?.$loadingBar.finish()
+    },
+    createdError(error) {
+      domToImageOptions?.createdError?.(error)
+      window?.$loadingBar.error()
+    },
+  })
+
+  create('jpeg')?.then((res) => {
+    const { print } = usePrint(res, {
+      type: 'image',
+      base64: true,
+      targetStyles: ['*'],
+      ...omit(printOptions as UsePrintOptions, ['type', 'base64']),
     })
+
+    print()
+  })
 }

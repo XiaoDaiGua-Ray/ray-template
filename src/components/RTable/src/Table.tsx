@@ -24,7 +24,7 @@ import { config } from './shared'
 
 import type { DropdownOption, DataTableInst } from 'naive-ui'
 import type { ComponentSize } from '@/types'
-import type { C as CType, PropsComponentPopselectKeys } from './type'
+import type { C as CType, PropsComponentPopselectKeys } from './types'
 
 export default defineComponent({
   name: 'RTable',

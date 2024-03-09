@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { useAxiosInterceptor } from '@/axios/helper/interceptor'
+import { useAxiosInterceptor } from '@/axios/utils/interceptor'
 import implement from './provider'
 
 const { setImplement } = useAxiosInterceptor()

@@ -18,7 +18,7 @@
 
 import axios from 'axios'
 import { AXIOS_CONFIG } from '@/app-config'
-import { useAxiosInterceptor } from '@/axios/helper/interceptor'
+import { useAxiosInterceptor } from '@/axios/utils/interceptor'
 import {
   setupResponseInterceptor,
   setupResponseErrorInterceptor,
@@ -28,7 +28,7 @@ import {
   setupRequestErrorInterceptor,
 } from '@/axios/inject/request'
 
-import type { AxiosInstanceExpand } from './type'
+import type { AxiosInstanceExpand } from './types'
 
 const server: AxiosInstanceExpand = axios.create(AXIOS_CONFIG)
 const { createAxiosInstance, beforeFetch, fetchError } = useAxiosInterceptor()

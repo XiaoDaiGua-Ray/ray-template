@@ -52,13 +52,33 @@ $globalSearchWidth: 650px;
         transform: scale(0.75);
         font-weight: bolder;
       }
+    }
+  }
+}
 
-      & .global-search__card-content .content-item {
-        &.content-item--active,
-        &:hover {
-          background-color: var(--ray-theme-primary-fade-color);
-        }
-      }
+.n-flex.global-search__card-content {
+  & .content-item.content-item--active,
+  & .content-item:hover {
+    background-color: var(--ray-theme-primary-fade-color);
+  }
+
+  & .content-item {
+    position: relative;
+    transition: var(--r-bezier);
+
+    & .content-item-icon__enter {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      right: 16px;
+      opacity: 0;
+    }
+  }
+
+  & .content-item.content-item--active,
+  & .content-item:hover {
+    & .content-item-icon__enter {
+      opacity: 1;
     }
   }
 }

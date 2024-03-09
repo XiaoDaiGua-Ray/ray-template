@@ -48,7 +48,7 @@ export const getWeather = (city: string) => {
   })
 }
 
-export const getTypicode = () => {
+export const getTypicCode = () => {
   return request<JSONPlaceholder>({
     url: 'https://jsonplaceholder.typicode.com/todos/1',
     method: 'get',

@@ -1,5 +1,5 @@
 import type { VNode } from 'vue'
-import type { AppRouteRecordRaw, AppRouteMeta } from '@/router/type'
+import type { AppRouteRecordRaw, AppRouteMeta } from '@/router/types'
 
 export type Key = string | number
 

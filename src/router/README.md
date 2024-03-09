@@ -8,7 +8,7 @@
 import { t } from '@/hooks'
 import { LAYOUT } from '@/router/constant'
 
-import type { AppRouteRecordRaw } from '@/router/type'
+import type { AppRouteRecordRaw } from '@/router/types'
 
 const demo: AppRouteRecordRaw = {
   /** 路由路径，如果为根菜单且无有菜单的时候可以配置为空字符串 */

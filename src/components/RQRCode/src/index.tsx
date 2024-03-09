@@ -22,7 +22,7 @@ import type {
   QRCodeRenderResponse,
   GIFBuffer,
   DownloadFilenameType,
-} from './type'
+} from './types'
 import type { WatchStopHandle } from 'vue'
 
 const readGIFAsArrayBuffer = (url: string): Promise<GIFBuffer> => {

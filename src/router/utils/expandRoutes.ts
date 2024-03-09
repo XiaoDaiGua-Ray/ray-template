@@ -19,7 +19,7 @@
 
 import { cloneDeep } from 'lodash-es'
 
-import type { AppRouteRecordRaw } from '@/router/type'
+import type { AppRouteRecordRaw } from '@/router/types'
 
 // 是否为根路由
 const isRootPath = (path: string) => path[0] === '/'

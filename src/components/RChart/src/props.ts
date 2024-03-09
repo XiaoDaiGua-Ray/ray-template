@@ -1,21 +1,19 @@
 import type * as echarts from 'echarts/core' // `echarts` 核心模块
 import type { PropType, VNode } from 'vue'
 import type { MaybeArray } from '@/types'
+import type { ECharts, SetOptionOpts } from 'echarts/core'
+import type { MaybeComputedElementRef, MaybeElement } from '@vueuse/core'
 import type {
   LoadingOptions,
   AutoResize,
   ChartTheme,
-} from '@/components/RChart/src/type'
-import type { ECharts, SetOptionOpts } from 'echarts/core'
-import type { MaybeComputedElementRef, MaybeElement } from '@vueuse/core'
-import type {
   EChartsExtensionInstallRegisters,
   RChartPresetType,
   RChartDownloadOptions,
-} from './type'
+} from './types'
 import type { CardProps, DropdownProps, DropdownOption } from 'naive-ui'
 
-import { loadingOptions } from './helper'
+import { loadingOptions } from './utils'
 
 const props = {
   bordered: {

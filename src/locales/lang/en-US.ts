@@ -1,6 +1,6 @@
-import { combineI18nMessages } from '@/locales/helper'
+import { combineI18nMessages } from '@/locales/utils'
 
-import type { I18nModules } from '@/locales/type'
+import type { I18nModules } from '@/locales/types'
 
 const modules: I18nModules = import.meta.glob('./en-US/**/*.json', {
   eager: true,

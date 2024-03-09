@@ -80,7 +80,7 @@ export default defineComponent({
       'closeOther',
       'closeCurrentPage',
     ] // 哪些下拉框允许禁用
-    let currentContextmenuIndex = -1 // 当前右键标签页索引位置
+    let currentContextmenuIndex = Infinity // 当前右键标签页索引位置
     const iconConfig = {
       size: 16,
     }
@@ -154,6 +154,7 @@ export default defineComponent({
     })
     const MENU_TAG_DATA = 'menu_tag_data' // 注入 tag 前缀
     const globalMainLayoutLoad = getVariableToRefs('globalMainLayoutLoad')
+    const naiveScrollbarContainerClass = 'n-scrollbar-container' // naive scrollbar 容器 class
 
     /**
      *
@@ -200,7 +201,7 @@ export default defineComponent({
           scroll.childNodes,
         ) as HTMLElement[]
         const findElement = scrollContentElement.find((el) => {
-          const has = hasClass(el, 'n-scrollbar-container')
+          const has = hasClass(el, naiveScrollbarContainerClass)
 
           return has.value
         })
@@ -241,7 +242,11 @@ export default defineComponent({
     const actionDropdownSelect = (key: string | number) => {
       actionState.actionDropdownShow = false
 
-      actionMap[key]?.()
+      const fn = actionMap[key as keyof typeof actionMap]
+
+      if (fn) {
+        fn()
+      }
     }
 
     /**

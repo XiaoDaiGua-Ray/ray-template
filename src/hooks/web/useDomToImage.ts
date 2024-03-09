@@ -19,7 +19,8 @@ export type ImageType = keyof typeof domToImageMethods
 
 export type DomToImageResult = string | Blob | Uint8ClampedArray | undefined
 
-export interface UseDomToImageOptions extends ReDomToImageOptions {
+export interface UseDomToImageOptions<T extends TargetType = Element>
+  extends ReDomToImageOptions {
   /**
    *
    *
@@ -37,9 +38,7 @@ export interface UseDomToImageOptions extends ReDomToImageOptions {
    *
    * @default undefined
    */
-  beforeCreate?: <T extends TargetType = Element>(
-    element: T | null | undefined,
-  ) => void
+  beforeCreate?: (element: T | null | undefined) => void
   /**
    *
    * @param element current dom
@@ -49,10 +48,7 @@ export interface UseDomToImageOptions extends ReDomToImageOptions {
    *
    * @default undefined
    */
-  created?: <T extends TargetType = Element>(
-    result: DomToImageResult,
-    element: T,
-  ) => void
+  created?: (result: DomToImageResult, element: T) => void
   /**
    *
    * @param error dom to image error

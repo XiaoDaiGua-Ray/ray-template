@@ -32,13 +32,13 @@ import {
 import { RIcon } from '@/components'
 
 import { queryElements, setClass, removeClass, pick } from '@/utils'
-import { debounce } from 'lodash-es'
+import { throttle } from 'lodash-es'
 import { useMenuActions } from '@/store'
-import { validMenuItemShow } from '@/router/helper/routerCopilot'
+import { validMenuItemShow } from '@/router/utils/routerCopilot'
 import { useDevice } from '@/hooks'
 import { useEventListener } from '@vueuse/core'
 
-import type { AppRouteMeta } from '@/router/type'
+import type { AppRouteMeta } from '@/router/types'
 import type { AppMenuOption } from '@/types'
 
 export default defineComponent({
@@ -288,6 +288,11 @@ export default defineComponent({
       >
         <div class="content-item-icon">{RenderPreIcon(menuOption.meta)}</div>
         <div class="content-item-label">{menuOption.breadcrumbLabel}</div>
+        <RIcon
+          name="enter"
+          size="18"
+          customClassName="content-item-icon__enter"
+        />
       </NFlex>
     )
 
@@ -312,7 +317,7 @@ export default defineComponent({
       ...toRefs(state),
       modelShow,
       helperTipOptions,
-      fuzzySearchMenuOptions: debounce(fuzzySearchMenuOptions, 300),
+      fuzzySearchMenuOptions: throttle(fuzzySearchMenuOptions, 300),
       searchItemClick,
       RenderPreIcon,
       isTabletOrSmaller,
@@ -322,7 +327,7 @@ export default defineComponent({
   },
   render() {
     const { isTabletOrSmaller, searchOptions, loading } = this
-    const { SearchItem, fuzzySearchMenuOptions, $t } = this
+    const { SearchItem, fuzzySearchMenuOptions } = this
 
     return isTabletOrSmaller ? (
       <div style="display: none;"></div>
@@ -368,7 +373,7 @@ export default defineComponent({
                           size={[0, 6]}
                           class="global-search__card-content"
                         >
-                          {searchOptions.map((curr) => (
+                          {searchOptions.map((curr, idx) => (
                             <SearchItem menuOption={curr} key={curr.fullPath} />
                           ))}
                         </NFlex>

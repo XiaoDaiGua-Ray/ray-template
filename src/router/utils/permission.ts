@@ -21,13 +21,13 @@
  */
 
 import { WHITE_ROUTES, APP_CATCH_KEY } from '@/app-config'
-import { redirectRouterToDashboard } from '@/router/helper/routerCopilot'
-import { validRole } from '@/router/helper/routerCopilot'
+import { redirectRouterToDashboard } from '@/router/utils/routerCopilot'
+import { validRole } from '@/router/utils/routerCopilot'
 import { isValueType, getStorage } from '@/utils'
 import { useAppRoot } from '@/hooks'
 
 import type { Router, RouteLocationNormalized } from 'vue-router'
-import type { AppRouteMeta } from '@/router/type'
+import type { AppRouteMeta } from '@/router/types'
 
 /** 路由守卫 */
 export const permissionRouter = (router: Router) => {

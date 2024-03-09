@@ -26,14 +26,14 @@
 import { NEllipsis } from 'naive-ui'
 
 import { setStorage, pick, equalRouterPath } from '@/utils'
-import { validRole, validMenuItemShow } from '@/router/helper/routerCopilot'
+import { validRole, validMenuItemShow } from '@/router/utils/routerCopilot'
 import {
   parseAndFindMatchingNodes,
   updateDocumentTitle,
   createMenuIcon,
   getCatchMenuKey,
   createMenuExtra,
-} from './helper'
+} from './utils'
 import { useI18n } from '@/hooks'
 import { getAppRawRoutes } from '@/router/appRouteModules'
 import { useKeepAliveActions } from '@/store'

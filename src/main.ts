@@ -34,9 +34,9 @@ const setupRayTemplateCore = async () => {
  * 注册时应该注意每个插件的加载顺序。
  */
 const setupPlugins = async (inst: AppType<Element>) => {
+  setupStore(inst)
   await setupI18n(inst)
-  await setupStore(inst)
-  await setupRouter(inst)
+  setupRouter(inst)
   setupDayjs()
   setupDirectives(inst)
 }

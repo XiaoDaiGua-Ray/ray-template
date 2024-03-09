@@ -1,5 +1,48 @@
 # CHANGE LOG
 
+## 4.7.0
+
+做了一些核心依赖的升级操作。
+
+并且规范了整个模板的包命名，这个一直算是遗留问题，有些包名不够语意化与有点混乱，现在终于统一了。
+
+## Feats
+
+- `useDomToImage` 相关
+  - 优化 `ts` 类型提示
+- `usePrint` 相关
+  - 现在会强制剔除 `printable` 配置项
+- 移除 `rollup-plugin-visualizer` 体积分析插件，使用 `vite-bundle-analyzer` 替换
+
+```sh
+# 执行
+pnpm report
+
+# 等待构建后，会自动打开浏览器。
+```
+
+- 移除 `report` 模式的 `eslint` 检查
+- `axios` 相关
+  - `BeforeFetchFunction` 类型更名为 `FetchFunction`
+  - `AppRawRequestConfig` 类型新增 `__CANCELER_TAG_RAY_TEMPLATE__` 标记，用于标记是否需要可以被取消
+  - 优化 `ts` 类型标注
+- 将所有 `type.ts` 包重命名为 `types.ts` 符合语义
+- 更新 `vueuse` 版本至 `10.9.0`
+- 更新 `vite` 版本至 `5.1.5`
+- 更新 `vue` 版本至 `3.4.21`
+- 将所有 `helper.ts, helper file` 统一更改为 `utils.ts`, `utils file` 方式管理
+- 重构 `app/prefixCacheKey` 方法，现在支持自定义前缀
+- 优化 `GlobalSearch` 搜索待选项样式
+- `__ray-template` 包现在只会在 `__DEV__` 环境下才会做检查
+- 新增 `ellipsis` 指令，并且补充所有自定义指令的注释
+- `router` 包相关
+  - 修改 `router` 注册形式，改为同步注册
+  - 修改 `routes` 包导出形式，改为导出一个数组
+
+## Fixes
+
+- 修复 `useVueRouter` 方法 `HMR` 时可能会报错的问题
+
 ## 4.6.4
 
 稳定了 `4.6.4` 版本。
@@ -208,7 +251,7 @@ remove('your key', 'all')
 import { t } from '@/hooks'
 import { LAYOUT } from '@/router/constant'
 
-import type { AppRouteRecordRaw } from '@/router/type'
+import type { AppRouteRecordRaw } from '@/router/types'
 
 const cacheDemo: AppRouteRecordRaw = {
   // ...your route config,

@@ -1,7 +1,7 @@
 import { t } from '@/hooks'
 import { LAYOUT } from '@/router/constant'
 
-import type { AppRouteRecordRaw } from '@/router/type'
+import type { AppRouteRecordRaw } from '@/router/types'
 
 const doc: AppRouteRecordRaw = {
   path: '/doc',

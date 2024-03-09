@@ -20,16 +20,16 @@
  * 其中 injectRequestCanceler requestErrorCanceler 方法为 axios request interceptor 方法
  */
 
-import { axiosCanceler } from '@/axios/helper/interceptor'
-import { appendRequestHeaders } from '@/axios/helper/axiosCopilot'
+import { axiosCanceler } from '@/axios/utils/interceptor'
+import { appendRequestHeaders } from '@/axios/utils/axiosCopilot'
 import { APP_CATCH_KEY } from '@/app-config'
 import { getStorage } from '@/utils'
 
 import type {
   RequestInterceptorConfig,
-  BeforeFetchFunction,
+  FetchFunction,
   FetchErrorFunction,
-} from '@/axios/type'
+} from '@/axios/types'
 import type { Recordable } from '@/types'
 
 /**
@@ -54,10 +54,7 @@ const requestHeaderToken = (ins: RequestInterceptorConfig, mode: string) => {
 }
 
 /** 注入请求头信息 */
-const injectRequestHeaders: BeforeFetchFunction<RequestInterceptorConfig> = (
-  ins,
-  mode,
-) => {
+const injectRequestHeaders: FetchFunction = (ins, mode) => {
   appendRequestHeaders(ins, [
     requestHeaderToken(ins, mode),
     {
@@ -72,12 +69,10 @@ const injectRequestHeaders: BeforeFetchFunction<RequestInterceptorConfig> = (
  * @param ins 当前请求实例
  * @param mode 当前环境
  *
- * 移除请求拦截器与注入请求拦截器
+ * @description
+ * 移除请求拦截器与注入请求拦截器。
  */
-const injectRequestCanceler: BeforeFetchFunction<RequestInterceptorConfig> = (
-  ins,
-  mode,
-) => {
+const injectRequestCanceler: FetchFunction = (ins, mode) => {
   axiosCanceler.removePendingRequest(ins) // 检查是否存在重复请求, 若存在则取消已发的请求
   axiosCanceler.addPendingRequest(ins) // 把当前的请求信息添加到 pendingRequest 表中
 }
@@ -87,10 +82,11 @@ const injectRequestCanceler: BeforeFetchFunction<RequestInterceptorConfig> = (
  * @param error 请求错误信息
  * @param mode 当前环境
  *
- * 请求错误时候，移除请求拦截器
+ * @description
+ * 请求错误时候，移除请求拦截器。
  */
-const requestErrorCanceler: FetchErrorFunction<Recordable> = (error, mode) => {
-  axiosCanceler.removePendingRequest(error)
+const requestErrorCanceler: FetchErrorFunction = (error, mode) => {
+  axiosCanceler.removePendingRequest(error) // 移除请求拦截器
 }
 
 /**

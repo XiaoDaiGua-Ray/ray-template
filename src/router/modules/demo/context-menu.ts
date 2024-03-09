@@ -1,6 +1,6 @@
 import { t } from '@/hooks'
 
-import type { AppRouteRecordRaw } from '@/router/type'
+import type { AppRouteRecordRaw } from '@/router/types'
 
 const contextMenu: AppRouteRecordRaw = {
   path: '/context-menu',

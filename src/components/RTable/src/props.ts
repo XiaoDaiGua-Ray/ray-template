@@ -14,7 +14,7 @@ import { dataTableProps } from 'naive-ui'
 import type { PropType, VNode } from 'vue'
 import type { MaybeArray } from '@/types'
 import type { DropdownOption, DataTableColumn } from 'naive-ui'
-import type { DownloadCsvTableOptions, PrintTableOptions } from './type'
+import type { DownloadCsvTableOptions, PrintTableOptions } from './types'
 import type { Recordable } from '@/types'
 
 const props = {

@@ -11,28 +11,47 @@
 
 import { router } from '@/router'
 
+import type { Router } from 'vue-router'
+
 /**
  *
- * @returns vue router instance
+ * @description
+ * 获取 vue-router 实例，允许你在非 setup 环境中使用。
  *
- * @remark 使用 vue router instance, 可以在 setup 环境外使用
+ * 可能考虑后期会加一些新的东西，所以与 vue-router useRouter 有点差异，需要解构使用 router，
+ * 但是，其余的所有使用方法都与 useRouter 一致。
  *
- * 使用该方法时候, 可能会出现热更新错误的问题... 所以遇到的时候不要紧张, 刷新一下就好
- * 如果确定使用环境就在 setup 中, 还是建议使用官方的 useRouter useRoute 方法, 避免热更新报错的问题
+ * 如果需要使用类似于 useRoute 的方法，可以使用 useVueRouter().router.currentRoute 获取。
+ *
+ * @example
+ * const { router } = useVueRouter()
+ *
+ * // 使用 router
+ * router.push('/path')
+ * router.replace('/path')
+ *
+ * // 使用类似于 useRoute 的方法
+ * const { router: { currentRouter } } = useVueRouter()
+ *
+ * console.log(route.fullPath)
  */
 export const useVueRouter = () => {
-  try {
-    if (router) {
-      return {
-        router,
-      }
-    } else {
-      throw new Error()
+  /**
+   *
+   * 该写法无实际意义，仅是为了避免 HMR 报错，导致开发流程中断。
+   * 在实际业务中，router 始终是有值状态，所以不用担心。
+   *
+   * 但是，其实这是一种很不友好的做好，并且在顶层做修改的时候，依旧可能会有 HMR 报错；
+   * 现在还未找到更好的解决方案，所以只能先这样。
+   */
+  if (!router) {
+    return {
+      router: {} as Router,
     }
-  } catch (e) {
-    throw new Error(
-      `[useVueRouter]: An error occurred during registration of vue-router. ${e}`,
-    )
+  }
+
+  return {
+    router,
   }
 }
 

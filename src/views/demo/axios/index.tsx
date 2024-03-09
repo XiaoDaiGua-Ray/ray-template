@@ -1,7 +1,7 @@
 import './index.scss'
 
 import { NCard, NLayout, NFlex, NInput, NButton } from 'naive-ui'
-import { getWeather, getTypicode } from '@/api/demo/test'
+import { getWeather, getTypicCode } from '@/api/demo/test'
 import { useRequest, useHookPlusRequest } from '@/axios'
 
 const Axios = defineComponent({
@@ -19,7 +19,7 @@ const Axios = defineComponent({
       data: throttleDemoValue,
       loading: throttleDemoLoading,
       run: throttleDemoRun,
-    } = useHookPlusRequest(getTypicode, {
+    } = useHookPlusRequest(getTypicCode, {
       throttleWait: 1000,
       manual: true,
     })
@@ -27,7 +27,7 @@ const Axios = defineComponent({
       data: debounceDemoValue,
       loading: debounceDemoLoading,
       run: debounceDemoRun,
-    } = useHookPlusRequest(getTypicode, {
+    } = useHookPlusRequest(getTypicCode, {
       debounceWait: 1000,
       manual: true,
     })
@@ -55,6 +55,9 @@ const Axios = defineComponent({
       },
       {
         manual: true,
+        onError: () => {
+          window.$message.error('接口出现异常')
+        },
       },
     )
 

@@ -17,7 +17,7 @@ import viteVeI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import viteInspect from 'vite-plugin-inspect'
 import viteSvgLoader from 'vite-svg-loader'
 import vitePluginImp from 'vite-plugin-imp'
-import { visualizer } from 'rollup-plugin-visualizer'
+import { analyzer } from 'vite-bundle-analyzer'
 import viteCompression from 'vite-plugin-compression'
 import { ViteEjsPlugin as viteEjsPlugin } from 'vite-plugin-ejs'
 import viteAutoImport from 'unplugin-auto-import/vite'
@@ -36,20 +36,21 @@ import type { PluginOption } from 'vite'
 import type { DependenciesKey } from './vite-helper/type'
 
 // 仅适用于报告模式（report）
-function onlyReportOptions(mode: string) {
+function onlyReportOptions(mode: string): PluginOption[] {
+  if (mode !== 'report') {
+    return []
+  }
+
   return [
-    visualizer({
-      gzipSize: true, // 搜集 `gzip` 压缩包
-      brotliSize: true, // 搜集 `brotli` 压缩包
-      emitFile: false, // 生成文件在根目录下
-      filename: 'visualizer.html',
-      open: mode === 'report' ? true : false, // 以默认服务器代理打开文件
+    analyzer({
+      analyzerMode: 'server', // 以默认服务器代理打开文件
+      openAnalyzer: true, // 以默认服务器代理打开文件
     }),
   ]
 }
 
 // 仅适用于构建模式（任何构建模式：preview、build、report...）
-function onlyBuildOptions(mode: string) {
+function onlyBuildOptions(mode: string): PluginOption[] {
   const cdnBaseUrl = 'https://cdnjs.cloudflare.com/ajax/libs'
 
   const resolve = (dependenciesKey: DependenciesKey) => {
@@ -106,12 +107,16 @@ function onlyBuildOptions(mode: string) {
 }
 
 // 仅适用于开发模式
-function onlyDevOptions(mode: string) {
+function onlyDevOptions(mode: string): PluginOption[] {
+  if (mode === 'development') {
+    return []
+  }
+
   return []
 }
 
 // 基础插件配置
-function baseOptions(mode: string) {
+function baseOptions(mode: string): PluginOption[] {
   const { title, appPrimaryColor, preloadingConfig } = config
 
   return [
@@ -166,15 +171,18 @@ function baseOptions(mode: string) {
     viteSvgLoader({
       defaultImport: 'url', // 默认以 url 形式导入 svg
     }),
-    viteEslint({
-      lintOnStart: true,
-      failOnError: true,
-      failOnWarning: true,
-      fix: true,
-      exclude: ['dist/**', '**/node_modules/**', 'vite-env.d.ts', '*.md'],
-      include: ['src/**/*.{vue,js,jsx,ts,tsx}'],
-      cache: true,
-    }),
+    // 基础插件配置，在 report 模式下不需要 eslint 插件
+    mode !== 'report'
+      ? viteEslint({
+          lintOnStart: true,
+          failOnError: true,
+          failOnWarning: true,
+          fix: true,
+          exclude: ['dist/**', '**/node_modules/**', 'vite-env.d.ts', '*.md'],
+          include: ['src/**/*.{vue,js,jsx,ts,tsx}'],
+          cache: true,
+        })
+      : null,
     vitePluginImp({
       libList: [
         {

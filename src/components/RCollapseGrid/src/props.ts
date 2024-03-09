@@ -1,7 +1,7 @@
 import { gridProps } from 'naive-ui'
 
 import type { PropType } from 'vue'
-import type { CollapseToggleText } from './type'
+import type { CollapseToggleText } from './types'
 import type { AnyFC, MaybeArray } from '@/types'
 
 const props = {

@@ -1,7 +1,7 @@
 import RQRCode from './src'
 import qrcodeProps from './src/props'
 
-import type * as RQRCodeType from './src/type'
+import type * as RQRCodeType from './src/types'
 import type { ExtractPublicPropTypes } from 'vue'
 
 export type QRCodeProps = ExtractPublicPropTypes<typeof qrcodeProps>
