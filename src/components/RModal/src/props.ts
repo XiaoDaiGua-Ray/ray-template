@@ -13,19 +13,21 @@ import { modalProps } from 'naive-ui'
 
 const props = {
   ...modalProps,
+  /**
+   *
+   * @description
+   * 是否记住上一次的位置。
+   *
+   * @default true
+   */
   memo: {
-    /**
-     *
-     * 是否记住上一次的位置
-     *
-     * @default true
-     */
     type: Boolean,
     default: true,
   },
   /**
    *
-   * 是否全屏
+   * @description
+   * 是否全屏。
    *
    * @default false
    */
@@ -33,44 +35,48 @@ const props = {
     type: Boolean,
     default: false,
   },
+  /**
+   *
+   * @description
+   * preset 空时宽度设置。
+   *
+   * @default 600
+   */
   width: {
-    /**
-     *
-     * preset 空时宽度设置
-     *
-     * @default 600
-     */
     type: [String, Number],
     default: 600,
   },
+  /**
+   *
+   * @description
+   * preset 为 card 时宽度设置。
+   *
+   * @default 600
+   */
   cardWidth: {
-    /**
-     *
-     * preset 为 card 时宽度设置
-     *
-     * @default 600
-     */
     type: [String, Number],
     default: 600,
   },
+  /**
+   *
+   * @description
+   * preset 为 dialog 时宽度设置。
+   *
+   * @default 446
+   */
   dialogWidth: {
-    /**
-     *
-     * preset 为 dialog 时宽度设置
-     *
-     * @default 446
-     */
     type: [String, Number],
     default: 446,
   },
+  /**
+   *
+   * @description
+   * 是否启用拖拽。
+   * 当启用拖拽时，可以通过拖拽 header 部分控制模态框。
+   *
+   * @default false
+   */
   dad: {
-    /**
-     *
-     * 是否启用拖拽
-     * 当启用拖拽时，可以通过拖拽 header 部分控制模态框
-     *
-     * @default false
-     */
     type: Boolean,
     default: false,
   },

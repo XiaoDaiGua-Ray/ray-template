@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+export {}
+
 import 'vue-router'
 
 import type { AppRouteMeta } from '@/router/types'

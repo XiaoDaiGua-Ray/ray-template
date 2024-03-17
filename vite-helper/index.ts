@@ -1,4 +1,5 @@
 import pkg from '../package.json'
+import { defineResolve } from 'vite-plugin-cdn2/resolve'
 
 import type { DependenciesKey } from './type'
 
@@ -64,3 +65,18 @@ export const getDependenciesVersion = (dependenciesKey: DependenciesKey) => {
 
   return result.replace(/^[^\w\s]+/, '')
 }
+
+export const cdnResolve = defineResolve({
+  name: 'RayTemplateCdnResolve',
+  setup({ extra }) {
+    const baseURL = 'https://cdnjs.cloudflare.com/ajax/libs/'
+    const { version, name, relativeModule } = extra
+    const url = new URL(`${name}/${version}/${relativeModule}`, baseURL)
+
+    return {
+      url: url.href,
+      injectTo: 'head-prepend',
+      attrs: {},
+    }
+  },
+})

@@ -179,14 +179,18 @@ const Echart = defineComponent({
     }
 
     const mountChart = () => {
-      baseChartRef.value?.render()
+      if (!baseChartRef.value?.isDispose()) {
+        baseChartRef.value?.render()
+      } else {
+        window.$message.warning('图表已经渲染')
+      }
     }
 
     const unmountChart = () => {
       baseChartRef.value?.dispose()
     }
 
-    const handleUpdateTitle = () => {
+    const updateChartOptions = () => {
       const createData = () => Math.floor((Math.random() + 1) * 100)
 
       baseLineOptions.value.series[0].data = new Array(7)
@@ -209,7 +213,7 @@ const Echart = defineComponent({
       ...toRefs(state),
       mountChart,
       unmountChart,
-      handleUpdateTitle,
+      updateChartOptions,
     }
   },
   render() {
@@ -236,13 +240,19 @@ const Echart = defineComponent({
             <li>
               <h3>5. 配置 setChartOptions 属性，可以定制化合并模式</h3>
             </li>
+            <li>
+              <h3>
+                6. 默认启用 intersectionObserver
+                属性，只有元素在可见范围才会渲染图表，可以滚动查看效果
+              </h3>
+            </li>
           </ul>
         </NCard>
         <NCard title="预设 card 风格图表">
           <NFlex style={['padding: 18px 0']}>
             <NButton onClick={this.mountChart.bind(this)}>渲染</NButton>
             <NButton onClick={this.unmountChart.bind(this)}>卸载</NButton>
-            <NButton onClick={this.handleUpdateTitle.bind(this)}>
+            <NButton onClick={this.updateChartOptions.bind(this)}>
               更新配置项
             </NButton>
           </NFlex>

@@ -105,16 +105,19 @@ export default defineComponent({
     return (
       <div class="app-lock-screen__unlock">
         <div class="app-lock-screen__unlock__content">
-          <div
-            class={[
-              'app-lock-screen__unlock__content-bg',
-              isTabletOrSmaller
-                ? 'app-lock-screen__unlock__content-bg--smaller'
-                : '',
-            ]}
-          >
-            <div class="left">{hmSplit[0]}</div>
-            <div class="right">{hmSplit[1]}</div>
+          <div class="app-lock-screen__unlock__content-wrapper">
+            <div
+              class={[
+                'app-lock-screen__unlock__content-bg__wrapper',
+                'app-lock-screen__unlock__content-bg',
+                isTabletOrSmaller
+                  ? 'app-lock-screen__unlock__content-bg--smaller'
+                  : '',
+              ]}
+            >
+              <div class="left">{hmSplit[0]}</div>
+              <div class="right">{hmSplit[1]}</div>
+            </div>
           </div>
           <div class="app-lock-screen__unlock__content-avatar">
             <AppAvatar vertical align="center" avatarSize={52} />

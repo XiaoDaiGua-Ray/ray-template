@@ -1,7 +1,7 @@
 {
   "name": "ray-template",
   "private": false,
-  "version": "4.7.0",
+  "version": "4.7.1",
   "type": "module",
   "engines": {
     "node": "^18.0.0 || >=20.0.0",
@@ -92,9 +92,9 @@
     "typescript": "^5.2.2",
     "unplugin-auto-import": "^0.17.5",
     "unplugin-vue-components": "^0.26.0",
-    "vite": "^5.1.5",
+    "vite": "^5.1.6",
     "vite-bundle-analyzer": "0.8.1",
-    "vite-plugin-cdn2": "0.15.4",
+    "vite-plugin-cdn2": "1.1.0",
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-ejs": "^1.7.0",
     "vite-plugin-eslint": "1.8.1",

@@ -1,5 +1,32 @@
 # CHANGE LOG
 
+## 4.7.1
+
+## Feats
+
+- 更新 `vite` 版本至 `5.1.6`
+- `vite-plugin-cdn2` 相关
+  - 更新 `vite-plugin-cdn2` 版本至 `1.1.0`
+  - 更新 `vite.plugin.config.ts` 关于 `cdn2` 配置
+  - 新增 `cdnResolve` 方法，自定义 `resolve`
+- 更新主流浏览器版本号升级
+- `RChart` 组件相关
+  - 新增 `intersectionObserver` 配置项，用于配置是否使用 `IntersectionObserver` 监听图表渲染
+    > 但是该配置项不支持动态修改，只能在初始化时配置
+  - 优化组件的注释，并且补充了一些注释
+  - 新增 `intersectionObserver` 配置项，手动指定 `IntersectionObserver` 需要监听的元素
+  - `observer` 更名为 `autoResizeObserverTarget`
+  - 补充 `chart` 示例页面
+- 优化亮色主题下锁屏样式
+
+## Fixes
+
+- 修复 `vite-plugin-cdn2` 插件构建 `echarts` 失败问题，具体查看该 [issue](https://github.com/nonzzz/vite-plugin-cdn/issues/42)
+- `RChart` 组件相关
+  - 修复卸载组件不能完全清理 `inst` 问题
+  - 修复组件不能正常触发初始化动画问题
+  - 修正 `isDispose` 方法返回值含义，现在返回 `true` 代表已经卸载，`false` 代表未卸载
+
 ## 4.7.0
 
 做了一些核心依赖的升级操作。

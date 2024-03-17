@@ -17,13 +17,14 @@ import type {
 
 /**
  *
+ * @see https://echarts.apache.org/zh/theme-builder.html
+ *
  * @description
- * 自动注册所有主题
+ * 自动注册所有主题。
  *
- * 默认以文件名当作主题名称
+ * 默认以文件名当作主题名称。
  *
- * 主题配置器：https://echarts.apache.org/zh/theme-builder.html
- * 流程：
+ * 主题编辑器使用方法:
  * 1. 配置、选择主题
  * 2. 点击下载主题
  * 3. 选择 json 类型，然后复制
@@ -57,8 +58,15 @@ export const setupChartTheme = () => {
 
 /**
  *
+ * @param options 加载自定义配置项
+ *
  * @description
- * 为了方便使用加载动画, 写了此方法, 虽然没啥用
+ * chart 加载配置项。
+ *
+ * @see https://echarts.apache.org/zh/api.html#echartsInstance.showLoading
+ *
+ * @example
+ * const options = loadingOptions({ ...LoadingOptions })
  */
 export const loadingOptions = (options?: LoadingOptions) =>
   Object.assign(

@@ -36,13 +36,6 @@ export interface LoadingOptions {
   fontFamily: string // 字体系列
 }
 
-export type AutoResize =
-  | boolean
-  | {
-      width: number
-      height: number
-    }
-
 export type ChartTheme =
   | 'macarons-dark'
   | 'macarons'
@@ -53,31 +46,34 @@ export type ChartTheme =
 export interface RChartInst {
   /**
    *
-   * echart 实例
-   * 访问当前 chart 图所有方法与属性
+   * echart 实例。
+   * 访问当前 chart 图所有方法与属性。
    *
    * @default undefined
    */
   echart: Ref<ECharts | undefined>
   /**
    *
-   * 手动卸载当前 chart 图
-   * 注意：不会卸载当前组件，仅仅是卸载 chart
+   * @description
+   * 手动卸载当前 chart 图。
+   * 注意：不会卸载当前组件，仅仅是卸载 chart。
    *
    * @default () => void
    */
   dispose: () => void
   /**
    *
-   * 手动渲染 chart 图
-   * 注意：会根据当前的 options 配置项与 props 配置项重新渲染 chart
+   * @description
+   * 手动渲染 chart 图。
+   * 注意：会根据当前的 options 配置项与 props 配置项重新渲染 chart。
    *
    * @default () => void
    */
   render: () => void
   /**
    *
-   * 判断图表是否已经卸载
+   * @description
+   * 判断图表是否已经卸载。
    *
    * @returns 图表是否已经卸载
    */

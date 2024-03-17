@@ -26,7 +26,7 @@ import mockDevServerPlugin from 'vite-plugin-mock-dev-server'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import unpluginViteComponents from 'unplugin-vue-components/vite'
 import { cdn as viteCDNPlugin } from 'vite-plugin-cdn2'
-import { getDependenciesVersion } from './vite-helper'
+import { getDependenciesVersion, cdnResolve } from './vite-helper'
 
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 
@@ -60,46 +60,47 @@ function onlyBuildOptions(mode: string): PluginOption[] {
   return [
     viteCDNPlugin({
       // modules 顺序 vue, vue-demi 必须保持当前顺序加载，否则会出现加载错误问题
+      resolve: cdnResolve,
       modules: [
         {
           name: 'vue',
           global: 'Vue',
-          resolve: `${resolve('vue')}/vue.global.min.js`,
+          relativeModule: 'vue.global.min.js',
         },
         {
           name: 'vue-demi',
           global: 'VueDemi',
-          resolve: `${resolve('vue-demi')}/index.iife.min.js`,
+          relativeModule: 'index.iife.min.js',
         },
         {
           name: 'naive-ui',
           global: 'naive',
-          resolve: `${resolve('naive-ui')}/index.prod.js`,
+          relativeModule: 'index.prod.js',
         },
         {
           name: 'pinia',
           global: 'Pinia',
-          resolve: `${resolve('pinia')}/pinia.iife.min.js`,
+          relativeModule: 'pinia.iife.min.js',
         },
         {
           name: 'vue-router',
           global: 'VueRouter',
-          resolve: `${resolve('vue-router')}/vue-router.global.min.js`,
+          relativeModule: 'vue-router.global.min.js',
         },
         {
           name: 'vue-i18n',
           global: 'VueI18n',
-          resolve: `${resolve('vue-i18n')}/vue-i18n.global.min.js`,
+          relativeModule: 'vue-i18n.global.min.js',
         },
         {
           name: 'echarts',
           global: 'echarts',
-          resolve: `${resolve('echarts')}/echarts.min.js`,
+          relativeModule: 'echarts.min.js',
         },
         {
           name: 'axios',
           global: 'axios',
-          resolve: `${resolve('axios')}/axios.min.js`,
+          relativeModule: 'axios.min.js',
         },
       ],
     }),

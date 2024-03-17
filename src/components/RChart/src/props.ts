@@ -1,11 +1,14 @@
-import type * as echarts from 'echarts/core' // `echarts` 核心模块
+import type * as echarts from 'echarts/core' // echarts 核心模块
 import type { PropType, VNode } from 'vue'
 import type { MaybeArray } from '@/types'
 import type { ECharts, SetOptionOpts } from 'echarts/core'
-import type { MaybeComputedElementRef, MaybeElement } from '@vueuse/core'
+import type {
+  MaybeComputedElementRef,
+  MaybeElement,
+  UseIntersectionObserverOptions,
+} from '@vueuse/core'
 import type {
   LoadingOptions,
-  AutoResize,
   ChartTheme,
   EChartsExtensionInstallRegisters,
   RChartPresetType,
@@ -16,195 +19,340 @@ import type { CardProps, DropdownProps, DropdownOption } from 'naive-ui'
 import { loadingOptions } from './utils'
 
 const props = {
-  bordered: {
-    /**
-     *
-     * 仅在 preset 为 card 时生效
-     *
-     * 设置边框
-     */
+  /**
+   *
+   * @description
+   * 是否开启 IntersectionObserver 监听，用于监听图表是否在可视区域内再进行渲染。
+   * 默认监听图表容器是否在可视区域内，也可以配置 intersectionObserverTarget 属性监听指定元素。
+   *
+   * 该方法需要浏览器支持 IntersectionObserver API。
+   *
+   * @default true
+   */
+  intersectionObserver: {
     type: Boolean,
     default: true,
   },
+  /**
+   *
+   * @description
+   * 指定 IntersectionObserver 监听的目标元素。
+   *
+   * 该属性需要开启 intersectionObserver 才能生效。
+   *
+   * @default null
+   */
+  intersectionObserverTarget: {
+    type: Object as PropType<MaybeComputedElementRef<MaybeElement>>,
+    default: null,
+  },
+  /**
+   *
+   * @description
+   * IntersectionObserver 配置项。
+   *
+   * 该属性需要开启 intersectionObserver 才能生效。
+   *
+   * @see https://www.vueusejs.com/core/useIntersectionObserver/
+   *
+   * @default {threshold:0.1}
+   */
+  intersectionOptions: {
+    type: Object as PropType<UseIntersectionObserverOptions>,
+    default: {
+      threshold: 0.1,
+    },
+  },
+  /**
+   *
+   * @description
+   * 仅在 preset 为 card 时生效。
+   *
+   * @default true
+   */
+  bordered: {
+    type: Boolean,
+    default: true,
+  },
+  /**
+   *
+   * @description
+   * 仅在 preset 为 card 时生效。
+   *
+   * type: 导出的格式，可选 png, jpg, svg。注意: png, jpg 只有在 canvas 渲染器的时候可使用，svg 只有在使用 svg 渲染器的时候可用。
+   * pixelRatio: 导出的图片分辨率比例，默认为 1。
+   * backgroundColor: 导出的图片背景色，默认使用 option 里的 backgroundColor。
+   * excludeComponents: 忽略组件的列表，例如要忽略 toolbox 就是 ['toolbox']。
+   *
+   * @default {}
+   */
   downloadOptions: {
-    /**
-     *
-     * 仅在 preset 为 card 时生效
-     *
-     * type: 导出的格式，可选 png, jpg, svg。注意：png, jpg 只有在 canvas 渲染器的时候可使用，svg 只有在使用 svg 渲染器的时候可用
-     * pixelRatio: 导出的图片分辨率比例，默认为 1
-     * backgroundColor: 导出的图片背景色，默认使用 option 里的 backgroundColor
-     * excludeComponents: 忽略组件的列表，例如要忽略 toolbox 就是 ['toolbox']
-     */
     type: Object as PropType<RChartDownloadOptions>,
     default: () => ({}),
   },
+  /**
+   *
+   * @description
+   * dropdown 选中回调。
+   *
+   * 仅在 preset 为 card 时生效。
+   *
+   * @default undefined
+   */
   onDropdownSelect: {
-    // 仅在 preset 为 card 时生效
     type: [Function, Array] as PropType<
       MaybeArray<(key: string | number, option: DropdownOption) => void>
     >,
   },
+  /**
+   *
+   * @description
+   * dropdown 列表。
+   *
+   * 仅在 preset 为 card 时生效。
+   *
+   * @default []
+   */
   dropdownOptions: {
-    // 仅在 preset 为 card 时生效
     type: Array as PropType<DropdownProps['options']>,
   },
+  /**
+   *
+   * @description
+   * 是否启用预设样式。
+   *
+   * @default undefined
+   */
   preset: {
-    // 是否启用预设样式
     type: String as PropType<RChartPresetType>,
   },
+  /**
+   *
+   * @description
+   * 设置 content 区域的样式。
+   *
+   * 仅在 preset 为 card 时生效。
+   *
+   * @default undefined
+   */
   contentStyle: {
-    // 仅在 preset 为 card 时生效
     type: [String, Object] as PropType<CardProps['contentStyle']>,
   },
+  /**
+   *
+   * @description
+   * 设置预设样式的标题。
+   *
+   * 仅在 preset 为 card 时生效。
+   *
+   * @default undefined
+   */
   title: {
-    // 仅在 preset 为 card 时生效
     type: [String, Function] as PropType<string | (() => VNode)>,
   },
+  /**
+   *
+   * @description
+   * chart 默认宽度，默认为 100%。
+   *
+   * 但是，如果未获取到实际宽度，那么会以 200px 宽度填充。
+   *
+   * @default 100%
+   */
   width: {
-    /**
-     *
-     * chart 容器初始化宽度
-     *
-     * 如果未能继承宽度, 则会以 200px 宽度填充
-     */
     type: String,
     default: '100%',
   },
+  /**
+   *
+   * @description
+   * chart 默认高度，默认为 100%。
+   *
+   * 但是，如果未获取到实际高度，那么会以 200px 高度填充。
+   *
+   * @default 100%
+   */
   height: {
-    /**
-     *
-     * chart 容器初始化高度
-     *
-     * 如果未能继承高度, 则会以 200px 宽度填充
-     */
     type: String,
     default: '100%',
   },
+  /**
+   *
+   * @description
+   * 是否启用自动调整大小，默认跟随图表容器尺寸变化。
+   *
+   * @default true
+   */
   autoResize: {
-    /**
-     *
-     * `chart` 是否跟随窗口尺寸变化自动变化
-     *
-     * 如果为对象, 则可以指定其变化尺寸, 实现图表大小不等于容器大小的效果
-     * 默认每秒触发一次的频率
-     */
-    type: [Boolean, Object] as PropType<AutoResize>,
+    type: Boolean,
     default: true,
   },
+  /**
+   *
+   * @description
+   * 是否启用 chart 无障碍模式。
+   * 启用该配置项后会覆盖 options 中的 aria。
+   *
+   * @default false
+   */
   showAria: {
-    /**
-     *
-     * 是否开启 `chart` 无障碍访问
-     *
-     * 此选项会覆盖 `options` 中的 `aria` 配置
-     */
     type: Boolean,
     default: false,
   },
+  /**
+   *
+   * @description
+   * chart 图表配置项。
+   *
+   * @default {}
+   */
   options: {
     type: Object as PropType<echarts.EChartsCoreOption>,
     default: () => ({}),
   },
+  /**
+   *
+   * @description
+   * chart 渲染成功回调函数。
+   *
+   * @default null
+   */
   onSuccess: {
-    /**
-     *
-     * 渲染成功回调函数
-     */
     type: [Function, Array] as PropType<MaybeArray<(e: ECharts) => void>>,
     default: null,
   },
+  /**
+   *
+   * @description
+   * chart 渲染失败回调函数。
+   *
+   * @default null
+   */
   onError: {
-    /**
-     *
-     * 渲染失败回调函数
-     */
     type: [Function, Array] as PropType<MaybeArray<() => void>>,
     default: null,
   },
+  /**
+   *
+   * @description
+   * 手动指定 chart 主题配置项。
+   *
+   * @default null
+   */
   theme: {
-    /**
-     *
-     * 手动指定 chart theme
-     */
     type: String as PropType<ChartTheme>,
     default: null,
   },
+  /**
+   *
+   * @description
+   * 是否自动跟随模板主题切换。
+   * 该配置项会覆盖 theme 配置项。
+   *
+   * @default true
+   */
   autoChangeTheme: {
-    /**
-     *
-     * 是否自动跟随模板主题切换
-     * 如果开启此属性, 则会覆盖 `theme` 属性
-     *
-     * 注意: 这个属性重度依赖此模板
-     */
     type: Boolean,
     default: true,
   },
+  /**
+   *
+   * @description
+   * 手动拓展 chart 图的相关组件。
+   *
+   * 该配置项不支持动态调用，及时动态更新了该属性，也不会生效。
+   * 并且，该配置项必须在 RChart 组件初始化时候配置。
+   *
+   * @default []
+   */
   use: {
-    /**
-     *
-     * 拓展 `echarts` 图表
-     * 用于自己手动拓展相关的包
-     *
-     * 注意，该方法不支持动态调用，及时动态更新了该属性，也不会生效
-     */
     type: Array as PropType<EChartsExtensionInstallRegisters[]>,
     default: () => [],
   },
+  /**
+   *
+   * @description
+   * 是否开启 watch 监听 options 配置项。
+   *
+   * @default true
+   */
   watchOptions: {
-    /** 主动监听 options 变化 */
     type: Boolean,
     default: true,
   },
+  /**
+   *
+   * @description
+   * 是否启用 chart 加载动画。
+   *
+   * @default false
+   */
   loading: {
-    /** 加载动画 */
     type: Boolean,
     default: false,
   },
+  /**
+   *
+   * @description
+   * chart 加载动画配置项。
+   *
+   * @default {}
+   */
   loadingOptions: {
-    /** 配置加载动画样式 */
     type: Object as PropType<LoadingOptions>,
     default: () => loadingOptions(),
   },
-  observer: {
-    /**
-     *
-     * 需要被监听尺寸的元素
-     * 需要开启 autoResize 才能生效
-     * 默认以父元素作为监听对象
-     */
+  /**
+   *
+   * @description
+   * 手动设置 autoResize 监听的元素。
+   * 该元素必须是一个有效的 DOM 元素，并且需要开启 autoResize 才能生效。
+   *
+   * 默认以图表容器元素作为监听对象。
+   *
+   * @default null
+   */
+  autoResizeObserverTarget: {
     type: Object as PropType<MaybeComputedElementRef<MaybeElement>>,
     default: null,
   },
+  /**
+   *
+   * @description
+   * 节流等待时间。
+   *
+   * @default 500
+   */
   throttleWait: {
-    /** 节流等待时间 */
     type: Number,
     default: 500,
   },
+  /**
+   *
+   * @description
+   * 是否将渲染放置下一个队列。
+   *
+   * @default true
+   */
   nextTick: {
-    /**
-     *
-     * 是否将渲染放置下一个队列
-     */
     type: Boolean,
     default: true,
   },
+  /**
+   *
+   * @description
+   * 设置 setOptions 方法配置项。
+   *
+   * @default {notMerge:false,lazyUpdate:true,silent:false,replaceMerge:[]}
+   */
   setChartOptions: {
-    /**
-     *
-     * 当 options 配置项更改时候，setOptions 方法配置项
-     *
-     * 默认值
-     * notMerge: false,
-     * lazyUpdate: true,
-     * silent: false,
-     * replaceMerge: [],
-     *
-     * 会自动进行合并配置项
-     */
     type: Object as PropType<SetOptionOpts>,
-    default: () => ({}),
+    default: () => ({
+      notMerge: false,
+      lazyUpdate: true,
+      silent: false,
+      replaceMerge: [],
+    }),
   },
 }
 
