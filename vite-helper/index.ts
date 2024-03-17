@@ -1,7 +1,4 @@
-import pkg from '../package.json'
 import { defineResolve } from 'vite-plugin-cdn2/resolve'
-
-import type { DependenciesKey } from './type'
 
 /**
  *
@@ -38,32 +35,6 @@ export const mixinCSSPlugin = (options?: string[]) => {
   }, '')
 
   return mixinString as string
-}
-
-/**
- *
- * @param dependenciesKey 依赖包名称
- *
- * @returns 依赖包版本号
- *
- * @description
- * 获取 package.json 文件中的依赖包版本号，如果不存在则抛出异常。
- *
- * @example
- * const vueVersion = getDependenciesVersion('vue') // vue version
- * const unknownVersion = getDependenciesVersion('unknown package') // Error
- */
-export const getDependenciesVersion = (dependenciesKey: DependenciesKey) => {
-  const { dependencies } = pkg
-  const result = dependencies[dependenciesKey]
-
-  if (!result) {
-    throw Error(
-      `[getDependenciesVersion]: The ${dependenciesKey} does not exist in the package.json file!`,
-    )
-  }
-
-  return result.replace(/^[^\w\s]+/, '')
 }
 
 export const cdnResolve = defineResolve({

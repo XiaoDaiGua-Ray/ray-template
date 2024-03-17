@@ -26,14 +26,13 @@ import mockDevServerPlugin from 'vite-plugin-mock-dev-server'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import unpluginViteComponents from 'unplugin-vue-components/vite'
 import { cdn as viteCDNPlugin } from 'vite-plugin-cdn2'
-import { getDependenciesVersion, cdnResolve } from './vite-helper'
+import { cdnResolve } from './vite-helper'
 
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 
 import config from './vite.custom.config'
 
 import type { PluginOption } from 'vite'
-import type { DependenciesKey } from './vite-helper/type'
 
 // 仅适用于报告模式（report）
 function onlyReportOptions(mode: string): PluginOption[] {
@@ -51,12 +50,6 @@ function onlyReportOptions(mode: string): PluginOption[] {
 
 // 仅适用于构建模式（任何构建模式：preview、build、report...）
 function onlyBuildOptions(mode: string): PluginOption[] {
-  const cdnBaseUrl = 'https://cdnjs.cloudflare.com/ajax/libs'
-
-  const resolve = (dependenciesKey: DependenciesKey) => {
-    return `${cdnBaseUrl}/${dependenciesKey}/${getDependenciesVersion(dependenciesKey)}`
-  }
-
   return [
     viteCDNPlugin({
       // modules 顺序 vue, vue-demi 必须保持当前顺序加载，否则会出现加载错误问题

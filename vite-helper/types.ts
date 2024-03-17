@@ -1,5 +1,3 @@
-import type pkg from '../package.json'
-
 export interface VitePluginCompression {
   /**
    *
@@ -129,5 +127,3 @@ export interface ImpConfig {
    */
   transpileDependencies?: boolean | Array<string | RegExp>
 }
-
-export type DependenciesKey = keyof (typeof pkg)['dependencies']

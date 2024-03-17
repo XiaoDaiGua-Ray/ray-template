@@ -35,7 +35,7 @@
   "include": [
     "vite.config.ts",
     "vite-helper/index.ts",
-    "vite-helper/type.ts",
+    "vite-helper/types.ts",
     "vite.custom.config.ts",
     "package.json",
     "vite-env.d.ts",
