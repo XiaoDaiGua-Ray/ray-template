@@ -9,7 +9,7 @@ import type {
 } from 'naive-ui'
 import type { VNode } from 'vue'
 import type { Recordable } from '@/types'
-import type { PrintDomOptions } from '@/utils'
+import type { PrintDomOptions } from '@/utils/dom'
 
 export type TableActionIcon = string | (() => VNode)
 
