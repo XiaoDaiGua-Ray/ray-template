@@ -1,1 +1,4 @@
-export * from './prefixCacheKey'
+// export * from './prefixCacheKey'
+import { prefixCacheKey } from './prefixCacheKey'
+
+export { prefixCacheKey }

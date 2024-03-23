@@ -68,10 +68,9 @@ export default defineConfig(({ mode }) => {
         output: {
           manualChunks: (id) => {
             const isUtils = () => id.includes('src/utils/')
-            const isHooks = () =>
-              id.includes('src/hooks/template') || id.includes('src/hooks/web')
+            const isHooks = () => id.includes('src/hooks/')
             const isNodeModules = () => id.includes('node_modules')
-            const index = id.includes('pnpm') ? 1 : 0
+            const index = id.includes('pnpm') ? 1 : 0 // 兼容 pnpm, yarn, npm 包管理器差异
 
             if (isUtils()) {
               return 'utils'
@@ -89,6 +88,9 @@ export default defineConfig(({ mode }) => {
                 [index].toString()
             }
           },
+          assetFileNames: '[ext]/[name]-[hash][extname]',
+          chunkFileNames: 'js/[name]-[hash].js',
+          entryFileNames: 'js/[name]-[hash].js',
         },
       },
     },

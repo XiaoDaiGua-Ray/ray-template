@@ -38,8 +38,12 @@ export type CurrencyArguments = string | number | currency
 
 export type OriginalValueType = 'string' | 'number'
 
+export interface CurrencyOptions extends Options {
+  type?: OriginalValueType
+}
+
 // currency.js 默认配置
-const defaultOptions: Partial<Options> = {
+const defaultOptions: Partial<CurrencyOptions> = {
   precision: 8,
   decimal: '.',
 }
@@ -130,13 +134,10 @@ export const isCurrency = (value: unknown) => {
  * format(0.1) // 0.1
  * format(0.1, { symbol: '¥' }) // ¥0.1
  */
-export const format = (
-  value: CurrencyArguments,
-  options?: Options,
-  type: OriginalValueType = 'number',
-) => {
+export const format = (value: CurrencyArguments, options?: CurrencyOptions) => {
   const assignOptions = Object.assign({}, defaultOptions, options)
   const v = currency(value, assignOptions)
+  const { type = 'number' } = assignOptions
 
   return type === 'number' ? v.value : v.toString()
 }
@@ -249,7 +250,11 @@ export const divide = (...args: CurrencyArguments[]) => {
  * distribute(0, 1) // [0]
  * distribute(0, 3) // [0, 0, 0]
  */
-export const distribute = (value: CurrencyArguments, length: number) => {
+export const distribute = (
+  value: CurrencyArguments,
+  length: number,
+  options?: CurrencyOptions,
+) => {
   if (length <= 1) {
     return [value ? value : 0]
   } else {
@@ -258,10 +263,12 @@ export const distribute = (value: CurrencyArguments, length: number) => {
     }
   }
 
-  const result = currency(value, defaultOptions)
+  const assignOptions = Object.assign({}, defaultOptions, options)
+
+  const result = currency(value, assignOptions)
     .distribute(length)
     .map((curr) => {
-      return format(curr)
+      return format(curr, assignOptions)
     })
 
   return result

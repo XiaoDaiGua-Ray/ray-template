@@ -60,7 +60,6 @@ const config: AppConfigExport = {
    * 预设:
    *   - ./src/styles/mixins.scss
    *   - ./src/styles/setting.scss
-   *   - ./src/styles/theme.scss
    *
    * 如果需要删除或者修改, 需要同步修改目录下的 css 文件
    */
@@ -141,28 +140,17 @@ const config: AppConfigExport = {
   /**
    *
    * 预设别名
-   * - `@`: `src` 根目录
-   * - `@api`: `src/axios/api` 根目录
-   * - `@images`: `src/assets/images` 根目录
+   * - @: src 根目录
+   * - @api: src/axios/api 根目录
+   * - @images: src/assets/images 根目录
+   * - @mock: mock 根目录
    */
-  alias: [
-    {
-      find: '@',
-      replacement: path.resolve(__dirname, './src'),
-    },
-    {
-      find: '@api',
-      replacement: path.resolve(__dirname, './src/axios/api'),
-    },
-    {
-      find: '@images',
-      replacement: path.resolve(__dirname, './src/assets/images'),
-    },
-    {
-      find: '@mock',
-      replacement: path.resolve(__dirname, './mock'),
-    },
-  ],
+  alias: {
+    '@': path.resolve(__dirname, './src'),
+    '@api': path.resolve(__dirname, './src/axios/api'),
+    '@images': path.resolve(__dirname, './src/assets/images'),
+    '@mock': path.resolve(__dirname, './mock'),
+  },
 }
 
 export default config

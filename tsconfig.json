@@ -15,7 +15,6 @@
     "skipLibCheck": true,
     "jsxImportSource": "vue",
     "baseUrl": "./",
-    "rootDir": "./",
     "paths": {
       "@": ["src"],
       "@/*": ["src/*"],
@@ -28,8 +27,7 @@
       "@mock": ["mock/*"]
     },
     "suppressImplicitAnyIndexErrors": true,
-    "typeRoots": ["./src/types/app.d.ts", "./src/types/global.d.ts"],
-    "types": ["vite/client"],
+    "types": ["vite/client", "vitest/globals"],
     "ignoreDeprecations": "5.0"
   },
   "include": [
@@ -41,6 +39,7 @@
     "vite-env.d.ts",
     "./unplugin/**/*",
     "src/**/*",
-    "mock/**/*"
+    "mock/**/*",
+    "__test__/**/*"
   ]
 }

@@ -25,8 +25,8 @@ import type { ComponentPublicInstance } from 'vue'
  * const refDom = ref<HTMLElement | null>(null)
  * const computedDom = computed(() => refDom.value)
  *
- * unrefElement(refDom) => div
- * unrefElement(computedDom) => div
+ * unrefElement(refDom) // div
+ * unrefElement(computedDom) // div
  */
 function unrefElement<T extends TargetType>(
   target: BasicTarget<T>,

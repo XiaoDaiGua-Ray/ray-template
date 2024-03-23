@@ -18,7 +18,7 @@ import type { AnyFC } from '@/types'
  * @param fc effect 作用域卸载时需执行函数
  *
  * @description
- * 返回 true 表示获取到 effect 作用域并且卸载；false 表示未存在 effect 作用域
+ * 返回 true 表示获取到 effect 作用域并且卸载；false 表示未存在 effect 作用域。
  *
  * @example
  * const watchStop = watch(() => {}, () => {})

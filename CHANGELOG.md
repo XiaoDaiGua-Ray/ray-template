@@ -1,5 +1,67 @@
 # CHANGE LOG
 
+## 4.7.2
+
+新增 `vitest` 测试框架。
+
+重写了一些 `utils`, `hooks` 包的方法，并且编写了对应的单测模块。
+
+## Feats
+
+- 集成 `vitest` 测试框架，并且对于 `utils`, `hooks` 包方法编写了对应的单测模块
+
+> 使用方法请查看 [vitest](https://cn.vitest.dev/)。
+
+```sh
+# 新增测试单元模块
+1. 在 `__test__` 目录下创建测试文件
+2. 添加对应的单测模块
+3. 编写对应的单测逻辑
+
+# 值得注意的是
+1. 测试文件必须在 `__test__` 目录下
+2. 测试文件必须以 `xxx.spec.ts` 或者 `xxx.spec.tsx` 结尾，否则不生效
+3. 必须手动补全导入待测试方法或者组件，可以查看现有的测试文件
+
+# 运行测试
+pnpm test
+
+# 运行测试 ui 界面
+pnpm test:ui
+
+# 最重要需要值得注意的地方
+一旦被导入方法或者组件文件中，有报错，那么会导致整个文件的测试方法在执行 `pnpm test`, `pnpm test:ui` 时都报错。
+
+但是单独测试该文件时，不会报错，只有在执行 `pnpm test`, `pnpm test:ui` 时才会报错。
+
+# 最后
+未来会逐步完善测试用例，以及编写更多的测试单元模块，包括全局组件。
+```
+
+- `basic` 包相关
+  - 重构 `equalRouterPath` 方法，现在允许忽略带参数的路径比较
+  - `omit`, `pick` 方法不在对 `null`, `undefined` 传参抛出警告；该方法现在支持多参数传递
+- `hooks` 包相关
+  - `useDayjs`
+    - 优化注释
+    - `getStartAndEndOfDay` 方法新增 `formatEndOfDay`
+- `element` 包相关
+  - `colorToRgba`
+    - 现在支持解析 `#fff`, `#ffffff`, `#ffffffaa` 格式的颜色
+    - 重写该方法
+  - `precision` 包相关
+    - `Options` 类型重构为 `CurrencyOptions`
+    - `format` 方法新增 `currency` 配置项，移除第二个参数，合并在配置项中配置输出格式
+    - `distribute` 方法新增配置项（CurrencyOptions）
+- 现在 `@/hooks` 包下方法都将构建在一个包中输出，不在做拆分
+
+## Fixes
+
+- `utils` 包相关
+  - 修复 `arrayBufferToBase64Image` 方法总是返回 `null` 的问题
+  - 修复 `queryElements` 方法 `defaultElement` 配置项不能正确的返回默认值问题
+  - 修复 `autoPrefixStyle` 方法不能返回样式本身问题
+
 ## 4.7.1
 
 ## Feats
@@ -275,7 +337,7 @@ remove('your key', 'all')
   - 新增 `extra` 配置项，用于配置标记
 
 ```ts
-import { t } from '@/hooks'
+import { t } from '@/hooks/web/useI18n'
 import { LAYOUT } from '@/router/constant'
 
 import type { AppRouteRecordRaw } from '@/router/types'

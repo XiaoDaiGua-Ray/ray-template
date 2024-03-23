@@ -53,15 +53,15 @@ export const printDom = <T extends HTMLElement>(
     ...domToImageOptions,
     beforeCreate: (element) => {
       domToImageOptions?.beforeCreate?.(element)
-      window?.$loadingBar.start()
+      window.$loadingBar?.start()
     },
     created(result, element) {
       domToImageOptions?.created?.(result, element)
-      window?.$loadingBar.finish()
+      window.$loadingBar?.finish()
     },
     createdError(error) {
       domToImageOptions?.createdError?.(error)
-      window?.$loadingBar.error()
+      window.$loadingBar?.error()
     },
   })
 

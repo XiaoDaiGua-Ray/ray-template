@@ -46,11 +46,7 @@ export const getAppEnvironment = () => {
  * @example
  * const Image = arrayBufferToBase64Image('base64')
  */
-export const arrayBufferToBase64Image = (data: ArrayBuffer): string | null => {
-  if (!data || data.byteLength) {
-    return null
-  }
-
+export const arrayBufferToBase64Image = (data: ArrayBuffer) => {
   const base64 =
     'data:image/png;base64,' +
     window.btoa(
@@ -97,6 +93,8 @@ export const downloadBase64File = (base64: string, fileName: string) => {
  * isValueType<object>({}, 'Object') // true
  * isValueType<number>([], 'Array') // true
  * isValueType<number>([], 'Object') // false
+ * isValueType<undefined>(undefined, 'Undefined') // true
+ * isValueType<null>(null, 'Null') // true
  */
 export const isValueType = <T extends BasicTypes>(
   value: unknown,
@@ -237,16 +235,15 @@ export function omit<T extends object>(
 export function omit<T extends Recordable, K extends keyof T>(
   targetObject: T,
   targetKeys: K | K[],
+  ...rest: K[]
 ) {
   if (!targetObject) {
-    console.warn(
-      `[omit]: The targetObject is expected to be an object, but got ${targetObject}.`,
-    )
-
     return {}
   }
 
-  const keys = Array.isArray(targetKeys) ? targetKeys : [targetKeys]
+  let keys = Array.isArray(targetKeys) ? targetKeys : [targetKeys]
+
+  keys = [...keys, ...rest]
 
   if (!keys.length) {
     return targetObject
@@ -282,12 +279,9 @@ export function pick<T extends object>(
 export function pick<T extends object, K extends keyof T>(
   targetObject: T,
   targetKeys: K | K[],
+  ...rest: K[]
 ) {
   if (!targetObject) {
-    console.warn(
-      `[pick]: The targetObject is expected to be an object, but got ${targetObject}.`,
-    )
-
     return {}
   }
 
@@ -297,7 +291,7 @@ export function pick<T extends object, K extends keyof T>(
     return targetObject
   }
 
-  const result = keys.reduce(
+  const result = [...keys, ...rest].reduce(
     (pre, curr) => {
       if (Reflect.has(targetObject, curr)) {
         pre[curr] = targetObject[curr]
@@ -426,7 +420,7 @@ export const callWithAsyncErrorHandling = async <
  * 如果无法识别，则返回 Unknown。
  *
  * @example
- * detectOperatingSystem() => 'Windows' | 'MacOS' | 'Linux' | 'Android' | 'IOS' | 'Unknown'
+ * detectOperatingSystem() // 'Windows' | 'MacOS' | 'Linux' | 'Android' | 'IOS' | 'Unknown'
  */
 export const detectOperatingSystem = () => {
   const userAgent = navigator.userAgent
@@ -469,20 +463,9 @@ export const detectOperatingSystem = () => {
  * equal('/a', '/a') // true
  */
 export const equalRouterPath = (path1: string, path2: string) => {
-  const path1End = path1.endsWith('/')
-  const path2End = path2.endsWith('/')
+  const p1 = path1.split('?').filter(Boolean)[0]
+  const p2 = path2.split('?').filter(Boolean)[0]
+  const regex = /\/$/
 
-  if (path1End && path2End) {
-    return path1.slice(0, -1) === path2.slice(0, -1)
-  }
-
-  if (!path1End && !path2End) {
-    return path1 === path2
-  }
-
-  return (
-    path1 === path2 ||
-    path1.slice(0, -1) === path2 ||
-    path1 === path2.slice(0, -1)
-  )
+  return p1.replace(regex, '') === p2.replace(regex, '')
 }

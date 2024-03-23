@@ -19,8 +19,9 @@ import type { AnyFC } from '@/types'
  * @param fc 副作用函数
  * @param watchOptions watchEffect 配置项
  *
- * 该方法使用 watchEffect 实现副作用函数的执行
- * 并且能够在 effect 作用域卸载时，自动停止监听
+ * @description
+ * 该方法使用 watchEffect 实现副作用函数的执行，
+ * 并且能够在 effect 作用域卸载时，自动停止监听。
  *
  * @example
  * const ref = ref(0)

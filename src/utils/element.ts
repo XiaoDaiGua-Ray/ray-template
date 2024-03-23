@@ -14,7 +14,7 @@ import type { CSSProperties } from 'vue'
  * @param classNames 所需添加类名
  *
  * @description
- * 为目标元素添加类名
+ * 为目标元素添加类名。
  *
  * @example
  * // targetDom 当前 class: a-class b-class
@@ -55,7 +55,7 @@ export const setClass = (
  * @param className 所需删除类名
  *
  * @description
- * 为目标元素删除类名
+ * 为目标元素删除类名。
  *
  * @example
  * // targetDom 当前 class: a-class b-class
@@ -103,7 +103,7 @@ export const removeClass = (
  * @param className 查询元素是否含有此类名
  *
  * @description
- * 查询元素是否含有此类名
+ * 查询元素是否含有此类名。
  *
  * @example
  * hasClass(targetDom, 'matchClassName') // Ref<true> | Ref<false>
@@ -153,10 +153,10 @@ export const hasClass = (
  * @returns 添加前缀后的样式
  *
  * @description
- * 为样式添加浏览器前缀，返回一个对象
+ * 为样式添加浏览器前缀，返回一个对象。
  *
  * @example
- * autoPrefixStyle('transform') => {webkitTransform: 'transform', mozTransform: 'transform', msTransform: 'transform', oTransform: 'transform'}
+ * autoPrefixStyle('transform') // {webkitTransform: 'transform', mozTransform: 'transform', msTransform: 'transform', oTransform: 'transform'}
  */
 export const autoPrefixStyle = (style: string) => {
   const prefixes = ['webkit', 'moz', 'ms', 'o']
@@ -168,6 +168,8 @@ export const autoPrefixStyle = (style: string) => {
     ] = style
   })
 
+  styleWithPrefixes[style] = style
+
   return styleWithPrefixes
 }
 
@@ -177,7 +179,7 @@ export const autoPrefixStyle = (style: string) => {
  * @param styles 所需绑定样式(如果为字符串, 则必须以分号结尾每个行内样式描述)
  *
  * @description
- * 为目标元素添加样式
+ * 为目标元素添加样式。
  *
  * @example
  * style of string
@@ -262,9 +264,9 @@ export const setStyle = <Style extends CSSProperties>(
  * @param styles 所需卸载样式
  *
  * @description
- * 为目标元素卸载样式
+ * 为目标元素卸载样式。
  *
- * 当你发现不能正常的移除某些样式的时候，应该考虑是否是样式表兼容问题
+ * 当你发现不能正常的移除某些样式的时候，应该考虑是否是样式表兼容问题。
  *
  * @example
  * removeStyle(['zIndex', 'z-index'])
@@ -298,45 +300,43 @@ export const removeStyle = (
  * @param alpha 透明度
  *
  * @description
- * 将任意颜色值转为 rgba，如果本身为 rgba, rgb 或者其它非法颜色值则直接返回
+ * 将任意颜色值转为 rgba，如果本身为 rgba 或者其它非法颜色值则直接返回。
  *
  * @example
  * colorToRgba('#123632', 0.8) // rgba(18, 54, 50, 0.8)
- * colorToRgba('rgb(18, 54, 50)', 0.8) // rgb(18, 54, 50)
+ * colorToRgba('rgb(18, 54, 50)', 0.8) // rgba(18, 54, 50, 0.8)
  * colorToRgba('#ee4f12', 0.3) // rgba(238, 79, 18, 0.3)
  * colorToRgba('rgba(238, 79, 18, 0.3)', 0.3) // rgba(238, 79, 18, 0.3)
  * colorToRgba('not a color', 0.3) // not a color
  */
 export const colorToRgba = (color: string, alpha = 1) => {
-  const hexPattern = /^#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i
-  const rgbPattern = /^rgb\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)$/i
-  const rgbaPattern =
-    /^rgba\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3}),\s*(\d*(?:\.\d+)?)\)$/i
-
-  let result: string
-
-  if (hexPattern.test(color)) {
-    const hex = color.substring(1)
-    const rgb = [
-      parseInt(hex.substring(0, 2), 16),
-      parseInt(hex.substring(2, 4), 16),
-      parseInt(hex.substring(4, 6), 16),
-    ]
-
-    result = 'rgb(' + rgb.join(', ') + ')'
-  } else if (rgbPattern.test(color)) {
-    return color
-  } else if (rgbaPattern.test(color)) {
-    return color
-  } else {
+  if (color.includes('rgba')) {
     return color
   }
 
-  if (result && !result.startsWith('rgba')) {
-    result = result.replace('rgb', 'rgba').replace(')', `, ${alpha})`)
+  if (color.includes('rgb')) {
+    return color.replace('rgb', 'rgba').replace(')', `, ${alpha})`)
   }
 
-  return result
+  if (color.includes('#')) {
+    const hex = color.replace('#', '')
+
+    switch (hex.length) {
+      case 3:
+        return `rgba(${parseInt(hex[0] + hex[0], 16)}, ${parseInt(hex[1] + hex[1], 16)}, ${parseInt(hex[2] + hex[2], 16)}, ${alpha})`
+
+      case 6:
+        return `rgba(${parseInt(hex.slice(0, 2), 16)}, ${parseInt(hex.slice(2, 4), 16)}, ${parseInt(hex.slice(4, 6), 16)}, ${alpha})`
+
+      case 8:
+        return `rgba(${parseInt(hex.slice(0, 2), 16)}, ${parseInt(hex.slice(2, 4), 16)}, ${parseInt(hex.slice(4, 6), 16)}, ${(parseInt(hex.slice(6, 8), 16) / 255).toFixed(2)})`
+
+      default:
+        return color
+    }
+  }
+
+  return color
 }
 
 /**
@@ -347,7 +347,7 @@ export const colorToRgba = (color: string, alpha = 1) => {
  * @description
  * 使用 querySelectorAll 作为检索方法。
  *
- * 如果希望按照 attribute 匹配, 仅需要 'attr:xxx'传递参数即可
+ * 如果希望按照 attribute 匹配, 仅需要 'attr:xxx'传递参数即可。
  *
  * @example
  * // class:
@@ -378,6 +378,10 @@ export const queryElements = <T extends Element = Element>(
   try {
     const elements = Array.from(document.querySelectorAll<T>(queryParam))
 
+    if (!elements.length && defaultElement) {
+      return [defaultElement]
+    }
+
     return elements
   } catch (error) {
     console.error(
@@ -395,7 +399,7 @@ export const queryElements = <T extends Element = Element>(
  * @param unit 自动填充 css 尺寸单位
  *
  * @description
- * 自动补全尺寸
+ * 自动补全尺寸。
  */
 export const completeSize = (size: number | string, unit = 'px') => {
   if (typeof size === 'number') {

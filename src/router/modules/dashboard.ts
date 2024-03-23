@@ -1,4 +1,4 @@
-import { t } from '@/hooks'
+import { t } from '@/hooks/web/useI18n'
 import { LAYOUT } from '@/router/constant'
 
 import type { AppRouteRecordRaw } from '@/router/types'
@@ -6,7 +6,7 @@ import type { AppRouteRecordRaw } from '@/router/types'
 const dashboard: AppRouteRecordRaw = {
   path: '/dashboard',
   name: 'RDashboard',
-  component: () => import('@/views/dashboard/index'),
+  component: () => import('@/views/dashboard'),
   meta: {
     i18nKey: t('menu.Dashboard'),
     icon: 'dashboard',
