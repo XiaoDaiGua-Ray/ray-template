@@ -52,6 +52,7 @@ A `completely free`, `efficient`, `feature complete` and based on vite5. x & ts(
 - `SVG:` built-in svg icon solution
 - `Hooks:` based on the template characteristics of the encapsulated hooks to make it easier to use some functions of the template
 - `TypeScript:` provide a complete type
+- `Vitest:` built-in vitest test solution
 
 ## 👀 Preview
 
@@ -80,6 +81,7 @@ A `completely free`, `efficient`, `feature complete` and based on vite5. x & ts(
 - [Mock.js](https://github.com/nuysoft/Mock) - mockjs basic syntax
 - [Pinia](https://pinia.vuejs.org/zh/introduction.html) - state manager pinia usage
 - [TSX](https://github.com/vuejs/babel-plugin-jsx/blob/main/packages/babel-plugin-jsx/README-zh_CN.md) - tsx basic syntax
+- [Vitest](https://cn.vitest.dev/guide/) - vitest basic use
 
 ## 📦 Setup
 
@@ -97,6 +99,13 @@ git clone https://mirror.ghproxy.com/https://github.com/XiaoDaiGua-Ray/ray-templ
 
 ```sh
 pnpm i
+```
+
+### Test project
+
+```sh
+
+pnpm test
 ```
 
 ### Startup project

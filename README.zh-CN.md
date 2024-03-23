@@ -52,6 +52,7 @@
 - `SVG：`内置 svg icon 解决方案
 - `Hooks：`基于模板特性封装的 hooks 让你更加方便的使用模板一些功能
 - `TypeScript：`提供完整的类型
+- `Vitest：`内置 vitest 测试方案
 
 ## 👀 预览地址
 
@@ -80,6 +81,7 @@
 - [Mock.js](https://github.com/nuysoft/Mock) - mockjs 基本语法
 - [Pinia](https://pinia.vuejs.org/zh/introduction.html) - 状态管理器 pinia 使用
 - [TSX](https://github.com/vuejs/babel-plugin-jsx/blob/main/packages/babel-plugin-jsx/README-zh_CN.md) - tsx 基本语法
+- [Vitest](https://cn.vitest.dev/guide/) - vitest 基本使用
 
 ## 📦 起步
 
@@ -97,6 +99,13 @@ git clone https://mirror.ghproxy.com/https://github.com/XiaoDaiGua-Ray/ray-templ
 
 ```sh
 pnpm i
+```
+
+### 测试项目
+
+```sh
+
+pnpm test
 ```
 
 ### 启动项目
