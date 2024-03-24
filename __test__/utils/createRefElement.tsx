@@ -1,7 +1,18 @@
 import { mount } from '@vue/test-utils'
 
-import type { Slot } from 'vue'
-
+/**
+ *
+ * @param slots 需要传递的插槽
+ *
+ * @description
+ * 创建一个包含 ref 为 domRef 的组件。
+ * 并且允许传递插槽。
+ *
+ * @example
+ * const wrapper = createRefElement({ default: () => <div>hello</div> })
+ *
+ * const text = wrapper.find('div').text() // hello
+ */
 const createRefElement = (slots?: Record<string, Function>) => {
   const wrapper = mount(
     defineComponent({

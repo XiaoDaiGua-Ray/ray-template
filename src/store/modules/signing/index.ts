@@ -27,7 +27,7 @@ import type {
   SigningForm,
   SigningCallback,
   SigningResponse,
-} from '@/store/modules/signing/type'
+} from '@/store/modules/signing/types'
 
 export const piniaSigningStore = defineStore(
   'signing',

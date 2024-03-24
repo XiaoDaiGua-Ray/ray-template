@@ -1,5 +1,19 @@
 # CHANGE LOG
 
+## 4.7.3
+
+补全 `hooks` 包下的单测模块。
+
+## Feats
+
+- 重命名 `store` 包下的 `type.ts` 为 `types.ts`
+- `useElementFullscreen`
+  - 优化全屏尺寸逻辑，现在会监听浏览器 `width`, `height` 变化，自动调整全屏尺寸
+
+## Fixes
+
+- 修复 `useElementFullscreen` 方法在退出全屏时，不能恢复原有 `transition` 样式问题
+
 ## 4.7.2
 
 新增 `vitest` 测试框架。

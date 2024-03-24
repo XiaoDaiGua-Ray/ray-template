@@ -89,15 +89,15 @@ export const validMenuItemShow = (option: AppMenuOption) => {
  */
 export const setupRouterLoadingBar = (router: Router) => {
   router.beforeEach(() => {
-    window?.$loadingBar.start()
+    window.$loadingBar?.start()
   })
 
   router.afterEach(() => {
-    window?.$loadingBar.finish()
+    window.$loadingBar?.finish()
   })
 
   router.onError(() => {
-    window?.$loadingBar.error()
+    window.$loadingBar?.error()
   })
 }
 

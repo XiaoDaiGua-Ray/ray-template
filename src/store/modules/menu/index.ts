@@ -40,7 +40,7 @@ import { useKeepAliveActions } from '@/store'
 import { APP_CATCH_KEY } from '@/app-config'
 
 import type { AppMenuOption, MenuTagOptions } from '@/types'
-import type { MenuState } from '@/store/modules/menu/type'
+import type { MenuState } from '@/store/modules/menu/types'
 import type { LocationQuery } from 'vue-router'
 
 let cachePreNormal: AppMenuOption | undefined = void 0

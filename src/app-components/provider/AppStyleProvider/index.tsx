@@ -20,7 +20,7 @@ import {
 import { useSettingGetters } from '@/store'
 import { APP_CATCH_KEY } from '@/app-config'
 
-import type { SettingState } from '@/store/modules/setting/type'
+import type { SettingState } from '@/store/modules/setting/types'
 
 export default defineComponent({
   name: 'AppStyleProvider',

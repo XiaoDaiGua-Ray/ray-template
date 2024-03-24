@@ -55,7 +55,7 @@ export interface UseElementFullscreenOptions {
 let currentZIndex = 999
 let isAppend = false
 const ID_TAG = 'ELEMENT-FULLSCREEN-RAY'
-const { height } = useWindowSize() // 获取实际高度避免 100vh 会导致手机端浏览器获取不准确问题
+const { width, height } = useWindowSize() // 获取实际高度避免 100vh 会导致手机端浏览器获取不准确问题
 const styleElement = document.createElement('style')
 
 /**
@@ -107,7 +107,7 @@ export const useElementFullscreen = (
     const cssContent = `
           [${ID_TAG}] {
             position: fixed;
-            width: 100% !important;
+            width: ${width.value}px !important;
             height: ${height.value}px !important;
             transform: translate(-${left}px, -${top}px) !important;
             transition: all 0.3s var(--r-bezier);
@@ -163,6 +163,8 @@ export const useElementFullscreen = (
     const element = unrefElement(target)
 
     if (element) {
+      ;(element as HTMLElement).style.transition = cacheStyle.transition ?? ''
+
       element.removeAttribute(ID_TAG)
     }
 
@@ -181,7 +183,7 @@ export const useElementFullscreen = (
     }
   }
 
-  const stopWatch = watch(() => height.value, updateStyle)
+  const stopWatch = watch(() => [width.value, height.value], updateStyle)
 
   effectDispose(() => {
     const element = unrefElement(target) as HTMLElement | null

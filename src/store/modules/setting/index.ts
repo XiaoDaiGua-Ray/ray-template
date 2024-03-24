@@ -4,7 +4,7 @@ import { useI18n, useDayjs } from '@/hooks'
 import { watchOnce } from '@vueuse/core'
 import { APP_CATCH_KEY, APP_THEME } from '@/app-config'
 
-import type { SettingState } from '@/store/modules/setting/type'
+import type { SettingState } from '@/store/modules/setting/types'
 import type { LocalKey } from '@/hooks'
 import type { AnyFC } from '@/types'
 
@@ -26,7 +26,7 @@ export const piniaSettingStore = defineStore(
           primaryColorPressed: primaryColor,
         },
       },
-      appTheme: false, // `true` 为黑夜主题, `false` 为白色主题
+      appTheme: false, // true 为黑夜主题, false 为明亮主题
       menuTagSwitch: true, // 多标签页开关
       breadcrumbSwitch: true, // 面包屑开关
       localeLanguage: getAppDefaultLanguage(),

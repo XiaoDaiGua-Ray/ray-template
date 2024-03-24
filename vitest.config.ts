@@ -9,7 +9,7 @@ export default defineConfig((configEnv) =>
     defineConfig({
       plugins: [tsconfigPaths()],
       test: {
-        include: ['**/__test__/**/*'],
+        include: ['**/__test__/**/*.(spec).(ts|tsx)'],
         exclude: [
           ...configDefaults.exclude,
           '**/src/**',

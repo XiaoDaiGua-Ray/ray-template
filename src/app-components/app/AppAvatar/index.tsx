@@ -27,7 +27,7 @@ import { getStorage } from '@/utils'
 
 import type { PropType } from 'vue'
 import type { AvatarProps, SpaceProps } from 'naive-ui'
-import type { SigningCallback } from '@/store/modules/signing/type'
+import type { SigningCallback } from '@/store/modules/signing/types'
 
 const AppAvatar = defineComponent({
   name: 'AppAvatar',

@@ -11,7 +11,7 @@
 
 import { useSettingGetters, useSettingActions } from '@/store'
 
-import type { AppRootRoute } from '@/store/modules/setting/type'
+import type { AppRootRoute } from '@/store/modules/setting/types'
 
 export function useAppRoot() {
   const { getAppRootRoute } = useSettingGetters()
@@ -19,17 +19,20 @@ export function useAppRoot() {
 
   /**
    *
-   * @remark 获取根路由
+   * @description
+   * 获取根路由。
    */
   const getRootRoute = getAppRootRoute
   /**
    *
-   * @remark 获取根路由 path
+   * @description
+   * 获取根路由 path。
    */
   const getRootPath = computed(() => getAppRootRoute.value.path)
   /**
    *
-   * @remark 获取根路由 name
+   * @description
+   * 获取根路由 name。
    */
   const getRootName = computed(() => getAppRootRoute.value.name)
 
@@ -37,7 +40,8 @@ export function useAppRoot() {
    *
    * @param route 根路由配置内容
    *
-   * 设置根路由
+   * @description
+   * 设置根路由。
    *
    * @example
    * setRootRoute({ path: '/your root path', name: 'your root name' })
