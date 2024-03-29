@@ -12,6 +12,9 @@ const mockDemo: AppRouteRecordRaw = {
     icon: 'other',
     order: 3,
     keepAlive: false,
+    extra: {
+      label: 'usePagination',
+    },
   },
 }
 

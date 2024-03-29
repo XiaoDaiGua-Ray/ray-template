@@ -3,18 +3,18 @@ import { LAYOUT } from '@/router/constant'
 
 import type { AppRouteRecordRaw } from '@/router/types'
 
-const table: AppRouteRecordRaw = {
-  path: '/table',
-  name: 'TableView',
-  component: () => import('@/views/demo/table/index'),
+const form: AppRouteRecordRaw = {
+  path: '/form',
+  name: 'FormView',
+  component: () => import('@/views/demo/form'),
   meta: {
-    i18nKey: t('menu.Table'),
+    i18nKey: t('menu.Form'),
     icon: 'other',
     order: 2,
     extra: {
-      label: 'useTable',
+      label: 'useForm',
     },
   },
 }
 
-export default table
+export default form

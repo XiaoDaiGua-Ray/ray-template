@@ -1,5 +1,118 @@
 # CHANGE LOG
 
+## 4.7.4
+
+对于 `RTable`, `RForm`, `RChart` 组件都新增了对应的 `useTable`, `useForm`, `useChart` 方法；让你在业务开发中抛弃注册 `ref` 实例方式调用组件方法。
+
+补充拓展了 `useModal` 方法，支持 `dad`, `fullscreen` 等拓展配置项。
+
+```ts
+import { useTable, useForm } from '@/components'
+
+const [registerTable, { getTableInstance }] = useTable()
+const [registerForm, { getFormInstance }] = useForm()
+
+// 做点什么...
+```
+
+## Feats
+
+- 更新 `vite` 版本至 `5.2.6`
+- `useDevice` 方法支持自定义 `media` 配置项，用于配置自定义媒体查询尺寸
+- `RTable` 组件
+  - 新增 `tool` 配置项，配置是否显示工具栏
+  - 优化工具栏渲染逻辑
+  - 新增 `useTable` 方法，用于便捷调用表格方法
+
+> 该方法比起常见的 `ref` 注册，然后 `tableRef.value.xxx` 的方法获取表格方法更为简洁一点。但是也值得注意的是，需要手动调用一次 `register` 方法，否则会报错；还有值得注意的是，需要注意表格方法的调用时机，需要等待表格注册完成后才能正常调用。如果需要在 `Parent Create` 阶段调用，可以尝试 `nextTick` 包裹一层。
+
+```tsx
+import { RTable } from '@/components'
+import { useTable } from '@/components'
+
+defineComponent({
+  setup() {
+    const [
+      register,
+      { getTableInstance, clearFilters, clearSorter, scrollTo, filters, sort },
+    ] = useTable()
+
+    const columns = [
+      {
+        title: 'No',
+        key: 'no',
+      },
+      {
+        title: 'Title',
+        key: 'title',
+      },
+    ]
+    const data = [
+      {
+        no: 1,
+        title: 'title',
+      },
+    ]
+
+    return {
+      register,
+      getTableInstance,
+      clearFilters,
+      clearSorter,
+      scrollTo,
+      filters,
+      sort,
+      columns,
+      data,
+    }
+  },
+  render() {
+    const { columns, data } = this
+    const { register } = this
+
+    return (
+      <RTable columns={columns} data={data} register={register.bind(this)} />
+    )
+  },
+})
+```
+
+- `RForm` 组件
+  - 新增组件，所有行为、方法与 `NForm` 保持一致
+  - `useForm` 方法，使用方法与 `useTable` 几乎一致
+- `canUseDom`, `isBrowser` 方法统一为函数导出
+- `RModal` 组件新增 `useModal` 方法
+  - 新增 `useModal` 方法，允许拓展配置 `dad`, `fullscreen` 等配置项。但是由于 `useModal` 生成组件的特殊性，不支持 `memo` 属性配置，其余配置项维持一致
+    > 该方法在当前版本存在一个 bug，`preset = card` 时，不能正确的显示 content，查看相应的 [issues](https://github.com/tusen-ai/naive-ui/issues/5746)。
+  - 重写部分代码，优化组件逻辑，补全 `ts` 类型
+- `RChart`
+  - 新增 `useChart` 方法，使用方法与 `useTable` 几乎一致
+- 新增 `usePagination` 方法与 `usePagination.spec` 单元测试模块
+
+```ts
+import { usePagination } from '@/hooks'
+
+const {
+  updatePage,
+  updatePageSize,
+  getItemCount,
+  setItemCount,
+  getPage,
+  setPage,
+  getPageSize,
+  setPageSize,
+  getPagination,
+  getCallback,
+} = usePagination(
+  () => {
+    // do something...
+  },
+  {
+    // ...options
+  },
+)
+```
+
 ## 4.7.3
 
 补全 `hooks` 包下的单测模块。

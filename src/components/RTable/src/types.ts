@@ -42,10 +42,28 @@ export interface C extends DataTableBaseColumn {
   children?: C[]
 }
 
+export interface RTableInst extends Omit<DataTableInst, 'clearFilter'> {}
+
 export type OverridesTableColumn<T = Recordable> = C | DataTableColumn<T>
 
 export interface TableInst extends Omit<TableProvider, 'wrapperRef'> {
-  rTableInst: Omit<DataTableInst, 'clearFilter'>
+  rTableInst: RTableInst
 }
 
 export type PropsComponentPopselectKeys = 'striped' | 'bordered'
+
+type DownloadCsvParameters = Parameters<RTableInst['downloadCsv']>
+
+export type CsvOptionsType = DownloadCsvParameters[0]
+
+type FiltersParameters = Parameters<RTableInst['filters']>
+
+export type FilterState = FiltersParameters[0]
+
+export type ScrollToOptions = RTableInst['scrollTo']
+
+type SortParameters = Parameters<RTableInst['sort']>
+
+export type ColumnKey = SortParameters[0]
+
+export type SortOrder = SortParameters[1]

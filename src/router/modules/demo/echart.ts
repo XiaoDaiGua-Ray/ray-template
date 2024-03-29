@@ -11,6 +11,9 @@ const echart: AppRouteRecordRaw = {
     i18nKey: t('menu.Echart'),
     icon: 'echart',
     order: 1,
+    extra: {
+      label: 'useChart',
+    },
   },
 }
 

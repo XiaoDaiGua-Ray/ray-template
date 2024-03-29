@@ -12,6 +12,8 @@
 import { RModal } from '@/components'
 import { NButton, NCard, NFlex } from 'naive-ui'
 
+import { useModal } from '@/components'
+
 export default defineComponent({
   name: 'ModalDemo',
   setup() {
@@ -20,12 +22,36 @@ export default defineComponent({
       modal2: false,
       modal3: false,
     })
+    const { create } = useModal()
+
+    const createCardModal = () => {
+      create({
+        title: '卡片模态框',
+        dad: true,
+        preset: 'card',
+        content: '我可以被拖拽的全屏card模态框',
+        fullscreen: true,
+      })
+    }
+
+    const createDialogModal = () => {
+      create({
+        title: '模态框',
+        content: '内容',
+        preset: 'dialog',
+        dad: true,
+      })
+    }
 
     return {
       ...toRefs(state),
+      createCardModal,
+      createDialogModal,
     }
   },
   render() {
+    const { createCardModal, createDialogModal } = this
+
     return (
       <NFlex vertical>
         <NCard title="props">
@@ -90,6 +116,12 @@ export default defineComponent({
           <h4>
             所有的宽度配置属性都会注入一个对应的 `css variable`，有时候会用上。
           </h4>
+        </NCard>
+        <NCard title="重写 useModal">
+          <NButton onClick={createCardModal.bind(this)}>创建卡片模态框</NButton>
+          <NButton onClick={createDialogModal.bind(this)}>
+            创建对话框模态框
+          </NButton>
         </NCard>
       </NFlex>
     )

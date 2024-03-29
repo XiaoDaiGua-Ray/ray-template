@@ -70,14 +70,18 @@ echartThemes.forEach((curr) => {
  *
  * @example
  * <template>
- *  <RChart :options="options" />
+ *  <RChart :options="options" @register="register" />
  * </template>
  *
  * <script setup>
  * import { RChart } from '@/components'
+ *
+ * import { useChart } from 'vue'
  * import { ref } from 'vue'
  *
+ * const [register, { ...Hooks }] = useChart()
  * const options = ref({ ... })
+ * </script>
  */
 export default defineComponent({
   name: 'RChart',
@@ -348,6 +352,13 @@ export default defineComponent({
 
       // 初始化完成后移除 intersectionObserver 监听
       intersectionObserverReturn?.stop()
+
+      // 注册 register，用于 useChart hook
+      const { onRegister } = props
+
+      if (onRegister && echartInst) {
+        call(onRegister, echartInst, mount, unmount)
+      }
     }
 
     if (props.intersectionObserver) {

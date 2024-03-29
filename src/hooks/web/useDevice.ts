@@ -19,7 +19,16 @@ import { watchEffectWithTarget } from '@/utils'
 
 import type { UseWindowSizeOptions } from '@vueuse/core'
 
-export interface UseDeviceOptions extends UseWindowSizeOptions {}
+export interface UseDeviceOptions extends UseWindowSizeOptions {
+  /**
+   *
+   * @description
+   * 自定义 isTabletOrSmaller 的判断尺寸。
+   *
+   * @default 768
+   */
+  media?: number
+}
 
 /**
  *
@@ -40,7 +49,9 @@ export function useDevice(options?: UseDeviceOptions) {
   const isTabletOrSmaller = ref(false)
 
   const update = () => {
-    isTabletOrSmaller.value = width.value <= 768
+    const { media = 768 } = options ?? {}
+
+    isTabletOrSmaller.value = width.value <= media
   }
 
   watchEffectWithTarget(update)

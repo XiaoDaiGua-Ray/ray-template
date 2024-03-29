@@ -1,3 +1,5 @@
+import { loadingOptions } from './utils'
+
 import type * as echarts from 'echarts/core' // echarts 核心模块
 import type { PropType, VNode } from 'vue'
 import type { MaybeArray } from '@/types'
@@ -15,8 +17,7 @@ import type {
   RChartDownloadOptions,
 } from './types'
 import type { CardProps, DropdownProps, DropdownOption } from 'naive-ui'
-
-import { loadingOptions } from './utils'
+import type { VoidFC } from '@/types'
 
 const props = {
   /**
@@ -353,6 +354,20 @@ const props = {
       silent: false,
       replaceMerge: [],
     }),
+  },
+  /**
+   *
+   * @description
+   * RChart 注册挂载成功后触发的事件。
+   * 可以结合 useChart 方法中的 register 方法使用，然后便捷的使用 hooks。
+   *
+   * @default null
+   */
+  onRegister: {
+    type: [Function, Array] as PropType<
+      MaybeArray<(chartInst: ECharts, render: VoidFC, dispose: VoidFC) => void>
+    >,
+    default: null,
   },
 }
 

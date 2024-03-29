@@ -3,12 +3,25 @@ import './index.scss'
 import { NCard, NSwitch, NFlex, NH2, NButton } from 'naive-ui'
 import { RChart } from '@/components'
 
+import { useChart } from '@/components'
+
 import type { RChartType } from '@/components'
 
 const Echart = defineComponent({
   name: 'REchart',
   setup() {
-    const baseChartRef = ref<RChartType.RChartInst>()
+    const [register, { getChartInstance, dispose, render, isDispose }] =
+      useChart()
+    const [
+      register2,
+      {
+        getChartInstance: getChartInstance2,
+        dispose: dispose2,
+        render: render2,
+        isDispose: isDispose2,
+      },
+    ] = useChart()
+
     const chartLoading = ref(false)
     const chartAria = ref(false)
     const state = reactive({
@@ -179,15 +192,15 @@ const Echart = defineComponent({
     }
 
     const mountChart = () => {
-      if (!baseChartRef.value?.isDispose()) {
-        baseChartRef.value?.render()
+      if (isDispose()) {
+        render()
       } else {
         window.$message.warning('图表已经渲染')
       }
     }
 
     const unmountChart = () => {
-      baseChartRef.value?.dispose()
+      dispose()
     }
 
     const updateChartOptions = () => {
@@ -203,7 +216,6 @@ const Echart = defineComponent({
 
     return {
       baseOptions,
-      baseChartRef,
       chartLoading,
       handleLoadingShow,
       chartAria,
@@ -214,9 +226,16 @@ const Echart = defineComponent({
       mountChart,
       unmountChart,
       updateChartOptions,
+      register,
+      register2,
+      dispose2,
+      render2,
+      isDispose2,
     }
   },
   render() {
+    const { register, register2, dispose2, render2, isDispose2 } = this
+
     return (
       <div class="echart">
         <NCard title="chart 组件">
@@ -246,6 +265,9 @@ const Echart = defineComponent({
                 属性，只有元素在可见范围才会渲染图表，可以滚动查看效果
               </h3>
             </li>
+            <li>
+              <h3>7. useChart 方法</h3>
+            </li>
           </ul>
         </NCard>
         <NCard title="预设 card 风格图表">
@@ -258,8 +280,8 @@ const Echart = defineComponent({
           </NFlex>
           <div class="chart--container">
             <RChart
+              onRegister={register}
               title="周销售量"
-              ref="baseChartRef"
               autoChangeTheme
               options={this.baseLineOptions}
               showAria={this.chartAria}
@@ -268,13 +290,30 @@ const Echart = defineComponent({
           </div>
         </NCard>
         <NCard title="不跟随主题切换的暗色主题可视化图，并且手动指定原始主题色">
-          <div class="chart--container">
-            <RChart
-              autoChangeTheme={false}
-              theme="default"
-              options={this.baseOptions}
-            />
-          </div>
+          <NFlex vertical>
+            <NFlex>
+              <NButton
+                onClick={() => {
+                  if (isDispose2()) {
+                    render2()
+                  } else {
+                    window.$message.warning('图表已经渲染')
+                  }
+                }}
+              >
+                渲染
+              </NButton>
+              <NButton onClick={dispose2.bind(this)}>卸载</NButton>
+            </NFlex>
+            <div class="chart--container">
+              <RChart
+                onRegister={register2}
+                autoChangeTheme={false}
+                theme="default"
+                options={this.baseOptions}
+              />
+            </div>
+          </NFlex>
         </NCard>
         <NCard title="加载动画">
           <NSwitch

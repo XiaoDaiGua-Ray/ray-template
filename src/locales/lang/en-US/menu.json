@@ -24,5 +24,6 @@
   "TemplateHooks": "Template Api",
   "Modal": "Modal",
   "ContextMenu": "Right Click Menu",
-  "CacheDemo": "Cache Utils Demo"
+  "CacheDemo": "Cache Utils Demo",
+  "Form": "Form"
 }

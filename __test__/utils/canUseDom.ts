@@ -12,4 +12,5 @@ const canUseDom = () => {
     window.document.createElement
   )
 }
+
 export default canUseDom

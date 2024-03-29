@@ -23,20 +23,29 @@ import {
 } from 'naive-ui'
 import { RCollapseGrid, RTable, RIcon, RMoreDropdown } from '@/components'
 
+import { uuid } from '@/utils'
+import { useTable } from '@/components'
+
 import type { DataTableColumns } from 'naive-ui'
-import type { RTableType } from '@/components'
 
 type RowData = {
-  key: number
+  key: number | string
   name: string
   age: number
   address: string
   tags: string[]
+  remark: string
 }
 
 const TableView = defineComponent({
   name: 'TableView',
   setup() {
+    // 使用以下 hooks 的时候，应该注意调用时机
+    const [
+      register,
+      { getTableInstance, clearFilters, clearSorter, scrollTo, filters, sort },
+    ] = useTable()
+
     const baseColumns = [
       {
         title: 'Name',
@@ -68,7 +77,7 @@ const TableView = defineComponent({
       {
         title: 'Remark',
         key: 'remark',
-        width: 300,
+        width: 100,
       },
       {
         title: 'Action',
@@ -98,32 +107,7 @@ const TableView = defineComponent({
     const actionColumns = ref<DataTableColumns<RowData>>(
       [...baseColumns].map((curr) => ({ ...curr, width: 400 })),
     )
-    const tableData = ref([
-      {
-        key: 0,
-        name: 'John Brown',
-        age: 32,
-        address: 'New York No. 1 Lake Park',
-        tags: ['nice', 'developer'],
-        remark: '我是一条很长很长的备注',
-      },
-      {
-        key: 1,
-        name: 'Jim Green',
-        age: 42,
-        address: 'London No. 1 Lake Park',
-        tags: ['wow'],
-        remark: '我是一条很长很长的备注',
-      },
-      {
-        key: 2,
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sidney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-        remark: '我是一条很长很长的备注',
-      },
-    ])
+    const tableData = ref<RowData[]>([])
     const tableMenuOptions = [
       {
         label: '编辑',
@@ -140,9 +124,24 @@ const TableView = defineComponent({
       tableLoading: false,
     })
 
-    const handleMenuSelect = (key: string | number) => {
+    const createTableData = () => {
+      for (let i = 0; i < 20; i++) {
+        tableData.value.push({
+          key: uuid(),
+          name: 'John Brown',
+          age: i + 20,
+          address: 'New York No. 1 Lake Park',
+          tags: ['nice', 'developer'],
+          remark: '我是一条很长很长的备注',
+        })
+      }
+    }
+
+    const menuSelect = (key: string | number) => {
       window.$message.info(`${key}`)
     }
+
+    createTableData()
 
     return {
       ...toRefs(state),
@@ -150,10 +149,13 @@ const TableView = defineComponent({
       actionColumns,
       baseColumns,
       tableMenuOptions,
-      handleMenuSelect,
+      menuSelect,
+      register,
     }
   },
   render() {
+    const { register } = this
+
     return (
       <NFlex vertical>
         <NCard title="RTable">
@@ -199,7 +201,8 @@ const TableView = defineComponent({
           }}
         </RCollapseGrid>
         <RTable
-          scrollX={2000}
+          onRegister={register.bind(this)}
+          scrollX={1000}
           title={
             <NFlex align="center">
               <span>标题插槽:</span>
@@ -215,7 +218,7 @@ const TableView = defineComponent({
           }}
           contextMenuOptions={this.tableMenuOptions}
           loading={this.tableLoading}
-          onContextMenuClick={this.handleMenuSelect.bind(this)}
+          onContextMenuClick={this.menuSelect.bind(this)}
           toolOptions={[
             <NPopover>
               {{

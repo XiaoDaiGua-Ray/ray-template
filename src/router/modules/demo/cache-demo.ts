@@ -11,9 +11,6 @@ const cacheDemo: AppRouteRecordRaw = {
     i18nKey: t('menu.CacheDemo'),
     icon: 'other',
     order: 3,
-    extra: {
-      label: 'new',
-    },
   },
 }
 

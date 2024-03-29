@@ -1,18 +1,6 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-11-22
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
+import type { ModalOptions as NaiveModalOptions } from 'naive-ui'
 
-import { modalProps } from 'naive-ui'
-
-const props = {
-  ...modalProps,
+export interface RModalProps extends NaiveModalOptions {
   /**
    *
    * @description
@@ -20,10 +8,7 @@ const props = {
    *
    * @default true
    */
-  memo: {
-    type: Boolean,
-    default: true,
-  },
+  memo?: boolean
   /**
    *
    * @description
@@ -31,10 +16,7 @@ const props = {
    *
    * @default false
    */
-  fullscreen: {
-    type: Boolean,
-    default: false,
-  },
+  fullscreen?: boolean
   /**
    *
    * @description
@@ -42,10 +24,7 @@ const props = {
    *
    * @default 600
    */
-  width: {
-    type: [String, Number],
-    default: 600,
-  },
+  width?: number
   /**
    *
    * @description
@@ -53,10 +32,7 @@ const props = {
    *
    * @default 600
    */
-  cardWidth: {
-    type: [String, Number],
-    default: 600,
-  },
+  cardWidth?: number
   /**
    *
    * @description
@@ -64,10 +40,7 @@ const props = {
    *
    * @default 446
    */
-  dialogWidth: {
-    type: [String, Number],
-    default: 446,
-  },
+  dialogWidth?: number
   /**
    *
    * @description
@@ -76,10 +49,5 @@ const props = {
    *
    * @default false
    */
-  dad: {
-    type: Boolean,
-    default: false,
-  },
+  dad?: boolean
 }
-
-export default props

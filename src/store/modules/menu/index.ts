@@ -136,9 +136,8 @@ export const piniaMenuStore = defineStore(
             default: () => label.value,
           }),
         breadcrumbLabel: label.value,
-        /** 检查该菜单项是否展示 */
       } as AppMenuOption
-      /** 合并 icon */
+      /** 合并 icon, extra */
       const attr: AppMenuOption = Object.assign({}, route, {
         icon: createMenuIcon(option),
         extra: createMenuExtra(option),

@@ -30,7 +30,7 @@ export default defineComponent({
   name: 'RTable',
   props,
   setup(props, ctx) {
-    const { expose } = ctx
+    const { expose, emit } = ctx
 
     const rTableInst = ref<DataTableInst>()
     const wrapperRef = ref<HTMLElement>()
@@ -161,8 +161,14 @@ export default defineComponent({
      * 处理 toolOptions，合并渲染所有的 toolOptions
      */
     const tool = (p: typeof props) => {
+      const { tool } = p
+
+      if (!tool) {
+        return
+      }
+
       const renderDefaultToolOptions = () => (
-        <>
+        <NFlex align="center">
           <Print {...p} />
           <Size {...p} onChangeSize={changeTableSize.bind(this)} />
           <Fullscreen />
@@ -172,24 +178,33 @@ export default defineComponent({
             onPopselectChange={popselectChange.bind(this)}
             onInitialed={popselectChange.bind(this)}
           />
-        </>
+        </NFlex>
       )
 
       if (!props.toolOptions) {
         return renderDefaultToolOptions
       } else {
         if (props.coverTool) {
-          return renderToolOptions
+          return <NFlex align="center">{renderToolOptions()}</NFlex>
         } else {
           return () => (
-            <>
+            <NFlex align="center">
               {renderDefaultToolOptions()}
               {renderToolOptions()}
-            </>
+            </NFlex>
           )
         }
       }
     }
+
+    onMounted(() => {
+      // 主动调用 register 方法，满足 useTable 方法正常调用
+      const { onRegister } = props
+
+      if (onRegister && rTableInst.value) {
+        call(onRegister, rTableInst.value)
+      }
+    })
 
     provide(config.tableKey, {
       uuidTable,
@@ -242,13 +257,13 @@ export default defineComponent({
           default: () => (
             <>
               <NDataTable
-                ref="rTableInst"
                 {...{ id: uuidTable }}
                 {...$attrs}
                 {...$props}
                 {...propsPopselectValue}
                 rowProps={combineRowProps.bind(this)}
                 size={privateReactive.size}
+                ref="rTableInst"
               >
                 {{
                   ...$slots,
@@ -273,12 +288,8 @@ export default defineComponent({
           header: renderNode(title, {
             defaultElement: <div style="display: none;"></div>,
           }),
-          'header-extra': () => (
-            <NFlex align="center">
-              {/* eslint-disable @typescript-eslint/no-explicit-any */}
-              {tool($props as any)}
-            </NFlex>
-          ),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          'header-extra': tool($props as any),
           footer: () => $slots.tableFooter?.(),
           action: () => $slots.tableAction?.(),
         }}

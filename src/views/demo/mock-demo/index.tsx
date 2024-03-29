@@ -14,6 +14,7 @@ import { RCollapseGrid, RTable } from '@/components'
 
 import { useHookPlusRequest } from '@/axios'
 import { getPersonList } from '@/api/demo/mock/person'
+import { usePagination } from '@/hooks'
 
 import type { Person } from '@/api/demo/mock/person'
 
@@ -86,24 +87,23 @@ const MockDemo = defineComponent({
     const condition = reactive({
       email: null,
     })
-    const paginationRef = reactive({
-      page: 1,
-      pageSize: 10,
-      itemCount: 0,
-      pageSizes: [10, 20, 30, 40, 50],
-      showSizePicker: true,
-      onUpdatePage: (page: number) => {
-        paginationRef.page = page
 
-        getPerson()
-      },
-      onUpdatePageSize: (pageSize: number) => {
-        paginationRef.pageSize = pageSize
-        paginationRef.page = 1
-
-        getPerson()
-      },
+    const {
+      getPagination,
+      getPage,
+      getPageSize,
+      setItemCount,
+      getCallback,
+      setPage,
+      setPageSize,
+    } = usePagination(() => {
+      personFetchRun({
+        page: getPage(),
+        pageSize: getPageSize(),
+        email: condition.email,
+      })
     })
+    const paginationRef = getPagination()
     const {
       data: personData,
       loading: personLoading,
@@ -111,36 +111,26 @@ const MockDemo = defineComponent({
     } = useHookPlusRequest(getPersonList, {
       defaultParams: [
         {
-          page: paginationRef.page,
-          pageSize: paginationRef.pageSize,
+          page: getPage(),
+          pageSize: getPageSize(),
           email: condition.email,
         },
       ],
       onSuccess: (res) => {
         const { total } = res
 
-        paginationRef.itemCount = total
+        setItemCount(total)
       },
     })
-
-    const getPerson = () => {
-      const { pageSize, page } = paginationRef
-      const { email } = condition
-
-      personFetchRun({
-        page,
-        pageSize,
-        email,
-      })
-    }
 
     return {
       personData,
       personLoading,
-      paginationRef,
+      getPagination,
       columns,
       ...toRefs(condition),
-      getPerson,
+      getCallback,
+      paginationRef,
     }
   },
   render() {
@@ -170,7 +160,7 @@ const MockDemo = defineComponent({
                 </>
               ),
               action: () => (
-                <NButton type="primary" onClick={this.getPerson.bind(this)}>
+                <NButton type="primary" onClick={this.getCallback.bind(this)}>
                   搜索
                 </NButton>
               ),
