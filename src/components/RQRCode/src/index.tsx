@@ -167,7 +167,7 @@ export default defineComponent({
     return (
       <div class={['ray-qrcode', `ray-qrcode--${status}`]}>
         <NSpin show={status === 'loading'} description={loadingDescription}>
-          <img src={qrcodeURL as string | undefined} />
+          <img class="r-qr-code__image" src={qrcodeURL as string | undefined} />
         </NSpin>
         {status === 'error' ? (
           <div class="ray-qrcode__error">

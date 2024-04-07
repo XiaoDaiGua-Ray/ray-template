@@ -16,7 +16,7 @@ import Register from './components/Register'
 import QRCodeSigning from './components/QRCodeSigning'
 import SSOSigning from './components/SSOSigning'
 import { RIcon } from '@/components'
-import RayLink from '@/app-components/app/RayLink'
+import AppShareLink from '@/app-components/app/AppShareLink'
 import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch'
 
 import { LOCAL_OPTIONS } from '@/app-config'
@@ -140,7 +140,7 @@ const Login = defineComponent({
                   <NDivider>其他登陆方式</NDivider>
                   <SSOSigning />
                   <NDivider>友情链接</NDivider>
-                  <RayLink />
+                  <AppShareLink />
                 </NCard>
               </NGridItem>
             </NGrid>

@@ -251,13 +251,17 @@ export default defineComponent({
       <NCard
         ref="wrapperRef"
         bordered={wrapperBordered}
-        {...{ id: uuidWrapper }}
+        {...{
+          id: uuidWrapper,
+        }}
       >
         {{
           default: () => (
             <>
               <NDataTable
-                {...{ id: uuidTable }}
+                {...{
+                  id: uuidTable,
+                }}
                 {...$attrs}
                 {...$props}
                 {...propsPopselectValue}

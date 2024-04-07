@@ -24,6 +24,7 @@ import AppRequestCancelerProvider from '@/app-components/provider/AppRequestCanc
 import { getVariableToRefs } from '@/global-variable'
 import { useSettingGetters } from '@/store'
 import { useMaximize } from '@/hooks'
+import { LAYOUT_CONTENT_SPIN_WHEN_ROUTE_CHANGE } from '@/app-config'
 
 import type { GlobalThemeOverrides } from 'naive-ui'
 
@@ -52,7 +53,9 @@ export default defineComponent({
       })
     }
 
-    setupLayoutContentSpin()
+    if (LAYOUT_CONTENT_SPIN_WHEN_ROUTE_CHANGE) {
+      setupLayoutContentSpin()
+    }
 
     return {
       globalMainLayoutLoad,

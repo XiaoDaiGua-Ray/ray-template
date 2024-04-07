@@ -88,8 +88,11 @@ export const useI18n = (namespace?: string) => {
  *
  * @description
  * 该方法为纯函数，无任何副作用，单纯为了配合 i18n-ally 插件使用。
- *
  * 该插件识别 t 方法包裹 path 进行提示文案内容。
+ *
+ * 不过在使用的时候必须按照示例导入，避免 vitest 抛出奇奇怪怪的错误。
+ * @example
+ * import { t } from '@/hooks/web/useI18n'
  */
 export const t = (key: string) => key
 

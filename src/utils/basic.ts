@@ -293,7 +293,7 @@ export function pick<T extends object, K extends keyof T>(
 
   const result = [...keys, ...rest].reduce(
     (pre, curr) => {
-      if (Reflect.has(targetObject, curr)) {
+      if (Object.hasOwn(targetObject, curr)) {
         pre[curr] = targetObject[curr]
       }
 

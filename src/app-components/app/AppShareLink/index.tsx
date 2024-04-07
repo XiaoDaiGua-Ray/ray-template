@@ -13,21 +13,9 @@ interface AvatarOptions {
 }
 
 export default defineComponent({
-  name: 'RayLink',
+  name: 'AppShareLink',
   setup() {
     const avatarOptions: AvatarOptions[] = [
-      // {
-      //   key: 'yunhome',
-      //   src: 'https://yunkuangao.me/',
-      //   tooltip: '云之家',
-      //   icon: 'https://r2chevereto.yka.moe/avatar.jpeg',
-      // },
-      // {
-      //   key: 'yun-cloud-images',
-      //   src: 'https://yunkuangao.com/',
-      //   tooltip: '云图床',
-      //   icon: 'https://r2chevereto.yka.moe/avatar.jpeg',
-      // },
       {
         key: 'ray-js-note',
         src: 'https://note.youdao.com/s/ObWEe2BB',

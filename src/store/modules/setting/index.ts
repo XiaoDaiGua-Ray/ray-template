@@ -103,7 +103,7 @@ export const piniaSettingStore = defineStore(
       value: V[T],
       cb?: C,
     ) => {
-      if (Reflect.has(settingState, key)) {
+      if (Object.hasOwn(settingState, key)) {
         settingState[key] = value
       }
 

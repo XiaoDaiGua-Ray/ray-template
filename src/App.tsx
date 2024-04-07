@@ -3,8 +3,10 @@ import AppNaiveGlobalProvider from '@/app-components/provider/AppNaiveGlobalProv
 import AppStyleProvider from '@/app-components/provider/AppStyleProvider'
 import AppLockScreen from '@/app-components/app/AppLockScreen'
 import AppWatermarkProvider from '@/app-components/provider/AppWatermarkProvider'
-import AppGlobalSpin from '@/spin'
+import AppGlobalSpin from '@/app-components/app/AppGlobalSpin'
 import AppVersionProvider from '@/app-components/provider/AppVersionProvider'
+
+import { APP_GLOBAL_LOADING } from '@/app-config'
 
 export default defineComponent({
   name: 'App',
@@ -18,7 +20,7 @@ export default defineComponent({
         <AppGlobalSpin>
           {{
             default: () => <RouterView />,
-            description: () => 'loading...',
+            description: () => APP_GLOBAL_LOADING,
           }}
         </AppGlobalSpin>
       </AppNaiveGlobalProvider>

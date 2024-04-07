@@ -42,4 +42,3 @@ withDefaults(defineProps<TransitionProps>(), props)
 const { getKeepAliveInclude } = useKeepAliveGetters()
 const { setupKeepAlive, maxKeepAliveLength, keepAliveExclude } = APP_KEEP_ALIVE
 </script>
-./types

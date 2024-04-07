@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import PageResult from '@/error'
+import PageResult from '@/views/error'
 
 const ErrorPage404 = defineComponent({
   name: 'ErrorPage404',

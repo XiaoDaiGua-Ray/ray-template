@@ -19,7 +19,12 @@ export default defineConfig(({ mode }) => {
   } = config
 
   const __APP_CFG__ = {
-    pkg: { dependencies, devDependencies, name, version },
+    pkg: {
+      dependencies,
+      devDependencies,
+      name,
+      version,
+    },
     layout: {
       copyright,
       sideBarLogo,

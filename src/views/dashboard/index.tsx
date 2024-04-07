@@ -10,7 +10,7 @@ import {
   NH6,
 } from 'naive-ui'
 import { RIcon } from '@/components'
-import RayLink from '@/app-components/app/RayLink'
+import AppShareLink from '@/app-components/app/AppShareLink'
 
 const Dashboard = defineComponent({
   name: 'RDashboard',
@@ -123,7 +123,7 @@ const Dashboard = defineComponent({
           </NP>
         </NCard>
         <NCard title="友情链接">
-          <RayLink />
+          <AppShareLink />
         </NCard>
       </NFlex>
     )

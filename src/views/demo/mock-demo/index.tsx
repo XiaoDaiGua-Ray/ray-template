@@ -88,22 +88,16 @@ const MockDemo = defineComponent({
       email: null,
     })
 
-    const {
-      getPagination,
-      getPage,
-      getPageSize,
-      setItemCount,
-      getCallback,
-      setPage,
-      setPageSize,
-    } = usePagination(() => {
+    const [
+      paginationRef,
+      { getPage, getPageSize, setItemCount, getCallback, setPage, setPageSize },
+    ] = usePagination(() => {
       personFetchRun({
         page: getPage(),
         pageSize: getPageSize(),
         email: condition.email,
       })
     })
-    const paginationRef = getPagination()
     const {
       data: personData,
       loading: personLoading,
@@ -126,7 +120,6 @@ const MockDemo = defineComponent({
     return {
       personData,
       personLoading,
-      getPagination,
       columns,
       ...toRefs(condition),
       getCallback,

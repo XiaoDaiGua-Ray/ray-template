@@ -6,7 +6,7 @@ import type { AppRouteRecordRaw } from '@/router/types'
 const error404: AppRouteRecordRaw = {
   path: '/:catchAll(.*)',
   name: 'ErrorPage',
-  component: () => import('@/error/views/Error404/index'),
+  component: () => import('@/views/error/views/Error404'),
   meta: {
     i18nKey: t('menu.Error'),
     icon: 'error',

@@ -146,18 +146,21 @@ export const usePagination = <T extends AnyFC>(
    */
   const getCallback = callback
 
-  return {
-    updatePage,
-    updatePageSize,
-    getItemCount,
-    setItemCount,
-    getPage,
-    setPage,
-    getPageSize,
-    setPageSize,
-    getPagination,
-    getCallback,
-  }
+  return [
+    paginationRef as PaginationProps,
+    {
+      updatePage,
+      updatePageSize,
+      getItemCount,
+      setItemCount,
+      getPage,
+      setPage,
+      getPageSize,
+      setPageSize,
+      getPagination,
+      getCallback,
+    },
+  ] as const
 }
 
 export type UsePaginationReturn = ReturnType<typeof usePagination>

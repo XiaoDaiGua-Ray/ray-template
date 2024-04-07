@@ -28,6 +28,7 @@ const useModal = () => {
         return
       }
 
+      // 是否启用拖拽
       if (dad) {
         setupInteract(modalElement, {
           preset,
@@ -36,6 +37,7 @@ const useModal = () => {
         })
       }
 
+      // preset 为 card，fullscreen 为 true 时，最大化 modal
       if (fullscreen && preset === 'card') {
         setStyle(modalElement, {
           width: '100%',

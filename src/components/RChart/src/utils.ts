@@ -33,7 +33,7 @@ import type {
 export const setupChartTheme = () => {
   // 获取所有主题
   const themeRawModules: Record<string, ChartThemeRawModules> =
-    import.meta.glob('@/echart-themes/**/*.json', {
+    import.meta.glob('@/app-config/echart-themes/**/*.json', {
       eager: true,
     })
   const regex = /\/([^/]+)\.json$/

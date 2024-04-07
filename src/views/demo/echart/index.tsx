@@ -1,6 +1,6 @@
 import './index.scss'
 
-import { NCard, NSwitch, NFlex, NH2, NButton } from 'naive-ui'
+import { NCard, NSwitch, NFlex, NButton } from 'naive-ui'
 import { RChart } from '@/components'
 
 import { useChart } from '@/components'
@@ -78,11 +78,26 @@ const Echart = defineComponent({
           type: 'pie',
           radius: '50%',
           data: [
-            { value: 1048, name: 'Search Engine' },
-            { value: 735, name: 'Direct' },
-            { value: 580, name: 'Email' },
-            { value: 484, name: 'Union Ads' },
-            { value: 300, name: 'Video Ads' },
+            {
+              value: 1048,
+              name: 'Search Engine',
+            },
+            {
+              value: 735,
+              name: 'Direct',
+            },
+            {
+              value: 580,
+              name: 'Email',
+            },
+            {
+              value: 484,
+              name: 'Union Ads',
+            },
+            {
+              value: 300,
+              name: 'Video Ads',
+            },
           ],
           emphasis: {
             itemStyle: {
@@ -195,7 +210,7 @@ const Echart = defineComponent({
       if (isDispose()) {
         render()
       } else {
-        window.$message.warning('图表已经渲染')
+        window.$message.warning('不可以重复渲染图表~')
       }
     }
 
@@ -239,36 +254,10 @@ const Echart = defineComponent({
     return (
       <div class="echart">
         <NCard title="chart 组件">
-          <ul>
-            <li>
-              <h3>1. 当未获取到宽高时，组件会默认以 200*200 尺寸填充。</h3>
-            </li>
-            <li>
-              <h3>
-                2. 默认启用 autoChangeTheme，自动监听模板主题变化，如果设置为
-                false 则为 APP_THEME.echartTheme 配置项为渲染结果（RayTemplate
-                独有）
-              </h3>
-            </li>
-            <li>
-              <h3>3. 默认启用 watchOptions，自动监听配置项变化</h3>
-            </li>
-            <li>
-              <h3>4. 默认启用 nextTick，强制在下一队列渲染图标内容</h3>
-            </li>
-            <li>
-              <h3>5. 配置 setChartOptions 属性，可以定制化合并模式</h3>
-            </li>
-            <li>
-              <h3>
-                6. 默认启用 intersectionObserver
-                属性，只有元素在可见范围才会渲染图表，可以滚动查看效果
-              </h3>
-            </li>
-            <li>
-              <h3>7. useChart 方法</h3>
-            </li>
-          </ul>
+          <h3>该组件基于 ECharts, Vueuse 封装。默认做了最佳的优化封装实践。</h3>
+          <h3>
+            开箱即用的优化策略：节流更新图表、异步渲染、自动销毁、贴花、加载、主题、视窗区域渲染、自动更新尺寸等高级特性。
+          </h3>
         </NCard>
         <NCard title="预设 card 风格图表">
           <NFlex style={['padding: 18px 0']}>
@@ -297,7 +286,7 @@ const Echart = defineComponent({
                   if (isDispose2()) {
                     render2()
                   } else {
-                    window.$message.warning('图表已经渲染')
+                    window.$message.warning('不可以重复渲染图表~')
                   }
                 }}
               >

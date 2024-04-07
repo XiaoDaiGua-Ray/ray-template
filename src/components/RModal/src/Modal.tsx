@@ -110,7 +110,9 @@ export default defineComponent({
         {...$otherProps}
         {...$attrs}
       >
-        {{ ...$slots }}
+        {{
+          ...$slots,
+        }}
       </NModal>
     )
   },

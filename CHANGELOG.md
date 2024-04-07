@@ -1,5 +1,54 @@
 # CHANGE LOG
 
+## 4.7.5
+
+## Feats
+
+- 更新 `vite` 版本至 `5.2.8`
+- `appConfig` 配置项
+  - 新增 `LAYOUT_CONTENT_SPIN_WHEN_ROUTE_CHANGE` 配置项，用于配置路由切换时是否显示内容区域（LayoutContent）加载中状态
+  - 新增 `APP_GLOBAL_LOADING` 配置项，用于配置全局加载状态内容
+- `setVariable`, `updateSettingState` 方法，使用 `Object.hasOwn` 方法替代 `Reflect.has` 方法
+- `spin` 包整合至 `app-components` 下
+- `RayLink` 更名为 `AppShareLink`
+- `echart-themes` 包整合至 `app-config` 下
+- 优化 `GlobalSearch` 底部样式
+- `error` 包
+  - 整合至 `views` 下
+  - `PageResult` 组件新增 `goBack` 功能
+- `usePagination` 方法
+  - 重写该方法返回值
+- 调整 `MenuTag` 标签页尺寸为 `small`
+- `RChart` 组件
+  - 新增 `onFinally` 配置项，用于配置图表渲染完成后的回调
+  - 新增 `watchOptionsThrottleWait` 配置项，可以配置 `watchOptions` 触发频率，当你需要频繁更新图表数据时，可以配置该项，避免频繁渲染图表
+  - 移除 `throttleWait` 配置项
+- `__test__` 包
+  - 新增 `qr-code.spec.ts` 单元测试模块
+  - 新增 `modal.spec.ts` 单元测试模块
+- 针对 `eslint` 部分规则进行调整
+- 补充代码注释
+
+```ts
+import { usePagination } from '@/hooks'
+
+const [
+  paginationRef,
+  { updatePage, updatePageSize, getItemCount, setItemCount },
+] = usePagination(
+  () => {
+    // do something...
+  },
+  {
+    // ...options
+  },
+)
+```
+
+## Fixes
+
+- 修复 `useDayjs.spec` 单测模块测试失败问题
+
 ## 4.7.4
 
 对于 `RTable`, `RForm`, `RChart` 组件都新增了对应的 `useTable`, `useForm`, `useChart` 方法；让你在业务开发中抛弃注册 `ref` 实例方式调用组件方法。

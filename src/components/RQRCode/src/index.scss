@@ -28,10 +28,10 @@
 
 .ray-qrcode {
   &.ray-qrcode--loading img {
-    filter: blur(4px);
+    filter: blur(5px);
   }
 
   &.ray-qrcode--error img {
-    filter: blur(4px);
+    filter: blur(5px);
   }
 }

@@ -17,7 +17,7 @@
 
 import './index.scss'
 
-import { NModal } from 'naive-ui'
+import { RModal } from '@/components'
 import LockScreen from './components/LockScreen'
 import UnlockScreen from './components/UnlockScreen'
 
@@ -46,7 +46,7 @@ const AppLockScreen = defineComponent({
     const { getLockAppScreen } = this
 
     return (
-      <NModal
+      <RModal
         v-model:show={this.lockScreenSwitchRef}
         transformOrigin="center"
         show
@@ -59,7 +59,7 @@ const AppLockScreen = defineComponent({
         <div class="app-lock-screen__content">
           {!getLockAppScreen() ? <LockScreen /> : <UnlockScreen />}
         </div>
-      </NModal>
+      </RModal>
     )
   },
 })

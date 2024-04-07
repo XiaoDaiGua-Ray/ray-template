@@ -509,6 +509,7 @@ export default defineComponent({
                       onMouseleave: menuTagMouseleave.bind(this, curr),
                       [MENU_TAG_DATA]: curr.path,
                     }}
+                    size="small"
                   >
                     {{
                       default: () => (

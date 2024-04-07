@@ -7,7 +7,7 @@
 1. 配置、选择主题
 2. 点击下载主题
 3. 选择 json 类型，然后复制
-4. 在 src/echart-themes 包中创建对应的 json 文件，文件名为主题名称
+4. 在 src/app-config/echart-themes 包中创建对应的 json 文件，文件名为主题名称
 
 ## 注意
 

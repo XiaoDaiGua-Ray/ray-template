@@ -28,7 +28,11 @@ import { throttle } from 'lodash-es'
 import { completeSize, downloadBase64File, call, renderNode } from '@/utils'
 import { setupChartTheme } from './utils'
 import { APP_THEME } from '@/app-config'
-import { useResizeObserver, useIntersectionObserver } from '@vueuse/core'
+import {
+  useResizeObserver,
+  useIntersectionObserver,
+  watchThrottled,
+} from '@vueuse/core'
 import { RMoreDropdown } from '@/components'
 import { useSettingGetters } from '@/store'
 
@@ -94,7 +98,7 @@ export default defineComponent({
     let resizeThrottleReturn: DebouncedFunc<AnyFC> | null // resize 防抖方法实例
     let resizeObserverReturn: UseResizeObserverReturn | null // resize observer 实例
     const { echartTheme } = APP_THEME // 当前配置主题
-    let watchCallback: WatchStopHandle | null // watch props 回调
+    let watchThrottledCallback: WatchStopHandle | null // watch props 回调
     let echartInst: ECharts | null // 无代理响应式代理缓存 echart inst
     const moreDropDownOptions = computed<DropdownProps['options']>(() => [
       {
@@ -259,7 +263,13 @@ export default defineComponent({
           call(onError)
         }
 
-        console.error('[RChart]: render error: ', e)
+        throw new Error(`[RChart render error]: ${e}`)
+      } finally {
+        const { onFinally } = props
+
+        if (onFinally) {
+          call(onFinally)
+        }
       }
     }
 
@@ -321,7 +331,7 @@ export default defineComponent({
       // 注册事件
       if (props.autoResize) {
         if (!resizeThrottleReturn) {
-          resizeThrottleReturn = throttle(resizeChart, props.throttleWait)
+          resizeThrottleReturn = throttle(resizeChart, 500)
         }
 
         /**
@@ -417,7 +427,7 @@ export default defineComponent({
     watchEffect(() => {
       /** 监听 options 变化 */
       if (props.watchOptions) {
-        watchCallback = watch(
+        watchThrottledCallback = watchThrottled(
           () => props.options,
           (ndata) => {
             // 重新组合 options
@@ -433,10 +443,11 @@ export default defineComponent({
           {
             // 深度监听 options
             deep: true,
+            throttle: props.watchOptionsThrottleWait,
           },
         )
       } else {
-        watchCallback?.()
+        watchThrottledCallback?.()
       }
 
       // 监听 loading 变化
@@ -467,7 +478,7 @@ export default defineComponent({
     })
     onBeforeUnmount(() => {
       unmount()
-      watchCallback?.()
+      watchThrottledCallback?.()
     })
 
     return {

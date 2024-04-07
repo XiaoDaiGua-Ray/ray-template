@@ -16,6 +16,21 @@ import type { AppMenuConfig, AppKeepAlive } from '@/types'
 
 /**
  *
+ * 是否启用路由切换 spin 加载；
+ * 如果启用该配置项，啧会在路由更新时触发内容区域的加载状态，直到路由加载完成。
+ *
+ * 在 v4.7.5 版本后，默认关闭了该配置项。
+ */
+export const LAYOUT_CONTENT_SPIN_WHEN_ROUTE_CHANGE = false
+
+/**
+ *
+ * 全局 Spin 加载内容
+ */
+export const APP_GLOBAL_LOADING = 'loading'
+
+/**
+ *
  * 系统缓存
  *
  * 说明:

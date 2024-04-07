@@ -8,16 +8,19 @@ describe('usePagination', () => {
     pageSize: 10,
   }
 
-  const {
-    getItemCount,
-    getCallback,
-    getPage,
-    getPageSize,
-    getPagination,
-    setItemCount,
-    setPage,
-    setPageSize,
-  } = usePagination(() => {
+  const [
+    _,
+    {
+      getItemCount,
+      getCallback,
+      getPage,
+      getPageSize,
+      getPagination,
+      setItemCount,
+      setPage,
+      setPageSize,
+    },
+  ] = usePagination(() => {
     count++
   }, defaultOptions)
 

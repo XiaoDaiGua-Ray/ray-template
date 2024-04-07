@@ -54,7 +54,9 @@ module.exports = {
     '@typescript-eslint/no-non-null-asserted-optional-chain': 'off',
     '@typescript-eslint/consistent-type-imports': [
       'error',
-      { disallowTypeAnnotations: false },
+      {
+        disallowTypeAnnotations: false,
+      },
     ], // 强制导入类型显示标注 `import type xxx from 'xxx'`
     '@typescript-eslint/no-empty-interface': [
       'error',
@@ -89,7 +91,13 @@ module.exports = {
       },
     ], // 禁止不必要的 `bool` 转换
     'no-extra-parens': 0, // 禁止非必要的括号
-    semi: ['error', 'never', { beforeStatementContinuationChars: 'always' }],
+    semi: [
+      'error',
+      'never',
+      {
+        beforeStatementContinuationChars: 'always',
+      },
+    ],
     'no-fallthrough': 1, // 禁止 `switch` 穿透
     'no-func-assign': 2, // 禁止重复的函数声明
     'no-implicit-coercion': [

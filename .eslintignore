@@ -13,6 +13,6 @@ visualizer.html
 .env.*
 src/locales/lang
 .depcheckrc
-src/echart-themes/**/*.json
+src/app-config/echart-themes/**/*.json
 *.md
 src/icons/*.svg

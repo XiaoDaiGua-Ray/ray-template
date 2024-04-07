@@ -54,7 +54,9 @@ const GlobalSpin = defineComponent({
         show={this.spinValue}
         themeOverrides={this.overrides}
       >
-        {{ ...this.$slots }}
+        {{
+          ...this.$slots,
+        }}
       </NSpin>
     )
   },

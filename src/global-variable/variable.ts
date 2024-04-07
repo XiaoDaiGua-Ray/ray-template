@@ -65,9 +65,11 @@ export function setVariable<T extends VariableStateKey, FC extends AnyFC>(
   value: VariableState[T],
   cb?: FC,
 ) {
-  variableState[key] = value
+  if (Object.hasOwn(variableState, key)) {
+    variableState[key] = value
 
-  cb?.()
+    cb?.()
+  }
 }
 
 /**

@@ -36,13 +36,15 @@ const bindEllipsis = (el: HTMLElement, options: EllipsisBindingValue) => {
   const { line = 1, type = 'block', width, popoverText } = options
 
   if (width === void 0 || width === null) {
-    console.error(`[v-ellipsis]: Expected width, but got ${width}!`)
+    console.error(
+      `[v-ellipsis]: Expected width is string or number, but got typeof ${width}!`,
+    )
 
     return
   }
 
-  if (popoverText) {
-    el.setAttribute('title', el.textContent || '')
+  if (popoverText && el.textContent) {
+    el.setAttribute('title', el.textContent)
   }
 
   if (type === 'line') {

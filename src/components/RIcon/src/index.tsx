@@ -56,9 +56,17 @@ export default defineComponent({
         onClick={this.iconClick.bind(this)}
       >
         <svg
-          {...({ RayIconAttribute: 'ray-icon', ariaHidden: true } as object)}
+          {...({
+            RayIconAttribute: 'ray-icon',
+            ariaHidden: true,
+          } as object)}
         >
-          <use {...{ 'xlink:href': this.symbolId }} fill={this.color} />
+          <use
+            {...{
+              'xlink:href': this.symbolId,
+            }}
+            fill={this.color}
+          />
         </svg>
       </span>
     )

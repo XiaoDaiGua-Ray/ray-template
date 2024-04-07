@@ -236,6 +236,15 @@ const props = {
   /**
    *
    * @description
+   * chart 渲染结束后的回调函数，不论是否成功都会执行。
+   */
+  onFinally: {
+    type: [Function, Array] as PropType<MaybeArray<() => void>>,
+    default: null,
+  },
+  /**
+   *
+   * @description
    * 手动指定 chart 主题配置项。
    *
    * @default null
@@ -320,11 +329,14 @@ const props = {
   /**
    *
    * @description
-   * 节流等待时间。
+   * 是否开启 watchThrottle 监听 options 配置项更新。
+   * 该配置项适合在需要频繁更新 chart options 的场景下使用。
+   *
+   * 但是该配置项需要开启 watchOptions 才能生效。
    *
    * @default 500
    */
-  throttleWait: {
+  watchOptionsThrottleWait: {
     type: Number,
     default: 500,
   },

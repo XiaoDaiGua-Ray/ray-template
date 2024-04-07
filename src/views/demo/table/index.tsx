@@ -105,7 +105,10 @@ const TableView = defineComponent({
       },
     ]
     const actionColumns = ref<DataTableColumns<RowData>>(
-      [...baseColumns].map((curr) => ({ ...curr, width: 400 })),
+      [...baseColumns].map((curr) => ({
+        ...curr,
+        width: 400,
+      })),
     )
     const tableData = ref<RowData[]>([])
     const tableMenuOptions = [

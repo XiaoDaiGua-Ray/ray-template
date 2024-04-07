@@ -1,4 +1,5 @@
 import { useDayjs } from '../../src/hooks/web/useDayjs'
+import dayjs from 'dayjs'
 
 describe('useDayjs', () => {
   const {
@@ -37,13 +38,13 @@ describe('useDayjs', () => {
       formatStartOfDay,
       formatEndOfDay,
     } = getStartAndEndOfDay(formatOptions)
-    const _today = new Date().toLocaleDateString()
-    const _startOfDay = new Date(
-      new Date().setHours(0, 0, 0, 0),
-    ).toLocaleString()
-    const _endOfDay = new Date(
-      new Date().setHours(23, 59, 59, 999),
-    ).toLocaleString()
+    const _today = dayjs(new Date()).format(formatOptions2.format)
+    const _startOfDay = dayjs(new Date().setHours(0, 0, 0, 0)).format(
+      formatOptions.format,
+    )
+    const _endOfDay = dayjs(new Date().setHours(23, 59, 59, 999)).format(
+      formatOptions.format,
+    )
 
     expect(format(today, formatOptions2)).toBe(_today)
     expect(format(startOfDay, formatOptions)).toBe(_startOfDay)
