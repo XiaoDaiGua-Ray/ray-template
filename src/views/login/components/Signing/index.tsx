@@ -3,7 +3,6 @@ import { NForm, NFormItem, NInput, NButton } from 'naive-ui'
 import { setStorage } from '@/utils'
 import { useI18n, useAppRoot } from '@/hooks'
 import { APP_CATCH_KEY } from '@/app-config'
-import { setVariable, getVariableToRefs } from '@/global-variable'
 import { useSigningActions } from '@/store'
 
 import type { FormInst } from 'naive-ui'
@@ -16,7 +15,7 @@ export default defineComponent({
     const { t } = useI18n()
     const { signing } = useSigningActions()
     const { getRootPath } = useAppRoot()
-    const globalSpinning = getVariableToRefs('globalSpinning')
+    const loading = ref(false)
 
     const useSigningForm = () => ({
       name: 'Ray Admin',
@@ -43,20 +42,20 @@ export default defineComponent({
     const handleLogin = () => {
       loginFormRef.value?.validate((valid) => {
         if (!valid) {
-          setVariable('globalSpinning', true)
+          loading.value = true
 
           signing(signingForm.value)
             .then((res) => {
               if (res.code === 0) {
                 setTimeout(() => {
-                  setVariable('globalSpinning', false)
-
                   window.$message.success(`欢迎${signingForm.value.name}登陆~`)
 
                   setStorage(APP_CATCH_KEY.token, 'tokenValue')
                   setStorage(APP_CATCH_KEY.signing, res.data)
 
                   router.push(getRootPath.value)
+
+                  loading.value = false
                 }, 2 * 1000)
               }
             })
@@ -72,11 +71,11 @@ export default defineComponent({
       loginFormRef,
       handleLogin,
       rules,
-      globalSpinning,
+      loading,
     }
   },
   render() {
-    const { $t, globalSpinning } = this
+    const { $t, loading } = this
 
     return (
       <NForm model={this.signingForm} ref="loginFormRef" rules={this.rules}>
@@ -98,7 +97,7 @@ export default defineComponent({
           style={['width: 100%', 'margin-to: 18px']}
           type="primary"
           onClick={this.handleLogin.bind(this)}
-          loading={globalSpinning}
+          loading={loading}
         >
           {$t('views.login.index.Login')}
         </NButton>
