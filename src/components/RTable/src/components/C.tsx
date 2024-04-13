@@ -24,6 +24,7 @@ import { RIcon } from '@/components'
 import { config } from '../shared'
 import props from '../props'
 import { call } from '@/utils'
+import { cloneDeep, isEmpty } from 'lodash-es'
 
 import type { TreeOption, TreeDropInfo } from 'naive-ui'
 import type { C } from '../types'
@@ -109,11 +110,22 @@ export default defineComponent({
     },
   },
   setup(props) {
+    let tableColumnType: C
     // 深拷贝 columns 避免修改源数据
     const treeDataSource = computed({
       get: () => {
+        const cloneColumns = cloneDeep(props.columns).filter((curr) => {
+          if (curr.type) {
+            tableColumnType = curr as unknown as C
+
+            return false
+          }
+
+          return true
+        })
+
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return props.columns.map((curr, idx) => {
+        return cloneColumns.map((curr, idx) => {
           const { key, title, children, fixed, isResizable, ...args } =
             curr as C
           const isLeftFixedActivated = fixed === 'left'
@@ -228,6 +240,10 @@ export default defineComponent({
       dropPosition === 'before'
         ? nodeSiblings.splice(nodeIndex, 0, dragNode)
         : nodeSiblings.splice(nodeIndex + 1, 0, dragNode)
+
+      if (!isEmpty(tableColumnType)) {
+        nodeSiblings.unshift(tableColumnType as TreeOption)
+      }
 
       // 触发事件，更新树形数据源
       event(nodeSiblings as C[])

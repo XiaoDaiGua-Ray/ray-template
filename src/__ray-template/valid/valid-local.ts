@@ -92,10 +92,6 @@ const validDefaultDayjsLocal = () => {
  * 验证所有的 localConfig 相关的配置。
  */
 export const validLocal = async () => {
-  if (!__DEV__) {
-    return
-  }
-
   validSystemDefaultLocal()
   validSystemFallbackLocale()
   validDayjsLocalMap()

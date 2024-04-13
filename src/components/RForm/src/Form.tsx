@@ -19,7 +19,7 @@ import type { RFormInst } from './types'
 export default defineComponent({
   name: 'RForm',
   props,
-  setup(props) {
+  setup(props, { expose }) {
     const formRef = ref<RFormInst>()
 
     onMounted(() => {
@@ -30,6 +30,8 @@ export default defineComponent({
         call(onRegister, formRef.value)
       }
     })
+
+    expose()
 
     return {
       formRef,

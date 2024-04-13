@@ -15,13 +15,11 @@ import type { Ref } from 'vue'
 
 /**
  *
- * 动态获取 SiderBar 和 MenuTag 高度, 用于 LayoutContent 高度实时获取与渲染
- * 可以动态更改 MenuTag 样式后, 使得 LayoutContent 也可以准确的获取高度
- *
- * 基于 vueuse useElementSize 方法实现
- * 不建议滥用该方法, 对页面渲染有一定的影响
+ * @description
+ * 动态获取 SiderBar 和 MenuTag 高度，用于 LayoutContent 高度实时获取与渲染；
+ * 可以动态更改 MenuTag 样式后，使得 LayoutContent 也可以准确的获取高度。
  */
-export const layoutHeaderCssVars = (
+export const layoutCssVars = (
   element: [
     Ref<HTMLElement | undefined>,
     Ref<HTMLElement | undefined>,

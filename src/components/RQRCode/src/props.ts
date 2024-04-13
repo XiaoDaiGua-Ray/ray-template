@@ -305,6 +305,6 @@ const props = {
     type: [Function, Array] as PropType<MaybeArray<() => void>>,
     default: null,
   },
-}
+} as const
 
 export default props

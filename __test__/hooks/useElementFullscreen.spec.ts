@@ -49,6 +49,6 @@ describe('useElementFullscreen', async () => {
 
     await nextTick()
 
-    expect(div.style.transition).toBe('')
+    expect(!div.style.transition).not.toBe(true)
   })
 })

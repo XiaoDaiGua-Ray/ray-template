@@ -21,7 +21,7 @@ import { NSpin } from 'naive-ui'
 import { RTransitionComponent, RIcon } from '@/components'
 import AppRequestCancelerProvider from '@/app-components/provider/AppRequestCancelerProvider'
 
-import { getVariableToRefs } from '@/global-variable'
+import { getVariable } from '@/global-variable'
 import { useSettingGetters } from '@/store'
 import { useMaximize } from '@/hooks'
 import { LAYOUT_CONTENT_SPIN_WHEN_ROUTE_CHANGE } from '@/app-config'
@@ -39,9 +39,11 @@ export default defineComponent({
     const themeOverridesSpin: GlobalThemeOverrides['Spin'] = {
       opacitySpinning: '0',
     }
-    const globalMainLayoutLoad = getVariableToRefs('globalMainLayoutLoad')
-    const layoutContentMaximize = getVariableToRefs('layoutContentMaximize')
-    const layoutContentSpinning = getVariableToRefs('layoutContentSpinning')
+    const {
+      globalMainLayoutLoad,
+      layoutContentMaximize,
+      layoutContentSpinning,
+    } = getVariable()
 
     const setupLayoutContentSpin = () => {
       router.beforeEach(() => {

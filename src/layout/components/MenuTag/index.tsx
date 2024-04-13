@@ -41,8 +41,8 @@ import {
 } from 'naive-ui'
 import { RIcon, RMoreDropdown } from '@/components'
 
-import CloseRight from '@/icons/close_right.svg?component'
-import CloseLeft from '@/icons/close_left.svg?component'
+import CloseRight from '@/icons/directional/close_right.svg?component'
+import CloseLeft from '@/icons/directional/close_left.svg?component'
 
 import { useMenuGetters, useMenuActions } from '@/store'
 import { hasClass, uuid, queryElements } from '@/utils'

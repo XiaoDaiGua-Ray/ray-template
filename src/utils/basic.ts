@@ -5,9 +5,6 @@ import type {
   DownloadAnyFileDataType,
   BasicTypes,
   AnyFC,
-  PropertyName,
-  Recordable,
-  Many,
 } from '@/types'
 
 /**
@@ -192,11 +189,12 @@ export const downloadAnyFile = (
 
       link.addEventListener('load', () => {
         remove()
+
         return resolve()
       })
-
       link.addEventListener('error', (error) => {
         remove()
+
         return reject(error)
       })
 
@@ -206,103 +204,6 @@ export const downloadAnyFile = (
       return reject(error)
     }
   })
-}
-
-export function omit<T extends Recordable, K extends PropertyName[]>(
-  targetObject: T,
-  ...paths: K
-): Pick<T, Exclude<keyof T, K[number]>>
-
-export function omit<T extends object>(
-  object: T | null | undefined,
-  ...paths: Array<Many<PropertyName>>
-): Partial<T>
-
-/**
- *
- * @param targetObject 对象
- * @param targetKeys 待删除的 key
- *
- * @description
- * 删除对象中的指定 key，
- * 如果传递的 targetObject 为 null 或者 undefined，则返回空对象。
- *
- * @example
- * omit({ a: 1, b: 2, c: 3 }, 'a') // { b: 2, c: 3 }
- * omit({ a: 1, b: 2, c: 3 }, ['a', 'b']) // { c: 3 }
- * omit(null) // {}
- */
-export function omit<T extends Recordable, K extends keyof T>(
-  targetObject: T,
-  targetKeys: K | K[],
-  ...rest: K[]
-) {
-  if (!targetObject) {
-    return {}
-  }
-
-  let keys = Array.isArray(targetKeys) ? targetKeys : [targetKeys]
-
-  keys = [...keys, ...rest]
-
-  if (!keys.length) {
-    return targetObject
-  }
-
-  keys.forEach((key) => {
-    delete targetObject[key]
-  })
-
-  return targetObject
-}
-
-export function pick<T extends object>(
-  object: T | null | undefined,
-  ...paths: Array<Many<PropertyName>>
-): Partial<T>
-
-/**
- *
- * @param targetObject target object
- * @param targetKeys target keys
- *
- * @description
- * 从对象中提取指定的 key，
- * 如果传递的 targetObject 为 null 或者 undefined，则返回空对象。
- *
- * @example
- * pick({ a: 1, b: 2, c: 3 }, 'a') // { a: 1 }
- * pick({ a: 1, b: 2, c: 3 }, ['a', 'b']) // { a: 1, b: 2 }
- * pick({ a: 1, b: 2, c: 3 }, []) // {}
- * pick(null) // {}
- */
-export function pick<T extends object, K extends keyof T>(
-  targetObject: T,
-  targetKeys: K | K[],
-  ...rest: K[]
-) {
-  if (!targetObject) {
-    return {}
-  }
-
-  const keys = Array.isArray(targetKeys) ? targetKeys : [targetKeys]
-
-  if (!keys.length) {
-    return targetObject
-  }
-
-  const result = [...keys, ...rest].reduce(
-    (pre, curr) => {
-      if (Object.hasOwn(targetObject, curr)) {
-        pre[curr] = targetObject[curr]
-      }
-
-      return pre
-    },
-    {} as Pick<T, K>,
-  )
-
-  return result
 }
 
 /**

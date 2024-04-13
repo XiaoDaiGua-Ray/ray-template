@@ -13,7 +13,7 @@ import { NPopselect } from 'naive-ui'
 import { RIcon } from '@/components'
 
 import { call } from '@/utils'
-import { config } from '../shared'
+import { config, propsOptions } from '../shared'
 import props from '../props'
 
 import type { MaybeArray } from '@/types'
@@ -39,16 +39,6 @@ export default defineComponent({
   setup(props) {
     const popoverShow = ref(false)
     const propsPopselectValue = ref<PropsComponentPopselectKeys[]>([])
-    const propsOptions = [
-      {
-        label: '斑马条纹',
-        value: 'striped',
-      },
-      {
-        label: '表格边框',
-        value: 'bordered',
-      },
-    ]
 
     const updatePopselectValue = (value: PropsComponentPopselectKeys[]) => {
       const { onPopselectChange } = props
@@ -78,7 +68,6 @@ export default defineComponent({
 
     return {
       propsPopselectValue,
-      propsOptions,
       popoverShow,
       updatePopselectValue,
     }
@@ -87,7 +76,7 @@ export default defineComponent({
     return (
       <NPopselect
         v-model:value={this.propsPopselectValue}
-        options={this.propsOptions}
+        options={propsOptions}
         trigger="click"
         multiple
         onUpdateValue={this.updatePopselectValue.bind(this)}

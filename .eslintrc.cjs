@@ -202,5 +202,12 @@ module.exports = {
         message: 'Disallow using key as a custom attribute',
       },
     ],
+    'no-restricted-syntax': [
+      'error',
+      {
+        selector: "CallExpression[callee.property.name='deprecated']",
+        message: 'Using deprecated API is not allowed.',
+      },
+    ],
   },
 }

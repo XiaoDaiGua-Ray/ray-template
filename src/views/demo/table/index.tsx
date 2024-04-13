@@ -24,7 +24,7 @@ import {
 import { RCollapseGrid, RTable, RIcon, RMoreDropdown } from '@/components'
 
 import { uuid } from '@/utils'
-import { useTable } from '@/components'
+import { useTable, useCheckedRowKeys } from '@/components'
 
 import type { DataTableColumns } from 'naive-ui'
 
@@ -43,17 +43,41 @@ const TableView = defineComponent({
     // 使用以下 hooks 的时候，应该注意调用时机
     const [
       register,
-      { getTableInstance, clearFilters, clearSorter, scrollTo, filters, sort },
+      {
+        getTableInstance,
+        clearFilters,
+        clearSorter,
+        scrollTo,
+        filters,
+        sort,
+        downloadCsv,
+      },
     ] = useTable()
 
-    const baseColumns = [
+    const baseColumns: DataTableColumns<RowData> = [
+      {
+        type: 'selection',
+      },
       {
         title: 'Name',
         key: 'name',
+        filterOptions: [
+          {
+            label: 'John Brown',
+            value: 'John Brown',
+          },
+          {
+            label: 'Jim Green',
+            value: 'Jim Green',
+          },
+        ],
+        filter: (value, row) => row.name.includes(value.toString()),
       },
+
       {
         title: 'Age',
         key: 'age',
+        sorter: (a, b) => a.age - b.age,
       },
       {
         title: 'Address',
@@ -77,7 +101,6 @@ const TableView = defineComponent({
       {
         title: 'Remark',
         key: 'remark',
-        width: 100,
       },
       {
         title: 'Action',
@@ -105,9 +128,8 @@ const TableView = defineComponent({
       },
     ]
     const actionColumns = ref<DataTableColumns<RowData>>(
-      [...baseColumns].map((curr) => ({
+      [...baseColumns].map((curr, idx) => ({
         ...curr,
-        width: 400,
       })),
     )
     const tableData = ref<RowData[]>([])
@@ -126,12 +148,19 @@ const TableView = defineComponent({
       gridCollapsedRows: 1,
       tableLoading: false,
     })
+    const [
+      checkedRowKeys,
+      { checkedRowKeysBind, getKeys, getRows, clearKey, clearAll, selectKey },
+    ] = useCheckedRowKeys(tableData, {
+      rowKey: 'key',
+      onChange: (keys, rows, meta) => {},
+    })
 
     const createTableData = () => {
       for (let i = 0; i < 20; i++) {
         tableData.value.push({
           key: uuid(),
-          name: 'John Brown',
+          name: i % 2 === 0 ? 'John Brown' : 'Jim Green',
           age: i + 20,
           address: 'New York No. 1 Lake Park',
           tags: ['nice', 'developer'],
@@ -144,6 +173,24 @@ const TableView = defineComponent({
       window.$message.info(`${key}`)
     }
 
+    const clearSecondIndexRow = () => {
+      const { key } = tableData.value[1]
+
+      clearKey(key)
+    }
+
+    const selectAll = () => {
+      const keys = tableData.value.map((curr) => curr.key)
+
+      keys.forEach((curr) => selectKey(curr))
+    }
+
+    const selectSecondIndexRow = () => {
+      const { key } = tableData.value[1]
+
+      selectKey(key)
+    }
+
     createTableData()
 
     return {
@@ -154,16 +201,79 @@ const TableView = defineComponent({
       tableMenuOptions,
       menuSelect,
       register,
+      getKeys,
+      getRows,
+      clearKey,
+      clearAll,
+      checkedRowKeysBind,
+      checkedRowKeys,
+      clearSecondIndexRow,
+      selectAll,
+      selectSecondIndexRow,
+      clearFilters,
+      clearSorter,
+      scrollTo,
+      filters,
+      sort,
+      downloadCsv,
     }
   },
   render() {
-    const { register } = this
+    const {
+      register,
+      clearAll,
+      checkedRowKeysBind,
+      clearSecondIndexRow,
+      selectAll,
+      selectSecondIndexRow,
+      clearFilters,
+      clearSorter,
+      scrollTo,
+      filters,
+      sort,
+      downloadCsv,
+    } = this
 
     return (
       <NFlex vertical>
         <NCard title="RTable">
           基于 NDataTable 封装，继承该组件所有 props 属性。查看 RTable props
           文件即可查看该组件拓展项
+        </NCard>
+        <NCard title="useTable">
+          <NFlex align="center">
+            <NButton onClick={clearSorter.bind(this)}>清除所有排序</NButton>
+            <NButton onClick={clearFilters.bind(this)}>清除所有过滤</NButton>
+            <NButton
+              onClick={() => {
+                downloadCsv()
+              }}
+            >
+              下载 CSV
+            </NButton>
+            <div>其余的方法查看 Naive UI 官网，保持一致。</div>
+          </NFlex>
+        </NCard>
+        <NCard title="useCheckedRowKeys">
+          <NFlex vertical>
+            <NFlex>
+              <NButton onClick={selectAll.bind(this)}>选中所有行</NButton>
+              <NButton onClick={clearAll.bind(this)}>取消所有已选中行</NButton>
+              <NButton onClick={selectSecondIndexRow.bind(this)}>
+                选中第二行
+              </NButton>
+              <NButton onClick={clearSecondIndexRow.bind(this)}>
+                取消第二行选中
+              </NButton>
+            </NFlex>
+            <NFlex>
+              {this.checkedRowKeys.map((curr) => (
+                <NTag type="success" key={curr}>
+                  {curr}
+                </NTag>
+              ))}
+            </NFlex>
+          </NFlex>
         </NCard>
         <RCollapseGrid
           bordered={false}
@@ -204,6 +314,8 @@ const TableView = defineComponent({
           }}
         </RCollapseGrid>
         <RTable
+          v-model:checkedRowKeys={this.checkedRowKeys}
+          onUpdateCheckedRowKeys={checkedRowKeysBind.bind(this)}
           onRegister={register.bind(this)}
           scrollX={1000}
           title={
@@ -239,6 +351,8 @@ const TableView = defineComponent({
               }}
             </NPopover>,
           ]}
+          rowKey={(row) => row.key}
+          striped
         >
           {{
             tableFooter: () => '表格的底部内容区域插槽，有时候你可能会用上',

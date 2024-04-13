@@ -13,11 +13,11 @@
  *
  * directive name: copy
  *
+ * @description
  * 该指令用于处理复制，使用的时候必须传递正确的 value 值。
  *
  * 指令基于 clipboard.js 实现。
  *
- * 使用方式：
  * @example
  * <template>
  *  <button v-copy="copyText">复制</button>

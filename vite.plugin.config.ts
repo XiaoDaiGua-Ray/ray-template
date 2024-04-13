@@ -26,8 +26,8 @@ import mockDevServerPlugin from 'vite-plugin-mock-dev-server'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import unpluginViteComponents from 'unplugin-vue-components/vite'
 import { cdn as viteCDNPlugin } from 'vite-plugin-cdn2'
-import { cdnResolve } from './vite-helper'
 
+import { cdnResolve, svgIconResolve } from './vite-helper'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 
 import config from './vite.custom.config'
@@ -53,7 +53,7 @@ function onlyBuildOptions(mode: string): PluginOption[] {
   return [
     viteCDNPlugin({
       // modules 顺序 vue, vue-demi 必须保持当前顺序加载，否则会出现加载错误问题
-      resolve: cdnResolve,
+      resolve: cdnResolve(),
       modules: [
         {
           name: 'vue',
@@ -212,7 +212,7 @@ function baseOptions(mode: string): PluginOption[] {
       build: true,
     }),
     createSvgIconsPlugin({
-      iconDirs: [path.resolve(process.cwd(), 'src/icons')],
+      iconDirs: svgIconResolve(),
       symbolId: 'icon-[dir]-[name]',
       inject: 'body-last',
       customDomId: '__svg__icons__dom__',

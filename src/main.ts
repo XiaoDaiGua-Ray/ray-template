@@ -10,19 +10,9 @@ import { setupStore } from './store'
 import { setupI18n } from './locales'
 import { setupDayjs } from './dayjs'
 import { setupDirectives } from './directives'
-import { validAppRootPath, validLocal } from './__ray-template'
+import { setupRayTemplateCore } from './__ray-template'
 
 import type { App as AppType } from 'vue'
-
-/**
- *
- * @description
- * 该方法用于初始化 ray-template 配置。
- */
-const setupRayTemplateCore = async () => {
-  await validAppRootPath()
-  await validLocal()
-}
 
 /**
  *

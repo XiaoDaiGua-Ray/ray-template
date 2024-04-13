@@ -1,4 +1,4 @@
-import { prefixCacheKey } from '../../src/utils/app/prefixCacheKey'
+import { prefixCacheKey } from '../../src/utils/app/prefix-cache-key'
 
 describe('prefixCacheKey', () => {
   it('should return the key with the default prefix', () => {

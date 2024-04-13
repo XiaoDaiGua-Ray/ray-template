@@ -21,7 +21,7 @@ import './index.scss'
 
 import { NResult, NButton, NFlex } from 'naive-ui'
 
-import { redirectRouterToDashboard } from '@/router/utils/routerCopilot'
+import { redirectRouterToDashboard } from '@/router/utils'
 import { resultProps } from 'naive-ui'
 import { getStorage } from '@/utils'
 import { useVueRouter } from '@/hooks'

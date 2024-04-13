@@ -31,10 +31,10 @@ import {
 } from 'naive-ui'
 import { RIcon } from '@/components'
 
-import { queryElements, setClass, removeClass, pick } from '@/utils'
-import { throttle } from 'lodash-es'
+import { queryElements, setClass, removeClass } from '@/utils'
+import { throttle, pick } from 'lodash-es'
 import { useMenuActions } from '@/store'
-import { validMenuItemShow } from '@/router/utils/routerCopilot'
+import { validMenuItemShow } from '@/router/utils'
 import { useDevice } from '@/hooks'
 import { useEventListener } from '@vueuse/core'
 

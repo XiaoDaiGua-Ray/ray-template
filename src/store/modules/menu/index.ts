@@ -21,12 +21,15 @@
  *   - breadcrumbOptions
  *   - menuKey
  *   - menuTagOptions
+ *
+ * 备注:
+ *   - parseAndFindMatchingNodes: 如果需要反向查找完整的父子节点，可以使用该方法
  */
 
 import { NEllipsis } from 'naive-ui'
 
-import { setStorage, pick, equalRouterPath } from '@/utils'
-import { validRole, validMenuItemShow } from '@/router/utils/routerCopilot'
+import { setStorage, equalRouterPath } from '@/utils'
+import { validRole, validMenuItemShow } from '@/router/utils'
 import {
   parseAndFindMatchingNodes,
   updateDocumentTitle,
@@ -35,9 +38,10 @@ import {
   createMenuExtra,
 } from './utils'
 import { useI18n } from '@/hooks'
-import { getAppRawRoutes } from '@/router/appRouteModules'
+import { getAppRawRoutes } from '@/router/app-route-modules'
 import { useKeepAliveActions } from '@/store'
 import { APP_CATCH_KEY } from '@/app-config'
+import { pick } from 'lodash-es'
 
 import type { AppMenuOption, MenuTagOptions } from '@/types'
 import type { MenuState } from '@/store/modules/menu/types'

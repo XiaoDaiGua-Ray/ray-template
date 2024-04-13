@@ -211,11 +211,7 @@ export default defineComponent({
       uuidWrapper,
       wrapperRef,
     })
-    expose({
-      rTableInst,
-      uuidTable,
-      uuidWrapper,
-    })
+    expose()
 
     return {
       uuidWrapper,

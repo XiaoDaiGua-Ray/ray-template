@@ -11,7 +11,7 @@
 
 import { useMenuGetters, useMenuActions } from '@/store'
 import { useVueRouter, useAppRoot } from '@/hooks'
-import { pick } from '@/utils'
+import { pick } from 'lodash-es'
 
 import type { MenuTagOptions, Key, AppMenuOption } from '@/types'
 

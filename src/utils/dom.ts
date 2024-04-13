@@ -9,8 +9,8 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { omit } from './basic'
 import { useDomToImage, usePrint } from '@/hooks'
+import { omit } from 'lodash-es'
 
 import type { UsePrintOptions, UseDomToImageOptions } from '@/hooks'
 import type { BasicTarget } from '@/types'

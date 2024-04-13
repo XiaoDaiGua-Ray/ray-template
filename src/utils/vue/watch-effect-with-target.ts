@@ -9,7 +9,7 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
-import { effectDispose } from './effectDispose'
+import { effectDispose } from './effect-dispose'
 
 import type { WatchOptionsBase } from 'vue'
 import type { AnyFC } from '@/types'

@@ -1,5 +1,5 @@
 import Layout from '@/layout'
-import { appExpandRoutes } from './appRouteModules'
+import { appExpandRoutes } from './app-route-modules'
 
 export default [
   /**

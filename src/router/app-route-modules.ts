@@ -20,9 +20,9 @@
  * 如果不设置 order 属性, 则会默认排在前面
  */
 
-import { combineRawRouteModules } from '@/router/utils/setupHelper'
-import { orderRoutes } from '@/router/utils/setupHelper'
-import { expandRoutes } from '@/router/utils/expandRoutes'
+import { combineRawRouteModules } from '@/router/utils'
+import { orderRoutes } from '@/router/utils'
+import { expandRoutes } from '@/router/utils'
 
 /** 获取所有被合并与排序的路由 */
 export const getAppRawRoutes = () => orderRoutes(combineRawRouteModules())

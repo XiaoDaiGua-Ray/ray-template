@@ -21,7 +21,7 @@ import {
 } from './default'
 
 import { LAYOUT_CONTENT_REF } from '@/app-config'
-import { layoutHeaderCssVars } from '@/layout/layoutResize'
+import { layoutCssVars } from '@/layout/layout-css-vars'
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
 import { useSettingGetters } from '@/store'
 
@@ -34,7 +34,7 @@ export default defineComponent({
 
     const { getMenuTagSwitch, getCopyrightSwitch } = useSettingGetters()
     const { getLockAppScreen } = useAppLockScreen()
-    const cssVarsRef = layoutHeaderCssVars([
+    const cssVarsRef = layoutCssVars([
       layoutSiderBarRef,
       layoutMenuTagRef,
       layoutFooterRef,

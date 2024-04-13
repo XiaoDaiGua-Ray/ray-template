@@ -38,9 +38,9 @@
 
 import path from 'node:path'
 
-import { htmlTitlePlugin, mixinCSSPlugin } from './vite-helper/index'
-import { APP_THEME } from './src/app-config/designConfig'
-import { PRE_LOADING_CONFIG, SIDE_BAR_LOGO } from './src/app-config/appConfig'
+import { htmlTitlePlugin, mixinCss } from './vite-helper'
+import { APP_THEME } from './src/app-config/design-config'
+import { PRE_LOADING_CONFIG, SIDE_BAR_LOGO } from './src/app-config/app-config'
 
 import type { AppConfigExport } from '@/types'
 import type { BuildOptions } from 'vite'
@@ -63,10 +63,7 @@ const config: AppConfigExport = {
    *
    * 如果需要删除或者修改, 需要同步修改目录下的 css 文件
    */
-  mixinCSS: mixinCSSPlugin([
-    './src/styles/mixins.scss',
-    './src/styles/setting.scss',
-  ]),
+  mixinCSS: mixinCss(['./src/styles/mixins.scss', './src/styles/setting.scss']),
   /**
    *
    * 版权信息

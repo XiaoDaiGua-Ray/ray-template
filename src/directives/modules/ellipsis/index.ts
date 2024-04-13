@@ -2,11 +2,11 @@
  *
  * directive name: ellipsis
  *
+ * @description
  * 该指令用于处理文本溢出省略，使用的时候必须传递正确的 width 值。
  *
  * 其中 line 和 type 是可选的，line 默认为 1，type 默认为 block。
  *
- * 使用方式：
  * @example
  * <template>
  *  <div v-ellipsis="{ line: 2, width: 200 }">这是一段需要省略的文字</div>

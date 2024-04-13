@@ -25,5 +25,6 @@
   "Modal": "模态框",
   "ContextMenu": "右键菜单",
   "CacheDemo": "缓存工具函数",
-  "Form": "表单"
+  "Form": "表单",
+  "Segment": "分段器"
 }

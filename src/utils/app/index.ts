@@ -1,1 +1,1 @@
-export * from './prefixCacheKey'
+export * from './prefix-cache-key'

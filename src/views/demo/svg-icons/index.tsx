@@ -18,7 +18,7 @@ const PreviewSVGIcons = defineComponent({
   name: 'PreviewSVGIcons',
   setup() {
     const icons = ref<string[]>([])
-    const iconsModules = import.meta.glob('@/icons/**.svg')
+    const iconsModules = import.meta.glob('@/icons/**/**.svg')
 
     Object.keys(iconsModules).forEach((curr) => {
       const iconName = curr.match(/\/(\w+)\.svg/)![1]

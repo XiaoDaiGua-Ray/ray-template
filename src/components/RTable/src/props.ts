@@ -206,6 +206,6 @@ const props = {
     >,
     default: null,
   },
-}
+} as const
 
 export default props

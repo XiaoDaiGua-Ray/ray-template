@@ -19,13 +19,11 @@ import {
   NForm,
   NFormItem,
   NInputNumber,
+  NTag,
+  NAlert,
 } from 'naive-ui'
 
 import type { ConditionalPick } from '@/types'
-import type {
-  DebounceBindingOptions,
-  ThrottleBindingOptions,
-} from '@/directives/types'
 
 const RDirective = defineComponent({
   name: 'RDirective',
@@ -55,6 +53,42 @@ const RDirective = defineComponent({
     return (
       <NFlex>
         <NCard title="指令">该页面展示如何使用已封装好的指令</NCard>
+
+        <NCard title="水波纹">
+          <NFlex vertical>
+            <NAlert title="modifiers" type="info">
+              你可以手动显示的声明水波纹效果，默认为 circle。你可以手动的声明为
+              center。
+            </NAlert>
+            <NAlert title="vue template" type="success">
+              "v-ripple.center" 或者 "v-ripple.circle"。
+            </NAlert>
+            <NAlert title="tsx" type="success">
+              {JSON.stringify(`v-ripple={[true, ['center']]}`)} 或者
+              {JSON.stringify(`v-ripple={[true, ['circle']]}`)}。
+            </NAlert>
+            <NFlex>
+              <NTag v-ripple type="success" size="large">
+                水波纹效果的Tag
+              </NTag>
+              <NTag v-ripple type="warning" size="large">
+                水波纹效果的Tag
+              </NTag>
+              <NTag v-ripple type="error" size="large">
+                水波纹效果的Tag
+              </NTag>
+              <NButton v-ripple type="info">
+                水波纹效果的Button
+              </NButton>
+              <div
+                style="height: 20px; line-height: 20px;text-align: center; border: 1px solid; padding: 6px;"
+                v-ripple={[true, ['center']]}
+              >
+                原生元素绑定水波纹效果，并且手动绑定 modifiers 为 center
+              </div>
+            </NFlex>
+          </NFlex>
+        </NCard>
         <NCard title="文本省略">
           <NFlex vertical>
             <NCard title="单行省略">
@@ -68,12 +102,12 @@ const RDirective = defineComponent({
               </div>
             </NCard>
             <NCard title="多行省略">
-              <NFlex vertical>
-                <h3>
+              <NFlex vertical size="large">
+                <NAlert title="注意" type="warning">
                   该方法基于非标准属性实现（-webkit-line-clamp），可能会有兼容性问题，所以请谨慎使用。
                   详情参考：
                   <a href="https://caniuse.com/?search=line-clamp">can i use</a>
-                </h3>
+                </NAlert>
                 <div
                   v-ellipsis={{
                     type: 'line',

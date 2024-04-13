@@ -461,12 +461,7 @@ export default defineComponent({
       }
     })
 
-    expose({
-      echart: echartInstanceRef,
-      dispose: unmount,
-      render: mount,
-      isDispose,
-    })
+    expose()
 
     onBeforeMount(async () => {
       // 注册 echarts 组件与渲染器

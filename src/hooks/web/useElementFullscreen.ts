@@ -50,6 +50,13 @@ export interface UseElementFullscreenOptions {
    * @default null
    */
   backgroundColor?: string
+  /**
+   *
+   * 手动设定 transition 过度效果
+   *
+   * @default 'width 0.3s var(--r-bezier), height 0.3s var(--r-bezier)'
+   */
+  transition?: string
 }
 
 let currentZIndex = 999
@@ -92,8 +99,8 @@ export const useElementFullscreen = (
     exit: _exit,
     backgroundColor,
     zIndex,
+    transition = 'all 0.3s var(--r-bezier)',
   } = options ?? {}
-  const cacheStyle: Partial<CSSProperties> = {} // 缓存一些需要被覆盖的样式，例如: transition
   let isSetup = false
 
   const updateStyle = () => {
@@ -110,7 +117,7 @@ export const useElementFullscreen = (
             width: ${width.value}px !important;
             height: ${height.value}px !important;
             transform: translate(-${left}px, -${top}px) !important;
-            transition: all 0.3s var(--r-bezier);
+            transition: ${transition};
             z-index: ${
               isValueType<null>(zIndex, 'Null') ||
               isValueType<undefined>(zIndex, 'Undefined')
@@ -150,8 +157,7 @@ export const useElementFullscreen = (
         isAppend = true
       }
 
-      cacheStyle.transition = element.style.transition
-      element.style.transition = 'all 0.3s var(--r-bezier)'
+      element.style.transition = transition
 
       _enter?.()
     }
@@ -163,8 +169,6 @@ export const useElementFullscreen = (
     const element = unrefElement(target)
 
     if (element) {
-      ;(element as HTMLElement).style.transition = cacheStyle.transition ?? ''
-
       element.removeAttribute(ID_TAG)
     }
 
@@ -189,8 +193,6 @@ export const useElementFullscreen = (
     const element = unrefElement(target) as HTMLElement | null
 
     if (element) {
-      element.style.transition = cacheStyle.transition ?? ''
-
       element.removeAttribute(ID_TAG)
     }
 

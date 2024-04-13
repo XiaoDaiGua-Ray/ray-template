@@ -1,4 +1,3 @@
-import { useI18n } from '@/hooks'
 import { useSigningActions, useSettingActions } from '@/store'
 
 import type { IconOptionsFC, IconOptions } from './type'
@@ -101,28 +100,22 @@ export const createLeftIconOptions = (opts: IconOptionsFC) => {
  *   - false: 不展示搜索按钮
  */
 export const createRightIconOptions = (opts: IconOptionsFC) => {
-  const { isFullscreen, isTabletOrSmaller } = opts
-  const { t } = useI18n()
+  const { isTabletOrSmaller } = opts
 
   const basicOptions: IconOptions[] = [
     {
       name: 'fullscreen',
       size: 18,
-      tooltip: isFullscreen.value
-        ? t('headerTooltip.CancelFullScreen')
-        : t('headerTooltip.FullScreen'),
       eventKey: 'screen',
     },
     {
       name: 'github',
       size: 18,
-      tooltip: t('headerTooltip.Github'),
       eventKey: 'github',
     },
     {
       name: 'setting',
       size: 18,
-      tooltip: t('headerTooltip.Setting'),
       eventKey: 'setting',
     },
   ]

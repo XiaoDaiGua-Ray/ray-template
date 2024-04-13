@@ -1,0 +1,21 @@
+.global-search-btn__label {
+  height: 22px;
+  padding: 0 6px;
+  font-size: var(--n-font-size);
+  line-height: 1;
+  font-family: inherit;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--n-border-radius);
+  text-decoration: none;
+  display: inline-flex;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+  align-items: center;
+  border: var(--n-border);
+  transition: border-color 0.3s var(--n-bezier);
+}
+
+.global-search__btn-wrapper:hover .global-search-btn__label {
+  border: var(--n-border-hover);
+}

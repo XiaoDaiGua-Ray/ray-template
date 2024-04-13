@@ -19,6 +19,7 @@
   "alias-skip.allowedsuffix": ["ts", "tsx"],
   "alias-skip.rootpath": "package.json",
   "cSpell.words": [
+    "bezier",
     "Clickoutside",
     "commitmsg",
     "datetimerange",

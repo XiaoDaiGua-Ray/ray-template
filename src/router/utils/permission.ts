@@ -21,8 +21,8 @@
  */
 
 import { WHITE_ROUTES, APP_CATCH_KEY } from '@/app-config'
-import { redirectRouterToDashboard } from '@/router/utils/routerCopilot'
-import { validRole } from '@/router/utils/routerCopilot'
+import { redirectRouterToDashboard } from '@/router/utils'
+import { validRole } from '@/router/utils'
 import { isValueType, getStorage } from '@/utils'
 import { useAppRoot } from '@/hooks'
 

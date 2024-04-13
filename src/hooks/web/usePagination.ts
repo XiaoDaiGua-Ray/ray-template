@@ -1,7 +1,8 @@
-import { omit } from '@/utils'
+import { omit } from 'lodash-es'
 
 import type { AnyFC } from '@/types'
 import type { PaginationProps } from 'naive-ui'
+import type { Ref } from 'vue'
 
 type OmitKeys =
   | 'themeOverrides'
@@ -29,9 +30,6 @@ const defaultOptions: UsePaginationOptions = {
  *
  * @description
  * 便捷分页 hook。
- *
- * @warning
- * callback 暂不支持异步函数。
  */
 export const usePagination = <T extends AnyFC>(
   callback: T,
@@ -54,23 +52,23 @@ export const usePagination = <T extends AnyFC>(
   ])
   const methodsOptions = {
     onUpdatePage: (page: number) => {
-      paginationRef.page = page
+      paginationRef.value.page = page
 
       callback()
     },
     onUpdatePageSize: (pageSize: number) => {
-      paginationRef.pageSize = pageSize
-      paginationRef.page = 1
+      paginationRef.value.pageSize = pageSize
+      paginationRef.value.page = 1
 
       callback()
     },
   }
-  const paginationRef = reactive<PaginationProps>(
+  const paginationRef = ref<PaginationProps>(
     Object.assign({}, defaultOptions, omitOptions, methodsOptions),
   )
 
-  const updatePage = paginationRef.onUpdatePage as (page: number) => void
-  const updatePageSize = paginationRef.onUpdatePageSize as (
+  const updatePage = paginationRef.value.onUpdatePage as (page: number) => void
+  const updatePageSize = paginationRef.value.onUpdatePageSize as (
     pageSize: number,
   ) => void
 
@@ -79,7 +77,7 @@ export const usePagination = <T extends AnyFC>(
    * @description
    * 获取总条数。
    */
-  const getItemCount = () => paginationRef.itemCount
+  const getItemCount = () => paginationRef.value.itemCount
 
   /**
    *
@@ -89,7 +87,7 @@ export const usePagination = <T extends AnyFC>(
    * 设置总条数。
    */
   const setItemCount = (itemCount: number) => {
-    paginationRef.itemCount = itemCount
+    paginationRef.value.itemCount = itemCount
   }
 
   /**
@@ -97,7 +95,7 @@ export const usePagination = <T extends AnyFC>(
    * @description
    * 获取当前页页码。
    */
-  const getPage = () => paginationRef.page
+  const getPage = () => paginationRef.value.page
 
   /**
    *
@@ -117,7 +115,7 @@ export const usePagination = <T extends AnyFC>(
    * @description
    * 获取每页条数。
    */
-  const getPageSize = () => paginationRef.pageSize
+  const getPageSize = () => paginationRef.value.pageSize
 
   /**
    *
@@ -137,7 +135,7 @@ export const usePagination = <T extends AnyFC>(
    * @description
    * 获取分页配置，通常可以用来传递给 RTable 组件。
    */
-  const getPagination = () => paginationRef as UsePaginationOptions
+  const getPagination = () => paginationRef.value as UsePaginationOptions
 
   /**
    *
@@ -147,7 +145,7 @@ export const usePagination = <T extends AnyFC>(
   const getCallback = callback
 
   return [
-    paginationRef as PaginationProps,
+    paginationRef as Ref<UsePaginationOptions>,
     {
       updatePage,
       updatePageSize,

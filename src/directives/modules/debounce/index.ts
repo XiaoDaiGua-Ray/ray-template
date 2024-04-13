@@ -13,11 +13,12 @@
  *
  * directive name: debounce
  *
+ * @description
+ *
  * 该指令用于处理防抖，使用的时候必须传递正确的 func 值。
  *
  * 其中 trigger 和 wait 是可选的，trigger 默认为 click，wait 默认为 500。
  *
- * 使用方式：
  * @example
  * <template>
  *  <div v-debounce="{ func: () => console.log('debounce') }">这是一个防抖指令</div>

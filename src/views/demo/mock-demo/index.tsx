@@ -15,6 +15,7 @@ import { RCollapseGrid, RTable } from '@/components'
 import { useHookPlusRequest } from '@/axios'
 import { getPersonList } from '@/api/demo/mock/person'
 import { usePagination } from '@/hooks'
+import { useCheckedRowKeys } from '@/components'
 
 import type { Person } from '@/api/demo/mock/person'
 
@@ -22,6 +23,10 @@ const MockDemo = defineComponent({
   name: 'MockDemo',
   setup() {
     const columns = [
+      {
+        type: 'selection',
+        multiple: true,
+      },
       {
         title: 'id',
         key: 'id',
@@ -167,6 +172,7 @@ const MockDemo = defineComponent({
           v-model:columns={this.columns}
           pagination={this.paginationRef}
           remote
+          rowKey={(row) => row.id}
         />
       </NFlex>
     )

@@ -1,5 +1,44 @@
 # CHANGE LOG
 
+## 4.8.0
+
+全局破坏性更新。移除了很多包、方法，请谨慎更新。
+
+## Feats
+
+- 移除无意义依赖包
+- `RTable` 组件
+  - 强制约束使用 `useTable` 方法操作实例，移除 `expose` 暴露
+  - 新增 `useCheckedRowKeys` 方法，用于操作表格选中行，该方法仅适用于选中行操作（多选、单选）
+- `RForm`, `RChart` 强制约束使用对应 `useForm`, `useChart` 方法操作实例，移除 `expose` 暴露
+- 优化 `usePagination` 方法修改 `paginationRef` 值类型，使用 `Ref` 签名类型
+- `eslint` 规则新增禁用被标记弃用方法
+- 移除 `omit`, `pick` 方法，使用 `lodash-es` 包替代
+- 新增 `RSegment` 分段器组件
+  > 由于是基于 [NTabs](https://www.naiveui.com/zh-CN/dark/components/tabs) 组件二开，所以也继承了该组件的一些特性（bug）
+- `svg icon` 支持分包管理
+- `vite-helper` 包中所有方法进行拆分，约定按照功能模块进行拆分。如果该方法属于 `vite` 插件，按照 `xx-xx-plugin` 方式命名。
+- 统一所有模块的文件命名
+  - `class`, `hooks` 方法统一为小驼峰命名
+    > 示例: `MyClass`, `useMyHooks`
+  - `component` 的文件夹与组件名称统一为大驼峰命名
+    > 示例: `MyComponent`, `ChildComponent`
+  - `utils`, `custom function` 统一为蛇形命名
+    > 示例: `custom-function`, `custom-utils`
+- 新增 `v-ripple` 水波纹指令
+- 新增 `v-lazy-show` 惰性 `v-show` 指令
+- `GlobalSearchButton` 组件样式优化
+- `useElementFullscreen` 方法
+  - 移除缓存 `transition` 样式还原方式，使用 `options.transition` 方式配置，默认为 `all 0.3s var(--r-bezier)`
+- 优化 `LayoutContent` 网页最大化动画效果
+- `global-variable` 新增 `getVariable` 方法，允许解构获取全局响应式变量
+- 移除 `SiderBar` 组件的 `tip` 提示
+- 补充了一些注释
+
+## Fixes
+
+- 修复 `RTable C` 组件对于 `columns type` 项无法有效兼容问题
+
 ## 4.7.5
 
 ## Feats

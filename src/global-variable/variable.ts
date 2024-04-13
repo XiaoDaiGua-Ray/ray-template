@@ -45,8 +45,11 @@ const variableState = reactive({
 })
 
 export type VariableState = typeof variableState
-
 export type VariableStateKey = keyof VariableState
+
+type ReadonlyVariableState<T> = {
+  [K in keyof T & string]: Readonly<Ref<T[K]>>
+}
 
 /**
  *
@@ -83,4 +86,20 @@ export function setVariable<T extends VariableStateKey, FC extends AnyFC>(
  */
 export function getVariableToRefs<K extends VariableStateKey>(key: K) {
   return readonly(toRef<VariableState, K>(variableState, key))
+}
+
+/**
+ *
+ * @description
+ * 允许解构获取 variable 属性。并且返回一个只读的 ref。
+ *
+ * 该方法为了解决 getVariableToRefs 方法的解构问题，如果需要在一个地方获取很多 variable 属性，可以使用该方法。
+ *
+ * @example
+ * const { globalMainLayoutLoad } = getVariable()
+ */
+export function getVariable(): ReadonlyVariableState<typeof variableState> {
+  return {
+    ...toRefs(readonly(variableState)),
+  }
 }

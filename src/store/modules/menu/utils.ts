@@ -27,7 +27,8 @@ import type { TagProps } from 'naive-ui'
  * @param key 动态字段
  * @param value 匹配值
  *
- * @remark 检查是否为所需项
+ * @description
+ * 检查是否为所需项。
  */
 const isMatch = (
   node: AppMenuOption,
@@ -47,7 +48,8 @@ const isMatch = (
  * @param key 动态字段
  * @param value 匹配值
  *
- * @remark 匹配所有节点
+ * @description
+ * 匹配所有节点。
  */
 const findMatchingNodes = (
   options: AppMenuOption,
@@ -84,6 +86,10 @@ const findMatchingNodes = (
  * @param options 节点数组
  * @param key 动态字段
  * @param value 匹配值
+ *
+ * @description
+ * 反向查找匹配的节点，允许从子节点，查找到完整的父子节点。
+ * 查找的完整节点路径，会平铺展开，返回一个一维数组。
  */
 export const parseAndFindMatchingNodes = (
   options: AppMenuOption[],
@@ -107,8 +113,9 @@ export const parseAndFindMatchingNodes = (
  *
  * @param option menu option
  *
- * @remark 动态修改浏览器标题
- * @remark 会自动拼接 sideBarLogo.title
+ * @description
+ * 动态修改浏览器标题。
+ * 会自动拼接 sideBarLogo.title。
  */
 export const updateDocumentTitle = (option: AppMenuOption) => {
   const { breadcrumbLabel } = option
@@ -124,10 +131,8 @@ export const updateDocumentTitle = (option: AppMenuOption) => {
  *
  * @param option menu option
  *
- * @returns 创建菜单图标
- *
  * @description
- * 创建菜单图标，接受一个 AppMenuOption 类型的参数，或者一个包含 AppMenuOption 核心数据的对象
+ * 创建菜单图标，接受一个 AppMenuOption 类型的参数，或者一个包含 AppMenuOption 核心数据的对象。
  *
  * @example
  * createMenuIcon({ ...AppMenuOption })
@@ -161,8 +166,6 @@ export const createMenuIcon = (option: AppMenuOption) => {
 /**
  *
  * @param option menu option
- *
- * @returns 创建菜单额外内容
  *
  * @description
  * 创建菜单额外内容，接受一个 AppMenuOption 类型的参数，或者一个包含 AppMenuOption 核心数据的对象

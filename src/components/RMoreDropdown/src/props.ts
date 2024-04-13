@@ -21,6 +21,6 @@ const props = {
     type: String,
     default: 'default',
   },
-}
+} as const
 
 export default props

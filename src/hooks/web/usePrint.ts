@@ -1,5 +1,6 @@
 import print from 'print-js'
-import { unrefElement, omit } from '@/utils'
+import { unrefElement } from '@/utils'
+import { omit } from 'lodash-es'
 
 import type { BasicTarget } from '@/types'
 

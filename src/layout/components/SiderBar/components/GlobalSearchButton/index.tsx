@@ -9,6 +9,8 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
+import './index.scss'
+
 import { NButton, NFlex } from 'naive-ui'
 import { RIcon } from '@/components'
 
@@ -57,13 +59,19 @@ export default defineComponent({
     const { getShortcutKeyAboutSystem, click, $t } = this
 
     return (
-      <NButton bordered={false} onClick={click.bind(this)}>
+      <NButton
+        class="global-search__btn-wrapper"
+        bordered={false}
+        onClick={click.bind(this)}
+      >
         {{
           icon: () => <RIcon name="search" size="16" />,
           default: () => (
             <NFlex align="center">
               {$t('headerTooltip.Search')}
-              <NButton size="tiny">{getShortcutKeyAboutSystem()}</NButton>
+              <div class="global-search-btn__label">
+                {getShortcutKeyAboutSystem()}
+              </div>
             </NFlex>
           ),
         }}
