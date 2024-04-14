@@ -95,6 +95,11 @@ function onlyBuildOptions(mode: string): PluginOption[] {
           global: 'axios',
           relativeModule: 'axios.min.js',
         },
+        {
+          name: 'jsbarcode',
+          global: 'JsBarcode',
+          relativeModule: 'JsBarcode.all.min.js',
+        },
       ],
     }),
   ]
