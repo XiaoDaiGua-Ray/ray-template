@@ -1,5 +1,15 @@
 # CHANGE LOG
 
+## 4.8.1
+
+## Feats
+
+- 新增 `RBarcode` 条形码组件，基于 `JsBarcode` 二次封装
+
+## Fixes
+
+- 修复 `RSegment` 分段器设置 `popover` 后警告的问题
+
 ## 4.8.0
 
 全局破坏性更新。移除了很多包、方法，请谨慎更新。

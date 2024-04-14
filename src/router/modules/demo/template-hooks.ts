@@ -11,9 +11,6 @@ const axios: AppRouteRecordRaw = {
     i18nKey: t('menu.TemplateHooks'),
     icon: 'other',
     order: 1,
-    extra: {
-      label: 'new',
-    },
   },
 }
 

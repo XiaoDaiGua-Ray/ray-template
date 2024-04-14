@@ -10,7 +10,7 @@ const qrcode: AppRouteRecordRaw = {
   meta: {
     i18nKey: t('menu.QRCode'),
     icon: 'other',
-    order: 3,
+    order: 2,
   },
 }
 

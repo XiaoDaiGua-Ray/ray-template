@@ -32,6 +32,9 @@ dependencies:
   interactjs:
     specifier: 1.10.26
     version: 1.10.26
+  jsbarcode:
+    specifier: 3.11.6
+    version: 3.11.6
   lodash-es:
     specifier: ^4.17.21
     version: 4.17.21
@@ -85,6 +88,9 @@ devDependencies:
   '@types/dom-to-image':
     specifier: 2.6.7
     version: 2.6.7
+  '@types/jsbarcode':
+    specifier: 3.11.4
+    version: 3.11.4
   '@types/lodash-es':
     specifier: ^4.17.11
     version: 4.17.12
@@ -1579,6 +1585,12 @@ packages:
   /@types/js-cookie@3.0.6:
     resolution: {integrity: sha512-wkw9yd1kEXOPnvEeEV1Go1MmxtBJL0RR79aOTAApecWFVu7w0NNXNqhcWgvw2YgZDYadliXkl14pa3WXw5jlCQ==}
     dev: false
+
+  /@types/jsbarcode@3.11.4:
+    resolution: {integrity: sha512-VBcpTAnEMH0Gbh8JpV14CgOtJjCYjsvR2FoDRyoYPE0gUxtApf8N4c+HKEOyz/iiIZkMzqrzBA3XX7+KgKxxsA==}
+    dependencies:
+      '@types/node': 20.11.30
+    dev: true
 
   /@types/json-schema@7.0.15:
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
@@ -5287,6 +5299,10 @@ packages:
     dependencies:
       argparse: 2.0.1
     dev: true
+
+  /jsbarcode@3.11.6:
+    resolution: {integrity: sha512-G5TKGyKY1zJo0ZQKFM1IIMfy0nF2rs92BLlCz+cU4/TazIc4ZH+X1GYeDRt7TKjrYqmPfTjwTBkU/QnQlsYiuA==}
+    dev: false
 
   /jsesc@2.5.2:
     resolution: {integrity: sha512-OYu7XEzjkCQ3C5Ps3QIZsQfNpqoJyZZA99wd9aWd05NCtC5pWOkShK2mkL6HXQR6/Cy2lbNdPlZBpuQHXE63gA==}

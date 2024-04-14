@@ -1,0 +1,16 @@
+.r-barcode {
+  position: relative;
+  width: var(--r-barcode-width);
+  height: var(--r-barcode-height);
+  transition: filter 0.3s var(--r-bezier);
+
+  &.r-barcode--loading {
+    filter: blur(4px);
+  }
+}
+
+.r-barcode-spin,
+.r-barcode-spin .n-spin-content {
+  width: max-content !important;
+  height: max-content !important;
+}

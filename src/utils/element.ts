@@ -402,6 +402,10 @@ export const queryElements = <T extends Element = Element>(
  * 自动补全尺寸。
  */
 export const completeSize = (size: number | string, unit = 'px') => {
+  if (size === 'auto') {
+    return size
+  }
+
   if (typeof size === 'number') {
     return size.toString() + unit
   } else if (

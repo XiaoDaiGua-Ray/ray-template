@@ -4,24 +4,14 @@ import { LAYOUT } from '@/router/constant'
 import type { AppRouteRecordRaw } from '@/router/types'
 
 const rely: AppRouteRecordRaw = {
-  path: '/rely',
-  name: 'Rely',
-  component: LAYOUT,
+  path: 'rely-about',
+  name: 'RelyAbout',
+  component: () => import('@/views/demo/rely/views/rely-about/index'),
   meta: {
-    i18nKey: t('menu.Rely'),
+    i18nKey: t('menu.RelyAbout'),
     icon: 'rely',
     order: 999,
   },
-  children: [
-    {
-      path: 'rely-about',
-      name: 'RelyAbout',
-      component: () => import('@/views/demo/rely/views/rely-about/index'),
-      meta: {
-        i18nKey: t('menu.RelyAbout'),
-      },
-    },
-  ],
 }
 
 export default rely
