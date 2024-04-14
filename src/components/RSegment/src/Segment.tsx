@@ -40,7 +40,7 @@ const popoverSegmentTab = (option: RSegmentOptions) => {
     return (
       <NPopover>
         {{
-          trigger: iconSegmentTab(option),
+          trigger: () => iconSegmentTab(option),
           default: () => option.popover,
         }}
       </NPopover>
@@ -54,7 +54,7 @@ const popoverSegmentTab = (option: RSegmentOptions) => {
     return (
       <NPopover {...parameters}>
         {{
-          trigger: iconSegmentTab(option),
+          trigger: () => iconSegmentTab(option),
           default: () => label,
         }}
       </NPopover>
