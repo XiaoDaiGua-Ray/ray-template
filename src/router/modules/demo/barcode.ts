@@ -5,7 +5,6 @@ import type { AppRouteRecordRaw } from '@/router/types'
 
 const barcode: AppRouteRecordRaw = {
   path: 'barcode',
-  name: 'Barcode',
   component: () => import('@/views/demo/BarcodeDemo'),
   meta: {
     i18nKey: t('menu.Barcode'),

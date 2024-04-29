@@ -171,6 +171,7 @@ const removeStorage: RemoveStorageFC = (key, storageType, options) => {
     console.error(
       `[removeStorage]: Failed to remove stored data: key ${key} is empty or undefined`,
     )
+
     return
   }
 
@@ -185,6 +186,7 @@ const removeStorage: RemoveStorageFC = (key, storageType, options) => {
       : removeType === 'localStorage'
         ? localStorageKeys
         : sessionStorageKeys
+
     keys.forEach((curr) => {
       if (key === '__all__') {
         window.sessionStorage.removeItem(_prefix + curr)

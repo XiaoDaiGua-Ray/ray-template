@@ -1,5 +1,6 @@
 import type { RBarcodeRender, RBarcodeOptions, RBarcodeFormat } from './types'
 import type { PropType } from 'vue'
+import type { MaybeArray } from '@/types'
 
 const props = {
   /**
@@ -81,6 +82,57 @@ const props = {
   format: {
     type: String as PropType<RBarcodeFormat>,
     default: () => 'CODE128',
+  },
+  /**
+   *
+   * @description
+   * 是否监听 text 变化，当 text 变化时，会重新生成条形码。
+   *
+   * 但是，在条形码的使用场景中，text 变化的频率应该是比较低的，所以默认不开启。如果有需要，可以手动开启。
+   *
+   * @default false
+   */
+  watchText: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   *
+   * @description
+   * 条形码渲染成功时的回调函数。
+   *
+   * @default undefined
+   */
+  onSuccess: {
+    type: [Function, Array] as PropType<
+      MaybeArray<
+        (
+          currentText: string | undefined,
+          format: RBarcodeFormat,
+          option: RBarcodeOptions,
+        ) => void
+      >
+    >,
+  },
+  /**
+   *
+   * @description
+   * 条形码渲染失败时的回调函数。
+   *
+   * @default undefined
+   */
+  onError: {
+    type: [Function, Array] as PropType<MaybeArray<(err: Error) => void>>,
+  },
+  /**
+   *
+   * @description
+   * 条形码渲染结束后的回调函数，无论成功或失败都会触发。
+   *
+   * @default undefined
+   */
+  onFinally: {
+    type: [Function, Array] as PropType<MaybeArray<() => void>>,
   },
 } as const
 

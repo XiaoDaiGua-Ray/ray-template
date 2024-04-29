@@ -53,7 +53,7 @@ const readGIFAsArrayBuffer = (url: string): Promise<GIFBuffer> => {
 }
 
 export default defineComponent({
-  name: 'RayQRcode',
+  name: 'RQrcode',
   props,
   setup(props, ctx) {
     const { expose } = ctx

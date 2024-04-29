@@ -5,7 +5,6 @@ import type { AppRouteRecordRaw } from '@/router/types'
 
 const rely: AppRouteRecordRaw = {
   path: 'rely-about',
-  name: 'RelyAbout',
   component: () => import('@/views/demo/rely/views/rely-about/index'),
   meta: {
     i18nKey: t('menu.RelyAbout'),

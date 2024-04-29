@@ -1,4 +1,5 @@
 import { omit } from 'lodash-es'
+import { effectDispose } from '@/utils'
 
 import type { AnyFC } from '@/types'
 import type { PaginationProps } from 'naive-ui'
@@ -32,16 +33,10 @@ const defaultOptions: UsePaginationOptions = {
  * 便捷分页 hook。
  */
 export const usePagination = <T extends AnyFC>(
-  callback: T,
+  callback?: T,
   options?: UsePaginationOptions,
 ) => {
-  if (typeof callback !== 'function') {
-    throw new Error(
-      '[usePagination]: callback expected a function, but got ' +
-        typeof callback,
-    )
-  }
-
+  const callbackRef = ref(callback)
   const omitOptions = omit(options, [
     'on-update:page',
     'on-update:page-size',
@@ -54,13 +49,13 @@ export const usePagination = <T extends AnyFC>(
     onUpdatePage: (page: number) => {
       paginationRef.value.page = page
 
-      callback()
+      callbackRef.value?.()
     },
     onUpdatePageSize: (pageSize: number) => {
       paginationRef.value.pageSize = pageSize
       paginationRef.value.page = 1
 
-      callback()
+      callbackRef.value?.()
     },
   }
   const paginationRef = ref<PaginationProps>(
@@ -77,7 +72,7 @@ export const usePagination = <T extends AnyFC>(
    * @description
    * 获取总条数。
    */
-  const getItemCount = () => paginationRef.value.itemCount
+  const getItemCount = () => paginationRef.value.itemCount as number
 
   /**
    *
@@ -95,7 +90,7 @@ export const usePagination = <T extends AnyFC>(
    * @description
    * 获取当前页页码。
    */
-  const getPage = () => paginationRef.value.page
+  const getPage = () => paginationRef.value.page as number
 
   /**
    *
@@ -115,7 +110,7 @@ export const usePagination = <T extends AnyFC>(
    * @description
    * 获取每页条数。
    */
-  const getPageSize = () => paginationRef.value.pageSize
+  const getPageSize = () => paginationRef.value.pageSize as number
 
   /**
    *
@@ -144,6 +139,25 @@ export const usePagination = <T extends AnyFC>(
    */
   const getCallback = callback
 
+  /**
+   *
+   * @param callback 页码、页条数更新时的回调函数
+   *
+   * @description
+   * 手动设置回调函数。
+   *
+   * @example
+   * setCallback(() => {})
+   */
+  const setCallback = (callback: T) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    callbackRef.value = callback as any
+  }
+
+  effectDispose(() => {
+    callbackRef.value = void 0
+  })
+
   return [
     paginationRef as Ref<UsePaginationOptions>,
     {
@@ -157,6 +171,7 @@ export const usePagination = <T extends AnyFC>(
       setPageSize,
       getPagination,
       getCallback,
+      setCallback,
     },
   ] as const
 }

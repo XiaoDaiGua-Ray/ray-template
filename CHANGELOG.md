@@ -1,5 +1,65 @@
 # CHANGE LOG
 
+## 4.8.2
+
+破坏性更新！请仔细阅读更新日志！
+
+更新默认 `node` 版本为 `v20.12.0`。
+
+并且对于历史一些模块的分包进行了优化，现在更加语意化与清晰。
+
+重构 `axios` 拦截器，使用插件式设计思想，更加强大的拓展性、可维护性！
+
+## Feats
+
+- 更新默认 `node` 版本为 `v20.12.0`
+- `RBarcode` 相关
+  - 新增 `onSuccess`, `onError`, `onFinally` 三个渲染回调
+  - 新增 `watchText` 配置项，当 `text` 内容变化后，主动更新条形码，默认不启用
+- 更新 `vue-tsc` 版本至 `2.0.11`
+- `hooks` 包
+  - `template` 包
+    - 新增 `useContentScroll` 方法，用于滚动 `LayoutContent` 内容区域
+    - 新增 `useSiderScroll` 方法，用于滚动 `LayoutSider` 侧边栏区域，也就是菜单区域
+  - `web` 包
+    - `usePagination` 类型修复，所有 `get` 方法都会准确的返回对应的类型
+- `SiderBarLogo` 组件
+  - 支持未配置 `icon` 时，允许截取 `title` 第一个字符作为占位
+- `router` 包
+  - `router types` 包，补充类型，获得更好的类型提示与配置提示
+  - `combine-raw-route-modules` 方法现在会检查路由配置的 `name`, `path` 属性是否出现重复，如果重复，会直接抛出异常中断流程
+  - 移除 `name` 配置项作为必选项
+  - 标记 `components` 配置项为 `deprecated` 描述项
+  - 增强 `AppRouteRecordRaw` 类型，现在当你显式配置了 `meta.keepAlive` 为 `true` 的时候，会提示你 `name` 必填
+- `app-config` 包
+  - 提供 `MessageProver` 配置
+    - 限制最大消息数量为 5 条
+    - 默认不启用手动关闭消息功能
+- `RTable` 新增 `cardProps` 配置项，配置外层容器。
+- 更新 `vue` 版本至 `3.4.25`
+- 更新 `vite` 版本至 `5.2.10`
+- 更新 `vite-bundle-analyzer` 版本至 `0.9.4`，新增汇总模式
+- 移除 `naive-ui` 自动导入 `hooks`
+- `Search` 组件
+  - 优化分包逻辑
+  - 现在允许在搜索菜单初始位置进行上下键切换
+  - 优化搜索菜单样式
+- 新增 `positionSelectedMenuItem` 方法，用于定位选中菜单项
+- `hooks` 包
+  - `template`
+    - 新增 `useContentScroll` 方法，用于滚动 `LayoutContent` 内容区域
+    - 新增 `useSiderScroll` 方法，用于滚动 `LayoutSider` 侧边栏区域，也就是菜单区域
+- 重写 `AppAvatar` 组件
+- `axios` 包
+  - `inject` 包重命名为 `axios-interceptor`，并且拆分分包逻辑，现在以插件形式管理拦截器逻辑与注入逻辑
+- 新增 `padding-line-between-statements` 规范，强制语句之间的空行
+
+## Fixes
+
+- 修复 `SIDE_BAR_LOGO` 未配置 `icon` 时，侧边栏不显示的问题
+- 修复 `RTable` 在配置 `style.height` 时，样式会错乱的问题
+- 修复 `MenuTag` 在初始化位置时不能准确滚动到当前标签页的问题
+
 ## 4.8.1
 
 ## Feats

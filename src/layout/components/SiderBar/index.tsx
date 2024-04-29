@@ -19,7 +19,7 @@
 
 import './index.scss'
 
-import { NLayoutHeader, NFlex, NDropdown } from 'naive-ui'
+import { NLayoutHeader, NFlex, NDropdown, NButton, NScrollbar } from 'naive-ui'
 import { RIcon } from '@/components'
 import {
   TooltipIcon,
@@ -146,8 +146,9 @@ export default defineComponent({
           class="layout-header__method"
           align="center"
           justify="space-between"
+          wrap={false}
         >
-          <NFlex align="center">
+          <NFlex align="center" wrap={false}>
             {leftIconOptions.map((curr) => (
               <TooltipIcon
                 key={curr.name}
@@ -161,7 +162,7 @@ export default defineComponent({
             ))}
             {getBreadcrumbSwitch ? <Breadcrumb /> : null}
           </NFlex>
-          <NFlex align="center" size={[16, 0]}>
+          <NFlex justify="end" align="center" size={[0, 0]} wrap={false}>
             {isRenderVNode(
               <GlobalSearchButton
                 onClick={(e) => {
@@ -172,34 +173,40 @@ export default defineComponent({
               />,
             )}
             {rightTooltipIconOptions.map((curr) => (
-              <TooltipIcon
+              <NButton
+                class="override-button__layout"
+                quaternary
+                size="medium"
                 key={curr.name}
-                iconName={curr.name}
-                tooltipText={
-                  isRef(curr.tooltip) ? curr.tooltip.value : curr.tooltip
-                }
-                customClassName={curr.iconClass}
                 onClick={toolIconClick.bind(this, curr.name)}
-              />
+              >
+                <RIcon name={curr.name} size={18} cursor="pointer" />
+              </NButton>
             ))}
             <NDropdown
               options={LOCAL_OPTIONS}
               onSelect={(key: string | number) => updateLocale(String(key))}
               trigger="click"
             >
-              <RIcon
-                customClassName="layout-header__method--icon"
-                name="language"
-                size="18"
-                cursor="pointer"
-              />
+              <NButton quaternary class="override-button__layout">
+                <RIcon
+                  customClassName="layout-header__method--icon"
+                  name="language"
+                  size="18"
+                  cursor="pointer"
+                />
+              </NButton>
             </NDropdown>
             <NDropdown
               options={createAvatarOptions()}
               onSelect={avatarDropdownClick.bind(this)}
               trigger="click"
             >
-              <AppAvatar avatarSize="small" align="center" cursor="pointer" />
+              <AppAvatar
+                avatarSize={24}
+                spaceSize={[8, 0]}
+                class="override-button__layout"
+              />
             </NDropdown>
           </NFlex>
         </NFlex>

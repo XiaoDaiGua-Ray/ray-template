@@ -48,7 +48,7 @@
 - `多端适配：`支持 pc, phone, pad
 - `文档：`完善的文档
 - `Mock 数据：`内置 Mock 数据方案
-- `Axios 请求：`二次封装 axios 库，支持：取消、防抖、自动重复取消等功能
+- `Axios 请求：`采用插件式设计二次封装 axios 库拦截器，让拦截器更加灵活
 - `SVG：`内置 svg icon 解决方案
 - `Hooks：`基于模板特性封装的 hooks 让你更加方便的使用模板一些功能
 - `TypeScript：`提供完整的类型
@@ -57,12 +57,10 @@
 ## 👀 预览地址
 
 - [点击预览](https://xiaodaigua-ray.github.io/ray-template/#/)
-- [点击预览(加速地址)](https://ray-template.yunkuangao.com/#/)
 
 ## 📌 文档地址
 
 - [文档](https://xiaodaigua-ray.github.io/ray-template-doc/)
-- [文档(加速地址)](https://ray-template.yunkuangao.com/ray-template-doc/)
 
 ## 🔋 更新日志
 
@@ -90,9 +88,6 @@
 ```sh
 # github
 git clone https://github.com/XiaoDaiGua-Ray/ray-template.git
-
-# 如果你的下载速度很慢，可以切换到下面的代理地址
-git clone https://mirror.ghproxy.com/https://github.com/XiaoDaiGua-Ray/ray-template.git
 ```
 
 ### 拉取依赖

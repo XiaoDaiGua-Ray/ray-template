@@ -9,11 +9,11 @@ export default defineConfig((configEnv) =>
     defineConfig({
       plugins: [tsconfigPaths()],
       test: {
-        include: ['**/__test__/**/*.(spec).(ts|tsx)'],
+        include: ['./__test__/**/*.(spec).(ts|tsx)'],
         exclude: [
           ...configDefaults.exclude,
           '**/src/**',
-          '**/__test__/utils/**/*',
+          './__test__/utils/**/*',
         ],
         environment: 'happy-dom',
         globals: true,

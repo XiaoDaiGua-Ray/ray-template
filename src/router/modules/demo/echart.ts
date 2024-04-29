@@ -5,7 +5,6 @@ import type { AppRouteRecordRaw } from '@/router/types'
 
 const echart: AppRouteRecordRaw = {
   path: '/echart',
-  name: 'REchart',
   component: () => import('@/views/demo/echart/index'),
   meta: {
     i18nKey: t('menu.Echart'),

@@ -5,7 +5,6 @@ import type { AppRouteRecordRaw } from '@/router/types'
 
 const form: AppRouteRecordRaw = {
   path: '/form',
-  name: 'FormView',
   component: () => import('@/views/demo/form'),
   meta: {
     i18nKey: t('menu.Form'),

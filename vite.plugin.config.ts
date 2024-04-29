@@ -17,7 +17,7 @@ import viteVeI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import viteInspect from 'vite-plugin-inspect'
 import viteSvgLoader from 'vite-svg-loader'
 import vitePluginImp from 'vite-plugin-imp'
-import { analyzer } from 'vite-bundle-analyzer'
+import { analyzer, adapter } from 'vite-bundle-analyzer'
 import viteCompression from 'vite-plugin-compression'
 import { ViteEjsPlugin as viteEjsPlugin } from 'vite-plugin-ejs'
 import viteAutoImport from 'unplugin-auto-import/vite'
@@ -25,14 +25,18 @@ import viteEslint from 'vite-plugin-eslint'
 import mockDevServerPlugin from 'vite-plugin-mock-dev-server'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import unpluginViteComponents from 'unplugin-vue-components/vite'
-import { cdn as viteCDNPlugin } from 'vite-plugin-cdn2'
 
-import { cdnResolve, svgIconResolve } from './vite-helper'
+import { cdn as viteCDNPlugin } from 'vite-plugin-cdn2'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 
+import { cdnResolve, svgIconResolve } from './vite-helper'
 import config from './vite.custom.config'
 
 import type { PluginOption } from 'vite'
+
+function pathResolve(dir: string) {
+  return path.resolve(__dirname, dir)
+}
 
 // 仅适用于报告模式（report）
 function onlyReportOptions(mode: string): PluginOption[] {
@@ -41,10 +45,12 @@ function onlyReportOptions(mode: string): PluginOption[] {
   }
 
   return [
-    analyzer({
-      analyzerMode: 'server', // 以默认服务器代理打开文件
-      openAnalyzer: true, // 以默认服务器代理打开文件
-    }),
+    adapter(
+      analyzer({
+        analyzerMode: 'server', // 以默认服务器代理打开文件
+        openAnalyzer: true, // 以默认服务器代理打开文件
+      }),
+    ),
   ]
 }
 
@@ -107,7 +113,7 @@ function onlyBuildOptions(mode: string): PluginOption[] {
 
 // 仅适用于开发模式
 function onlyDevOptions(mode: string): PluginOption[] {
-  if (mode === 'development') {
+  if (mode !== 'development') {
     return []
   }
 
@@ -127,7 +133,7 @@ function baseOptions(mode: string): PluginOption[] {
       compositionOnly: true,
       forceStringify: true,
       defaultSFCLang: 'json',
-      include: [path.resolve(__dirname, '../locales/**')],
+      include: [pathResolve('../locales/**')],
     }),
     viteAutoImport({
       eslintrc: {
@@ -141,19 +147,7 @@ function baseOptions(mode: string): PluginOption[] {
         /\.md$/, // .md
       ],
       dts: './unplugin/auto-imports.d.ts',
-      imports: [
-        'vue',
-        'vue-router',
-        'pinia',
-        {
-          'naive-ui': [
-            'useDialog',
-            'useMessage',
-            'useNotification',
-            'useLoadingBar',
-          ],
-        },
-      ],
+      imports: ['vue', 'vue-router', 'pinia'],
       resolvers: [NaiveUiResolver()],
     }),
     unpluginViteComponents({

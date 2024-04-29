@@ -19,27 +19,26 @@
 
 import './index.scss'
 
-import { NAvatar, NFlex } from 'naive-ui'
+import { NAvatar, NButton, NFlex } from 'naive-ui'
 
-import { avatarProps, flexProps } from 'naive-ui'
+import { avatarProps } from 'naive-ui'
 import { APP_CATCH_KEY } from '@/app-config'
 import { getStorage } from '@/utils'
 
 import type { PropType } from 'vue'
-import type { AvatarProps, SpaceProps } from 'naive-ui'
+import type { AvatarProps, FlexProps } from 'naive-ui'
 import type { SigningCallback } from '@/store/modules/signing/types'
 
 const AppAvatar = defineComponent({
   name: 'AppAvatar',
   props: {
     ...avatarProps,
-    ...flexProps,
     cursor: {
       type: String,
       default: 'auto',
     },
     spaceSize: {
-      type: [String, Number] as PropType<SpaceProps['size']>,
+      type: [String, Number, Array] as PropType<FlexProps['size']>,
       default: 'medium',
     },
     avatarSize: {
@@ -49,39 +48,27 @@ const AppAvatar = defineComponent({
   },
   setup(props) {
     const signing = getStorage<SigningCallback>(APP_CATCH_KEY.signing)
-    const cssVars = computed(() => {
-      const vars = {
-        '--app-avatar-cursor': props.cursor,
-      }
-
-      return vars
-    })
 
     return {
       signing,
-      cssVars,
     }
   },
   render() {
-    const { signing, cssVars, spaceSize, avatarSize, $props } = this
+    const { signing, avatarSize, spaceSize, $props } = this
 
     return (
-      <NFlex
-        class="app-avatar"
-        {...this.$props}
-        style={cssVars}
-        size={spaceSize}
-      >
-        <NAvatar
-          // eslint-disable-next-line prettier/prettier, @typescript-eslint/no-explicit-any
-          {...($props as any)}
-          src={signing?.avatar}
-          objectFit="cover"
-          round
-          size={avatarSize}
-        />
-        <div class="app-avatar__name">{signing?.name}</div>
-      </NFlex>
+      <NButton quaternary strong>
+        <NFlex align="center" size={spaceSize}>
+          <NAvatar
+            {...($props as AvatarProps)}
+            src={signing?.avatar}
+            objectFit="cover"
+            round
+            size={avatarSize}
+          />
+          {signing?.name}
+        </NFlex>
+      </NButton>
     )
   },
 })

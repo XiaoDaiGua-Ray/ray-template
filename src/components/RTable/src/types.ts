@@ -6,10 +6,15 @@ import type {
   DataTableInst,
   DataTableColumn,
   DataTableBaseColumn,
+  CardProps,
 } from 'naive-ui'
-import type { VNode } from 'vue'
+import type { VNode, CSSProperties } from 'vue'
 import type { Recordable } from '@/types'
 import type { PrintDomOptions } from '@/utils/dom'
+
+export interface RTableCardProps extends CardProps {
+  style?: CSSProperties
+}
 
 export type TableActionIcon = string | (() => VNode)
 

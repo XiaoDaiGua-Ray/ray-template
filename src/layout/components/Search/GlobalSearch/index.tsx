@@ -28,10 +28,16 @@ import {
   NFlex,
   NSpin,
   NCard,
+  NText,
 } from 'naive-ui'
 import { RIcon } from '@/components'
 
-import { queryElements, setClass, removeClass } from '@/utils'
+import {
+  queryElements,
+  setClass,
+  removeClass,
+  positionSelectedMenuItem,
+} from '@/utils'
 import { throttle, pick } from 'lodash-es'
 import { useMenuActions } from '@/store'
 import { validMenuItemShow } from '@/router/utils'
@@ -91,6 +97,7 @@ export default defineComponent({
     let preSearchElementIndex = searchElementIndex
     const { isTabletOrSmaller } = useDevice()
     const loading = ref(false)
+    const ACTIVE_CLASS = 'content-item--active' // 激活样式 class name
 
     /** 初始化一些值 */
     const resetSearchSomeValue = () => {
@@ -175,6 +182,7 @@ export default defineComponent({
           modelShow.value = false
 
           changeMenuModelValue(option.fullPath, option)
+          setTimeout(positionSelectedMenuItem, 300)
         }
       }
     }
@@ -183,7 +191,6 @@ export default defineComponent({
     const autoFocusingSearchItem = () => {
       const currentOption = state.searchOptions[searchElementIndex] // 获取当前搜索项
       const preOption = state.searchOptions[preSearchElementIndex] // 获取上一搜索项
-      const activeClass = 'content-item--active' // 激活样式 class name
 
       if (currentOption) {
         nextTick().then(() => {
@@ -197,13 +204,13 @@ export default defineComponent({
           if (preSearchElementOptions?.length) {
             const [el] = preSearchElementOptions
 
-            removeClass(el, activeClass)
+            removeClass(el, ACTIVE_CLASS)
           }
 
           if (searchElementOptions?.length) {
             const [el] = searchElementOptions
 
-            setClass(el, activeClass)
+            setClass(el, ACTIVE_CLASS)
           }
         })
       }
@@ -225,13 +232,19 @@ export default defineComponent({
     /** 更新索引 */
     const updateIndex = (type: 'up' | 'down') => {
       if (type === 'up') {
-        searchElementIndex =
-          searchElementIndex - 1 < 0 ? 0 : searchElementIndex - 1
-      } else if (type === 'down') {
-        searchElementIndex =
-          searchElementIndex + 1 >= state.searchOptions.length
-            ? state.searchOptions.length - 1
-            : searchElementIndex + 1
+        searchElementIndex -= 1
+
+        if (searchElementIndex < 0) {
+          searchElementIndex = state.searchOptions.length - 1
+        }
+      }
+
+      if (type === 'down') {
+        searchElementIndex += 1
+
+        if (searchElementIndex >= state.searchOptions.length) {
+          searchElementIndex = 0
+        }
       }
     }
 
@@ -256,10 +269,12 @@ export default defineComponent({
           updateIndex('up')
 
           break
+
         case 'ArrowDown':
           updateIndex('down')
 
           break
+
         case 'Enter':
           // eslint-disable-next-line no-case-declarations
           const option = state.searchOptions[searchElementIndex]
@@ -386,7 +401,7 @@ export default defineComponent({
                                 justify="center"
                                 class="global-search__empty-content"
                               >
-                                没有搜索结果
+                                <NText>没有搜索结果</NText>
                               </NFlex>
                             ),
                           }}

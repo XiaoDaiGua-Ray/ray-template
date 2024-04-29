@@ -5,7 +5,6 @@ import type { AppRouteRecordRaw } from '@/router/types'
 
 const multiMenu: AppRouteRecordRaw = {
   path: '/multi',
-  name: 'MultiMenu',
   component: LAYOUT,
   meta: {
     i18nKey: t('menu.MultiMenu'),

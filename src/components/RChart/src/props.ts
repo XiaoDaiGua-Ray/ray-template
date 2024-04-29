@@ -161,7 +161,7 @@ const props = {
    * @default 100%
    */
   width: {
-    type: String,
+    type: [String, Number] as PropType<string | number>,
     default: '100%',
   },
   /**
@@ -174,7 +174,7 @@ const props = {
    * @default 100%
    */
   height: {
-    type: String,
+    type: [String, Number] as PropType<string | number>,
     default: '100%',
   },
   /**

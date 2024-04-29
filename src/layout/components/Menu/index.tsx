@@ -14,7 +14,7 @@ import './index.scss'
 import { NMenu, NLayoutSider, NDrawer } from 'naive-ui'
 import SiderBarLogo from './components/SiderBarLogo'
 
-import { APP_MENU_CONFIG } from '@/app-config'
+import { APP_MENU_CONFIG, LAYOUT_SIDER_REF } from '@/app-config'
 import { useDevice } from '@/hooks'
 import { getVariableToRefs, setVariable } from '@/global-variable'
 import { useMenuGetters, useMenuActions } from '@/store'
@@ -33,7 +33,16 @@ export default defineComponent({
 
     const modelMenuKey = computed({
       get: () => {
+        // eslint-disable-next-line vue/no-async-in-computed-properties
         nextTick().then(() => {
+          /**
+           *
+           * @description
+           * 禁用该 eslint 规则，因为在 computed 中使用了异步操作。
+           * 该规则只是为了避免异步的 computed get 获取值出现问题；
+           * 但是，在这里获取值的操作是同步行为，只是为了在获取值以后将对应菜单项展开；
+           * 所以，这里不会出现异步获取值的问题，所以可以禁用该规则。
+           */
           showMenuOption()
         })
 
@@ -55,14 +64,15 @@ export default defineComponent({
 
     /**
      *
-     * 手动展开当前激活菜单项
+     * @description
+     * 手动展开当前激活菜单项。
      */
     const showMenuOption = () => {
-      const key = modelMenuKey.value as string
+      const key = modelMenuKey.value
 
-      nextTick().then(() => {
-        menuRef.value?.showOption?.(key)
-      })
+      if (key !== void 0 && key !== null) {
+        nextTick(() => menuRef.value?.showOption?.(key))
+      }
     }
 
     const BasicMenu = () => (
@@ -73,6 +83,7 @@ export default defineComponent({
         collapsedWidth={APP_MENU_CONFIG.menuCollapsedWidth}
         onUpdateCollapsed={collapsedMenu.bind(this)}
         nativeScrollbar={false}
+        ref={LAYOUT_SIDER_REF}
       >
         <SiderBarLogo collapsed={getCollapsed.value} />
         <NMenu

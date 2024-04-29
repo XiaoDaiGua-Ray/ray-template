@@ -5,7 +5,6 @@ import type { AppRouteRecordRaw } from '@/router/types'
 
 const dashboard: AppRouteRecordRaw = {
   path: '/dashboard',
-  name: 'RDashboard',
   component: () => import('@/views/dashboard'),
   meta: {
     i18nKey: t('menu.Dashboard'),

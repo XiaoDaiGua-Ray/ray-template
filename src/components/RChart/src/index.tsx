@@ -437,6 +437,7 @@ export default defineComponent({
               props.setChartOptions,
               defaultChartOptions,
             )
+
             // 如果 options 发生变动更新 echarts
             echartInst?.setOption(options, setOpt)
           },

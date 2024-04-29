@@ -11,8 +11,17 @@
 
 import './index.scss'
 
-import { NEllipsis, NPopover } from 'naive-ui'
+import { NEllipsis, NTooltip } from 'naive-ui'
 import { RIcon } from '@/components'
+
+import { isValueType } from '@/utils'
+
+/**
+ *
+ * @description
+ * 侧边栏菜单 Logo 元素 ref。
+ */
+export const SIDER_BAR_LOGO = ref<HTMLElement>()
 
 export default defineComponent({
   name: 'SiderBarLogo',
@@ -36,7 +45,7 @@ export default defineComponent({
      *   - station: 模板内跳转
      *   - outsideStation: 新开页面跳转
      */
-    const handleSideBarLogoClick = () => {
+    const sideBarLogoClick = () => {
       if (sideBarLogo && sideBarLogo.url) {
         sideBarLogo.jumpType === 'station'
           ? router.push(sideBarLogo.url)
@@ -44,44 +53,72 @@ export default defineComponent({
       }
     }
 
-    const TemplateLogo = ({ cursor }: { cursor: string }) => (
-      <RIcon name={sideBarLogo!.icon as string} size="30" cursor={cursor} />
-    )
+    const TemplateLogo = ({ cursor }: { cursor: string }) => {
+      if (typeof sideBarLogo.icon === 'string') {
+        return (
+          <RIcon name={sideBarLogo!.icon as string} size="30" cursor={cursor} />
+        )
+      }
+
+      if (isValueType<object>(sideBarLogo.icon, 'Object')) {
+        return <sideBarLogo.icon />
+      }
+    }
 
     return {
       sideBarLogo,
-      handleSideBarLogoClick,
+      sideBarLogoClick,
       TemplateLogo,
     }
   },
   render() {
-    return this.sideBarLogo?.icon && this.sideBarLogo?.title ? (
+    const { sideBarLogo, collapsed, TemplateLogo, sideBarLogoClick } = this
+
+    return sideBarLogo?.title ? (
       <div
         class={[
           'ray-menu__logo',
-          this.sideBarLogo?.url ? 'ray-menu__logo-url' : null,
+          sideBarLogo?.url ? 'ray-menu__logo-url' : null,
         ]}
-        onClick={this.handleSideBarLogoClick.bind(this)}
+        onClick={sideBarLogoClick.bind(this)}
+        ref={SIDER_BAR_LOGO}
       >
-        {this.sideBarLogo?.icon ? (
-          this.collapsed ? (
-            <NPopover placement="right">
+        {sideBarLogo?.icon ? (
+          collapsed ? (
+            <NTooltip placement="right">
               {{
-                trigger: () => <this.TemplateLogo cursor="pointer" />,
-                default: () => this.sideBarLogo?.title,
+                trigger: () =>
+                  TemplateLogo({
+                    cursor: 'pointer',
+                  }),
+                default: () => sideBarLogo.title,
               }}
-            </NPopover>
+            </NTooltip>
           ) : (
-            <this.TemplateLogo cursor="pointer" />
+            TemplateLogo({
+              cursor: 'pointer',
+            })
           )
+        ) : collapsed ? (
+          <NTooltip placement="right">
+            {{
+              trigger: () => (
+                <h1 class="n-menu-item-content">
+                  {sideBarLogo.title[0] || null}
+                </h1>
+              ),
+              default: () => sideBarLogo.title,
+            }}
+          </NTooltip>
         ) : null}
         <h1
           class={[
-            !this.collapsed ? 'ray-menu__logo-title--open' : null,
+            !collapsed ? 'ray-menu__logo-title--open' : null,
             'ray-menu__logo-title',
+            'class="n-menu-item-content"',
           ]}
         >
-          <NEllipsis>{this.sideBarLogo?.title}</NEllipsis>
+          <NEllipsis>{sideBarLogo.title}</NEllipsis>
         </h1>
       </div>
     ) : null

@@ -13,6 +13,20 @@
 
 import type { LayoutSideBarLogo, PreloadingConfig } from '@/types'
 import type { AppMenuConfig, AppKeepAlive } from '@/types'
+import type { MessageProviderProps } from 'naive-ui'
+
+/**
+ *
+ * @description
+ * 配置 MessageProver 组件。
+ * 该配置项会影响到全局 Message 组件的默认配置。
+ *
+ * @see https://www.naiveui.com/zh-CN/dark/components/message#MessageProvider-Props
+ */
+export const MESSAGE_PROVIDER: MessageProviderProps = {
+  max: 5,
+  closable: false,
+}
 
 /**
  *
@@ -57,12 +71,12 @@ export const PRE_LOADING_CONFIG: PreloadingConfig = {
 
 /**
  *
- * icon: LOGO 图标, 依赖 `RIcon` 实现(如果为空则不会渲染图标)
+ * icon: LOGO 图标， 依赖 `RIcon` 实现(如果为空则不会渲染图标)；4.8.2 版本后支持 VNode
  * title: LOGO 标题
- * url: 点击跳转地址, 如果不配置该属性, 则不会触发跳转
- * jumpType: 跳转类型(station: 项目内跳转, outsideStation: 新页面打开)
+ * url: 点击跳转地址， 如果不配置该属性， 则不会触发跳转
+ * jumpType: 跳转类型(station: 项目内跳转， outsideStation: 新页面打开)
  *
- * 如果不设置该属性或者为空, 则不会渲染 LOGO
+ * 如果不设置该属性或者为空， 则不会渲染 LOGO
  */
 export const SIDE_BAR_LOGO: LayoutSideBarLogo | undefined = {
   icon: 'ray',

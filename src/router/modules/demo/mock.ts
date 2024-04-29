@@ -5,7 +5,6 @@ import type { AppRouteRecordRaw } from '@/router/types'
 
 const mockDemo: AppRouteRecordRaw = {
   path: '/mock-demo',
-  name: 'MockDemo',
   component: () => import('@/views/demo/mock-demo/index'),
   meta: {
     i18nKey: t('menu.Mock'),

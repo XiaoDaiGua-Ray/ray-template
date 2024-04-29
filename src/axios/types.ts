@@ -24,11 +24,26 @@ export interface RequestHeaderOptions {
 }
 
 export interface CancelConfig {
+  /**
+   *
+   * @description
+   * 是否需要取消该请求。
+   */
   cancel?: boolean
 }
 
 export interface AppRawRequestConfig<T = any> extends AxiosRequestConfig<T> {
+  /**
+   *
+   * @description
+   * 取消请求配置。
+   */
   cancelConfig?: CancelConfig
+  /**
+   *
+   * @description
+   * 标记该请求的配置项是否被标记了取消。
+   */
   __CANCELER_TAG_RAY_TEMPLATE__?: '__CANCELER_TAG_RAY_TEMPLATE__'
 }
 

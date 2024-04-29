@@ -7,9 +7,10 @@ import type {
 } from 'vite'
 import type { Recordable } from '@/types'
 import type { GlobalThemeOverrides } from 'naive-ui'
+import type { VNode } from 'vue'
 
 export interface LayoutSideBarLogo {
-  icon?: string
+  icon?: string | VNode
   title?: string
   url?: string
   jumpType?: 'station' | 'outsideStation'

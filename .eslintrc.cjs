@@ -209,5 +209,78 @@ module.exports = {
         message: 'Using deprecated API is not allowed.',
       },
     ],
+    'padding-line-between-statements': [
+      'error',
+      {
+        blankLine: 'always',
+        prev: '*',
+        next: 'return',
+      },
+      {
+        blankLine: 'always',
+        prev: '*',
+        next: 'function',
+      },
+      {
+        blankLine: 'always',
+        prev: ['const', 'let', 'var'],
+        next: '*',
+      },
+      {
+        blankLine: 'any',
+        prev: ['const', 'let', 'var'],
+        next: ['const', 'let', 'var'],
+      },
+      {
+        blankLine: 'always',
+        prev: 'directive',
+        next: '*',
+      },
+      {
+        blankLine: 'any',
+        prev: 'directive',
+        next: 'directive',
+      },
+      {
+        blankLine: 'always',
+        prev: ['case', 'default'],
+        next: '*',
+      },
+      {
+        blankLine: 'always',
+        prev: ['break'],
+        next: '*',
+      },
+      {
+        blankLine: 'always',
+        prev: ['import'],
+        next: '*',
+      },
+      {
+        blankLine: 'any',
+        prev: 'import',
+        next: 'import',
+      },
+      {
+        blankLine: 'always',
+        prev: '*',
+        next: 'export',
+      },
+      {
+        blankLine: 'any',
+        prev: 'export',
+        next: 'export',
+      },
+      {
+        blankLine: 'always',
+        prev: ['function'],
+        next: '*',
+      },
+      {
+        blankLine: 'always',
+        prev: ['class'],
+        next: '*',
+      },
+    ],
   },
 }

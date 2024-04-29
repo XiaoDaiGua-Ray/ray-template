@@ -10,7 +10,15 @@
  */
 
 import { RBarcode } from '@/components'
-import { NAlert, NCard, NFlex, NGrid, NGridItem, NSwitch } from 'naive-ui'
+import {
+  NAlert,
+  NCard,
+  NFlex,
+  NGrid,
+  NGridItem,
+  NInput,
+  NSwitch,
+} from 'naive-ui'
 
 export default defineComponent({
   name: 'BarcodeDemo',
@@ -19,10 +27,12 @@ export default defineComponent({
       width: 4,
     }
     const loading = ref(false)
+    const text = ref('RayTemplate')
 
     return {
       baseOptions,
       loading,
+      text,
     }
   },
   render() {
@@ -116,6 +126,14 @@ export default defineComponent({
                 }}
               </NSwitch>
               <RBarcode text="RayTemplate" loading={this.loading} />
+            </NFlex>
+          </NCard>
+        </NGridItem>
+        <NGridItem span={1}>
+          <NCard title="watchText 主动监听 text 变化">
+            <NFlex vertical>
+              <NInput v-model:value={this.text} />
+              <RBarcode text={this.text} watchText />
             </NFlex>
           </NCard>
         </NGridItem>

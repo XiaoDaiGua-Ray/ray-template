@@ -28,6 +28,7 @@ import type { C as CType, PropsComponentPopselectKeys } from './types'
 
 export default defineComponent({
   name: 'RTable',
+  inheritAttrs: false,
   props,
   setup(props, ctx) {
     const { expose, emit } = ctx
@@ -241,15 +242,18 @@ export default defineComponent({
       $slots,
       propsPopselectValue,
     } = this
+    const { class: className } = $attrs
     const { tool, combineRowProps, contextMenuSelect } = this
 
     return (
       <NCard
-        ref="wrapperRef"
-        bordered={wrapperBordered}
+        {...$props.cardProps}
         {...{
           id: uuidWrapper,
         }}
+        ref="wrapperRef"
+        bordered={wrapperBordered}
+        class={className}
       >
         {{
           default: () => (

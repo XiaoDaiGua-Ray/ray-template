@@ -158,7 +158,7 @@ const MockDemo = defineComponent({
                 </>
               ),
               action: () => (
-                <NButton type="primary" onClick={this.getCallback.bind(this)}>
+                <NButton type="primary" onClick={this.getCallback?.bind(this)}>
                   搜索
                 </NButton>
               ),

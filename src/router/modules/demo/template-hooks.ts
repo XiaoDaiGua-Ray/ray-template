@@ -5,7 +5,6 @@ import type { AppRouteRecordRaw } from '@/router/types'
 
 const axios: AppRouteRecordRaw = {
   path: '/template-hooks',
-  name: 'TemplateHooks',
   component: () => import('@/views/demo/template-hooks/index'),
   meta: {
     i18nKey: t('menu.TemplateHooks'),

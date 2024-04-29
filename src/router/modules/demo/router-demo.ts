@@ -5,7 +5,6 @@ import type { AppRouteRecordRaw } from '@/router/types'
 
 const routerDemo: AppRouteRecordRaw = {
   path: '/router-demo',
-  name: 'RouterDemoRoot',
   component: LAYOUT,
   meta: {
     i18nKey: t('menu.RouterDemo'),
@@ -15,7 +14,6 @@ const routerDemo: AppRouteRecordRaw = {
   children: [
     {
       path: 'router-demo-home',
-      name: 'RouterDemoHome',
       component: () =>
         import('@/views/demo/router-demo/router-demo-home/index'),
       meta: {
@@ -24,7 +22,6 @@ const routerDemo: AppRouteRecordRaw = {
     },
     {
       path: 'router-demo-detail',
-      name: 'RouterDemoDetail',
       component: () =>
         import('@/views/demo/router-demo/router-demo-detail/index'),
       meta: {

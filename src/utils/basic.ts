@@ -162,6 +162,7 @@ export const downloadAnyFile = (
     try {
       if (typeof data === 'string') {
         downloadBase64File(data, fileName)
+
         return resolve()
       }
 
@@ -200,6 +201,8 @@ export const downloadAnyFile = (
 
       document.body.appendChild(link)
       link.click()
+
+      return resolve()
     } catch (error) {
       return reject(error)
     }

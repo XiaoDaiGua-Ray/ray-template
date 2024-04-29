@@ -47,6 +47,7 @@ const CalculatePrecision = defineComponent({
         )
       })
     }
+
     updateDistributeValue()
 
     return {

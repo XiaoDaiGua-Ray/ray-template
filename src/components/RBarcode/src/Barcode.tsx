@@ -15,7 +15,9 @@ import { NSpin } from 'naive-ui'
 
 import barcode from 'jsbarcode'
 import props from './props'
-import { completeSize } from '@/utils'
+import { completeSize, call } from '@/utils'
+
+import type { WatchStopHandle } from 'vue'
 
 export default defineComponent({
   name: 'RBarcode',
@@ -30,19 +32,53 @@ export default defineComponent({
 
       return cssVar
     })
+    let watchStop: WatchStopHandle
 
     const barcodeRender = () => {
-      const { format, text = '', options } = props
+      try {
+        const { format, text, options, onSuccess } = props
 
-      const assignOptions = Object.assign({}, options, {
-        format,
-      })
+        const assignOptions = Object.assign({}, options, {
+          format,
+        })
 
-      barcode(barcodeRef.value, text, assignOptions)
+        barcode(
+          barcodeRef.value,
+          text !== void 0 && text !== null ? text.toString() : '',
+          assignOptions,
+        )
+
+        if (onSuccess) {
+          call(onSuccess, text, format, options)
+        }
+      } catch (e) {
+        const { onError } = props
+
+        if (onError) {
+          call(onError, e as Error)
+        }
+      } finally {
+        const { onFinally } = props
+
+        if (onFinally) {
+          call(onFinally)
+        }
+      }
     }
+
+    watchEffect(() => {
+      if (props.watchText) {
+        watchStop = watch(() => props.text, barcodeRender)
+      } else {
+        watchStop?.()
+      }
+    })
 
     onMounted(() => {
       barcodeRender()
+    })
+    onBeforeUnmount(() => {
+      watchStop?.()
     })
 
     return {

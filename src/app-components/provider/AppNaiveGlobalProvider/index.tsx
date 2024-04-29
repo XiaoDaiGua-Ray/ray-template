@@ -31,6 +31,7 @@ import {
 
 import { getNaiveLocales } from '@/locales/utils'
 import { useSettingGetters } from '@/store'
+import { MESSAGE_PROVIDER } from '@/app-config'
 
 export default defineComponent({
   name: 'GlobalProvider',
@@ -92,7 +93,7 @@ export default defineComponent({
         dateLocale={localePackage.dateLocal}
       >
         <NLoadingBarProvider>
-          <NMessageProvider>
+          <NMessageProvider {...MESSAGE_PROVIDER}>
             <NDialogProvider>
               <NModalProvider>
                 <NNotificationProvider>

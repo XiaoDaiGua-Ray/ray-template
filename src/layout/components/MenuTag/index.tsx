@@ -381,6 +381,11 @@ export default defineComponent({
             positionMenuTag()
           }
         }
+
+        // 初始化时，滚动到当前激活标签页
+        if (odata === void 0) {
+          positionMenuTag()
+        }
       },
       {
         immediate: true,

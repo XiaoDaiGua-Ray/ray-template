@@ -74,15 +74,18 @@ export default defineComponent({
       globalMainLayoutLoad,
       layoutContentMaximize,
       layoutContentSpinning,
+      maximize,
+      spinning,
+      themeOverridesSpin,
+      getContentTransition,
     } = this
-    const { maximize } = this
 
     return (
       <NSpin
-        show={this.spinning || !globalMainLayoutLoad || layoutContentSpinning}
+        show={spinning || !globalMainLayoutLoad || layoutContentSpinning}
         description="loading..."
         size="large"
-        themeOverrides={this.themeOverridesSpin}
+        themeOverrides={themeOverridesSpin}
         class={[
           layoutContentMaximize
             ? 'r-layout-full__viewer-content--maximize'
@@ -105,7 +108,7 @@ export default defineComponent({
         {globalMainLayoutLoad ? (
           <RTransitionComponent
             class="content-wrapper"
-            transitionPropName={this.getContentTransition + '-transform'}
+            transitionPropName={getContentTransition + '-transform'}
           />
         ) : null}
       </NSpin>

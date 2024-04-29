@@ -11,7 +11,6 @@ import type { AppRouteRecordRaw } from '@/router/types'
 
 const scrollReveal: AppRouteRecordRaw = {
   path: '/scroll-reveal',
-  name: 'ScrollReveal',
   component: () => import('@/views/demo/scroll-reveal/index'),
   meta: {
     i18nKey: t('menu.scrollReveal'),

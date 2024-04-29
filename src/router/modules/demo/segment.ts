@@ -5,7 +5,6 @@ import type { AppRouteRecordRaw } from '@/router/types'
 
 const segment: AppRouteRecordRaw = {
   path: '/segment',
-  name: 'RAxios',
   component: () => import('@/views/demo/segment'),
   meta: {
     i18nKey: t('menu.Segment'),

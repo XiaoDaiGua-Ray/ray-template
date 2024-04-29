@@ -18,11 +18,21 @@ import type {
   DownloadCsvTableOptions,
   PrintTableOptions,
   RTableInst,
+  RTableCardProps,
 } from './types'
 import type { Recordable } from '@/types'
 
 const props = {
   ...dataTableProps,
+  /**
+   *
+   * @description
+   * 配置表格外层容器 props，也就是 NCard 的配置项。
+   */
+  cardProps: {
+    type: Object as PropType<RTableCardProps>,
+    default: () => ({}),
+  },
   /**
    *
    * @description

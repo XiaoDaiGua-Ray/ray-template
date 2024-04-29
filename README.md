@@ -48,7 +48,7 @@ A `completely free`, `efficient`, `feature complete` and based on vite5. x & ts(
 - `Multi-terminal adaptation:` support pc, phone, pad
 - `Documentation:` complete documentation
 - `Mock data:` built-in Mock data solution
-- `Axios request:` secondary encapsulation of axios library, support: cancel, jitter, automatic repeat cancellation and other functions
+- `Axios request:` the plug-in design is used to encapsulate the axios library interceptor twice, which makes the interceptor more flexible
 - `SVG:` built-in svg icon solution
 - `Hooks:` based on the template characteristics of the encapsulated hooks to make it easier to use some functions of the template
 - `TypeScript:` provide a complete type
@@ -57,12 +57,10 @@ A `completely free`, `efficient`, `feature complete` and based on vite5. x & ts(
 ## 👀 Preview
 
 - [Preview](https://xiaodaigua-ray.github.io/ray-template/#/)
-- [Preview(Acceleration address)](https://ray-template.yunkuangao.com/#/)
 
 ## 📌 Documentation
 
 - [Documentation](https://xiaodaigua-ray.github.io/ray-template-doc/)
-- [Documentation(Acceleration address)](https://ray-template.yunkuangao.com/ray-template-doc/)
 
 ## 🔋 Change Log
 
@@ -90,9 +88,6 @@ A `completely free`, `efficient`, `feature complete` and based on vite5. x & ts(
 ```sh
 # github
 git clone https://github.com/XiaoDaiGua-Ray/ray-template.git
-
-# If your download speed is very slow, you can switch to the proxy address below
-git clone https://mirror.ghproxy.com/https://github.com/XiaoDaiGua-Ray/ray-template.git
 ```
 
 ### Pull dependencies

@@ -6,6 +6,7 @@ import type {
   ShouldRuleBeApplied,
   RFormRules,
 } from '../types'
+import type { Recordable } from '@/types'
 
 /**
  *
@@ -35,7 +36,7 @@ import type {
  *   },
  * })
  */
-const useForm = <T extends Record<string, unknown>, R extends RFormRules>(
+const useForm = <T extends Recordable, R extends RFormRules>(
   model?: T,
   rules?: R,
 ) => {

@@ -1,9 +1,9 @@
 import type { VNode } from 'vue'
-import type { AppRouteRecordRaw, AppRouteMeta } from '@/router/types'
+import type { AppRouteMeta } from '@/router/types'
 
 export type Key = string | number
 
-export interface AppMenuOption extends AppRouteRecordRaw {
+export interface AppMenuOption {
   name: string
   key: Key
   path: string

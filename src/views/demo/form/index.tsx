@@ -22,7 +22,7 @@ import {
   NRadioGroup,
 } from 'naive-ui'
 
-import { useForm } from '@/components'
+import { useForm, useModal } from '@/components'
 
 import type { RFormRules } from '@/components'
 
@@ -138,6 +138,8 @@ export default defineComponent({
                 type="info"
                 onClick={() => {
                   this.condition = formModel()
+
+                  restoreValidation()
                 }}
               >
                 重置表单为初始状态

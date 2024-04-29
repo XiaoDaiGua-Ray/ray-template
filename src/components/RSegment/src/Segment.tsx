@@ -75,6 +75,7 @@ export default defineComponent({
           segmentWidthVar = '100%'
 
           break
+
         case 'fitContent':
           segmentWidthVar = 'fit-content'
 

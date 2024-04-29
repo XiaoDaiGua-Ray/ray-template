@@ -54,6 +54,7 @@ const errorImplement: ErrorImplementQueue = {
   implementRequestInterceptorErrorArray: [],
   implementResponseInterceptorErrorArray: [],
 }
+
 /** 取消器实例 */
 export const axiosCanceler = new RequestCanceler()
 

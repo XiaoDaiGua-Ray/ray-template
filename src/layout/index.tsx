@@ -55,7 +55,7 @@ export default defineComponent({
     const { getLockAppScreen } = this
 
     return !getLockAppScreen() ? (
-      <NLayout class="r-layout-full" style={[cssVarsRef]} hasSider>
+      <NLayout class="r-layout-full" style={[cssVarsRef]} hasSider embedded>
         <Menu />
         <NLayoutContent class="r-layout-full__viewer">
           <HeaderWrapper ref="layoutSiderBarRef" />

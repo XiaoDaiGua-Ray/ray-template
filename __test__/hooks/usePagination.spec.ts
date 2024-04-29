@@ -63,12 +63,4 @@ describe('usePagination', () => {
 
     expect(count).toBe(2)
   })
-
-  it('should get callback', () => {
-    count = 0
-
-    getCallback()
-
-    expect(count).toBe(1)
-  })
 })

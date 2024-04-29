@@ -332,6 +332,7 @@ export const piniaMenuStore = defineStore(
             let fullPath = `${
               parentPath.endsWith('/') ? parentPath : parentPath + '/'
             }${curr.path}`
+
             // 使用正则表达式替换重复的 '/'
             fullPath = fullPath.replace(/\/+/g, '/')
 

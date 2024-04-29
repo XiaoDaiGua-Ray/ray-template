@@ -12,7 +12,6 @@
 /** 锁屏界面 */
 
 import { NInput, NForm, NFormItem, NButton } from 'naive-ui'
-import AppAvatar from '@/app-components/app/AppAvatar'
 
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
 import { rules, useCondition } from '@/app-components/app/AppLockScreen/shared'
@@ -61,7 +60,6 @@ const LockScreen = defineComponent({
   render() {
     return (
       <div class="app-lock-screen__input">
-        <AppAvatar vertical align="center" avatarSize={52} />
         <NForm
           ref="formInstRef"
           model={this.lockCondition}

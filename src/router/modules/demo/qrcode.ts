@@ -5,7 +5,6 @@ import type { AppRouteRecordRaw } from '@/router/types'
 
 const qrcode: AppRouteRecordRaw = {
   path: '/qrcode',
-  name: 'RQRCode',
   component: () => import('@/views/demo/qrcode/index'),
   meta: {
     i18nKey: t('menu.QRCode'),
