@@ -9,3 +9,4 @@ yarn.*
 visualizer.*
 visualizer.html
 .env.*
+*-lock.yaml
