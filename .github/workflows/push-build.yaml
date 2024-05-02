@@ -19,7 +19,7 @@ jobs:
       - name: Install Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ['18.18.2', '20.12.0']
 
       - uses: pnpm/action-setup@v2
         name: Install pnpm
