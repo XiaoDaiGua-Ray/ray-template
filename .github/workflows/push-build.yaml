@@ -8,35 +8,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [18.18.2, 20.12.0] # 指定 Node.js 版本
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: [20.x]
+        os: [ubuntu-latest, windows-latest]
         experimental: [true]
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Set up Node.js ${{ matrix.node-version }}
+      - name: Install Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-
-      - name: Install system dependencies for canvas (macOS only)
-        if: runner.os == 'macOS'
-        run: |
-          brew update
-          brew install pkg-config cairo pango libpng jpeg giflib
-
-      - name: Install node-pre-gyp and node-gyp
-        run: |
-          npm install -g node-pre-gyp
-          npm install -g node-gyp
-
-      - name: Install Python and distutils (macOS only)
-        if: runner.os == 'macOS'
-        run: |
-          python3 -m ensurepip
-          python3 -m pip install -U distutils
 
       - uses: pnpm/action-setup@v2
         name: Install pnpm
