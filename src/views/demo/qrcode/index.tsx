@@ -10,18 +10,18 @@
  */
 
 import { NFlex, NCard, NButton } from 'naive-ui'
-import { RQRCode } from '@/components'
+import { Vue3NextQrcode } from 'vue3-next-qrcode'
 
 import LOGO from '@/assets/images/ray.svg'
 
-import type { RQRCodeType } from '@/components'
+import type { QRCodeStatus, QRCodeInst } from 'vue3-next-qrcode'
 
 export default defineComponent({
   name: 'RQRCodeDemo',
   setup() {
     const qrcodeText = ref('ray template yes')
-    const qrcodeStatus = ref<RQRCodeType.QRCodeStatus | undefined>()
-    const rayQRCodeRef = ref<RQRCodeType.QRCodeInst>()
+    const qrcodeStatus = ref<QRCodeStatus | undefined>()
+    const rayQRCodeRef = ref<QRCodeInst>()
 
     return {
       qrcodeText,
@@ -41,9 +41,9 @@ export default defineComponent({
         </NCard>
         <NCard title="基础二维码">
           <NFlex>
-            <RQRCode text="ray template yes" />
-            <RQRCode text="ray template yes" logoImage={LOGO} />
-            <RQRCode
+            <Vue3NextQrcode text="ray template yes" />
+            <Vue3NextQrcode text="ray template yes" logoImage={LOGO} />
+            <Vue3NextQrcode
               text="ray template yes"
               gifBackgroundURL="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80"
               dotScale={0.5}
@@ -53,7 +53,7 @@ export default defineComponent({
         </NCard>
         <NCard title="状态二维码">
           <NFlex>
-            <RQRCode
+            <Vue3NextQrcode
               text="ray template yes"
               logoImage={LOGO}
               status="error"
@@ -61,7 +61,7 @@ export default defineComponent({
                 window.$message.info('reload event')
               }}
             />
-            <RQRCode
+            <Vue3NextQrcode
               text="ray template yes"
               logoImage={LOGO}
               status="loading"
@@ -92,7 +92,7 @@ export default defineComponent({
               </NButton>
             </NFlex>
             <NFlex>
-              <RQRCode
+              <Vue3NextQrcode
                 text={this.qrcodeText}
                 status={this.qrcodeStatus}
                 logoImage={LOGO}

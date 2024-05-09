@@ -281,6 +281,21 @@ module.exports = {
         prev: ['class'],
         next: '*',
       },
+      {
+        blankLine: 'always',
+        prev: '*',
+        next: 'for',
+      },
+      {
+        blankLine: 'any',
+        prev: 'for',
+        next: 'for',
+      },
+      {
+        blankLine: 'always',
+        prev: '*',
+        next: ['while', 'do', 'switch'],
+      },
     ],
   },
 }

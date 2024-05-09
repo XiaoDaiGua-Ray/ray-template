@@ -11,7 +11,7 @@
 
 import './index.scss'
 
-import { RQRCode } from '@/components'
+import { Vue3NextQrcode } from 'vue3-next-qrcode'
 
 import LOGO from '@/assets/images/ray.svg'
 
@@ -36,7 +36,7 @@ const QRCodeSigning = defineComponent({
   render() {
     return (
       <div class="qrcode-signing">
-        <RQRCode text="ray template yes" size={200} logoImage={LOGO} />
+        <Vue3NextQrcode text="ray template yes" size={200} logoImage={LOGO} />
       </div>
     )
   },

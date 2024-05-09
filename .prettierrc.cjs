@@ -17,6 +17,5 @@ module.exports = {
   proseWrap: 'preserve', // 使用默认的折行标准
   htmlWhitespaceSensitivity: 'css', // 根据显示样式决定 `html` 要不要折行
   endOfLine: 'lf', // 换行符使用 `lf`,
-  bracketLine: false,
   singleAttributePerLine: false,
 }

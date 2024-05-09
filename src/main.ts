@@ -2,6 +2,7 @@ import App from './App'
 
 import '@/styles/base.scss' // 初始化一些基础样式
 import './app-components/provider/provider.scss' // 初始化 provider 包注入组件样式
+import 'vue3-next-qrcode/es/style.css' // vue3-next-qrcode 样式
 
 import 'virtual:svg-icons-register' // vite-plugin-svg-icons 脚本，启用 svg 雪碧图
 

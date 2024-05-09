@@ -1,5 +1,20 @@
 # CHANGE LOG
 
+## 4.8.4
+
+由于 `node canvas` 本身的特性（环境问题很多），故在 `v4.8.4` 版本予以移除 `RQRCode` 组件，使用 `vue3-next-qrcode` 替代。所有的使用方法保持一致。
+
+## Feats
+
+- 新增 `package.json` 的 `lint` 命令，用于自动修复 `eslint, prettier` 问题
+
+```sh
+pnpm lint
+```
+
+- `useModal` 方法在 `preset = card` 并且设置了 `fullscreen` 时，现在会自动启用滚动条
+- `pre-commit` 新增 `vue-tsc` 检查
+
 ## 4.8.3
 
 ## Feats
