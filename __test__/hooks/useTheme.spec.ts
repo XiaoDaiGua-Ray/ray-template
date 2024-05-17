@@ -31,16 +31,16 @@ describe('useTheme', async () => {
   it('should return current theme', () => {
     darkTheme()
 
-    const { theme: darkTheme, themeLabel: darkThemeLabel } = getAppTheme()
+    const { theme: _darkTheme, themeLabel: _darkThemeLabel } = getAppTheme()
 
-    expect(darkTheme).toBe(true)
-    expect(darkThemeLabel).toBe('暗色')
+    expect(_darkTheme).toBe(true)
+    expect(_darkThemeLabel).toBe('Dark')
 
     lightTheme()
 
-    const { theme: lightTheme, themeLabel: lightThemeLabel } = getAppTheme()
+    const { theme: __lightTheme, themeLabel: __lightThemeLabel } = getAppTheme()
 
-    expect(lightTheme).toBe(false)
-    expect(lightThemeLabel).toBe('明亮')
+    expect(__lightTheme).toBe(false)
+    expect(__lightThemeLabel).toBe('Light')
   })
 })
