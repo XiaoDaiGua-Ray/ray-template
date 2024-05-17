@@ -4,23 +4,22 @@ import { useTheme } from '../../src/hooks/template/useTheme'
 describe('useTheme', async () => {
   await setupMiniApp()
 
-  const { changeDarkTheme, changeLightTheme, toggleTheme, getAppTheme } =
-    useTheme()
+  const { darkTheme, lightTheme, toggleTheme, getAppTheme } = useTheme()
 
   it('should change to dark theme', () => {
-    changeDarkTheme()
+    darkTheme()
 
     expect(getAppTheme().theme).toBe(true)
   })
 
   it('should change to light theme', () => {
-    changeLightTheme()
+    lightTheme()
 
     expect(getAppTheme().theme).toBe(false)
   })
 
   it('should toggle theme', () => {
-    changeLightTheme()
+    lightTheme()
 
     expect(getAppTheme().theme).toBe(false)
 
@@ -30,14 +29,14 @@ describe('useTheme', async () => {
   })
 
   it('should return current theme', () => {
-    changeDarkTheme()
+    darkTheme()
 
     const { theme: darkTheme, themeLabel: darkThemeLabel } = getAppTheme()
 
     expect(darkTheme).toBe(true)
     expect(darkThemeLabel).toBe('暗色')
 
-    changeLightTheme()
+    lightTheme()
 
     const { theme: lightTheme, themeLabel: lightThemeLabel } = getAppTheme()
 

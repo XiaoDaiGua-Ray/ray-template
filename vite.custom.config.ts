@@ -102,37 +102,35 @@ const config: AppConfigExport = {
    * 打包相关配置
    */
   buildOptions: (mode: string): BuildOptions => {
-    const outDirMap = {
-      test: 'dist/test-dist',
-      development: 'dist/development-dist',
-      production: 'dist/production-dist',
-      report: 'dist/report-dist',
+    const productionBuildOptions = {
+      sourcemap: false,
+      terserOptions: {
+        compress: {
+          drop_console: true,
+          drop_debugger: true,
+        },
+      },
     }
-    const dirPath = outDirMap[mode] || 'dist/test-dist'
+    const defaultOptions = {
+      sourcemap: true,
+      terserOptions: {
+        compress: {
+          drop_console: false,
+          drop_debugger: false,
+        },
+      },
+    }
+    const outDir = `dist/${mode}`
 
-    if (mode === 'production') {
-      return {
-        outDir: dirPath,
-        sourcemap: false,
-        terserOptions: {
-          compress: {
-            drop_console: true,
-            drop_debugger: true,
-          },
-        },
-      }
-    } else {
-      return {
-        outDir: dirPath,
-        sourcemap: true,
-        terserOptions: {
-          compress: {
-            drop_console: false,
-            drop_debugger: false,
-          },
-        },
-      }
-    }
+    return mode === 'production'
+      ? {
+          ...productionBuildOptions,
+          outDir,
+        }
+      : {
+          ...defaultOptions,
+          outDir,
+        }
   },
   /**
    *

@@ -13,6 +13,29 @@ import { useSettingActions, useSettingGetters } from '@/store'
 import { useI18n } from '@/hooks'
 import { APP_THEME } from '@/app-config'
 
+export type ThemeLabel = 'Dark' | 'Light'
+
+export interface AppThemeInfo {
+  /**
+   *
+   * @description
+   * 当前主题状态，true 为暗色主题，false 为明色主题
+   */
+  theme: boolean
+  /**
+   *
+   * @description
+   * 当前主题描述，默认描述。
+   */
+  themeLabel: ThemeLabel
+  /**
+   *
+   * @description
+   * 当前主题描述，国际化描述，会根据当前语言环境自动切换。
+   */
+  themeI18nLabel: string
+}
+
 const setThemeOverrides = (theme: boolean) => {
   const { getPrimaryColorOverride } = useSettingGetters()
   const { updateSettingState } = useSettingActions()
@@ -46,15 +69,16 @@ export const useTheme = () => {
    * getAppTheme() // { theme: true, themeLabel: '暗色' | 'Dark' }
    * getAppTheme() // { theme: false, themeLabel: '亮色' | 'Light' }
    */
-  const getAppTheme = () => {
+  const getAppTheme = (): AppThemeInfo => {
     const { getAppTheme } = useSettingGetters()
     const { t } = useI18n()
 
     return {
       theme: getAppTheme.value,
-      themeLabel: getAppTheme.value
+      themeI18nLabel: getAppTheme.value
         ? t('headerSettingOptions.ThemeOptions.Dark')
         : t('headerSettingOptions.ThemeOptions.Light'),
+      themeLabel: getAppTheme.value ? 'Dark' : 'Light',
     }
   }
 
@@ -64,9 +88,9 @@ export const useTheme = () => {
    * 切换至暗色主题
    *
    * @example
-   * changeDarkTheme()
+   * darkTheme()
    */
-  const changeDarkTheme = () => {
+  const darkTheme = () => {
     const { updateSettingState } = useSettingActions()
 
     updateSettingState('appTheme', true)
@@ -79,9 +103,9 @@ export const useTheme = () => {
    * 切换至明色主题
    *
    * @example
-   * changeLightTheme()
+   * lightTheme()
    */
-  const changeLightTheme = () => {
+  const lightTheme = () => {
     const { updateSettingState } = useSettingActions()
 
     updateSettingState('appTheme', false)
@@ -110,8 +134,8 @@ export const useTheme = () => {
   }
 
   return {
-    changeDarkTheme,
-    changeLightTheme,
+    darkTheme,
+    lightTheme,
     toggleTheme,
     getAppTheme,
   }

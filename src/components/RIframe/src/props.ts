@@ -93,7 +93,7 @@ const props = {
     type: Boolean,
     default: true,
   },
-  wrapperClass: {
+  iframeClass: {
     type: String,
     default: null,
   },

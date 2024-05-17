@@ -46,7 +46,7 @@ export function useAppRoot() {
    * @example
    * setRootRoute({ path: '/your root path', name: 'your root name' })
    */
-  const setRootRoute = (route: AppRootRoute) => {
+  const setRootRoute = (route: Partial<AppRootRoute>) => {
     updateSettingState(
       'appRootRoute',
       Object.assign({}, getAppRootRoute.value, route),

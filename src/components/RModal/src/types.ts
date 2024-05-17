@@ -24,7 +24,7 @@ export interface RModalProps extends NaiveModalOptions {
    *
    * @default 600
    */
-  width?: number
+  width?: number | string
   /**
    *
    * @description
@@ -32,7 +32,7 @@ export interface RModalProps extends NaiveModalOptions {
    *
    * @default 600
    */
-  cardWidth?: number
+  cardWidth?: number | string
   /**
    *
    * @description
@@ -40,7 +40,7 @@ export interface RModalProps extends NaiveModalOptions {
    *
    * @default 446
    */
-  dialogWidth?: number
+  dialogWidth?: number | string
   /**
    *
    * @description

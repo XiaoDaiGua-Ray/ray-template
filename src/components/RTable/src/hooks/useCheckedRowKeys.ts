@@ -3,6 +3,11 @@ import { effectDispose } from '@/utils'
 
 import type { Recordable } from '@/types'
 import type { MaybeRef } from '@vueuse/core'
+import type {
+  DataTableColumns,
+  DataTableColumn,
+  DataTableSelectionColumn,
+} from 'naive-ui'
 
 export type RowKey = string | number
 
@@ -73,6 +78,27 @@ const findRow = (
   return void 0
 }
 
+const isMultiple = (columns: MaybeRef<DataTableColumns<any> | undefined>) => {
+  const unrefColumns = unref(columns)
+
+  if (unrefColumns) {
+    const idx = unrefColumns.findIndex((column) => {
+      const { type, multiple } = column as DataTableSelectionColumn
+
+      if (
+        type === 'selection' &&
+        (multiple === void 0 || multiple === null || multiple === true)
+      ) {
+        return true
+      }
+    })
+
+    return idx !== -1
+  }
+
+  return true
+}
+
 /**
  *
  * @param data 当前 DataTable 组件的数据
@@ -100,16 +126,21 @@ const findRow = (
  *
  * const data = ref([{ ...table data }])
  * const columns = [{ ...table columns }]
- * const [checkedRowKeys, { checkedRowKeysBind }] = useCheckedRowKeys(data, { rowKey: 'key' })
+ * const [checkedRowKeys, { checkedRowKeysBind }] = useCheckedRowKeys(data, { rowKey: 'key' }, multiple: true)
  * </script>
  */
-const useCheckedRowKeys = <T extends Recordable>(
+const useCheckedRowKeys = <
+  T extends Recordable,
+  C extends DataTableColumns<any>,
+>(
   data: MaybeRef<T[] | undefined>,
+  columns: MaybeRef<C | undefined>,
   options?: UseCheckedRowKeysOptions<T>,
 ) => {
   const keysRef = ref<RowKey[]>([])
   const rowsRef = ref<any[]>([])
   const { rowKey: bindRowKey = 'key', onChange } = options || {}
+  const currentColumnIsMultiple = computed(() => isMultiple(columns))
 
   /**
    *
@@ -139,6 +170,8 @@ const useCheckedRowKeys = <T extends Recordable>(
         action: Action
       },
     )
+
+    isMultiple(columns)
   }
 
   /**
@@ -212,20 +245,23 @@ const useCheckedRowKeys = <T extends Recordable>(
    *
    * @description
    * 选中指定的 keys。
-   *
    * 当你调用该方法时，会将 keys 与 data 中的 rows 进行比对，将匹配的 rows 添加到已选中的 rows 中。
+   *
+   * 如果 multiple 为 false，那么只会选中一个 key；
+   * 所以，如果你需要选中多个 key，需要将 multiple 设置为 true。
    */
   const selectKey = (key: RowKey) => {
     if (keysRef.value.includes(key)) {
       return
     }
 
-    keysRef.value.push(key)
-
+    const multiple = !currentColumnIsMultiple.value && keysRef.value.length >= 1
     const row = findRow(unref(data) || [], bindRowKey, key)
 
+    multiple ? (keysRef.value = [key]) : keysRef.value.push(key)
+
     if (row) {
-      rowsRef.value.push(row)
+      multiple ? (rowsRef.value = [row]) : rowsRef.value.push(row)
 
       onChange?.(keysRef.value, rowsRef.value, {
         row: row as any,

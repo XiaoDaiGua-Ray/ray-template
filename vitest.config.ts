@@ -25,11 +25,9 @@ export default defineConfig((configEnv) =>
            * @see https://github.com/vitest-dev/vitest/issues/740
            *
            * 目前暂时没有更好的解决方案，这么做会导致单测执行速度变慢，但是可以避免错误，后续有更好的解决方案会更新。
+           *
+           * 在 v4.8.5 版本中，已经修复了该问题，可以升级到该版本。
            */
-          threads: {
-            maxThreads: 1,
-            minThreads: 0,
-          },
         },
       },
     }),

@@ -1,5 +1,34 @@
 # CHANGE LOG
 
+## 4.8.5
+
+## Feats
+
+- 更新 `vue-router` 版本至 `4.3.2`
+- 更新 `vue-hooks-plus` 版本至 `2.0.3`
+- `usePagination` 方法
+  - 新增 `resetPagination` 方法，用于重置分页器
+- `RBarcode` 组件，默认启用 `watchText` 配置项，用于监听 `text` 内容变化
+- `RMoreDropdown` 组件，新增 `icon` 自定义配置图标，依赖 `RIcon` 组件实现
+- `buildOptions` 方法现在会自动根据 `mode` 进行自动构建生成包了
+- `RTable hooks`
+  - `UseCheckedRowKeysOptions`
+    - 新增 `table column` 参数，自动获取当前表格列配置是否启用了选项模式（单选、多选）
+    - `selectKey` 方法现在在单选模式下，只会选择一条数据，最后一次选择的会覆盖上次的
+  - `useTable`
+    - 新增 `print` 方法
+- `useTheme` 方法
+  - `changeDarkTheme` 更名为 `darkTheme`
+  - `changeLightTheme` 更名为 `lightTheme`
+  - `getAppTheme` 方法返回值做了准确的 `ts` 签名，并且新增 `themeLabelI18n` 字段
+
+## Fixes
+
+- 修复 `vitest` 设置 `threads` 导致报错 `Module did not self-register...` 的问题
+- 修复 `vue-router warning` 抛出 `can no longer be used directly inside...` 的警告问题
+- 修复 `pre-commit` 错误的 `vue-tsc` 检查报错
+- `signing logout` 方法现在会正确的清理 `menuTagOptions`
+
 ## 4.8.4
 
 由于 `node canvas` 本身的特性（环境问题很多），故在 `v4.8.4` 版本予以移除 `RQRCode` 组件，使用 `vue3-next-qrcode` 替代。所有的使用方法保持一致。

@@ -19,6 +19,7 @@ import type {
   PrintTableOptions,
   RTableInst,
   RTableCardProps,
+  UseTableRegister,
 } from './types'
 import type { Recordable } from '@/types'
 
@@ -211,9 +212,7 @@ const props = {
    * @default null
    */
   onRegister: {
-    type: [Function, Array] as PropType<
-      MaybeArray<(tableInst: RTableInst) => void>
-    >,
+    type: [Function, Array] as PropType<MaybeArray<UseTableRegister>>,
     default: null,
   },
 } as const

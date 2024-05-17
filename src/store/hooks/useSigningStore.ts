@@ -16,7 +16,8 @@ export const useSigningGetters = () => {
 
   /**
    *
-   * @remark 获取登陆返回信息
+   * @description
+   * 获取登陆返回信息。
    */
   const getSigningCallback = computed(() => variable.signingCallback)
 

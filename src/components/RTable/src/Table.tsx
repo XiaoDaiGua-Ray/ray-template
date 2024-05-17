@@ -203,7 +203,11 @@ export default defineComponent({
       const { onRegister } = props
 
       if (onRegister && rTableInst.value) {
-        call(onRegister, rTableInst.value)
+        call(onRegister, rTableInst.value, {
+          uuidTable,
+          uuidWrapper,
+          wrapperRef,
+        })
       }
     })
 

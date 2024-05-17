@@ -40,8 +40,7 @@ export default defineComponent({
       setWatermarkContent,
       toggleWatermark,
     } = useWatermark()
-    const { changeDarkTheme, changeLightTheme, toggleTheme, getAppTheme } =
-      useTheme()
+    const { darkTheme, lightTheme, toggleTheme, getAppTheme } = useTheme()
     const {
       hidden: badgeHidden,
       show: badgeShow,
@@ -61,8 +60,8 @@ export default defineComponent({
       setWatermarkContent,
       watermark,
       toggleWatermark,
-      changeDarkTheme,
-      changeLightTheme,
+      darkTheme,
+      lightTheme,
       toggleTheme,
       getAppTheme,
       isLayoutContentMaximized,
@@ -83,8 +82,8 @@ export default defineComponent({
       hiddenWatermark,
       setWatermarkContent,
       toggleWatermark,
-      changeDarkTheme,
-      changeLightTheme,
+      darkTheme,
+      lightTheme,
       toggleTheme,
       getAppTheme,
       isLayoutContentMaximized,
@@ -147,8 +146,8 @@ export default defineComponent({
           <NFlex vertical>
             <h3>getAppTheme 获取当前主题色: {getAppTheme().themeLabel}</h3>
             <NFlex>
-              <NButton onClick={() => changeDarkTheme()}>切换暗黑主题</NButton>
-              <NButton onClick={() => changeLightTheme()}>切换明亮主题</NButton>
+              <NButton onClick={() => darkTheme()}>切换暗黑主题</NButton>
+              <NButton onClick={() => lightTheme()}>切换明亮主题</NButton>
               <NButton onClick={() => toggleTheme()}>切换主题</NButton>
             </NFlex>
           </NFlex>

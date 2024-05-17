@@ -72,3 +72,8 @@ type SortParameters = Parameters<RTableInst['sort']>
 export type ColumnKey = SortParameters[0]
 
 export type SortOrder = SortParameters[1]
+
+export type UseTableRegister = (
+  tableInst: RTableInst,
+  extra: TableProvider,
+) => void

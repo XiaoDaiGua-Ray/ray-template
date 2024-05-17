@@ -18,7 +18,7 @@ import { useTheme } from '@/hooks'
 export default defineComponent({
   name: 'ThemeSwitch',
   setup() {
-    const { changeDarkTheme, changeLightTheme } = useTheme()
+    const { darkTheme, lightTheme } = useTheme()
     const { getAppTheme } = useSettingGetters()
     const modelAppThemeRef = ref(getAppTheme.value)
 
@@ -33,15 +33,15 @@ export default defineComponent({
     }
 
     return {
-      changeDarkTheme,
-      changeLightTheme,
+      darkTheme,
+      lightTheme,
       getAppTheme,
       railStyle,
       modelAppThemeRef,
     }
   },
   render() {
-    const { $t, changeDarkTheme, changeLightTheme, railStyle } = this
+    const { $t, darkTheme, lightTheme, railStyle } = this
 
     return (
       <NFlex justify="center">
@@ -52,7 +52,7 @@ export default defineComponent({
                 v-model:value={this.modelAppThemeRef}
                 railStyle={railStyle.bind(this)}
                 onUpdateValue={(bool: boolean) =>
-                  bool ? changeDarkTheme() : changeLightTheme()
+                  bool ? darkTheme() : lightTheme()
                 }
               >
                 {{

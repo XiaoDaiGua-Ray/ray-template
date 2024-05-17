@@ -1,3 +1,5 @@
+import { printDom } from '@/utils'
+
 import type {
   RTableInst,
   CsvOptionsType,
@@ -5,6 +7,8 @@ import type {
   ScrollToOptions,
   ColumnKey,
   SortOrder,
+  UseTableRegister,
+  TableProvider,
 } from '../types'
 
 /**
@@ -37,10 +41,12 @@ import type {
  */
 const useTable = () => {
   const tableRef = ref<RTableInst>()
+  let extra = {} as TableProvider
 
-  const register = (inst: RTableInst) => {
+  const register: UseTableRegister = (inst, extraInfo) => {
     if (inst) {
       tableRef.value = inst
+      extra = extraInfo
     }
   }
 
@@ -55,6 +61,7 @@ const useTable = () => {
         '[useTable]: table instance is not ready yet. if you are using useTable, please make sure you have called register method in onRegister event.',
       )
     }
+    console.log(tableRef.value)
 
     return tableRef.value
   }
@@ -127,6 +134,21 @@ const useTable = () => {
   const sort = (columnKey: ColumnKey, order: SortOrder) =>
     getTableInstance().sort.call(null, columnKey, order)
 
+  /**
+   *
+   * @description
+   * 打印表格。
+   */
+  const print = () => {
+    const { uuidWrapper } = extra
+
+    if (uuidWrapper) {
+      const tableWrapperElement = document.getElementById(uuidWrapper)
+
+      printDom(tableWrapperElement)
+    }
+  }
+
   return [
     register,
     {
@@ -138,6 +160,7 @@ const useTable = () => {
       page,
       scrollTo,
       sort,
+      print,
     },
   ] as const
 }

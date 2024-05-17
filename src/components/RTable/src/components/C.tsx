@@ -34,7 +34,7 @@ import type { MaybeArray } from '@/types'
 type FixedClick = (type: 'left' | 'right', option: C, index: number) => void
 
 const renderSwitcherIcon = () => (
-  <RIcon name="draggable" size={14} cursor="all-scroll" />
+  <RIcon name="draggable" size={14} cursor="grab" />
 )
 
 const RowIconRender = ({

@@ -77,7 +77,7 @@ export default defineComponent({
             ...this.$slots,
             default: () => (
               <iframe
-                class={['ray-iframe__container', this.wrapperClass]}
+                class={['ray-iframe__container', this.iframeClass]}
                 ref="iframeRef"
                 src={this.src}
                 allow={this.allow}

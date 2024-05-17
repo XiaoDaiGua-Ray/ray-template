@@ -22,6 +22,15 @@ export interface DateRange {
   end: dayjs.ConfigType
 }
 
+export interface StartAndEndOfDay {
+  today: dayjs.Dayjs
+  startOfDay: dayjs.Dayjs
+  endOfDay: dayjs.Dayjs
+  formatToday: string
+  formatStartOfDay: string
+  formatEndOfDay: string
+}
+
 export type LocalKey = typeof DEFAULT_DAYJS_LOCAL
 
 const defaultDayjsFormat = 'YYYY-MM-DD HH:mm:ss'
@@ -61,7 +70,7 @@ export const useDayjs = () => {
    *
    * @example
    * isDayjs('2022-11-11') // false
-   * isDayjs('1699687245973) // false
+   * isDayjs('1699687245973') // false
    * isDayjs(dayjs()) // true
    */
   const isDayjs = (d: unknown) => {
@@ -96,7 +105,9 @@ export const useDayjs = () => {
    *
    * 会返回当前日期、当前日期的开始时间和结束时间（未格式化与格式化后的）。
    */
-  const getStartAndEndOfDay = (formatOption?: FormatOption) => {
+  const getStartAndEndOfDay = (
+    formatOption?: FormatOption,
+  ): Readonly<StartAndEndOfDay> => {
     const { format = defaultDayjsFormat } = formatOption ?? {}
     const today = dayjs()
     const startOfDay = today.startOf('day')

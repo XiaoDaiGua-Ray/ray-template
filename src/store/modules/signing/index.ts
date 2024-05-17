@@ -22,6 +22,7 @@
 import { isEmpty } from 'lodash-es'
 import { removeStorage } from '@/utils'
 import { APP_CATCH_KEY } from '@/app-config'
+import { useSiderBar } from '@/hooks'
 
 import type {
   SigningForm,
@@ -44,9 +45,9 @@ export const piniaSigningStore = defineStore(
     /**
      *
      * @param SigningForm 用户登录信息
-     * @returns 状态码
      *
-     * @remark 0: 登陆成功, 1: 登陆失败
+     * @description
+     * 0: 登陆成功, 1: 登陆失败
      */
     const signing = (SigningForm: SigningForm): Promise<SigningResponse> => {
       return new Promise((resolve, reject) => {
@@ -78,8 +79,11 @@ export const piniaSigningStore = defineStore(
      * 延迟 300ms 后强制刷新当前系统
      */
     const logout = () => {
+      const { closeAll } = useSiderBar()
+
       window.$message.info('账号退出中...')
       removeStorage('__all_sessionStorage__', 'sessionStorage')
+      closeAll()
 
       setTimeout(() => window.location.reload())
     }

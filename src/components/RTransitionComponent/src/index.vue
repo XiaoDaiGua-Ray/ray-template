@@ -1,26 +1,27 @@
 <template>
-  <!-- 这是一个魔法注释，删不的（如果删了会出现一个异常提示，不信你试试） -->
-  <RouterView v-slot="{ Component, route }">
-    <template v-if="Component">
-      <Transition
-        :name="transitionPropName"
-        :mode="transitionMode"
-        :appear="transitionAppear"
-      >
-        <Suspense>
-          <KeepAlive
-            v-if="setupKeepAlive"
-            :max="maxKeepAliveLength"
-            :include="getKeepAliveInclude"
-            :exclude="keepAliveExclude"
-          >
-            <Component :is="Component" :key="route.fullPath" />
-          </KeepAlive>
-          <Component :is="Component" v-else :key="route.fullPath" />
-        </Suspense>
-      </Transition>
-    </template>
-  </RouterView>
+  <div>
+    <RouterView v-slot="{ Component, route }">
+      <template v-if="Component">
+        <Transition
+          :name="transitionPropName"
+          :mode="transitionMode"
+          :appear="transitionAppear"
+        >
+          <Suspense>
+            <KeepAlive
+              v-if="setupKeepAlive"
+              :max="maxKeepAliveLength"
+              :include="getKeepAliveInclude"
+              :exclude="keepAliveExclude"
+            >
+              <Component :is="Component" :key="route.fullPath" />
+            </KeepAlive>
+            <Component :is="Component" v-else :key="route.fullPath" />
+          </Suspense>
+        </Transition>
+      </template>
+    </RouterView>
+  </div>
 </template>
 <script lang="ts" setup>
 import { useKeepAliveGetters } from '@/store'

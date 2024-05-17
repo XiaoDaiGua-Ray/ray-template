@@ -88,13 +88,11 @@ const props = {
    * @description
    * 是否监听 text 变化，当 text 变化时，会重新生成条形码。
    *
-   * 但是，在条形码的使用场景中，text 变化的频率应该是比较低的，所以默认不开启。如果有需要，可以手动开启。
-   *
-   * @default false
+   * @default true
    */
   watchText: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   /**
    *

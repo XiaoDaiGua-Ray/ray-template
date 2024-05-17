@@ -20,6 +20,7 @@ import {
   NFlex,
   NPopover,
   NCard,
+  NAlert,
 } from 'naive-ui'
 import { RCollapseGrid, RTable, RIcon, RMoreDropdown } from '@/components'
 
@@ -51,6 +52,7 @@ const TableView = defineComponent({
         filters,
         sort,
         downloadCsv,
+        print,
       },
     ] = useTable()
 
@@ -151,13 +153,13 @@ const TableView = defineComponent({
     const [
       checkedRowKeys,
       { checkedRowKeysBind, getKeys, getRows, clearKey, clearAll, selectKey },
-    ] = useCheckedRowKeys(tableData, {
+    ] = useCheckedRowKeys(tableData, actionColumns, {
       rowKey: 'key',
       onChange: (keys, rows, meta) => {},
     })
 
     const createTableData = () => {
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 10; i++) {
         tableData.value.push({
           key: uuid(),
           name: i % 2 === 0 ? 'John Brown' : 'Jim Green',
@@ -216,6 +218,8 @@ const TableView = defineComponent({
       filters,
       sort,
       downloadCsv,
+      getTableInstance,
+      print,
     }
   },
   render() {
@@ -232,6 +236,10 @@ const TableView = defineComponent({
       filters,
       sort,
       downloadCsv,
+      getTableInstance,
+      getRows,
+      getKeys,
+      print,
     } = this
 
     return (
@@ -241,17 +249,32 @@ const TableView = defineComponent({
           文件即可查看该组件拓展项
         </NCard>
         <NCard title="useTable">
-          <NFlex align="center">
-            <NButton onClick={clearSorter.bind(this)}>清除所有排序</NButton>
-            <NButton onClick={clearFilters.bind(this)}>清除所有过滤</NButton>
-            <NButton
-              onClick={() => {
-                downloadCsv()
-              }}
-            >
-              下载 CSV
-            </NButton>
-            <div>其余的方法查看 Naive UI 官网，保持一致。</div>
+          <NFlex vertical style="width: 100%">
+            <NAlert title="DataTable Methods" type="info">
+              其余的方法查看{' '}
+              <a
+                style="color: transparent"
+                href="https://www.naiveui.com/zh-CN/dark/components/data-table#DataTable-Methods"
+              >
+                Naive UI
+              </a>
+              官网，保持一致。
+            </NAlert>
+            <NFlex>
+              <NButton onClick={clearSorter.bind(this)}>清除所有排序</NButton>
+              <NButton onClick={clearFilters.bind(this)}>清除所有过滤</NButton>
+              <NButton
+                onClick={() => {
+                  downloadCsv()
+                }}
+              >
+                下载 CSV
+              </NButton>
+              <NButton onClick={getTableInstance.bind(this)}>
+                getTableInstance
+              </NButton>
+              <NButton onClick={print.bind(this)}>打印</NButton>
+            </NFlex>
           </NFlex>
         </NCard>
         <NCard title="useCheckedRowKeys">

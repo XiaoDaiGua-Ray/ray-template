@@ -154,6 +154,21 @@ export const usePagination = <T extends AnyFC>(
     callbackRef.value = callback as any
   }
 
+  /**
+   *
+   * @description
+   * 初始化分页。
+   *
+   * 重置页码为 1，每页条数为 pageSizes 的第一个值。
+   * 如果，pageSizes 为空，则设置每页条数为 10。
+   */
+  const resetPagination = () => {
+    const { pageSizes } = paginationRef.value
+
+    paginationRef.value.page = 1
+    paginationRef.value.pageSize = (pageSizes?.[0] as number) || 10
+  }
+
   effectDispose(() => {
     callbackRef.value = void 0
   })
@@ -161,8 +176,6 @@ export const usePagination = <T extends AnyFC>(
   return [
     paginationRef as Ref<UsePaginationOptions>,
     {
-      updatePage,
-      updatePageSize,
       getItemCount,
       setItemCount,
       getPage,
@@ -172,6 +185,7 @@ export const usePagination = <T extends AnyFC>(
       getPagination,
       getCallback,
       setCallback,
+      resetPagination,
     },
   ] as const
 }

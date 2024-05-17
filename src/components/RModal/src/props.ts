@@ -10,6 +10,7 @@
  */
 
 import { modalProps } from 'naive-ui'
+import type { PropType } from 'vue'
 
 const props = {
   ...modalProps,
@@ -43,7 +44,7 @@ const props = {
    * @default 600
    */
   width: {
-    type: [String, Number],
+    type: [String, Number] as PropType<string | number>,
     default: 600,
   },
   /**
@@ -54,7 +55,7 @@ const props = {
    * @default 600
    */
   cardWidth: {
-    type: [String, Number],
+    type: [String, Number] as PropType<string | number>,
     default: 600,
   },
   /**
@@ -65,7 +66,7 @@ const props = {
    * @default 446
    */
   dialogWidth: {
-    type: [String, Number],
+    type: [String, Number] as PropType<string | number>,
     default: 446,
   },
   /**
