@@ -28,7 +28,8 @@ export default defineComponent({
   setup() {
     const menuRef = ref<MenuInst | null>(null)
 
-    const { changeMenuModelValue, collapsedMenu } = useMenuActions()
+    const { changeMenuModelValue, collapsedMenu, updateMenuState } =
+      useMenuActions()
     const { getMenuOptions, getCollapsed, getMenuKey } = useMenuGetters()
 
     const modelMenuKey = computed({
@@ -84,6 +85,13 @@ export default defineComponent({
         onUpdateCollapsed={collapsedMenu.bind(this)}
         nativeScrollbar={false}
         ref={LAYOUT_SIDER_REF}
+        collapsed={getCollapsed.value}
+        onExpand={() => {
+          updateMenuState('collapsed', false)
+        }}
+        onCollapse={() => {
+          updateMenuState('collapsed', true)
+        }}
       >
         <SiderBarLogo collapsed={getCollapsed.value} />
         <NMenu

@@ -8,12 +8,12 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  fill: currentColor;
+  color: var(--ray-icon-color);
   transform: translateZ(0);
   opacity: var(--ray-icon-depth);
   cursor: var(--ray-icon-cursor);
 
-  & svg[RayIconAttribute="ray-icon"] {
+  & svg[RayIconAttribute='ray-icon'] {
     width: var(--ray-icon-width);
     height: var(--ray-icon-height);
     fill: currentColor;

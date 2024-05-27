@@ -46,6 +46,7 @@ import { pick } from 'lodash-es'
 import type { AppMenuOption, MenuTagOptions } from '@/types'
 import type { MenuState } from '@/store/modules/menu/types'
 import type { LocationQuery } from 'vue-router'
+import type { UpdateMenuState } from './types'
 
 let cachePreNormal: AppMenuOption | undefined = void 0
 
@@ -105,6 +106,20 @@ export const piniaMenuStore = defineStore(
       currentMenuOption: null, // 当前激活菜单项
     })
     const isSetupAppMenuLock = ref(true)
+
+    /**
+     *
+     * @param key menu state key
+     * @param value updated value
+     *
+     * @description
+     * 更新 menu state 指定 key 的值。
+     */
+    const updateMenuState: UpdateMenuState = (key, value) => {
+      if (Object.hasOwn(menuState, key as string)) {
+        menuState[key] = value
+      }
+    }
 
     /**
      *
@@ -426,6 +441,7 @@ export const piniaMenuStore = defineStore(
       spliceMenTagOptions,
       setMenuTagOptions,
       resolveOption,
+      updateMenuState,
     }
   },
   {

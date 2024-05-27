@@ -21,8 +21,7 @@
  */
 
 import { combineRawRouteModules } from '@/router/utils'
-import { orderRoutes } from '@/router/utils'
-import { expandRoutes } from '@/router/utils'
+import { orderRoutes, expandRoutes } from '@/router/utils'
 
 /** 获取所有被合并与排序的路由 */
 export const getAppRawRoutes = () => orderRoutes(combineRawRouteModules())

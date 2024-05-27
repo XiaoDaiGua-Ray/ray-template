@@ -119,6 +119,11 @@ export const parseAndFindMatchingNodes = (
  */
 export const updateDocumentTitle = (option: AppMenuOption) => {
   const { breadcrumbLabel } = option
+
+  if (!breadcrumbLabel) {
+    return
+  }
+
   const {
     layout: { sideBarLogo },
   } = __APP_CFG__

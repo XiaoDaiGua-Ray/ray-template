@@ -21,7 +21,7 @@ const PreviewSVGIcons = defineComponent({
     const iconsModules = import.meta.glob('@/icons/**/**.svg')
 
     Object.keys(iconsModules).forEach((curr) => {
-      const iconName = curr.match(/\/(\w+)\.svg/)![1]
+      const iconName = curr.match(/\/(\w+)\.svg/)?.[1]
 
       if (iconName) {
         icons.value.push(iconName)

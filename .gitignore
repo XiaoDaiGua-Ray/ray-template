@@ -15,6 +15,7 @@ dist/
 *.local
 visualizer.*
 .eslintcache
+.history
 
 # Editor directories and files
 .idea

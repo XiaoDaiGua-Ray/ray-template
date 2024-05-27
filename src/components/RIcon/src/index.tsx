@@ -29,6 +29,7 @@ export default defineComponent({
           : completeSize(props.size),
         '--ray-icon-depth': props.depth,
         '--ray-icon-cursor': props.cursor,
+        '--ray-icon-color': props.color,
       }
 
       return cssVar
