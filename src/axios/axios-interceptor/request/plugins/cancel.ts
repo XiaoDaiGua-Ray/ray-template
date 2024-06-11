@@ -1,6 +1,6 @@
 import { axiosCanceler } from '@/axios/utils/interceptor'
 
-import type { FetchFunction, FetchErrorFunction } from '@/axios/types'
+import type { AxiosRequestInterceptor, FetchErrorFunction } from '@/axios/types'
 
 /**
  *
@@ -10,7 +10,7 @@ import type { FetchFunction, FetchErrorFunction } from '@/axios/types'
  * @description
  * 移除请求拦截器与注入请求拦截器。
  */
-const injectRequestCanceler: FetchFunction = (ins, mode) => {
+const injectRequestCanceler: AxiosRequestInterceptor = (ins, mode) => {
   axiosCanceler.removePendingRequest(ins) // 检查是否存在重复请求, 若存在则取消已发的请求
   axiosCanceler.addPendingRequest(ins) // 把当前的请求信息添加到 pendingRequest 表中
 }

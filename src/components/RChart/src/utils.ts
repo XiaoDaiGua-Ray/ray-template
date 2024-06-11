@@ -9,6 +9,8 @@
  * @remark 今天也是元气满满撸代码的一天
  */
 
+import { useTheme } from '@/hooks'
+
 import type {
   ChartThemeRawArray,
   ChartThemeRawModules,
@@ -68,14 +70,17 @@ export const setupChartTheme = () => {
  * @example
  * const options = loadingOptions({ ...LoadingOptions })
  */
-export const loadingOptions = (options?: LoadingOptions) =>
-  Object.assign(
+export const loadingOptions = (options?: LoadingOptions) => {
+  const { getAppTheme } = useTheme()
+  const { theme } = getAppTheme()
+
+  return Object.assign(
     {},
     {
       text: 'loading',
       color: '#c23531',
-      textColor: '#000',
-      maskColor: 'rgba(255, 255, 255, 0.9)',
+      textColor: theme ? '#fff' : '#000',
+      maskColor: theme ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.5)',
       zlevel: 0,
       fontSize: 12,
       showSpinner: true,
@@ -87,3 +92,4 @@ export const loadingOptions = (options?: LoadingOptions) =>
     },
     options,
   )
+}

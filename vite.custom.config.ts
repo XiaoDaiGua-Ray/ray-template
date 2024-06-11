@@ -40,7 +40,10 @@ import path from 'node:path'
 
 import { htmlTitlePlugin, mixinCss } from './vite-helper'
 import { APP_THEME } from './src/app-config/design-config'
-import { PRE_LOADING_CONFIG, SIDE_BAR_LOGO } from './src/app-config/app-config'
+import {
+  PRE_LOADING_CONFIG,
+  SIDE_BAR_LOGO_DEFAULT,
+} from './src/app-config/app-config'
 
 import type { AppConfigExport } from '@/types'
 import type { BuildOptions } from 'vite'
@@ -52,7 +55,7 @@ const config: AppConfigExport = {
   preloadingConfig: PRE_LOADING_CONFIG,
   /** 默认主题色(不可省略, 必填), 也用于 ejs 注入 */
   appPrimaryColor: APP_THEME.appPrimaryColor,
-  sideBarLogo: SIDE_BAR_LOGO,
+  sideBarLogo: SIDE_BAR_LOGO_DEFAULT,
   /**
    *
    * 预处理全局需要注入的 css 文件

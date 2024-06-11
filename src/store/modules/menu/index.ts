@@ -376,11 +376,16 @@ export const piniaMenuStore = defineStore(
         if (menuState.currentMenuOption) {
           const { currentMenuOption } = menuState
 
-          setBreadcrumbOptions(currentMenuOption.key)
+          // 惰性更新面包屑，避免 sameLevel 模式下的面包屑被覆盖
+          if (!menuState.breadcrumbOptions.length) {
+            setBreadcrumbOptions(currentMenuOption.key)
+          }
+
           setMenuTagOptionsWhenMenuValueChange(
             currentMenuOption.fullPath,
             currentMenuOption,
           )
+          updateDocumentTitle(currentMenuOption)
         }
 
         resolve()

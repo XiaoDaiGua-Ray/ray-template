@@ -7,6 +7,8 @@ import type {
   Axios,
   AxiosResponse,
   AxiosError,
+  InternalAxiosRequestConfig,
+  AxiosRequestHeaders,
 } from 'axios'
 import type { AnyFC } from '@/types'
 
@@ -45,6 +47,24 @@ export interface AppRawRequestConfig<T = any> extends AxiosRequestConfig<T> {
    * 标记该请求的配置项是否被标记了取消。
    */
   __CANCELER_TAG_RAY_TEMPLATE__?: '__CANCELER_TAG_RAY_TEMPLATE__'
+  /**
+   *
+   * @description
+   * 该接口是否需要自动弹出请求状态提示。
+   * 统一显示后端返回的提示信息。
+   *
+   * @default true
+   */
+  responseErrorMessage?: boolean
+  /**
+   *
+   * @description
+   * 该接口是否需要自动弹出请求状态提示。
+   * 统一显示后端返回的提示信息。
+   *
+   * @default false
+   */
+  responseSuccessMessage?: boolean
 }
 
 export interface CancelerParams<T = any, D = any>
@@ -125,11 +145,6 @@ export interface ErrorImplementQueue {
   implementResponseInterceptorErrorArray: AnyFC[]
 }
 
-export type FetchFunction = <T = any, K = any>(
-  ins: RequestInterceptorConfig<T> & ResponseInterceptorConfig<T, K>,
-  mode: string,
-) => void
-
 export type FetchType = 'ok' | 'error'
 
 export type FetchErrorFunction<T = any, D = any> = (
@@ -146,3 +161,24 @@ export interface AxiosFetchError<T = any> {
   requestError: T | null
   responseError: T | null
 }
+
+interface AxiosResponseConfigInterceptor<T = any>
+  extends AppRawRequestConfig<T> {
+  headers: AxiosRequestHeaders
+}
+
+type AxiosResponseOmit<T = any, D = any> = Omit<AxiosResponse<T, D>, 'config'>
+
+type AxiosResponseInterceptorIns<T = any, D = any> = AxiosResponseOmit<T, D> & {
+  config: AxiosResponseConfigInterceptor<T>
+}
+
+export type AxiosResponseInterceptor<T = any, K = any> = (
+  ins: AxiosResponseInterceptorIns<T, K>,
+  mode: string,
+) => void
+
+export type AxiosRequestInterceptor<T = any> = (
+  ins: RequestInterceptorConfig<T>,
+  mode: string,
+) => void

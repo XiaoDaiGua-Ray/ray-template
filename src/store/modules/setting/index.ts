@@ -2,7 +2,7 @@ import { getAppDefaultLanguage } from '@/locales/utils'
 import { colorToRgba, setStorage } from '@/utils'
 import { useI18n, useDayjs } from '@/hooks'
 import { watchOnce } from '@vueuse/core'
-import { APP_CATCH_KEY, APP_THEME } from '@/app-config'
+import { APP_CATCH_KEY, APP_THEME, SIDE_BAR_LOGO_DEFAULT } from '@/app-config'
 
 import type { SettingState } from '@/store/modules/setting/types'
 import type { LocalKey } from '@/hooks'
@@ -48,6 +48,7 @@ export const piniaSettingStore = defineStore(
         name: 'Dashboard',
         path: '/dashboard',
       },
+      sideBarLogo: Object.assign({}, SIDE_BAR_LOGO_DEFAULT),
     })
 
     /** 修改当前语言 */
@@ -119,18 +120,18 @@ export const piniaSettingStore = defineStore(
       () => settingState.appTheme,
       (ndata) => {
         ndata
-          ? Object.assign(
+          ? (settingState.primaryColorOverride = Object.assign(
               {},
               settingState.primaryColorOverride,
               APP_THEME.appNaiveUIThemeOverrides.dark,
               APP_THEME.appNaiveUIThemeOverridesCommon.dark,
-            )
-          : Object.assign(
+            ))
+          : (settingState.primaryColorOverride = Object.assign(
               {},
               settingState.primaryColorOverride,
               APP_THEME.appNaiveUIThemeOverrides.light,
               APP_THEME.appNaiveUIThemeOverridesCommon.light,
-            )
+            ))
       },
       {
         immediate: true,

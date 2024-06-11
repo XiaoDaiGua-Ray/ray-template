@@ -122,7 +122,7 @@ export default defineComponent({
           slot 的 warning。如果你不想看到这个 warning，请设定一个
           default-value。
         </NAlert>
-        <NAlert title="注已知问题" type="warning">
+        <NAlert title="已知问题" type="warning">
           由于 NTabs 设计缘故，手动设置 width 为 fitContent 后，配置了 disabled,
           popover 的配置项，会丢失过度效果。具体可以看下面的例子。
           <br />
@@ -192,7 +192,7 @@ export default defineComponent({
                 <NRadioGroup v-model:value={this.width}>
                   <NRadio value="fitContent">fitContent</NRadio>
                   <NRadio value="block">block</NRadio>
-                  <NRadio value={700}>700</NRadio>
+                  <NRadio value={800}>800</NRadio>
                 </NRadioGroup>
                 <RSegment
                   defaultValue="this is two"

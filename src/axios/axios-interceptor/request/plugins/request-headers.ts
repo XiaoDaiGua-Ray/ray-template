@@ -2,7 +2,10 @@ import { appendRequestHeaders } from '@/axios/utils/append-request-headers'
 import { APP_CATCH_KEY } from '@/app-config'
 import { getStorage } from '@/utils'
 
-import type { RequestInterceptorConfig, FetchFunction } from '@/axios/types'
+import type {
+  RequestInterceptorConfig,
+  AxiosRequestInterceptor,
+} from '@/axios/types'
 
 /**
  *
@@ -26,7 +29,7 @@ const requestHeaderToken = (ins: RequestInterceptorConfig, mode: string) => {
 }
 
 /** 注入请求头信息 */
-const injectRequestHeaders: FetchFunction = (ins, mode) => {
+const injectRequestHeaders: AxiosRequestInterceptor = (ins, mode) => {
   appendRequestHeaders(ins, [
     requestHeaderToken(ins, mode),
     {

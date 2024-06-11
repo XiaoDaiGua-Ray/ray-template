@@ -78,7 +78,7 @@ export const PRE_LOADING_CONFIG: PreloadingConfig = {
  *
  * 如果不设置该属性或者为空， 则不会渲染 LOGO
  */
-export const SIDE_BAR_LOGO: LayoutSideBarLogo | undefined = {
+export const SIDE_BAR_LOGO_DEFAULT: LayoutSideBarLogo | undefined = {
   icon: 'ray',
   title: 'Ray Template',
   url: '/dashboard',

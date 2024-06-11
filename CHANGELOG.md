@@ -1,5 +1,23 @@
 # CHANGE LOG
 
+## 4.8.7
+
+## Feats
+
+- 更新 `vite` 版本至 `5.2.12`
+- 更新 `vue` 版本至 `3.4.27`
+- 更新 `vue-hooks-plus` 版本至 `2.2.0`
+- 更新 `@types/lodash-es` 版本至 `4.17.12`
+- `FetchFunction` 移除，使用 `AxiosResponseInterceptor`, `AxiosRequestInterceptor` 替代插件类型推导
+- `echarts macarons theme` 优化
+- `RChart` 组件的默认 `loading` 效果支持自动跟随主题切换
+- `SIDE_BAR_LOGO` 更名为 `SIDE_BAR_LOGO_DEFAULT`，现在支持在 `setting store` 中动态更新，以满足更广泛的需求
+
+## Fixes
+
+- 修复 `primaryColorOverride` 配置项不生效问题
+- 修复面包屑在 `sameLevel` 的情况下，可能会被覆盖问题
+
 ## 4.8.6
 
 ## Fixes

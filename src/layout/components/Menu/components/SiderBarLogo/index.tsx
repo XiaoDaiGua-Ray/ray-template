@@ -14,7 +14,8 @@ import './index.scss'
 import { NEllipsis, NTooltip } from 'naive-ui'
 import { RIcon } from '@/components'
 
-import { isValueType } from '@/utils'
+import { isValueType, renderNode } from '@/utils'
+import { useSettingGetters } from '@/store'
 
 /**
  *
@@ -33,10 +34,7 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter()
-
-    const {
-      layout: { sideBarLogo },
-    } = __APP_CFG__
+    const { getSideBarLogo } = useSettingGetters()
 
     /**
      *
@@ -46,27 +44,35 @@ export default defineComponent({
      *   - outsideStation: 新开页面跳转
      */
     const sideBarLogoClick = () => {
-      if (sideBarLogo && sideBarLogo.url) {
-        sideBarLogo.jumpType === 'station'
-          ? router.push(sideBarLogo.url)
-          : window.open(sideBarLogo.url)
+      if (getSideBarLogo.value && getSideBarLogo.value.url) {
+        getSideBarLogo.value.jumpType === 'station'
+          ? router.push(getSideBarLogo.value.url)
+          : window.open(getSideBarLogo.value.url)
       }
     }
 
     const TemplateLogo = ({ cursor }: { cursor: string }) => {
-      if (typeof sideBarLogo.icon === 'string') {
+      if (!getSideBarLogo.value) {
+        return null
+      }
+
+      if (typeof getSideBarLogo.value.icon === 'string') {
         return (
-          <RIcon name={sideBarLogo!.icon as string} size="30" cursor={cursor} />
+          <RIcon
+            name={getSideBarLogo.value.icon as string}
+            size="30"
+            cursor={cursor}
+          />
         )
       }
 
-      if (isValueType<object>(sideBarLogo.icon, 'Object')) {
-        return <sideBarLogo.icon />
+      if (isValueType<object>(getSideBarLogo.value.icon, 'Object')) {
+        return renderNode(getSideBarLogo.value.icon)
       }
     }
 
     return {
-      sideBarLogo,
+      sideBarLogo: getSideBarLogo,
       sideBarLogoClick,
       TemplateLogo,
     }
@@ -104,7 +110,7 @@ export default defineComponent({
             {{
               trigger: () => (
                 <h1 class="n-menu-item-content">
-                  {sideBarLogo.title[0] || null}
+                  {sideBarLogo.title?.[0] || null}
                 </h1>
               ),
               default: () => sideBarLogo.title,

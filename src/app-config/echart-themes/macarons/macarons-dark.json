@@ -7,7 +7,24 @@
     "#f7c5a0",
     "#d4a4eb",
     "#d2f5a6",
-    "#76f2f2"
+    "#76f2f2",
+    "#9b8bba",
+    "#e098c7",
+    "#8fd3e8",
+    "#71669e",
+    "#cc70af",
+    "#7cb4cc",
+    "#7EC4FF",
+    "#5FCBB0",
+    "#49C4BF",
+    "#F0C9CA",
+    "#34DC90",
+    "#3295E0",
+    "#EAB62E",
+    "#76C3F3",
+    "#2DC2C0",
+    "#FCC43F",
+    "#84CFFF"
   ],
   "backgroundColor": "transparent",
   "textStyle": {},
@@ -296,6 +313,9 @@
   },
   "legend": {
     "textStyle": {
+      "color": "#999999"
+    },
+    "pageTextStyle": {
       "color": "#999999"
     }
   },

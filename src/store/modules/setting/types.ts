@@ -1,5 +1,5 @@
 import type { GlobalThemeOverrides } from 'naive-ui'
-import type { Placement } from '@/types'
+import type { Placement, LayoutSideBarLogo } from '@/types'
 
 export interface WatermarkConfig {
   content: string
@@ -30,4 +30,5 @@ export interface SettingState {
   contentTransition: string
   watermarkConfig: WatermarkConfig
   appRootRoute: AppRootRoute
+  sideBarLogo: LayoutSideBarLogo | undefined
 }

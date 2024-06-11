@@ -1,6 +1,9 @@
 import { axiosCanceler } from '@/axios/utils/interceptor'
 
-import type { FetchFunction, FetchErrorFunction } from '@/axios/types'
+import type {
+  AxiosResponseInterceptor,
+  FetchErrorFunction,
+} from '@/axios/types'
 
 /**
  *
@@ -10,7 +13,7 @@ import type { FetchFunction, FetchErrorFunction } from '@/axios/types'
  * @description
  * 响应成功后注销请求取消器。
  */
-const injectResponseCanceler: FetchFunction = (ins, mode) => {
+const injectResponseCanceler: AxiosResponseInterceptor = (ins, mode) => {
   axiosCanceler.removePendingRequest(ins)
 }
 
