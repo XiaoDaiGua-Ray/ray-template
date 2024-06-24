@@ -187,7 +187,7 @@ const useCheckedRowKeys = <
    * @description
    * 获取所有已选择行的数据。
    */
-  const getRows = () => rowsRef.value
+  const getRows = () => rowsRef.value as T[]
 
   /**
    *

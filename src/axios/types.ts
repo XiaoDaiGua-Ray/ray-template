@@ -147,11 +147,6 @@ export interface ErrorImplementQueue {
 
 export type FetchType = 'ok' | 'error'
 
-export type FetchErrorFunction<T = any, D = any> = (
-  error: AxiosError<T, D>,
-  mode: string,
-) => void
-
 export interface AxiosFetchInstance {
   requestInstance: RequestInterceptorConfig | null
   responseInstance: ResponseInterceptorConfig | null
@@ -173,12 +168,42 @@ type AxiosResponseInterceptorIns<T = any, D = any> = AxiosResponseOmit<T, D> & {
   config: AxiosResponseConfigInterceptor<T>
 }
 
+/**
+ *
+ * @param ins current response instance
+ * @param mode current environment mode
+ *
+ * @description
+ * axios response interceptor.
+ */
 export type AxiosResponseInterceptor<T = any, K = any> = (
   ins: AxiosResponseInterceptorIns<T, K>,
   mode: string,
 ) => void
 
+/**
+ *
+ * @param ins current request instance
+ * @param mode current environment mode
+ *
+ * @description
+ * axios request interceptor.
+ */
 export type AxiosRequestInterceptor<T = any> = (
   ins: RequestInterceptorConfig<T>,
+  mode: string,
+) => void
+
+/**
+ *
+ * @param error current request error instance
+ * @param mode current environment mode
+ *
+ * @description
+ * axios request and response error interceptor.
+ * if you need create plugin with error interceptor, you can use this function type.
+ */
+export type FetchErrorFunction<T = any, D = any> = (
+  error: AxiosError<T, D>,
   mode: string,
 ) => void

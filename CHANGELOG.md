@@ -1,5 +1,17 @@
 # CHANGE LOG
 
+## 4.8.8
+
+## Feats
+
+- 更新 `vite` 版本至 `5.3.1`
+- 更新 `vue` 版本至 `3.4.30`
+- `FetchErrorFunction` 类型在你自定义请求拦截器插件处理错误请求的时候，可能会用上
+
+## Fixes
+
+- 修复 `useCheckedRowKeys` 的 `getRows` 方法类型丢失问题
+
 ## 4.8.7
 
 ## Feats
