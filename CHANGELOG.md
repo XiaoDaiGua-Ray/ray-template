@@ -1,5 +1,11 @@
 # CHANGE LOG
 
+## 4.8.9
+
+## Fixes
+
+- 修复 `useCheckedRowKeys` 的 `getRows` 方法在异步分页获取数据的时候，会导致切换页面后勾选项丢失问题
+
 ## 4.8.8
 
 ## Feats

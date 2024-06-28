@@ -3,11 +3,7 @@ import { effectDispose } from '@/utils'
 
 import type { Recordable } from '@/types'
 import type { MaybeRef } from '@vueuse/core'
-import type {
-  DataTableColumns,
-  DataTableColumn,
-  DataTableSelectionColumn,
-} from 'naive-ui'
+import type { DataTableColumns, DataTableSelectionColumn } from 'naive-ui'
 
 export type RowKey = string | number
 
@@ -99,6 +95,41 @@ const isMultiple = (columns: MaybeRef<DataTableColumns<any> | undefined>) => {
   return true
 }
 
+const matchRowsBySelectionKeys = <T extends Recordable>(
+  data: MaybeRef<T[] | undefined>,
+  keys: RowKey[],
+  currentRows: MaybeRef<T[]>,
+  bindRowKey: string,
+) => {
+  const unrefData = unref(data)
+
+  if (!unrefData) {
+    return currentRows
+  }
+
+  return keys.reduce((pre, key) => {
+    const findByCurrentRows = unref(currentRows).findIndex(
+      (f) => f[bindRowKey] === key,
+    )
+
+    if (findByCurrentRows !== -1) {
+      pre.push(unref(currentRows)[findByCurrentRows])
+
+      return pre
+    }
+
+    const findByData = unrefData.findIndex((f) => f[bindRowKey] === key)
+
+    if (findByData !== -1) {
+      pre.push(unrefData[findByData])
+
+      return pre
+    }
+
+    return pre
+  }, [] as T[])
+}
+
 /**
  *
  * @param data 当前 DataTable 组件的数据
@@ -160,11 +191,13 @@ const useCheckedRowKeys = <
     },
   ) => {
     keysRef.value = keys
-    rowsRef.value = rows
+    rowsRef.value = unref(
+      matchRowsBySelectionKeys(data, keys, rowsRef, bindRowKey),
+    )
 
     onChange?.(
       keys,
-      rows as any,
+      rowsRef.value,
       meta as {
         row: any | undefined
         action: Action
