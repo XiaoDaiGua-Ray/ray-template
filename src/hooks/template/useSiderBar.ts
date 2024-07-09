@@ -12,6 +12,7 @@
 import { useMenuGetters, useMenuActions } from '@/store'
 import { useVueRouter, useAppRoot } from '@/hooks'
 import { pick } from 'lodash-es'
+import { pickRouteRecordNormalizedConstant } from '@/store/modules/menu/constant'
 
 import type { MenuTagOptions, Key, AppMenuOption } from '@/types'
 
@@ -206,13 +207,7 @@ export function useSiderBar() {
     )
 
     if (findMenuOption) {
-      const pickOption = pick(findMenuOption, [
-        'children',
-        'meta',
-        'path',
-        'name',
-        'redirect',
-      ])
+      const pickOption = pick(findMenuOption, pickRouteRecordNormalizedConstant)
       const res = resolveOption(pickOption as unknown as AppMenuOption)
 
       changeMenuModelValue(

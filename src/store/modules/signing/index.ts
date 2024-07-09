@@ -80,11 +80,18 @@ export const piniaSigningStore = defineStore(
      */
     const logout = () => {
       const { closeAll } = useSiderBar()
+      const { appPiniaMenuStore, appPiniaSigningStore } = APP_CATCH_KEY
 
+      // 提示信息
       window.$message.info('账号退出中...')
+      // 移除所有 sessionStorage 缓存
       removeStorage('__all_sessionStorage__', 'sessionStorage')
+      // 移除指定 localStorage 缓存
+      removeStorage(appPiniaMenuStore, 'localStorage')
+      removeStorage(appPiniaSigningStore, 'localStorage')
+      // 关闭所有侧边栏标签
       closeAll()
-
+      // 延迟 300ms 后强制刷新当前系统
       setTimeout(() => window.location.reload())
     }
 
@@ -98,7 +105,7 @@ export const piniaSigningStore = defineStore(
     persist: {
       key: APP_CATCH_KEY.appPiniaSigningStore,
       paths: ['signingCallback'],
-      storage: sessionStorage,
+      storage: window.localStorage,
     },
   },
 )

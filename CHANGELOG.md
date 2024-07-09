@@ -1,5 +1,23 @@
 # CHANGE LOG
 
+## 4.9.0
+
+主要修复了一个歧义问题，就是新开页面输入 `url`，或者是 `window.open` 打开当前系统的页面时，会导致初始化异常的问题。这是因为以前的 `appMenu`, `appSigning` 相关的缓存都是防止与 `sessionStorage`，但是该缓存并不能共享，所以导致了这个问题。在该版本中将该缓存调整为了 `localStorage`。
+
+## Feats
+
+- 移除 `vite-plugin-imp` 插件
+- 更新 `vue` 版本至 `3.4.31`
+- 更新 `vite` 版本至 `5.3.3`
+- 将 `appPiniaMenuStore`, `appPiniaSigningStore` 缓存由 `sessionStorage` 更改为 `localStorage` 缓存
+- 现在在模拟退出的时候，会清理 `appPiniaMenuStore`, `appPiniaSigningStore` 的 `localStorage` 缓存
+- 将 `route` 待提取字段单独抽离，统一维护为 `pickRouteRecordNormalizedConstant`
+
+## Fixes
+
+- 修复 `RTable` 自定义 `tool` 时抛出的优化警告问题
+- 修复在复制 `url` 打开新标签页输入网址后（包括新开页面），会导致项目初始化异常的问题
+
 ## 4.8.9
 
 ## Fixes

@@ -40,7 +40,7 @@ export const permissionRouter = (router: Router) => {
   ) => to.path === '/' || from.path === '/login'
 
   beforeEach((to, from, next) => {
-    const token = getStorage<string>(APP_CATCH_KEY.token)
+    const token = getStorage<string>(APP_CATCH_KEY.token, 'localStorage')
     const catchRoutePath = getStorage(
       APP_CATCH_KEY.appMenuKey,
       'sessionStorage',

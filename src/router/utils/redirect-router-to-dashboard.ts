@@ -15,7 +15,7 @@ export const redirectRouterToDashboard = (isReplace = true) => {
   const { push, replace } = router
   const { getRootPath } = useAppRoot()
 
-  setStorage(APP_CATCH_KEY.appMenuKey, getRootPath.value)
+  setStorage(APP_CATCH_KEY.appMenuKey, getRootPath.value, 'localStorage')
 
   isReplace ? replace(getRootPath.value) : push(getRootPath.value)
 }

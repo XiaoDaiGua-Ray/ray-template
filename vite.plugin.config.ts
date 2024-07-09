@@ -16,7 +16,6 @@ import viteVueJSX from '@vitejs/plugin-vue-jsx'
 import viteVeI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import viteInspect from 'vite-plugin-inspect'
 import viteSvgLoader from 'vite-svg-loader'
-import vitePluginImp from 'vite-plugin-imp'
 import { analyzer, adapter } from 'vite-bundle-analyzer'
 import viteCompression from 'vite-plugin-compression'
 import { ViteEjsPlugin as viteEjsPlugin } from 'vite-plugin-ejs'
@@ -176,20 +175,6 @@ function baseOptions(mode: string): PluginOption[] {
           cache: true,
         })
       : null,
-    vitePluginImp({
-      libList: [
-        {
-          libName: 'lodash-es',
-          libDirectory: '',
-          camel2DashComponentName: false,
-        },
-        {
-          libName: '@vueuse',
-          libDirectory: '',
-          camel2DashComponentName: false,
-        },
-      ],
-    }),
     viteEjsPlugin({
       preloadingConfig,
       appPrimaryColor,

@@ -50,8 +50,8 @@ export default defineComponent({
                 setTimeout(() => {
                   window.$message.success(`欢迎${signingForm.value.name}登陆~`)
 
-                  setStorage(APP_CATCH_KEY.token, 'tokenValue')
-                  setStorage(APP_CATCH_KEY.signing, res.data)
+                  setStorage(APP_CATCH_KEY.token, 'tokenValue', 'localStorage')
+                  setStorage(APP_CATCH_KEY.signing, res.data, 'localStorage')
 
                   router.push(getRootPath.value)
 

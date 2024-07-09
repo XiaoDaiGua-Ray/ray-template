@@ -186,7 +186,7 @@ export default defineComponent({
         return renderDefaultToolOptions
       } else {
         if (props.coverTool) {
-          return <NFlex align="center">{renderToolOptions()}</NFlex>
+          return () => <NFlex align="center">{renderToolOptions()}</NFlex>
         } else {
           return () => (
             <NFlex align="center">

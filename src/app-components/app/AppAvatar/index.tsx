@@ -47,7 +47,10 @@ const AppAvatar = defineComponent({
     },
   },
   setup(props) {
-    const signing = getStorage<SigningCallback>(APP_CATCH_KEY.signing)
+    const signing = getStorage<SigningCallback>(
+      APP_CATCH_KEY.signing,
+      'localStorage',
+    )
 
     return {
       signing,

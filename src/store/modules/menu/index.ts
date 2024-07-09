@@ -42,6 +42,7 @@ import { getAppRawRoutes } from '@/router/app-route-modules'
 import { useKeepAliveActions } from '@/store'
 import { APP_CATCH_KEY } from '@/app-config'
 import { pick } from 'lodash-es'
+import { pickRouteRecordNormalizedConstant } from './constant'
 
 import type { AppMenuOption, MenuTagOptions } from '@/types'
 import type { MenuState } from '@/store/modules/menu/types'
@@ -271,15 +272,10 @@ export const piniaMenuStore = defineStore(
           setStorage(APP_CATCH_KEY.appMenuKey, key)
         } else {
           // 使用 pick 提取仅需要的字段，避免 vue 抛错空引用，导致性能损耗
-          const breadcrumbOption = pick(resolveOption(option), [
-            'breadcrumbLabel',
-            'children',
-            'key',
-            'meta',
-            'name',
-            'path',
-            'show',
-          ]) as unknown as AppMenuOption
+          const breadcrumbOption = pick(
+            resolveOption(option),
+            pickRouteRecordNormalizedConstant,
+          ) as unknown as AppMenuOption
           // 查看是否重复
           const find = menuState.breadcrumbOptions.find(
             (curr) => curr.key === breadcrumbOption.key,
@@ -314,13 +310,10 @@ export const piniaMenuStore = defineStore(
 
       if (findMenuOption) {
         // 使用 pick 提取仅需要的字段，避免 vue 抛错空引用，导致性能损耗
-        const pickOption = pick(findMenuOption, [
-          'children',
-          'meta',
-          'path',
-          'name',
-          'redirect',
-        ]) as unknown as AppMenuOption
+        const pickOption = pick(
+          findMenuOption,
+          pickRouteRecordNormalizedConstant,
+        ) as unknown as AppMenuOption
 
         changeMenuModelValue(
           routePath,
@@ -452,7 +445,7 @@ export const piniaMenuStore = defineStore(
   {
     persist: {
       key: APP_CATCH_KEY.appPiniaMenuStore,
-      storage: window.sessionStorage,
+      storage: window.localStorage,
       paths: ['breadcrumbOptions', 'menuKey', 'menuTagOptions', 'collapsed'],
     },
   },
