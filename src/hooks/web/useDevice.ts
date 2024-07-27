@@ -19,6 +19,11 @@ import { watchEffectWithTarget } from '@/utils'
 
 import type { UseWindowSizeOptions } from '@vueuse/core'
 
+type Callback = (
+  isSmaller: boolean,
+  size: { width: number; height: number },
+) => void
+
 export interface UseDeviceOptions extends UseWindowSizeOptions {
   /**
    *
@@ -28,6 +33,7 @@ export interface UseDeviceOptions extends UseWindowSizeOptions {
    * @default 768
    */
   media?: number
+  observer?: Callback
 }
 
 /**
@@ -47,11 +53,17 @@ export interface UseDeviceOptions extends UseWindowSizeOptions {
 export function useDevice(options?: UseDeviceOptions) {
   const { width, height } = useWindowSize(options)
   const isTabletOrSmaller = ref(false)
+  const { observer } = options ?? {}
 
   const update = () => {
     const { media = 768 } = options ?? {}
 
     isTabletOrSmaller.value = width.value <= media
+
+    observer?.(isTabletOrSmaller.value, {
+      width: width.value,
+      height: height.value,
+    })
   }
 
   watchEffectWithTarget(update)

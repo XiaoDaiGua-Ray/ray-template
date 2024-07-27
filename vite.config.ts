@@ -58,7 +58,6 @@ export default defineConfig(({ mode }) => {
         'lodash-es',
         'vue-hooks-plus',
         'interactjs',
-        'awesome-qr',
         'pinia-plugin-persistedstate',
         'currency.js',
         'mockjs',

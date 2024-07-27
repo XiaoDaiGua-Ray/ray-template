@@ -30,7 +30,7 @@ module.exports = {
       minPixelValue: 1,
       /** 允许在媒体查询中转换 px */
       mediaQuery: false,
-      // exclude: /(\/|\\)(node_modules)(\/|\\)/, // 忽略某些文件夹下的文件或特定文件，例如 'node_modules' 下的文件
+      exclude: /(\/|\\)(node_modules)(\/|\\)/, // 忽略某些文件夹下的文件或特定文件，例如 'node_modules' 下的文件
       include: [/^src[/\\].*\.(vue|tsx|jsx|ts(?!d))$/],
       preserve: true,
     },

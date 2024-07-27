@@ -55,7 +55,14 @@ export default defineComponent({
         }
       },
     })
-    const { isTabletOrSmaller } = useDevice()
+    const { isTabletOrSmaller } = useDevice({
+      observer: (isSmaller) => {
+        if (isSmaller) {
+          // 避免菜单折叠时，在小尺寸屏幕导致菜单显示不完整
+          updateMenuState('collapsed', false)
+        }
+      },
+    })
     const modelGlobalDrawerValue = computed({
       get: () => getVariableToRefs('globalDrawerValue').value,
       set: (val) => {
