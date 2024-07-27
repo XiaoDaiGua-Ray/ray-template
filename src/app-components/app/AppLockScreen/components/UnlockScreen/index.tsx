@@ -120,7 +120,7 @@ export default defineComponent({
             </div>
           </div>
           <div class="app-lock-screen__unlock__content-avatar">
-            <AppAvatar avatarSize={52} style="pointer-events: none;" />
+            <AppAvatar avatarSize={52} style="pointer-events: none;" vertical />
           </div>
           <div class="app-lock-screen__unlock__content-input">
             <NForm ref="formRef" model={this.lockCondition} rules={rules}>

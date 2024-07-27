@@ -21,6 +21,7 @@ import TablePropsSelect from './components/Props'
 import props from './props'
 import { call, renderNode, uuid } from '@/utils'
 import { config } from './shared'
+import { pick } from 'lodash-es'
 
 import type { DropdownOption, DataTableInst } from 'naive-ui'
 import type { ComponentSize } from '@/types'
@@ -56,10 +57,15 @@ export default defineComponent({
     const privateReactive = reactive({
       size: props.size,
     })
-    const propsPopselectValue = ref({
-      striped: false,
-      bordered: false,
-    })
+    const propsPopselectValue = ref(
+      Object.assign(
+        {
+          striped: false,
+          bordered: false,
+        },
+        pick(props, 'striped', 'bordered'),
+      ),
+    )
 
     /**
      *

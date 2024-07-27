@@ -1,5 +1,26 @@
 # CHANGE LOG
 
+## 4.9.1
+
+更新核心依赖版本为主流版本。
+
+## Feats
+
+- 更新 `axios` 版本至 `1.7.2`
+- 更新 `vue-hooks-plus` 版本至 `2.2.1`
+- 更新 `naive-ui` 版本至 `2.39.0`
+- 更新 `vue` 版本至 `3.4.34`
+- 更新 `vite` 版本至 `5.3.5`
+- 更新 `@vitejs/plugin-vue` 版本至 `5.1.0`
+- 更新 `@vitejs/plugin-vue-jsx` 版本至 `4.0.0`
+- 调整解锁锁屏头像样式
+- `RModal` 在设置为拖拽时，如果未设置头（也就是 `title`）属性，则会失效
+
+## Fixes
+
+- 修复 `__APP_CFG__` 类型丢失问题
+- 修复 `RTable` 设置 `tool` 为 `false` 时，单独设置 `striped`, `bordered` 时不生效的问题
+
 ## 4.9.0
 
 主要修复了一个歧义问题，就是新开页面输入 `url`，或者是 `window.open` 打开当前系统的页面时，会导致初始化异常的问题。这是因为以前的 `appMenu`, `appSigning` 相关的缓存都是防止与 `sessionStorage`，但是该缓存并不能共享，所以导致了这个问题。在该版本中将该缓存调整为了 `localStorage`。

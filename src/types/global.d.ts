@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export {}
 
-import type { AppConfig } from './modules/viteCustomConfig'
+import type { AppConfig } from './modules/vite-custom-config'
 import type {
   MessageApi,
   DialogApi,

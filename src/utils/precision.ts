@@ -248,7 +248,8 @@ export const divide = (...args: CurrencyArguments[]) => {
  *
  * @example
  * distribute(0, 1) // [0]
- * distribute(0, 3) // [0, 0, 0]
+ * distribute(2, 3) // [0.67, 0.67, 0.67]
+ * distribute(3, 3) // [1, 1, 1]
  */
 export const distribute = (
   value: CurrencyArguments,

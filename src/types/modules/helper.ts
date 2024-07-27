@@ -48,10 +48,10 @@ export type Recordable<T = any> = Record<string, T>
 
 /**
  *
- * 获取目标类型的所有属性名
+ * 获取目标类型的所有属性类型
  *
  * @example
- * Keys<{ a: string, b: number }> // 'a' | 'b'
+ * ValueOf<{ a: string, b: number }> // string | number
  */
 export type ValueOf<T extends object> = T[keyof T]
 

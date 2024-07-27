@@ -45,6 +45,10 @@ const AppAvatar = defineComponent({
       type: [String, Number] as PropType<AvatarProps['size']>,
       default: 'medium',
     },
+    vertical: {
+      type: Boolean,
+      default: false,
+    },
   },
   setup(props) {
     const signing = getStorage<SigningCallback>(
@@ -57,11 +61,11 @@ const AppAvatar = defineComponent({
     }
   },
   render() {
-    const { signing, avatarSize, spaceSize, $props } = this
+    const { signing, avatarSize, spaceSize, $props, vertical } = this
 
     return (
       <NButton quaternary strong>
-        <NFlex align="center" size={spaceSize}>
+        <NFlex align="center" size={spaceSize} vertical={vertical}>
           <NAvatar
             {...($props as AvatarProps)}
             src={signing?.avatar}
