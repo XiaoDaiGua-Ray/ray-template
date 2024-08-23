@@ -55,7 +55,8 @@ $menuTagWrapperWidth: 76px;
       opacity: 0;
 
       & .ray-icon {
-        transform: translate(-1px, 0px);
+        width: 11px !important;
+        height: 11px !important;
       }
     }
 
@@ -70,6 +71,9 @@ $menuTagWrapperWidth: 76px;
         padding: 1px;
         transition: all 0.3s var(--r-bezier);
         opacity: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
     }
   }

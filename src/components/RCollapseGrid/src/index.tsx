@@ -32,6 +32,13 @@ export default defineComponent({
   props,
   setup(props) {
     const modelCollapsed = ref(!props.open)
+    const cssVars = computed(() => {
+      const cssVar = {
+        '--r-collapse-grid-action-align': props.actionAlign,
+      }
+
+      return cssVar
+    })
 
     const collapseClick = () => {
       modelCollapsed.value = !modelCollapsed.value
@@ -68,11 +75,14 @@ export default defineComponent({
       modelCollapsed,
       collapseClick,
       CollapseIcon,
+      cssVars,
     }
   },
   render() {
+    const { cssVars } = this
+
     return (
-      <NCard bordered={this.bordered}>
+      <NCard bordered={this.bordered} style={[cssVars]}>
         {{
           default: () => (
             <NGrid
@@ -84,7 +94,7 @@ export default defineComponent({
               collapsedRows={this.collapsedRows}
             >
               {this.$slots.default?.()}
-              <NGridItem suffix class="ray-collapse-grid__suffix--btn">
+              <NGridItem suffix class={['ray-collapse-grid__suffix--btn']}>
                 <NFlex justify="end" align="center">
                   {this.$slots.action?.()}
                   {this.CollapseIcon()}

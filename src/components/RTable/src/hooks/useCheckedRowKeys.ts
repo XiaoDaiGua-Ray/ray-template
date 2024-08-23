@@ -280,7 +280,7 @@ const useCheckedRowKeys = <
    * 选中指定的 keys。
    * 当你调用该方法时，会将 keys 与 data 中的 rows 进行比对，将匹配的 rows 添加到已选中的 rows 中。
    *
-   * 如果 multiple 为 false，那么只会选中一个 key；
+   * 如果 multiple 为 false，那么只会选中一个 key；重复的选择，将会以最后一次绑定的 key 为准。
    * 所以，如果你需要选中多个 key，需要将 multiple 设置为 true。
    */
   const selectKey = (key: RowKey) => {

@@ -61,7 +61,6 @@ const useTable = () => {
         '[useTable]: table instance is not ready yet. if you are using useTable, please make sure you have called register method in onRegister event.',
       )
     }
-    console.log(tableRef.value)
 
     return tableRef.value
   }

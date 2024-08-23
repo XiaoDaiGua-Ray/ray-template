@@ -490,6 +490,10 @@ export default defineComponent({
               {...{
                 id: uuidScrollBar,
               }}
+              themeOverrides={{
+                width: '0px',
+                height: '0px',
+              }}
             >
               <NFlex
                 ref="menuTagSpaceRef"

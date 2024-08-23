@@ -28,6 +28,18 @@ const props = {
   /**
    *
    * @description
+   * 是否渲染外层容器 header，默认渲染。
+   * 如果配置为 false，则不会显示外层容器的头部。
+   *
+   * @default true
+   */
+  renderWrapperHeader: {
+    type: Boolean,
+    default: true,
+  },
+  /**
+   *
+   * @description
    * 配置表格外层容器 props，也就是 NCard 的配置项。
    */
   cardProps: {

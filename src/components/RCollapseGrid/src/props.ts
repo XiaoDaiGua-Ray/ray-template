@@ -1,10 +1,21 @@
 import { gridProps } from 'naive-ui'
 
 import type { PropType } from 'vue'
-import type { CollapseToggleText } from './types'
+import type { CollapseToggleText, ActionAlignType } from './types'
 import type { AnyFC, MaybeArray } from '@/types'
 
 const props = {
+  /**
+   *
+   * @description
+   * 自定义操作按钮区域按钮列排列方式。
+   *
+   * @default end
+   */
+  actionAlign: {
+    type: String as PropType<ActionAlignType>,
+    default: 'end',
+  },
   open: {
     /**
      *

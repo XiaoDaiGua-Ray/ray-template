@@ -48,7 +48,7 @@ import type { DropdownProps, DropdownOption } from 'naive-ui'
 
 // setOption 默认配置项
 const defaultChartOptions = {
-  notMerge: false,
+  notMerge: true,
   lazyUpdate: true,
   silent: false,
   replaceMerge: [],
@@ -434,8 +434,8 @@ export default defineComponent({
             const options = combineChartOptions(ndata)
             const setOpt = Object.assign(
               {},
-              props.setChartOptions,
               defaultChartOptions,
+              props.setChartOptions,
             )
 
             // 如果 options 发生变动更新 echarts

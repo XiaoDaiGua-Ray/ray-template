@@ -356,12 +356,12 @@ const props = {
    * @description
    * 设置 setOptions 方法配置项。
    *
-   * @default {notMerge:false,lazyUpdate:true,silent:false,replaceMerge:[]}
+   * @default {notMerge:true,lazyUpdate:true,silent:false,replaceMerge:[]}
    */
   setChartOptions: {
     type: Object as PropType<SetOptionOpts>,
     default: () => ({
-      notMerge: false,
+      notMerge: true,
       lazyUpdate: true,
       silent: false,
       replaceMerge: [],

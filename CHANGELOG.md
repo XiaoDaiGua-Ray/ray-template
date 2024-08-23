@@ -1,5 +1,30 @@
 # CHANGE LOG
 
+## 4.9.3
+
+## Feats
+
+- 更新 `vue` 版本至 `3.4.38`
+- 更新 `vite` 版本至 `5.4.1`
+- 调整 `RCollapseGrid` 支持 `actionAlign` 配置型，配置按钮垂直方向，默认为 `end`
+- `MenuTag` 组件
+  - 调整 `MenuTag` 滚动条样式，现在将它隐藏了
+  - 优化关闭按钮样式
+- `RTable` 新增 `renderWrapperHeader` 配置项，配置外层容器 `header` 是否渲染
+- `postcss` 配置 `not dead`，忽略兼容已经无需兼容的浏览器
+- `RChart` 组件 `setOptions` 方法配置项默认不启用 `merge` 模式
+- 调整 `header` 的样式，增加了一点点间隙
+- `useDevice` 新增 `observer` 配置项，可以自定义观察回调
+- 新增 `components-pro` 包，助力简化业务开发
+  - 新增 `RTablePro` 组件，大幅简化中后台带有过滤请求条件的表格显示业务
+  - 新增 `RCollapse` 组件，允许折叠过滤条件
+
+## Fixes
+
+- 移除 `postcss-px-to-viewport-8-plugin` 插件，使用 `postcss-px-to-viewport-8-with-include` 替换，修复 `include` 失效问题
+- 修复 `useElementFullscreen` 在退出时，没有正确的回滚 `zIndex` 的问题
+- 修复 `RChart` 配置 `setChartOptions` 不生效的问题
+
 ## 4.9.2
 
 ## Feats

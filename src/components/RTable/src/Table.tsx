@@ -25,7 +25,11 @@ import { pick } from 'lodash-es'
 
 import type { DropdownOption, DataTableInst } from 'naive-ui'
 import type { ComponentSize } from '@/types'
-import type { C as CType, PropsComponentPopselectKeys } from './types'
+import type {
+  C as CType,
+  PropsComponentPopselectKeys,
+  RTableInst,
+} from './types'
 
 export default defineComponent({
   name: 'RTable',
@@ -34,7 +38,7 @@ export default defineComponent({
   setup(props, ctx) {
     const { expose, emit } = ctx
 
-    const rTableInst = ref<DataTableInst>()
+    const rTableInst = ref<RTableInst>()
     const wrapperRef = ref<HTMLElement>()
 
     const uuidWrapper = uuid(16) // wrapper id
@@ -147,7 +151,7 @@ export default defineComponent({
       const { toolOptions } = props
 
       return toolOptions
-        ?.filter(() => Boolean)
+        ?.filter(Boolean)
         .map((curr) => (typeof curr === 'function' ? curr() : curr))
     }
 
@@ -251,6 +255,7 @@ export default defineComponent({
       title,
       $slots,
       propsPopselectValue,
+      renderWrapperHeader,
     } = this
     const { class: className } = $attrs
     const { tool, combineRowProps, contextMenuSelect } = this
@@ -299,9 +304,11 @@ export default defineComponent({
               ) : null}
             </>
           ),
-          header: renderNode(title, {
-            defaultElement: <div style="display: none;"></div>,
-          }),
+          header: renderWrapperHeader
+            ? renderNode(title, {
+                defaultElement: <div style="display: none;"></div>,
+              })
+            : null,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           'header-extra': tool($props as any),
           footer: () => $slots.tableFooter?.(),

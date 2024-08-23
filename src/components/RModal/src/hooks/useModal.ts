@@ -25,8 +25,6 @@ const useModal = () => {
             },
             trigger: 'none',
             style: {
-              padding:
-                '0 var(--n-padding-left) var(--n-padding-bottom) var(--n-padding-left)',
               width: 'auto',
               height:
                 'calc(100vh - 29px - var(--n-padding-bottom) - var(--n-padding-bottom) - var(--n-padding-top))',

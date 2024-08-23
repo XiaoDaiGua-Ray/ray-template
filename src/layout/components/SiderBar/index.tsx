@@ -162,7 +162,7 @@ export default defineComponent({
             ))}
             {getBreadcrumbSwitch ? <Breadcrumb /> : null}
           </NFlex>
-          <NFlex justify="end" align="center" size={[0, 0]} wrap={false}>
+          <NFlex justify="end" align="center" size={[4, 0]} wrap={false}>
             {isRenderVNode(
               <GlobalSearchButton
                 onClick={(e) => {

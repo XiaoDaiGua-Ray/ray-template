@@ -33,6 +33,13 @@ export interface UseDeviceOptions extends UseWindowSizeOptions {
    * @default 768
    */
   media?: number
+  /**
+   *
+   * @description
+   * 当尺寸更新后的回调函数。
+   *
+   * @default undefined
+   */
   observer?: Callback
 }
 
@@ -72,7 +79,7 @@ export function useDevice(options?: UseDeviceOptions) {
     width,
     height,
     isTabletOrSmaller: readonly(isTabletOrSmaller),
-  }
+  } as const
 }
 
 export type UseDeviceReturnType = ReturnType<typeof useDevice>

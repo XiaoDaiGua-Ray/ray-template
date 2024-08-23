@@ -196,6 +196,9 @@ export const useElementFullscreen = (
       element.removeAttribute(ID_TAG)
     }
 
+    // 回滚 z-index 值，避免无限增加
+    currentZIndex--
+
     stopWatch()
   })
 

@@ -27,5 +27,6 @@
   "SvgIcon": "SVG 图标",
   "Table": "表格",
   "TemplateHooks": "模板内置 Api",
-  "scrollReveal": "滚动动画"
+  "scrollReveal": "滚动动画",
+  "TablePro": "高级表格"
 }
