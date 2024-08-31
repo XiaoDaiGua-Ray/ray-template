@@ -1,5 +1,19 @@
 # CHANGE LOG
 
+## 4.9.4
+
+## Feats
+
+- `cdn` 相关的一些配置
+  - 将 `cdn` 源更新为 `baomitu`，为了避免因为墙的影响导致加载缓慢的问题
+  - 新增一些插件的 `cdn` 配置
+- `useTable`, `useTablePro` 中的 `print` 方法新增传递 `options` 配置项，配置打印，允许配置 `dom-to-image` 与 `print-js`，详情可以查看 `PrintDomOptions` 类型说明。
+- `RCollapse` 组件新增 `collapse` 插槽，允许自定义【展开】与【收起】状态
+
+## Fixes
+
+- 修复 `useTablePro` 中 `print` 方法丢失的问题
+
 ## 4.9.3
 
 ## Feats

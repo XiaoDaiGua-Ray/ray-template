@@ -10,6 +10,7 @@ import type {
   UseTableRegister,
   TableProvider,
 } from '../types'
+import type { PrintDomOptions } from '@/utils'
 
 /**
  *
@@ -138,15 +139,18 @@ const useTable = () => {
    * @description
    * 打印表格。
    */
-  const print = () => {
+  const print = (options?: PrintDomOptions) => {
     const { uuidWrapper } = extra
 
     if (uuidWrapper) {
       const tableWrapperElement = document.getElementById(uuidWrapper)
 
-      printDom(tableWrapperElement)
+      printDom(tableWrapperElement, options)
     }
   }
+
+  const filter = (filters: FilterState | null) =>
+    getTableInstance().filter.call(null, filters)
 
   return [
     register,
@@ -160,6 +164,7 @@ const useTable = () => {
       scrollTo,
       sort,
       print,
+      filter,
     },
   ] as const
 }

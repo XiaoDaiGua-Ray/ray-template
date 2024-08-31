@@ -23,7 +23,20 @@ export default defineComponent({
   name: 'RTablePro',
   props,
   setup(props) {
-    const [register, { getTableInstance }] = useTable()
+    const [
+      register,
+      {
+        clearFilters,
+        clearSorter,
+        downloadCsv,
+        filters,
+        page,
+        scrollTo,
+        sort,
+        print,
+        filter,
+      },
+    ] = useTable()
     const [
       paginationRef,
       {
@@ -31,7 +44,6 @@ export default defineComponent({
         getPageSize,
         setCallback,
         setItemCount,
-        getPagination,
         resetPagination,
         getItemCount,
       },
@@ -42,8 +54,6 @@ export default defineComponent({
 
     // 获取最新 statistics 和 pagination 值
     const update = (): TablePagination => {
-      const pagination = getPagination()
-
       return {
         getItemCount,
         getPage,
@@ -126,19 +136,7 @@ export default defineComponent({
     onMounted(() => {
       const { onRegister } = props
 
-      if (onRegister && getTableInstance()) {
-        const {
-          clearFilters,
-          clearSorter,
-          downloadCsv,
-          filters,
-          page,
-          scrollTo,
-          sort,
-          filter,
-          print,
-        } = getTableInstance()
-
+      if (onRegister) {
         call(onRegister, {
           getTablePagination: update,
           runTableRequest: runResetPaginationRequest,
@@ -149,8 +147,8 @@ export default defineComponent({
           page,
           scrollTo,
           sort,
-          filter,
           print,
+          filter,
           getCurrentTableRequestParams:
             combineRequestParams as TableProInst['getCurrentTableRequestParams'],
         })

@@ -19,10 +19,12 @@
   "alias-skip.allowedsuffix": ["ts", "tsx"],
   "alias-skip.rootpath": "package.json",
   "cSpell.words": [
+    "baomitu",
     "bezier",
     "Clickoutside",
     "codabar",
     "commitmsg",
+    "crossorigin",
     "datetimerange",
     "domtoimage",
     "EDITMSG",

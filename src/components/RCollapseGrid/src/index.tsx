@@ -31,7 +31,20 @@ export default defineComponent({
   name: 'RCollapseGrid',
   props,
   setup(props) {
-    const modelCollapsed = ref(!props.open)
+    const modelCollapsed = computed({
+      get: () => !props.open,
+      set: (val) => {
+        const { onUpdateValue, 'onUpdate:value': _onUpdateValue } = props
+
+        if (onUpdateValue) {
+          call(onUpdateValue, val)
+        }
+
+        if (_onUpdateValue) {
+          call(_onUpdateValue, val)
+        }
+      },
+    })
     const cssVars = computed(() => {
       const cssVar = {
         '--r-collapse-grid-action-align': props.actionAlign,
@@ -42,16 +55,6 @@ export default defineComponent({
 
     const collapseClick = () => {
       modelCollapsed.value = !modelCollapsed.value
-
-      const { onUpdateValue, 'onUpdate:value': _onUpdateValue } = props
-
-      if (onUpdateValue) {
-        call(onUpdateValue, modelCollapsed.value)
-      }
-
-      if (_onUpdateValue) {
-        call(_onUpdateValue, modelCollapsed.value)
-      }
     }
 
     const CollapseIcon = () => (
@@ -79,7 +82,16 @@ export default defineComponent({
     }
   },
   render() {
-    const { cssVars } = this
+    const {
+      $slots: { collapse, action, default: defaultSlot },
+      CollapseIcon,
+      $props,
+      modelCollapsed,
+      xGap,
+      yGap,
+      collapsedRows,
+      cssVars,
+    } = this
 
     return (
       <NCard bordered={this.bordered} style={[cssVars]}>
@@ -87,17 +99,17 @@ export default defineComponent({
           default: () => (
             <NGrid
               class="ray-collapse-grid"
-              {...this.$props}
-              collapsed={this.modelCollapsed}
-              xGap={this.xGap || 12}
-              yGap={this.yGap || 18}
-              collapsedRows={this.collapsedRows}
+              {...$props}
+              collapsed={modelCollapsed}
+              xGap={xGap || 12}
+              yGap={yGap || 12}
+              collapsedRows={collapsedRows}
             >
-              {this.$slots.default?.()}
-              <NGridItem suffix class={['ray-collapse-grid__suffix--btn']}>
+              {defaultSlot?.()}
+              <NGridItem suffix class="ray-collapse-grid__suffix--btn">
                 <NFlex justify="end" align="center">
-                  {this.$slots.action?.()}
-                  {this.CollapseIcon()}
+                  {action?.()}
+                  {collapse ? collapse(modelCollapsed) : CollapseIcon()}
                 </NFlex>
               </NGridItem>
             </NGrid>

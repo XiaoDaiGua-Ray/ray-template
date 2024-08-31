@@ -270,10 +270,10 @@ const TableView = defineComponent({
               >
                 下载 CSV
               </NButton>
-              <NButton onClick={getTableInstance.bind(this)}>
+              <NButton onClick={() => getTableInstance()}>
                 getTableInstance
               </NButton>
-              <NButton onClick={print.bind(this)}>打印</NButton>
+              <NButton onClick={() => print()}>打印</NButton>
             </NFlex>
           </NFlex>
         </NCard>

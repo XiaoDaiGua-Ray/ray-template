@@ -105,6 +105,23 @@ function onlyBuildOptions(mode: string): PluginOption[] {
           global: 'JsBarcode',
           relativeModule: 'JsBarcode.all.min.js',
         },
+        {
+          name: 'dayjs',
+          global: 'dayjs',
+          relativeModule: 'dayjs.min.js',
+        },
+        {
+          name: 'dom-to-image',
+          global: 'domtoimage',
+          relativeModule: 'dom-to-image.min.js',
+        },
+        {
+          // 如果需要修改版本，需要同时修改 index.html 中对应的 css
+          // 可以全局搜索 https://lib.baomitu.com/print-js/1.6.0/print.min.css
+          name: 'print-js',
+          global: 'printJS',
+          relativeModule: 'print.min.js',
+        },
       ],
     }),
   ]

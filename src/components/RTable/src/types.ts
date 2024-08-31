@@ -53,7 +53,7 @@ export interface RTableInst extends Omit<DataTableInst, 'clearFilter'> {
    * @description
    * 打印表格。
    */
-  print: () => void
+  print: (options?: PrintDomOptions) => void
 }
 
 export type OverridesTableColumn<T = Recordable> = C | DataTableColumn<T>

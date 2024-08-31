@@ -1,2 +1,14 @@
 # 将换行符设置为lf
 * text eol=lf
+# 将静态资源文件以二进制形式处理
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.svg binary
+*.webp binary
+*.mp4 binary
+*.mov binary
+*.avi binary
+*.mp3 binary
+*.wav binary

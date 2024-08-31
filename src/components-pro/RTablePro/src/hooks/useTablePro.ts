@@ -8,6 +8,7 @@ import type {
   ColumnKey,
   SortOrder,
 } from '@/components/RTable/src/types'
+import type { PrintDomOptions } from '@/utils'
 
 /**
  *
@@ -134,7 +135,8 @@ export const useTablePro = () => {
    * @description
    * 打印表格。
    */
-  const print = () => getTableProInstance().print.call(null)
+  const print = (options?: PrintDomOptions) =>
+    getTableProInstance().print.call(null, options)
 
   /**
    *

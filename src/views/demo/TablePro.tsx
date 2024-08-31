@@ -22,7 +22,9 @@ import {
   NFormItem,
   NSelect,
   NDatePicker,
+  NText,
 } from 'naive-ui'
+import { RIcon } from '@/components'
 
 import { uuid } from '@/utils'
 import { useHookPlusRequest } from '@/axios'
@@ -213,6 +215,7 @@ export default defineComponent({
       rowKey: 'key',
       onChange: (keys, rows, meta) => {},
     })
+    const collapseRef = ref(true)
 
     const isNullOrUndefined = (value: unknown) => {
       return value === null || value === void 0
@@ -300,6 +303,7 @@ export default defineComponent({
       getRows,
       clearKey,
       clearAll,
+      collapseRef,
       selectKey,
     }
   },
@@ -326,7 +330,7 @@ export default defineComponent({
 
     return (
       <NFlex vertical>
-        <RCollapse>
+        <RCollapse open={this.collapseRef}>
           {{
             default: () => (
               <>
@@ -372,6 +376,22 @@ export default defineComponent({
                 </NButton>
               </NFlex>
             ),
+            collapse: (open: boolean) =>
+              open ? (
+                <NButton onClick={() => (this.collapseRef = true)} secondary>
+                  {{
+                    default: () => '受控展开',
+                    icon: () => <RIcon name="dark" size="18" />,
+                  }}
+                </NButton>
+              ) : (
+                <NButton onClick={() => (this.collapseRef = false)} secondary>
+                  {{
+                    default: () => '受控收起',
+                    icon: () => <RIcon name="light" size="18" />,
+                  }}
+                </NButton>
+              ),
           }}
         </RCollapse>
         <NCard title="常用高级拓展功能">
@@ -392,7 +412,7 @@ export default defineComponent({
         </NCard>
         <NCard title="useTablePro 部分方法">
           <NFlex>
-            <NButton type="primary" onClick={print}>
+            <NButton type="primary" onClick={() => print()}>
               打印
             </NButton>
             <NButton type="primary" onClick={() => downloadCsv()}>
