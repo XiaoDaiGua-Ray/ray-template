@@ -12,6 +12,7 @@
 import type { PropType } from 'vue'
 import type { MaybeArray } from '@/types'
 import type { SpinProps } from 'naive-ui'
+import type { Lazy } from './types'
 
 const props = {
   src: {
@@ -90,7 +91,7 @@ const props = {
   },
   lazy: {
     /** 是否延迟加载 iframe */
-    type: Boolean,
+    type: [Boolean, String] as PropType<boolean | Lazy>,
     default: true,
   },
   iframeClass: {

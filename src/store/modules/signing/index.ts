@@ -104,7 +104,7 @@ export const piniaSigningStore = defineStore(
   {
     persist: {
       key: APP_CATCH_KEY.appPiniaSigningStore,
-      paths: ['signingCallback'],
+      pick: ['signingCallback'],
       storage: window.localStorage,
     },
   },

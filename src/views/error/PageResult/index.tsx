@@ -27,6 +27,8 @@ import { getStorage } from '@/utils'
 import { useVueRouter } from '@/hooks'
 import { APP_CATCH_KEY } from '@/app-config'
 
+import type { ResultProps } from 'naive-ui'
+
 const PageResult = defineComponent({
   name: 'PageResult',
   props: {
@@ -56,7 +58,7 @@ const PageResult = defineComponent({
     return (
       <div class="error-page">
         <NResult
-          {...this.$props}
+          {...(this.$props as ResultProps)}
           status="500"
           title="404 资源不存在"
           description="小调皮你走错地方了"

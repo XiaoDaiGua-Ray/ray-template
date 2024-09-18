@@ -16,6 +16,8 @@ import { RIcon } from '@/components'
 
 import { tooltipProps } from 'naive-ui'
 
+import type { TooltipProps } from 'naive-ui'
+
 export default defineComponent({
   name: 'TooltipIcon',
   props: {
@@ -58,7 +60,7 @@ export default defineComponent({
     const { Icon } = this
 
     return this.tooltipText ? (
-      <NTooltip {...this.$props}>
+      <NTooltip {...(this.$props as TooltipProps)}>
         {{
           trigger: () => <Icon />,
           default: () => this.tooltipText,

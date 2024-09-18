@@ -23,6 +23,7 @@ import {
 } from './constant'
 
 import type interact from 'interactjs'
+import type { ModalProps } from 'naive-ui'
 
 export default defineComponent({
   name: 'RModal',
@@ -93,7 +94,7 @@ export default defineComponent({
   },
   render() {
     const { $props, $slots, $attrs } = this
-    const { preset, ...$otherProps } = $props
+    const { preset, ...$otherProps } = $props as ModalProps
     const { cssVars, uuidEl, isFullscreenCardType } = this
 
     return (

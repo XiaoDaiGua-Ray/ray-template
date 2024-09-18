@@ -22,8 +22,9 @@ import props from './props'
 import { call, renderNode, uuid } from '@/utils'
 import { config } from './shared'
 import { pick } from 'lodash-es'
+import { useTemplateRef } from 'vue'
 
-import type { DropdownOption, DataTableInst } from 'naive-ui'
+import type { DropdownOption, DataTableInst, DataTableProps } from 'naive-ui'
 import type { ComponentSize } from '@/types'
 import type {
   C as CType,
@@ -38,8 +39,8 @@ export default defineComponent({
   setup(props, ctx) {
     const { expose, emit } = ctx
 
-    const rTableInst = ref<RTableInst>()
-    const wrapperRef = ref<HTMLElement>()
+    const rTableInst = useTemplateRef<RTableInst>('rTableInst')
+    const wrapperRef = useTemplateRef<HTMLElement>('wrapperRef')
 
     const uuidWrapper = uuid(16) // wrapper id
     const uuidTable = uuid(16) // table id
@@ -278,7 +279,7 @@ export default defineComponent({
                   id: uuidTable,
                 }}
                 {...$attrs}
-                {...$props}
+                {...($props as DataTableProps)}
                 {...propsPopselectValue}
                 rowProps={combineRowProps.bind(this)}
                 size={privateReactive.size}

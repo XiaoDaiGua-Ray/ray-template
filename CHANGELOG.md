@@ -1,5 +1,33 @@
 # CHANGE LOG
 
+## 4.9.5
+
+天元突破，红莲螺岩。
+
+兼容 `vue3.5` 版本的更新。
+
+## Feats
+
+- 更新脚手架依赖为主流依赖
+- 更新 `vue` 版本至 `3.5.6`
+- 更新 `vite` 版本至 `5.4.3`
+- 更新 `pinia-plugin-persistedstate` 版本至 `4.0.1`，并且兼容破坏性更新改动
+- `RChart` 组件相关
+  - 小重构该组件，移除多个 `echart` 缓存，现在有且仅有一个
+  - 减少 `watch` 监听项
+  - 使用 `useTemplateRef` 方法替代 `ref` 注册 `dom`
+  - 现在预设 `card` 时，`chart` 图会更加的醒目一些
+  - 优化 `demo` 展示
+  - 现在会拦截 `aria` 属性，现在仅允许通过 `showAria` 配置项管理无障碍模式
+  - 优化无障碍模式渲染，现在不会重新渲染整个图表，而是通过 `setOptions` 方式更新图表
+- `useChart` 方法相关
+  - `isDispose` 方法更名为 `isDisposed`
+
+## Fixes
+
+- 修复 `useChart` 方法相关方法中 `dispose` 方法执行不生效的问题
+- 修复 `RChart` 的 `loading` 不能跟随主题变化的问题
+
 ## 4.9.4
 
 ## Feats

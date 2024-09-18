@@ -79,7 +79,7 @@ export const piniaKeepAliveStore = defineStore(
     persist: {
       key: APP_CATCH_KEY.appPiniaKeepAliveStore,
       storage: window.sessionStorage,
-      paths: ['keepAliveInclude'],
+      pick: ['keepAliveInclude'],
     },
   },
 )

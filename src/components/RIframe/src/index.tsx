@@ -16,6 +16,7 @@ import { NSpin } from 'naive-ui'
 import { call, completeSize } from '@/utils'
 import props from './props'
 import { useEventListener } from '@vueuse/core'
+import { useTemplateRef } from 'vue'
 
 export default defineComponent({
   name: 'RIframe',
@@ -30,7 +31,7 @@ export default defineComponent({
 
       return cssVar
     })
-    const iframeRef = ref<HTMLIFrameElement>()
+    const iframeRef = useTemplateRef<HTMLIFrameElement>('iframeRef')
     const spinShow = ref(true)
 
     const iframeLoadSuccess = (e: Event) => {
@@ -83,9 +84,7 @@ export default defineComponent({
                 allow={this.allow}
                 name={this.name}
                 title={this.title}
-                {...{
-                  loading: this.lazy ? 'lazy' : null,
-                }}
+                loading={typeof this.lazy === 'boolean' ? 'lazy' : this.lazy}
               />
             ),
           }}

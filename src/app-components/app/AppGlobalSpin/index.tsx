@@ -31,6 +31,8 @@ import { NSpin } from 'naive-ui'
 import { spinProps } from 'naive-ui'
 import { getVariableToRefs } from '@/global-variable'
 
+import type { SpinProps } from 'naive-ui'
+
 const GlobalSpin = defineComponent({
   name: 'GlobalSpin',
   props: {
@@ -50,7 +52,7 @@ const GlobalSpin = defineComponent({
   render() {
     return (
       <NSpin
-        {...this.$props}
+        {...(this.$props as SpinProps)}
         show={this.spinValue}
         themeOverrides={this.overrides}
       >

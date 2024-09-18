@@ -91,6 +91,7 @@ export default defineComponent({
             type="password"
             showPasswordOn="click"
             placeholder={$t('views.login.index.PasswordPlaceholder')}
+            onKeydown={(e) => e.key === 'Enter' && this.handleLogin()}
           />
         </NFormItem>
         <NButton

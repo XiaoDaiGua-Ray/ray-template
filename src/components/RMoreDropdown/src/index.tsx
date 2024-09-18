@@ -15,6 +15,8 @@ import { RIcon } from '@/components'
 import props from './props'
 import { renderNode } from '@/utils'
 
+import type { DropdownProps } from 'naive-ui'
+
 export default defineComponent({
   name: 'RMoreDropdown',
   props,
@@ -23,7 +25,11 @@ export default defineComponent({
     const { default: $default } = this.$slots
 
     return (
-      <NDropdown {...this.$props} {...this.$attrs} placement="bottom-start">
+      <NDropdown
+        {...(this.$props as DropdownProps)}
+        {...this.$attrs}
+        placement="bottom-start"
+      >
         {renderNode($default, {
           defaultElement: <RIcon name={icon} size={iconSize} cursor={cursor} />,
         })}

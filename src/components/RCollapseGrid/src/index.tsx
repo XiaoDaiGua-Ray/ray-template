@@ -27,6 +27,8 @@ import { RIcon } from '@/components'
 import { call } from '@/utils'
 import props from './props'
 
+import type { GridProps } from 'naive-ui'
+
 export default defineComponent({
   name: 'RCollapseGrid',
   props,
@@ -99,7 +101,7 @@ export default defineComponent({
           default: () => (
             <NGrid
               class="ray-collapse-grid"
-              {...$props}
+              {...($props as GridProps)}
               collapsed={modelCollapsed}
               xGap={xGap || 12}
               yGap={yGap || 12}

@@ -16,6 +16,7 @@ import { NSpin } from 'naive-ui'
 import barcode from 'jsbarcode'
 import props from './props'
 import { completeSize, call } from '@/utils'
+import { useTemplateRef } from 'vue'
 
 import type { WatchStopHandle } from 'vue'
 
@@ -23,7 +24,9 @@ export default defineComponent({
   name: 'RBarcode',
   props,
   setup(props) {
-    const barcodeRef = ref<HTMLCanvasElement | HTMLOrSVGElement>()
+    const barcodeRef = useTemplateRef<HTMLCanvasElement | HTMLOrSVGElement>(
+      'barcodeRef',
+    )
     const cssVars = computed(() => {
       const cssVar = {
         '--r-barcode-width': completeSize(props.width),

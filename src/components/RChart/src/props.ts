@@ -1,4 +1,4 @@
-import { loadingOptions } from './utils'
+import { loadingOptions, setEchartOptions } from './utils'
 
 import type * as echarts from 'echarts/core' // echarts 核心模块
 import type { PropType, VNode } from 'vue'
@@ -192,7 +192,8 @@ const props = {
    *
    * @description
    * 是否启用 chart 无障碍模式。
-   * 启用该配置项后会覆盖 options 中的 aria。
+   * 该组建默认拦截 aria 配置项的 enabled 属性与 decal.show 属性。
+   * 也就意味着，你不能通过配置 options 管理该组件的无障碍模式，只能通过该配置项统一管理。
    *
    * @default false
    */
@@ -344,6 +345,7 @@ const props = {
    *
    * @description
    * 是否将渲染放置下一个队列。
+   * 该配置项在渲染很多图表的时候可以有很不错的性能提升。
    *
    * @default true
    */
@@ -360,12 +362,7 @@ const props = {
    */
   setChartOptions: {
     type: Object as PropType<SetOptionOpts>,
-    default: () => ({
-      notMerge: true,
-      lazyUpdate: true,
-      silent: false,
-      replaceMerge: [],
-    }),
+    default: () => setEchartOptions(),
   },
   /**
    *

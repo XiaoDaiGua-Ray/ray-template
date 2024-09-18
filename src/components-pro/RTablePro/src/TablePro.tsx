@@ -17,7 +17,6 @@ import { call } from '@/utils'
 import { usePagination } from '@/hooks'
 
 import type { TablePagination, TableRequestConfig, TableProInst } from './types'
-import type { Recordable } from '@/types'
 
 export default defineComponent({
   name: 'RTablePro',
@@ -162,7 +161,9 @@ export default defineComponent({
   },
   render() {
     const { register, $props, paginationRef, $slots } = this
-    const { onRegister, showPagination, ...rest } = $props
+    const { onRegister, showPagination, ...rest } = $props as ExtractPropTypes<
+      typeof props
+    >
 
     return (
       <RTable

@@ -10,7 +10,7 @@ import type { RChartType } from '@/components'
 const Echart = defineComponent({
   name: 'REchart',
   setup() {
-    const [register, { getChartInstance, dispose, render, isDispose }] =
+    const [register, { getChartInstance, dispose, render, isDisposed }] =
       useChart()
     const [
       register2,
@@ -18,7 +18,7 @@ const Echart = defineComponent({
         getChartInstance: getChartInstance2,
         dispose: dispose2,
         render: render2,
-        isDispose: isDispose2,
+        isDisposed: isDisposed2,
       },
     ] = useChart()
 
@@ -26,6 +26,7 @@ const Echart = defineComponent({
     const chartAria = ref(false)
     const state = reactive({
       loading: false,
+      loading1: false,
     })
 
     const baseOptions = {
@@ -207,10 +208,10 @@ const Echart = defineComponent({
     }
 
     const mountChart = () => {
-      if (isDispose()) {
+      if (isDisposed()) {
         render()
       } else {
-        window.$message.warning('不可以重复渲染图表~')
+        window.$message.warning('图表已渲染~')
       }
     }
 
@@ -219,14 +220,20 @@ const Echart = defineComponent({
     }
 
     const updateChartOptions = () => {
+      state.loading1 = true
+
       const createData = () => Math.floor((Math.random() + 1) * 100)
 
-      baseLineOptions.value.series[0].data = new Array(7)
-        .fill(0)
-        .map(() => createData())
-      baseLineOptions.value.series[1].data = new Array(7)
-        .fill(0)
-        .map(() => createData())
+      setTimeout(() => {
+        baseLineOptions.value.series[0].data = new Array(7)
+          .fill(0)
+          .map(() => createData())
+        baseLineOptions.value.series[1].data = new Array(7)
+          .fill(0)
+          .map(() => createData())
+
+        state.loading1 = false
+      }, 1000)
     }
 
     return {
@@ -245,11 +252,12 @@ const Echart = defineComponent({
       register2,
       dispose2,
       render2,
-      isDispose2,
+      isDisposed2,
     }
   },
   render() {
-    const { register, register2, dispose2, render2, isDispose2 } = this
+    const { register, register2, dispose2, render2, isDisposed2, loading1 } =
+      this
 
     return (
       <div class="echart">
@@ -266,6 +274,13 @@ const Echart = defineComponent({
             <NButton onClick={this.updateChartOptions.bind(this)}>
               更新配置项
             </NButton>
+            <NButton
+              onClick={() => {
+                this.loading1 = !this.loading1
+              }}
+            >
+              {`${this.loading1 ? '关闭' : '开启'}`}加载动画
+            </NButton>
           </NFlex>
           <div class="chart--container">
             <RChart
@@ -275,6 +290,7 @@ const Echart = defineComponent({
               options={this.baseLineOptions}
               showAria={this.chartAria}
               preset="card"
+              loading={loading1}
             />
           </div>
         </NCard>
@@ -283,7 +299,7 @@ const Echart = defineComponent({
             <NFlex>
               <NButton
                 onClick={() => {
-                  if (isDispose2()) {
+                  if (isDisposed2()) {
                     render2()
                   } else {
                     window.$message.warning('不可以重复渲染图表~')

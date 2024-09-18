@@ -79,10 +79,9 @@ const useChart = () => {
    *
    * @description
    * chart 是否已经销毁。
-   * 如果销毁则返回 true, 否则返回 false。
+   * 如果销毁则返回 true，否则返回 false。
    */
-  const isDispose = () =>
-    !(echartInst && getChartInstance().echartInst.getDom())
+  const isDisposed = () => !!getChartInstance().echartInst?.isDisposed()
 
   /**
    *
@@ -102,7 +101,7 @@ const useChart = () => {
     register,
     {
       getChartInstance,
-      isDispose,
+      isDisposed,
       dispose,
       render,
     },

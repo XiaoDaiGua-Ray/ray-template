@@ -8,7 +8,7 @@ import type {
   DataTableBaseColumn,
   CardProps,
 } from 'naive-ui'
-import type { VNode, CSSProperties } from 'vue'
+import type { VNode, CSSProperties, ShallowRef } from 'vue'
 import type { Recordable } from '@/types'
 import type { PrintDomOptions } from '@/utils/dom'
 
@@ -34,7 +34,7 @@ export interface PrintTableOptions extends PrintDomOptions {}
 export interface TableProvider {
   uuidWrapper: string
   uuidTable: string
-  wrapperRef: Ref<HTMLElement | undefined>
+  wrapperRef: Readonly<ShallowRef<HTMLElement | null>>
 }
 
 export interface C extends DataTableBaseColumn {
