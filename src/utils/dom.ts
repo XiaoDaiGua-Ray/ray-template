@@ -1,14 +1,3 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-12-14
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
 import { useDomToImage, usePrint } from '@/hooks'
 import { omit } from 'lodash-es'
 
@@ -63,7 +52,7 @@ export const printDom = <T extends HTMLElement>(
       domToImageOptions?.createdError?.(error)
       window.$loadingBar?.error()
     },
-  })
+  } as UseDomToImageOptions)
 
   create('jpeg')?.then((res) => {
     const { print } = usePrint(res, {

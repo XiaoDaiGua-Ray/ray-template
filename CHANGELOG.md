@@ -1,5 +1,23 @@
 # CHANGE LOG
 
+## 4.9.6
+
+由于 `cdn` 厂商更新 `cdn` 资源太慢的缘故，所以目前 `vue` 的版本只有 `3.5.3` 会导致构建线上生产环境报错的问题。
+
+## Feats
+
+- 更新 `vue` 版本至 `3.5.8`
+- `useDomToImage` 相关
+  - 使用 `html-to-image` 替换 `dom-to-image` 底层依赖库
+  - 同步补全 `html-to-image` 所有新特性至该方法
+  - 同步修改 `printDom` 方法
+  - 类型提示现在会更加友好，`create` 方法会根据 `imageType` 自动推导转换结果的类型
+  - 移除 `DomToImageResult` 类型
+
+## Fixes
+
+- 修复 `RCollapseGrid` 组件折叠失败的问题
+
 ## 4.9.5
 
 天元突破，红莲螺岩。
