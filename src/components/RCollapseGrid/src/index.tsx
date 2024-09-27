@@ -33,20 +33,7 @@ export default defineComponent({
   name: 'RCollapseGrid',
   props,
   setup(props) {
-    const modelCollapsed = computed({
-      get: () => !props.open,
-      set: (val) => {
-        const { onUpdateValue, 'onUpdate:value': _onUpdateValue } = props
-
-        if (onUpdateValue) {
-          call(onUpdateValue, val)
-        }
-
-        if (_onUpdateValue) {
-          call(_onUpdateValue, val)
-        }
-      },
-    })
+    const modelCollapsed = ref(!props.open)
     const cssVars = computed(() => {
       const cssVar = {
         '--r-collapse-grid-action-align': props.actionAlign,
@@ -56,7 +43,17 @@ export default defineComponent({
     })
 
     const collapseClick = () => {
+      const { onUpdateValue, 'onUpdate:value': _onUpdateValue } = props
+
       modelCollapsed.value = !modelCollapsed.value
+
+      if (onUpdateValue) {
+        call(onUpdateValue, modelCollapsed.value)
+      }
+
+      if (_onUpdateValue) {
+        call(_onUpdateValue, modelCollapsed.value)
+      }
     }
 
     const CollapseIcon = () => (

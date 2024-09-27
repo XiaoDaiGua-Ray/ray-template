@@ -1,40 +1,35 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-12-14
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
-import domToImage from 'dom-to-image'
 import { unrefElement } from '@/utils'
+import {
+  toPng,
+  toJpeg,
+  toBlob,
+  toPixelData,
+  toSvg,
+  toCanvas,
+} from 'html-to-image'
 
-import type { Options as ReDomToImageOptions } from 'dom-to-image'
 import type { BasicTarget, TargetType } from '@/types'
 
-export type ImageType = keyof typeof domToImageMethods
+type HtmlToImageOptions = Partial<NonNullable<Parameters<typeof toPng>[1]>>
 
-export type DomToImageResult = string | Blob | Uint8ClampedArray | undefined
-
-export interface UseDomToImageOptions<T extends TargetType = Element>
-  extends ReDomToImageOptions {
+interface Options<
+  T extends TargetType = Element,
+  ImageType extends DomToImageMethodKeys = 'jpeg',
+> {
   /**
    *
-   *
-   * 指定图片类型，允许传递 imageType 参数，用于指定图片类型
+   * @description
+   * 指定图片类型，允许传递 imageType 参数，用于指定图片类型。
    *
    * @default jpeg
    */
-  imageType?: ImageType
+  imageType?: DomToImageReturnType<ImageType>
   /**
    *
-   *
-   * 在 dom 转换为图片之前执行
-   *
    * @param element current dom
+   *
+   * @description
+   * 在 dom 转换为图片之前执行。
    *
    * @default undefined
    */
@@ -44,11 +39,12 @@ export interface UseDomToImageOptions<T extends TargetType = Element>
    * @param element current dom
    * @param result dom to image result
    *
-   * 在 dom 转换为图片之后执行
+   * @description
+   * 在 dom 转换为图片之后执行。
    *
    * @default undefined
    */
-  created?: (result: DomToImageResult, element: T) => void
+  created?: (result: DomToImageReturnType<ImageType>, element: T) => void
   /**
    *
    * @param error dom to image error
@@ -62,30 +58,40 @@ export interface UseDomToImageOptions<T extends TargetType = Element>
    *
    * @param element current dom
    *
-   * 无论 dom 转换为图片成功或失败，都会执行
+   * @description
+   * 无论 dom 转换为图片成功或失败，都会执行。
    *
    * @default undefined
    */
-  finally?: () => void
+  finally?: (element: T) => void
 }
 
+export type UseDomToImageOptions<T extends TargetType = Element> = Options<T> &
+  HtmlToImageOptions
+
+export type DomToImageMethodKeys = keyof typeof domToImageMethods
+
+type DomToImageReturnType<ImageType extends DomToImageMethodKeys = 'jpeg'> =
+  Awaited<ReturnType<(typeof domToImageMethods)[ImageType]>>
+
 const domToImageMethods = {
-  svg: domToImage.toSvg,
-  png: domToImage.toPng,
-  jpeg: domToImage.toJpeg,
-  blob: domToImage.toBlob,
-  pixelData: domToImage.toPixelData,
-}
+  svg: toSvg,
+  png: toPng,
+  jpeg: toJpeg,
+  blob: toBlob,
+  pixelData: toPixelData,
+  canvas: toCanvas,
+} as const
 
 /**
  *
  * @param target ref dom
- * @param options dom-to-image options
+ * @param options html-to-image options
  *
- * @see https://github.com/tsayen/dom-to-image
+ * @see https://github.com/bubkoo/html-to-image
  *
  * @description
- * 使用 dom-to-image 将 dom 转换为图片，基于 dom-to-image v2.6.0。
+ * 使用 html-to-image 将 dom 转换为图片。
  * 拓展了 imageType 参数，用于指定图片类型。
  *
  * create 方法支持在执行时传递 imageType 参数，用于指定图片类型。并且优先级大于 options.imageType；
@@ -113,9 +119,9 @@ export const useDomToImage = <T extends HTMLElement>(
     imageType: _imageType,
   } = options ?? {}
 
-  const run = (
-    imageType?: UseDomToImageOptions['imageType'],
-  ): Promise<DomToImageResult> => {
+  const run = <ImageType extends DomToImageMethodKeys = 'jpeg'>(
+    imageType?: ImageType,
+  ): Promise<DomToImageReturnType<ImageType>> => {
     return new Promise((resolve, reject) => {
       const element = unrefElement(target)
 
@@ -128,7 +134,8 @@ export const useDomToImage = <T extends HTMLElement>(
       }
 
       domToImageMethods[imageType ?? _imageType ?? 'jpeg']?.(element, options)
-        .then((res) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .then((res: any) => {
           created?.(res, element)
 
           return resolve(res)
@@ -139,7 +146,7 @@ export const useDomToImage = <T extends HTMLElement>(
           return reject(error)
         })
         .finally(() => {
-          _finally?.()
+          _finally?.(element)
         })
     })
   }

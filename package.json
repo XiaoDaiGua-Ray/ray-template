@@ -1,7 +1,7 @@
 {
   "name": "ray-template",
   "private": false,
-  "version": "4.9.5",
+  "version": "4.9.6",
   "type": "module",
   "engines": {
     "node": "^18.0.0 || >=20.0.0",
@@ -38,8 +38,8 @@
     "clipboard": "^2.0.11",
     "currency.js": "^2.0.4",
     "dayjs": "^1.11.10",
-    "dom-to-image": "2.6.0",
     "echarts": "^5.5.0",
+    "html-to-image": "1.11.11",
     "interactjs": "1.10.26",
     "jsbarcode": "3.11.6",
     "lodash-es": "^4.17.21",
@@ -48,7 +48,7 @@
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^4.0.1",
     "print-js": "^1.6.0",
-    "vue": "^3.5.6",
+    "vue": "^3.5.8",
     "vue-demi": "0.14.6",
     "vue-hooks-plus": "2.2.1",
     "vue-i18n": "^9.13.1",
