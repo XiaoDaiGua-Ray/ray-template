@@ -1,0 +1,5 @@
+/**
+* @vue/shared v3.5.6
+* (c) 2018-present Yuxi (Evan) You and Vue contributors
+* @license MIT
+**/const h=[],b=t=>t.charCodeAt(0)===111&&t.charCodeAt(1)===110&&(t.charCodeAt(2)>122||t.charCodeAt(2)<97),A=Object.assign,f=Array.isArray,C=t=>typeof t=="function",i=t=>typeof t=="string",E=t=>typeof t=="symbol",l=t=>t!==null&&typeof t=="object";let c;const R=()=>c||(c=typeof globalThis<"u"?globalThis:typeof self<"u"?self:typeof window<"u"?window:typeof global<"u"?global:{});function a(t){if(f(t)){const o={};for(let n=0;n<t.length;n++){const s=t[n],e=i(s)?m(s):a(s);if(e)for(const r in e)o[r]=e[r]}return o}else if(i(t)||l(t))return t}const d=/;(?![^(]*\))/g,g=/:([^]+)/,p=/\/\*[^]*?\*\//g;function m(t){const o={};return t.replace(p,"").split(d).forEach(n=>{if(n){const s=n.split(g);s.length>1&&(o[s[0].trim()]=s[1].trim())}}),o}function y(t){let o="";if(i(t))o=t;else if(f(t))for(let n=0;n<t.length;n++){const s=y(t[n]);s&&(o+=s+" ")}else if(l(t))for(const n in t)t[n]&&(o+=n+" ");return o.trim()}export{h as E,i as a,f as b,C as c,l as d,A as e,a as f,R as g,b as h,E as i,y as n};
