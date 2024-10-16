@@ -302,7 +302,7 @@ const TableView = defineComponent({
           bordered={false}
           collapsedRows={this.gridCollapsedRows}
           cols={this.gridItemCount}
-          onUpdateValue={(value: boolean) =>
+          onUpdateOpen={(value: boolean) =>
             window.$message.info(
               `我是 RCollapseGrid 组件${value ? '收起' : '展开'}的回调函数`,
             )
