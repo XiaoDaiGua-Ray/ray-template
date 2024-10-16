@@ -1,1 +1,0 @@
-const u=Vue.defineComponent({name:"MultiMenuTwoOne",setup(){return{inputValue:Vue.ref(null)}},render(){return Vue.createVNode("div",{style:{height:"var(--layout-content-height)"}},[Vue.createTextVNode("多级菜单2-2-1"),Vue.createVNode(naive.NInput,{modelValue:this.inputValue,"onUpdate:modelValue":e=>this.inputValue=e},null)])}});export{u as default};
