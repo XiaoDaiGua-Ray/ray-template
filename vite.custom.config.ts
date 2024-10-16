@@ -49,11 +49,13 @@ import type { AppConfigExport } from '@/types'
 import type { BuildOptions } from 'vite'
 
 const config: AppConfigExport = {
-  /** 公共基础路径配置, 如果为空则会默认以 '/' 填充 */
+  // 是否启用 cdn 构建项目
+  cdn: false,
+  // 公共基础路径配置, 如果为空则会默认以 '/' 填充
   base: '/ray-template/',
-  /** 配置首屏加载信息 */
+  // 配置首屏加载信息
   preloadingConfig: PRE_LOADING_CONFIG,
-  /** 默认主题色(不可省略, 必填), 也用于 ejs 注入 */
+  // 默认主题色（不可省略，必填），也用于 ejs 注入
   appPrimaryColor: APP_THEME.appPrimaryColor,
   sideBarLogo: SIDE_BAR_LOGO_DEFAULT,
   /**
@@ -79,10 +81,7 @@ const config: AppConfigExport = {
    * 浏览器标题
    */
   title: htmlTitlePlugin(PRE_LOADING_CONFIG.title || 'Ray Template'),
-  /**
-   *
-   * 配置 HMR 特定选项(端口、主机、路径和协议)
-   */
+  // 配置 HMR 特定选项（端口、主机、路径和协议）
   server: {
     host: '0.0.0.0',
     port: 9527,
@@ -100,10 +99,7 @@ const config: AppConfigExport = {
       },
     },
   },
-  /**
-   *
-   * 打包相关配置
-   */
+  // 打包相关配置
   buildOptions: (mode: string): BuildOptions => {
     const productionBuildOptions = {
       sourcemap: false,

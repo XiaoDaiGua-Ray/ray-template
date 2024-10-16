@@ -1,15 +1,4 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-06-02
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
-import { useElementBounding } from '@vueuse/core'
+import { useElementBounding, useWindowSize } from '@vueuse/core'
 
 import type { Ref } from 'vue'
 
@@ -29,10 +18,14 @@ export const layoutCssVars = (
   const siderBar = useElementBounding(element[0])
   const menuTag = useElementBounding(element[1])
   const footer = useElementBounding(element[2])
+  const { height, width } = useWindowSize()
 
   return computed(() => {
     return {
-      '--layout-content-height': `calc(100% - ${siderBar.height.value}px - ${menuTag.height.value}px - ${footer.height.value}px)`,
+      '--window-width': `${width.value}px`,
+      '--window-height': `${height.value}px`,
+      '--layout-content-height': `calc(${height.value}px - ${siderBar.height.value}px - ${menuTag.height.value}px - ${footer.height.value}px)`,
+      '--layout-content-width': `${siderBar.width.value}px`,
       '--layout-siderbar-height': `${siderBar.height.value}px`,
       '--layout-menutag-height': `${menuTag.height.value}px`,
       '--layout-footer-height': `${footer.height.value}px`,

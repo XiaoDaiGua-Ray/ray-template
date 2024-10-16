@@ -1,5 +1,34 @@
 # CHANGE LOG
 
+## 4.9.7
+
+从该版本开始，默认关闭了 `cdn` 构建生产环境；因为国内厂商真心不给力。
+
+## Feats
+
+- 更新 `vue` 版本至 `3.5.12`
+- 更新 `@vueuse/core` 版本至 `11.1.0`
+- 更新 `naive-ui` 版本至 `2.40.1`
+- 更新 `MenuTag` 一些东西，移除了无用的 `ref` 注册，简化了代码；现在允许出现 `rootPath` 标签的关闭按钮了
+- `useElementFullscreen` 新增 `currentWindowSize` 返回项，获取当前的窗口尺寸
+- `RCollapseGrid` 组件默认开启 `bordered`
+- `RCollapseGrid onUpdateValue` 方法更名为 `onUpdateOpen`
+- `RTable` 组件默认开启 `wrapperBordered`
+- `RTable` 组件默认开启 `bordered`
+- 新增 `clearSigningCallback` 方法
+- `vite.custom.config` 新增 `cdn` 配置项，是否启用 `cdn` 构建项目
+- 配置 `cdn` 为 `false`，因为国内厂商更新资源速度有点慢，导致预览失败
+- `Layout` 层注入 `--window-width`, `--window-height` `css var` 属性
+- 稳定 `Layout` 层的 `css var` 属性
+
+## Fixes
+
+- 修复 `MenuTag` 鼠标移入并且加右键菜单操作时，会导致关闭按钮图标消失的问题
+- 修复 `useElementFullscreen` 方法在窗口尺寸更新时，全屏元素失败的问题
+- 修复 `MenuTag` 注入 `MENU_TAG_DATA` 错误的问题
+- 修复 `Layout Content` 默认高度获取失败问题
+- 修复 `RCollapseGrid` 组件自定义 `collapse` 插槽折叠失败的问题
+
 ## 4.9.6
 
 由于 `cdn` 厂商更新 `cdn` 资源太慢的缘故，所以目前 `vue` 的版本只有 `3.5.3` 会导致构建线上生产环境报错的问题。

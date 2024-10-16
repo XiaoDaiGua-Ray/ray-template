@@ -1,7 +1,7 @@
 {
   "name": "ray-template",
   "private": false,
-  "version": "4.9.6",
+  "version": "4.9.7",
   "type": "module",
   "engines": {
     "node": "^18.0.0 || >=20.0.0",
@@ -33,7 +33,7 @@
     ]
   },
   "dependencies": {
-    "@vueuse/core": "^10.9.0",
+    "@vueuse/core": "^11.1.0",
     "axios": "^1.7.5",
     "clipboard": "^2.0.11",
     "currency.js": "^2.0.4",
@@ -44,11 +44,11 @@
     "jsbarcode": "3.11.6",
     "lodash-es": "^4.17.21",
     "mockjs": "1.1.0",
-    "naive-ui": "^2.39.0",
-    "pinia": "^2.1.7",
-    "pinia-plugin-persistedstate": "^4.0.1",
+    "naive-ui": "^2.40.1",
+    "pinia": "^2.2.4",
+    "pinia-plugin-persistedstate": "^4.1.1",
     "print-js": "^1.6.0",
-    "vue": "^3.5.8",
+    "vue": "^3.5.12",
     "vue-demi": "0.14.6",
     "vue-hooks-plus": "2.2.1",
     "vue-i18n": "^9.13.1",

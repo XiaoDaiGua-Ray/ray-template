@@ -55,74 +55,78 @@ function onlyReportOptions(mode: string): PluginOption[] {
 
 // 仅适用于构建模式（任何构建模式：preview、build、report...）
 function onlyBuildOptions(mode: string): PluginOption[] {
+  const { cdn } = config
+
   return [
     viteCDNPlugin({
       // modules 顺序 vue, vue-demi 必须保持当前顺序加载，否则会出现加载错误问题
       resolve: cdnResolve(),
-      modules: [
-        {
-          name: 'vue',
-          global: 'Vue',
-          relativeModule: 'vue.global.min.js',
-        },
-        {
-          name: 'vue-demi',
-          global: 'VueDemi',
-          relativeModule: 'index.iife.min.js',
-        },
-        {
-          name: 'naive-ui',
-          global: 'naive',
-          relativeModule: 'index.prod.js',
-        },
-        {
-          name: 'pinia',
-          global: 'Pinia',
-          relativeModule: 'pinia.iife.min.js',
-        },
-        {
-          name: 'vue-router',
-          global: 'VueRouter',
-          relativeModule: 'vue-router.global.min.js',
-        },
-        {
-          name: 'vue-i18n',
-          global: 'VueI18n',
-          relativeModule: 'vue-i18n.global.min.js',
-        },
-        {
-          name: 'echarts',
-          global: 'echarts',
-          relativeModule: 'echarts.min.js',
-        },
-        {
-          name: 'axios',
-          global: 'axios',
-          relativeModule: 'axios.min.js',
-        },
-        {
-          name: 'jsbarcode',
-          global: 'JsBarcode',
-          relativeModule: 'JsBarcode.all.min.js',
-        },
-        {
-          name: 'dayjs',
-          global: 'dayjs',
-          relativeModule: 'dayjs.min.js',
-        },
-        {
-          name: 'dom-to-image',
-          global: 'domtoimage',
-          relativeModule: 'dom-to-image.min.js',
-        },
-        {
-          // 如果需要修改版本，需要同时修改 index.html 中对应的 css
-          // 可以全局搜索 https://lib.baomitu.com/print-js/1.6.0/print.min.css
-          name: 'print-js',
-          global: 'printJS',
-          relativeModule: 'print.min.js',
-        },
-      ],
+      modules: cdn
+        ? [
+            {
+              name: 'vue',
+              global: 'Vue',
+              relativeModule: 'vue.global.min.js',
+            },
+            {
+              name: 'vue-demi',
+              global: 'VueDemi',
+              relativeModule: 'index.iife.min.js',
+            },
+            {
+              name: 'naive-ui',
+              global: 'naive',
+              relativeModule: 'index.prod.js',
+            },
+            {
+              name: 'pinia',
+              global: 'Pinia',
+              relativeModule: 'pinia.iife.min.js',
+            },
+            {
+              name: 'vue-router',
+              global: 'VueRouter',
+              relativeModule: 'vue-router.global.min.js',
+            },
+            {
+              name: 'vue-i18n',
+              global: 'VueI18n',
+              relativeModule: 'vue-i18n.global.min.js',
+            },
+            {
+              name: 'echarts',
+              global: 'echarts',
+              relativeModule: 'echarts.min.js',
+            },
+            {
+              name: 'axios',
+              global: 'axios',
+              relativeModule: 'axios.min.js',
+            },
+            {
+              name: 'jsbarcode',
+              global: 'JsBarcode',
+              relativeModule: 'JsBarcode.all.min.js',
+            },
+            {
+              name: 'dayjs',
+              global: 'dayjs',
+              relativeModule: 'dayjs.min.js',
+            },
+            {
+              name: 'dom-to-image',
+              global: 'domtoimage',
+              relativeModule: 'dom-to-image.min.js',
+            },
+            {
+              // 如果需要修改版本，需要同时修改 index.html 中对应的 css
+              // 可以全局搜索 https://lib.baomitu.com/print-js/1.6.0/print.min.css
+              name: 'print-js',
+              global: 'printJS',
+              relativeModule: 'print.min.js',
+            },
+          ]
+        : [],
     }),
   ]
 }

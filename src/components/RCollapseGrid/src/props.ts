@@ -48,13 +48,13 @@ const props = {
      * 默认 `false`
      */
     type: Boolean,
-    default: false,
+    default: true,
   },
-  onUpdateValue: {
+  onUpdateOpen: {
     type: [Function, Array] as PropType<MaybeArray<(bool: boolean) => void>>,
     default: null,
   },
-  'onUpdate:value': {
+  'onUpdate:open': {
     type: [Function, Array] as PropType<MaybeArray<(bool: boolean) => void>>,
     default: null,
   },

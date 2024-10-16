@@ -308,6 +308,15 @@ export const piniaMenuStore = defineStore(
       // 直接使用完整 url，检查是否在 routes 中
       const findMenuOption = getRoutes().find((curr) => curr.path === routePath)
 
+      // 避免匹配根页面路由
+      if (
+        findMenuOption?.path === '/' ||
+        !findMenuOption?.path ||
+        findMenuOption?.path === '/login'
+      ) {
+        return
+      }
+
       if (findMenuOption) {
         // 使用 pick 提取仅需要的字段，避免 vue 抛错空引用，导致性能损耗
         const pickOption = pick(

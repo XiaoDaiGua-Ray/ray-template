@@ -11,6 +11,7 @@
 
 /**
  *
+ * @description
  * 操作说明:
  *   - 关闭全部: 关闭所有标签页，并且重定向至根页面 rootRoute.path
  *   - 关闭右侧: 关闭右侧所有标签，如果选中标签页与当前激活页不一致并且激活页在右侧，则会重定向至当前选中标签页
@@ -18,15 +19,15 @@
  *   - 关闭其他: 关闭其他所有标签，如果选中标签页与当前激活页不一致并且激活页在其中，则会重定向至当前选中标签页
  *   - 关闭所有: 关闭所有标签页，并且重定向至 root page
  *
- * root path 标签不可被关闭，所以不会显示关闭按钮
- * 页面刷新后，仅会保留刷新前激活 key 的 tag 标签
+ * root path 标签不可被关闭。
+ * 页面刷新后，仅会保留刷新前激活 key 的 tag 标签。
  *
- * 注入 MENU_TAG_DATA 属性，用于动态更新 MenuTag 标签所在的位置
+ * 注入 MENU_TAG_DATA 属性，用于动态更新 MenuTag 标签所在的位置。
  *
- * 该模板中引入了 Root Path 概念，在 MenuTag 中除了关闭左右侧标签操作能主动移除 Root Tag 之外其余的操作都不允许
+ * 该模板中引入了 Root Path 概念，在 MenuTag 中除了关闭左右侧标签操作能主动移除 Root Tag 之外其余的操作都不允许。
  *
- * outsideClick 方法优先级不如 contextmenu 事件高，所以可能会出现重复右键菜单时，闪烁问题
- * 虽然使用 throttle 方法进行优化，但是该问题本质并没有解决
+ * outsideClick 方法优先级不如 contextmenu 事件高，所以可能会出现重复右键菜单时，闪烁问题；
+ * 虽然使用 throttle 方法进行优化，但是该问题本质并没有解决。
  */
 
 import './index.scss'
@@ -49,6 +50,7 @@ import { hasClass, uuid, queryElements } from '@/utils'
 import { useMaximize, useSpinning, useAppRoot, useSiderBar } from '@/hooks'
 import { throttle } from 'lodash-es'
 import { getVariableToRefs } from '@/global-variable'
+import { useTemplateRef } from 'vue'
 
 import type { ScrollbarInst } from 'naive-ui'
 import type { MenuTagOptions, AppMenuOption } from '@/types'
@@ -56,12 +58,11 @@ import type { MenuTagOptions, AppMenuOption } from '@/types'
 export default defineComponent({
   name: 'AppMenuTag',
   setup(_, { expose }) {
-    const scrollRef = ref<ScrollbarInst | null>(null)
-
+    const scrollRef = useTemplateRef<ScrollbarInst | null>('scrollRef')
     const { getMenuKey, getMenuTagOptions } = useMenuGetters()
     const { changeMenuModelValue } = useMenuActions()
     const { getRootPath } = useAppRoot()
-    const { maximize } = useMaximize()
+    const { maximize, isLayoutContentMaximized } = useMaximize()
     const { reload } = useSpinning()
     const {
       close,
@@ -72,18 +73,20 @@ export default defineComponent({
       checkCloseLeft,
       checkCloseRight,
     } = useSiderBar()
-
+    // 哪些下拉框允许禁用
     const canDisabledOptions = [
       'closeAll',
       'closeRight',
       'closeLeft',
       'closeOther',
       'closeCurrentPage',
-    ] // 哪些下拉框允许禁用
-    let currentContextmenuIndex = Infinity // 当前右键标签页索引位置
+    ]
+    // 当前右键标签页索引位置
+    let currentContextmenuIndex = Infinity
     const iconConfig = {
       size: 16,
     }
+    // 下拉菜单
     const moreOptions = ref([
       {
         label: '刷新页面',
@@ -124,8 +127,9 @@ export default defineComponent({
         icon: () => <RIcon name="resize_h" size={iconConfig.size} />,
         disabled: false,
       },
-    ]) // 下拉菜单
-    const uuidScrollBar = uuid(16) // scroll bar uuid
+    ])
+    // scroll bar uuid
+    const uuidScrollBar = uuid(16)
     const actionMap = {
       closeCurrentPage: () => {
         getMenuKey.value !== getRootPath.value && close(currentContextmenuIndex)
@@ -146,53 +150,47 @@ export default defineComponent({
         $closeOther(currentContextmenuIndex)
       },
     }
-    /** 右键菜单 */
+    // 右键菜单
     const actionState = reactive({
       x: 0,
       y: 0,
       actionDropdownShow: false,
     })
-    const MENU_TAG_DATA = 'menu_tag_data' // 注入 tag 前缀
+    // 注入 tag 前缀
+    const MENU_TAG_DATA = 'menu_tag_data'
     const globalMainLayoutLoad = getVariableToRefs('globalMainLayoutLoad')
-    const naiveScrollbarContainerClass = 'n-scrollbar-container' // naive scrollbar 容器 class
+    // naive scrollbar 容器 class
+    const naiveScrollbarContainerClass = 'n-scrollbar-container'
+    // 缓存上一次的菜单 key
+    let catchMenuKey = getMenuKey.value
 
-    /**
-     *
-     * @param idx 索引
-     *
-     * @remark 关闭 `tag` 菜单, 如果仅有一个则不能关闭
-     */
+    // 关闭当前菜单标签，如果只有一个标签，则不允许关闭
     const closeCurrentMenuTag = (idx: number) => {
       close(idx)
     }
 
+    // 动态设置右键菜单的禁用项
     const setMoreOptionsDisabled = (
       key: (typeof moreOptions.value)[number]['key'],
       disabled: boolean,
     ) => {
-      moreOptions.value.forEach((curr) => {
+      for (const curr of moreOptions.value) {
         if (curr.key === key) {
           curr.disabled = disabled
 
-          return
+          break
         }
-      })
+      }
     }
 
-    /**
-     *
-     * @param option 当前菜单值
-     */
+    // 菜单标签点击更新当前菜单激活项
     const menuTagClick = (option: AppMenuOption) => {
       actionState.actionDropdownShow = false
 
       changeMenuModelValue(option.fullPath, option)
     }
 
-    /**
-     *
-     * 获取滚动条容器
-     */
+    // 获取滚动条容器
     const getScrollElement = () => {
       const scroll = document.getElementById(uuidScrollBar) // 获取滚动条容器
 
@@ -208,25 +206,15 @@ export default defineComponent({
 
         return findElement
       }
-
-      return
     }
 
-    /**
-     *
-     * @param type 滚动方向
-     *
-     * 手动滚动容器
-     */
+    // 手动滚动容器
     const scrollX = (type: 'left' | 'right') => {
       const el = getScrollElement()
 
       if (el) {
-        /**
-         *
-         * 找到实际横向滚动元素(class: n-scrollbar-container)
-         * 获取 scrollLeft 属性后, 用于左右滚动边界值进行处理
-         */
+        // 找到实际横向滚动元素（class：n-scrollbar-container）
+        // 获取 scrollLeft 属性后, 用于左右滚动边界值进行处理
         const scrollX = el!.scrollLeft || 0
         const rolling =
           type === 'left' ? Math.max(0, scrollX - 200) : scrollX + 200
@@ -238,23 +226,17 @@ export default defineComponent({
       }
     }
 
-    /** 更多操作操作栏 */
+    // 更多操作操作栏
     const actionDropdownSelect = (key: string | number) => {
       actionState.actionDropdownShow = false
 
       const fn = actionMap[key as keyof typeof actionMap]
 
-      if (fn) {
-        fn()
-      }
+      fn?.()
     }
 
-    /**
-     *
-     * 右键点击标签页
-     *
-     * 缓存当前点击标签页索引值(用于关闭左或者右侧标签页操作)
-     */
+    // 右键点击标签页
+    // 缓存当前点击标签页索引值（用于关闭左或者右侧标签页操作）
     const menuTagContextMenu = (idx: number, e: MouseEvent) => {
       e.preventDefault()
 
@@ -268,10 +250,7 @@ export default defineComponent({
       })
     }
 
-    /**
-     *
-     * 动态设置某些项禁用
-     */
+    // 动态设置某些项禁用
     const setDisabledAccordionToIndex = () => {
       const { closeable } =
         getMenuTagOptions.value[currentContextmenuIndex] ??
@@ -291,12 +270,8 @@ export default defineComponent({
         : setMoreOptionsDisabled('closeLeft', true)
     }
 
-    /**
-     *
-     * 如果通过更多按钮触发关闭事件, 则根据当前标签所在索引值为 currentContextmenuIndex
-     *
-     * 并且动态设置是否可操作状态
-     */
+    // 如果通过更多按钮触发关闭事件，则根据当前标签所在索引值为 currentContextmenuIndex
+    // 并且动态设置是否可操作状态
     const setCurrentContextmenuIndex = () => {
       const index = getMenuTagOptions.value.findIndex(
         (curr) => curr.fullPath === getMenuKey.value,
@@ -307,7 +282,7 @@ export default defineComponent({
       setDisabledAccordionToIndex()
     }
 
-    /** 仅有 getMenuTagOptions 长度大于 1 并且非 root path 时, 才激活关闭按钮 */
+    // 仅有 getMenuTagOptions 长度大于 1 并且非 root path 时，才激活关闭按钮
     const menuTagMouseenter = (option: MenuTagOptions) => {
       if (
         getMenuTagOptions.value.length > 1 &&
@@ -317,18 +292,14 @@ export default defineComponent({
       }
     }
 
-    /** 移出 MenuTag 时, 判断是否为当前已激活 key */
+    // 移出 MenuTag 时，判断是否为当前已激活 key
     const menuTagMouseleave = (option: MenuTagOptions) => {
       if (option.fullPath !== getMenuKey.value) {
         option.closeable = false
       }
     }
 
-    /**
-     *
-     * 每当新的页面打开后, 将滚动条横向滚到至底部
-     * 使用 nextTick 避免元素未渲染挂载至页面
-     */
+    // 每当新的页面打开后，将滚动条横向滚到至底部，使用 nextTick 避免元素未渲染挂载至页面
     const updateScrollBarPosition = () => {
       const el = getScrollElement()
 
@@ -342,7 +313,7 @@ export default defineComponent({
       }
     }
 
-    /** 动态更新 menu tag 所在位置 */
+    // 动态更新 menu tag 所在位置
     const positionMenuTag = () => {
       nextTick().then(() => {
         const tags = queryElements<HTMLElement>(
@@ -362,7 +333,11 @@ export default defineComponent({
       })
     }
 
-    /** 如果有且只有一个标签页时, 禁止全部关闭操作 */
+    // 最大化内容区域按钮点击
+    const maximizeBtnClick = () => {
+      maximize(true)
+    }
+
     watch(
       () => getMenuTagOptions.value,
       (ndata, odata) => {
@@ -391,16 +366,18 @@ export default defineComponent({
         immediate: true,
       },
     )
-    /** 动态设置关闭按钮是否可操作 */
-    watch(
-      () => actionState.actionDropdownShow,
-      (ndata) => {
+    watchEffect(() => {
+      if (actionState.actionDropdownShow) {
         // 使用节流函数，避免右键菜单闪烁问题
-        if (ndata) {
-          throttle(setDisabledAccordionToIndex, 100)?.()
-        }
-      },
-    )
+        throttle(setDisabledAccordionToIndex, 300)?.()
+      }
+
+      if (catchMenuKey !== getMenuKey.value) {
+        catchMenuKey = getMenuKey.value
+
+        positionMenuTag()
+      }
+    })
 
     expose({})
 
@@ -425,22 +402,21 @@ export default defineComponent({
         height: 22,
       },
       maximize,
-      getRootPath,
       reload,
       globalMainLayoutLoad,
+      maximizeBtnClick,
     }
   },
   render() {
     const {
       iconConfig,
-      getRootPath,
       uuidScrollBar,
       getMenuTagOptions,
       MENU_TAG_DATA,
       globalMainLayoutLoad,
     } = this
     const {
-      maximize,
+      maximizeBtnClick,
       closeCurrentMenuTag,
       scrollX,
       $t,
@@ -496,7 +472,6 @@ export default defineComponent({
               }}
             >
               <NFlex
-                ref="menuTagSpaceRef"
                 class="menu-tag-wrapper"
                 wrap={false}
                 align="center"
@@ -516,7 +491,7 @@ export default defineComponent({
                       onContextmenu: menuTagContextMenu.bind(this, idx),
                       onMouseenter: menuTagMouseenter.bind(this, curr),
                       onMouseleave: menuTagMouseleave.bind(this, curr),
-                      [MENU_TAG_DATA]: curr.path,
+                      [MENU_TAG_DATA]: curr.fullPath,
                     }}
                     size="small"
                   >
@@ -535,29 +510,14 @@ export default defineComponent({
                               },
                             }}
                           </span>
-                          {(curr.closeable || getMenuTagOptions.length === 1) &&
-                          curr.fullPath !== getRootPath ? (
-                            <NIcon
-                              class="menu-tag__btn-icon"
-                              {...{
-                                onMousedown: closeCurrentMenuTag.bind(
-                                  this,
-                                  idx,
-                                ),
-                              }}
-                            >
-                              <RIcon name="close" size="14" />
-                            </NIcon>
-                          ) : (
-                            // 默认使用一个空 NIcon 占位，避免不能正确的触发动画
-                            <NIcon
-                              class={[
-                                curr.fullPath !== getRootPath
-                                  ? 'menu-tag__btn-icon'
-                                  : 'menu-tag__btn-icon--hidden',
-                              ]}
-                            />
-                          )}
+                          <NIcon
+                            class="menu-tag__btn-icon"
+                            {...{
+                              onMousedown: closeCurrentMenuTag.bind(this, idx),
+                            }}
+                          >
+                            <RIcon name="close" size="14" />
+                          </NIcon>
                         </>
                       ),
                     }}
@@ -584,9 +544,7 @@ export default defineComponent({
                 width={iconConfig.width}
                 height={iconConfig.height}
                 customClassName="menu-tag__right-setting"
-                onClick={() => {
-                  maximize(true)
-                }}
+                onClick={maximizeBtnClick}
               />
               <RIcon
                 name="reload"

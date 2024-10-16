@@ -40,6 +40,7 @@ export interface AppPrimaryColor {
 }
 
 export interface Config {
+  cdn: boolean
   server: ServerOptions
   buildOptions: (mode: string) => BuildOptions
   alias: AliasOptions

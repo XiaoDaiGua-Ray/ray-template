@@ -149,11 +149,22 @@ const props = {
    *
    * 与表格边框为两个不同配置项。
    *
-   * @default false
+   * @default true
    */
   wrapperBordered: {
     type: Boolean,
-    default: false,
+    default: true,
+  },
+  /**
+   *
+   * @description
+   * 表格边框。
+   *
+   * @default true
+   */
+  bordered: {
+    type: Boolean,
+    default: true,
   },
   /**
    *

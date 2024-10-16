@@ -1,15 +1,4 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-12-04
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
-import { unrefElement, effectDispose, isValueType } from '@/utils'
+import { unrefElement, effectDispose, isValueType, setStyle } from '@/utils'
 import { useWindowSize } from '@vueuse/core'
 
 import type { BasicTarget } from '@/types'
@@ -18,41 +7,56 @@ import type { CSSProperties } from 'vue'
 export interface UseElementFullscreenOptions {
   /**
    *
-   * 进入全屏前的回调
+   * @description
+   * 进入全屏前的回调。
+   *
+   * @default undefined
    */
   beforeEnter?: () => void
   /**
    *
-   * 进入全屏后的回调
+   * @description
+   * 进入全屏后的回调。
+   *
+   * @default undefined
    */
   enter?: () => void
   /**
    *
-   * 退出全屏前的回调
+   * @description
+   * 退出全屏前的回调。
+   *
+   * @default undefined
    */
   beforeExit?: () => void
   /**
    *
-   * 退出全屏后的回调
+   * @description
+   * 退出全屏后的回调。
+   *
+   * @default undefined
    */
   exit?: () => void
   /**
    *
-   * 全屏时的 z-index
+   * @description
+   * 全屏时的 z-index。
    *
    * @default 999
    */
   zIndex?: number
   /**
    *
-   * 全屏时的背景色
+   * @description
+   * 全屏时的背景色。
    *
    * @default null
    */
   backgroundColor?: string
   /**
    *
-   * 手动设定 transition 过度效果
+   * @description
+   * 手动设定 transition 过度效果。
    *
    * @default 'width 0.3s var(--r-bezier), height 0.3s var(--r-bezier)'
    */
@@ -70,10 +74,11 @@ const styleElement = document.createElement('style')
  * @param target target dom
  * @param options useElementFullscreen options
  *
- * 使元素全屏，但是不调用浏览器的全屏 API，仅使用纯 css 实现
- * 该方法具有入侵性，并且会在元素上覆盖 transition 样式
+ * @description
+ * 使元素全屏，但是不调用浏览器的全屏 API，仅使用纯 css 实现。
+ * 该方法具有入侵性，并且会在元素上覆盖 transition 样式。
  *
- * 该方法虽然能够实现全屏，但是会覆盖元素的一些基本样式，因此需要注意管理元素的一些基本样式，例如：position、z-index、transition、transform、width、height
+ * 该方法虽然能够实现全屏，但是会覆盖元素的一些基本样式，因此需要注意管理元素的一些基本样式，例如：position、z-index、transition、transform、width、height。
  *
  * @example
  * <template>
@@ -102,6 +107,13 @@ export const useElementFullscreen = (
     transition = 'all 0.3s var(--r-bezier)',
   } = options ?? {}
   let isSetup = false
+  const catchBoundingClientRect: {
+    x: number | null
+    y: number | null
+  } = {
+    x: null,
+    y: null,
+  }
 
   const updateStyle = () => {
     const element = unrefElement(target) as HTMLElement | null
@@ -111,20 +123,38 @@ export const useElementFullscreen = (
     }
 
     const { left, top } = element.getBoundingClientRect()
+
+    if (
+      catchBoundingClientRect.x === null &&
+      catchBoundingClientRect.y === null
+    ) {
+      catchBoundingClientRect.x = -left
+      catchBoundingClientRect.y = -top
+    }
+
+    setStyle(document.body, {
+      '--element-fullscreen-z-index':
+        isValueType<null>(zIndex, 'Null') ||
+        isValueType<undefined>(zIndex, 'Undefined')
+          ? currentZIndex
+          : zIndex,
+      '--element-fullscreen-transition': transition,
+      '--element-fullscreen-background-color': backgroundColor,
+      '--element-fullscreen-width': `${width.value}px`,
+      '--element-fullscreen-height': `${height.value}px`,
+      '--element-fullscreen-transform-x': `${catchBoundingClientRect.x}px`,
+      '--element-fullscreen-transform-y': `${catchBoundingClientRect.y}px`,
+    })
+
     const cssContent = `
           [${ID_TAG}] {
             position: fixed;
-            width: ${width.value}px !important;
-            height: ${height.value}px !important;
-            transform: translate(-${left}px, -${top}px) !important;
-            transition: ${transition};
-            z-index: ${
-              isValueType<null>(zIndex, 'Null') ||
-              isValueType<undefined>(zIndex, 'Undefined')
-                ? currentZIndex
-                : zIndex
-            } !important;
-            background-color: ${backgroundColor ?? null};
+            width: var(--element-fullscreen-width) !important;
+            height: var(--element-fullscreen-height) !important;
+            transform: translate(var(--element-fullscreen-transform-x), var(--element-fullscreen-transform-y)) !important;
+            transition: var(--element-fullscreen-transition);
+            z-index: var(--element-fullscreen-z-index) !important;
+            background-color: var(--element-fullscreen-background-color);
           }
         `
 
@@ -206,6 +236,10 @@ export const useElementFullscreen = (
     enter,
     exit,
     toggleFullscreen,
+    currentWindowSize: {
+      width,
+      height,
+    },
   }
 }
 

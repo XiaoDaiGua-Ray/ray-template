@@ -27,10 +27,11 @@ export const useSigningGetters = () => {
 }
 
 export const useSigningActions = () => {
-  const { signing, logout } = piniaSigningStore()
+  const { signing, logout, clearSigningCallback } = piniaSigningStore()
 
   return {
     signing,
     logout,
+    clearSigningCallback,
   }
 }

@@ -53,7 +53,8 @@ export const useMaximize = () => {
    *
    * @param full 是否网页全屏内容区域
    *
-   * 该方法仅针对于 LayoutContent 区域，并且依赖全局属性 layoutContentMaximize
+   * @description
+   * 该方法仅针对于 LayoutContent 区域，并且依赖全局属性 layoutContentMaximize。
    *
    * @example
    * maximize(true, { MaximizeOptions }) 全屏内容区域

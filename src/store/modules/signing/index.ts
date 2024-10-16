@@ -75,30 +75,58 @@ export const piniaSigningStore = defineStore(
 
     /**
      *
-     * 退出登陆并且清空缓存数据
-     * 延迟 300ms 后强制刷新当前系统
+     * @param toSigning 是否需要退出登录，并且重定向至登录页
+     *
+     * @description
+     * 清除所有登录缓存信息。
+     * 如果 toSigning 传递 true 则会重定向至登录页。
      */
-    const logout = () => {
+    const clearSigningCallback = (toSigning: boolean) => {
       const { closeAll } = useSiderBar()
-      const { appPiniaMenuStore, appPiniaSigningStore } = APP_CATCH_KEY
+      const {
+        appPiniaMenuStore,
+        appPiniaSigningStore,
+        token,
+        signing,
+        appMenuKey,
+      } = APP_CATCH_KEY
 
       // 提示信息
       window.$message.info('账号退出中...')
       // 移除所有 sessionStorage 缓存
       removeStorage('__all_sessionStorage__', 'sessionStorage')
       // 移除指定 localStorage 缓存
-      removeStorage(appPiniaMenuStore, 'localStorage')
       removeStorage(appPiniaSigningStore, 'localStorage')
+      removeStorage(appPiniaMenuStore, 'localStorage')
+      removeStorage(token, 'localStorage')
+      removeStorage(signing, 'localStorage')
+      removeStorage(appMenuKey, 'localStorage')
       // 关闭所有侧边栏标签
       closeAll()
-      // 延迟 300ms 后强制刷新当前系统
-      setTimeout(() => window.location.reload())
+
+      if (toSigning) {
+        window.location.replace('#/')
+
+        setTimeout(() => {
+          window.location.reload()
+        }, 0)
+      }
+    }
+
+    /**
+     *
+     * 退出登陆并且清空缓存数据
+     * 延迟 300ms 后强制刷新当前系统
+     */
+    const logout = () => {
+      clearSigningCallback(true)
     }
 
     return {
       ...toRefs(state),
       signing,
       logout,
+      clearSigningCallback,
     }
   },
   {

@@ -43,35 +43,37 @@ export default defineComponent({
     })
 
     const collapseClick = () => {
-      const { onUpdateValue, 'onUpdate:value': _onUpdateValue } = props
+      const { onUpdateOpen, 'onUpdate:open': _onUpdateOpen } = props
 
       modelCollapsed.value = !modelCollapsed.value
 
-      if (onUpdateValue) {
-        call(onUpdateValue, modelCollapsed.value)
+      if (onUpdateOpen) {
+        call(onUpdateOpen, modelCollapsed.value)
       }
 
-      if (_onUpdateValue) {
-        call(_onUpdateValue, modelCollapsed.value)
+      if (_onUpdateOpen) {
+        call(_onUpdateOpen, modelCollapsed.value)
       }
     }
 
-    const CollapseIcon = () => (
+    const CollapseIcon = (collapse: boolean) => (
       <div class="collapse-icon" onClick={collapseClick.bind(this)}>
         <span>
-          {modelCollapsed.value
-            ? props.collapseToggleText[0]
-            : props.collapseToggleText[1]}
+          {collapse ? props.collapseToggleText[0] : props.collapseToggleText[1]}
         </span>
         <RIcon
           customClassName={`collapse-icon--arrow ${
-            modelCollapsed.value ? '' : 'collapse-icon--arrow__expanded'
+            collapse ? '' : 'collapse-icon--arrow__expanded'
           }`}
           name="expanded"
           size="14"
         />
       </div>
     )
+
+    watchEffect(() => {
+      modelCollapsed.value = !props.open
+    })
 
     return {
       modelCollapsed,
@@ -108,7 +110,9 @@ export default defineComponent({
               <NGridItem suffix class="ray-collapse-grid__suffix--btn">
                 <NFlex justify="end" align="center">
                   {action?.()}
-                  {collapse ? collapse(modelCollapsed) : CollapseIcon()}
+                  {collapse
+                    ? collapse(modelCollapsed)
+                    : CollapseIcon(modelCollapsed)}
                 </NFlex>
               </NGridItem>
             </NGrid>
