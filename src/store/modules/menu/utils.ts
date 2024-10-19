@@ -1,22 +1,12 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-03-03
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
 /** 本方法感谢 <https://yunkuangao.me/> 的支持 */
 
 import { RIcon } from '@/components'
 
-import { APP_MENU_CONFIG, APP_CATCH_KEY } from '@/app-config'
+import { APP_CATCH_KEY } from '@/app-config'
 import { getStorage, isValueType } from '@/utils'
 import { useAppRoot, useI18n } from '@/hooks'
 import { NTag } from 'naive-ui'
+import { piniaSettingStore } from '../setting'
 
 import type { AppMenuOption, AppMenuKey } from '@/types/modules/app'
 import type { TagProps } from 'naive-ui'
@@ -124,9 +114,7 @@ export const updateDocumentTitle = (option: AppMenuOption) => {
     return
   }
 
-  const {
-    layout: { sideBarLogo },
-  } = __APP_CFG__
+  const { sideBarLogo } = piniaSettingStore()
   const spliceTitle = sideBarLogo ? sideBarLogo.title : ''
 
   document.title = breadcrumbLabel + ' - ' + spliceTitle
@@ -155,11 +143,12 @@ export const createMenuIcon = (option: AppMenuOption) => {
     return () => icon
   }
 
+  const { menuConfig } = piniaSettingStore()
   const _icon = h(
     RIcon,
     {
       name: icon,
-      size: APP_MENU_CONFIG.menuCollapsedIconSize,
+      size: menuConfig.collapsedIconSize,
       cursor: 'pointer',
     },
     {},

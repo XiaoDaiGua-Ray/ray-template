@@ -1,16 +1,5 @@
 /**
  *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2022-12-08
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
-/**
- *
  * @description
  * 操作说明:
  *   - 关闭全部: 关闭所有标签页，并且重定向至根页面 rootRoute.path

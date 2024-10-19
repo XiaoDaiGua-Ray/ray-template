@@ -1,16 +1,5 @@
 /**
  *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-06-06
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
-/**
- *
  * 响应拦截器入口
  * 被注册方法执行时其实例能够保证获取到, 所以不需要做额外空判断
  * 在内部执行方法中, 已经做了边界处理

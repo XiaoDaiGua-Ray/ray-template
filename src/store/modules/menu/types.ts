@@ -1,4 +1,4 @@
-import type { AppMenuOption, MenuTagOptions, AppMenuKey } from '@/types'
+import type { AppMenuOption, MenuTagOptions, AppMenuKey, AnyFC } from '@/types'
 
 export interface MenuState {
   menuKey: AppMenuKey
@@ -13,5 +13,6 @@ type PickUpdateKeys = 'collapsed' | 'currentMenuOption'
 
 export type UpdateMenuState = <T extends keyof Pick<MenuState, PickUpdateKeys>>(
   key: T,
-  value: MenuState[T],
+  value: Partial<MenuState[T]>,
+  cb?: AnyFC,
 ) => void

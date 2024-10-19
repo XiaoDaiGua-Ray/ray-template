@@ -1,16 +1,5 @@
 /**
  *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2022-12-08
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
-/**
- *
  * 注册 `vue-i18n`
  *
  * 预设 `localeLanguage` 作为缓存 `key`

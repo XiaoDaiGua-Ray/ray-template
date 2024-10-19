@@ -1,14 +1,3 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-04-02
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
 import { NFlex, NSwitch, NTooltip } from 'naive-ui'
 import { RIcon } from '@/components'
 

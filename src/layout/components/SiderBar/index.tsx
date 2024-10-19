@@ -1,16 +1,5 @@
 /**
  *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-01-04
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
-/**
- *
  * 本来想通过写数据配置化的方式实现顶部的功能小按钮, 结果事实发现...
  * 但是我又不想改, 就这样吧
  *

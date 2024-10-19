@@ -1,14 +1,3 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-06-07
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
 import { NLayout, NCard, NDynamicTags, NFlex, NInputNumber } from 'naive-ui'
 
 import { add, subtract, multiply, divide, distribute, format } from '@/utils'

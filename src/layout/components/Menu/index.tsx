@@ -1,23 +1,12 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2022-10-11
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
 import './index.scss'
 
 import { NMenu, NLayoutSider, NDrawer } from 'naive-ui'
 import SiderBarLogo from './components/SiderBarLogo'
 
-import { APP_MENU_CONFIG, LAYOUT_SIDER_REF } from '@/app-config'
+import { LAYOUT_SIDER_REF } from '@/app-config'
 import { useDevice } from '@/hooks'
 import { getVariableToRefs, setVariable } from '@/global-variable'
-import { useMenuGetters, useMenuActions } from '@/store'
+import { useMenuGetters, useMenuActions, useSettingGetters } from '@/store'
 
 import type { MenuInst } from 'naive-ui'
 import type { NaiveMenuOptions } from '@/types'
@@ -30,6 +19,7 @@ export default defineComponent({
 
     const { changeMenuModelValue, collapsedMenu, updateMenuState } =
       useMenuActions()
+    const { getMenuConfig } = useSettingGetters()
     const { getMenuOptions, getCollapsed, getMenuKey } = useMenuGetters()
 
     const modelMenuKey = computed({
@@ -87,8 +77,8 @@ export default defineComponent({
       <NLayoutSider
         class="app-menu__sider"
         showTrigger={!isTabletOrSmaller.value}
-        collapseMode={APP_MENU_CONFIG.menuCollapsedMode}
-        collapsedWidth={APP_MENU_CONFIG.menuCollapsedWidth}
+        collapseMode={getMenuConfig.value.collapsedMode}
+        collapsedWidth={getMenuConfig.value.collapsedWidth}
         onUpdateCollapsed={collapsedMenu.bind(this)}
         nativeScrollbar={false}
         ref={LAYOUT_SIDER_REF}
@@ -107,14 +97,14 @@ export default defineComponent({
           keyField="fullPath"
           v-model:value={modelMenuKey.value}
           options={getMenuOptions.value as NaiveMenuOptions[]}
-          indent={APP_MENU_CONFIG.menuCollapsedIndent}
+          indent={getMenuConfig.value.collapsedIndent}
           collapsed={getCollapsed.value}
-          collapsedIconSize={APP_MENU_CONFIG.menuCollapsedIconSize}
-          collapsedWidth={APP_MENU_CONFIG.menuCollapsedWidth}
+          collapsedIconSize={getMenuConfig.value.collapsedIconSize}
+          collapsedWidth={getMenuConfig.value.collapsedWidth}
           onUpdateValue={(key, op) => {
             changeMenuModelValue(key, op as unknown as AppMenuOption)
           }}
-          accordion={APP_MENU_CONFIG.menuAccordion}
+          accordion={getMenuConfig.value.accordion}
         />
       </NLayoutSider>
     )

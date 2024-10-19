@@ -1,16 +1,5 @@
 /**
  *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-06-01
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
-/**
- *
  * 该功能基于 <https://me.yka.moe/> 提供代码改进实现
  *
  * 自动展开所有路由

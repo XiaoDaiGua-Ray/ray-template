@@ -1,14 +1,3 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-06-20
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
 import type { InputInst } from 'naive-ui'
 import type { Ref } from 'vue'
 

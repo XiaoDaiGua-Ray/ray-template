@@ -1,5 +1,24 @@
 # CHANGE LOG
 
+## 5.0.0
+
+## Feats
+
+- `RTable` 组件现在默认 `attrs` 透传不会再透传至 `Table` 而是透传至容器 `Card`
+- `AppAvatar` 组件获取用户信息由 `localStorage` 缓存获取变更为 `getSigningCallback` 响应式获取
+- 移除 `SUPER_ADMIN` 默认值
+- 移除 `APP_KEEP_ALIVE` 配置项，迁移至 `settingStore`
+- 移除 `SIDE_BAR_LOGO_DEFAULT` 配置项，迁移至 `settingStore`
+- 移除 `APP_MENU_CONFIG` 配置项，迁移至 `settingStore`
+- 移除所有的 `ray-template` 相关注释信息
+- `SettingDrawer` 新增更多配置项，允许通过配置入口配置更多的配置项
+- 新增 `DatePicker`, `InputNumber` 样式，默认设置 `width` 为 `100%`
+- 新增 `updateObjectValue` 方法，并且全局替换重复类似方法
+- `useTheme` 新增 `syncSystemTheme` 方法，允许同步系统主题
+- 新增 `ThemeSegment` 主题切换组件
+- 移除 `watchOnce` 方法引入，使用原生 `watch` 方法替代
+- 取消 `SettingDrawer` 自动聚焦可选中元素
+
 ## 4.9.7
 
 从该版本开始，默认关闭了 `cdn` 构建生产环境；因为国内厂商真心不给力。

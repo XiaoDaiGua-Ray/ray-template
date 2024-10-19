@@ -23,6 +23,7 @@
   align-items: center;
 }
 
+// 调整自定义 AppMenu 样式
 .r-menu--app {
   // 手动设置 label 宽度，兼容 extra 的情况
   .n-menu-item-content-header .n-ellipsis {
@@ -32,4 +33,10 @@
   .n-menu-item-content-header__extra {
     margin-right: 8px;
   }
+}
+
+// 手动设置 NDatePicker, NInputNumber 样式
+.n-date-picker,
+.n-input-number {
+  width: 100%;
 }

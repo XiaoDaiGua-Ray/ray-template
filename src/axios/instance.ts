@@ -1,16 +1,5 @@
 /**
  *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2022-11-18
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
-/**
- *
  * 请求拦截器与响应拦截器
  * 如果有需要拓展拦截器, 请在 inject 目录下参照示例方法继续拓展
  * 该页面不应该做过多的改动与配置

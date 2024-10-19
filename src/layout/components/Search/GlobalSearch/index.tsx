@@ -1,16 +1,5 @@
 /**
  *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-04-16
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
-/**
- *
  * app search 搜索功能
  * 递归模糊查找所有在 getMenuOptions 中匹配的项
  * 只有在满足 validMenuItemShow 的时候，才会出现在搜索结果中

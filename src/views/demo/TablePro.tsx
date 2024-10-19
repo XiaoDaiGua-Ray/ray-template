@@ -1,14 +1,3 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2024-08-23
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
 import { RTablePro, RCollapse } from '@/components-pro'
 import {
   NFlex,
@@ -330,7 +319,7 @@ export default defineComponent({
 
     return (
       <NFlex vertical>
-        <RCollapse open={this.collapseRef}>
+        <RCollapse open={this.collapseRef} bordered>
           {{
             default: () => (
               <>

@@ -1,16 +1,5 @@
 /**
  *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-01-03
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
-/**
- *
  * 模板约定不直接操作 store 实例，所有操作都应在 hooks 中二次封装的 getters, actions
  *
  * 持久化存储 pinia 数据

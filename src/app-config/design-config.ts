@@ -1,16 +1,3 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-05-19
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
-/** 系统颜色风格配置入口 */
-
 import type { AppTheme } from '@/types'
 
 export const APP_THEME: AppTheme = {

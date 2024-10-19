@@ -12,7 +12,6 @@ export default defineConfig(({ mode }) => {
     buildOptions,
     alias,
     copyright,
-    sideBarLogo,
     mixinCSS,
     appPrimaryColor,
     base,
@@ -27,7 +26,6 @@ export default defineConfig(({ mode }) => {
     },
     layout: {
       copyright,
-      sideBarLogo,
     },
     appPrimaryColor,
   }

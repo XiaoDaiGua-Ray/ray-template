@@ -1,14 +1,3 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-11-17
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
 import { useSettingGetters, useSettingActions } from '@/store'
 
 import type { AppRootRoute } from '@/store/modules/setting/types'

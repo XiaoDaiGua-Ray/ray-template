@@ -1,14 +1,3 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-11-03
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
 import { useMenuGetters, useMenuActions } from '@/store'
 import { useVueRouter, useAppRoot } from '@/hooks'
 import { pick } from 'lodash-es'

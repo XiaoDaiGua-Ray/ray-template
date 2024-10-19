@@ -1,16 +1,3 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-06-20
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
-/** 解锁界面 */
-
 import { NInput, NForm, NFormItem, NButton, NFlex } from 'naive-ui'
 import AppAvatar from '@/app-components/app/AppAvatar'
 

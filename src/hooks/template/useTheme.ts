@@ -1,17 +1,7 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-11-30
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
 import { useSettingActions, useSettingGetters } from '@/store'
 import { useI18n } from '@/hooks'
 import { APP_THEME } from '@/app-config'
+import { useColorMode } from '@vueuse/core'
 
 export type ThemeLabel = 'Dark' | 'Light'
 
@@ -93,7 +83,8 @@ export const useTheme = () => {
   const darkTheme = () => {
     const { updateSettingState } = useSettingActions()
 
-    updateSettingState('appTheme', true)
+    updateSettingState('_appTheme', true)
+    updateSettingState('appTheme', 'dark')
     setThemeOverrides(true)
   }
 
@@ -108,8 +99,27 @@ export const useTheme = () => {
   const lightTheme = () => {
     const { updateSettingState } = useSettingActions()
 
-    updateSettingState('appTheme', false)
+    updateSettingState('_appTheme', false)
+    updateSettingState('appTheme', 'light')
     setThemeOverrides(false)
+  }
+
+  /**
+   *
+   * @description
+   * 同步系统主题。
+   *
+   * @example
+   * syncSystemTheme()
+   */
+  const syncSystemTheme = () => {
+    const { getAppTheme } = useSettingGetters()
+    const { updateSettingState } = useSettingActions()
+    const { system } = useColorMode()
+
+    updateSettingState('_appTheme', system.value === 'dark')
+    updateSettingState('appTheme', 'auto')
+    setThemeOverrides(getAppTheme.value)
   }
 
   /**
@@ -129,7 +139,8 @@ export const useTheme = () => {
     const { theme } = getAppTheme()
     const { updateSettingState } = useSettingActions()
 
-    updateSettingState('appTheme', !theme)
+    updateSettingState('_appTheme', !theme)
+    updateSettingState('appTheme', !theme ? 'dark' : 'light')
     setThemeOverrides(!theme)
   }
 
@@ -138,6 +149,7 @@ export const useTheme = () => {
     lightTheme,
     toggleTheme,
     getAppTheme,
+    syncSystemTheme,
   }
 }
 

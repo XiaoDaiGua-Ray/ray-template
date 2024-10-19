@@ -1,16 +1,3 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-06-20
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
-/** 锁屏界面 */
-
 import { NInput, NForm, NFormItem, NButton } from 'naive-ui'
 
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'

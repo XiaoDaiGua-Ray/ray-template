@@ -1,13 +1,3 @@
-/**
- *
- * app setting 抽屉
- * 提供了一些基础的动态配置能力
- * 如果需要其他额外的配置项，可以按照当前的方式进行拓展
- *
- * 可能会疑问，为什么可配置项那么少？
- * 其实并不少，只是有一些东西，在我看来是没多大意义需要动态的去改动的，所以都是在 `app-config` 包中进行配置维护
- */
-
 import './index.scss'
 
 import {
@@ -20,14 +10,24 @@ import {
   NDescriptions,
   NDescriptionsItem,
   NSelect,
+  NInputNumber,
+  NFormItem,
+  NForm,
+  NButton,
+  NText,
+  NTooltip,
 } from 'naive-ui'
-import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch'
+import ThemeSegment from './components/ThemeSegment'
+import { RIcon } from '@/components'
 
 import { APP_THEME, CONTENT_TRANSITION_OPTIONS } from '@/app-config'
 import { useSettingGetters, useSettingActions } from '@/store'
+import { defaultSettingConfig } from './constant'
+import { forIn } from 'lodash-es'
 
 import type { PropType } from 'vue'
 import type { Placement } from '@/types'
+import type { SettingState } from '@/store/modules/setting/types'
 
 export default defineComponent({
   name: 'SettingDrawer',
@@ -56,6 +56,9 @@ export default defineComponent({
       getCopyrightSwitch,
       getContentTransition,
       getWatermarkSwitch,
+      getKeepAliveConfig,
+      getMenuConfig,
+      getDrawerPlacement,
     } = useSettingGetters()
 
     const modelShow = computed({
@@ -65,7 +68,7 @@ export default defineComponent({
       },
     })
     // 为了方便管理多个 computed，因为 computed 不能被逆向修改
-    const modelSwitchReactive = computed({
+    const modelReactive = computed({
       get: () => {
         return {
           getMenuTagSwitch: getMenuTagSwitch.value,
@@ -73,10 +76,19 @@ export default defineComponent({
           getCopyrightSwitch: getCopyrightSwitch.value,
           getContentTransition: getContentTransition.value,
           getWatermarkSwitch: getWatermarkSwitch.value,
+          getKeepAliveConfig: getKeepAliveConfig.value,
+          getMenuConfig: getMenuConfig.value,
+          getDrawerPlacement: getDrawerPlacement.value,
         }
       },
       set: (value) => {},
     })
+
+    const defaultSettingBtnClick = () => {
+      forIn(defaultSettingConfig, (value, key) => {
+        updateSettingState(key as keyof SettingState, value)
+      })
+    }
 
     return {
       modelShow,
@@ -84,24 +96,32 @@ export default defineComponent({
       getAppTheme,
       getPrimaryColorOverride,
       updateSettingState,
-      modelSwitchReactive,
+      modelReactive,
+      defaultSettingBtnClick,
     }
   },
   render() {
-    const { $t, changePrimaryColor, updateSettingState } = this
+    const {
+      $t,
+      changePrimaryColor,
+      updateSettingState,
+      defaultSettingBtnClick,
+    } = this
 
     return (
       <NDrawer
         v-model:show={this.modelShow}
         placement={this.placement}
         width={this.width}
+        trapFocus={false}
+        autoFocus={false}
       >
-        <NDrawerContent title={$t('headerSettingOptions.Title')}>
+        <NDrawerContent title="系统配置">
           <NFlex class="setting-drawer__space" vertical>
             <NDivider titlePlacement="center">
               {$t('headerSettingOptions.ThemeOptions.Title')}
             </NDivider>
-            <ThemeSwitch />
+            <ThemeSegment />
             <NDivider titlePlacement="center">
               {$t('headerSettingOptions.ThemeOptions.PrimaryColorConfig')}
             </NDivider>
@@ -114,19 +134,56 @@ export default defineComponent({
               {$t('headerSettingOptions.ContentTransition')}
             </NDivider>
             <NSelect
-              v-model:value={this.modelSwitchReactive.getContentTransition}
+              v-model:value={this.modelReactive.getContentTransition}
               options={CONTENT_TRANSITION_OPTIONS}
               onUpdateValue={(value) => {
                 updateSettingState('contentTransition', value)
               }}
             />
-            <NDivider titlePlacement="center">
-              {$t('headerSettingOptions.InterfaceDisplay')}
-            </NDivider>
+            <NDivider titlePlacement="center">抽屉位置</NDivider>
+            <NSelect
+              v-model:value={this.modelReactive.getDrawerPlacement}
+              options={[
+                {
+                  label: '右边',
+                  value: 'right',
+                },
+                {
+                  label: '左边',
+                  value: 'left',
+                },
+              ]}
+              onUpdateValue={(value) => {
+                updateSettingState('drawerPlacement', value)
+              }}
+            />
+            <NDivider titlePlacement="center">系统设置</NDivider>
             <NDescriptions labelPlacement="left" column={1}>
+              <NDescriptionsItem label="菜单手风琴">
+                <NSwitch
+                  v-model:value={this.modelReactive.getMenuConfig.accordion}
+                  onUpdateValue={(bool: boolean) =>
+                    updateSettingState('menuConfig', {
+                      accordion: bool,
+                    })
+                  }
+                />
+              </NDescriptionsItem>
+              <NDescriptionsItem label="页面缓存">
+                <NSwitch
+                  v-model:value={
+                    this.modelReactive.getKeepAliveConfig.setupKeepAlive
+                  }
+                  onUpdateValue={(bool: boolean) =>
+                    updateSettingState('keepAliveConfig', {
+                      setupKeepAlive: bool,
+                    })
+                  }
+                />
+              </NDescriptionsItem>
               <NDescriptionsItem label="多标签">
                 <NSwitch
-                  v-model:value={this.modelSwitchReactive.getMenuTagSwitch}
+                  v-model:value={this.modelReactive.getMenuTagSwitch}
                   onUpdateValue={(bool: boolean) =>
                     updateSettingState('menuTagSwitch', bool)
                   }
@@ -134,7 +191,7 @@ export default defineComponent({
               </NDescriptionsItem>
               <NDescriptionsItem label="面包屑">
                 <NSwitch
-                  v-model:value={this.modelSwitchReactive.getBreadcrumbSwitch}
+                  v-model:value={this.modelReactive.getBreadcrumbSwitch}
                   onUpdateValue={(bool: boolean) =>
                     updateSettingState('breadcrumbSwitch', bool)
                   }
@@ -142,7 +199,7 @@ export default defineComponent({
               </NDescriptionsItem>
               <NDescriptionsItem label="水印">
                 <NSwitch
-                  v-model:value={this.modelSwitchReactive.getWatermarkSwitch}
+                  v-model:value={this.modelReactive.getWatermarkSwitch}
                   onUpdateValue={(bool: boolean) =>
                     updateSettingState('watermarkSwitch', bool)
                   }
@@ -150,13 +207,91 @@ export default defineComponent({
               </NDescriptionsItem>
               <NDescriptionsItem label="版权信息">
                 <NSwitch
-                  v-model:value={this.modelSwitchReactive.getCopyrightSwitch}
+                  v-model:value={this.modelReactive.getCopyrightSwitch}
                   onUpdateValue={(bool: boolean) =>
                     updateSettingState('copyrightSwitch', bool)
                   }
                 />
               </NDescriptionsItem>
             </NDescriptions>
+            <NDivider titlePlacement="center">菜单样式</NDivider>
+            <NForm showFeedback={true} showRequireMark={false}>
+              <NFormItem label="每级菜单缩进">
+                <NInputNumber
+                  v-model:value={
+                    this.modelReactive.getMenuConfig.collapsedIndent
+                  }
+                  min={24}
+                  precision={0}
+                  onUpdateValue={(value) => {
+                    if (value !== null) {
+                      updateSettingState('menuConfig', {
+                        collapsedIndent: value,
+                      })
+                    }
+                  }}
+                />
+              </NFormItem>
+              <NFormItem label="折叠菜单图标尺寸">
+                <NInputNumber
+                  v-model:value={
+                    this.modelReactive.getMenuConfig.collapsedIconSize
+                  }
+                  min={22}
+                  precision={0}
+                  onUpdateValue={(value) => {
+                    if (value !== null) {
+                      updateSettingState('menuConfig', {
+                        collapsedIconSize: value,
+                      })
+                    }
+                  }}
+                />
+              </NFormItem>
+              <NFormItem label="折叠菜单宽度" showFeedback={false}>
+                <NInputNumber
+                  v-model:value={
+                    this.modelReactive.getMenuConfig.collapsedWidth
+                  }
+                  min={64}
+                  precision={0}
+                  onUpdateValue={(value) => {
+                    if (value !== null) {
+                      updateSettingState('menuConfig', {
+                        collapsedWidth: value,
+                      })
+                    }
+                  }}
+                />
+              </NFormItem>
+            </NForm>
+            <NDivider titlePlacement="center">
+              <NFlex wrap={false} align="center" size={[4, 0]}>
+                <NTooltip placement="top" showArrow={false}>
+                  {{
+                    trigger: () => <RIcon name="question" size="16" />,
+                    default: () => '当设置为【0】时，缓存将会失效',
+                  }}
+                </NTooltip>
+                <NText>最大缓存数</NText>
+              </NFlex>
+            </NDivider>
+            <NInputNumber
+              v-model:value={
+                this.modelReactive.getKeepAliveConfig.maxKeepAliveLength
+              }
+              showButton={true}
+              min={0}
+              max={100}
+              precision={0}
+              disabled={!this.modelReactive.getKeepAliveConfig.setupKeepAlive}
+            />
+            <NDivider titlePlacement="center">操作</NDivider>
+            <NFlex>
+              <NButton type="primary" block onClick={defaultSettingBtnClick}>
+                清除设置
+              </NButton>
+            </NFlex>
           </NFlex>
         </NDrawerContent>
       </NDrawer>

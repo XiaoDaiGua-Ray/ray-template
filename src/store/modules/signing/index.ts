@@ -1,16 +1,5 @@
 /**
  *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-01-28
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
-/**
- *
  * 出于便捷性考虑, 将用户部分信息存于 pinia 仓库
  * 可以存储: 头像, 权限, 以及基于你项目实际情况的一些附带信息
  *

@@ -1,14 +1,3 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-11-06
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
 import { piniaSettingStore } from '../modules/setting'
 
 export const useSettingGetters = () => {
@@ -31,7 +20,13 @@ export const useSettingGetters = () => {
    * @description
    * 获取 app 主题。
    */
-  const getAppTheme = computed(() => variable.appTheme)
+  const getAppTheme = computed(() => variable._appTheme)
+  /**
+   *
+   * @description
+   * 获取 app 主题。
+   */
+  const getAppThemeStr = computed(() => variable.appTheme)
   /**
    *
    * @description
@@ -96,6 +91,20 @@ export const useSettingGetters = () => {
    */
   const getSideBarLogo = computed(() => variable.sideBarLogo)
 
+  /**
+   *
+   * @description
+   * 获取缓存设置。
+   */
+  const getKeepAliveConfig = computed(() => variable.keepAliveConfig)
+
+  /**
+   *
+   * @description
+   * 获取菜单设置。
+   */
+  const getMenuConfig = computed(() => variable.menuConfig)
+
   return {
     getDrawerPlacement,
     getPrimaryColorOverride,
@@ -110,6 +119,9 @@ export const useSettingGetters = () => {
     getWatermarkConfig,
     getAppRootRoute,
     getSideBarLogo,
+    getKeepAliveConfig,
+    getMenuConfig,
+    getAppThemeStr,
   }
 }
 

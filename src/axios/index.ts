@@ -1,16 +1,5 @@
 /**
  *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-07-11
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
-/**
- *
  * 基于 vue-hook-plus 与 axios 封装
  *
  * (vue-hook-plus 参考文档)[https://inhiblab-core.gitee.io/docs/hooks/useRequest/basic/]

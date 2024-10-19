@@ -46,7 +46,6 @@ export interface Config {
   alias: AliasOptions
   title: HTMLTitle
   copyright?: LayoutCopyright
-  sideBarLogo?: LayoutSideBarLogo
   mixinCSS?: string
   preloadingConfig?: PreloadingConfig
   base?: string
@@ -69,7 +68,6 @@ export interface AppConfig {
   }
   layout: {
     copyright?: LayoutCopyright
-    sideBarLogo?: LayoutSideBarLogo
   }
   base?: string
   appPrimaryColor: AppPrimaryColor

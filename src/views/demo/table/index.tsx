@@ -1,14 +1,3 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2022-12-08
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
 import {
   NTag,
   NButton,
@@ -22,7 +11,8 @@ import {
   NCard,
   NAlert,
 } from 'naive-ui'
-import { RCollapseGrid, RTable, RIcon, RMoreDropdown } from '@/components'
+import { RTable, RIcon, RMoreDropdown } from '@/components'
+import { RCollapse } from '@/components-pro'
 
 import { uuid } from '@/utils'
 import { useTable, useCheckedRowKeys } from '@/components'
@@ -298,13 +288,12 @@ const TableView = defineComponent({
             </NFlex>
           </NFlex>
         </NCard>
-        <RCollapseGrid
-          bordered={false}
+        <RCollapse
           collapsedRows={this.gridCollapsedRows}
           cols={this.gridItemCount}
           onUpdateOpen={(value: boolean) =>
             window.$message.info(
-              `我是 RCollapseGrid 组件${value ? '收起' : '展开'}的回调函数`,
+              `我是 RCollapse 组件${value ? '收起' : '展开'}的回调函数`,
             )
           }
         >
@@ -335,7 +324,7 @@ const TableView = defineComponent({
               </>
             ),
           }}
-        </RCollapseGrid>
+        </RCollapse>
         <RTable
           v-model:checkedRowKeys={this.checkedRowKeys}
           onUpdateCheckedRowKeys={checkedRowKeysBind.bind(this)}

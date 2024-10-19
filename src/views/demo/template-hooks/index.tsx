@@ -1,14 +1,3 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-11-03
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
 import { NFlex, NCard, NButton, NInput } from 'naive-ui'
 import { RIcon } from '@/components'
 
@@ -40,7 +29,8 @@ export default defineComponent({
       setWatermarkContent,
       toggleWatermark,
     } = useWatermark()
-    const { darkTheme, lightTheme, toggleTheme, getAppTheme } = useTheme()
+    const { darkTheme, lightTheme, toggleTheme, getAppTheme, syncSystemTheme } =
+      useTheme()
     const {
       hidden: badgeHidden,
       show: badgeShow,
@@ -69,6 +59,7 @@ export default defineComponent({
       badgeShow,
       badgeUpdateLabel,
       badgeValue,
+      syncSystemTheme,
     }
   },
   render() {
@@ -90,6 +81,7 @@ export default defineComponent({
       badgeHidden,
       badgeShow,
       badgeUpdateLabel,
+      syncSystemTheme,
     } = this
 
     return (
@@ -148,6 +140,7 @@ export default defineComponent({
             <NFlex>
               <NButton onClick={() => darkTheme()}>切换暗黑主题</NButton>
               <NButton onClick={() => lightTheme()}>切换明亮主题</NButton>
+              <NButton onClick={() => syncSystemTheme()}>跟随主题</NButton>
               <NButton onClick={() => toggleTheme()}>切换主题</NButton>
             </NFlex>
           </NFlex>

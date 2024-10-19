@@ -1,16 +1,5 @@
 /**
  *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2022-12-27
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
-/**
- *
  * <https://www.naiveui.com/zh-CN/dark/components/grid>
  *
  * 可折叠操作栏
@@ -92,10 +81,11 @@ export default defineComponent({
       yGap,
       collapsedRows,
       cssVars,
+      bordered,
     } = this
 
     return (
-      <NCard bordered={this.bordered} style={[cssVars]}>
+      <NCard bordered={bordered} style={[cssVars]}>
         {{
           default: () => (
             <NGrid

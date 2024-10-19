@@ -1,14 +1,3 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-10-04
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
 import './index.scss'
 
 import { NCard, NDataTable, NDropdown, NFlex } from 'naive-ui'
@@ -258,7 +247,7 @@ export default defineComponent({
       propsPopselectValue,
       renderWrapperHeader,
     } = this
-    const { class: className } = $attrs
+    const { class: className, ...restAttrs } = $attrs
     const { tool, combineRowProps, contextMenuSelect } = this
 
     return (
@@ -267,6 +256,7 @@ export default defineComponent({
         {...{
           id: uuidWrapper,
         }}
+        {...restAttrs}
         ref="wrapperRef"
         bordered={wrapperBordered}
         class={className}
@@ -278,7 +268,6 @@ export default defineComponent({
                 {...{
                   id: uuidTable,
                 }}
-                {...$attrs}
                 {...($props as DataTableProps)}
                 {...propsPopselectValue}
                 rowProps={combineRowProps.bind(this)}

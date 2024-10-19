@@ -1,8 +1,3 @@
-/**
- *
- * 友情链接组件，无实际项目意义
- */
-
 import { NAvatar, NTooltip, NFlex } from 'naive-ui'
 
 interface AvatarOptions {

@@ -54,7 +54,7 @@ export interface RSegmentOptions {
    * @description
    * 自定义图标。
    */
-  icon?: VNode
+  icon?: VNode | (() => VNode)
 }
 
 export type RSegmentWidth = number | 'block' | 'fitContent'

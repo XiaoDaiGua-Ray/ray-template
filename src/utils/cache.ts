@@ -1,14 +1,3 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-06-05
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
 import { APP_CATCH_KEY_PREFIX } from '@/app-config'
 
 import type { StorageLike, StorageOptions, RemoveStorageFC } from '@/types'

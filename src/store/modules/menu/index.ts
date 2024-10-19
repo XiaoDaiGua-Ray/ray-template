@@ -1,16 +1,5 @@
 /**
  *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2022-11-03
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
-/**
- *
  * 该文件为 menu 菜单 pinia store
  *
  * 说明:
@@ -28,7 +17,7 @@
 
 import { NEllipsis } from 'naive-ui'
 
-import { setStorage, equalRouterPath } from '@/utils'
+import { setStorage, equalRouterPath, updateObjectValue } from '@/utils'
 import { validRole, validMenuItemShow } from '@/router/utils'
 import {
   parseAndFindMatchingNodes,
@@ -116,10 +105,8 @@ export const piniaMenuStore = defineStore(
      * @description
      * 更新 menu state 指定 key 的值。
      */
-    const updateMenuState: UpdateMenuState = (key, value) => {
-      if (Object.hasOwn(menuState, key as string)) {
-        menuState[key] = value
-      }
+    const updateMenuState: UpdateMenuState = (key, value, cb) => {
+      updateObjectValue(menuState, key, value, cb)
     }
 
     /**

@@ -1,16 +1,6 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-08-11
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
 import { NFlex, NCard, NButton, NFormItemGi, NInput, NForm } from 'naive-ui'
-import { RCollapseGrid, RTable } from '@/components'
+import { RTable } from '@/components'
+import { RCollapse } from '@/components-pro'
 
 import { useHookPlusRequest } from '@/axios'
 import { getPersonList } from '@/api/demo/mock/person'
@@ -148,7 +138,7 @@ const MockDemo = defineComponent({
           </h2>
         </NCard>
         <NForm labelPlacement="left">
-          <RCollapseGrid bordered={false} cols={3}>
+          <RCollapse cols={3}>
             {{
               default: () => (
                 <>
@@ -163,7 +153,7 @@ const MockDemo = defineComponent({
                 </NButton>
               ),
             }}
-          </RCollapseGrid>
+          </RCollapse>
         </NForm>
         <RTable
           title="Mock数据表格"

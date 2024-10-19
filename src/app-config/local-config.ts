@@ -1,16 +1,3 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-05-19
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
-/** 国际化相关配置 */
-
 import type { TemplateLocale, LocalOptions, DayjsLocalMap } from '@/types'
 import type { ValueOf } from '@/types'
 

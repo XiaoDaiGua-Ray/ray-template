@@ -1,21 +1,10 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2024-04-10
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
 import './index.scss'
 
 import { NTabs, NTab, NPopover, NFlex } from 'naive-ui'
 
 import props from './props'
 import { themeOverrides } from './constant'
-import { completeSize, isValueType } from '@/utils'
+import { completeSize, isValueType, renderNode } from '@/utils'
 
 import type { TabsProps } from 'naive-ui'
 import type { RSegmentOptions } from './types'
@@ -26,7 +15,7 @@ const iconSegmentTab = (option: RSegmentOptions) => {
   if (icon) {
     return (
       <NFlex align="center" wrap={false} size="small">
-        <icon />
+        {renderNode(icon)?.()}
         <div>{label}</div>
       </NFlex>
     )

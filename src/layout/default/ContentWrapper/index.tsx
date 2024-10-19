@@ -1,16 +1,5 @@
 /**
  *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-04-21
- *
- * @workspace ray-template-mine
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
-/**
- *
  * 使用 NSpin 组件实现 loading 效果
  * 默认添加 300ms 延迟
  */

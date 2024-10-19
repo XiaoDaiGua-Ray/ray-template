@@ -1,16 +1,5 @@
 /**
  *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-09-11
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
-/**
- *
  * @description
  * 存放全局响应式变量，脱离 pinia 使用的变量。
  * 简单的全局变量，并不需要复杂的控制流程。

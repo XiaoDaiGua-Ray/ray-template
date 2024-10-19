@@ -1,8 +1,7 @@
 import { getAppDefaultLanguage } from '@/locales/utils'
-import { colorToRgba, setStorage } from '@/utils'
+import { colorToRgba, setStorage, updateObjectValue } from '@/utils'
 import { useI18n, useDayjs } from '@/hooks'
-import { watchOnce } from '@vueuse/core'
-import { APP_CATCH_KEY, APP_THEME, SIDE_BAR_LOGO_DEFAULT } from '@/app-config'
+import { APP_CATCH_KEY, APP_THEME } from '@/app-config'
 
 import type { SettingState } from '@/store/modules/setting/types'
 import type { LocalKey } from '@/hooks'
@@ -18,7 +17,9 @@ export const piniaSettingStore = defineStore(
     const { locale: dayjsLocal } = useDayjs()
 
     const settingState = reactive<SettingState>({
+      // 默认设置出现位置
       drawerPlacement: 'right',
+      // 默认主题色
       primaryColorOverride: {
         common: {
           primaryColor: primaryColor,
@@ -26,14 +27,24 @@ export const piniaSettingStore = defineStore(
           primaryColorPressed: primaryColor,
         },
       },
-      appTheme: false, // true 为黑夜主题, false 为明亮主题
-      menuTagSwitch: true, // 多标签页开关
-      breadcrumbSwitch: true, // 面包屑开关
+      // true 为黑夜主题, false 为明亮主题
+      _appTheme: false,
+      appTheme: 'light',
+      // 多标签页开关
+      menuTagSwitch: true,
+      // 面包屑开关
+      breadcrumbSwitch: true,
+      // 默认国际化语言
       localeLanguage: getAppDefaultLanguage(),
-      lockScreenSwitch: false, // 锁屏开关
-      copyrightSwitch: true, // 底部区域开关
-      contentTransition: 'scale', // 切换过渡效果
-      watermarkSwitch: false, // 水印开关,
+      // 锁屏开关
+      lockScreenSwitch: false,
+      // 底部区域开关
+      copyrightSwitch: true,
+      // 切换过渡效果
+      contentTransition: 'scale',
+      // 水印开关
+      watermarkSwitch: false,
+      // 水印
       watermarkConfig: {
         content: 'Trying be better~',
         fontSize: 16,
@@ -44,14 +55,35 @@ export const piniaSettingStore = defineStore(
         yOffset: 60,
         rotate: -15,
       },
+      // 根路由信息
       appRootRoute: {
         name: 'Dashboard',
         path: '/dashboard',
       },
-      sideBarLogo: Object.assign({}, SIDE_BAR_LOGO_DEFAULT),
+      // 侧边栏设置
+      sideBarLogo: {
+        icon: 'ray',
+        title: 'Ray Template',
+        url: '/dashboard',
+        jumpType: 'station',
+      },
+      // 缓存动态设置
+      keepAliveConfig: {
+        setupKeepAlive: true,
+        keepAliveExclude: [],
+        maxKeepAliveLength: 10,
+      },
+      // 菜单配置
+      menuConfig: {
+        collapsedWidth: 64,
+        collapsedMode: 'width',
+        collapsedIconSize: 22,
+        collapsedIndent: 24,
+        accordion: false,
+      },
     })
 
-    /** 修改当前语言 */
+    // 修改当前语言
     const updateLocale = (key: string) => {
       locale(key)
       dayjsLocal(key as LocalKey)
@@ -63,7 +95,8 @@ export const piniaSettingStore = defineStore(
 
     /**
      *
-     * 切换主题色，传递对应颜色即可更新 naive-ui 的主题色
+     * @description
+     * 切换主题色，传递对应颜色即可更新 naive-ui 的主题色。
      */
     const changePrimaryColor = (value: string, alpha = 0.3) => {
       const alphaColor = colorToRgba(value, alpha)
@@ -88,8 +121,9 @@ export const piniaSettingStore = defineStore(
      * @param value settingState 的 value
      * @param cb 回调函数
      *
-     * 更新 settingState 的值，如果 key 不存在与 settingState 中，则不会更新
-     * 但是不论是否更新成功，都会执行回调函数
+     * @description
+     * 更新 settingState 的值，如果 key 不存在与 settingState 中，则不会更新。
+     * 但是不论是否更新成功，都会执行回调函数。
      *
      * @example
      * updateSettingState('drawerPlacement', 'left')
@@ -101,14 +135,10 @@ export const piniaSettingStore = defineStore(
       C extends AnyFC,
     >(
       key: T,
-      value: V[T],
+      value: Partial<V[T]>,
       cb?: C,
     ) => {
-      if (Object.hasOwn(settingState, key)) {
-        settingState[key] = value
-      }
-
-      cb?.()
+      updateObjectValue(settingState, key, value, cb)
     }
 
     /**
@@ -116,7 +146,7 @@ export const piniaSettingStore = defineStore(
      * 初始化合并自定义主题色
      * 该方法会在初始化时执行一次，之后会在切换主题色时执行
      */
-    watchOnce(
+    watch(
       () => settingState.appTheme,
       (ndata) => {
         ndata
@@ -135,6 +165,7 @@ export const piniaSettingStore = defineStore(
       },
       {
         immediate: true,
+        once: true,
       },
     )
 

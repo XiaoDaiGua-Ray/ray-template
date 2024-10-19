@@ -1,16 +1,3 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-05-19
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
-/** vue-router 相关配置入口 */
-
 import type { LayoutInst } from 'naive-ui'
 import type { Ref } from 'vue'
 
@@ -71,4 +58,4 @@ export const WHITE_ROUTES: string[] = ['RLogin', 'ErrorPage', 'RayTemplateDoc']
  * 超级管理员
  * 配置默认超级管理员, 默认拥有全部最高权限
  */
-export const SUPER_ADMIN: (string | number)[] = ['admin']
+export const SUPER_ADMIN: (string | number)[] = []

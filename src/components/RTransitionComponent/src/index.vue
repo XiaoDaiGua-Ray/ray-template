@@ -9,10 +9,10 @@
         >
           <Suspense>
             <KeepAlive
-              v-if="setupKeepAlive"
-              :max="maxKeepAliveLength"
+              v-if="getKeepAliveConfig.setupKeepAlive"
+              :max="getKeepAliveConfig.maxKeepAliveLength"
               :include="getKeepAliveInclude"
-              :exclude="keepAliveExclude"
+              :exclude="getKeepAliveConfig.keepAliveExclude"
             >
               <Component :is="Component" :key="route.fullPath" />
             </KeepAlive>
@@ -24,8 +24,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { useKeepAliveGetters } from '@/store'
-import { APP_KEEP_ALIVE } from '@/app-config'
+import { useSettingGetters, useKeepAliveGetters } from '@/store'
 import props from './props'
 
 import type { TransitionProps } from './types'
@@ -41,5 +40,5 @@ defineOptions({
 withDefaults(defineProps<TransitionProps>(), props)
 
 const { getKeepAliveInclude } = useKeepAliveGetters()
-const { setupKeepAlive, maxKeepAliveLength, keepAliveExclude } = APP_KEEP_ALIVE
+const { getKeepAliveConfig } = useSettingGetters()
 </script>

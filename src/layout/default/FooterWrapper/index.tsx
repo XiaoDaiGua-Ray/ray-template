@@ -1,14 +1,3 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-04-21
- *
- * @workspace ray-template-mine
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
 import './index.scss'
 
 export default defineComponent({

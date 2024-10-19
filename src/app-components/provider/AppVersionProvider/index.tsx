@@ -1,16 +1,5 @@
 /**
  *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2024-01-01
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
-/**
- *
  * 检测当前版本是否为最新版本
  * 如果不是最新版本则弹出提示框，提示用户更新，点击确认后退出登录并且刷新资源
  */

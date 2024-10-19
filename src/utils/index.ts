@@ -8,3 +8,4 @@ export * from './precision'
 export * from './vue'
 export * from './app'
 export { positionSelectedMenuItem }
+export { updateObjectValue } from './update-object-value'
