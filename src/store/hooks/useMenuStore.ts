@@ -73,6 +73,7 @@ export const useMenuActions = () => {
     setMenuTagOptions,
     resolveOption,
     updateMenuState,
+    setupAppMenu,
   } = piniaMenuStore()
 
   return {
@@ -82,5 +83,6 @@ export const useMenuActions = () => {
     setMenuTagOptions,
     resolveOption,
     updateMenuState,
+    setupAppMenu,
   }
 }

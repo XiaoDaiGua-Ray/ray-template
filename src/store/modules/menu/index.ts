@@ -436,6 +436,7 @@ export const piniaMenuStore = defineStore(
       setMenuTagOptions,
       resolveOption,
       updateMenuState,
+      setupAppMenu,
     }
   },
   {

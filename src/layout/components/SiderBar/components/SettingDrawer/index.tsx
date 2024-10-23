@@ -21,9 +21,9 @@ import ThemeSegment from './components/ThemeSegment'
 import { RIcon } from '@/components'
 
 import { APP_THEME, CONTENT_TRANSITION_OPTIONS } from '@/app-config'
-import { useSettingGetters, useSettingActions } from '@/store'
+import { useSettingGetters, useSettingActions, useMenuActions } from '@/store'
 import { defaultSettingConfig } from './constant'
-import { forIn } from 'lodash-es'
+import { forIn, throttle } from 'lodash-es'
 
 import type { PropType } from 'vue'
 import type { Placement } from '@/types'
@@ -60,6 +60,7 @@ export default defineComponent({
       getMenuConfig,
       getDrawerPlacement,
     } = useSettingGetters()
+    const { setupAppMenu } = useMenuActions()
 
     const modelShow = computed({
       get: () => props.show,
@@ -84,10 +85,14 @@ export default defineComponent({
       set: (value) => {},
     })
 
+    const throttleSetupAppMenu = throttle(setupAppMenu, 300)
+
     const defaultSettingBtnClick = () => {
       forIn(defaultSettingConfig, (value, key) => {
         updateSettingState(key as keyof SettingState, value)
       })
+
+      throttleSetupAppMenu()
     }
 
     return {
@@ -98,6 +103,7 @@ export default defineComponent({
       updateSettingState,
       modelReactive,
       defaultSettingBtnClick,
+      throttleSetupAppMenu,
     }
   },
   render() {
@@ -106,6 +112,7 @@ export default defineComponent({
       changePrimaryColor,
       updateSettingState,
       defaultSettingBtnClick,
+      throttleSetupAppMenu,
     } = this
 
     return (
@@ -226,7 +233,17 @@ export default defineComponent({
                 />
               </NDescriptionsItem>
             </NDescriptions>
-            <NDivider titlePlacement="center">菜单样式</NDivider>
+            <NDivider titlePlacement="center">
+              <NFlex wrap={false} align="center" size={[4, 0]}>
+                <NTooltip placement="top" showArrow={false}>
+                  {{
+                    trigger: () => <RIcon name="question" size="16" />,
+                    default: () => '菜单渲染是一个复杂、耗时的操作，请手动更新',
+                  }}
+                </NTooltip>
+                <NText>菜单样式</NText>
+              </NFlex>
+            </NDivider>
             <NForm showFeedback={true} showRequireMark={false}>
               <NFormItem label="每级菜单缩进">
                 <NInputNumber
@@ -274,7 +291,7 @@ export default defineComponent({
                   }}
                 />
               </NFormItem>
-              <NFormItem label="折叠菜单宽度" showFeedback={false}>
+              <NFormItem label="折叠菜单宽度">
                 <NInputNumber
                   v-model:value={
                     this.modelReactive.getMenuConfig.collapsedWidth
@@ -289,6 +306,19 @@ export default defineComponent({
                     }
                   }}
                 />
+              </NFormItem>
+              <NFormItem showFeedback={false} showLabel={false}>
+                <NButton
+                  onClick={throttleSetupAppMenu}
+                  block
+                  type="info"
+                  secondary
+                >
+                  {{
+                    icon: () => <RIcon name="question" size="16" />,
+                    default: () => '点击刷新',
+                  }}
+                </NButton>
               </NFormItem>
             </NForm>
             <NDivider titlePlacement="center">

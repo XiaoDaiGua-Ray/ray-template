@@ -16,7 +16,7 @@
  * 该模板中引入了 Root Path 概念，在 MenuTag 中除了关闭左右侧标签操作能主动移除 Root Tag 之外其余的操作都不允许。
  *
  * outsideClick 方法优先级不如 contextmenu 事件高，所以可能会出现重复右键菜单时，闪烁问题；
- * 虽然使用 throttle 方法进行优化，但是该问题本质并没有解决（v5.0.1 版本修复了该问题）。
+ * 虽然使用 throttle 方法进行优化，但是该问题本质并没有解决（v5.0.2 版本修复了该问题）。
  */
 
 import './index.scss'
@@ -34,7 +34,6 @@ import { RIcon, RMoreDropdown } from '@/components'
 import { useMenuGetters, useMenuActions } from '@/store'
 import { hasClass, uuid, queryElements } from '@/utils'
 import { useMaximize, useSpinning, useAppRoot, useSiderBar } from '@/hooks'
-import { throttle } from 'lodash-es'
 import { getVariableToRefs } from '@/global-variable'
 import { useTemplateRef } from 'vue'
 
@@ -65,7 +64,6 @@ export default defineComponent({
       'closeRight',
       'closeLeft',
       'closeOther',
-      'closeCurrentPage',
     ]
     // 当前右键标签页索引位置
     let currentContextmenuIndex = Infinity
@@ -179,6 +177,8 @@ export default defineComponent({
     const naiveScrollbarContainerClass = 'n-scrollbar-container'
     // 缓存上一次的菜单 key
     let catchMenuKey = getMenuKey.value
+    // 当前鼠标是否划入 menu tag
+    const isMouseInMenuTag = ref(false)
 
     // 关闭当前菜单标签，如果只有一个标签，则不允许关闭
     const closeCurrentMenuTag = (idx: number) => {
@@ -260,21 +260,14 @@ export default defineComponent({
       actionState.actionDropdownShow = false
 
       nextTick(() => {
-        actionState.actionDropdownShow = true
         actionState.x = e.clientX
         actionState.y = e.clientY
+        actionState.actionDropdownShow = true
       })
     }
 
     // 动态设置某些项禁用
     const setDisabledAccordionToIndex = () => {
-      const { closeable } =
-        getMenuTagOptions.value[currentContextmenuIndex] ??
-        ({} as MenuTagOptions)
-
-      // 是否需要禁用关闭当前标签页
-      setMoreOptionsDisabled('closeCurrentPage', !closeable ?? false)
-
       // 是否需要禁用关闭右侧标签页
       checkCloseRight(currentContextmenuIndex)
         ? setMoreOptionsDisabled('closeRight', false)
@@ -306,6 +299,8 @@ export default defineComponent({
       ) {
         option.closeable = true
       }
+
+      isMouseInMenuTag.value = true
     }
 
     // 移出 MenuTag 时，判断是否为当前已激活 key
@@ -313,6 +308,8 @@ export default defineComponent({
       if (option.fullPath !== getMenuKey.value) {
         option.closeable = false
       }
+
+      isMouseInMenuTag.value = false
     }
 
     // 每当新的页面打开后，将滚动条横向滚到至底部，使用 nextTick 避免元素未渲染挂载至页面
@@ -359,7 +356,7 @@ export default defineComponent({
       (ndata, odata) => {
         // 当 menuTagOptions 长度为 1时，禁用所有 canDisabledOptions 匹配的项
         moreOptions.value.forEach((curr) => {
-          if (canDisabledOptions.includes(curr.key)) {
+          if (canDisabledOptions.includes(curr.key as string)) {
             ndata.length > 1 ? (curr.disabled = false) : (curr.disabled = true)
           }
         })
@@ -384,8 +381,7 @@ export default defineComponent({
     )
     watchEffect(() => {
       if (actionState.actionDropdownShow) {
-        // 使用节流函数，避免右键菜单闪烁问题
-        throttle(setDisabledAccordionToIndex, 300)?.()
+        setDisabledAccordionToIndex()
       }
 
       if (catchMenuKey !== getMenuKey.value) {
@@ -418,6 +414,7 @@ export default defineComponent({
       reload,
       globalMainLayoutLoad,
       maximizeBtnClick,
+      isMouseInMenuTag,
     }
   },
   render() {
@@ -427,6 +424,7 @@ export default defineComponent({
       getMenuTagOptions,
       MENU_TAG_DATA,
       globalMainLayoutLoad,
+      isMouseInMenuTag,
     } = this
     const {
       maximizeBtnClick,
@@ -454,6 +452,11 @@ export default defineComponent({
             trigger="manual"
             placement="bottom-start"
             onSelect={actionDropdownSelect.bind(this)}
+            onClickoutside={() => {
+              if (!isMouseInMenuTag) {
+                this.actionState.actionDropdownShow = false
+              }
+            }}
           />
           <NFlex
             class="menu-tag-space"
@@ -510,12 +513,10 @@ export default defineComponent({
                       onContextmenu: menuTagContextMenu.bind(this, idx),
                       onMouseenter: menuTagMouseenter.bind(this, curr),
                       onMouseleave: menuTagMouseleave.bind(this, curr),
-                      onBlur: () => {
-                        this.actionState.actionDropdownShow = false
-                      },
                       [MENU_TAG_DATA]: curr.fullPath,
                     }}
                     size="small"
+                    focusable={false}
                   >
                     {{
                       default: () => (

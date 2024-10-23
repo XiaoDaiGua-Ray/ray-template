@@ -21,7 +21,6 @@ export default defineComponent({
       useMenuActions()
     const { getMenuConfig } = useSettingGetters()
     const { getMenuOptions, getCollapsed, getMenuKey } = useMenuGetters()
-
     const modelMenuKey = computed({
       get: () => {
         // eslint-disable-next-line vue/no-async-in-computed-properties
