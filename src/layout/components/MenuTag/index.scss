@@ -2,14 +2,13 @@ $space: calc($layoutRouterViewContainer / 2);
 $menuTagWrapperWidth: 76px;
 
 .menu-tag {
-  height: $layoutMenuHeight;
   display: flex;
   align-items: center;
   padding: 6px 0;
 
   & .menu-tag-space {
     width: calc(100% - $space * 2);
-    padding: $space;
+    padding: 0px 18px;
 
     & .menu-tag-wrapper {
       width: calc(100% - $space * 2 - $menuTagWrapperWidth);
@@ -17,17 +16,6 @@ $menuTagWrapperWidth: 76px;
 
     & .ray-icon {
       cursor: pointer;
-    }
-
-    & .menu-tag__right-wrapper {
-      & .menu-tag__right-arrow {
-        transform: rotate(180deg);
-      }
-
-      & .menu-tag__right-setting {
-        width: 28px;
-        height: 20px;
-      }
     }
   }
 
@@ -39,8 +27,6 @@ $menuTagWrapperWidth: 76px;
 // 激活标签页关闭按钮样式
 .menu-tag {
   .menu-tag__btn {
-    padding: 7px 10px;
-
     .menu-tag__btn-icon--hidden {
       display: none !important;
     }
@@ -82,8 +68,8 @@ $menuTagWrapperWidth: 76px;
 // 设置 dropdown animate svg 尺寸
 .menu-tag__dropdown {
   & .menu-tag__icon {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
   }
 }
 
@@ -97,4 +83,8 @@ $menuTagWrapperWidth: 76px;
 
 .ray-template--dark .menu-tag {
   box-shadow: 0 2px 2px $layoutShadowColorDark;
+}
+
+.override-button__menu-tag {
+  padding: 0 6px;
 }

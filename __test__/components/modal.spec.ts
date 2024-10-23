@@ -1,4 +1,4 @@
-import { RModal } from '../../src/components/RModal/index'
+import { RModal } from '../../src/components/base/RModal/index'
 import { mount } from '@vue/test-utils'
 
 describe('RModal', () => {

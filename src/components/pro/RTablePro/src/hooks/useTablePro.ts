@@ -7,7 +7,7 @@ import type {
   ScrollToOptions,
   ColumnKey,
   SortOrder,
-} from '@/components/RTable/src/types'
+} from '@/components/base/RTable/src/types'
 import type { PrintDomOptions } from '@/utils'
 
 /**

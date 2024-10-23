@@ -49,9 +49,11 @@ export default defineComponent({
 
     return (
       <NButton
-        class="global-search__btn-wrapper"
         bordered={false}
         onClick={click.bind(this)}
+        round
+        tertiary
+        style="margin-right: 16px"
       >
         {{
           icon: () => <RIcon name="search" size="16" />,

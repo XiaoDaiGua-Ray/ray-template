@@ -77,9 +77,11 @@ export const piniaSettingStore = defineStore(
       menuConfig: {
         collapsedWidth: 64,
         collapsedMode: 'width',
-        collapsedIconSize: 22,
+        collapsedIconSize: 16,
         collapsedIndent: 24,
         accordion: false,
+        menuSiderBarLogo: true,
+        iconSize: 16,
       },
     })
 

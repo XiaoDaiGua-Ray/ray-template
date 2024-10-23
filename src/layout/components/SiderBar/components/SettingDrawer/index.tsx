@@ -159,6 +159,18 @@ export default defineComponent({
             />
             <NDivider titlePlacement="center">系统设置</NDivider>
             <NDescriptions labelPlacement="left" column={1}>
+              <NDescriptionsItem label="菜单页头">
+                <NSwitch
+                  v-model:value={
+                    this.modelReactive.getMenuConfig.menuSiderBarLogo
+                  }
+                  onUpdateValue={(bool: boolean) =>
+                    updateSettingState('menuConfig', {
+                      menuSiderBarLogo: bool,
+                    })
+                  }
+                />
+              </NDescriptionsItem>
               <NDescriptionsItem label="菜单手风琴">
                 <NSwitch
                   v-model:value={this.modelReactive.getMenuConfig.accordion}
@@ -205,7 +217,7 @@ export default defineComponent({
                   }
                 />
               </NDescriptionsItem>
-              <NDescriptionsItem label="版权信息">
+              <NDescriptionsItem label="页底信息">
                 <NSwitch
                   v-model:value={this.modelReactive.getCopyrightSwitch}
                   onUpdateValue={(bool: boolean) =>
@@ -221,7 +233,7 @@ export default defineComponent({
                   v-model:value={
                     this.modelReactive.getMenuConfig.collapsedIndent
                   }
-                  min={24}
+                  min={0}
                   precision={0}
                   onUpdateValue={(value) => {
                     if (value !== null) {
@@ -232,12 +244,26 @@ export default defineComponent({
                   }}
                 />
               </NFormItem>
+              <NFormItem label="菜单图标尺寸">
+                <NInputNumber
+                  v-model:value={this.modelReactive.getMenuConfig.iconSize}
+                  min={0}
+                  precision={0}
+                  onUpdateValue={(value) => {
+                    if (value !== null) {
+                      updateSettingState('menuConfig', {
+                        iconSize: value,
+                      })
+                    }
+                  }}
+                />
+              </NFormItem>
               <NFormItem label="折叠菜单图标尺寸">
                 <NInputNumber
                   v-model:value={
                     this.modelReactive.getMenuConfig.collapsedIconSize
                   }
-                  min={22}
+                  min={0}
                   precision={0}
                   onUpdateValue={(value) => {
                     if (value !== null) {
@@ -253,7 +279,7 @@ export default defineComponent({
                   v-model:value={
                     this.modelReactive.getMenuConfig.collapsedWidth
                   }
-                  min={64}
+                  min={0}
                   precision={0}
                   onUpdateValue={(value) => {
                     if (value !== null) {

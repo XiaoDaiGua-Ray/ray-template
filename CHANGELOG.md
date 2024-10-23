@@ -1,5 +1,22 @@
 # CHANGE LOG
 
+## 5.0.1
+
+本次更新灵感来自于 `vben admin 5` 项目。
+
+## Feats
+
+- 更新了 `Menu`, `MenuTag`, `SiderBar` 样式细节
+- 调整 `components`, `components-pro` 分包，现在都统一到 `components` 下，以 `base`, `pro` 进行区分，避免导出导入麻烦
+- `MenuTag` 新增了一些操作方式
+- `SiderBarLogo` 样式调整
+
+## Fixes
+
+- 新增 `tableFlexHeight` 配置项属性修复 `RTable` 组件因为不再透传至 `Table` 导致设置 `flexHeight` 进行动态高度设置失败的问题
+- 修复 `RTable` 错误的 `title` 属性注入问题
+- 修复 `MenuTag` 频繁右键会导致闪烁出现右键菜单的问题
+
 ## 5.0.0
 
 ## Feats
@@ -123,7 +140,7 @@
 - `RChart` 组件 `setOptions` 方法配置项默认不启用 `merge` 模式
 - 调整 `header` 的样式，增加了一点点间隙
 - `useDevice` 新增 `observer` 配置项，可以自定义观察回调
-- 新增 `components-pro` 包，助力简化业务开发
+- 新增 `components` 包，助力简化业务开发
   - 新增 `RTablePro` 组件，大幅简化中后台带有过滤请求条件的表格显示业务
   - 新增 `RCollapse` 组件，允许折叠过滤条件
 

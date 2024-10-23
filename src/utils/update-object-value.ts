@@ -14,9 +14,10 @@ import type { Recordable, AnyFC } from '@/types'
  *
  * @example
  * const obj = { a: 1, b: 2, c: { d: 3 } }
- * updateObjectValue(obj, 'a', 2)
- * updateObjectValue(obj, 'b', 3)
- * updateObjectValue(obj, 'c', { d: 4 })
+ * updateObjectValue(obj, 'a', 2) // success
+ * updateObjectValue(obj, 'b', 3) // success
+ * updateObjectValue(obj, 'c', { d: 4 }) // success
+ * updateObjectValue(obj, 'd', 5) // reject
  */
 export const updateObjectValue = <
   Target extends Recordable,

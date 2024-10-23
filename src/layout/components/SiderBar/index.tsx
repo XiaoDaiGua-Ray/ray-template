@@ -151,7 +151,7 @@ export default defineComponent({
             ))}
             {getBreadcrumbSwitch ? <Breadcrumb /> : null}
           </NFlex>
-          <NFlex justify="end" align="center" size={[4, 0]} wrap={false}>
+          <NFlex justify="end" align="center" size={[0, 0]} wrap={false}>
             {isRenderVNode(
               <GlobalSearchButton
                 onClick={(e) => {
@@ -168,8 +168,9 @@ export default defineComponent({
                 size="medium"
                 key={curr.name}
                 onClick={toolIconClick.bind(this, curr.name)}
+                focusable={false}
               >
-                <RIcon name={curr.name} size={18} cursor="pointer" />
+                <RIcon name={curr.name} size={16} cursor="pointer" />
               </NButton>
             ))}
             <NDropdown
@@ -177,11 +178,15 @@ export default defineComponent({
               onSelect={(key: string | number) => updateLocale(String(key))}
               trigger="click"
             >
-              <NButton quaternary class="override-button__layout">
+              <NButton
+                quaternary
+                class="override-button__layout"
+                focusable={false}
+              >
                 <RIcon
                   customClassName="layout-header__method--icon"
                   name="language"
-                  size="18"
+                  size="16"
                   cursor="pointer"
                 />
               </NButton>

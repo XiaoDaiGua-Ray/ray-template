@@ -16,7 +16,7 @@
  * 该模板中引入了 Root Path 概念，在 MenuTag 中除了关闭左右侧标签操作能主动移除 Root Tag 之外其余的操作都不允许。
  *
  * outsideClick 方法优先级不如 contextmenu 事件高，所以可能会出现重复右键菜单时，闪烁问题；
- * 虽然使用 throttle 方法进行优化，但是该问题本质并没有解决。
+ * 虽然使用 throttle 方法进行优化，但是该问题本质并没有解决（v5.0.1 版本修复了该问题）。
  */
 
 import './index.scss'
@@ -30,9 +30,6 @@ import {
   NIcon,
 } from 'naive-ui'
 import { RIcon, RMoreDropdown } from '@/components'
-
-import CloseRight from '@/icons/directional/close_right.svg?component'
-import CloseLeft from '@/icons/directional/close_left.svg?component'
 
 import { useMenuGetters, useMenuActions } from '@/store'
 import { hasClass, uuid, queryElements } from '@/utils'
@@ -51,7 +48,7 @@ export default defineComponent({
     const { getMenuKey, getMenuTagOptions } = useMenuGetters()
     const { changeMenuModelValue } = useMenuActions()
     const { getRootPath } = useAppRoot()
-    const { maximize, isLayoutContentMaximized } = useMaximize()
+    const { maximize } = useMaximize()
     const { reload } = useSpinning()
     const {
       close,
@@ -78,14 +75,24 @@ export default defineComponent({
     // 下拉菜单
     const moreOptions = ref([
       {
-        label: '刷新页面',
+        label: '关闭当前页面',
+        key: 'closeCurrentPage',
+        icon: () => <RIcon name="close" size={iconConfig.size} />,
+      },
+      {
+        label: '最大化当前页面',
+        key: 'maximizeLayoutContent',
+        icon: () => <RIcon name="fullscreen_fold" size={iconConfig.size} />,
+      },
+      {
+        label: '刷新当前页面',
         key: 'reloadCurrentPage',
         icon: () => <RIcon name="reload" size={iconConfig.size} />,
       },
       {
-        label: '关闭当前页面',
-        key: 'closeCurrentPage',
-        icon: () => <RIcon name="close" size={iconConfig.size} />,
+        label: '新窗口打开',
+        key: 'windowOpenTab',
+        icon: () => <RIcon name="shared" size={iconConfig.size} />,
       },
       {
         type: 'divider',
@@ -94,12 +101,12 @@ export default defineComponent({
       {
         label: '关闭左侧标签页',
         key: 'closeLeft',
-        icon: () => <CloseLeft class="menu-tag__icon" />,
+        icon: () => <RIcon name="close_left" size={iconConfig.size} />,
       },
       {
         label: '关闭右侧标签页',
         key: 'closeRight',
-        icon: () => <CloseRight class="menu-tag__icon" />,
+        icon: () => <RIcon name="close_right" size={iconConfig.size} />,
       },
       {
         type: 'divider',
@@ -108,7 +115,7 @@ export default defineComponent({
       {
         label: '关闭其他标签页',
         key: 'closeOther',
-        icon: () => <RIcon name="other" size={iconConfig.size} />,
+        icon: () => <RIcon name="close_other" size={iconConfig.size} />,
       },
       {
         label: '关闭所有标签页',
@@ -137,6 +144,26 @@ export default defineComponent({
       },
       closeOther: () => {
         $closeOther(currentContextmenuIndex)
+      },
+      windowOpenTab: () => {
+        const option = getMenuTagOptions.value[currentContextmenuIndex]
+
+        if (!option?.fullPath) {
+          return
+        }
+
+        // 兼容配置 hash 前缀的情况
+        const path = option.fullPath.startsWith('#')
+          ? option.fullPath
+          : `#${option.fullPath}`
+
+        window.open(path, '_blank')
+      },
+      maximizeLayoutContent: () => {
+        const option = getMenuTagOptions.value[currentContextmenuIndex]
+
+        maximize(true)
+        option && menuTagClick(option)
       },
     }
     // 右键菜单
@@ -229,8 +256,8 @@ export default defineComponent({
     const menuTagContextMenu = (idx: number, e: MouseEvent) => {
       e.preventDefault()
 
-      actionState.actionDropdownShow = false
       currentContextmenuIndex = idx
+      actionState.actionDropdownShow = false
 
       nextTick(() => {
         actionState.actionDropdownShow = true
@@ -368,7 +395,7 @@ export default defineComponent({
       }
     })
 
-    expose({})
+    expose()
 
     return {
       getMenuTagOptions,
@@ -386,10 +413,7 @@ export default defineComponent({
       menuTagMouseenter,
       menuTagMouseleave,
       MENU_TAG_DATA,
-      iconConfig: {
-        width: 22,
-        height: 22,
-      },
+      iconConfig,
       maximize,
       reload,
       globalMainLayoutLoad,
@@ -430,9 +454,6 @@ export default defineComponent({
             trigger="manual"
             placement="bottom-start"
             onSelect={actionDropdownSelect.bind(this)}
-            onClickoutside={() => {
-              this.actionState.actionDropdownShow = false
-            }}
           />
           <NFlex
             class="menu-tag-space"
@@ -440,15 +461,24 @@ export default defineComponent({
             align="center"
             justify="space-between"
             inline
-            size={[16, 0]}
           >
-            <RIcon
-              name="expanded"
-              width={iconConfig.width}
-              height={iconConfig.height}
-              customClassName="menu-tag__left-arrow"
+            <NButton
+              quaternary
+              class="override-button__menu-tag"
+              focusable={false}
               onClick={this.scrollX.bind(this, 'left')}
-            />
+            >
+              {{
+                icon: () => (
+                  <RIcon
+                    name="expanded"
+                    width={iconConfig.size}
+                    height={iconConfig.size}
+                    customClassName="menu-tag__left-arrow"
+                  />
+                ),
+              }}
+            </NButton>
             <NScrollbar
               xScrollable
               ref="scrollRef"
@@ -480,6 +510,9 @@ export default defineComponent({
                       onContextmenu: menuTagContextMenu.bind(this, idx),
                       onMouseenter: menuTagMouseenter.bind(this, curr),
                       onMouseleave: menuTagMouseleave.bind(this, curr),
+                      onBlur: () => {
+                        this.actionState.actionDropdownShow = false
+                      },
                       [MENU_TAG_DATA]: curr.fullPath,
                     }}
                     size="small"
@@ -514,55 +547,89 @@ export default defineComponent({
                 ))}
               </NFlex>
             </NScrollbar>
-            <NFlex
-              class="menu-tag__right-wrapper"
-              align="center"
-              inline
-              wrap={false}
-              size={[8, 0]}
-            >
-              <RIcon
-                name="expanded"
-                width={iconConfig.width}
-                height={iconConfig.height}
-                customClassName="menu-tag__right-arrow"
+            <NFlex align="center" inline wrap={false} size={[0, 0]}>
+              <NButton
+                quaternary
+                class="override-button__menu-tag"
+                focusable={false}
                 onClick={scrollX.bind(this, 'right')}
-              />
-              <RIcon
-                name="fullscreen_fold"
-                width={iconConfig.width}
-                height={iconConfig.height}
-                customClassName="menu-tag__right-setting"
+              >
+                {{
+                  icon: () => (
+                    <RIcon
+                      name="expanded"
+                      width={iconConfig.size}
+                      height={iconConfig.size}
+                      style={{
+                        transform: 'rotate(180deg)',
+                      }}
+                    />
+                  ),
+                }}
+              </NButton>
+              <NButton
+                quaternary
+                class="override-button__menu-tag"
+                focusable={false}
                 onClick={maximizeBtnClick}
-              />
-              <RIcon
-                name="reload"
-                width={iconConfig.width}
-                height={iconConfig.height}
-                customClassName={`menu-tag__right-setting ${
-                  !globalMainLayoutLoad
-                    ? 'menu-tag__right-setting--spinning'
-                    : ''
-                }`}
+              >
+                {{
+                  icon: () => (
+                    <RIcon
+                      name="fullscreen_fold"
+                      width={iconConfig.size}
+                      height={iconConfig.size}
+                    />
+                  ),
+                }}
+              </NButton>
+              <NButton
+                quaternary
+                class="override-button__menu-tag"
+                focusable={false}
                 onClick={() => {
                   reload()
                 }}
-              />
+              >
+                {{
+                  icon: () => (
+                    <RIcon
+                      name="reload"
+                      width={iconConfig.size}
+                      height={iconConfig.size}
+                      customClassName={`${
+                        !globalMainLayoutLoad
+                          ? 'menu-tag__right-setting--spinning'
+                          : ''
+                      }`}
+                    />
+                  ),
+                }}
+              </NButton>
               <RMoreDropdown
                 class="menu-tag__dropdown"
                 options={this.moreOptions}
                 trigger="click"
                 onSelect={this.actionDropdownSelect.bind(this)}
-                iconSize={20}
+                iconSize={18}
                 keyboard={false}
               >
-                <RIcon
-                  name="more"
-                  width={iconConfig.width}
-                  height={iconConfig.height}
-                  customClassName="menu-tag__right-setting"
+                <NButton
+                  quaternary
+                  class="override-button__menu-tag"
+                  focusable={false}
                   onClick={this.setCurrentContextmenuIndex.bind(this)}
-                />
+                >
+                  {{
+                    icon: () => (
+                      <RIcon
+                        name="more"
+                        width={iconConfig.size}
+                        height={iconConfig.size}
+                      />
+                    ),
+                  }}
+                </NButton>
               </RMoreDropdown>
             </NFlex>
           </NFlex>

@@ -46,7 +46,7 @@ const AppAvatar = defineComponent({
     const { getSigningCallback, avatarSize, spaceSize, $props, vertical } = this
 
     return (
-      <NButton quaternary strong>
+      <NButton quaternary strong focusable={false}>
         <NFlex align="center" size={spaceSize} vertical={vertical}>
           <NAvatar
             {...($props as AvatarProps)}

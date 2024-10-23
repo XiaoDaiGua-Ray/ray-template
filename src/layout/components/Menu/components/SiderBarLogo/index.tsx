@@ -1,16 +1,11 @@
 import './index.scss'
 
-import { NEllipsis, NTooltip } from 'naive-ui'
+import { NEllipsis, NTooltip, NGradientText } from 'naive-ui'
 import { RIcon } from '@/components'
 
 import { isValueType, renderNode } from '@/utils'
 import { useSettingGetters } from '@/store'
 
-/**
- *
- * @description
- * 侧边栏菜单 Logo 元素 ref。
- */
 export const SIDER_BAR_LOGO = ref<HTMLElement>()
 
 export default defineComponent({
@@ -106,15 +101,17 @@ export default defineComponent({
             }}
           </NTooltip>
         ) : null}
-        <h1
+        <NGradientText
           class={[
             !collapsed ? 'ray-menu__logo-title--open' : null,
             'ray-menu__logo-title',
             'class="n-menu-item-content"',
           ]}
+          type="primary"
+          size={18}
         >
           <NEllipsis>{sideBarLogo.title}</NEllipsis>
-        </h1>
+        </NGradientText>
       </div>
     ) : null
   },

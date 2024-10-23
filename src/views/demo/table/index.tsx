@@ -12,7 +12,7 @@ import {
   NAlert,
 } from 'naive-ui'
 import { RTable, RIcon, RMoreDropdown } from '@/components'
-import { RCollapse } from '@/components-pro'
+import { RCollapse } from '@/components'
 
 import { uuid } from '@/utils'
 import { useTable, useCheckedRowKeys } from '@/components'

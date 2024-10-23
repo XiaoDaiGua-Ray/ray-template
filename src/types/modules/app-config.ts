@@ -8,6 +8,8 @@ export interface AppMenuConfig {
   collapsedIconSize: number
   collapsedIndent: number
   accordion: boolean
+  menuSiderBarLogo: boolean
+  iconSize: number
 }
 
 export interface AppKeepAlive {

@@ -17,6 +17,17 @@ const props = {
   /**
    *
    * @description
+   * 当设置表格高度为弹性高度时，手动设置表格的高度。
+   *
+   * @default undefined
+   */
+  tableFlexHeight: {
+    type: [String, Number] as PropType<string | number>,
+    default: void 0,
+  },
+  /**
+   *
+   * @description
    * 是否渲染外层容器 header，默认渲染。
    * 如果配置为 false，则不会显示外层容器的头部。
    *

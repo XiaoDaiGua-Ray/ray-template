@@ -1,4 +1,4 @@
-import { RTablePro, RCollapse } from '@/components-pro'
+import { RTablePro, RCollapse } from '@/components'
 import {
   NFlex,
   NTag,
@@ -19,7 +19,7 @@ import { uuid } from '@/utils'
 import { useHookPlusRequest } from '@/axios'
 import Mock from 'mockjs'
 import dayjs from 'dayjs'
-import { useTablePro } from '@/components-pro'
+import { useTablePro } from '@/components'
 import { useCheckedRowKeys } from '@/components'
 import { useDayjs } from '@/hooks'
 

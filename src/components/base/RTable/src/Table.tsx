@@ -8,7 +8,7 @@ import Print from './components/Print'
 import TablePropsSelect from './components/Props'
 
 import props from './props'
-import { call, renderNode, uuid } from '@/utils'
+import { call, renderNode, uuid, completeSize } from '@/utils'
 import { config } from './shared'
 import { pick } from 'lodash-es'
 import { useTemplateRef } from 'vue'
@@ -20,6 +20,7 @@ import type {
   PropsComponentPopselectKeys,
   RTableInst,
 } from './types'
+import type { ExtractPublicPropTypes } from 'vue'
 
 export default defineComponent({
   name: 'RTable',
@@ -235,24 +236,29 @@ export default defineComponent({
     const {
       $props,
       $attrs,
-      wrapperBordered,
+      $slots,
+      uuidTable,
+      contextMenuReactive,
       uuidWrapper,
       privateReactive,
-      disabledContextMenu,
-      contextMenuReactive,
-      contextMenuOptions,
-      uuidTable,
-      title,
-      $slots,
       propsPopselectValue,
-      renderWrapperHeader,
     } = this
     const { class: className, ...restAttrs } = $attrs
     const { tool, combineRowProps, contextMenuSelect } = this
+    const {
+      renderWrapperHeader,
+      wrapperBordered,
+      disabledContextMenu,
+      contextMenuOptions,
+      title,
+      tableFlexHeight,
+      cardProps,
+      ...restProps
+    } = $props as ExtractPublicPropTypes<typeof props>
 
     return (
       <NCard
-        {...$props.cardProps}
+        {...cardProps}
         {...{
           id: uuidWrapper,
         }}
@@ -268,11 +274,17 @@ export default defineComponent({
                 {...{
                   id: uuidTable,
                 }}
-                {...($props as DataTableProps)}
+                {...(restProps as DataTableProps)}
                 {...propsPopselectValue}
                 rowProps={combineRowProps.bind(this)}
                 size={privateReactive.size}
                 ref="rTableInst"
+                style={{
+                  height:
+                    tableFlexHeight !== null && tableFlexHeight !== void 0
+                      ? completeSize(tableFlexHeight)
+                      : null,
+                }}
               >
                 {{
                   ...$slots,

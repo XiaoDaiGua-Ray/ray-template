@@ -1,6 +1,7 @@
 import { RCollapseGrid, RForm } from '@/components'
 
-import { collapseGridProps, formProps } from '@/components'
+import formProps from '../../base/RForm/src/props'
+import collapseGridProps from '../../base/RCollapseGrid/src/props'
 
 import type { FormProps, GridProps } from 'naive-ui'
 

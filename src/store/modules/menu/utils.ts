@@ -7,6 +7,7 @@ import { getStorage, isValueType } from '@/utils'
 import { useAppRoot, useI18n } from '@/hooks'
 import { NTag } from 'naive-ui'
 import { piniaSettingStore } from '../setting'
+import { piniaMenuStore } from '.'
 
 import type { AppMenuOption, AppMenuKey } from '@/types/modules/app'
 import type { TagProps } from 'naive-ui'
@@ -144,11 +145,12 @@ export const createMenuIcon = (option: AppMenuOption) => {
   }
 
   const { menuConfig } = piniaSettingStore()
+  const { collapsed } = piniaMenuStore()
   const _icon = h(
     RIcon,
     {
       name: icon,
-      size: menuConfig.collapsedIconSize,
+      size: collapsed ? menuConfig.collapsedIconSize : menuConfig.iconSize,
       cursor: 'pointer',
     },
     {},

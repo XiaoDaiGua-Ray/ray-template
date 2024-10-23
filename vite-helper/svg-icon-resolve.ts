@@ -28,7 +28,5 @@ export const svgIconResolve = (directory = 'src/icons') => {
     }
   }
 
-  console.log(folders)
-
   return folders
 }

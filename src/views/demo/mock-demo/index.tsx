@@ -1,6 +1,6 @@
 import { NFlex, NCard, NButton, NFormItemGi, NInput, NForm } from 'naive-ui'
 import { RTable } from '@/components'
-import { RCollapse } from '@/components-pro'
+import { RCollapse } from '@/components'
 
 import { useHookPlusRequest } from '@/axios'
 import { getPersonList } from '@/api/demo/mock/person'

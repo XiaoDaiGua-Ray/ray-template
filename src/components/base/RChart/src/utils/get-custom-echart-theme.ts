@@ -1,7 +1,7 @@
 import type {
   ChartThemeRawArray,
   ChartThemeRawModules,
-} from '@/components/RChart/src/types'
+} from '@/components/base/RChart/src/types'
 
 /**
  *

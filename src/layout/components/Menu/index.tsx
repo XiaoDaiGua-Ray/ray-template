@@ -90,7 +90,9 @@ export default defineComponent({
           updateMenuState('collapsed', true)
         }}
       >
-        <SiderBarLogo collapsed={getCollapsed.value} />
+        {getMenuConfig.value.menuSiderBarLogo ? (
+          <SiderBarLogo collapsed={getCollapsed.value} />
+        ) : null}
         <NMenu
           ref={menuRef}
           class="r-menu--app"
@@ -105,6 +107,7 @@ export default defineComponent({
             changeMenuModelValue(key, op as unknown as AppMenuOption)
           }}
           accordion={getMenuConfig.value.accordion}
+          iconSize={getMenuConfig.value.iconSize}
         />
       </NLayoutSider>
     )
