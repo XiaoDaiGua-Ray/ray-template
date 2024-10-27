@@ -14,7 +14,10 @@ export interface WatermarkConfig {
   height: number
   xOffset: number
   yOffset: number
+  xGap: number
+  yGap: number
   rotate: number
+  cross: boolean
 }
 
 export interface AppRootRoute {
@@ -70,4 +73,12 @@ export interface SettingState {
    * accordion 手风琴模式
    */
   menuConfig: AppMenuConfig
+  colorWeakness: boolean
+  /**
+   *
+   * @description
+   * 动态浏览器标题。
+   * 如果设置为 true，会在更新菜单时，自动取用当前菜单的标题作为浏览器标题。
+   */
+  dynamicDocumentTitle: boolean
 }

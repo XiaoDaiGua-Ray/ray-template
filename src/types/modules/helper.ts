@@ -2,7 +2,8 @@
 
 /**
  *
- * 从目标类型中挑选出符合条件的属性名
+ * @description
+ * 从目标类型中挑选出符合条件的属性名。
  *
  * @example
  * ConditionalKeys<{ a: string, b: number }, string> // 'a'
@@ -15,7 +16,8 @@ export type ConditionalKeys<Base, Condition> = NonNullable<
 
 /**
  *
- * 从目标类型中排除符合条件的属性
+ * @description
+ * 从目标类型中排除符合条件的属性。
  *
  * @example
  * ConditionalExclude<{ a: string, b: number }, string> // { b: number }
@@ -27,7 +29,8 @@ export type ConditionalExclude<Base, Condition> = Omit<
 
 /**
  *
- * 从目标类型中挑选出符合条件的属性
+ * @description
+ * 从目标类型中挑选出符合条件的属性。
  *
  * @example
  * ConditionalPick<{ a: string, b: number }, string> // { a: string }
@@ -39,7 +42,8 @@ export type ConditionalPick<Base, Condition> = Pick<
 
 /**
  *
- * 声明一个任意类型的对象
+ * @description
+ * 声明一个任意类型的对象。
  *
  * @example
  * const A: Recordable = { a: 1, b: [] }
@@ -48,7 +52,8 @@ export type Recordable<T = any> = Record<string, T>
 
 /**
  *
- * 获取目标类型的所有属性类型
+ * @description
+ * 获取目标类型的所有属性类型。
  *
  * @example
  * ValueOf<{ a: string, b: number }> // string | number
@@ -57,7 +62,8 @@ export type ValueOf<T extends object> = T[keyof T]
 
 /**
  *
- * 将目标所有属性变为可修改
+ * @description
+ * 将目标所有属性变为可修改。
  *
  * @example
  * Mutable<{ readonly a: string }> // { a: string }
@@ -68,7 +74,8 @@ export type Mutable<T> = {
 
 /**
  *
- * 递归将目标所有属性变为可修改
+ * @description
+ * 递归将目标所有属性变为可修改。
  *
  * @example
  * DeepMutable<{ readonly a: { readonly b: { readonly c: string } } }> // { a: { b: { c: string } } }
@@ -83,7 +90,8 @@ export type DeepMutable<T> = {
 
 /**
  *
- * 获取 Promise 返回值类型
+ * @description
+ * 获取 Promise 返回值类型。
  *
  * @example
  * ReturnPromiseType<Promise<string>> // string
@@ -91,3 +99,17 @@ export type DeepMutable<T> = {
  */
 export type ReturnPromiseType<T extends Promise<any>> =
   T extends Promise<infer U> ? U : never
+
+/**
+ *
+ * @description
+ * 深度只读。
+ *
+ * @example
+ * DeepReadonly<{ a: { b: string } }> // { readonly a: { readonly b: string } }
+ */
+export type DeepReadonly<T> = T extends object
+  ? {
+      readonly [P in keyof T]: DeepReadonly<T[P]>
+    }
+  : T

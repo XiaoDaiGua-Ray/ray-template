@@ -105,6 +105,20 @@ export const useSettingGetters = () => {
    */
   const getMenuConfig = computed(() => variable.menuConfig)
 
+  /**
+   *
+   * @description
+   * 获取是否启用色弱模式。
+   */
+  const getColorWeakness = computed(() => variable.colorWeakness)
+
+  /**
+   *
+   * @description
+   * 是否启用动态浏览器标题。
+   */
+  const getDynamicDocumentTitle = computed(() => variable.dynamicDocumentTitle)
+
   return {
     getDrawerPlacement,
     getPrimaryColorOverride,
@@ -122,16 +136,23 @@ export const useSettingGetters = () => {
     getKeepAliveConfig,
     getMenuConfig,
     getAppThemeStr,
+    getColorWeakness,
+    getDynamicDocumentTitle,
   }
 }
 
 export const useSettingActions = () => {
-  const { updateLocale, changePrimaryColor, updateSettingState } =
-    piniaSettingStore()
+  const {
+    updateLocale,
+    changePrimaryColor,
+    updateSettingState,
+    toggleColorWeakness,
+  } = piniaSettingStore()
 
   return {
     updateLocale,
     changePrimaryColor,
     updateSettingState,
+    toggleColorWeakness,
   }
 }

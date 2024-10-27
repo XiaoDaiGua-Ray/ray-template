@@ -79,7 +79,8 @@ export default defineComponent({
         collapseMode={getMenuConfig.value.collapsedMode}
         collapsedWidth={getMenuConfig.value.collapsedWidth}
         onUpdateCollapsed={collapsedMenu.bind(this)}
-        nativeScrollbar={false}
+        width={getMenuConfig.value.menuWidth}
+        nativeScrollbar={getMenuConfig.value.nativeScrollbar}
         ref={LAYOUT_SIDER_REF}
         collapsed={getCollapsed.value}
         onExpand={() => {
@@ -88,6 +89,7 @@ export default defineComponent({
         onCollapse={() => {
           updateMenuState('collapsed', true)
         }}
+        inverted={getMenuConfig.value.inverted}
       >
         {getMenuConfig.value.menuSiderBarLogo ? (
           <SiderBarLogo collapsed={getCollapsed.value} />
@@ -107,6 +109,7 @@ export default defineComponent({
           }}
           accordion={getMenuConfig.value.accordion}
           iconSize={getMenuConfig.value.iconSize}
+          inverted={getMenuConfig.value.inverted}
         />
       </NLayoutSider>
     )

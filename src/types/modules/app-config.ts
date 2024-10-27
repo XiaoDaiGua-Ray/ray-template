@@ -10,11 +10,14 @@ export interface AppMenuConfig {
   accordion: boolean
   menuSiderBarLogo: boolean
   iconSize: number
+  menuWidth: number
+  inverted: boolean
+  nativeScrollbar: boolean
 }
 
 export interface AppKeepAlive {
   setupKeepAlive: boolean
-  keepAliveExclude?: string[]
+  keepAliveExclude: string[]
   maxKeepAliveLength: number
 }
 

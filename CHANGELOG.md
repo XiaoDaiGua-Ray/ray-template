@@ -1,5 +1,13 @@
 # CHANGE LOG
 
+## 5.0.3
+
+个性化配置能力再次提升。
+
+## Feats
+
+- `SettingDrawer` 组件重构
+
 ## 5.0.2
 
 ## Feats

@@ -1,5 +1,5 @@
 import { getAppDefaultLanguage } from '@/locales/utils'
-import { colorToRgba, setStorage, updateObjectValue } from '@/utils'
+import { colorToRgba, setStorage, updateObjectValue, setStyle } from '@/utils'
 import { useI18n, useDayjs } from '@/hooks'
 import { APP_CATCH_KEY, APP_THEME } from '@/app-config'
 
@@ -52,8 +52,11 @@ export const piniaSettingStore = defineStore(
         width: 384,
         height: 384,
         xOffset: 12,
+        xGap: 0,
+        yGap: 0,
         yOffset: 60,
         rotate: -15,
+        cross: true,
       },
       // 根路由信息
       appRootRoute: {
@@ -82,7 +85,14 @@ export const piniaSettingStore = defineStore(
         accordion: false,
         menuSiderBarLogo: true,
         iconSize: 16,
+        menuWidth: 272,
+        inverted: false,
+        nativeScrollbar: false,
       },
+      // 色弱模式
+      colorWeakness: false,
+      // 动态标题
+      dynamicDocumentTitle: true,
     })
 
     // 修改当前语言
@@ -125,7 +135,6 @@ export const piniaSettingStore = defineStore(
      *
      * @description
      * 更新 settingState 的值，如果 key 不存在与 settingState 中，则不会更新。
-     * 但是不论是否更新成功，都会执行回调函数。
      *
      * @example
      * updateSettingState('drawerPlacement', 'left')
@@ -143,39 +152,49 @@ export const piniaSettingStore = defineStore(
       updateObjectValue(settingState, key, value, cb)
     }
 
+    const toggleColorWeakness = (bool: boolean) => {
+      const html = document.documentElement
+
+      updateSettingState('colorWeakness', bool)
+      setStyle(html, {
+        filter: bool ? 'invert(100%)' : '',
+      })
+    }
+
     /**
      *
-     * 初始化合并自定义主题色
-     * 该方法会在初始化时执行一次，之后会在切换主题色时执行
+     * @description
+     * 初始化合并自定义主题色。
+     * 该方法会在初始化时执行一次，之后会在切换主题色时执行。
      */
-    watch(
-      () => settingState.appTheme,
-      (ndata) => {
-        ndata
-          ? (settingState.primaryColorOverride = Object.assign(
-              {},
-              settingState.primaryColorOverride,
-              APP_THEME.appNaiveUIThemeOverrides.dark,
-              APP_THEME.appNaiveUIThemeOverridesCommon.dark,
-            ))
-          : (settingState.primaryColorOverride = Object.assign(
-              {},
-              settingState.primaryColorOverride,
-              APP_THEME.appNaiveUIThemeOverrides.light,
-              APP_THEME.appNaiveUIThemeOverridesCommon.light,
-            ))
-      },
-      {
-        immediate: true,
-        once: true,
-      },
-    )
+    watchEffect(() => {
+      settingState.appTheme
+        ? (settingState.primaryColorOverride = Object.assign(
+            {},
+            settingState.primaryColorOverride,
+            APP_THEME.appNaiveUIThemeOverrides.dark,
+            APP_THEME.appNaiveUIThemeOverridesCommon.dark,
+          ))
+        : (settingState.primaryColorOverride = Object.assign(
+            {},
+            settingState.primaryColorOverride,
+            APP_THEME.appNaiveUIThemeOverrides.light,
+            APP_THEME.appNaiveUIThemeOverridesCommon.light,
+          ))
+
+      toggleColorWeakness(settingState.colorWeakness)
+
+      if (!settingState.dynamicDocumentTitle) {
+        document.title = settingState.sideBarLogo?.title || 'Ray Template'
+      }
+    })
 
     return {
       ...toRefs(settingState),
       updateLocale,
       changePrimaryColor,
       updateSettingState,
+      toggleColorWeakness,
     }
   },
   {

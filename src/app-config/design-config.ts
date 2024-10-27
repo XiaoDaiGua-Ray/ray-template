@@ -11,7 +11,6 @@ export const APP_THEME: AppTheme = {
     '#3f9eff',
     '#ff42bc',
     '#ee4f12',
-    '#a6e4f7',
     '#dbcb02',
     '#18A058',
   ],

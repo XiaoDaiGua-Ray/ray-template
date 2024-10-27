@@ -109,6 +109,12 @@ export const parseAndFindMatchingNodes = (
  * 会自动拼接 sideBarLogo.title。
  */
 export const updateDocumentTitle = (option: AppMenuOption) => {
+  const { dynamicDocumentTitle } = piniaSettingStore()
+
+  if (!dynamicDocumentTitle) {
+    return
+  }
+
   const { breadcrumbLabel } = option
 
   if (!breadcrumbLabel) {

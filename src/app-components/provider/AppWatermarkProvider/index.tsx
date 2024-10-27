@@ -26,7 +26,7 @@ export default defineComponent({
     const { getWatermarkConfig, getWatermarkSwitch } = this
 
     return getWatermarkSwitch ? (
-      <NWatermark cross fullscreen {...getWatermarkConfig} />
+      <NWatermark {...getWatermarkConfig} fullscreen />
     ) : null
   },
 })
