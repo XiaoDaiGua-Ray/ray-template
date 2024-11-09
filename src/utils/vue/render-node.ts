@@ -31,7 +31,7 @@ export interface RenderNodeOptions<T extends DefaultElement> {
  * renderNode('hello world') // () => 'hello world'
  * renderNode(<div>hello world</div>) // () => <div>hello world</div>
  * renderNode(() => <div>hello world</div>) // () => <div>hello world</div>
- * renderNode(null, { defaultElement: () => <span>hello world</span> }) // () => 'hello world'
+ * renderNode(null, { defaultElement: () => <span>hello world</span> }) // () => <span>hello world</span>
  */
 export function renderNode<T extends DefaultElement>(
   vnode: RenderVNodeType,

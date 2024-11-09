@@ -121,14 +121,14 @@ export const piniaMenuStore = defineStore(
      * 其实这是一个设计的失误，因为该方法不能准确的感知到 fullPath 应该是什么。
      *
      * @example
-     * resolveOption({ path: '/dashboard', name: 'Dashboard', meta: { i18nKey: 'menu.Dashboard' } })
+     * resolveOption({ path: '/demo', fullPath: '/demo', name: 'Demo', meta: { ... } })
      * resolveOption({ ...VueRouterRouteOption })
      */
     const resolveOption = (option: AppMenuOption) => {
       const { meta } = option
       const { i18nKey, noLocalTitle } = meta
 
-      /** 设置 label, i18nKey 优先级最高 */
+      // 设置 label, i18nKey 优先级最高
       const label = computed(() => (i18nKey ? t(`${i18nKey}`) : noLocalTitle))
       /**
        *
@@ -144,7 +144,7 @@ export const piniaMenuStore = defineStore(
           }),
         breadcrumbLabel: label.value,
       } as AppMenuOption
-      /** 合并 icon, extra */
+      // 合并 icon, extra
       const attr: AppMenuOption = Object.assign({}, route, {
         icon: createMenuIcon(option),
         extra: createMenuExtra(option),
@@ -161,9 +161,12 @@ export const piniaMenuStore = defineStore(
 
     /**
      *
-     * 设置面包屑
+     * @param key menu state key
      *
-     * 如果识别到为平级模式, 则会自动追加一层面包屑
+     * @description
+     * 设置面包屑。
+     *
+     * 如果识别到为平级模式，则会自动追加一层面包屑。
      */
     const setBreadcrumbOptions = (key: string | number) => {
       menuState.breadcrumbOptions = parseAndFindMatchingNodes(
@@ -175,8 +178,12 @@ export const piniaMenuStore = defineStore(
 
     /**
      *
-     * @param options menu tag option(s)
-     * @param isAppend true: 追加操作(push), false: 覆盖操作
+     * @param options menu tag options
+     * @param isAppend is append
+     *
+     * @description
+     * 设置标签菜单。
+     * true: 追加操作（push），false: 覆盖操作。
      */
     const setMenuTagOptions = (
       options: MenuTagOptions | MenuTagOptions[],
@@ -190,7 +197,14 @@ export const piniaMenuStore = defineStore(
         : (menuState.menuTagOptions = arr)
     }
 
-    /** 当 url 地址发生变化触发 menuTagOptions 更新 */
+    /**
+     *
+     * @param key full path
+     * @param option menu tag option
+     *
+     * @description
+     * 设置当前标签项，如果不存在则追加。
+     */
     const setMenuTagOptionsWhenMenuValueChange = (
       key: string | number,
       option: AppMenuOption,
@@ -324,8 +338,11 @@ export const piniaMenuStore = defineStore(
 
     /**
      *
-     * 初始化系统菜单列表，该方法仅执行一次
-     * 会在初始化时拼接完整的 url 地址为 fullPath
+     * @description
+     * 初始化系统菜单列表，该方法仅执行一次。
+     * 会在初始化时拼接完整的 url 地址为 fullPath。
+     *
+     * 如果你需要手动更新菜单，可以在需要的时候调用该方法，即可刷新整个系统菜单。
      */
     const setupAppMenu = () => {
       return new Promise<void>((resolve) => {
@@ -384,6 +401,9 @@ export const piniaMenuStore = defineStore(
     /**
      *
      * @param collapsed 折叠菜单开关
+     *
+     * @description
+     * 折叠菜单。
      */
     const collapsedMenu = (collapsed: boolean) =>
       (menuState.collapsed = collapsed)
@@ -394,14 +414,18 @@ export const piniaMenuStore = defineStore(
      * @param length 裁剪标签页长度
      *
      * @returns 被关闭标签项
+     *
+     * @description
+     * 关闭 menu tag 标签。
      */
     const spliceMenTagOptions = (idx: number, length = 1) =>
       menuState.menuTagOptions.splice(idx, length)
 
     /**
      *
-     * 初始化系统菜单列表
-     * 该方法仅执行一次
+     * @description
+     * 初始化系统菜单列表。
+     * 该方法仅执行一次。
      */
     const setupPiniaMenuStore = async () => {
       if (!isSetupAppMenuLock.value) {
@@ -413,7 +437,7 @@ export const piniaMenuStore = defineStore(
       isSetupAppMenuLock.value = false
     }
 
-    /** 监听路由变化并且更新路由菜单与菜单标签 */
+    // 监听路由变化并且更新路由菜单与菜单标签
     watch(
       () => route.fullPath,
       async (ndata, odata) => {

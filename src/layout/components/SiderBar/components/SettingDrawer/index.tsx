@@ -71,6 +71,8 @@ export default defineComponent({
         negativeText: '取消',
         onPositiveClick: () => {
           forIn(getDefaultSettingConfig(), (value, key) => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             modelReactive[key] = value
 
             updateSettingState(key as keyof SettingState, value)

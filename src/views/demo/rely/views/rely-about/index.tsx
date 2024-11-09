@@ -57,7 +57,7 @@ export default defineComponent({
         Object.keys(obj).reduce((pre, curr) => {
           pre.push({
             name: curr,
-            relyVersion: obj[curr],
+            relyVersion: obj[curr as keyof typeof obj],
             relyAddress: '',
           })
 

@@ -62,6 +62,7 @@ export type BasicTypes =
   | string
   | symbol
   | bigint
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   | Function
   | any[]
   | object

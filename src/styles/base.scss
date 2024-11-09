@@ -93,7 +93,7 @@ body {
 }
 
 // 配合 v-disabled 指令使用
-body .ray-template__directive--disabled {
+html .ray-template__directive--disabled {
   opacity: 0.3 !important;
   pointer-events: none !important;
   cursor: not-allowed !important;

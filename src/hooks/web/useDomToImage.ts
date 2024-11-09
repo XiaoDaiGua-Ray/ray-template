@@ -133,7 +133,11 @@ export const useDomToImage = <T extends HTMLElement>(
         return reject('useDomToImage: element is undefined.')
       }
 
-      domToImageMethods[imageType ?? _imageType ?? 'jpeg']?.(element, options)
+      const imageTypeKey = (imageType ??
+        _imageType ??
+        'jpeg') as keyof typeof domToImageMethods
+
+      domToImageMethods[imageTypeKey]?.(element, options)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .then((res: any) => {
           created?.(res, element)

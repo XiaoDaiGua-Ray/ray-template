@@ -15,6 +15,8 @@
  * createVariableState({ your state })
  */
 
+import { updateObjectValue } from '@/utils'
+
 import type { AnyFC } from '@/types'
 
 /**
@@ -57,11 +59,7 @@ export function setVariable<T extends VariableStateKey, FC extends AnyFC>(
   value: VariableState[T],
   cb?: FC,
 ) {
-  if (Object.hasOwn(variableState, key)) {
-    variableState[key] = value
-
-    cb?.()
-  }
+  updateObjectValue(variableState, key, value, cb)
 }
 
 /**

@@ -71,7 +71,9 @@ export const useAxiosInterceptor = () => {
     func: AnyFC[],
     fetchType: FetchType,
   ) => {
-    fetchType === 'ok' ? (implement[key] = func) : (errorImplement[key] = func)
+    fetchType === 'ok'
+      ? (implement[key as keyof ImplementQueue] = func)
+      : (errorImplement[key as keyof ErrorImplementQueue] = func)
   }
 
   /** 获取队列中所有的所有拦截器方法 */
@@ -79,7 +81,9 @@ export const useAxiosInterceptor = () => {
     key: keyof ImplementQueue | keyof ErrorImplementQueue,
     fetchType: FetchType,
   ): AnyFC[] => {
-    return fetchType === 'ok' ? implement[key] : errorImplement[key]
+    return fetchType === 'ok'
+      ? implement[key as keyof ImplementQueue]
+      : errorImplement[key as keyof ErrorImplementQueue]
   }
 
   /** 队列执行器 */
@@ -101,8 +105,8 @@ export const useAxiosInterceptor = () => {
   ) => {
     const funcArr =
       fetchType === 'ok'
-        ? implement[implementKey]
-        : errorImplement[implementKey]
+        ? implement[implementKey as keyof ImplementQueue]
+        : errorImplement[implementKey as keyof ErrorImplementQueue]
     const instance = getAxiosInstance(key)
     const { MODE } = getAppEnvironment()
 

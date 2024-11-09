@@ -11,7 +11,7 @@ export const combineDirective = <
       const fc = directiveModules[curr]?.default
 
       if (typeof fc === 'function') {
-        pre[curr] = fc
+        pre[curr as K] = fc
 
         return pre
       } else {

@@ -21,7 +21,7 @@ export const getAppLocalMessages = async (
 
   for (const curr of localOptions) {
     const msg: AppLocalesModules = await import(`@/locales/lang/${curr.key}.ts`)
-    const key = curr.key
+    const key = curr.key as keyof AppCurrentAppMessages
 
     if (key) {
       message[key] = msg?.default?.message ?? {}

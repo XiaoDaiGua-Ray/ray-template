@@ -5,6 +5,7 @@ import type {
   BasicTarget,
   QueryElementsOptions,
   ElementSelector,
+  Recordable,
 } from '@/types'
 import type { CSSProperties } from 'vue'
 
@@ -160,7 +161,7 @@ export const hasClass = (
  */
 export const autoPrefixStyle = (style: string) => {
   const prefixes = ['webkit', 'moz', 'ms', 'o']
-  const styleWithPrefixes = {}
+  const styleWithPrefixes: Recordable = {}
 
   prefixes.forEach((prefix) => {
     styleWithPrefixes[
@@ -214,16 +215,17 @@ export const setStyle = <Style extends CSSProperties>(
         if (key.startsWith('--')) {
           element.style.setProperty(trimKey, trimValue)
         } else if (key.startsWith('-')) {
-          element.style[key] = value
+          element.style.setProperty(key, value)
         } else {
           // 兼容浏览器前缀
           const kitFix = autoPrefixStyle(trimKey)
 
           Object.keys(kitFix).forEach((key) => {
-            element.style[key] = kitFix[key]
+            element.style.setProperty(key, kitFix[key])
           })
+
           // 设置默认需要添加样式
-          element.style[trimKey] = trimValue
+          element.style.setProperty(trimKey, trimValue)
         }
       }
     })
@@ -246,7 +248,7 @@ export const setStyle = <Style extends CSSProperties>(
       const keys = Object.keys(styles)
 
       keys.forEach((curr) => {
-        set(`${curr}: ${styles[curr]}`, element)
+        set(`${curr}: ${styles[curr as keyof typeof styles]}`, element)
       })
     }
   }

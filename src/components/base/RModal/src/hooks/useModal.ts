@@ -5,12 +5,10 @@ import { R_MODAL_CLASS, CSS_VARS_KEYS } from '../constant'
 
 import type { RModalProps } from '../types'
 
-interface UseModalCreateOptions extends Omit<RModalProps, 'memo'> {}
-
 const useModal = () => {
   const { create: naiveCreate, destroyAll: naiveDestroyAll } = useNaiveModal()
 
-  const create = (options: UseModalCreateOptions) => {
+  const create = (options: RModalProps) => {
     const { content, ...rest } = options
     let contentNode = content
 
@@ -27,7 +25,7 @@ const useModal = () => {
             style: {
               width: 'auto',
               height:
-                'calc(100vh - 29px - var(--n-padding-bottom) - var(--n-padding-bottom) - var(--n-padding-top))',
+                'calc(var(--html-height) - 29px - var(--n-padding-bottom) - var(--n-padding-bottom) - var(--n-padding-top))',
             },
           },
           {
@@ -68,17 +66,6 @@ const useModal = () => {
 
       // preset 为 card，fullscreen 为 true 时，最大化 modal
       if (fullscreen && preset === 'card') {
-        const cardContentElement =
-          modalElement.querySelector<HTMLElement>('.n-card__content')
-
-        if (cardContentElement) {
-          setStyle(cardContentElement, {
-            maxHeight: `calc(100vh - 9px - var(--n-padding-bottom) - var(--n-padding-bottom) - var(--n-padding-top))`,
-            overflowY: 'hidden',
-            padding: '0',
-          })
-        }
-
         setStyle(modalElement, {
           width: '100%',
           height: '100vh',

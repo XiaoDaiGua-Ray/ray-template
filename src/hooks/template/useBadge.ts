@@ -77,6 +77,7 @@ export function useBadge() {
   /**
    *
    * @param target 目标菜单 key 或者菜单项（AppMenuOption)
+   * @param extraOption 菜单标记配置项
    *
    * @example
    * const { show } = useBadge()
@@ -84,8 +85,12 @@ export function useBadge() {
    * show('your key')
    * show({ ...AppMenuOption })
    */
-  const show = (target: BadgeKey) => {
+  const show = (
+    target: BadgeKey,
+    extraOption?: Omit<AppMenuExtraOptions, 'show'>,
+  ) => {
     normalOption(target, 'show', {
+      ...extraOption,
       show: true,
     })
   }

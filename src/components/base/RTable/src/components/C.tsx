@@ -191,8 +191,9 @@ export default defineComponent({
     }
 
     const fixedClick: FixedClick = (type, option, index) => {
-      const key = `${type}FixedActivated`
-      const otherKey = `${type === 'left' ? 'right' : 'left'}FixedActivated`
+      const key = `${type}FixedActivated` as const
+      const otherKey =
+        `${type === 'left' ? 'right' : 'left'}FixedActivated` as const
 
       option[otherKey] = false
       option[key] = !option[key]

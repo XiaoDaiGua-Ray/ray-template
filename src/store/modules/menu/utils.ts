@@ -30,7 +30,7 @@ const isMatch = (
     return false
   }
 
-  return node[key] === value
+  return node[key as keyof AppMenuOption] === value
 }
 
 /**

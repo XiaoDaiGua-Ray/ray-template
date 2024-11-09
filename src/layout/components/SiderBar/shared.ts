@@ -59,7 +59,9 @@ const avatarDropdownActionMap = {
   },
 }
 
-export const avatarDropdownClick = (key: string | number) => {
+export const avatarDropdownClick = (
+  key: keyof typeof avatarDropdownActionMap,
+) => {
   const action = avatarDropdownActionMap[key]
 
   action ? action() : window.$message.info('这个人很懒, 没做这个功能~')

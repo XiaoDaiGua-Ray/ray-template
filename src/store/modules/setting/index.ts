@@ -120,11 +120,11 @@ export const piniaSettingStore = defineStore(
 
       settingState.primaryColorOverride.common = themeOverrides
 
-      const body = document.body
+      const html = document.documentElement
 
       /** 设置主题色变量 */
-      body.style.setProperty('--ray-theme-primary-color', value)
-      body.style.setProperty('--ray-theme-primary-fade-color', alphaColor)
+      html.style.setProperty('--ray-theme-primary-color', value)
+      html.style.setProperty('--ray-theme-primary-fade-color', alphaColor)
     }
 
     /**

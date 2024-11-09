@@ -4,6 +4,16 @@ import type { MessageProviderProps } from 'naive-ui'
 /**
  *
  * @description
+ * 全局注入到 html 的样式类名。
+ */
+export const THEME_CLASS_NAMES = {
+  darkClassName: 'ray-template--dark',
+  lightClassName: 'ray-template--light',
+}
+
+/**
+ *
+ * @description
  * 配置 MessageProver 组件。
  * 该配置项会影响到全局 Message 组件的默认配置。
  *

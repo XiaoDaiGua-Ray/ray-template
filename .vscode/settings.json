@@ -32,6 +32,7 @@
     "internalkey",
     "jsbarcode",
     "linebreak",
+    "logicflow",
     "macarons",
     "menutag",
     "ndata",
@@ -40,6 +41,7 @@
     "Popselect",
     "precommit",
     "siderbar",
+    "snapline",
     "stylelint",
     "WUJIE",
     "zlevel"

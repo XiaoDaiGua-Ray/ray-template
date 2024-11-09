@@ -17,8 +17,8 @@ describe('useDayjs', () => {
     }
     const localSpy = vi.spyOn(m, 'locale')
 
-    m.locale('en')
-    m.locale('zh-cn')
+    m.locale('en-US')
+    m.locale('zh-CN')
 
     expect(localSpy).toHaveBeenCalledTimes(2)
   })

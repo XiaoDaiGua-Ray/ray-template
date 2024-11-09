@@ -16,7 +16,7 @@ export const useWatermark = () => {
    */
   const setWatermarkContent = (content: string) => {
     const { getWatermarkConfig } = useSettingGetters()
-    const assignWatermark = Object.assign(getWatermarkConfig.value, {
+    const assignWatermark = Object.assign({}, getWatermarkConfig.value, {
       content,
     })
     const { updateSettingState } = useSettingActions()

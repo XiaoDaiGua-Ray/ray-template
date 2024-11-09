@@ -43,7 +43,7 @@
 
 // 根据主题切换样式
 @mixin useAppTheme($theme) {
-  body[class="ray-template--#{$theme}"] & {
+  html[class='ray-template--#{$theme}'] & {
     @content;
   }
 }

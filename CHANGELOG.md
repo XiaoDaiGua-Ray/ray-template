@@ -1,5 +1,33 @@
 # CHANGE LOG
 
+## 5.0.4
+
+将 `ts` 版本与 `eslint` 解析插件版本更新至最新版，并且同步解决了以前历史遗留的一些问题。
+
+并且，在该版本做了一些全局注入方式调整，请谨慎更新。
+
+## Feats
+
+- 移除 `vite-plugin-compression` 插件，使用 `rollup-plugin-gzip` 代替
+- 更新 `@vitejs/plugin-vue-jsx` 版本至 `4.0.1`
+- 优化注释
+- 默认设置 `ContentWrapper` 的 `content-wrapper` 内容展示区域的宽高为 `100%`，继承父容器的宽高；该样式会自动的计算，也就是说会自动的适配不同尺寸的屏幕输出与判断是否显示 `FeatureWrapper`, `FooterWrapper`
+- 更新 `@typescript-eslint/eslint-plugin`, `@typescript-eslint/parser` 版本至 `8.13.0`
+- 更新 `typescript` 版本至 `5.6.3`
+- 更新 `vue-tsc` 版本至 `2.1.10`
+- 更新 `pnpm` 包管理器版本至 `9.12.3`
+- 新增 `RFlow` 基础流程图组件（后期有时间会逐步加强该组件）
+- 移除 `useElementFullscreen` 方法 `currentWindowSize` 返回值
+- 新增 `--html-height`, `--html-width` 的全局 `css var` 属性，实时获取浏览器的尺寸
+- 样式注入现在由注入至 `body` 改为注入至 `html`，避免 `teleport` 传送至 `body` 外的元素不能使用全局样式的问题
+- `useBadge.show` 方法新增 `extraOption` 配置项，允许在显示 `badge` 到时候，传入额外的 `options` 配置项
+
+## Fixes
+
+- 修复菜单折叠后，`SiderBarLogo` 标题样式丢失问题
+- 修复 `useModal` 因为 `Omit` 原因导致类型丢失问题，现在直接使用 `ModalProps` 作为类型
+- 修复 `useModal` 创建全屏 `card` 的时候，内容区域边距样式被覆盖的问题，现在会尊重原有的 `card` 样式
+
 ## 5.0.3
 
 个性化配置能力再次提升。

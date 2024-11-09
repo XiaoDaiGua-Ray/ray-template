@@ -17,7 +17,7 @@ import viteVeI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import viteInspect from 'vite-plugin-inspect'
 import viteSvgLoader from 'vite-svg-loader'
 import { analyzer, adapter } from 'vite-bundle-analyzer'
-import viteCompression from 'vite-plugin-compression'
+import gzipPlugin from 'rollup-plugin-gzip'
 import { ViteEjsPlugin as viteEjsPlugin } from 'vite-plugin-ejs'
 import viteAutoImport from 'unplugin-auto-import/vite'
 import viteEslint from 'vite-plugin-eslint'
@@ -180,7 +180,7 @@ function baseOptions(mode: string): PluginOption[] {
         },
       ],
     }),
-    viteCompression(),
+    gzipPlugin(),
     viteSvgLoader({
       defaultImport: 'url', // 默认以 url 形式导入 svg
     }),

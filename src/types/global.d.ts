@@ -56,7 +56,7 @@ export declare global {
       bus: EventBus
       shadowRoot?: ShadowRoot
       props?: { [key: string]: unknown }
-      location?: Object
+      location?: object
     }
 
     $message: MessageApi

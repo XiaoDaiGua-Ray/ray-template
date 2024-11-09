@@ -1,6 +1,8 @@
 import dayjs from 'dayjs'
 import { DEFAULT_DAYJS_LOCAL, DAYJS_LOCAL_MAP } from '@/app-config'
 
+import type { DayjsLocalMap } from '@/types'
+
 export interface FormatOption {
   format?: string
 }
@@ -19,7 +21,7 @@ export interface StartAndEndOfDay {
   formatEndOfDay: string
 }
 
-export type LocalKey = typeof DEFAULT_DAYJS_LOCAL
+export type LocalKey = keyof DayjsLocalMap
 
 const defaultDayjsFormat = 'YYYY-MM-DD HH:mm:ss'
 

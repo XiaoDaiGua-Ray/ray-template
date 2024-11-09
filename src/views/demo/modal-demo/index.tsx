@@ -18,7 +18,9 @@ export default defineComponent({
         title: '卡片模态框',
         dad: true,
         preset: 'card',
-        content: '我可以被拖拽的全屏card模态框',
+        content: () => (
+          <div style="height: 3000px;">我可以被拖拽的全屏card模态框</div>
+        ),
         fullscreen: true,
       })
     }
@@ -59,7 +61,7 @@ export default defineComponent({
           fullscreen
           preset="card"
         >
-          我是全屏模态框，并且会自动启用滚动条。
+          <div style="height: 3000px;">我可以被拖拽的全屏card模态框</div>
         </RModal>
         <RModal
           v-model:show={this.modal2}

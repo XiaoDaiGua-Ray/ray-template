@@ -93,9 +93,9 @@ export default defineComponent({
           <NTooltip placement="right">
             {{
               trigger: () => (
-                <h1 class="n-menu-item-content">
+                <NGradientText type="primary" size={18}>
                   {sideBarLogo.title?.[0] || null}
-                </h1>
+                </NGradientText>
               ),
               default: () => sideBarLogo.title,
             }}

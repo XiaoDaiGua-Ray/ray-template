@@ -150,9 +150,9 @@ export default defineComponent({
       const keys = Object.keys(propsPopselectValue.value)
 
       keys.forEach((key) => {
-        propsPopselectValue.value[key] = value.includes(
-          key as PropsComponentPopselectKeys,
-        )
+        propsPopselectValue.value[
+          key as keyof typeof propsPopselectValue.value
+        ] = value.includes(key as PropsComponentPopselectKeys)
       })
     }
 

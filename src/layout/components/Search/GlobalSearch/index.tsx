@@ -80,15 +80,16 @@ export default defineComponent({
         plain: true,
       },
     ]
-    /** 初始化索引 */
+    // 初始化索引
     let searchElementIndex = 0
-    /** 缓存索引 */
+    // 缓存索引
     let preSearchElementIndex = searchElementIndex
     const { isTabletOrSmaller } = useDevice()
     const loading = ref(false)
-    const ACTIVE_CLASS = 'content-item--active' // 激活样式 class name
+    // 激活样式 class name
+    const ACTIVE_CLASS = 'content-item--active'
 
-    /** 初始化一些值 */
+    // 初始化一些值
     const resetSearchSomeValue = () => {
       state.searchOptions = []
       state.searchValue = null
@@ -96,7 +97,7 @@ export default defineComponent({
       preSearchElementIndex = searchElementIndex
     }
 
-    /** 按下 ctrl + k 或者 command + k 激活搜索栏 */
+    // 按下 ctrl + k 或者 command + k 激活搜索栏
     const registerArouseKeyboard = (e: KeyboardEvent) => {
       if (modelShow.value) {
         return
@@ -111,7 +112,14 @@ export default defineComponent({
       }
     }
 
-    /** 根据输入值模糊检索菜单 */
+    /**
+     *
+     * @param value 输入的搜索内容
+     *
+     * @description
+     * 根据输入值模糊检索菜单。
+     * 依赖 getRoutes() 获取的路由列表。
+     */
     const fuzzySearchMenuOptions = (value: string) => {
       if (value) {
         loading.value = true
@@ -157,14 +165,15 @@ export default defineComponent({
         })
 
         loading.value = false
-      }, 500)
+      }, 300)
     }
 
+    // 搜索结果项点击
     const searchItemClick = (option: AppMenuOption) => {
       if (option) {
         const { meta } = option
 
-        /** 如果配置站外跳转则不会关闭搜索框 */
+        // 如果配置站外跳转则不会关闭搜索框
         if (meta.windowOpen) {
           window.open(meta.windowOpen)
         } else {
@@ -176,7 +185,7 @@ export default defineComponent({
       }
     }
 
-    /** 自动聚焦检索项 */
+    // 自动聚焦检索项
     const autoFocusingSearchItem = () => {
       const currentOption = state.searchOptions[searchElementIndex] // 获取当前搜索项
       const preOption = state.searchOptions[preSearchElementIndex] // 获取上一搜索项
@@ -205,7 +214,7 @@ export default defineComponent({
       }
     }
 
-    /** 渲染搜索菜单前缀图标, 如果没有则用 icon table 代替 */
+    // 渲染搜索菜单前缀图标，如果没有则用 icon table 代替
     const RenderPreIcon = (meta: AppRouteMeta) => {
       const { icon } = meta
 
@@ -218,7 +227,7 @@ export default defineComponent({
       }
     }
 
-    /** 更新索引 */
+    // 更新索引
     const updateIndex = (type: 'up' | 'down') => {
       if (type === 'up') {
         searchElementIndex -= 1
@@ -237,7 +246,7 @@ export default defineComponent({
       }
     }
 
-    /** 注册按键: 上、下、回车 */
+    // 注册按键: 上、下、回车
     const registerChangeSearchElementIndex = (e: KeyboardEvent) => {
       const keyCode = e.key
 

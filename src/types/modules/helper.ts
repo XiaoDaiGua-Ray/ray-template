@@ -113,3 +113,14 @@ export type DeepReadonly<T> = T extends object
       readonly [P in keyof T]: DeepReadonly<T[P]>
     }
   : T
+
+/**
+ *
+ * @description
+ * 将目标类型中的所有属性变为必填。
+ *
+ * @example
+ * SetRequired<{ a: string, b?: number }, 'a'> // { a: string, b: number }
+ */
+export type SetRequired<T, K extends keyof T> = Omit<T, K> &
+  Required<Pick<T, K>>

@@ -99,7 +99,13 @@ export default defineComponent({
               <NButton onClick={() => badgeHidden('/template-hooks')}>
                 隐藏当前菜单标记
               </NButton>
-              <NButton onClick={() => badgeShow('/template-hooks')}>
+              <NButton
+                onClick={() =>
+                  badgeShow('/template-hooks', {
+                    label: this.badgeValue,
+                  })
+                }
+              >
                 显示当前菜单标记
               </NButton>
               <NButton

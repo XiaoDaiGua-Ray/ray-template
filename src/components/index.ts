@@ -13,6 +13,7 @@ export * from './base/RForm'
 export * from './base/RSegment'
 export * from './base/RBarcode'
 export * from '../components/pro/RTablePro'
+export * from './base/RFlow'
 export { RCollapse }
 
 // 导出自定义组件类型
@@ -25,3 +26,9 @@ export type * from './base/RForm/src/types'
 export type * from './base/RModal/src/types'
 export type * from './base/RSegment/src/types'
 export type * from './base/RBarcode/src/types'
+export type {
+  NodeConfig,
+  EdgeConfig,
+  FlowGraphData,
+  FlowOptions,
+} from './base/RFlow/src/types'

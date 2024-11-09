@@ -1,8 +1,6 @@
 import { unrefElement, effectDispose, isValueType, setStyle } from '@/utils'
-import { useWindowSize } from '@vueuse/core'
 
 import type { BasicTarget } from '@/types'
-import type { CSSProperties } from 'vue'
 
 export interface UseElementFullscreenOptions {
   /**
@@ -66,7 +64,6 @@ export interface UseElementFullscreenOptions {
 let currentZIndex = 999
 let isAppend = false
 const ID_TAG = 'ELEMENT-FULLSCREEN-RAY'
-const { width, height } = useWindowSize() // 获取实际高度避免 100vh 会导致手机端浏览器获取不准确问题
 const styleElement = document.createElement('style')
 
 /**
@@ -140,8 +137,8 @@ export const useElementFullscreen = (
           : zIndex,
       '--element-fullscreen-transition': transition,
       '--element-fullscreen-background-color': backgroundColor,
-      '--element-fullscreen-width': `${width.value}px`,
-      '--element-fullscreen-height': `${height.value}px`,
+      '--element-fullscreen-width': 'var(--html-width)',
+      '--element-fullscreen-height': 'var(--html-height)',
       '--element-fullscreen-transform-x': `${catchBoundingClientRect.x}px`,
       '--element-fullscreen-transform-y': `${catchBoundingClientRect.y}px`,
     })
@@ -217,8 +214,6 @@ export const useElementFullscreen = (
     }
   }
 
-  const stopWatch = watch(() => [width.value, height.value], updateStyle)
-
   effectDispose(() => {
     const element = unrefElement(target) as HTMLElement | null
 
@@ -228,18 +223,12 @@ export const useElementFullscreen = (
 
     // 回滚 z-index 值，避免无限增加
     currentZIndex--
-
-    stopWatch()
   })
 
   return {
     enter,
     exit,
     toggleFullscreen,
-    currentWindowSize: {
-      width,
-      height,
-    },
   }
 }
 
