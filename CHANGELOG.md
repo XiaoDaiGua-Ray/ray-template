@@ -1,5 +1,20 @@
 # CHANGE LOG
 
+## 5.0.5
+
+## Feats
+
+- 新增 `GLOBAL_CLASS_NAMES` 配置项
+- 新增 `canSkipRoute` 方法，用于初始化系统菜单时，自动获取可跳转的路由，避免权限系统列表中无权限路由跳转导致异常的问题
+- 优化 `useElementFullscreen` 方法的过渡效果
+- `useElementFullscreen` 新增 `isFullscreen` 属性，标识当前元素是否处于网页全屏状态
+
+## Fixes
+
+- 修复锁屏逻辑问题
+- 修复菜单有时候不能正常的展开被激活项的问题
+- 修复 `useSiderBar` 的 `close` 问题
+
 ## 5.0.4
 
 将 `ts` 版本与 `eslint` 解析插件版本更新至最新版，并且同步解决了以前历史遗留的一些问题。

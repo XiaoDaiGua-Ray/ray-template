@@ -7,7 +7,7 @@ import {
   getStorage,
 } from '@/utils'
 import { useSettingGetters } from '@/store'
-import { APP_CATCH_KEY, THEME_CLASS_NAMES } from '@/app-config'
+import { APP_CATCH_KEY, GLOBAL_CLASS_NAMES, APP_THEME } from '@/app-config'
 import { useWindowSize } from '@vueuse/core'
 
 import type { SettingState } from '@/store/modules/setting/types'
@@ -20,9 +20,14 @@ export default defineComponent({
 
     // 同步主题色变量至 html，如果未获取到缓存值则已默认值填充
     const syncPrimaryColorToBody = () => {
+      // 默认主题色
       const {
         appPrimaryColor: { primaryColor, primaryFadeColor },
-      } = __APP_CFG__ // 默认主题色
+      } = APP_THEME
+      // 主题色配置 class 名
+      const { rayTemplateThemePrimaryColor, rayTemplateThemePrimaryFadeColor } =
+        GLOBAL_CLASS_NAMES
+
       const html = document.documentElement
 
       // 获取缓存 naive ui 配置项
@@ -42,18 +47,19 @@ export default defineComponent({
         const fp = colorToRgba(p, 0.38)
 
         // 设置全局主题色 css 变量
-        html.style.setProperty('--ray-theme-primary-color', p) // 主色调
+        html.style.setProperty(rayTemplateThemePrimaryColor, p) // 主色调
+        // 降低透明度后的主色调
         html.style.setProperty(
-          '--ray-theme-primary-fade-color',
+          rayTemplateThemePrimaryFadeColor,
           fp || primaryFadeColor,
-        ) // 降低透明度后的主色调
+        )
       }
     }
 
     // 隐藏加载动画
     const hiddenLoadingAnimation = () => {
       // pre-loading-animation 是默认 id
-      const el = document.getElementById('pre-loading-animation')
+      const el = document.getElementById(GLOBAL_CLASS_NAMES.preLoadingAnimation)
 
       if (el) {
         setStyle(el, {
@@ -65,7 +71,7 @@ export default defineComponent({
     // 切换主题时，同步更新 html class 以便于进行自定义 css 配置
     const updateGlobalThemeClass = (bool: boolean) => {
       const html = document.documentElement
-      const { darkClassName, lightClassName } = THEME_CLASS_NAMES
+      const { darkClassName, lightClassName } = GLOBAL_CLASS_NAMES
 
       bool
         ? removeClass(html, lightClassName)
@@ -82,8 +88,8 @@ export default defineComponent({
       updateGlobalThemeClass(getAppTheme.value)
       // 注入全局宽高尺寸
       setStyle(document.documentElement, {
-        '--html-height': `${height.value}px`,
-        '--html-width': `${width.value}px`,
+        [GLOBAL_CLASS_NAMES.htmlHeight]: `${height.value}px`,
+        [GLOBAL_CLASS_NAMES.htmlWidth]: `${width.value}px`,
       })
     })
 

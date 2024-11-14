@@ -24,7 +24,7 @@ const LockScreen = defineComponent({
       formInstRef.value?.validate((error) => {
         if (!error) {
           setLockAppScreen(true)
-          updateSettingState('lockScreenSwitch', true)
+          updateSettingState('lockScreenSwitch', false)
 
           state.lockCondition = useCondition()
         }
@@ -46,34 +46,36 @@ const LockScreen = defineComponent({
   },
   render() {
     return (
-      <div class="app-lock-screen__input">
-        <NForm
-          ref="formInstRef"
-          model={this.lockCondition}
-          rules={rules}
-          labelPlacement="left"
-        >
-          <NFormItem path="lockPassword">
-            <NInput
-              ref="inputInstRef"
-              v-model:value={this.lockCondition.lockPassword}
-              type="password"
-              placeholder="请输入锁屏密码"
-              clearable
-              showPasswordOn="click"
-              minlength={6}
-              maxlength={12}
-              onKeydown={(e: KeyboardEvent) => {
-                if (e.code === 'Enter') {
-                  this.lockScreen()
-                }
-              }}
-            />
-          </NFormItem>
-          <NButton type="primary" onClick={this.lockScreen.bind(this)}>
-            锁屏
-          </NButton>
-        </NForm>
+      <div class="app-lock-screen__content">
+        <div class="app-lock-screen__input">
+          <NForm
+            ref="formInstRef"
+            model={this.lockCondition}
+            rules={rules}
+            labelPlacement="left"
+          >
+            <NFormItem path="lockPassword">
+              <NInput
+                ref="inputInstRef"
+                v-model:value={this.lockCondition.lockPassword}
+                type="password"
+                placeholder="请输入锁屏密码"
+                clearable
+                showPasswordOn="click"
+                minlength={6}
+                maxlength={12}
+                onKeydown={(e: KeyboardEvent) => {
+                  if (e.code === 'Enter') {
+                    this.lockScreen()
+                  }
+                }}
+              />
+            </NFormItem>
+            <NButton type="primary" onClick={this.lockScreen.bind(this)}>
+              锁屏
+            </NButton>
+          </NForm>
+        </div>
       </div>
     )
   },

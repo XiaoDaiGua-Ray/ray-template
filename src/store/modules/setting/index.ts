@@ -1,7 +1,7 @@
 import { getAppDefaultLanguage } from '@/locales/utils'
 import { colorToRgba, setStorage, updateObjectValue, setStyle } from '@/utils'
 import { useI18n, useDayjs } from '@/hooks'
-import { APP_CATCH_KEY, APP_THEME } from '@/app-config'
+import { APP_CATCH_KEY, APP_THEME, GLOBAL_CLASS_NAMES } from '@/app-config'
 
 import type { SettingState } from '@/store/modules/setting/types'
 import type { LocalKey } from '@/hooks'
@@ -99,10 +99,9 @@ export const piniaSettingStore = defineStore(
     const updateLocale = (key: string) => {
       locale(key)
       dayjsLocal(key as LocalKey)
+      setStorage(APP_CATCH_KEY.localeLanguage, key, 'localStorage')
 
       settingState.localeLanguage = key
-
-      setStorage(APP_CATCH_KEY.localeLanguage, key, 'localStorage')
     }
 
     /**
@@ -117,14 +116,16 @@ export const piniaSettingStore = defineStore(
         primaryColorHover: value,
         primaryColorPressed: value,
       }
+      const { rayTemplateThemePrimaryColor, rayTemplateThemePrimaryFadeColor } =
+        GLOBAL_CLASS_NAMES
+      const html = document.documentElement
 
       settingState.primaryColorOverride.common = themeOverrides
 
-      const html = document.documentElement
-
-      /** 设置主题色变量 */
-      html.style.setProperty('--ray-theme-primary-color', value)
-      html.style.setProperty('--ray-theme-primary-fade-color', alphaColor)
+      // 设置主题色变量
+      html.style.setProperty(rayTemplateThemePrimaryColor, value)
+      // 设置主题色辅助色变量
+      html.style.setProperty(rayTemplateThemePrimaryFadeColor, alphaColor)
     }
 
     /**
@@ -200,6 +201,8 @@ export const piniaSettingStore = defineStore(
   {
     persist: {
       key: APP_CATCH_KEY.appPiniaSettingStore,
+      omit: ['lockScreenSwitch'],
+      storage: window.localStorage,
     },
   },
 )

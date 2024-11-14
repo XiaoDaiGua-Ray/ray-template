@@ -44,6 +44,7 @@ const GlobalSpin = defineComponent({
         {...(this.$props as SpinProps)}
         show={this.spinValue}
         themeOverrides={this.overrides}
+        style="height: var(--html-height)"
       >
         {{
           ...this.$slots,

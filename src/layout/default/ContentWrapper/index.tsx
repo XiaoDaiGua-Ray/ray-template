@@ -79,8 +79,6 @@ export default defineComponent({
           layoutContentMaximize
             ? 'r-layout-full__viewer-content--maximize'
             : null,
-          'r-layout-full__viewer-content--maximize--light',
-          'r-layout-full__viewer-content--maximize--dark',
         ]}
       >
         {layoutContentMaximize ? (

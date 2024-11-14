@@ -56,7 +56,7 @@ export interface UseElementFullscreenOptions {
    * @description
    * 手动设定 transition 过度效果。
    *
-   * @default 'width 0.3s var(--r-bezier), height 0.3s var(--r-bezier)'
+   * @default 'transform 0.3s var(--r-bezier)'
    */
   transition?: string
 }
@@ -101,7 +101,7 @@ export const useElementFullscreen = (
     exit: _exit,
     backgroundColor,
     zIndex,
-    transition = 'all 0.3s var(--r-bezier)',
+    transition = 'transform 0.3s var(--r-bezier)',
   } = options ?? {}
   let isSetup = false
   const catchBoundingClientRect: {
@@ -111,6 +111,8 @@ export const useElementFullscreen = (
     x: null,
     y: null,
   }
+  // 使用 ref 来追踪状态
+  const isFullscreen = ref(false)
 
   const updateStyle = () => {
     const element = unrefElement(target) as HTMLElement | null
@@ -153,7 +155,7 @@ export const useElementFullscreen = (
             z-index: var(--element-fullscreen-z-index) !important;
             background-color: var(--element-fullscreen-background-color);
           }
-        `
+        `.trim()
 
     styleElement.innerHTML = cssContent
 
@@ -185,6 +187,7 @@ export const useElementFullscreen = (
       }
 
       element.style.transition = transition
+      isFullscreen.value = true
 
       _enter?.()
     }
@@ -198,6 +201,8 @@ export const useElementFullscreen = (
     if (element) {
       element.removeAttribute(ID_TAG)
     }
+
+    isFullscreen.value = false
 
     _exit?.()
   }
@@ -222,13 +227,15 @@ export const useElementFullscreen = (
     }
 
     // 回滚 z-index 值，避免无限增加
-    currentZIndex--
+    currentZIndex = Math.max(999, currentZIndex - 1) // 防止 zIndex 小于初始值
+    isFullscreen.value = false
   })
 
   return {
     enter,
     exit,
     toggleFullscreen,
+    isFullscreen: readonly(isFullscreen), // 暴露只读状态
   }
 }
 

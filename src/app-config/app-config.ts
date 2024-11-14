@@ -5,11 +5,19 @@ import type { MessageProviderProps } from 'naive-ui'
  *
  * @description
  * 全局注入到 html 的样式类名。
+ *
+ * 如果涉及到全局主题色的 class name，需要修改的时候记得全局替换；
+ * 避免样式出现奇奇怪怪的问题。
  */
-export const THEME_CLASS_NAMES = {
+export const GLOBAL_CLASS_NAMES = {
   darkClassName: 'ray-template--dark',
   lightClassName: 'ray-template--light',
-}
+  rayTemplateThemePrimaryColor: '--ray-theme-primary-color',
+  rayTemplateThemePrimaryFadeColor: '--ray-theme-primary-fade-color',
+  preLoadingAnimation: 'pre-loading-animation',
+  htmlHeight: '--html-height',
+  htmlWidth: '--html-width',
+} as const
 
 /**
  *

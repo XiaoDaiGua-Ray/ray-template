@@ -18,7 +18,7 @@
 import { NEllipsis } from 'naive-ui'
 
 import { setStorage, equalRouterPath, updateObjectValue } from '@/utils'
-import { validRole, validMenuItemShow } from '@/router/utils'
+import { validRole, validMenuItemShow, canSkipRoute } from '@/router/utils'
 import {
   parseAndFindMatchingNodes,
   updateDocumentTitle,
@@ -379,19 +379,18 @@ export const piniaMenuStore = defineStore(
           '',
         )
 
-        if (menuState.currentMenuOption) {
-          const { currentMenuOption } = menuState
+        const r =
+          menuState.currentMenuOption ||
+          (canSkipRoute(menuState.options) as AppMenuOption)
 
+        if (r) {
           // 惰性更新面包屑，避免 sameLevel 模式下的面包屑被覆盖
           if (!menuState.breadcrumbOptions.length) {
-            setBreadcrumbOptions(currentMenuOption.key)
+            setBreadcrumbOptions(r.key)
           }
 
-          setMenuTagOptionsWhenMenuValueChange(
-            currentMenuOption.fullPath,
-            currentMenuOption,
-          )
-          updateDocumentTitle(currentMenuOption)
+          setMenuTagOptionsWhenMenuValueChange(r.fullPath, r)
+          updateDocumentTitle(r)
         }
 
         resolve()

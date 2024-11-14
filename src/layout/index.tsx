@@ -19,6 +19,7 @@ import {
   HeaderWrapper,
   FeatureWrapper,
 } from './default'
+import UnlockScreen from '@/app-components/app/AppLockScreen/components/UnlockScreen'
 
 import { LAYOUT_CONTENT_REF } from '@/app-config'
 import { layoutCssVars } from '@/layout/layout-css-vars'
@@ -70,6 +71,8 @@ export default defineComponent({
           {getCopyrightSwitch ? <FooterWrapper ref="layoutFooterRef" /> : null}
         </NLayoutContent>
       </NLayout>
-    ) : null
+    ) : (
+      <UnlockScreen />
+    )
   },
 })

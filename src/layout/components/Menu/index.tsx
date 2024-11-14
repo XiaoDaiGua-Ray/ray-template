@@ -24,7 +24,7 @@ export default defineComponent({
     const modelMenuKey = computed({
       get: () => {
         // eslint-disable-next-line vue/no-async-in-computed-properties
-        nextTick().then(() => {
+        setTimeout(() => {
           /**
            *
            * @description
@@ -34,7 +34,7 @@ export default defineComponent({
            * 所以，这里不会出现异步获取值的问题，所以可以禁用该规则。
            */
           showMenuOption()
-        })
+        }, 300)
 
         return getMenuKey.value
       },

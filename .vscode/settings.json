@@ -1,4 +1,5 @@
 {
+  "editor.formatOnSave": true,
   "i18n-ally.localesPaths": ["src/locales/lang"],
   "i18n-ally.keystyle": "nested",
   "i18n-ally.sortKeys": true,
@@ -45,6 +46,5 @@
     "stylelint",
     "WUJIE",
     "zlevel"
-  ],
-  "peacock.color": "#007fff"
+  ]
 }

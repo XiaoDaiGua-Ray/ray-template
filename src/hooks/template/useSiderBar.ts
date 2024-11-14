@@ -170,11 +170,19 @@ export function useSiderBar() {
       spliceMenTagOptions(index)
 
       if (option.fullPath === getMenuKey.value) {
-        const tag = getMenuTagOptions.value[index - 1]
+        let i = checkCloseLeft(index)
+          ? index - 1
+          : checkCloseRight(index)
+            ? index
+            : index - 1
 
-        if (tag) {
-          changeMenuModelValue(tag.fullPath, tag)
+        if (i < 0) {
+          i = 0
         }
+
+        const tag = getMenuTagOptions.value[i]
+
+        tag && changeMenuModelValue(tag.fullPath, tag)
       }
     }
   }

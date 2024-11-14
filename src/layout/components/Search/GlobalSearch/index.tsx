@@ -218,10 +218,10 @@ export default defineComponent({
     const RenderPreIcon = (meta: AppRouteMeta) => {
       const { icon } = meta
 
-      if (typeof icon === 'string') {
+      if (typeof icon === 'string' && icon) {
         return <RIcon name={icon} size="24" />
       } else if (typeof icon === 'function') {
-        return () => icon
+        return <icon />
       } else {
         return <RIcon name="search" size="24" />
       }

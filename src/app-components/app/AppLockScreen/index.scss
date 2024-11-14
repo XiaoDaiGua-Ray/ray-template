@@ -1,4 +1,10 @@
 .app-lock-screen__content {
+  &.app-lock-screen__content--full {
+    width: 100%;
+    height: var(--html-height);
+    @include flexCenter;
+  }
+
   & .app-lock-screen__input {
     & button[class*='n-button'] {
       width: 100%;

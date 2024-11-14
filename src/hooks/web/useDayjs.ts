@@ -42,8 +42,8 @@ export const useDayjs = () => {
    * 手动配置 dayjs 语言（国际化）。
    *
    * @example
-   * locale('en')
-   * locale('zh-cn')
+   * locale('zh-CN')
+   * locale('en-US')
    */
   const locale = (key: LocalKey) => {
     const locale = DAYJS_LOCAL_MAP[key]
