@@ -211,6 +211,31 @@ export const downloadAnyFile = (
 
 /**
  *
+ * @param file file object
+ *
+ * @description
+ * 将 File 文件对象转换为 base64。
+ *
+ * @example
+ * const base64 = await fileToBase64(file) // 'data:image/png;base64,...'
+ */
+export const fileToBase64 = (file: File) => {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader()
+
+    reader.onload = () => {
+      resolve(reader.result as string)
+    }
+    reader.onerror = (error) => {
+      reject(error)
+    }
+
+    reader.readAsDataURL(file)
+  })
+}
+
+/**
+ *
  * @param func 待判断的函数
  * @returns 是否为 async 函数
  *
@@ -254,7 +279,7 @@ export const isPromise = <T>(value: unknown): value is Promise<T> => {
 
 /**
  *
- * @param fc 正常执行的函数
+ * @param fn 正常执行的函数
  * @param errorCallback 错误回调
  * @param args 当前传递函数参数
  *
@@ -266,14 +291,14 @@ export const isPromise = <T>(value: unknown): value is Promise<T> => {
  * callWithErrorHandling((x: number) => { throw new Error('error') }, (error) => { console.log(error) }, [123]) => undefined
  */
 export const callWithErrorHandling = <T extends AnyFC, E extends Error>(
-  fc: T,
+  fn: T,
   errorCallback: AnyFC<E, void>,
   args?: Parameters<T>,
 ) => {
   let result: ReturnType<T> | undefined
 
   try {
-    result = args ? fc(...args) : fc()
+    result = args ? fn(...args) : fn()
   } catch (error) {
     errorCallback(error as E)
   }
@@ -299,16 +324,16 @@ export const callWithAsyncErrorHandling = async <
   T extends AnyFC,
   E extends Error,
 >(
-  fc: T,
+  fn: T,
   errorCallback: (error: E) => void,
   args?: Parameters<T>,
 ): Promise<ReturnType<T> | undefined> => {
   try {
-    if (!isPromise(fc)) {
-      return Promise.resolve(callWithErrorHandling(fc, errorCallback, args))
+    if (!isPromise(fn)) {
+      return Promise.resolve(callWithErrorHandling(fn, errorCallback, args))
     }
 
-    return await fc(...(args as Parameters<T>))
+    return await fn(...(args as Parameters<T>))
   } catch (error) {
     errorCallback(error as E)
 

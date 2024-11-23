@@ -2,6 +2,7 @@ import { getAppDefaultLanguage } from '@/locales/utils'
 import { colorToRgba, setStorage, updateObjectValue, setStyle } from '@/utils'
 import { useI18n, useDayjs } from '@/hooks'
 import { APP_CATCH_KEY, APP_THEME, GLOBAL_CLASS_NAMES } from '@/app-config'
+import { getDefaultSettingConfig } from './constant'
 
 import type { SettingState } from '@/store/modules/setting/types'
 import type { LocalKey } from '@/hooks'
@@ -17,8 +18,6 @@ export const piniaSettingStore = defineStore(
     const { locale: dayjsLocal } = useDayjs()
 
     const settingState = reactive<SettingState>({
-      // 默认设置出现位置
-      drawerPlacement: 'right',
       // 默认主题色
       primaryColorOverride: {
         common: {
@@ -27,37 +26,14 @@ export const piniaSettingStore = defineStore(
           primaryColorPressed: primaryColor,
         },
       },
-      // true 为黑夜主题, false 为明亮主题
+      // 内部使用，用于判断是否为黑夜主题（为了兼容历史遗留版本）；true 为黑夜主题，false 为明亮主题
       _appTheme: false,
+      // 当前主题样式
       appTheme: 'light',
-      // 多标签页开关
-      menuTagSwitch: true,
-      // 面包屑开关
-      breadcrumbSwitch: true,
       // 默认国际化语言
       localeLanguage: getAppDefaultLanguage(),
       // 锁屏开关
       lockScreenSwitch: false,
-      // 底部区域开关
-      copyrightSwitch: true,
-      // 切换过渡效果
-      contentTransition: 'scale',
-      // 水印开关
-      watermarkSwitch: false,
-      // 水印
-      watermarkConfig: {
-        content: 'Trying be better~',
-        fontSize: 16,
-        lineHeight: 16,
-        width: 384,
-        height: 384,
-        xOffset: 12,
-        xGap: 0,
-        yGap: 0,
-        yOffset: 60,
-        rotate: -15,
-        cross: true,
-      },
       // 根路由信息
       appRootRoute: {
         name: 'Dashboard',
@@ -70,29 +46,7 @@ export const piniaSettingStore = defineStore(
         url: '/dashboard',
         jumpType: 'station',
       },
-      // 缓存动态设置
-      keepAliveConfig: {
-        setupKeepAlive: true,
-        keepAliveExclude: [],
-        maxKeepAliveLength: 10,
-      },
-      // 菜单配置
-      menuConfig: {
-        collapsedWidth: 64,
-        collapsedMode: 'width',
-        collapsedIconSize: 16,
-        collapsedIndent: 24,
-        accordion: false,
-        menuSiderBarLogo: true,
-        iconSize: 16,
-        menuWidth: 272,
-        inverted: false,
-        nativeScrollbar: false,
-      },
-      // 色弱模式
-      colorWeakness: false,
-      // 动态标题
-      dynamicDocumentTitle: true,
+      ...getDefaultSettingConfig(),
     })
 
     // 修改当前语言
@@ -150,7 +104,7 @@ export const piniaSettingStore = defineStore(
       value: Partial<V[T]>,
       cb?: C,
     ) => {
-      updateObjectValue(settingState, key, value, cb)
+      updateObjectValue(settingState, key, value as V[T], cb)
     }
 
     const toggleColorWeakness = (bool: boolean) => {

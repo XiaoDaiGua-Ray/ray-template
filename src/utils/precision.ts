@@ -21,7 +21,6 @@ import { cloneDeep } from 'lodash-es'
 import { isValueType } from '@/utils'
 
 import type { Options } from 'currency.js'
-import type { AnyFC } from '@/types'
 
 export type CurrencyArguments = string | number | currency
 
@@ -35,7 +34,7 @@ export interface CurrencyOptions extends Options {
 const defaultOptions: Partial<CurrencyOptions> = {
   precision: 8,
   decimal: '.',
-}
+} as const
 // currency.js 原型属性集合
 const currencyPrototypeKeys = [
   's',
@@ -52,7 +51,7 @@ const currencyPrototypeKeys = [
   'multiply',
   'subtract',
   'toString',
-]
+] as const
 
 /**
  *
@@ -66,23 +65,28 @@ const currencyPrototypeKeys = [
 const basic = (
   valueOptions: CurrencyArguments[],
   dividend: CurrencyArguments,
-  cb: AnyFC,
-) => {
+  cb: (
+    pre: currency,
+    curr: CurrencyArguments,
+    idx: number,
+    arr: CurrencyArguments[],
+  ) => currency,
+): currency => {
+  // 如果 valueOptions 为空，则返回 0
   if (!valueOptions?.length) {
-    return 0
+    return currency(0, defaultOptions)
   }
 
+  // 如果 valueOptions 长度为 1，则返回 valueOptions[0]
   if (valueOptions.length === 1) {
     return currency(valueOptions[0], defaultOptions)
   }
 
-  const result = valueOptions.reduce((pre, curr, idx, arr) => {
-    pre = cb?.(pre, curr, idx, arr)
+  // 初始值
+  const initialValue = currency(dividend, defaultOptions)
 
-    return pre
-  }, dividend)
-
-  return result
+  // 计算
+  return valueOptions.reduce(cb, initialValue)
 }
 
 /**
@@ -98,16 +102,14 @@ const basic = (
  * isCurrency({ s: 1, intValue: 1, p: 1, value: 1 }) // false
  * isCurrency(currency(1)) // true
  */
-export const isCurrency = (value: unknown) => {
-  if (typeof value === 'string' || typeof value === 'number') {
+export const isCurrency = (value: unknown): value is currency => {
+  // 如果 value 不是对象类型，则返回 false
+  if (!isValueType<object>(value, 'Object')) {
     return false
   }
 
-  if (isValueType<object>(value, 'Object')) {
-    return currencyPrototypeKeys.every((key) => Reflect.has(value, key))
-  }
-
-  return false
+  // 如果 value 对象的属性在 currencyPrototypeKeys 中，则返回 true
+  return currencyPrototypeKeys.every((key) => key in value)
 }
 
 /**
@@ -124,13 +126,16 @@ export const isCurrency = (value: unknown) => {
  * format(0.1, { symbol: '¥' }) // ¥0.1
  */
 export const format = (value: CurrencyArguments, options?: CurrencyOptions) => {
-  const assignOptions = Object.assign({}, defaultOptions, options)
+  // 合并默认配置和传入配置
+  const assignOptions = { ...defaultOptions, ...options }
+  // 将 value 转换为 currency 对象
   const v = currency(value, assignOptions)
+  // 获取 type 配置，如果 type 不存在，则使用 'number'
   const { type = 'number' } = assignOptions
 
+  // 如果 type 为 'number'，则返回 value 的值，否则返回 value 的字符串
   return type === 'number' ? v.value : v.toString()
 }
-
 /**
  *
  * @description
@@ -140,14 +145,19 @@ export const format = (value: CurrencyArguments, options?: CurrencyOptions) => {
  * format(add(0.1, 0.2)) // 0.3
  * format(add(0.2, 0.33)) // 0.53
  */
-export const add = (...args: CurrencyArguments[]) => {
+export const add = (...args: CurrencyArguments[]): currency => {
+  // 如果 args 为空，则返回 0
+  if (!args.length) {
+    return currency(0, defaultOptions)
+  }
+
+  // 如果 args 长度为 1，则返回 args[0] 加上 0
   if (args.length === 1) {
     return currency(args[0], defaultOptions).add(0)
   }
 
-  return basic(args, 0, (pre, curr) => {
-    return currency(pre, defaultOptions).add(curr)
-  })
+  // 计算
+  return basic(args, 0, (pre, curr) => pre.add(curr))
 }
 
 /**
@@ -159,27 +169,27 @@ export const add = (...args: CurrencyArguments[]) => {
  * format(subtract(0.1, 0.12312)) // -0.02
  * format(subtract(0.2, 0.33)) // -0.13
  */
-export const subtract = (...args: CurrencyArguments[]) => {
+export const subtract = (...args: CurrencyArguments[]): currency => {
+  // 如果 args 为空，则返回 0
+  if (!args.length) {
+    return currency(0, defaultOptions)
+  }
+
+  // 如果 args 长度为 1，则返回 args[0] 减去 0
   if (args.length === 1) {
     return currency(args[0], defaultOptions).subtract(0)
   }
 
+  // 如果 args 长度为 2，则返回 args[0] 减去 args[1]
   if (args.length === 2) {
     const [one, two] = args
 
     return currency(one, defaultOptions).subtract(two)
   }
 
-  const cloneDeepArgs = cloneDeep(args)
-  const dividend = cloneDeepArgs.shift() as CurrencyArguments
+  const [first, ...rest] = args
 
-  if (!cloneDeepArgs.length) {
-    return dividend
-  }
-
-  return basic(cloneDeepArgs, dividend, (pre, curr) => {
-    return currency(pre, defaultOptions).subtract(curr)
-  })
+  return basic(rest, first, (pre, curr) => pre.subtract(curr))
 }
 
 /**
@@ -192,10 +202,12 @@ export const subtract = (...args: CurrencyArguments[]) => {
  * format(multiply(0.2, 0.33)) // 0.07
  */
 export const multiply = (...args: CurrencyArguments[]) => {
+  // 如果 args 长度为 1，则返回 args[0] 乘以 1
   if (args.length === 1) {
     return currency(args[0], defaultOptions).multiply(1)
   }
 
+  // 计算
   return basic(args, 1, (pre, curr) => {
     return currency(pre, defaultOptions).multiply(curr)
   })
@@ -211,17 +223,21 @@ export const multiply = (...args: CurrencyArguments[]) => {
  * format(divide(0.2, 0.33)) // 0.61
  */
 export const divide = (...args: CurrencyArguments[]) => {
+  // 如果 args 为空，则返回 0
   if (args.length === 1) {
     return currency(args[0], defaultOptions).divide(1)
   }
 
+  // 如果 args 长度为 2，则返回 args[0] 除以 args[1]
   if (args.length === 2) {
     const [one, two] = args
 
     return currency(one, defaultOptions).divide(two)
   }
 
+  // 深度克隆 args
   const cloneDeepArgs = cloneDeep(args)
+  // 获取 dividend
   const dividend = cloneDeepArgs.shift() as CurrencyArguments
 
   return basic(cloneDeepArgs, dividend, (pre, curr) => {
@@ -245,15 +261,18 @@ export const distribute = (
   length: number,
   options?: CurrencyOptions,
 ) => {
+  // 如果 length 小于等于 1，则返回一个包含 value 的数组
   if (length <= 1) {
     return [value ? value : 0]
   } else {
+    // 如果 value 为 undefined null，则返回一个长度为 length 的 0 数组
     if (!value) {
       return new Array(length).fill(0)
     }
   }
 
-  const assignOptions = Object.assign({}, defaultOptions, options)
+  // 合并配置项
+  const assignOptions = { ...defaultOptions, ...options }
 
   const result = currency(value, assignOptions)
     .distribute(length)

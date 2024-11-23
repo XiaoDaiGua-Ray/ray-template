@@ -25,44 +25,34 @@ $menuTagWrapperWidth: 76px;
 }
 
 // 激活标签页关闭按钮样式
-.menu-tag {
-  .menu-tag__btn {
-    .menu-tag__btn-icon--hidden {
-      display: none !important;
-    }
+.menu-tag .menu-tag__btn {
+  transition:
+    color 0.3s var(--n-bezier),
+    background-color 0.3s var(--n-bezier),
+    opacity 0.3s var(--n-bezier),
+    border-color 0.3s var(--n-bezier),
+    width 0.3s var(--n-bezier);
 
-    .menu-tag__btn-icon {
-      display: inline;
-      margin-left: 0;
-      width: 0;
-      height: 0;
+  .n-button__icon {
+    opacity: 0;
+    width: 0;
+    height: var(--n-icon-size);
+    transition: all 0.3s var(--r-bezier);
+    margin-left: 0px;
+    transform: translateX(4px);
+  }
+
+  &:hover {
+    .n-button__icon {
+      opacity: 1;
+      width: var(--n-icon-size);
       transition: all 0.3s var(--r-bezier);
-      overflow: hidden;
-      opacity: 0;
-
-      & .ray-icon {
-        width: 11px !important;
-        height: 11px !important;
-      }
-    }
-
-    &:hover {
-      .menu-tag__btn-icon {
-        width: 14px;
-        height: 14px;
-        margin-left: 5px;
-        font-size: 12px;
-        background-color: rgba(0, 0, 0, 0.12);
-        border-radius: 50%;
-        padding: 1px;
-        transition: all 0.3s var(--r-bezier);
-        opacity: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
     }
   }
+}
+
+.menu-tag__btn-icon:hover {
+  filter: brightness(0.8);
 }
 
 // 设置 dropdown animate svg 尺寸

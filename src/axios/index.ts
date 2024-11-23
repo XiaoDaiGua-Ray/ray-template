@@ -40,14 +40,14 @@ function useRequest<
   fetchOptions: AppRawRequestConfig<Response>,
   option?: UseRequestOptions<Response, HookPlusParams, HookPlusPlugin>,
 ) {
-  const fc = () => {
+  const fn = () => {
     const cb = request<Response>(fetchOptions)
 
     return cb
   }
 
   const hooks = useHookPlusRequest<Response, HookPlusParams>(
-    fc,
+    fn,
     Object.assign({}, option),
   )
 

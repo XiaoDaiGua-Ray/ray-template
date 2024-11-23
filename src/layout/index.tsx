@@ -29,9 +29,9 @@ import { useSettingGetters } from '@/store'
 export default defineComponent({
   name: 'RLayout',
   setup() {
-    const layoutSiderBarRef = ref<HTMLElement>() // 顶部操作栏 ref
-    const layoutMenuTagRef = ref<HTMLElement>() // 标签页 ref
-    const layoutFooterRef = ref<HTMLElement>() // 底部版权 ref
+    const layoutSiderBarRef = shallowRef<HTMLElement>() // 顶部操作栏 shallowRef
+    const layoutMenuTagRef = shallowRef<HTMLElement>() // 标签页 shallowRef
+    const layoutFooterRef = shallowRef<HTMLElement>() // 底部版权 shallowRef
 
     const { getMenuTagSwitch, getCopyrightSwitch } = useSettingGetters()
     const { getLockAppScreen } = useAppLockScreen()

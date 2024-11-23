@@ -36,7 +36,7 @@
           width: 100%;
           height: 100%;
           @include flexCenter;
-          font-size: 320px;
+          font-size: 16.67rem;
           gap: 80px;
           z-index: 0;
 
@@ -85,9 +85,23 @@
 
         & .current-year,
         & .current-date span {
-          font-size: 1.5rem;
+          font-size: 1.875rem;
+          line-height: 2.25rem;
         }
       }
+    }
+  }
+}
+
+.ray-template--light {
+  .app-lock-screen__unlock__content-bg__wrapper {
+    background-color: #fff !important;
+  }
+
+  .app-lock-screen__unlock__content-bg {
+    & .left,
+    & .right {
+      background-color: rgba(244, 244, 245, 1) !important;
     }
   }
 }

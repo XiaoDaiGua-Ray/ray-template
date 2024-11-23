@@ -1,20 +1,3 @@
-/**
- *
- * 该文件为 menu 菜单 pinia store
- *
- * 说明:
- *   - BreadcrumbMenu、TagMenu、Menu 统一管理
- *   - BreadcrumbMenu、TagMenu、Menu 属性值重度依赖 vue-router routers, 所以需要按照该项目约定方法进行配置
- *
- * 缓存(sessionStorage):
- *   - breadcrumbOptions
- *   - menuKey
- *   - menuTagOptions
- *
- * 备注:
- *   - parseAndFindMatchingNodes: 如果需要反向查找完整的父子节点，可以使用该方法
- */
-
 import { NEllipsis } from 'naive-ui'
 
 import { setStorage, equalRouterPath, updateObjectValue } from '@/utils'
@@ -33,10 +16,9 @@ import { APP_CATCH_KEY } from '@/app-config'
 import { pick } from 'lodash-es'
 import { pickRouteRecordNormalizedConstant } from './constant'
 
-import type { AppMenuOption, MenuTagOptions } from '@/types'
+import type { AppMenuOption, MenuTagOptions, AnyFC } from '@/types'
 import type { MenuState } from '@/store/modules/menu/types'
 import type { LocationQuery } from 'vue-router'
-import type { UpdateMenuState } from './types'
 
 let cachePreNormal: AppMenuOption | undefined = void 0
 
@@ -101,12 +83,17 @@ export const piniaMenuStore = defineStore(
      *
      * @param key menu state key
      * @param value updated value
+     * @param cb callback function
      *
      * @description
      * 更新 menu state 指定 key 的值。
      */
-    const updateMenuState: UpdateMenuState = (key, value, cb) => {
-      updateObjectValue(menuState, key, value, cb)
+    const updateMenuState = <T extends keyof MenuState>(
+      key: T,
+      value: Partial<MenuState[T]>,
+      cb?: AnyFC,
+    ) => {
+      updateObjectValue(menuState, key, value as MenuState[T], cb)
     }
 
     /**
@@ -169,10 +156,8 @@ export const piniaMenuStore = defineStore(
      * 如果识别到为平级模式，则会自动追加一层面包屑。
      */
     const setBreadcrumbOptions = (key: string | number) => {
-      menuState.breadcrumbOptions = parseAndFindMatchingNodes(
-        menuState.options,
-        'fullPath',
-        key,
+      menuState.breadcrumbOptions = unref(
+        parseAndFindMatchingNodes(menuState.options, 'fullPath', key),
       )
     }
 
@@ -254,22 +239,22 @@ export const piniaMenuStore = defineStore(
 
         const { sameLevel } = meta
 
-        /** 更新缓存队列 */
+        // 更新缓存队列
         setKeepAliveInclude(option)
-        /** 更新浏览器标题 */
+        // 更新浏览器标题
         updateDocumentTitle(option)
 
         // 如果不为 sameLevel，则会执行更新：覆盖更新面包屑、添加标签菜单、更新缓存
         if (!sameLevel) {
-          /** 更新标签菜单 */
+          // 更新标签菜单
           setMenuTagOptionsWhenMenuValueChange(key, option)
-          /** 更新面包屑 */
+          // 更新面包屑
           setBreadcrumbOptions(key)
 
           menuState.menuKey = key
           menuState.currentMenuOption = option
 
-          /** 缓存菜单 key(sessionStorage) */
+          // 缓存菜单 key(sessionStorage)
           setStorage(APP_CATCH_KEY.appMenuKey, key)
         } else {
           // 使用 pick 提取仅需要的字段，避免 vue 抛错空引用，导致性能损耗

@@ -1,16 +1,18 @@
 import { NInput, NForm, NFormItem, NButton } from 'naive-ui'
+import AppAvatar from '@/app-components/app/AppAvatar'
 
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
 import { rules, useCondition } from '@/app-components/app/AppLockScreen/shared'
-import { useSettingGetters, useSettingActions } from '@/store'
+import { useSettingActions } from '@/store'
+import { useTemplateRef } from 'vue'
 
 import type { FormInst, InputInst } from 'naive-ui'
 
 const LockScreen = defineComponent({
   name: 'LockScreen',
   setup() {
-    const formInstRef = ref<FormInst | null>(null)
-    const inputInstRef = ref<InputInst | null>(null)
+    const formInstRef = useTemplateRef<FormInst | null>('formInstRef')
+    const inputInstRef = useTemplateRef<InputInst | null>('inputInstRef')
 
     const { setLockAppScreen } = useAppLockScreen()
     const { updateSettingState } = useSettingActions()
@@ -19,7 +21,6 @@ const LockScreen = defineComponent({
       lockCondition: useCondition(),
     })
 
-    /** 锁屏 */
     const lockScreen = () => {
       formInstRef.value?.validate((error) => {
         if (!error) {
@@ -48,6 +49,11 @@ const LockScreen = defineComponent({
     return (
       <div class="app-lock-screen__content">
         <div class="app-lock-screen__input">
+          <AppAvatar
+            avatarSize={52}
+            style="pointer-events: none;margin: 24px 0;"
+            vertical
+          />
           <NForm
             ref="formInstRef"
             model={this.lockCondition}

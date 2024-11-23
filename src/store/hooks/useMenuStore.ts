@@ -6,22 +6,29 @@ export const useMenuGetters = () => {
 
   /**
    *
-   * @remark 获取菜单列表
+   * @description
+   * 获取菜单列表。
    */
   const getMenuOptions = computed(() => variable.options)
+
   /**
    *
-   * @remark 获取面包屑列表
+   * @description
+   * 获取面包屑列表。
    */
   const getBreadcrumbOptions = computed(() => variable.breadcrumbOptions)
+
   /**
    *
-   * @remark 获取菜单当前 key
+   * @description
+   * 获取菜单当前 key。
    */
   const getMenuKey = computed(() => variable.menuKey)
+
   /**
    *
-   * @remark 获取菜单标签列表
+   * @description
+   * 获取菜单标签列表。
    */
   const getMenuTagOptions = computed(() => {
     const { getRootPath } = useAppRoot()
@@ -44,14 +51,18 @@ export const useMenuGetters = () => {
       return curr
     })
   })
+
   /**
    *
-   * @remark 获取当前菜单项
+   * @description
+   * 获取当前菜单项。
    */
   const getCurrentMenuOption = computed(() => variable.currentMenuOption)
+
   /**
    *
-   * @remark 获取是否折叠
+   * @description
+   * 获取是否折叠。
    */
   const getCollapsed = computed(() => variable.collapsed)
 

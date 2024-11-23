@@ -85,7 +85,7 @@ const domToImageMethods = {
 
 /**
  *
- * @param target ref dom
+ * @param target useTemplateRef dom
  * @param options html-to-image options
  *
  * @see https://github.com/bubkoo/html-to-image
@@ -99,7 +99,7 @@ const domToImageMethods = {
  * 如果都未传递，则默认使用 jpeg。
  *
  * @example
- * const refDom = ref<HTMLElement>()
+ * const refDom = useTemplateRef<HTMLElement>('refDom')
  * const { create, stop } = useDomToImage(refDom, {
  *   beforeCreate: (element) => { ... },
  *   created: (element, result) => { ... },

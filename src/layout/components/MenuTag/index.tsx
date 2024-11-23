@@ -517,6 +517,7 @@ export default defineComponent({
                     }}
                     size="small"
                     focusable={false}
+                    iconPlacement="right"
                   >
                     {{
                       default: () => (
@@ -533,15 +534,17 @@ export default defineComponent({
                               },
                             }}
                           </span>
-                          <NIcon
-                            class="menu-tag__btn-icon"
-                            {...{
-                              onMousedown: closeCurrentMenuTag.bind(this, idx),
-                            }}
-                          >
-                            <RIcon name="close" size="14" />
-                          </NIcon>
                         </>
+                      ),
+                      icon: () => (
+                        <RIcon
+                          customClassName="menu-tag__btn-icon"
+                          name="close"
+                          size="15"
+                          {...{
+                            onMousedown: closeCurrentMenuTag.bind(this, idx),
+                          }}
+                        />
                       ),
                     }}
                   </NButton>

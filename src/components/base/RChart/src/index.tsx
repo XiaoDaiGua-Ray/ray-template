@@ -36,6 +36,7 @@ import {
 import { RMoreDropdown } from '@/components'
 import { useSettingGetters } from '@/store'
 import { useTemplateRef } from 'vue'
+import { USE_CHART_PROVIDER_KEY } from './config'
 
 import type { WatchStopHandle } from 'vue'
 import type { AnyFC } from '@/types'
@@ -124,6 +125,7 @@ export default defineComponent({
     const __catch = {
       aria: props.showAria,
     }
+    const chartProvideOptions = inject(USE_CHART_PROVIDER_KEY, {})
 
     /**
      *
@@ -174,8 +176,17 @@ export default defineComponent({
      * 但是，如果未获取到 echartTheme 属性，则会使用默认样式。
      */
     const updateChartTheme = () => {
+      const { theme: providerTheme } = chartProvideOptions || {}
+
       if (echartInstanceRef.value) {
         destroyChart()
+      }
+
+      // 如果配置了全局配置主题，则忽略后面所有逻辑
+      if (providerTheme) {
+        renderChart(providerTheme)
+
+        return
       }
 
       if (props.theme === 'default') {

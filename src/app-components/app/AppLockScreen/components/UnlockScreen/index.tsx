@@ -8,14 +8,15 @@ import { useSigningActions, useSettingActions } from '@/store'
 import { rules, useCondition } from '@/app-components/app/AppLockScreen/shared'
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
 import { useDevice } from '@/hooks'
+import { useTemplateRef } from 'vue'
 
 import type { FormInst, InputInst } from 'naive-ui'
 
 export default defineComponent({
   name: 'UnlockScreen',
   setup() {
-    const formRef = ref<FormInst | null>(null)
-    const inputInstRef = ref<InputInst | null>(null)
+    const formRef = useTemplateRef<FormInst | null>('formRef')
+    const inputInstRef = useTemplateRef<InputInst | null>('inputInstRef')
 
     const { logout } = useSigningActions()
     const { updateSettingState } = useSettingActions()
@@ -24,13 +25,13 @@ export default defineComponent({
 
     const HH_MM_FORMAT = 'HH:mm'
     const AM_PM_FORMAT = 'A'
-    const YY_MM_DD_FORMAT = 'YY年MM月DD日'
+    const YY_MM_DD_FORMAT = 'YYYY-MM-DD'
     const DDD_FORMAT = 'ddd'
 
     const state = reactive({
       lockCondition: useCondition(),
       HH_MM: dayjs().format(HH_MM_FORMAT),
-      AM_PM: dayjs().locale('en').format(AM_PM_FORMAT),
+      AM_PM: dayjs().format(AM_PM_FORMAT),
       YY_MM_DD: dayjs().format(YY_MM_DD_FORMAT),
       DDD: dayjs().format(DDD_FORMAT),
     })
@@ -43,7 +44,6 @@ export default defineComponent({
       state.DDD = dayjs().format(DDD_FORMAT)
     }, 86_400_000)
 
-    /** 退出登陆并且回到登陆页 */
     const backToSigning = () => {
       window.$dialog.warning({
         title: '警告',
@@ -51,15 +51,14 @@ export default defineComponent({
         positiveText: '确定',
         negativeText: '取消',
         onPositiveClick: () => {
-          logout()
+          updateSettingState('lockScreenSwitch', false)
           setTimeout(() => {
-            updateSettingState('lockScreenSwitch', false)
-          })
+            logout()
+          }, 100)
         },
       })
     }
 
-    /** 解锁 */
     const unlockScreen = () => {
       formRef.value?.validate((error) => {
         if (!error) {
@@ -71,6 +70,11 @@ export default defineComponent({
       })
     }
 
+    onMounted(() => {
+      nextTick(() => {
+        inputInstRef.value?.focus()
+      })
+    })
     onBeforeUnmount(() => {
       clearInterval(dayInterval)
       clearInterval(yearInterval)
@@ -126,7 +130,6 @@ export default defineComponent({
                     placeholder="请输入解锁密码"
                     clearable
                     minlength={6}
-                    maxlength={12}
                     onKeydown={(e: KeyboardEvent) => {
                       if (e.code === 'Enter') {
                         unlockScreen()
@@ -153,11 +156,8 @@ export default defineComponent({
               </NForm>
             </div>
             <div class="app-lock-screen__unlock__content-date">
-              <div class="current-date">
-                {HH_MM}&nbsp;<span>{AM_PM}</span>
-              </div>
               <div class="current-year">
-                {YY_MM_DD}&nbsp;<span>{DDD}</span>
+                {YY_MM_DD}&nbsp;<span>{DDD}</span>&nbsp;<span>{AM_PM}</span>
               </div>
             </div>
           </div>

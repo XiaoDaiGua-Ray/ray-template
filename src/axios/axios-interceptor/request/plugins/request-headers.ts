@@ -16,7 +16,7 @@ import type {
  * 当然你也可以根据 request instance 来特殊处理, 这里暂时不做演示
  */
 const requestHeaderToken = (ins: RequestInterceptorConfig, mode: string) => {
-  const token = getStorage<string>(APP_CATCH_KEY.token, 'localStorage')
+  const token = getStorage<string | null>(APP_CATCH_KEY.token, 'localStorage')
 
   if (ins.url) {
     // TODO: 根据 url 不同是否设置 token

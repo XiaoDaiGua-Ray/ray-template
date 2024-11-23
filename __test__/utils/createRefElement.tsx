@@ -13,6 +13,7 @@ import { mount } from '@vue/test-utils'
  *
  * const text = wrapper.find('div').text() // hello
  */
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 const createRefElement = (slots?: Record<string, Function>) => {
   const wrapper = mount(
     defineComponent({

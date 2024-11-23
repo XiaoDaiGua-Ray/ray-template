@@ -8,10 +8,10 @@ export const combineDirective = <
 ) => {
   const directives = Object.keys(directiveModules).reduce(
     (pre, curr) => {
-      const fc = directiveModules[curr]?.default
+      const fn = directiveModules[curr]?.default
 
-      if (typeof fc === 'function') {
-        pre[curr as K] = fc
+      if (typeof fn === 'function') {
+        pre[curr as K] = fn
 
         return pre
       } else {

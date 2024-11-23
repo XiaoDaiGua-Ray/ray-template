@@ -82,7 +82,7 @@ const styleElement = document.createElement('style')
  *  <div ref="refDom" />
  * </template>
  * <script lang="ts" setup>
- * const refDom = ref<HTMLElement>()
+ * const refDom = useTemplateRef<HTMLElement>('refDom')
  * const { enter, exit, toggleFullscreen } = useElementFullscreen(refDom, { UseElementFullscreenOptions })
  *
  * enter() // 进入全屏

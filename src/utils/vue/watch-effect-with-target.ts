@@ -5,7 +5,7 @@ import type { AnyFC } from '@/types'
 
 /**
  *
- * @param fc 副作用函数
+ * @param fn 副作用函数
  * @param watchOptions watchEffect 配置项
  *
  * @description
@@ -19,10 +19,10 @@ import type { AnyFC } from '@/types'
  * watchEffectWithTarget(watcher)
  */
 export function watchEffectWithTarget<T extends AnyFC>(
-  fc: T,
+  fn: T,
   watchOptions?: WatchOptionsBase,
 ) {
-  const stop = watchEffect(fc, watchOptions)
+  const stop = watchEffect(fn, watchOptions)
 
   effectDispose(stop)
 }

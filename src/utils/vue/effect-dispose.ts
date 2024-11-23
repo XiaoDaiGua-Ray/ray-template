@@ -4,7 +4,7 @@ import type { AnyFC } from '@/types'
 
 /**
  *
- * @param fc effect 作用域卸载时需执行函数
+ * @param fn effect 作用域卸载时需执行函数
  *
  * @description
  * 返回 true 表示获取到 effect 作用域并且卸载；false 表示未存在 effect 作用域。
@@ -16,9 +16,9 @@ import type { AnyFC } from '@/types'
  * effectDispose(watchStop)
  * effectDispose(watchEffectStop)
  */
-export function effectDispose<T extends AnyFC>(fc: T) {
+export function effectDispose<T extends AnyFC>(fn: T) {
   if (getCurrentScope()) {
-    onScopeDispose(fc)
+    onScopeDispose(fn)
 
     return true
   }

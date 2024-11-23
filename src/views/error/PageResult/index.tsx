@@ -12,9 +12,7 @@ import { NResult, NButton, NFlex } from 'naive-ui'
 
 import { redirectRouterToDashboard } from '@/router/utils'
 import { resultProps } from 'naive-ui'
-import { getStorage } from '@/utils'
-import { useVueRouter } from '@/hooks'
-import { APP_CATCH_KEY } from '@/app-config'
+import { useSettingGetters } from '@/store'
 
 import type { ResultProps } from 'naive-ui'
 
@@ -24,16 +22,13 @@ const PageResult = defineComponent({
     ...resultProps,
   },
   setup() {
-    const { router } = useVueRouter()
+    const { replace } = useRouter()
 
     const goBack = () => {
-      const { appMenuKey } = APP_CATCH_KEY
-      const key = getStorage(appMenuKey, 'sessionStorage', {
-        defaultValue: '',
-      })
+      const { getAppRootRoute } = useSettingGetters()
 
-      if (key) {
-        router.replace(key)
+      if (getAppRootRoute.value?.path) {
+        replace(getAppRootRoute.value.path)
       }
     }
 

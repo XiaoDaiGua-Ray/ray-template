@@ -22,27 +22,34 @@ import type { Recordable, AnyFC } from '@/types'
 export const updateObjectValue = <
   Target extends Recordable,
   Key extends keyof Target,
-  Value extends Partial<Target[Key]>,
-  Callback extends AnyFC,
+  Value extends Target[Key], // 移除 Partial，使类型更准确
+  Callback extends AnyFC = AnyFC, // 添加默认类型
 >(
   targetObject: Target,
   key: Key,
   value: Value,
   callback?: Callback,
-) => {
+): void => {
   if (!targetObject || typeof targetObject !== 'object') {
     console.warn(
-      `[updateObjectValue]: targetObject must be an object, expected ${typeof targetObject}`,
+      `[updateObjectValue]: targetObject must be an object, received ${typeof targetObject}`,
     )
 
     return
   }
 
-  if (Object.hasOwn(targetObject, key)) {
-    typeof value === 'object'
-      ? (targetObject[key] = Object.assign({}, targetObject[key], value))
-      : (targetObject[key] = value)
-
-    callback?.()
+  if (!Object.hasOwn(targetObject, key)) {
+    return
   }
+
+  if (typeof value === 'object' && value !== null) {
+    targetObject[key] = {
+      ...targetObject[key],
+      ...value,
+    } as Target[Key]
+  } else {
+    targetObject[key] = value
+  }
+
+  callback?.()
 }

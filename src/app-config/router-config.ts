@@ -4,7 +4,7 @@ import type { Ref } from 'vue'
 /**
  *
  * @description
- * 内容区域 ref 注册
+ * 内容区域 shallowRef 注册
  * 可以控制内容区域当前滚动位置
  * 如果你需要在切换路由时候配置自定义滚动到某个视图区域时, 可以使用该属性提供的方法(scrollTo)
  *
@@ -16,12 +16,12 @@ import type { Ref } from 'vue'
  * })
  */
 export const LAYOUT_CONTENT_REF: Readonly<Ref<LayoutInst | null>> =
-  ref<LayoutInst | null>(null)
+  shallowRef<LayoutInst | null>(null)
 
 /**
  *
  * @description
- * 侧边滚动栏滚动 ref 注册。
+ * 侧边滚动栏滚动 shallowRef 注册。
  * 可以控制侧边滚动栏滚动位置。
  *
  * 请注意使用时机。建议使用 nextTick() 等待 dom 挂载后再执行该方法。
@@ -31,7 +31,7 @@ export const LAYOUT_CONTENT_REF: Readonly<Ref<LayoutInst | null>> =
  * })
  */
 export const LAYOUT_SIDER_REF: Readonly<Ref<LayoutInst | null>> =
-  ref<LayoutInst | null>(null)
+  shallowRef<LayoutInst | null>(null)
 
 export const SETUP_ROUTER_ACTION = {
   /** 是否启用路由切换时顶部加载条 */

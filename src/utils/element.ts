@@ -300,6 +300,7 @@ export const removeStyle = (
  *
  * @param color 颜色格式
  * @param alpha 透明度
+ * @param defaultColor 默认颜色值
  *
  * @description
  * 将任意颜色值转为 rgba，如果本身为 rgba 或者其它非法颜色值则直接返回。
@@ -309,36 +310,70 @@ export const removeStyle = (
  * colorToRgba('rgb(18, 54, 50)', 0.8) // rgba(18, 54, 50, 0.8)
  * colorToRgba('#ee4f12', 0.3) // rgba(238, 79, 18, 0.3)
  * colorToRgba('rgba(238, 79, 18, 0.3)', 0.3) // rgba(238, 79, 18, 0.3)
- * colorToRgba('not a color', 0.3) // not a color
+ * colorToRgba('not a color', 0.3, '#000') // #000
+ * colorToRgba('hsl(0, 100%, 50%)', 0.5) // hsla(0, 100%, 50%, 0.5)
+ * colorToRgba('not a color') // not a color
  */
-export const colorToRgba = (color: string, alpha = 1) => {
-  if (color.includes('rgba')) {
-    return color
+export const colorToRgba = (
+  color: string,
+  alpha = 1,
+  defaultColor?: string,
+) => {
+  if (!color) {
+    return defaultColor || color
   }
 
-  if (color.includes('rgb')) {
+  // 处理 rgba 格式 - 替换原有的 alpha 值
+  if (color.includes('rgba')) {
+    return color.replace(
+      /rgba\((.*?),(.*?),(.*?),.*?\)/,
+      `rgba($1,$2,$3,${alpha})`,
+    )
+  }
+
+  // 处理 rgb 格式
+  if (color.includes('rgb(')) {
     return color.replace('rgb', 'rgba').replace(')', `, ${alpha})`)
   }
 
-  if (color.includes('#')) {
+  // 处理 hsla 格式 - 替换原有的 alpha 值
+  if (color.includes('hsla')) {
+    return color.replace(
+      /hsla\((.*?),(.*?),(.*?),.*?\)/,
+      `hsla($1,$2,$3,${alpha})`,
+    )
+  }
+
+  // 处理 hsl 格式
+  if (color.includes('hsl(')) {
+    return color.replace('hsl', 'hsla').replace(')', `, ${alpha})`)
+  }
+
+  // 处理 hex 格式
+  if (color.startsWith('#')) {
     const hex = color.replace('#', '')
 
-    switch (hex.length) {
-      case 3:
-        return `rgba(${parseInt(hex[0] + hex[0], 16)}, ${parseInt(hex[1] + hex[1], 16)}, ${parseInt(hex[2] + hex[2], 16)}, ${alpha})`
+    try {
+      switch (hex.length) {
+        case 3:
+          return `rgba(${parseInt(hex[0] + hex[0], 16)}, ${parseInt(hex[1] + hex[1], 16)}, ${parseInt(hex[2] + hex[2], 16)}, ${alpha})`
 
-      case 6:
-        return `rgba(${parseInt(hex.slice(0, 2), 16)}, ${parseInt(hex.slice(2, 4), 16)}, ${parseInt(hex.slice(4, 6), 16)}, ${alpha})`
+        case 6:
+          return `rgba(${parseInt(hex.slice(0, 2), 16)}, ${parseInt(hex.slice(2, 4), 16)}, ${parseInt(hex.slice(4, 6), 16)}, ${alpha})`
 
-      case 8:
-        return `rgba(${parseInt(hex.slice(0, 2), 16)}, ${parseInt(hex.slice(2, 4), 16)}, ${parseInt(hex.slice(4, 6), 16)}, ${(parseInt(hex.slice(6, 8), 16) / 255).toFixed(2)})`
+        case 8:
+          return `rgba(${parseInt(hex.slice(0, 2), 16)}, ${parseInt(hex.slice(2, 4), 16)}, ${parseInt(hex.slice(4, 6), 16)}, ${alpha})`
 
-      default:
-        return color
+        default:
+          return defaultColor || color
+      }
+    } catch {
+      return defaultColor || color
     }
   }
 
-  return color
+  // 返回原始字符串或默认值
+  return defaultColor || color
 }
 
 /**

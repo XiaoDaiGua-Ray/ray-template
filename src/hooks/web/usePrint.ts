@@ -16,16 +16,16 @@ export type UsePrintTarget<T = unknown> =
 
 /**
  *
- * @param target ref dom
+ * @param target useTemplateRef dom
  * @param options print-js options
  *
  * @see https://printjs.crabbly.com/
  *
  * @description
- * 拓展 print-js 的 usePrint 方法，允许 ref Dom 直接调用打印，其余的不变。
+ * 拓展 print-js 的 usePrint 方法，允许 useTemplateRef Dom 直接调用打印，其余的不变。
  *
  * @example
- * const refDom = ref<HTMLElement>()
+ * const refDom = useTemplateRef<HTMLElement>('refDom')
  *
  * const { print } = usePrint(refDom, {})
  *

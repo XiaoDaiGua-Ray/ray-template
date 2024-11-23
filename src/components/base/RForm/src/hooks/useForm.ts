@@ -40,7 +40,7 @@ const useForm = <T extends Recordable, R extends RFormRules>(
   model?: T,
   rules?: R,
 ) => {
-  const formRef = ref<RFormInst>()
+  const formRef = shallowRef<RFormInst>()
 
   const register = (inst: RFormInst) => {
     if (inst) {

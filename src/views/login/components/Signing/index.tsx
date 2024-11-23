@@ -1,16 +1,18 @@
 import { NForm, NFormItem, NInput, NButton } from 'naive-ui'
+import { RForm } from '@/components'
 
 import { setStorage } from '@/utils'
 import { useI18n, useAppRoot } from '@/hooks'
 import { APP_CATCH_KEY } from '@/app-config'
 import { useSigningActions } from '@/store'
+import { useForm } from '@/components'
 
 import type { FormInst } from 'naive-ui'
 
 export default defineComponent({
   name: 'RSigning',
   setup() {
-    const loginFormRef = ref<FormInst>()
+    const [register, { validate }] = useForm()
 
     const { t } = useI18n()
     const { signing } = useSigningActions()
@@ -40,45 +42,43 @@ export default defineComponent({
 
     /** 普通登陆形式 */
     const handleLogin = () => {
-      loginFormRef.value?.validate((valid) => {
-        if (!valid) {
-          loading.value = true
+      validate().then(() => {
+        loading.value = true
 
-          signing(signingForm.value)
-            .then((res) => {
-              if (res.code === 0) {
-                setTimeout(() => {
-                  window.$message.success(`欢迎${signingForm.value.name}登陆~`)
+        signing(signingForm.value)
+          .then((res) => {
+            if (res.code === 0) {
+              setTimeout(() => {
+                window.$message.success(`欢迎${signingForm.value.name}登陆~`)
 
-                  setStorage(APP_CATCH_KEY.token, 'tokenValue', 'localStorage')
-                  setStorage(APP_CATCH_KEY.signing, res.data, 'localStorage')
+                setStorage(APP_CATCH_KEY.token, 'tokenValue', 'localStorage')
+                setStorage(APP_CATCH_KEY.signing, res.data, 'localStorage')
 
-                  router.push(getRootPath.value)
+                router.push(getRootPath.value)
 
-                  loading.value = false
-                }, 2 * 1000)
-              }
-            })
-            .catch(() => {
-              window.$message.error('不可以这样哟, 不可以哟')
-            })
-        }
+                loading.value = false
+              }, 2 * 1000)
+            }
+          })
+          .catch(() => {
+            window.$message.error('不可以这样哟, 不可以哟')
+          })
       })
     }
 
     return {
       signingForm,
-      loginFormRef,
+      register,
       handleLogin,
       rules,
       loading,
     }
   },
   render() {
-    const { $t, loading } = this
+    const { $t, loading, register } = this
 
     return (
-      <NForm model={this.signingForm} ref="loginFormRef" rules={this.rules}>
+      <RForm model={this.signingForm} onRegister={register} rules={this.rules}>
         <NFormItem label={$t('views.login.index.Name')} path="name">
           <NInput
             v-model:value={this.signingForm.name}
@@ -102,7 +102,7 @@ export default defineComponent({
         >
           {$t('views.login.index.Login')}
         </NButton>
-      </NForm>
+      </RForm>
     )
   },
 })

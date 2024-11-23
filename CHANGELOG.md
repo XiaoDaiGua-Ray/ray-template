@@ -1,5 +1,33 @@
 # CHANGE LOG
 
+## 5.0.6
+
+## Feats
+
+- 新增 `useChartProvider` 方法，允许注入 `RCharts` 组件配置
+- 更新 `echarts` 版本至 `5.5.1`
+- 更新 `vue` 版本至 `3.5.13`
+- 更新 `@vueuse/core` 版本至 `11.2.0`
+- 修改 `SettingDrawer` 组件的 `defaultOptions` 配置项管理方式，现在迁移至 `store.setting` 包中
+- 重构 `cache` 工具模块，更有好的类型推导、更少的代码量
+- 重构 `precision` 工具模块，更好的类型推导、更少的代码量
+- 重写 `updateObjectValue` 方法，现在类型提示更加准确
+- 全局使用 `useTemplateRef`, `shallowRef` 方法替代 `ref` 注册模板引用，减少不必要的响应式代理
+- 优化 `MenuTag` 组件的关闭按钮样式
+- `LockScreen` 组件新增头像展示
+- `AppAvatar` 组件现在默认获取 `avatar` 字段为空的时候，展示名字的首字
+- 优化 `UnlockScreen` 组件样式，现在会根据主题自动调整背景颜色
+- 优化内容区域过度动画效果
+
+## Fixes
+
+- 修复 `404` 页面【返回】按钮不能准确返回的问题
+- 修复 `usePagination.getCallback` 方法类型丢失问题；修复该方法获取实时回调不准确的问题
+- 修复初始化时，菜单滚动条不能准确滚动到当前激活项的问题
+- 修复 `UnlockScreen` 组件在白色主题下，导致样式显示差异问题，现在统一为黑色主题配置覆盖
+- 修复 `LockScreen` 组件在退出锁屏时，没有及时更新 `localStorage` 缓存的问题
+- 修复 `setupDayjs` 初始化不准确的问题
+
 ## 5.0.5
 
 ## Feats

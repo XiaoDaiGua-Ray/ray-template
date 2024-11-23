@@ -17,7 +17,7 @@ type OmitKeys =
 
 export interface UsePaginationOptions extends Omit<PaginationProps, OmitKeys> {}
 
-const defaultOptions: UsePaginationOptions = {
+const DEFAULT_OPTIONS: UsePaginationOptions = {
   page: 1,
   pageSize: 10,
   showSizePicker: true,
@@ -36,16 +36,8 @@ export const usePagination = <T extends AnyFC>(
   callback?: T,
   options?: UsePaginationOptions,
 ) => {
-  const callbackRef = ref(callback)
-  const omitOptions = omit(options, [
-    'on-update:page',
-    'on-update:page-size',
-    'onUpdatePage',
-    'onUpdatePageSize',
-    'onUpdate:page',
-    'onUpdate:page-size',
-  ])
-  const methodsOptions = {
+  const callbackRef = shallowRef(callback)
+  const paginationMethods = {
     onUpdatePage: (page: number) => {
       paginationRef.value.page = page
 
@@ -53,16 +45,30 @@ export const usePagination = <T extends AnyFC>(
     },
     onUpdatePageSize: (pageSize: number) => {
       paginationRef.value.pageSize = pageSize
-      paginationRef.value.page = 1
+      paginationRef.value.page = DEFAULT_OPTIONS.page
 
       callbackRef.value?.()
     },
   }
-  const paginationRef = ref<PaginationProps>(
-    Object.assign({}, defaultOptions, omitOptions, methodsOptions),
-  )
+  // 使用 computed 优化配置合并
+  const mergedOptions = computed(() => ({
+    ...DEFAULT_OPTIONS,
+    ...omit(options, [
+      'on-update:page',
+      'on-update:page-size',
+      'onUpdatePage',
+      'onUpdatePageSize',
+      'onUpdate:page',
+      'onUpdate:page-size',
+    ]),
+    ...paginationMethods,
+  }))
+  const paginationRef = ref<PaginationProps>(mergedOptions.value)
 
+  // 更新分页页数
   const updatePage = paginationRef.value.onUpdatePage as (page: number) => void
+
+  // 更新分页每页条数
   const updatePageSize = paginationRef.value.onUpdatePageSize as (
     pageSize: number,
   ) => void
@@ -137,7 +143,7 @@ export const usePagination = <T extends AnyFC>(
    * @description
    * 获取回调函数。
    */
-  const getCallback = callback
+  const getCallback = callbackRef.value as T
 
   /**
    *
@@ -149,9 +155,8 @@ export const usePagination = <T extends AnyFC>(
    * @example
    * setCallback(() => {})
    */
-  const setCallback = (callback: T) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    callbackRef.value = callback as any
+  const setCallback = (callback: AnyFC) => {
+    callbackRef.value = callback
   }
 
   /**
@@ -165,8 +170,9 @@ export const usePagination = <T extends AnyFC>(
   const resetPagination = () => {
     const { pageSizes } = paginationRef.value
 
-    paginationRef.value.page = 1
-    paginationRef.value.pageSize = (pageSizes?.[0] as number) || 10
+    paginationRef.value.page = DEFAULT_OPTIONS.page
+    paginationRef.value.pageSize =
+      (pageSizes?.[0] as number) || DEFAULT_OPTIONS.pageSize
   }
 
   effectDispose(() => {

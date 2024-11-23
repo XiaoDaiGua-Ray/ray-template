@@ -5,7 +5,8 @@ export const useKeepAliveGetters = () => {
 
   /**
    *
-   * @remark 获取当前可缓存项 name
+   * @@description
+   * 获取当前可缓存项 name。
    */
   const getKeepAliveInclude = computed(() => variable.keepAliveInclude)
 

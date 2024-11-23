@@ -6,7 +6,7 @@ import { RIcon } from '@/components'
 import { isValueType, renderNode } from '@/utils'
 import { useSettingGetters } from '@/store'
 
-export const SIDER_BAR_LOGO = ref<HTMLElement>()
+export const SIDER_BAR_LOGO = shallowRef<HTMLElement>()
 
 export default defineComponent({
   name: 'SiderBarLogo',

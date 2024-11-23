@@ -22,21 +22,27 @@
 }
 
 /* scale-transform */
-.scale-transform-enter-active,
+.scale-transform-enter-active {
+  transition:
+    transform 0.35s cubic-bezier(0.33, 1, 0.68, 1),
+    opacity 0.25s cubic-bezier(0.33, 1, 0.68, 1);
+  transition-delay: 0.25s;
+}
+
 .scale-transform-leave-active {
   transition:
-    transform 0.4s var(--r-bezier),
-    opacity 0.45s var(--r-bezier);
+    transform 0.35s cubic-bezier(0.32, 0, 0.67, 0),
+    opacity 0.25s ease-out;
 }
 
 .scale-transform-enter-from {
   opacity: 0;
-  transform: scale(0.92);
+  transform: scale(0.95);
 }
 
 .scale-transform-leave-to {
   opacity: 0;
-  transform: scale(1.06);
+  transform: scale(1.03);
 }
 
 /* opacity-transform */
@@ -54,35 +60,49 @@
 }
 
 /* fade-bottom-transform */
-.fade-bottom-transform-enter-active,
+.fade-bottom-transform-enter-active {
+  transition:
+    transform 0.35s cubic-bezier(0.33, 1, 0.68, 1),
+    opacity 0.25s cubic-bezier(0.33, 1, 0.68, 1);
+  transition-delay: 0.25s;
+}
+
 .fade-bottom-transform-leave-active {
   transition:
-    opacity 0.55s var(--r-bezier),
-    transform 0.45s var(--r-bezier);
+    transform 0.35s cubic-bezier(0.32, 0, 0.67, 0),
+    opacity 0.25s ease-out;
 }
 
 .fade-bottom-transform-enter-from {
   opacity: 0;
-  transform: translateY(-10%);
+  transform: translateY(-15px);
 }
 
 .fade-bottom-transform-leave-to {
   opacity: 0;
-  transform: translateY(10%);
+  transform: translateY(15px);
 }
 
 /* fade-scale-transform */
-.fade-scale-transform-leave-active,
 .fade-scale-transform-enter-active {
-  transition: all 0.48s var(--r-bezier);
+  transition:
+    transform 0.35s cubic-bezier(0.33, 1, 0.68, 1),
+    opacity 0.25s cubic-bezier(0.33, 1, 0.68, 1);
+  transition-delay: 0.25s;
+}
+
+.fade-scale-transform-leave-active {
+  transition:
+    transform 0.25s cubic-bezier(0.32, 0, 0.67, 0),
+    opacity 0.25s ease-out;
 }
 
 .fade-scale-transform-enter-from {
   opacity: 0;
-  transform: scale(1.2);
+  transform: scale(1.1);
 }
 
 .fade-scale-transform-leave-to {
   opacity: 0;
-  transform: scale(0.8);
+  transform: scale(0.85);
 }

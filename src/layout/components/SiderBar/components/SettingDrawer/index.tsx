@@ -15,10 +15,11 @@ import SegmentViewsWatermark from './segment-views/Watermark'
 import SegmentViewsCustomMenu from './segment-views/CustomMenu'
 
 import { useSettingGetters, useSettingActions, useMenuActions } from '@/store'
-import { getDefaultSettingConfig, SETTING_DRAWER_INJECT_KEY } from './constant'
+import { SETTING_DRAWER_INJECT_KEY } from './constant'
 import { forIn, throttle } from 'lodash-es'
 import { drawerProps } from 'naive-ui'
 import { useModal } from '@/components'
+import { getDefaultSettingConfig } from '@/store/modules/setting/constant'
 
 import type { SettingState } from '@/store/modules/setting/types'
 

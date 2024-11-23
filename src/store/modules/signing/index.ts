@@ -90,6 +90,7 @@ export const piniaSigningStore = defineStore(
       removeStorage(token, 'localStorage')
       removeStorage(signing, 'localStorage')
       removeStorage(appMenuKey, 'localStorage')
+      removeStorage(APP_CATCH_KEY.isAppLockScreen, 'localStorage')
       // 关闭所有侧边栏标签
       closeAll()
 

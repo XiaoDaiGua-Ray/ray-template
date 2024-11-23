@@ -54,7 +54,14 @@ const AppAvatar = defineComponent({
             objectFit="cover"
             round
             size={avatarSize}
-          />
+          >
+            {{
+              default: () =>
+                getSigningCallback.avatar
+                  ? null
+                  : getSigningCallback?.name?.[0],
+            }}
+          </NAvatar>
           {getSigningCallback?.name}
         </NFlex>
       </NButton>

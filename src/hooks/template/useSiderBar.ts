@@ -10,17 +10,17 @@ export type CloseMenuTag = Key | MenuTagOptions
 /**
  *
  * @param target 标签页对象、索引、key
- * @param fc 触发函数
+ * @param fn 触发函数
  *
  * 该方法用于统一获取目标标签页方法
  */
-const normalMenuTagOption = (target: CloseMenuTag, fc: string) => {
+const normalMenuTagOption = (target: CloseMenuTag, fn: string) => {
   const { getMenuTagOptions } = useMenuGetters()
 
   if (typeof target === 'number') {
     // 判断是否为 NaN
     if (isNaN(target)) {
-      console.warn(`${fc}: The ${target} is NaN, expect number.`)
+      console.warn(`${fn}: The ${target} is NaN, expect number.`)
 
       return
     }
@@ -28,7 +28,7 @@ const normalMenuTagOption = (target: CloseMenuTag, fc: string) => {
     // 判断是否超出当前标签页列表最大长度或者是否为负数
     if (target > getMenuTagOptions.value.length || target < -1) {
       console.warn(
-        `${fc}: The incoming index ${target} did not match the corresponding item.`,
+        `${fn}: The incoming index ${target} did not match the corresponding item.`,
       )
 
       return
@@ -50,7 +50,7 @@ const normalMenuTagOption = (target: CloseMenuTag, fc: string) => {
           index,
         }
       : console.warn(
-          `${fc}: The incoming key ${target} did not match the corresponding item.`,
+          `${fn}: The incoming key ${target} did not match the corresponding item.`,
         )
   } else {
     const { fullPath } = target
@@ -60,7 +60,7 @@ const normalMenuTagOption = (target: CloseMenuTag, fc: string) => {
 
     if (index === -1) {
       console.warn(
-        `${fc}: The incoming menuTag option ${target.fullPath} did not match the corresponding item.`,
+        `${fn}: The incoming menuTag option ${target.fullPath} did not match the corresponding item.`,
       )
 
       return

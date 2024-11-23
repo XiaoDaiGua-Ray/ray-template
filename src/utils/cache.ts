@@ -3,14 +3,31 @@ import { APP_CATCH_KEY_PREFIX } from '@/app-config'
 import type { StorageLike, StorageOptions, RemoveStorageFC } from '@/types'
 
 /**
- *
- * @param key 需要删除的缓存值key
- * @param storageType 需要删除的缓存类型
+ * @param type 存储类型
+ * @returns Storage 实例
+ */
+const getStorageInstance = (type: StorageLike = 'sessionStorage'): Storage =>
+  type === 'localStorage' ? window.localStorage : window.sessionStorage
+
+/**
+ * 获取带前缀的键名
+ * @param key 原始键名
+ * @param options 配置项
+ * @returns 处理后的键名
+ */
+const getKeyWithPrefix = (key: string, options?: StorageOptions): string => {
+  const { prefix, prefixKey } = options ?? {}
+
+  return prefix ? (prefixKey || APP_CATCH_KEY_PREFIX) + key : key
+}
+
+/**
+ * @param key 需要查找的缓存值key
+ * @param storageType 需要查找的缓存类型
  * @param options 配置项
  *
  * @description
  * 查找当前缓存中是否含有某个 key。
- *
  * 默认查找 sessionStorage。
  *
  * @example
@@ -21,23 +38,20 @@ function hasStorage(
   storageType: StorageLike = 'sessionStorage',
   options?: StorageOptions,
 ) {
-  const { prefix, prefixKey } = options ?? {}
-  const _prefix = prefix ? prefixKey || APP_CATCH_KEY_PREFIX : ''
-  const storage =
-    storageType === 'localStorage' ? window.localStorage : window.sessionStorage
+  const prefixedKey = getKeyWithPrefix(key, options)
+  const storage = getStorageInstance(storageType)
 
-  return !!Object.keys(storage).find((curr) => curr === _prefix + key)
+  return Object.keys(storage).includes(prefixedKey)
 }
 
 /**
- *
- * @param key 需要删除的缓存值key
- * @param type 需要删除的缓存类型
+ * @param key 需要设置的缓存值key
+ * @param value 需要设置的值
+ * @param storageType 需要设置的缓存类型
  * @param options 配置项
  *
  * @description
  * 设置缓存值，默认设置 sessionStorage。
- *
  * 如果 key 为空，则会打印错误信息。
  *
  * @example
@@ -52,22 +66,16 @@ function setStorage<T = unknown>(
   options?: StorageOptions,
 ) {
   if (!key) {
-    console.error(
-      `[setStorage]: Failed to set stored data: key ${key} is empty`,
-    )
+    console.error('[setStorage]: Failed to set stored data: key is empty')
 
     return
   }
 
-  const { prefix, prefixKey } = options ?? {}
-  const _prefix = prefix ? prefixKey || APP_CATCH_KEY_PREFIX : ''
+  const prefixedKey = getKeyWithPrefix(key, options)
+  const storage = getStorageInstance(storageType)
 
   try {
-    const waitCacheValue = JSON.stringify(value)
-
-    storageType === 'localStorage'
-      ? window.localStorage.setItem(_prefix + key, waitCacheValue)
-      : window.sessionStorage.setItem(_prefix + key, waitCacheValue)
+    storage.setItem(prefixedKey, JSON.stringify(value))
   } catch (error) {
     console.error(
       `[setStorage]: Failed to set stored data for key '${key}'`,
@@ -79,26 +87,23 @@ function setStorage<T = unknown>(
 function getStorage<T = unknown>(
   key: string,
   storageType: StorageLike,
-  options?: StorageOptions<T>,
+  options: StorageOptions<T> & { defaultValue: T },
 ): T
 
 function getStorage<T = unknown>(
   key: string,
   storageType?: StorageLike,
-  options?: StorageOptions<T>,
+  options?: Omit<StorageOptions<T>, 'defaultValue'>,
 ): T | null
 
 /**
- *
- * @param key 需要删除的缓存值key
- * @param type 需要删除的缓存类型
+ * @param key 需要获取的缓存值key
+ * @param storageType 需要获取的缓存类型
  * @param options 配置项
  *
  * @description
  * 获取缓存值。
- *
  * 默认获取 sessionStorage。
- *
  * 如果 key 为空，则会打印错误信息。
  *
  * @example
@@ -111,20 +116,14 @@ function getStorage<T = unknown>(
   storageType: StorageLike = 'sessionStorage',
   options?: StorageOptions<T>,
 ): T | null {
-  const { prefix, prefixKey, defaultValue } = options ?? {}
-  const _prefix = prefix ? prefixKey || APP_CATCH_KEY_PREFIX : ''
+  const prefixedKey = getKeyWithPrefix(key, options)
+  const storage = getStorageInstance(storageType)
+  const { defaultValue } = options ?? {}
 
   try {
-    const data =
-      storageType === 'localStorage'
-        ? window.localStorage.getItem(_prefix + key)
-        : window.sessionStorage.getItem(_prefix + key)
+    const data = storage.getItem(prefixedKey)
 
-    if (data === null) {
-      return defaultValue ?? null
-    }
-
-    return JSON.parse(data) as T
+    return data === null ? defaultValue ?? null : (JSON.parse(data) as T)
   } catch (error) {
     console.error(
       `[getStorage]: Failed to get stored data for key '${key}'`,
@@ -136,16 +135,13 @@ function getStorage<T = unknown>(
 }
 
 /**
- *
  * @param key 需要删除的缓存值key
- * @param type 需要删除的缓存类型
+ * @param storageType 需要删除的缓存类型
  * @param options 配置项
  *
  * @description
  * 删除缓存值。
- *
  * 默认删除 sessionStorage。
- *
  * 预保留了 __all__、__all_sessionStorage__、__all_localStorage__ 三个 key，
  * 分别代表清空所有缓存、清空 sessionStorage 缓存、清空 localStorage 缓存。
  *
@@ -153,63 +149,47 @@ function getStorage<T = unknown>(
  * removeStorage('__all__', 'all') // 清空所有缓存
  * removeStorage('__all_sessionStorage__', 'sessionStorage') // 清空 sessionStorage 缓存
  * removeStorage('__all_localStorage__', 'localStorage') // 清空 localStorage 缓存
- * removeStorage('signing', 'sessionStorage' || 'localStorage') // 清空 session 中 signing 缓存字段
+ * removeStorage('signing', 'sessionStorage' || 'localStorage') // 清空 session 或者 localStorage 中 signing 缓存字段
  */
 const removeStorage: RemoveStorageFC = (key, storageType, options) => {
   if (!key) {
-    console.error(
-      `[removeStorage]: Failed to remove stored data: key ${key} is empty or undefined`,
-    )
+    console.error('[removeStorage]: Failed to remove stored data: key is empty')
 
     return
   }
 
-  const { prefix, prefixKey } = options ?? {}
-  const _prefix = prefix ? prefixKey || APP_CATCH_KEY_PREFIX : ''
-  const localStorageKeys = Object.keys(window.localStorage)
-  const sessionStorageKeys = Object.keys(window.sessionStorage)
+  const prefixedKey = getKeyWithPrefix(key, options)
+  const localStorage = window.localStorage
+  const sessionStorage = window.sessionStorage
 
-  const remove = (isAll: boolean, removeType?: StorageLike) => {
-    const keys = isAll
-      ? [...sessionStorageKeys, ...localStorageKeys]
-      : removeType === 'localStorage'
-        ? localStorageKeys
-        : sessionStorageKeys
-
-    keys.forEach((curr) => {
-      if (key === '__all__') {
-        window.sessionStorage.removeItem(_prefix + curr)
-        window.localStorage.removeItem(_prefix + curr)
-      } else {
-        removeType === 'localStorage'
-          ? window.localStorage.removeItem(_prefix + curr)
-          : window.sessionStorage.removeItem(_prefix + curr)
-      }
-    })
+  /**
+   * @param storage 存储实例
+   */
+  const removeFromStorage = (storage: Storage) => {
+    Object.keys(storage).forEach((k) =>
+      storage.removeItem(getKeyWithPrefix(k, options)),
+    )
   }
 
   switch (key) {
     case '__all__':
-      remove(true)
+      removeFromStorage(localStorage)
+      removeFromStorage(sessionStorage)
 
       break
 
     case '__all_sessionStorage__':
-      remove(false, 'sessionStorage')
+      removeFromStorage(sessionStorage)
 
       break
 
     case '__all_localStorage__':
-      remove(false, 'localStorage')
+      removeFromStorage(localStorage)
 
       break
 
     default:
-      storageType === 'localStorage'
-        ? window.localStorage.removeItem(_prefix + key)
-        : window.sessionStorage.removeItem(_prefix + key)
-
-      break
+      getStorageInstance(storageType as StorageLike).removeItem(prefixedKey)
   }
 }
 

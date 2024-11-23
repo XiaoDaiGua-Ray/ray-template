@@ -28,18 +28,10 @@ export default defineComponent({
       if (version !== cacheVersion) {
         modalShow.value = true
 
-        setStorage<string>(
-          APP_CATCH_KEY.appVersionProvider,
-          version,
-          'localStorage',
-        )
+        setStorage(APP_CATCH_KEY.appVersionProvider, version, 'localStorage')
       }
     } else {
-      setStorage<string>(
-        APP_CATCH_KEY.appVersionProvider,
-        version,
-        'localStorage',
-      )
+      setStorage(APP_CATCH_KEY.appVersionProvider, version, 'localStorage')
     }
 
     return {

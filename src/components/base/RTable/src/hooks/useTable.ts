@@ -41,7 +41,7 @@ import type { PrintDomOptions } from '@/utils'
  * })
  */
 const useTable = () => {
-  const tableRef = ref<RTableInst>()
+  const tableRef = shallowRef<RTableInst>()
   let extra = {} as TableProvider
 
   const register: UseTableRegister = (inst, extraInfo) => {
