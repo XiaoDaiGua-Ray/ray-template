@@ -42,6 +42,7 @@ describe('isValueType', () => {
   })
 
   it('should return false for Function', () => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     expect(isValueType<Function>(/a/i, 'Function')).toBe(false)
   })
 })

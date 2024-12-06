@@ -1,14 +1,3 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-09-15
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
 import path from 'node:path'
 
 import vue from '@vitejs/plugin-vue'
@@ -66,7 +55,7 @@ function onlyBuildOptions(mode: string): PluginOption[] {
             {
               name: 'vue',
               global: 'Vue',
-              relativeModule: 'vue.global.min.js',
+              relativeModule: 'vue.global.prod.min.js',
             },
             {
               name: 'vue-demi',
@@ -184,6 +173,7 @@ function baseOptions(mode: string): PluginOption[] {
     viteSvgLoader({
       defaultImport: 'url', // 默认以 url 形式导入 svg
     }),
+
     // 基础插件配置，在 report 模式下不需要 eslint 插件
     mode !== 'report'
       ? viteEslint({

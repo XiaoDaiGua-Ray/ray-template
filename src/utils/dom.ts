@@ -38,7 +38,7 @@ export const printDom = <T extends HTMLElement>(
 ) => {
   const { domToImageOptions, printOptions } = options ?? {}
 
-  const { create } = useDomToImage<T>(target, {
+  const { create } = useDomToImage(target, {
     ...domToImageOptions,
     beforeCreate: (element) => {
       domToImageOptions?.beforeCreate?.(element)

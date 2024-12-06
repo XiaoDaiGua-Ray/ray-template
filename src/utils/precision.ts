@@ -136,6 +136,7 @@ export const format = (value: CurrencyArguments, options?: CurrencyOptions) => {
   // 如果 type 为 'number'，则返回 value 的值，否则返回 value 的字符串
   return type === 'number' ? v.value : v.toString()
 }
+
 /**
  *
  * @description

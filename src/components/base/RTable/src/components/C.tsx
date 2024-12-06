@@ -113,7 +113,6 @@ export default defineComponent({
           return true
         })
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return cloneColumns.map((curr, idx) => {
           const { key, title, children, fixed, isResizable, ...args } =
             curr as C
@@ -170,7 +169,7 @@ export default defineComponent({
           }
         }) as C[]
       },
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
+
       set: () => {},
     })
 

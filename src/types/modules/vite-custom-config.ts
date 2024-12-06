@@ -83,8 +83,4 @@ export interface AppTheme {
     light: GlobalThemeOverrides
   }
   echartTheme: string
-  appNaiveUIThemeOverridesCommon: {
-    dark: GlobalThemeOverrides['common']
-    light: GlobalThemeOverrides['common']
-  }
 }

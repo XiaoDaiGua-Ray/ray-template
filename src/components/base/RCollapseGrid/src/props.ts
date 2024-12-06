@@ -8,6 +8,17 @@ const props = {
   /**
    *
    * @description
+   * 操作区域列数。
+   *
+   * @default 1
+   */
+  actionSpan: {
+    type: Number,
+    default: 1,
+  },
+  /**
+   *
+   * @description
    * 自定义操作按钮区域按钮列排列方式。
    *
    * @default end

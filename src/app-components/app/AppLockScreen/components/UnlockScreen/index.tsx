@@ -1,22 +1,20 @@
 import '../../index.scss'
 
-import { NInput, NForm, NFormItem, NButton, NFlex } from 'naive-ui'
+import { NInput, NFormItem, NButton, NFlex } from 'naive-ui'
 import AppAvatar from '@/app-components/app/AppAvatar'
+import { RForm } from '@/components'
 
 import dayjs from 'dayjs'
 import { useSigningActions, useSettingActions } from '@/store'
 import { rules, useCondition } from '@/app-components/app/AppLockScreen/shared'
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
 import { useDevice } from '@/hooks'
-import { useTemplateRef } from 'vue'
-
-import type { FormInst, InputInst } from 'naive-ui'
+import { useForm } from '@/components'
 
 export default defineComponent({
   name: 'UnlockScreen',
   setup() {
-    const formRef = useTemplateRef<FormInst | null>('formRef')
-    const inputInstRef = useTemplateRef<InputInst | null>('inputInstRef')
+    const [register, { validate }] = useForm()
 
     const { logout } = useSigningActions()
     const { updateSettingState } = useSettingActions()
@@ -60,21 +58,14 @@ export default defineComponent({
     }
 
     const unlockScreen = () => {
-      formRef.value?.validate((error) => {
-        if (!error) {
-          setLockAppScreen(false)
-          updateSettingState('lockScreenSwitch', false)
+      validate().then(() => {
+        setLockAppScreen(false)
+        updateSettingState('lockScreenSwitch', false)
 
-          state.lockCondition = useCondition()
-        }
+        state.lockCondition = useCondition()
       })
     }
 
-    onMounted(() => {
-      nextTick(() => {
-        inputInstRef.value?.focus()
-      })
-    })
     onBeforeUnmount(() => {
       clearInterval(dayInterval)
       clearInterval(yearInterval)
@@ -84,16 +75,15 @@ export default defineComponent({
       ...toRefs(state),
       backToSigning,
       unlockScreen,
-      formRef,
-      inputInstRef,
       isTabletOrSmaller,
+      register,
     }
   },
   render() {
     const { isTabletOrSmaller } = this
     const { HH_MM, AM_PM, YY_MM_DD, DDD } = this
     const hmSplit = HH_MM.split(':')
-    const { unlockScreen, backToSigning } = this
+    const { unlockScreen, backToSigning, register } = this
 
     return (
       <div class="app-lock-screen__content app-lock-screen__content--full">
@@ -121,10 +111,14 @@ export default defineComponent({
               />
             </div>
             <div class="app-lock-screen__unlock__content-input">
-              <NForm ref="formRef" model={this.lockCondition} rules={rules}>
+              <RForm
+                onRegister={register}
+                model={this.lockCondition}
+                rules={rules}
+              >
                 <NFormItem path="lockPassword">
                   <NInput
-                    ref="inputInstRef"
+                    autofocus
                     v-model:value={this.lockCondition.lockPassword}
                     type="password"
                     placeholder="请输入解锁密码"
@@ -153,7 +147,7 @@ export default defineComponent({
                     进入系统
                   </NButton>
                 </NFlex>
-              </NForm>
+              </RForm>
             </div>
             <div class="app-lock-screen__unlock__content-date">
               <div class="current-year">

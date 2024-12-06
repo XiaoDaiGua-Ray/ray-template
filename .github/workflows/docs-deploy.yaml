@@ -14,10 +14,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install Node.js 20.x
+      - name: Install Node.js 22.x
         uses: actions/setup-node@v3
         with:
-          node-version: 20.x
+          node-version: 22.x
 
       - uses: pnpm/action-setup@v2
         name: Install pnpm

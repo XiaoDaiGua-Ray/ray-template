@@ -39,6 +39,7 @@ describe('useContextmenuCoordinate', () => {
       clientX: 100,
       clientY: 200,
     })
+
     wrapperRef.element.dispatchEvent(event)
 
     await nextTick()

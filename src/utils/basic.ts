@@ -226,6 +226,7 @@ export const fileToBase64 = (file: File) => {
     reader.onload = () => {
       resolve(reader.result as string)
     }
+
     reader.onerror = (error) => {
       reject(error)
     }

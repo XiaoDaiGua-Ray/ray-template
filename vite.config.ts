@@ -43,6 +43,7 @@ export default defineConfig(({ mode }) => {
     optimizeDeps: {
       include: [
         'vue',
+        'vue-demi',
         'vue-router',
         'pinia',
         'vue-i18n',

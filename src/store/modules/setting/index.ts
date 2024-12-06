@@ -3,6 +3,7 @@ import { colorToRgba, setStorage, updateObjectValue, setStyle } from '@/utils'
 import { useI18n, useDayjs } from '@/hooks'
 import { APP_CATCH_KEY, APP_THEME, GLOBAL_CLASS_NAMES } from '@/app-config'
 import { getDefaultSettingConfig } from './constant'
+import { merge } from 'lodash-es'
 
 import type { SettingState } from '@/store/modules/setting/types'
 import type { LocalKey } from '@/hooks'
@@ -12,8 +13,8 @@ export const piniaSettingStore = defineStore(
   'setting',
   () => {
     const {
-      appPrimaryColor: { primaryColor },
-    } = __APP_CFG__ // 默认主题色
+      appPrimaryColor: { primaryColor, primaryFadeColor },
+    } = APP_THEME
     const { locale } = useI18n()
     const { locale: dayjsLocal } = useDayjs()
 
@@ -22,8 +23,9 @@ export const piniaSettingStore = defineStore(
       primaryColorOverride: {
         common: {
           primaryColor: primaryColor,
-          primaryColorHover: primaryColor,
-          primaryColorPressed: primaryColor,
+          primaryColorHover: primaryFadeColor,
+          primaryColorPressed: primaryFadeColor,
+          primaryColorSuppl: colorToRgba(primaryColor, 0.9),
         },
       },
       // 内部使用，用于判断是否为黑夜主题（为了兼容历史遗留版本）；true 为黑夜主题，false 为明亮主题
@@ -63,12 +65,14 @@ export const piniaSettingStore = defineStore(
      * @description
      * 切换主题色，传递对应颜色即可更新 naive-ui 的主题色。
      */
-    const changePrimaryColor = (value: string, alpha = 0.3) => {
-      const alphaColor = colorToRgba(value, alpha)
+    const changePrimaryColor = (value: string, alpha = 0.8) => {
+      const alphaColor1 = colorToRgba(value, alpha)
+      const alphaColor2 = colorToRgba(value, 0.9)
       const themeOverrides = {
         primaryColor: value,
-        primaryColorHover: value,
-        primaryColorPressed: value,
+        primaryColorHover: alphaColor1,
+        primaryColorPressed: alphaColor1,
+        primaryColorSuppl: alphaColor2,
       }
       const { rayTemplateThemePrimaryColor, rayTemplateThemePrimaryFadeColor } =
         GLOBAL_CLASS_NAMES
@@ -79,7 +83,7 @@ export const piniaSettingStore = defineStore(
       // 设置主题色变量
       html.style.setProperty(rayTemplateThemePrimaryColor, value)
       // 设置主题色辅助色变量
-      html.style.setProperty(rayTemplateThemePrimaryFadeColor, alphaColor)
+      html.style.setProperty(rayTemplateThemePrimaryFadeColor, alphaColor1)
     }
 
     /**
@@ -123,18 +127,16 @@ export const piniaSettingStore = defineStore(
      * 该方法会在初始化时执行一次，之后会在切换主题色时执行。
      */
     watchEffect(() => {
-      settingState.appTheme
-        ? (settingState.primaryColorOverride = Object.assign(
+      settingState._appTheme
+        ? (settingState.primaryColorOverride = merge(
             {},
             settingState.primaryColorOverride,
             APP_THEME.appNaiveUIThemeOverrides.dark,
-            APP_THEME.appNaiveUIThemeOverridesCommon.dark,
           ))
-        : (settingState.primaryColorOverride = Object.assign(
+        : (settingState.primaryColorOverride = merge(
             {},
             settingState.primaryColorOverride,
             APP_THEME.appNaiveUIThemeOverrides.light,
-            APP_THEME.appNaiveUIThemeOverridesCommon.light,
           ))
 
       toggleColorWeakness(settingState.colorWeakness)

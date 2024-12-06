@@ -51,8 +51,16 @@ $menuTagWrapperWidth: 76px;
   }
 }
 
-.menu-tag__btn-icon:hover {
-  filter: brightness(0.8);
+.ray-template--light {
+  .menu-tag__btn-icon:hover {
+    filter: brightness(2);
+  }
+}
+
+.ray-template--dark {
+  .menu-tag__btn-icon:hover {
+    filter: brightness(0.8);
+  }
 }
 
 // 设置 dropdown animate svg 尺寸

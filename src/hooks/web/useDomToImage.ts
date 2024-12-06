@@ -10,12 +10,32 @@ import {
 
 import type { BasicTarget, TargetType } from '@/types'
 
+// html-to-image 方法
+const domToImageMethods = {
+  svg: toSvg,
+  png: toPng,
+  jpeg: toJpeg,
+  blob: toBlob,
+  pixelData: toPixelData,
+  canvas: toCanvas,
+} as const
+
+// 获取 html-to-image Options
 type HtmlToImageOptions = Partial<NonNullable<Parameters<typeof toPng>[1]>>
 
-interface Options<
+// 获取 html-to-image 方法 keys
+type DomToImageMethodKeys = keyof typeof domToImageMethods
+
+// 获取 html-to-image 方法返回值
+type DomToImageReturnType<ImageType extends DomToImageMethodKeys> = Awaited<
+  ReturnType<(typeof domToImageMethods)[ImageType]>
+>
+
+// 自定义拓展 Options
+type Options<
   T extends TargetType = Element,
-  ImageType extends DomToImageMethodKeys = 'jpeg',
-> {
+  ImageType extends DomToImageMethodKeys = DomToImageMethodKeys,
+> = {
   /**
    *
    * @description
@@ -23,7 +43,7 @@ interface Options<
    *
    * @default jpeg
    */
-  imageType?: DomToImageReturnType<ImageType>
+  imageType?: ImageType
   /**
    *
    * @param element current dom
@@ -66,26 +86,14 @@ interface Options<
   finally?: (element: T) => void
 }
 
-export type UseDomToImageOptions<T extends TargetType = Element> = Options<T> &
-  HtmlToImageOptions
-
-export type DomToImageMethodKeys = keyof typeof domToImageMethods
-
-type DomToImageReturnType<ImageType extends DomToImageMethodKeys = 'jpeg'> =
-  Awaited<ReturnType<(typeof domToImageMethods)[ImageType]>>
-
-const domToImageMethods = {
-  svg: toSvg,
-  png: toPng,
-  jpeg: toJpeg,
-  blob: toBlob,
-  pixelData: toPixelData,
-  canvas: toCanvas,
-} as const
+export type UseDomToImageOptions<
+  T extends TargetType = Element,
+  ImageType extends DomToImageMethodKeys = DomToImageMethodKeys,
+> = Options<T, ImageType> & HtmlToImageOptions
 
 /**
  *
- * @param target useTemplateRef dom
+ * @param target ref dom
  * @param options html-to-image options
  *
  * @see https://github.com/bubkoo/html-to-image
@@ -98,18 +106,24 @@ const domToImageMethods = {
  * 当然，你也可以不传递 imageType 参数，此时会使用 options.imageType，
  * 如果都未传递，则默认使用 jpeg。
  *
+ * 如果希望 created 获得准确的类型，可以给 useDomToImage 手动声明第二个类型参数；
+ * 或者就是在显式声明 options.imageType 参数。
+ *
  * @example
- * const refDom = useTemplateRef<HTMLElement>('refDom')
- * const { create, stop } = useDomToImage(refDom, {
+ * const refDom = ref<HTMLElement>()
+ * const { create } = useDomToImage(refDom, {
  *   beforeCreate: (element) => { ... },
  *   created: (element, result) => { ... },
  *   createdError: (error) => { ... },
  *   finally: () => { ... },
  * })
  */
-export const useDomToImage = <T extends HTMLElement>(
+export const useDomToImage = <
+  T extends HTMLElement,
+  ImageType extends DomToImageMethodKeys = DomToImageMethodKeys,
+>(
   target: BasicTarget<T>,
-  options?: UseDomToImageOptions,
+  options?: UseDomToImageOptions<T, ImageType>,
 ) => {
   const {
     beforeCreate,
@@ -130,12 +144,12 @@ export const useDomToImage = <T extends HTMLElement>(
       if (!element) {
         createdError?.()
 
-        return reject('useDomToImage: element is undefined.')
+        return reject(`[useDomToImage]: target element is undefined.`)
       }
 
       const imageTypeKey = (imageType ??
         _imageType ??
-        'jpeg') as keyof typeof domToImageMethods
+        'jpeg') as DomToImageMethodKeys
 
       domToImageMethods[imageTypeKey]?.(element, options)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

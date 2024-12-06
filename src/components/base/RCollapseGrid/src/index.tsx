@@ -81,6 +81,7 @@ export default defineComponent({
       yGap,
       collapsedRows,
       cssVars,
+      actionSpan,
       bordered,
     } = this
 
@@ -97,7 +98,11 @@ export default defineComponent({
               collapsedRows={collapsedRows}
             >
               {defaultSlot?.()}
-              <NGridItem suffix class="ray-collapse-grid__suffix--btn">
+              <NGridItem
+                suffix
+                class="ray-collapse-grid__suffix--btn"
+                span={actionSpan}
+              >
                 <NFlex justify="end" align="center">
                   {action?.()}
                   {collapse

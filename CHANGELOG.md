@@ -1,5 +1,25 @@
 # CHANGE LOG
 
+## 5.0.7
+
+## Feats
+
+- 更新 `vue` 版本至 `3.5.13`
+- 更新 `vite` 版本至 `6.0.3`
+- 更新 `naive-ui` 版本至 `2.40.3`
+- 更新包依赖为主流依赖
+- 更新 `eslint` 版本至 `9.11.0`，并且同步修改 `eslint` 相关配置方式，使用 `eslint.config.mjs` 文件替代
+- 更新默认 `node` 版本至 `22.11.0`
+- `RCollapseGrid` 组件新增 `actionSpan` 配置项，配置操作区域列数
+- `usePagination` 方法新增 `pageChange`, `pageSizeChange` 回调函数，允许在更新分页页码与每页条数的时候，执行自定义回调；用于取代被移除的 `onUpdatePage`, `onUpdatePageSize` 方法
+- 移除 `appNaiveUIThemeOverridesCommon` 配置项，现在统一使用 `appNaiveUIThemeOverrides` 配置项
+- 优化整体风格样式
+
+## Fixes
+
+- 修复 `useDomToImage` 方法的类型推导问题
+- 修复主题切换时，`naive-ui` 主题色覆盖不生效的问题
+
 ## 5.0.6
 
 ## Feats
@@ -146,7 +166,7 @@
 - 新增 `clearSigningCallback` 方法
 - `vite.custom.config` 新增 `cdn` 配置项，是否启用 `cdn` 构建项目
 - 配置 `cdn` 为 `false`，因为国内厂商更新资源速度有点慢，导致预览失败
-- `Layout` 层注入 `--window-width`, `--window-height` `css var` 属性
+- `Layout` 层注入 `--window-width`, `--window-height`, `css var` 属性
 - 稳定 `Layout` 层的 `css var` 属性
 
 ## Fixes

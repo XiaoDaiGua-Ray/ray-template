@@ -128,6 +128,7 @@ export default defineComponent({
       if (onUpdateColumns) {
         call(onUpdateColumns, options)
       }
+
       if ($onUpdateColumns) {
         call($onUpdateColumns, options)
       }

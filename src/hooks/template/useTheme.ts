@@ -2,6 +2,7 @@ import { useSettingActions, useSettingGetters } from '@/store'
 import { useI18n } from '@/hooks'
 import { APP_THEME } from '@/app-config'
 import { useColorMode } from '@vueuse/core'
+import { merge } from 'lodash-es'
 
 export type ThemeLabel = 'Dark' | 'Light'
 
@@ -33,17 +34,15 @@ const setThemeOverrides = (theme: boolean) => {
   updateSettingState(
     'primaryColorOverride',
     theme
-      ? Object.assign(
+      ? merge(
           {},
           getPrimaryColorOverride.value,
           APP_THEME.appNaiveUIThemeOverrides.dark,
-          APP_THEME.appNaiveUIThemeOverridesCommon.dark,
         )
-      : Object.assign(
+      : merge(
           {},
           getPrimaryColorOverride.value,
           APP_THEME.appNaiveUIThemeOverrides.light,
-          APP_THEME.appNaiveUIThemeOverridesCommon.light,
         ),
   )
 }

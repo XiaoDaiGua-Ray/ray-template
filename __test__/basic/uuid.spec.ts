@@ -14,6 +14,7 @@ describe('uuid', () => {
 
   it('should return a string with length 36', () => {
     const uid = uuid(36)
+
     expect(uid.length).toBe(36)
   })
 })

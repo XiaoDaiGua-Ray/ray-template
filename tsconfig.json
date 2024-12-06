@@ -26,7 +26,7 @@
       "@mock/*": ["mock/*"],
       "@mock": ["mock/*"]
     },
-    "types": ["vite/client", "vitest/globals"]
+    "types": ["vite/client", "vitest/globals", "naive-ui/volar"]
   },
   "include": [
     "vite.config.ts",

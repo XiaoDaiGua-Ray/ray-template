@@ -14,8 +14,26 @@ type OmitKeys =
   | 'onUpdatePageSize'
   | 'onUpdate:page'
   | 'onUpdate:page-size'
+  | 'onUpdate:pageSize'
 
-export interface UsePaginationOptions extends Omit<PaginationProps, OmitKeys> {}
+export interface UsePaginationOptions extends Omit<PaginationProps, OmitKeys> {
+  /**
+   *
+   * @param page 当前分页页码
+   *
+   * @description
+   * 分页页码更新的回调函数。
+   */
+  pageChange?: (page: number) => void
+  /**
+   *
+   * @param pageSize 当前分页条数
+   *
+   * @description
+   * 分页页数更新回调函数。
+   */
+  pageSizeChange?: (pageSize: number) => void
+}
 
 const DEFAULT_OPTIONS: UsePaginationOptions = {
   page: 1,
@@ -36,21 +54,7 @@ export const usePagination = <T extends AnyFC>(
   callback?: T,
   options?: UsePaginationOptions,
 ) => {
-  const callbackRef = shallowRef(callback)
-  const paginationMethods = {
-    onUpdatePage: (page: number) => {
-      paginationRef.value.page = page
-
-      callbackRef.value?.()
-    },
-    onUpdatePageSize: (pageSize: number) => {
-      paginationRef.value.pageSize = pageSize
-      paginationRef.value.page = DEFAULT_OPTIONS.page
-
-      callbackRef.value?.()
-    },
-  }
-  // 使用 computed 优化配置合并
+  // 配置合并
   const mergedOptions = computed(() => ({
     ...DEFAULT_OPTIONS,
     ...omit(options, [
@@ -60,9 +64,33 @@ export const usePagination = <T extends AnyFC>(
       'onUpdatePageSize',
       'onUpdate:page',
       'onUpdate:page-size',
+      'onUpdate:pageSize',
     ]),
     ...paginationMethods,
   }))
+  // 回调函数
+  const callbackRef = shallowRef(callback)
+  // 分页方法
+  const paginationMethods = {
+    onUpdatePage: (page: number) => {
+      const { pageChange } = mergedOptions.value
+
+      paginationRef.value.page = page
+
+      callbackRef.value?.()
+      pageChange?.(page)
+    },
+    onUpdatePageSize: (pageSize: number) => {
+      const { pageSizeChange } = mergedOptions.value
+
+      paginationRef.value.pageSize = pageSize
+      paginationRef.value.page = DEFAULT_OPTIONS.page
+
+      callbackRef.value?.()
+      pageSizeChange?.(pageSize)
+    },
+  }
+  // 分页配置
   const paginationRef = ref<PaginationProps>(mergedOptions.value)
 
   // 更新分页页数

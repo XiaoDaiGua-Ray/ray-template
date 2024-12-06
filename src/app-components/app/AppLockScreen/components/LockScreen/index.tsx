@@ -1,17 +1,19 @@
-import { NInput, NForm, NFormItem, NButton } from 'naive-ui'
+import { NInput, NFormItem, NButton } from 'naive-ui'
 import AppAvatar from '@/app-components/app/AppAvatar'
+import { RForm } from '@/components'
 
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
 import { rules, useCondition } from '@/app-components/app/AppLockScreen/shared'
 import { useSettingActions } from '@/store'
 import { useTemplateRef } from 'vue'
+import { useForm } from '@/components'
 
-import type { FormInst, InputInst } from 'naive-ui'
+import type { InputInst } from 'naive-ui'
 
 const LockScreen = defineComponent({
   name: 'LockScreen',
   setup() {
-    const formInstRef = useTemplateRef<FormInst | null>('formInstRef')
+    const [register, { validate }] = useForm()
     const inputInstRef = useTemplateRef<InputInst | null>('inputInstRef')
 
     const { setLockAppScreen } = useAppLockScreen()
@@ -22,13 +24,11 @@ const LockScreen = defineComponent({
     })
 
     const lockScreen = () => {
-      formInstRef.value?.validate((error) => {
-        if (!error) {
-          setLockAppScreen(true)
-          updateSettingState('lockScreenSwitch', false)
+      validate().then(() => {
+        setLockAppScreen(true)
+        updateSettingState('lockScreenSwitch', false)
 
-          state.lockCondition = useCondition()
-        }
+        state.lockCondition = useCondition()
       })
     }
 
@@ -41,11 +41,13 @@ const LockScreen = defineComponent({
     return {
       ...toRefs(state),
       lockScreen,
-      formInstRef,
+      register,
       inputInstRef,
     }
   },
   render() {
+    const { register } = this
+
     return (
       <div class="app-lock-screen__content">
         <div class="app-lock-screen__input">
@@ -54,11 +56,12 @@ const LockScreen = defineComponent({
             style="pointer-events: none;margin: 24px 0;"
             vertical
           />
-          <NForm
+          <RForm
             ref="formInstRef"
             model={this.lockCondition}
             rules={rules}
             labelPlacement="left"
+            onRegister={register}
           >
             <NFormItem path="lockPassword">
               <NInput
@@ -75,12 +78,13 @@ const LockScreen = defineComponent({
                     this.lockScreen()
                   }
                 }}
+                autofocus
               />
             </NFormItem>
             <NButton type="primary" onClick={this.lockScreen.bind(this)}>
               锁屏
             </NButton>
-          </NForm>
+          </RForm>
         </div>
       </div>
     )

@@ -3,6 +3,7 @@ import { call } from '../../src/utils/vue/call'
 describe('call', () => {
   it('should be executed once', () => {
     const fn = vi.fn()
+
     call(() => fn())
 
     expect(fn).toHaveBeenCalledTimes(1)
@@ -10,6 +11,7 @@ describe('call', () => {
 
   it('should be executed with an argument', () => {
     const fn = vi.fn()
+
     call((a: number) => fn(a), 1)
 
     expect(fn).toHaveBeenCalledWith(1)
