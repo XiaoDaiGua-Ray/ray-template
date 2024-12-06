@@ -4,15 +4,15 @@ var __export = (target, all) => {
     __defProp(target, name, { get: all[name], enumerable: true });
 };
 
-// mock-data-1732337071180.js
-import { transformMockData } from "vite-plugin-mock-dev-server";
+// mock-data-1733504749905.js
+import { transformMockData, transformRawData } from "vite-plugin-mock-dev-server/server";
 
 // mock/demo/person.mock.ts
 var person_mock_exports = {};
 __export(person_mock_exports, {
   getPersonList: () => getPersonList
 });
-import { defineMock } from "vite-plugin-mock-dev-server";
+import { defineMock } from "vite-plugin-mock-dev-server/helper";
 
 // mock/shared/utils.ts
 function array(length) {
@@ -85,21 +85,15 @@ var getPersonList = defineMock({
   }
 });
 
-// mock-data-1732337071180.js
-var exporters = [person_mock_exports];
-var mockList = exporters.map((raw) => {
-  let mockConfig;
-  if (raw.default) {
-    mockConfig = raw.default;
-  } else {
-    mockConfig = [];
-    Object.keys(raw || {}).forEach((key) => {
-      Array.isArray(raw[key]) ? mockConfig.push(...raw[key]) : mockConfig.push(raw[key]);
-    });
-  }
-  return mockConfig;
+// mock-data-1733504749905.js
+var exporters = [
+  [person_mock_exports, "mock/demo/person.mock.ts"]
+];
+var mockList = exporters.map(([mod, filepath]) => {
+  const raw = mod.default || mod;
+  return transformRawData(raw, filepath);
 });
-var mock_data_1732337071180_default = transformMockData(mockList);
+var mock_data_1733504749905_default = transformMockData(mockList);
 export {
-  mock_data_1732337071180_default as default
+  mock_data_1733504749905_default as default
 };

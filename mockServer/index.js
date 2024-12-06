@@ -1,31 +1,28 @@
 import { createServer } from 'node:http';
 import connect from 'connect';
 import corsMiddleware from 'cors';
-import { baseMiddleware, createLogger, mockWebSocket } from 'vite-plugin-mock-dev-server';
+import { baseMiddleware, createLogger, mockWebSocket } from 'vite-plugin-mock-dev-server/server';
 import mockData from './mock-data.js';
 
 const app = connect();
 const server = createServer(app);
 const logger = createLogger('mock-server', 'error');
-const httpProxies = ["^/api"];
+const proxies = ["^/api"];
 const wsProxies = [];
 const cookiesOptions = {};
+const bodyParserOptions = {};
 const priority = {};
+const compiler = { mockData }
 
-mockWebSocket({ 
-  loader: { mockData },
-  httpServer: server,
-  proxies: wsProxies,
-  cookiesOptions,
-  logger,
-});
+mockWebSocket(compiler, server, { wsProxies, cookiesOptions, logger });
 
 app.use(corsMiddleware());
-app.use(baseMiddleware({ mockData }, {
+app.use(baseMiddleware(compiler, {
   formidableOptions: { multiples: true },
-  proxies: httpProxies,
+  proxies,
   priority,
   cookiesOptions,
+  bodyParserOptions,
   logger,
 }));
 
