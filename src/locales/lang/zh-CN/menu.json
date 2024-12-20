@@ -29,5 +29,6 @@
   "TemplateHooks": "模板内置 Api",
   "scrollReveal": "滚动动画",
   "TablePro": "高级表格",
-  "Flow": "流程图"
+  "Flow": "流程图",
+  "DraggableCard": "拖拽卡片"
 }

@@ -1,4 +1,5 @@
 import RCollapse from '../components/pro/RCollapse/Collapse'
+import RDraggableCard from '../components/base/RDraggableCard/DraggableCard'
 
 // 导出所有自定义组件
 export * from './base/RChart'
@@ -14,7 +15,7 @@ export * from './base/RSegment'
 export * from './base/RBarcode'
 export * from '../components/pro/RTablePro'
 export * from './base/RFlow'
-export { RCollapse }
+export { RCollapse, RDraggableCard }
 
 // 导出自定义组件类型
 export type * from './base/RChart/src/types'

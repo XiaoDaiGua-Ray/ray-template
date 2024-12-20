@@ -16,7 +16,7 @@ import SegmentViewsCustomMenu from './segment-views/CustomMenu'
 
 import { useSettingGetters, useSettingActions, useMenuActions } from '@/store'
 import { SETTING_DRAWER_INJECT_KEY } from './constant'
-import { forIn, throttle } from 'lodash-es'
+import { cloneDeep, forIn, throttle } from 'lodash-es'
 import { drawerProps } from 'naive-ui'
 import { useModal } from '@/components'
 import { getDefaultSettingConfig } from '@/store/modules/setting/constant'
@@ -71,10 +71,12 @@ export default defineComponent({
         positiveText: '确认初始化',
         negativeText: '取消',
         onPositiveClick: () => {
-          forIn(getDefaultSettingConfig(), (value, key) => {
+          forIn(cloneDeep(getDefaultSettingConfig()), (value, key) => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             modelReactive[key] = value
+
+            console.log(value, key)
 
             updateSettingState(key as keyof SettingState, value)
           })

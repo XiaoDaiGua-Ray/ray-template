@@ -1,0 +1,25 @@
+.n-card.r-draggable-card {
+  transform-origin: 0 0;
+  position: absolute;
+  width: var(--r-draggable-card-width);
+  z-index: var(--r-draggable-card-z-index);
+}
+
+#draggable-card-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+}
+
+// draggable-card 的 Transition 样式
+.draggable-card-enter-active,
+.draggable-card-leave-active {
+  transition: opacity 0.3s var(--r-bezier);
+}
+
+.draggable-card-enter-from,
+.draggable-card-leave-to {
+  opacity: 0;
+}

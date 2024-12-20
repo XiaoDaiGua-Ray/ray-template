@@ -1,5 +1,4 @@
 import { piniaMenuStore } from '../modules/menu'
-import { useAppRoot } from '@/hooks'
 
 export const useMenuGetters = () => {
   const variable = piniaMenuStore()
@@ -31,25 +30,7 @@ export const useMenuGetters = () => {
    * 获取菜单标签列表。
    */
   const getMenuTagOptions = computed(() => {
-    const { getRootPath } = useAppRoot()
-
-    return variable.menuTagOptions.map((curr, _idx, currentArray) => {
-      if (curr.key === getMenuKey.value && curr.key !== getRootPath.value) {
-        curr.closeable = true
-      } else {
-        curr.closeable = false
-      }
-
-      if (curr.key === getRootPath.value) {
-        curr.closeable = false
-      }
-
-      if (currentArray.length <= 1) {
-        curr.closeable = false
-      }
-
-      return curr
-    })
+    return variable.menuTagOptions
   })
 
   /**

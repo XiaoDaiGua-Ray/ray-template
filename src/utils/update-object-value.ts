@@ -1,3 +1,5 @@
+import { isValueType } from '@/utils'
+
 import type { Recordable, AnyFC } from '@/types'
 
 /**
@@ -42,7 +44,7 @@ export const updateObjectValue = <
     return
   }
 
-  if (typeof value === 'object' && value !== null) {
+  if (isValueType<object>(value, 'Object')) {
     targetObject[key] = {
       ...targetObject[key],
       ...value,

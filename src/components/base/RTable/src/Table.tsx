@@ -61,6 +61,23 @@ export default defineComponent({
         pick(props, 'striped', 'bordered'),
       ),
     )
+    // 默认设置 card header style
+    const cardHeaderStyle = computed(() => {
+      const { title, tool, cardProps } = props
+      const { headerStyle = {} } = cardProps ?? {}
+
+      if (!title && !tool) {
+        return Object.assign(
+          {},
+          {
+            paddingTop: '0px',
+          },
+          headerStyle,
+        )
+      }
+
+      return headerStyle
+    })
 
     /**
      *
@@ -231,6 +248,7 @@ export default defineComponent({
       tool,
       wrapperRef,
       propsPopselectValue,
+      cardHeaderStyle,
     }
   },
   render() {
@@ -243,6 +261,7 @@ export default defineComponent({
       uuidWrapper,
       privateReactive,
       propsPopselectValue,
+      cardHeaderStyle,
     } = this
     const { class: className, ...restAttrs } = $attrs
     const { tool, combineRowProps, contextMenuSelect } = this
@@ -255,11 +274,12 @@ export default defineComponent({
       tableFlexHeight,
       cardProps,
       ...restProps
-    } = $props as ExtractPublicPropTypes<typeof props>
+    } = $props
+    const { headerStyle, ...restCardProps } = cardProps ?? {}
 
     return (
       <NCard
-        {...cardProps}
+        {...restCardProps}
         {...{
           id: uuidWrapper,
         }}
@@ -267,6 +287,7 @@ export default defineComponent({
         ref="wrapperRef"
         bordered={wrapperBordered}
         class={className}
+        style={cardHeaderStyle}
       >
         {{
           default: () => (

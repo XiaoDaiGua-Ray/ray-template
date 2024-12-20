@@ -116,10 +116,10 @@ importers:
         version: 8.16.0(eslint@9.11.0(jiti@1.21.6))(typescript@5.6.3)
       '@vitejs/plugin-vue':
         specifier: ^5.1.0
-        version: 5.1.0(vite@6.0.3(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1))(vue@3.5.13(typescript@5.6.3))
+        version: 5.1.0(vite@6.0.4(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1))(vue@3.5.13(typescript@5.6.3))
       '@vitejs/plugin-vue-jsx':
         specifier: ^4.1.1
-        version: 4.1.1(vite@6.0.3(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1))(vue@3.5.13(typescript@5.6.3))
+        version: 4.1.1(vite@6.0.4(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1))(vue@3.5.13(typescript@5.6.3))
       '@vitest/ui':
         specifier: 1.5.2
         version: 1.5.2(vitest@2.0.5)
@@ -190,8 +190,8 @@ importers:
         specifier: ^0.27.4
         version: 0.27.4(@babel/parser@7.26.2)(@nuxt/kit@3.13.2(rollup@4.27.4)(webpack-sources@3.2.3))(rollup@4.27.4)(vue@3.5.13(typescript@5.6.3))(webpack-sources@3.2.3)
       vite:
-        specifier: ^6.0.3
-        version: 6.0.3(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1)
+        specifier: ^6.0.4
+        version: 6.0.4(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1)
       vite-bundle-analyzer:
         specifier: 0.9.4
         version: 0.9.4
@@ -200,19 +200,19 @@ importers:
         version: 1.1.0(rollup@4.27.4)
       vite-plugin-ejs:
         specifier: ^1.7.0
-        version: 1.7.0(vite@6.0.3(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1))
+        version: 1.7.0(vite@6.0.4(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1))
       vite-plugin-eslint:
         specifier: 1.8.1
-        version: 1.8.1(eslint@9.11.0(jiti@1.21.6))(vite@6.0.3(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1))
+        version: 1.8.1(eslint@9.11.0(jiti@1.21.6))(vite@6.0.4(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1))
       vite-plugin-inspect:
         specifier: ^0.8.4
-        version: 0.8.4(@nuxt/kit@3.13.2(rollup@4.27.4)(webpack-sources@3.2.3))(rollup@4.27.4)(vite@6.0.3(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1))
+        version: 0.8.4(@nuxt/kit@3.13.2(rollup@4.27.4)(webpack-sources@3.2.3))(rollup@4.27.4)(vite@6.0.4(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1))
       vite-plugin-mock-dev-server:
         specifier: 1.8.0
-        version: 1.8.0(esbuild@0.24.0)(rollup@4.27.4)(vite@6.0.3(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1))
+        version: 1.8.0(esbuild@0.24.0)(rollup@4.27.4)(vite@6.0.4(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1))
       vite-plugin-svg-icons:
         specifier: ^2.0.1
-        version: 2.0.1(vite@6.0.3(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1))
+        version: 2.0.1(vite@6.0.4(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1))
       vite-svg-loader:
         specifier: ^5.1.0
         version: 5.1.0(vue@3.5.13(typescript@5.6.3))
@@ -4183,8 +4183,8 @@ packages:
       terser:
         optional: true
 
-  vite@6.0.3:
-    resolution: {integrity: sha512-Cmuo5P0ENTN6HxLSo6IHsjCLn/81Vgrp81oaiFFMRa8gGDj5xEjIcEpf2ZymZtZR8oU0P2JX5WuUp/rlXcHkAw==}
+  vite@6.0.4:
+    resolution: {integrity: sha512-zwlH6ar+6o6b4Wp+ydhtIKLrGM/LoqZzcdVmkGAFun0KHTzIzjh+h0kungEx7KJg/PYnC80I4TII9WkjciSR6Q==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
     peerDependencies:
@@ -5461,19 +5461,19 @@ snapshots:
       '@typescript-eslint/types': 8.16.0
       eslint-visitor-keys: 4.2.0
 
-  '@vitejs/plugin-vue-jsx@4.1.1(vite@6.0.3(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1))(vue@3.5.13(typescript@5.6.3))':
+  '@vitejs/plugin-vue-jsx@4.1.1(vite@6.0.4(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1))(vue@3.5.13(typescript@5.6.3))':
     dependencies:
       '@babel/core': 7.26.0
       '@babel/plugin-transform-typescript': 7.25.9(@babel/core@7.26.0)
       '@vue/babel-plugin-jsx': 1.2.5(@babel/core@7.26.0)
-      vite: 6.0.3(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1)
+      vite: 6.0.4(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1)
       vue: 3.5.13(typescript@5.6.3)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitejs/plugin-vue@5.1.0(vite@6.0.3(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1))(vue@3.5.13(typescript@5.6.3))':
+  '@vitejs/plugin-vue@5.1.0(vite@6.0.4(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1))(vue@3.5.13(typescript@5.6.3))':
     dependencies:
-      vite: 6.0.3(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1)
+      vite: 6.0.4(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1)
       vue: 3.5.13(typescript@5.6.3)
 
   '@vitest/expect@2.0.5':
@@ -8582,20 +8582,20 @@ snapshots:
       - rollup
       - supports-color
 
-  vite-plugin-ejs@1.7.0(vite@6.0.3(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1)):
+  vite-plugin-ejs@1.7.0(vite@6.0.4(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1)):
     dependencies:
       ejs: 3.1.9
-      vite: 6.0.3(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1)
+      vite: 6.0.4(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1)
 
-  vite-plugin-eslint@1.8.1(eslint@9.11.0(jiti@1.21.6))(vite@6.0.3(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1)):
+  vite-plugin-eslint@1.8.1(eslint@9.11.0(jiti@1.21.6))(vite@6.0.4(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1)):
     dependencies:
       '@rollup/pluginutils': 4.2.1
       '@types/eslint': 8.56.6
       eslint: 9.11.0(jiti@1.21.6)
       rollup: 2.79.1
-      vite: 6.0.3(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1)
+      vite: 6.0.4(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1)
 
-  vite-plugin-inspect@0.8.4(@nuxt/kit@3.13.2(rollup@4.27.4)(webpack-sources@3.2.3))(rollup@4.27.4)(vite@6.0.3(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1)):
+  vite-plugin-inspect@0.8.4(@nuxt/kit@3.13.2(rollup@4.27.4)(webpack-sources@3.2.3))(rollup@4.27.4)(vite@6.0.4(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1)):
     dependencies:
       '@antfu/utils': 0.7.10
       '@rollup/pluginutils': 5.1.2(rollup@4.27.4)
@@ -8606,14 +8606,14 @@ snapshots:
       perfect-debounce: 1.0.0
       picocolors: 1.1.1
       sirv: 2.0.4
-      vite: 6.0.3(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1)
+      vite: 6.0.4(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1)
     optionalDependencies:
       '@nuxt/kit': 3.13.2(rollup@4.27.4)(webpack-sources@3.2.3)
     transitivePeerDependencies:
       - rollup
       - supports-color
 
-  vite-plugin-mock-dev-server@1.8.0(esbuild@0.24.0)(rollup@4.27.4)(vite@6.0.3(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1)):
+  vite-plugin-mock-dev-server@1.8.0(esbuild@0.24.0)(rollup@4.27.4)(vite@6.0.4(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1)):
     dependencies:
       '@pengzhanbo/utils': 1.1.2
       '@rollup/pluginutils': 5.1.2(rollup@4.27.4)
@@ -8630,7 +8630,7 @@ snapshots:
       mime-types: 2.1.35
       path-to-regexp: 6.2.2
       picocolors: 1.1.1
-      vite: 6.0.3(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1)
+      vite: 6.0.4(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1)
       ws: 8.18.0
     optionalDependencies:
       esbuild: 0.24.0
@@ -8640,7 +8640,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  vite-plugin-svg-icons@2.0.1(vite@6.0.3(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1)):
+  vite-plugin-svg-icons@2.0.1(vite@6.0.4(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1)):
     dependencies:
       '@types/svgo': 2.6.4
       cors: 2.8.5
@@ -8650,7 +8650,7 @@ snapshots:
       pathe: 0.2.0
       svg-baker: 1.7.0
       svgo: 2.8.0
-      vite: 6.0.3(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1)
+      vite: 6.0.4(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -8669,7 +8669,7 @@ snapshots:
       fsevents: 2.3.3
       sass: 1.77.1
 
-  vite@6.0.3(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1):
+  vite@6.0.4(@types/node@22.5.5)(jiti@1.21.6)(sass@1.77.1):
     dependencies:
       esbuild: 0.24.0
       postcss: 8.4.49

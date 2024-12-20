@@ -44,7 +44,7 @@ export default defineComponent({
           primaryColor,
         )
         // 将主色调任意颜色转换为 rgba 格式
-        const fp = colorToRgba(p, 0.8)
+        const fp = colorToRgba(p, 0.85)
 
         // 设置全局主题色 css 变量
         html.style.setProperty(rayTemplateThemePrimaryColor, p) // 主色调

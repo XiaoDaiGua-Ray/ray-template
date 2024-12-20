@@ -8,6 +8,7 @@ import {
   createMenuIcon,
   getCatchMenuKey,
   createMenuExtra,
+  getCatchMenuTagOptions,
 } from './utils'
 import { useI18n } from '@/hooks'
 import { getAppRawRoutes } from '@/router/app-route-modules'
@@ -73,7 +74,7 @@ export const piniaMenuStore = defineStore(
       menuKey: getCatchMenuKey(), // 当前菜单 `key`
       options: [], // 菜单列表
       collapsed: false, // 是否折叠菜单
-      menuTagOptions: [], // tag 标签菜单
+      menuTagOptions: getCatchMenuTagOptions(), // tag 标签菜单
       breadcrumbOptions: [], // 面包屑菜单
       currentMenuOption: null, // 当前激活菜单项
     })
@@ -117,11 +118,7 @@ export const piniaMenuStore = defineStore(
 
       // 设置 label, i18nKey 优先级最高
       const label = computed(() => (i18nKey ? t(`${i18nKey}`) : noLocalTitle))
-      /**
-       *
-       * 拼装菜单项
-       * 容错处理，兼容以前版本 key 选取为 path 的情况
-       */
+      // 拼装菜单项，容错处理，兼容以前版本 key 选取为 path 的情况
       const route = {
         ...option,
         key: option.fullPath,
@@ -137,10 +134,12 @@ export const piniaMenuStore = defineStore(
         extra: createMenuExtra(option),
       })
 
+      // 如果当前菜单项与缓存菜单项相同，则更新当前菜单项
       if (option.fullPath === getCatchMenuKey()) {
         menuState.currentMenuOption = attr
       }
 
+      // 验证菜单项是否显示
       attr.show = validMenuItemShow(attr)
 
       return attr
@@ -163,12 +162,13 @@ export const piniaMenuStore = defineStore(
 
     /**
      *
-     * @param options menu tag options
-     * @param isAppend is append
+     * @param options menu tag option(s)
+     * @param isAppend true: 追加操作(push), false: 覆盖操作
      *
      * @description
-     * 设置标签菜单。
-     * true: 追加操作（push），false: 覆盖操作。
+     * 设置标签页。
+     * 如果传递的 options 为数组，则进行追加操作。
+     * 如果传递的 options 为单个对象，则进行覆盖操作。
      */
     const setMenuTagOptions = (
       options: MenuTagOptions | MenuTagOptions[],
@@ -180,6 +180,8 @@ export const piniaMenuStore = defineStore(
       isAppend
         ? menuState.menuTagOptions.push(...arr)
         : (menuState.menuTagOptions = arr)
+
+      setStorage(APP_CATCH_KEY.appMenuTagOptions, menuState.menuTagOptions)
     }
 
     /**
@@ -199,6 +201,13 @@ export const piniaMenuStore = defineStore(
       if (!tag) {
         menuState.menuTagOptions.push(option as MenuTagOptions)
       }
+
+      // 清理所有非根路径的标签页
+      menuState.menuTagOptions = menuState.menuTagOptions.filter((curr) =>
+        curr.fullPath?.startsWith('/'),
+      )
+
+      setStorage(APP_CATCH_KEY.appMenuTagOptions, menuState.menuTagOptions)
     }
 
     /**
@@ -402,8 +411,13 @@ export const piniaMenuStore = defineStore(
      * @description
      * 关闭 menu tag 标签。
      */
-    const spliceMenTagOptions = (idx: number, length = 1) =>
-      menuState.menuTagOptions.splice(idx, length)
+    const spliceMenTagOptions = (idx: number, length = 1) => {
+      const r = menuState.menuTagOptions.splice(idx, length)
+
+      setStorage(APP_CATCH_KEY.appMenuTagOptions, menuState.menuTagOptions)
+
+      return r
+    }
 
     /**
      *
@@ -451,7 +465,7 @@ export const piniaMenuStore = defineStore(
     persist: {
       key: APP_CATCH_KEY.appPiniaMenuStore,
       storage: window.localStorage,
-      pick: ['breadcrumbOptions', 'menuKey', 'menuTagOptions', 'collapsed'],
+      pick: ['breadcrumbOptions', 'menuKey', 'collapsed'],
     },
   },
 )

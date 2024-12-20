@@ -1,5 +1,19 @@
 # CHANGE LOG
 
+## 5.0.8
+
+## Feats
+
+- 修改 `menuTagOptions` 的缓存方式，现在会缓存至 `sessionStorage` 中，兼容可能多系统版本部署与多开系统页面标签页冲突的问题
+- 新增 `RDraggableCard` 组件
+- 更新 `vite` 版本至 `6.0.4`
+
+## Fixes
+
+- 修复 `updateObjectValue` 方法对于对象值判断不准确的问题
+- 修复 `SettingDrawer` 组件初始化时，没有正确初始化 `settingStore` 的问题
+- 修复 `RTable` 组件在未设置 `title` 与 `tool` 为 `false` 时，导致 `headerStyle` 样式会高一些的问题
+
 ## 5.0.7
 
 ## Feats

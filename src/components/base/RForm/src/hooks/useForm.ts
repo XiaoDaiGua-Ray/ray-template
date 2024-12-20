@@ -36,7 +36,10 @@ import type { Recordable } from '@/types'
  *   },
  * })
  */
-const useForm = <T extends Recordable, R extends RFormRules>(
+const useForm = <
+  T extends Recordable = Recordable,
+  R extends RFormRules = RFormRules,
+>(
   model?: T,
   rules?: R,
 ) => {

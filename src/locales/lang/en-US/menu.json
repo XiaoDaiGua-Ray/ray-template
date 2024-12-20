@@ -29,5 +29,6 @@
   "TemplateHooks": "Template Api",
   "scrollReveal": "Scroll Reveal",
   "TablePro": "Table Pro",
-  "Flow": "Flow"
+  "Flow": "Flow",
+  "DraggableCard": "Draggable Card"
 }

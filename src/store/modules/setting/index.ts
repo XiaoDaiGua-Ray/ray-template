@@ -3,7 +3,7 @@ import { colorToRgba, setStorage, updateObjectValue, setStyle } from '@/utils'
 import { useI18n, useDayjs } from '@/hooks'
 import { APP_CATCH_KEY, APP_THEME, GLOBAL_CLASS_NAMES } from '@/app-config'
 import { getDefaultSettingConfig } from './constant'
-import { merge } from 'lodash-es'
+import { cloneDeep, merge } from 'lodash-es'
 
 import type { SettingState } from '@/store/modules/setting/types'
 import type { LocalKey } from '@/hooks'
@@ -24,8 +24,8 @@ export const piniaSettingStore = defineStore(
         common: {
           primaryColor: primaryColor,
           primaryColorHover: primaryFadeColor,
-          primaryColorPressed: primaryFadeColor,
-          primaryColorSuppl: colorToRgba(primaryColor, 0.9),
+          primaryColorPressed: primaryColor,
+          primaryColorSuppl: primaryFadeColor,
         },
       },
       // 内部使用，用于判断是否为黑夜主题（为了兼容历史遗留版本）；true 为黑夜主题，false 为明亮主题
@@ -48,7 +48,7 @@ export const piniaSettingStore = defineStore(
         url: '/dashboard',
         jumpType: 'station',
       },
-      ...getDefaultSettingConfig(),
+      ...cloneDeep(getDefaultSettingConfig()),
     })
 
     // 修改当前语言
@@ -65,14 +65,13 @@ export const piniaSettingStore = defineStore(
      * @description
      * 切换主题色，传递对应颜色即可更新 naive-ui 的主题色。
      */
-    const changePrimaryColor = (value: string, alpha = 0.8) => {
+    const changePrimaryColor = (value: string, alpha = 0.85) => {
       const alphaColor1 = colorToRgba(value, alpha)
-      const alphaColor2 = colorToRgba(value, 0.9)
       const themeOverrides = {
         primaryColor: value,
         primaryColorHover: alphaColor1,
-        primaryColorPressed: alphaColor1,
-        primaryColorSuppl: alphaColor2,
+        primaryColorPressed: value,
+        primaryColorSuppl: alphaColor1,
       }
       const { rayTemplateThemePrimaryColor, rayTemplateThemePrimaryFadeColor } =
         GLOBAL_CLASS_NAMES

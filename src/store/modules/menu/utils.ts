@@ -264,3 +264,17 @@ export const getCatchMenuKey = () => {
 
   return cacheMenuKey
 }
+
+/**
+ *
+ * @returns 获取缓存的菜单标签页
+ */
+export const getCatchMenuTagOptions = () => {
+  return getStorage<AppMenuOption[]>(
+    APP_CATCH_KEY.appMenuTagOptions,
+    'sessionStorage',
+    {
+      defaultValue: [],
+    },
+  )
+}

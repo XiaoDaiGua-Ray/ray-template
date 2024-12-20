@@ -20,7 +20,7 @@ export const APP_THEME: AppTheme = {
     // 主题色
     primaryColor: '#2d8cf0',
     // 主题辅助色(用于整体 hover、active 等之类颜色)
-    primaryFadeColor: 'rgba(45, 140, 240, 0.8)',
+    primaryFadeColor: 'rgba(45, 140, 240, 0.85)',
   },
   /**
    *
@@ -52,14 +52,12 @@ export const APP_THEME: AppTheme = {
       common: {
         borderRadius: '4px',
         baseColor: 'rgb(18, 18, 18)',
-        textColorBase: 'rgb(255, 255, 255)',
       },
     },
     light: {
       common: {
         borderRadius: '4px',
         baseColor: 'rgb(255, 255, 255)',
-        textColorBase: 'rgb(31, 31, 31)',
       },
     },
   },
