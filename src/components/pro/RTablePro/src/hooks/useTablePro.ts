@@ -1,7 +1,6 @@
 import type { Recordable } from '@/types'
 import type { TableProInst, TableRequestConfig } from '../types'
 import type {
-  RTableInst,
   CsvOptionsType,
   FilterState,
   ScrollToOptions,
@@ -152,6 +151,14 @@ export const useTablePro = () => {
     // @ts-ignore
     getTableProInstance().getCurrentTableRequestParams.call(null, extraConfig)
 
+  /**
+   *
+   * @description
+   * 重置表格分页。
+   */
+  const resetTablePagination = () =>
+    getTableProInstance().resetTablePagination.call(null)
+
   return [
     register,
     {
@@ -167,6 +174,7 @@ export const useTablePro = () => {
       runTableRequest,
       print,
       getCurrentTableRequestParams,
+      resetTablePagination,
     },
   ] as const
 }

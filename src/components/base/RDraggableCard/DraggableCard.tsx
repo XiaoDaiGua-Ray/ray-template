@@ -5,17 +5,24 @@ import { Teleport, Transition } from 'vue'
 
 import interact from 'interactjs'
 import { cardProps } from 'naive-ui'
-import { unrefElement, completeSize, queryElements } from '@/utils'
-import { useTemplateRef } from 'vue'
+import { unrefElement, completeSize, queryElements, isValueType } from '@/utils'
 
 import type { VNode } from 'vue'
+import type { MaybeElement, MaybeRefOrGetter } from '@vueuse/core'
 
 type RestrictRectOptions = Parameters<typeof interact.modifiers.restrictRect>[0]
 
-type Position = {
+type Padding = {
   x: number
   y: number
 }
+
+type Position =
+  | Padding
+  | 'top-left'
+  | 'top-right'
+  | 'bottom-left'
+  | 'bottom-right'
 
 const props = {
   ...cardProps,
@@ -27,8 +34,8 @@ const props = {
    * @default body
    */
   restrictionElement: {
-    type: [String, HTMLElement, Function] as PropType<
-      string | HTMLElement | (() => VNode)
+    type: [String, HTMLElement, Function, Object] as PropType<
+      string | HTMLElement | (() => VNode) | MaybeRefOrGetter<MaybeElement>
     >,
     default: 'body',
   },
@@ -62,7 +69,7 @@ const props = {
    * @default { x: 0, y: 0 }
    */
   defaultPosition: {
-    type: Object as PropType<Position>,
+    type: [Object, String] as PropType<Position>,
     default: () => ({
       x: 0,
       y: 0,
@@ -101,6 +108,18 @@ const props = {
     type: Boolean,
     default: false,
   },
+  /**
+   *
+   * @description
+   * 默认的边距。
+   * 设置该属性后，卡片首次出现的位置会根据该属性进行偏移。
+   *
+   * @default undefined
+   */
+  padding: {
+    type: Object as PropType<Padding>,
+    default: void 0,
+  },
 }
 
 export default defineComponent({
@@ -110,7 +129,8 @@ export default defineComponent({
     const cardRef = useTemplateRef<HTMLElement>('cardRef')
     let interactInst: ReturnType<typeof interact> | null = null
     const position = {
-      ...props.defaultPosition,
+      x: 0,
+      y: 0,
     }
     const CONTAINER_ID = 'draggable-card-container'
     const cssVars = computed(() => {
@@ -142,16 +162,68 @@ export default defineComponent({
 
       if (Array.isArray(re)) {
         restrictionElement = re[0]
-      } else if (typeof re === 'function') {
+      } else {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         restrictionElement = unrefElement<HTMLElement>(re as any) as HTMLElement
-      } else {
-        restrictionElement = re
+      }
+
+      if (!restrictionElement) {
+        throw new Error(
+          '[RDraggableCard]: if set restrictionElement, it must be a HTMLElement or a ref of HTMLElement.',
+        )
       }
 
       return {
         card,
         restrictionElement,
+      }
+    }
+
+    const getPosition = (containerRect: DOMRect, cardRect: DOMRect) => {
+      const { defaultPosition, padding } = props
+      const { x: paddingX = 0, y: paddingY = 0 } = padding ?? {}
+      const {
+        x: containerX,
+        y: containerY,
+        width: containerWidth,
+        height: containerHeight,
+      } = containerRect
+      const { width: cardWidth, height: cardHeight } = cardRect
+
+      if (typeof defaultPosition === 'string') {
+        switch (defaultPosition) {
+          case 'top-left':
+            return { x: paddingX + containerX, y: paddingY + containerY }
+
+          case 'top-right':
+            return {
+              x: containerWidth - cardWidth - paddingX + containerX,
+              y: paddingY + containerY,
+            }
+
+          case 'bottom-left':
+            return {
+              x: paddingX + containerX,
+              y: containerHeight - cardHeight - paddingY + containerY,
+            }
+
+          case 'bottom-right':
+            return {
+              x: containerWidth - cardWidth - paddingX + containerX,
+              y: containerHeight - cardHeight - paddingY + containerY,
+            }
+
+          // 默认为左上角
+          default:
+            return { x: paddingX + containerX, y: paddingY + containerY }
+        }
+      } else {
+        const { x: defaultX, y: defaultY } = defaultPosition
+
+        return {
+          x: defaultX + containerX + paddingX,
+          y: defaultY + containerY + paddingY,
+        }
       }
     }
 
@@ -175,13 +247,12 @@ export default defineComponent({
 
       if (restrictionRect && !isSetup) {
         // 计算偏移位置
-        const offsetX = restrictionRect.x + position.x
-        const offsetY = restrictionRect.y + position.y
+        const p = getPosition(restrictionRect, card.getBoundingClientRect())
 
         // 设置初始位置
-        card.style.transform = `translate(${offsetX}px, ${offsetY}px)`
-        position.x = offsetX
-        position.y = offsetY
+        card.style.transform = `translate(${p.x}px, ${p.y}px)`
+        position.x = p.x
+        position.y = p.y
       }
 
       interactInst = interact(card)

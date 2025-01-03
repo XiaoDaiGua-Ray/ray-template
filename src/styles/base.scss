@@ -1,7 +1,7 @@
-@import '@/styles/animate.scss';
-@import '@/styles/root.scss';
-@import '@/styles/naive.scss';
-@import '@/styles/print-css.scss';
+@use '@/styles/animate.scss' as *;
+@use '@/styles/root.scss' as *;
+@use '@/styles/naive.scss' as *;
+@use '@/styles/print-css.scss' as *;
 
 body,
 h1,

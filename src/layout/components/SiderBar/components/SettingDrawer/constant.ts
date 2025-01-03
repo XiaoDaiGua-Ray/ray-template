@@ -3,7 +3,7 @@ import type { InjectionKey, Reactive } from 'vue'
 import type { DebouncedFunc } from 'lodash-es'
 
 interface SettingDrawerInjectKey extends SettingState {
-  throttleSetupAppMenu: DebouncedFunc<() => void>
+  throttleSetupAppMenu: DebouncedFunc<() => Promise<void>>
 }
 
 export const SETTING_DRAWER_INJECT_KEY: Reactive<

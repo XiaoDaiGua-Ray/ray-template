@@ -9,3 +9,4 @@ export * from './vue'
 export * from './app'
 export { positionSelectedMenuItem }
 export { updateObjectValue } from './update-object-value'
+export { removeDuplicateKeys } from './remove-duplicate-keys'

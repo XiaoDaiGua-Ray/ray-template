@@ -2,7 +2,7 @@ import { RTable } from '@/components'
 
 import props from './props'
 import { useTable } from '@/components'
-import { call } from '@/utils'
+import { call, removeDuplicateKeys } from '@/utils'
 import { usePagination } from '@/hooks'
 
 import type { TablePagination, TableRequestConfig, TableProInst } from './types'
@@ -62,7 +62,8 @@ export default defineComponent({
     const combineRequestParams = (extraConfig?: TableRequestConfig) => {
       const config = Object.assign({}, props.requestConfig, extraConfig)
 
-      const { params, formatRangeTime } = config
+      const { formatRangeTime } = config
+      let params = config.params || {}
 
       // 转换时间范围，该功能仅支持 NDatePicker range 模式参数
       if (formatRangeTime?.length && params) {
@@ -83,6 +84,8 @@ export default defineComponent({
           }
         })
       }
+
+      params = removeDuplicateKeys(params)
 
       const requestParams = Object.assign({}, params, {
         page: getPage(),
@@ -139,6 +142,7 @@ export default defineComponent({
           filter,
           getCurrentTableRequestParams:
             combineRequestParams as TableProInst['getCurrentTableRequestParams'],
+          resetTablePagination: resetPagination,
         })
       }
     })

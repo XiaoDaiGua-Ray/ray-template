@@ -8,6 +8,7 @@ import {
   NFlex,
   NP,
   NH6,
+  NText,
 } from 'naive-ui'
 import { RIcon } from '@/components'
 import AppShareLink from '@/app-components/app/AppShareLink'
@@ -48,12 +49,16 @@ const Dashboard = defineComponent({
         des: () => (
           <NFlex align="center">
             如果有希望补充的功能可以在
-            <a
+            <NText
+              as="a"
               class="dashboard-link"
-              href="https://github.com/XiaoDaiGua-Ray/ray-template"
+              type="primary"
+              {...{
+                href: 'https://github.com/XiaoDaiGua-Ray/ray-template/issues',
+              }}
             >
               GitHub
-            </a>
+            </NText>
             提一个 Issues
           </NFlex>
         ),

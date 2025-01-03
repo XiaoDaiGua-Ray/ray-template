@@ -1,4 +1,16 @@
-# CHANGE LOG
+## 5.0.9
+
+## Feats
+
+- `RDraggableCard` 组件
+  - 新增 `restrictionElement` 配置项，允许设置拖拽限制元素
+  - 新增 `padding` 配置项，允许配置元素初始化位置的间隔值
+  - `defaultPosition` 配置项新增 `top-left`, `top-right`, `bottom-left`, `bottom-right` 配置项，允许配置元素初始化位置
+- `RTablePro` 组件
+  - 现在会自动删除重复的请求参数
+  - 暴露 `resetTablePagination` 方法，允许手动重置表格分页
+- `logout` 方法现在会在执行的时候，清空所有的 `router-route`
+- 更新依赖为主流版本
 
 ## 5.0.8
 

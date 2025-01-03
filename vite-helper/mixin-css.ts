@@ -13,7 +13,7 @@ export const mixinCss = (options?: string[]) => {
   }
 
   const mixinString = options.reduce((pre, curr) => {
-    const temp = `@import "${curr}";`
+    const temp = `@use "${curr}" as *;`
 
     return (pre += temp)
   }, '')

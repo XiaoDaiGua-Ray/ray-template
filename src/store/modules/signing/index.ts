@@ -22,6 +22,7 @@ import type {
 export const piniaSigningStore = defineStore(
   'signing',
   () => {
+    const { clearRoutes, replace } = useRouter()
     const state = reactive({
       /**
        *
@@ -95,7 +96,8 @@ export const piniaSigningStore = defineStore(
       closeAll()
 
       if (toSigning) {
-        window.location.replace('#/')
+        clearRoutes()
+        replace('/')
 
         setTimeout(() => {
           window.location.reload()

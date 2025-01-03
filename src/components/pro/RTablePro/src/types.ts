@@ -72,4 +72,10 @@ export interface TableProInst extends Omit<RTableInst, 'getTableInstance'> {
   getCurrentTableRequestParams: <T = Recordable>(
     extraConfig?: TableRequestConfig<T>,
   ) => TableRequestConfig<T>['params'] & Recordable
+  /**
+   *
+   * @description
+   * 重置表格分页。
+   */
+  resetTablePagination: () => void
 }

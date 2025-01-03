@@ -465,7 +465,7 @@ export const piniaMenuStore = defineStore(
     persist: {
       key: APP_CATCH_KEY.appPiniaMenuStore,
       storage: window.localStorage,
-      pick: ['breadcrumbOptions', 'menuKey', 'collapsed'],
+      pick: ['menuKey', 'collapsed'],
     },
   },
 )
