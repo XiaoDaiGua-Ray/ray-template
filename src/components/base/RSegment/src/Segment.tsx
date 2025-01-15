@@ -1,6 +1,6 @@
 import './index.scss'
 
-import { NTabs, NTab, NPopover, NFlex } from 'naive-ui'
+import { NTabs, NTabPane, NPopover, NFlex } from 'naive-ui'
 
 import props from './props'
 import { themeOverrides } from './constant'
@@ -103,7 +103,7 @@ export default defineComponent({
       >
         {options.map((curr) => {
           return (
-            <NTab
+            <NTabPane
               key={curr.key}
               name={curr.key}
               tab={
@@ -114,7 +114,7 @@ export default defineComponent({
               {{
                 ...curr.slots,
               }}
-            </NTab>
+            </NTabPane>
           )
         })}
       </NTabs>
