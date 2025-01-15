@@ -6,17 +6,6 @@ const props = {
   /**
    *
    * @description
-   * 是否记住上一次的位置。
-   *
-   * @default true
-   */
-  memo: {
-    type: Boolean,
-    default: true,
-  },
-  /**
-   *
-   * @description
    * 是否全屏。
    *
    * @default false
@@ -57,18 +46,6 @@ const props = {
   dialogWidth: {
     type: [String, Number] as PropType<string | number>,
     default: 446,
-  },
-  /**
-   *
-   * @description
-   * 是否启用拖拽。
-   * 当启用拖拽时，可以通过拖拽 header 部分控制模态框。
-   *
-   * @default false
-   */
-  dad: {
-    type: Boolean,
-    default: false,
   },
 }
 

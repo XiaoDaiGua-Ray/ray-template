@@ -53,7 +53,7 @@ export default defineComponent({
           title="发现新版本"
           content="当前版本已更新，点击确认加载新版本~"
           zIndex={999999999}
-          dad
+          draggable
           positiveText="确认"
           negativeText="取消"
           onPositiveClick={logout}

@@ -7,6 +7,8 @@ import { rules, useCondition } from '@/app-components/app/AppLockScreen/shared'
 import { useSettingActions } from '@/store'
 import { useTemplateRef } from 'vue'
 import { useForm } from '@/components'
+import { APP_CATCH_KEY } from '@/app-config'
+import { setStorage, encrypt } from '@/utils'
 
 import type { InputInst } from 'naive-ui'
 
@@ -27,6 +29,11 @@ const LockScreen = defineComponent({
       validate().then(() => {
         setLockAppScreen(true)
         updateSettingState('lockScreenSwitch', false)
+        setStorage(
+          APP_CATCH_KEY.appLockScreenPasswordKey,
+          encrypt(state.lockCondition.lockPassword),
+          'localStorage',
+        )
 
         state.lockCondition = useCondition()
       })

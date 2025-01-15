@@ -7,6 +7,7 @@ export * from './element'
 export * from './precision'
 export * from './vue'
 export * from './app'
+export * from './c'
 export { positionSelectedMenuItem }
 export { updateObjectValue } from './update-object-value'
 export { removeDuplicateKeys } from './remove-duplicate-keys'

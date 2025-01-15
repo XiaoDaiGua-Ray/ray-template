@@ -15,6 +15,27 @@
       --preloading-title-color: <%= preloadingConfig.titleColor %>;
       --ray-theme-primary-fade-color: <%= appPrimaryColor.primaryFadeColor %>;
       --ray-theme-primary-color: <%= appPrimaryColor.primaryColor %>;
+      --global-loading-bg-color: #ffffff;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      #pre-loading-animation {
+        background-color: var(--global-loading-bg-color);
+      }
+    }
+
+    @media (prefers-color-scheme: light) {
+      #pre-loading-animation {
+        background-color: var(--global-loading-bg-color);
+      }
+    }
+
+    html.dark #pre-loading-animation {
+      background-color: var(--global-loading-bg-color);
+    }
+
+    html.light #pre-loading-animation {
+      background-color: var(--global-loading-bg-color);
     }
 
     #pre-loading-animation {
@@ -23,13 +44,9 @@
       right: 0;
       top: 0;
       bottom: 0;
-      background-color: #ffffff;
       color: var(--preloading-title-color);
       text-align: center;
-    }
-
-    .ray-template--dark #pre-loading-animation {
-      background-color: #2a3146;
+      background-color: var(--global-loading-bg-color);
     }
 
     #pre-loading-animation .pre-loading-animation__wrapper {
@@ -95,6 +112,18 @@
       }
     }
   </style>
+  <script>
+    ;(function () {
+      const html = document.documentElement
+      const store = window.localStorage.getItem('piniaSettingStore')
+      const { _appTheme = false } = store ? JSON.parse(store) : {}
+      const loadingBgColor = _appTheme ? '#1c1e23' : '#ffffff'
+
+      html.classList.add(_appTheme ? 'dark' : 'light')
+      html.style.setProperty('--global-loading-bg-color', loadingBgColor)
+      html.style.setProperty('background-color', loadingBgColor)
+    })()
+  </script>
   <body>
     <div id="app"></div>
     <div id="pre-loading-animation">

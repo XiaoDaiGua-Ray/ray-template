@@ -1,5 +1,4 @@
 import { useModal as useNaiveModal, NScrollbar } from 'naive-ui'
-import { setupInteract } from '../utils'
 import { queryElements, setStyle, completeSize, setClass } from '@/utils'
 import { R_MODAL_CLASS, CSS_VARS_KEYS } from '../constant'
 
@@ -21,10 +20,10 @@ const useModal = () => {
               color: 'rgba(0, 0, 0, 0)',
               colorHover: 'rgba(0, 0, 0, 0)',
             },
-            trigger: 'none',
+            trigger: 'hover',
             style: {
               width: 'auto',
-              height:
+              maxHeight:
                 'calc(var(--html-height) - 29px - var(--n-padding-bottom) - var(--n-padding-bottom) - var(--n-padding-top))',
             },
           },
@@ -35,7 +34,7 @@ const useModal = () => {
         )
     }
 
-    const { preset, dad, fullscreen, width, cardWidth, dialogWidth } = options
+    const { preset, fullscreen, width, cardWidth, dialogWidth } = options
     const modalReactive = naiveCreate({
       ...rest,
       content: contentNode,
@@ -53,15 +52,6 @@ const useModal = () => {
 
       if (!modalElement) {
         return
-      }
-
-      // 是否启用拖拽
-      if (dad) {
-        setupInteract(modalElement, {
-          preset,
-          x: 0,
-          y: 0,
-        })
       }
 
       // preset 为 card，fullscreen 为 true 时，最大化 modal

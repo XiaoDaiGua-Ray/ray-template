@@ -37,21 +37,28 @@ import type { VNode } from 'vue'
 export default defineComponent({
   name: 'AppSiderBar',
   setup() {
+    // 获取 setting 相关值
     const { updateLocale, updateSettingState } = useSettingActions()
     const { t } = useI18n()
-
+    // 获取全屏相关方法
     const [isFullscreen, { toggleFullscreen, isEnabled }] = useFullscreen(
       document.getElementsByTagName('html')[0],
     )
+    // 获取设置相关方法
     const { getDrawerPlacement, getBreadcrumbSwitch } = useSettingGetters()
-    const showSettings = ref(false) // 是否显示设置抽屉
-    const globalSearchShown = ref(false) // 是否展示全局搜索
+    // 是否显示设置抽屉
+    const showSettings = ref(false)
+    // 是否展示全局搜索
+    const globalSearchShown = ref(false)
+    // 当前是否为平板或者更小的设备
     const { isTabletOrSmaller } = useDevice()
+    // 获取全局 drawer 的值
     const globalDrawerValue = getVariableToRefs('globalDrawerValue')
 
     /**
      *
-     * 顶部左边操作栏
+     * @description
+     * 顶部左边操作栏。
      */
     const leftIconOptions = computed(() =>
       createLeftIconOptions({
@@ -61,7 +68,8 @@ export default defineComponent({
     )
     /**
      *
-     * 顶部右边提示框操作栏
+     * @description
+     * 顶部右边提示框操作栏。
      */
     const rightTooltipIconOptions = computed(() =>
       createRightIconOptions({

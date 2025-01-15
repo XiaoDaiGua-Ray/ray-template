@@ -167,12 +167,6 @@ export default defineComponent({
         restrictionElement = unrefElement<HTMLElement>(re as any) as HTMLElement
       }
 
-      if (!restrictionElement) {
-        throw new Error(
-          '[RDraggableCard]: if set restrictionElement, it must be a HTMLElement or a ref of HTMLElement.',
-        )
-      }
-
       return {
         card,
         restrictionElement,

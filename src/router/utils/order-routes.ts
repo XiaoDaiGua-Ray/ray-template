@@ -16,10 +16,6 @@ export const orderRoutes = (routes: AppRouteRecordRaw[]) => {
     const currOrder = curr.meta?.order ?? 1
     const nextOrder = next.meta?.order ?? 0
 
-    if (typeof currOrder !== 'number' || typeof nextOrder !== 'number') {
-      throw new TypeError('orderRoutes error: order must be a number!')
-    }
-
     if (currOrder === nextOrder) {
       // 如果两个路由的 order 值相同，则按照路由名进行排序
       return curr.name

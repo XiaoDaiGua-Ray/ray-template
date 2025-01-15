@@ -94,7 +94,6 @@ export default defineComponent({
     return (
       <NTabs
         {...($props as TabsProps)}
-        ref="segmentRef"
         style={[cssVars]}
         class="r-segment"
         type="segment"

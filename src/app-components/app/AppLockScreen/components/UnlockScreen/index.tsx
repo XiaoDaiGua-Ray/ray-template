@@ -10,6 +10,8 @@ import { rules, useCondition } from '@/app-components/app/AppLockScreen/shared'
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
 import { useDevice } from '@/hooks'
 import { useForm } from '@/components'
+import { APP_CATCH_KEY } from '@/app-config'
+import { removeStorage, decrypt, getStorage } from '@/utils'
 
 export default defineComponent({
   name: 'UnlockScreen',
@@ -42,27 +44,56 @@ export default defineComponent({
       state.DDD = dayjs().format(DDD_FORMAT)
     }, 86_400_000)
 
+    const toSigningFn = () => {
+      removeStorage(APP_CATCH_KEY.appLockScreenPasswordKey, 'localStorage')
+      updateSettingState('lockScreenSwitch', false)
+      setTimeout(() => {
+        logout()
+      }, 100)
+    }
+
     const backToSigning = () => {
       window.$dialog.warning({
         title: '警告',
-        content: '是否返回到登陆页?',
+        content: '是否返回到登陆页并且重新登录',
         positiveText: '确定',
-        negativeText: '取消',
-        onPositiveClick: () => {
-          updateSettingState('lockScreenSwitch', false)
-          setTimeout(() => {
-            logout()
-          }, 100)
-        },
+        negativeText: '重新登录',
+        onPositiveClick: toSigningFn,
       })
     }
 
     const unlockScreen = () => {
-      validate().then(() => {
-        setLockAppScreen(false)
-        updateSettingState('lockScreenSwitch', false)
+      const catchPassword = getStorage<string>(
+        APP_CATCH_KEY.appLockScreenPasswordKey,
+        'localStorage',
+      )
 
-        state.lockCondition = useCondition()
+      if (!catchPassword) {
+        window.$dialog.warning({
+          title: '警告',
+          content: () => '检测到锁屏密码被修改，请重新登录',
+          closable: false,
+          maskClosable: false,
+          closeOnEsc: false,
+          positiveText: '重新登录',
+          onPositiveClick: toSigningFn,
+        })
+
+        return
+      }
+
+      const dCatchPassword = decrypt(catchPassword)
+
+      validate().then(() => {
+        if (dCatchPassword === state.lockCondition.lockPassword) {
+          setLockAppScreen(false)
+          updateSettingState('lockScreenSwitch', false)
+          removeStorage(APP_CATCH_KEY.appLockScreenPasswordKey, 'localStorage')
+
+          state.lockCondition = useCondition()
+        } else {
+          window.$message.warning('密码错误，请重新输入')
+        }
       })
     }
 

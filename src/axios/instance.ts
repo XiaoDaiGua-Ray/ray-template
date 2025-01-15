@@ -1,10 +1,3 @@
-/**
- *
- * 请求拦截器与响应拦截器
- * 如果有需要拓展拦截器, 请在 inject 目录下参照示例方法继续拓展
- * 该页面不应该做过多的改动与配置
- */
-
 import axios from 'axios'
 import { AXIOS_CONFIG } from '@/app-config'
 import { useAxiosInterceptor } from '@/axios/utils/interceptor'
@@ -17,23 +10,33 @@ import {
   setupRequestErrorInterceptor,
 } from '@/axios/axios-interceptor/request'
 
-import type { AxiosInstanceExpand } from './types'
+import type { AxiosInstanceExpand, RequestInterceptorConfig } from './types'
 
+// 创建 axios 实例
 const server: AxiosInstanceExpand = axios.create(AXIOS_CONFIG)
+// 获取拦截器实例
 const { createAxiosInstance, beforeFetch, fetchError } = useAxiosInterceptor()
 
 // 请求拦截器
 server.interceptors.request.use(
   (request) => {
-    createAxiosInstance(request, 'requestInstance') // 生成 request instance
-    setupRequestInterceptor() // 初始化拦截器所有已注入方法
-    beforeFetch('requestInstance', 'implementRequestInterceptorArray', 'ok') // 执行拦截器所有已注入方法
+    // 生成 request instance
+    createAxiosInstance(
+      request as RequestInterceptorConfig<unknown>,
+      'requestInstance',
+    )
+    // 初始化拦截器所有已注入方法
+    setupRequestInterceptor()
+    // 执行拦截器所有已注入方法
+    beforeFetch('requestInstance', 'implementRequestInterceptorArray', 'ok')
 
     return request
   },
   (error) => {
-    setupRequestErrorInterceptor() // 初始化拦截器所有已注入方法(错误状态)
-    fetchError('requestError', error, 'implementRequestInterceptorErrorArray') // 执行所有已注入方法
+    // 初始化拦截器所有已注入方法(错误状态)
+    setupRequestErrorInterceptor()
+    // 执行所有已注入方法
+    fetchError('requestError', error, 'implementRequestInterceptorErrorArray')
 
     return Promise.reject(error)
   },
@@ -42,17 +45,22 @@ server.interceptors.request.use(
 // 响应拦截器
 server.interceptors.response.use(
   (response) => {
-    createAxiosInstance(response, 'responseInstance') // 创建响应实例
-    setupResponseInterceptor() // 注入响应成功待执行队列
-    beforeFetch('responseInstance', 'implementResponseInterceptorArray', 'ok') // 执行响应成功拦截器
+    // 创建响应实例
+    createAxiosInstance(response, 'responseInstance')
+    // 注入响应成功待执行队列
+    setupResponseInterceptor()
+    // 执行响应成功拦截器
+    beforeFetch('responseInstance', 'implementResponseInterceptorArray', 'ok')
 
     const { data } = response
 
     return Promise.resolve(data)
   },
   (error) => {
-    setupResponseErrorInterceptor() // 注入响应失败待执行队列
-    fetchError('responseError', error, 'implementResponseInterceptorErrorArray') // 执行响应失败后拦截器
+    // 注入响应失败待执行队列
+    setupResponseErrorInterceptor()
+    // 执行响应失败后拦截器
+    fetchError('responseError', error, 'implementResponseInterceptorErrorArray')
 
     return Promise.reject(error)
   },

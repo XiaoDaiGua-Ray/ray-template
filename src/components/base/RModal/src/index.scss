@@ -4,6 +4,11 @@
   // 当设置全屏时，启用滚动
   & .n-card__content {
     overflow: scroll;
+    max-height: calc(
+      var(--html-height) - var(--n-padding-bottom) - var(--n-padding-bottom) - var(
+          --n-padding-top
+        )
+    );
   }
 }
 

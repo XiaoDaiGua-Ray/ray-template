@@ -16,7 +16,7 @@ export default defineComponent({
     const createCardModal = () => {
       create({
         title: '卡片模态框',
-        dad: true,
+        draggable: true,
         preset: 'card',
         content: () => (
           <div style="height: 3000px;">我可以被拖拽的全屏card模态框</div>
@@ -30,7 +30,7 @@ export default defineComponent({
         title: '模态框',
         content: '内容',
         preset: 'dialog',
-        dad: true,
+        draggable: true,
       })
     }
 
@@ -47,12 +47,7 @@ export default defineComponent({
       <NFlex vertical>
         <NCard title="props">
           <NFlex vertical>
-            <h3>
-              memoryPosition: 是否记住上一次被拖拽的位置，如果设置为
-              true，那么下一次打开的时候会自动定位到上一次的位置。
-            </h3>
             <h3>fullscreen: 全屏模态框。</h3>
-            <h3>dad: 启用拖拽，当配置为 false 时，会禁用拖拽效果。</h3>
           </NFlex>
         </NCard>
         <RModal
@@ -67,7 +62,7 @@ export default defineComponent({
           v-model:show={this.modal2}
           preset="card"
           title="可拖拽卡片模态框"
-          dad
+          draggable
         >
           <p>我可以被拖拽</p>
         </RModal>
@@ -75,7 +70,7 @@ export default defineComponent({
           v-model:show={this.modal3}
           preset="dialog"
           title="可拖拽卡片模态框"
-          dad
+          draggable
         >
           <p>我可以被拖拽</p>
         </RModal>

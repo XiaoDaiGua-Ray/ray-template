@@ -94,6 +94,7 @@ export const APP_CATCH_KEY_PREFIX = ''
  *   - appPiniaSigningStore: pinia signing store key
  *   - appVersionProvider: 版本信息缓存 key
  *   - appMenuTagOptions: 标签页菜单列表
+ *   - appLockScreenPasswordKey: 锁屏密码缓存 key
  */
 export const APP_CATCH_KEY = {
   signing: 'signing',
@@ -108,6 +109,7 @@ export const APP_CATCH_KEY = {
   isAppLockScreen: 'isAppLockScreen',
   appGlobalSearchOptions: 'appGlobalSearchOptions',
   appMenuTagOptions: 'appMenuTagOptions',
+  appLockScreenPasswordKey: 'appLockScreenPasswordKey',
 } as const
 
 /**

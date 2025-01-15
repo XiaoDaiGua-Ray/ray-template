@@ -84,7 +84,14 @@ export default defineComponent({
     let searchElementIndex = 0
     // 缓存索引
     let preSearchElementIndex = searchElementIndex
-    const { isTabletOrSmaller } = useDevice()
+    const { isTabletOrSmaller } = useDevice({
+      observer: (val) => {
+        // 当处于小尺寸状态时，自动关闭搜索框
+        if (val) {
+          modelShow.value = false
+        }
+      },
+    })
     const loading = ref(false)
     // 激活样式 class name
     const ACTIVE_CLASS = 'content-item--active'
@@ -309,22 +316,7 @@ export default defineComponent({
       </NFlex>
     )
 
-    watchEffect(() => {
-      // 当处于小尺寸状态时，自动关闭搜索框
-      if (isTabletOrSmaller.value) {
-        modelShow.value = false
-      }
-    })
-
-    useEventListener(
-      window,
-      'keydown',
-      (e: KeyboardEvent) => {
-        registerArouseKeyboard(e)
-        registerChangeSearchElementIndex(e)
-      },
-      true,
-    )
+    useEventListener(window, 'keydown', registerArouseKeyboard)
 
     return {
       ...toRefs(state),
@@ -336,11 +328,16 @@ export default defineComponent({
       isTabletOrSmaller,
       SearchItem,
       loading,
+      registerChangeSearchElementIndex,
     }
   },
   render() {
     const { isTabletOrSmaller, searchOptions, loading } = this
-    const { SearchItem, fuzzySearchMenuOptions } = this
+    const {
+      SearchItem,
+      fuzzySearchMenuOptions,
+      registerChangeSearchElementIndex,
+    } = this
 
     return isTabletOrSmaller ? (
       <div style="display: none;"></div>
@@ -350,7 +347,11 @@ export default defineComponent({
         transformOrigin="center"
         displayDirective="if"
       >
-        <div class="global-search global-search--dark global-search--light">
+        <div
+          class="global-search global-search--dark global-search--light"
+          tabindex="-1"
+          onKeydown={registerChangeSearchElementIndex}
+        >
           <div class="global-search__wrapper">
             <NCard
               class="global-search__card"
