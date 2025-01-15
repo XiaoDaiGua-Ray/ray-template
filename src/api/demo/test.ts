@@ -28,7 +28,7 @@ interface JSONPlaceholder {
  *
  * @returns 测试
  *
- * @medthod get
+ * @method get
  */
 export const getWeather = (city: string) => {
   return request<AxiosTestResponse>({
