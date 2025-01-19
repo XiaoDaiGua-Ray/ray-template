@@ -114,7 +114,7 @@ export default defineComponent({
     // 表格数据
     const tableDataRef = ref<RowData[]>([])
     // 表格列
-    const baseColumns: DataTableColumns<RowData> = [
+    const baseColumns = ref<DataTableColumns<RowData>>([
       {
         type: 'selection',
       },
@@ -159,7 +159,7 @@ export default defineComponent({
         title: 'Remark',
         key: 'remark',
       },
-    ]
+    ])
     // 表格分页数据
     const itemCountRef = ref(0)
     // 查询条件
@@ -452,7 +452,7 @@ export default defineComponent({
         <RTablePro
           onRegister={tableProRegister}
           data={tableDataRef}
-          columns={baseColumns}
+          v-model:columns={this.baseColumns}
           loading={loadingGetPersonList}
           // 如果需要设置分页功能，则该参数必传
           paginationCount={itemCountRef}

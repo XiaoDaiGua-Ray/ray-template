@@ -123,7 +123,7 @@ function getStorage<T = unknown>(
   try {
     const data = storage.getItem(prefixedKey)
 
-    return data === null ? defaultValue ?? null : (JSON.parse(data) as T)
+    return data === null ? (defaultValue ?? null) : (JSON.parse(data) as T)
   } catch (error) {
     console.error(
       `[getStorage]: Failed to get stored data for key '${key}'`,

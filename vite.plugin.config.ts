@@ -5,7 +5,7 @@ import viteVueJSX from '@vitejs/plugin-vue-jsx'
 import viteVeI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import viteInspect from 'vite-plugin-inspect'
 import viteSvgLoader from 'vite-svg-loader'
-import { analyzer, adapter } from 'vite-bundle-analyzer'
+import { analyzer } from 'vite-bundle-analyzer'
 import gzipPlugin from 'rollup-plugin-gzip'
 import { ViteEjsPlugin as viteEjsPlugin } from 'vite-plugin-ejs'
 import viteAutoImport from 'unplugin-auto-import/vite'
@@ -33,12 +33,12 @@ function onlyReportOptions(mode: string): PluginOption[] {
   }
 
   return [
-    adapter(
-      analyzer({
-        analyzerMode: 'server', // 以默认服务器代理打开文件
-        openAnalyzer: true, // 以默认服务器代理打开文件
-      }),
-    ),
+    analyzer({
+      // 以默认服务器代理打开文件
+      analyzerMode: 'server',
+      // 以默认服务器代理打开文件
+      openAnalyzer: true,
+    }),
   ]
 }
 
