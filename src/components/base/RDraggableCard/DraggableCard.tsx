@@ -5,10 +5,11 @@ import { Teleport, Transition } from 'vue'
 
 import interact from 'interactjs'
 import { cardProps } from 'naive-ui'
-import { unrefElement, completeSize, queryElements, isValueType } from '@/utils'
+import { unrefElement, completeSize, queryElements } from '@/utils'
 
 import type { VNode } from 'vue'
 import type { MaybeElement, MaybeRefOrGetter } from '@vueuse/core'
+import type { AnyFC } from '@/types'
 
 type RestrictRectOptions = Parameters<typeof interact.modifiers.restrictRect>[0]
 
@@ -17,12 +18,15 @@ type Padding = {
   y: number
 }
 
-type Position =
+export type DefaultPosition =
   | Padding
   | 'top-left'
   | 'top-right'
   | 'bottom-left'
   | 'bottom-right'
+  | 'center'
+  | 'top-center'
+  | 'bottom-center'
 
 const props = {
   ...cardProps,
@@ -69,7 +73,7 @@ const props = {
    * @default { x: 0, y: 0 }
    */
   defaultPosition: {
-    type: [Object, String] as PropType<Position>,
+    type: [Object, String] as PropType<DefaultPosition>,
     default: () => ({
       x: 0,
       y: 0,
@@ -132,7 +136,7 @@ export default defineComponent({
       x: 0,
       y: 0,
     }
-    const CONTAINER_ID = 'draggable-card-container'
+    const CONTAINER_ID = 'r-draggable-card-container'
     const cssVars = computed(() => {
       return {
         '--r-draggable-card-width': completeSize(props.width),
@@ -140,7 +144,12 @@ export default defineComponent({
       }
     })
     let isSetup = false
+    const cacheProps = {
+      defaultPosition: props.defaultPosition,
+      dad: props.dad,
+    }
 
+    // 创建 DraggableCard 容器
     const createDraggableCardContainer = () => {
       if (!document.getElementById(CONTAINER_ID)) {
         const container = document.createElement('div')
@@ -152,6 +161,7 @@ export default defineComponent({
 
     createDraggableCardContainer()
 
+    // 获取 card, restrictionElement 的 dom 信息
     const getDom = () => {
       const card = unrefElement(cardRef)
       const re =
@@ -173,9 +183,11 @@ export default defineComponent({
       }
     }
 
+    // 获取 container, card 的位置
     const getPosition = (containerRect: DOMRect, cardRect: DOMRect) => {
       const { defaultPosition, padding } = props
       const { x: paddingX = 0, y: paddingY = 0 } = padding ?? {}
+      // 默认的 body restrictionElement 的偏移量是 0
       const {
         x: containerX,
         y: containerY,
@@ -186,6 +198,33 @@ export default defineComponent({
 
       if (typeof defaultPosition === 'string') {
         switch (defaultPosition) {
+          case 'top-center': {
+            const cx1 = (containerWidth - cardWidth) / 2 + containerX
+            const cy1 = paddingY + containerY
+            const cx2 = paddingX + cx1
+            const cy2 = cy1
+
+            return { x: cx2, y: cy2 }
+          }
+
+          case 'bottom-center': {
+            const cx1 = (containerWidth - cardWidth) / 2 + containerX
+            const cy1 = containerHeight - cardHeight - paddingY + containerY
+            const cx2 = paddingX + cx1
+            const cy2 = cy1
+
+            return { x: cx2, y: cy2 }
+          }
+
+          case 'center': {
+            const cx1 = (containerWidth - cardWidth) / 2 + containerX
+            const cy1 = (containerHeight - cardHeight) / 2 + containerY
+            const cx2 = paddingX + cx1
+            const cy2 = paddingY + cy1
+
+            return { x: cx2, y: cy2 }
+          }
+
           case 'top-left':
             return { x: paddingX + containerX, y: paddingY + containerY }
 
@@ -221,10 +260,11 @@ export default defineComponent({
       }
     }
 
+    // 初始化设置 card 的位置，并且根据配置启用拖拽
     const setupDraggable = () => {
       const { card, restrictionElement } = getDom()
 
-      if (!card || !props.dad) {
+      if (!card) {
         return
       }
 
@@ -249,6 +289,10 @@ export default defineComponent({
         position.y = p.y
       }
 
+      if (!props.dad) {
+        return
+      }
+
       interactInst = interact(card)
         .draggable({
           inertia: true,
@@ -271,15 +315,30 @@ export default defineComponent({
       isSetup = true
     }
 
+    // 取消拖拽
+    const resetDraggable = () => {
+      interactInst?.unset()
+
+      interactInst = null
+    }
+
+    // 更新拖拽
+    const refreshDraggableWhenPropsChange = (fn: AnyFC) => {
+      isSetup = false
+
+      fn()
+      setupDraggable()
+    }
+
     expose()
 
     watchEffect(() => {
-      if (props.dad) {
-        setupDraggable()
-      } else {
-        interactInst?.unset()
+      props.dad ? setupDraggable() : resetDraggable()
 
-        interactInst = null
+      if (props.defaultPosition !== cacheProps.defaultPosition) {
+        refreshDraggableWhenPropsChange(() => {
+          cacheProps.defaultPosition = props.defaultPosition
+        })
       }
     })
 

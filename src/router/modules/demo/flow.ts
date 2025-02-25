@@ -5,7 +5,7 @@ import type { AppRouteRecordRaw } from '@/router/types'
 
 const r: AppRouteRecordRaw = {
   path: '/flow',
-  component: () => import('@/views/demo/Flow'),
+  component: () => import('@/views/demo/flow-demo'),
   meta: {
     i18nKey: t('menu.Flow'),
     icon: 'other',

@@ -1,19 +1,35 @@
 import { RDraggableCard } from '@/components'
-import { NButton, NCard, NFlex } from 'naive-ui'
+import { NButton, NCard, NFlex, NRadio, NRadioGroup, NSwitch } from 'naive-ui'
+
+import type { DefaultPosition } from '@/components'
 
 export default defineComponent({
   name: 'DraggableCardDemo',
   setup() {
     const card3 = ref(false)
     const domRef = useTemplateRef<HTMLElement>('domRef')
+    const positionRadioOptions = [
+      { label: 'center', value: 'center' },
+      { label: 'top-center', value: 'top-center' },
+      { label: 'bottom-center', value: 'bottom-center' },
+      { label: 'top-left', value: 'top-left' },
+      { label: 'top-right', value: 'top-right' },
+      { label: 'bottom-left', value: 'bottom-left' },
+      { label: 'bottom-right', value: 'bottom-right' },
+    ]
+    const positionRadioValue = ref('center')
+    const card3Dad = ref(true)
 
     return {
       card3,
+      card3Dad,
       domRef,
+      positionRadioOptions,
+      positionRadioValue,
     }
   },
   render() {
-    const { card3, domRef } = this
+    const { card3, domRef, positionRadioOptions } = this
 
     return (
       <div>
@@ -22,7 +38,7 @@ export default defineComponent({
           style={{
             width: '100%',
             height: '400px',
-            backgroundColor: 'red',
+            backgroundColor: 'rgba(255, 10, 20, 1)',
           }}
         ></div>
         <RDraggableCard animation title="Body">
@@ -35,6 +51,8 @@ export default defineComponent({
             restrictionElement={domRef}
             closable
             onClose={() => (this.card3 = false)}
+            defaultPosition={this.positionRadioValue as DefaultPosition}
+            dad={this.card3Dad}
           >
             {{
               default: () =>
@@ -46,9 +64,33 @@ export default defineComponent({
           </RDraggableCard>
         ) : null}
         <NCard title="显示与隐藏卡片">
-          <NButton type="primary" onClick={() => (this.card3 = !this.card3)}>
-            点一下试试
-          </NButton>
+          <NFlex vertical>
+            <NFlex>
+              <NSwitch v-model:value={this.card3Dad}>
+                {{
+                  checked: () => '拖拽',
+                  unchecked: () => '禁用',
+                }}
+              </NSwitch>
+            </NFlex>
+            <NFlex>
+              <NRadioGroup v-model:value={this.positionRadioValue}>
+                {positionRadioOptions.map((curr) => (
+                  <NRadio key={curr.value} value={curr.value}>
+                    {curr.label}
+                  </NRadio>
+                ))}
+              </NRadioGroup>
+            </NFlex>
+            <NFlex>
+              <NButton
+                type="primary"
+                onClick={() => (this.card3 = !this.card3)}
+              >
+                点一下试试
+              </NButton>
+            </NFlex>
+          </NFlex>
         </NCard>
       </div>
     )

@@ -16,6 +16,8 @@ export default defineComponent({
 
     const getInst = () => {
       console.log(getFlowInstance())
+
+      window.$message.info('获取实例成功，请在 console 中查看')
     }
 
     setTimeout(() => {

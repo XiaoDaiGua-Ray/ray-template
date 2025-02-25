@@ -50,7 +50,7 @@ const Dashboard = defineComponent({
           <NFlex align="center">
             如果有希望补充的功能可以在
             <NText
-              as="a"
+              tag="a"
               class="dashboard-link"
               type="primary"
               {...{

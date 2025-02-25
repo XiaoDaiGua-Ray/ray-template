@@ -33,3 +33,4 @@ export type {
   FlowGraphData,
   FlowOptions,
 } from './base/RFlow/src/types'
+export type { DefaultPosition } from './base/RDraggableCard/DraggableCard'

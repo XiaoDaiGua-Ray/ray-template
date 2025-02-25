@@ -5,7 +5,7 @@ import type { AppRouteRecordRaw } from '@/router/types'
 
 const r: AppRouteRecordRaw = {
   path: '/table-pro',
-  component: () => import('@/views/demo/TablePro'),
+  component: () => import('@/views/demo/table-pro-demo'),
   meta: {
     i18nKey: t('menu.TablePro'),
     icon: 'other',

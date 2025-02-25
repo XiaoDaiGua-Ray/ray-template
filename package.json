@@ -1,7 +1,7 @@
 {
   "name": "ray-template",
   "private": false,
-  "version": "5.0.10",
+  "version": "5.1.0",
   "type": "module",
   "engines": {
     "node": "^18.0.0 || ^20.0.0 || >=22.0.0",
@@ -53,7 +53,7 @@
     "print-js": "^1.6.0",
     "vue": "^3.5.13",
     "vue-demi": "0.14.10",
-    "vue-hooks-plus": "2.2.1",
+    "vue-hooks-plus": "2.2.3",
     "vue-i18n": "^9.13.1",
     "vue-router": "^4.4.0",
     "vue3-next-qrcode": "2.0.10"
@@ -92,12 +92,12 @@
     "postcss-px-to-viewport-8-with-include": "1.2.2",
     "prettier": "3.4.2",
     "rollup-plugin-gzip": "4.0.1",
-    "sass": "1.83.0",
+    "sass": "1.83.4",
     "svg-sprite-loader": "6.0.11",
     "typescript": "5.6.3",
     "unplugin-auto-import": "19.0.0",
     "unplugin-vue-components": "0.28.0",
-    "vite": "6.0.7",
+    "vite": "6.1.0",
     "vite-bundle-analyzer": "0.16.0",
     "vite-plugin-cdn2": "1.1.0",
     "vite-plugin-ejs": "1.7.0",
