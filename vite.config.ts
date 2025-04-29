@@ -3,6 +3,7 @@ import { defineConfig } from 'vite'
 import config from './vite.custom.config'
 import pkg from './package.json'
 import vitePlugins from './vite.plugin.config'
+import { chunksCopilot } from './vite-helper'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -70,9 +71,7 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks: (id) => {
-            const isUtils = () => id.includes('src/utils/')
-            const isHooks = () => id.includes('src/hooks/')
-            const isNodeModules = () => id.includes('node_modules')
+            const { isUtils, isHooks, isNodeModules } = chunksCopilot(id)
             const index = id.includes('pnpm') ? 1 : 0 // 兼容 pnpm, yarn, npm 包管理器差异
 
             if (isUtils()) {

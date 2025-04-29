@@ -3,8 +3,6 @@ import { RCollapseGrid, RForm } from '@/components'
 import formProps from '../../base/RForm/src/props'
 import collapseGridProps from '../../base/RCollapseGrid/src/props'
 
-import type { FormProps, GridProps } from 'naive-ui'
-
 /**
  *
  * @description
@@ -30,8 +28,7 @@ export default defineComponent({
   }),
   render() {
     const { $slots, $props } = this
-    const { labelPlacement, showFeedback, ...rest } = $props as FormProps &
-      GridProps
+    const { labelPlacement, showFeedback, ...rest } = $props
 
     return (
       <RForm {...rest} labelPlacement="top" showFeedback={false}>

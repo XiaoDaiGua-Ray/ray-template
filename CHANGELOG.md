@@ -2,14 +2,11 @@
 
 ## Feats
 
-- 主流依赖更新
-- `RDraggableCard` 组件 `defaultPosition` 配置项新增 `center`, `top-center`, `bottom-center` 配置项，并且该配置项支持动态更新了
-- `RDraggableCard` 组件容器 `id` 由 `draggable-card-container` 变更为 `r-draggable-card-container`
-- `views/demo` 包命名调整
+- 更新 `vite` 版本至 `5.3.3`
 
 ## Fixes
 
-- 修复 `RDraggableCard` 组件设置 `dad` 为 `false` 时，初始化位置错误的问题
+- 修复 `chunksCopilot` 方法判断不准确导致 `node_modules` 库被拆分到 `hooks` 分包重复的问题
 
 ## 5.0.10
 

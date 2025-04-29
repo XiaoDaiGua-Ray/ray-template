@@ -154,9 +154,7 @@ export default defineComponent({
   },
   render() {
     const { register, $props, paginationRef, $slots } = this
-    const { onRegister, showPagination, ...rest } = $props as ExtractPropTypes<
-      typeof props
-    >
+    const { onRegister, showPagination, ...rest } = $props
 
     return (
       <RTable
