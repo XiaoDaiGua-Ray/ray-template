@@ -1,5 +1,5 @@
 export const chunksCopilot = (id: string) => {
-  const utilsLibOptions = ['src/utils']
+  const utilsLibOptions = 'src/utils'
   const hooksLibOptions = [
     'src/hooks/components',
     'src/hooks/template',
@@ -8,7 +8,7 @@ export const chunksCopilot = (id: string) => {
   const nodeModulesOptions = ['node_modules']
 
   // 是否为模板工程下的 utils 库
-  const isUtils = () => utilsLibOptions.some((option) => id.includes(option))
+  const isUtils = () => id.includes(utilsLibOptions)
   // 是否为模板工程下的 hooks 库，不包含 node_modules 库
   const isHooks = () =>
     hooksLibOptions.some((option) => id.includes(option)) &&
