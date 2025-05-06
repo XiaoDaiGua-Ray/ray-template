@@ -17,6 +17,7 @@ export default defineConfig(({ mode }) => {
     appPrimaryColor,
     base,
   } = config
+  const { isUtils, isHooks, isNodeModules } = chunksCopilot()
 
   const __APP_CFG__ = {
     pkg: {
@@ -71,18 +72,17 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks: (id) => {
-            const { isUtils, isHooks, isNodeModules } = chunksCopilot(id)
             const index = id.includes('pnpm') ? 1 : 0 // 兼容 pnpm, yarn, npm 包管理器差异
 
-            if (isUtils()) {
+            if (isUtils(id)) {
               return 'utils'
             }
 
-            if (isHooks()) {
+            if (isHooks(id)) {
               return 'hooks'
             }
 
-            if (isNodeModules()) {
+            if (isNodeModules(id)) {
               return id
                 .toString()
                 .split('node_modules/')[1]
