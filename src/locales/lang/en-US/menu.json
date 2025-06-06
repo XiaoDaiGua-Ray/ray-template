@@ -9,8 +9,10 @@
   "Doc": "Doc",
   "DocLocal": "Doc (China)",
   "DocLocalInside": "Doc（inside）",
+  "DraggableCard": "Draggable Card",
   "Echart": "Chart",
   "Error": "Error Page",
+  "Flow": "Flow",
   "Form": "Form",
   "Mock": "Mock",
   "Modal": "Modal",
@@ -26,9 +28,8 @@
   "Segment": "Segment",
   "SvgIcon": "SVG Icon",
   "Table": "Table",
-  "TemplateHooks": "Template Api",
-  "scrollReveal": "Scroll Reveal",
+  "TableAutoHeight": "Table Auto Height",
   "TablePro": "Table Pro",
-  "Flow": "Flow",
-  "DraggableCard": "Draggable Card"
+  "TemplateHooks": "Template Api",
+  "scrollReveal": "Scroll Reveal"
 }

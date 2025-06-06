@@ -1,9 +1,10 @@
-import { RTable } from '@/components'
+import { RTable } from '../../../base/RTable'
 
 import props from './props'
-import { useTable } from '@/components'
+import useTable from '../../../base/RTable/src/hooks/useTable'
 import { call, removeDuplicateKeys } from '@/utils'
 import { usePagination } from '@/hooks'
+import { omit } from 'lodash-es'
 
 import type { TablePagination, TableRequestConfig, TableProInst } from './types'
 
@@ -11,20 +12,7 @@ export default defineComponent({
   name: 'RTablePro',
   props,
   setup(props) {
-    const [
-      register,
-      {
-        clearFilters,
-        clearSorter,
-        downloadCsv,
-        filters,
-        page,
-        scrollTo,
-        sort,
-        print,
-        filter,
-      },
-    ] = useTable()
+    const [register, tableFns] = useTable()
     const [
       paginationRef,
       {
@@ -36,16 +24,20 @@ export default defineComponent({
         getItemCount,
       },
     ] = usePagination(void 0, {
-      prefix: (info) => `共 ${info.itemCount} 条`,
+      prefix: props.paginationPrefix,
     })
     const tableRequestRef = computed(() => props.request)
 
     // 获取最新 statistics 和 pagination 值
     const update = (): TablePagination => {
+      const page = getPage()
+      const pageSize = getPageSize()
+      const itemCount = getItemCount()
+
       return {
-        getItemCount,
-        getPage,
-        getPageSize,
+        page,
+        pageSize,
+        itemCount,
       }
     }
 
@@ -62,7 +54,7 @@ export default defineComponent({
     const combineRequestParams = (extraConfig?: TableRequestConfig) => {
       const config = Object.assign({}, props.requestConfig, extraConfig)
 
-      const { formatRangeTime } = config
+      const { formatRangeTime, excludeParams } = config
       let params = config.params || {}
 
       // 转换时间范围，该功能仅支持 NDatePicker range 模式参数
@@ -87,6 +79,11 @@ export default defineComponent({
 
       params = removeDuplicateKeys(params)
 
+      // 排除指定的请求参数
+      if (excludeParams) {
+        params = omit(params, excludeParams)
+      }
+
       const requestParams = Object.assign({}, params, {
         page: getPage(),
         pageSize: getPageSize(),
@@ -95,17 +92,15 @@ export default defineComponent({
       return requestParams
     }
 
-    // 会重置 pagination 的请求
-    const runResetPaginationRequest = (extraConfig?: TableRequestConfig) => {
-      resetPagination()
+    // 会重置 pagination 的请求，默认会重置
+    const runResetPaginationRequest = (
+      extraConfig?: TableRequestConfig,
+      reset = true,
+    ) => {
+      if (reset) {
+        resetPagination()
+      }
 
-      const requestParams = combineRequestParams(extraConfig)
-
-      tableRequestRef.value?.(requestParams)
-    }
-
-    // 不会重置 pagination 的请求
-    const runRequest = (extraConfig?: TableRequestConfig) => {
       const requestParams = combineRequestParams(extraConfig)
 
       tableRequestRef.value?.(requestParams)
@@ -117,7 +112,7 @@ export default defineComponent({
         const { manual } = props
 
         if (!manual) {
-          runRequest()
+          runResetPaginationRequest(void 0, false)
         }
 
         emitTableUpdate()
@@ -129,21 +124,12 @@ export default defineComponent({
 
       if (onRegister) {
         call(onRegister, {
+          ...tableFns,
           getTablePagination: update,
           runTableRequest: runResetPaginationRequest,
-          clearFilters,
-          clearSorter,
-          downloadCsv,
-          filters,
-          page,
-          scrollTo,
-          sort,
-          print,
-          filter,
-          getCurrentTableRequestParams:
-            combineRequestParams as TableProInst['getCurrentTableRequestParams'],
+          getCurrentTableRequestParams: combineRequestParams,
           resetTablePagination: resetPagination,
-        })
+        } as unknown as TableProInst)
       }
     })
 

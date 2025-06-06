@@ -1,3 +1,57 @@
+## 5.2.0
+
+一些破坏性更新，请谨慎更新。
+
+## Feats
+
+- 更新 `vue` 版本至 `3.5.16`
+- 更新 `vite` 版本至 `6.3.5`
+- `RTablePro` 组件相关
+  - `runTableRequest` 方法现在支持传递 `reset` 参数，配置是否重置分页请求
+  - `runTableRequest` 方法新增 `excludeParams` 配置项，允许排除指定的请求参数
+  - `onTablePaginationUpdate` 方法参数返回值由返回函数改为直接返回值
+  - 新增 `paginationPrefix` 配置项，允许自定义分页器前缀，在国际化需求可能会有用
+  - 新增 `flexAutoHeight` 配置项，默认关闭，允许配置表格是否自动继承高度，但是要结合 `css flex` 属性使用
+
+> 如果你是使用 `NFlex` 组件结合 `RTablePro` 或者 `RTable` 组件使用，需要配置 `Flex` 组件的 `vertical` 属性，并且设置 `class` 为 `flex-vertical`，即可便捷实现该效果。否则你需要设置 `css flex` 相关属性（可以参考 Demo2）的示例。
+
+```tsx
+import { RTablePro } from '@/components'
+import { NFlex } from 'naive-ui'
+
+const Demo1 = () => {
+  return (
+    <NFlex vertical class="flex-vertical">
+      <RTablePro flexAutoHeight />
+    </NFlex>
+  )
+}
+
+const Demo2 = () => {
+  return (
+    <div
+      class="flex-vertical"
+      style="height: 100%; display: flex; flex-direction: column;"
+    >
+      <RTablePro flexAutoHeight />
+    </div>
+  )
+}
+```
+
+- 新增 `getDateByNaiveDatePicker` 方法，便捷获取 `naive-ui` 的 `DatePicker` 组件的日期值
+- `Recordable` 类型新增 `symbol`, `number` 类型作为 `key` 支持
+- `RCollapse` 组件相关
+  - 默认配置 `responsive` 配置项为 `screen` 响应模式
+  - 默认配置 `cols` 配置项为 `4 xs:1 s:2 m:2 l:4 xl:4 2xl:6`，虽然目前的预设已经足够使用，但你也可以高度自定义需求
+- `types` 包
+  - 新增 `GlobalDataTableColumns` 类型，用于声明全局 `DataTableColumns` 类型
+  - 新增 `GlobalRecordable` 类型，用于声明全局 `Recordable` 类型
+
+## Fixes
+
+- 修复 `RTablePro` 组件 `print` 方法打印内容错误的问题
+
 ## 5.1.0
 
 ## Feats

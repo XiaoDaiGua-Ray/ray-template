@@ -78,6 +78,19 @@ export default defineComponent({
 
       return headerStyle
     })
+    // 如果启用了 flexAutoHeight 属性，则自动继承高度
+    const flexAutoHeightStyle = computed(() => {
+      const { flexAutoHeight } = props
+
+      if (!flexAutoHeight) {
+        return null
+      }
+
+      return {
+        height: '100%',
+        flex: 1,
+      }
+    })
 
     /**
      *
@@ -249,6 +262,7 @@ export default defineComponent({
       wrapperRef,
       propsPopselectValue,
       cardHeaderStyle,
+      flexAutoHeightStyle,
     }
   },
   render() {
@@ -262,6 +276,7 @@ export default defineComponent({
       privateReactive,
       propsPopselectValue,
       cardHeaderStyle,
+      flexAutoHeightStyle,
     } = this
     const { class: className, ...restAttrs } = $attrs
     const { tool, combineRowProps, contextMenuSelect } = this
@@ -273,6 +288,8 @@ export default defineComponent({
       title,
       tableFlexHeight,
       cardProps,
+      flexAutoHeight,
+      flexHeight,
       ...restProps
     } = $props
     const { headerStyle, ...restCardProps } = cardProps ?? {}
@@ -287,7 +304,8 @@ export default defineComponent({
         ref="wrapperRef"
         bordered={wrapperBordered}
         class={className}
-        style={cardHeaderStyle}
+        // flexAutoHeight 具有更高的优先级
+        style={Object.assign({}, cardHeaderStyle, flexAutoHeightStyle)}
       >
         {{
           default: () => (
@@ -298,12 +316,14 @@ export default defineComponent({
                 }}
                 {...(restProps as DataTableProps)}
                 {...propsPopselectValue}
+                flexHeight={flexAutoHeight ? true : flexHeight}
                 rowProps={combineRowProps.bind(this)}
                 size={privateReactive.size}
                 ref="rTableInst"
                 style={{
-                  height:
-                    tableFlexHeight !== null && tableFlexHeight !== void 0
+                  height: flexAutoHeight
+                    ? '100%'
+                    : tableFlexHeight !== null && tableFlexHeight !== void 0
                       ? completeSize(tableFlexHeight)
                       : null,
                 }}

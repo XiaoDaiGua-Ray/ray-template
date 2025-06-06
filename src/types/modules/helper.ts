@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+type RecordKey = string | number | symbol
+
 /**
  *
  * @description
@@ -47,8 +49,10 @@ export type ConditionalPick<Base, Condition> = Pick<
  *
  * @example
  * const A: Recordable = { a: 1, b: [] }
+ * const B : Recordable = { 1: '1', b: '2' }
+ * const C : Recordable = { [Symbol('a')]: 'a' }
  */
-export type Recordable<T = any> = Record<string, T>
+export type Recordable<T = any> = Record<RecordKey, T>
 
 /**
  *

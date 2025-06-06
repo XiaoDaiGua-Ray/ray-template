@@ -11,3 +11,4 @@ export * from './c'
 export { positionSelectedMenuItem }
 export { updateObjectValue } from './update-object-value'
 export { removeDuplicateKeys } from './remove-duplicate-keys'
+export { getDateByNaiveDatePicker } from './get-date-by-naive-date-picker'

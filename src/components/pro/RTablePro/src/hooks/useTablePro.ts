@@ -1,3 +1,5 @@
+import { printDom } from '@/utils'
+
 import type { Recordable } from '@/types'
 import type { TableProInst, TableRequestConfig } from '../types'
 import type {
@@ -49,6 +51,9 @@ export const useTablePro = () => {
 
   /**
    *
+   * @param extraConfig 额外请求合并配置项
+   * @param reset 是否重置分页请求
+   *
    * @description
    * 手动触发表格请求，用于手动刷新表格。
    * 如果设置了 manual 为 true，则需要手动调用该函数。
@@ -57,9 +62,13 @@ export const useTablePro = () => {
    * 允许手动配置 TableRequestConfig 参数，会自动合并 props tableRequestConfig 配置。
    * 并且，运行该函数会重置 pagination 为初始状态。
    */
-  const runTableRequest = <T extends Recordable>(
-    extraConfig?: TableRequestConfig<T>,
-  ) => getTableProInstance().runTableRequest.call(null, extraConfig)
+  const runTableRequest = <
+    T extends Recordable,
+    ExcludeParams extends keyof T = keyof T,
+  >(
+    extraConfig?: TableRequestConfig<T, ExcludeParams>,
+    reset?: boolean,
+  ) => getTableProInstance().runTableRequest.call(null, extraConfig, reset)
 
   /**
    *
@@ -81,6 +90,8 @@ export const useTablePro = () => {
 
   /**
    *
+   * @param options 下载 CSV 配置项
+   *
    * @description
    * 下载 CSV。
    *
@@ -90,6 +101,8 @@ export const useTablePro = () => {
     getTableProInstance().downloadCsv.call(null, options)
 
   /**
+   *
+   * @param filters 过滤器状态配置
    *
    * @description
    * 设定表格当前的过滤器。
@@ -101,6 +114,8 @@ export const useTablePro = () => {
 
   /**
    *
+   * @param page 页数
+   *
    * @description
    * 手动设置 page。
    *
@@ -109,6 +124,8 @@ export const useTablePro = () => {
   const page = (page: number) => getTableProInstance().page.call(null, page)
 
   /**
+   *
+   * @param options 滚动配置项
    *
    * @description
    * 滚动内容。
@@ -121,6 +138,9 @@ export const useTablePro = () => {
 
   /**
    *
+   * @param columnKey 列键
+   * @param order 排序顺序
+   *
    * @description
    * 设定表格的过滤状态。
    *
@@ -131,27 +151,43 @@ export const useTablePro = () => {
 
   /**
    *
+   * @param options 打印选项
+   *
    * @description
    * 打印表格。
    */
-  const print = (options?: PrintDomOptions) =>
-    getTableProInstance().print.call(null, options)
+  const print = (options?: PrintDomOptions) => {
+    const { config } = getTableProInstance()
+    const { uuidWrapper } = config ?? {}
+
+    if (uuidWrapper) {
+      const tableWrapperElement = document.getElementById(uuidWrapper)
+
+      printDom(tableWrapperElement, options)
+    }
+  }
 
   /**
    *
    * @param extraConfig 额外请求合并配置项
+   * @param excludeParams 排除的请求参数
    *
    * @description
    * 获取当前内部表格请求参数。
    */
-  const getCurrentTableRequestParams = <T = Recordable>(
-    extraConfig?: TableRequestConfig<T>,
+  const getCurrentTableRequestParams = <
+    T extends Recordable,
+    ExcludeParams extends keyof T = keyof T,
+  >(
+    extraConfig?: TableRequestConfig<T, ExcludeParams>,
   ): T & Recordable =>
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     getTableProInstance().getCurrentTableRequestParams.call(null, extraConfig)
 
   /**
+   *
+   * @param extraConfig 额外请求合并配置项
    *
    * @description
    * 重置表格分页。

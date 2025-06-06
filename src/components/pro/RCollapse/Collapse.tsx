@@ -3,6 +3,8 @@ import { RCollapseGrid, RForm } from '@/components'
 import formProps from '../../base/RForm/src/props'
 import collapseGridProps from '../../base/RCollapseGrid/src/props'
 
+import type { GridProps } from 'naive-ui'
+
 /**
  *
  * @description
@@ -18,12 +20,16 @@ export default defineComponent({
       default: true,
     },
     cols: {
-      type: Number,
-      default: 4,
+      type: [Number, String] as PropType<GridProps['cols']>,
+      default: '4 xs:1 s:2 m:2 l:4 xl:4 2xl:6',
     },
     bordered: {
       type: Boolean,
       default: true,
+    },
+    responsive: {
+      type: String as PropType<GridProps['responsive']>,
+      default: 'screen',
     },
   }),
   render() {

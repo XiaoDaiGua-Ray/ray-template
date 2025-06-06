@@ -2,7 +2,12 @@ import { tableProps } from '@/components'
 import { omit } from 'lodash-es'
 
 import type { PropType } from 'vue'
-import type { TableProInst, TablePagination, TableRequestConfig } from './types'
+import type {
+  TableProInst,
+  TablePagination,
+  TableRequestConfig,
+  PaginationPrefix,
+} from './types'
 import type { AnyFC } from '@/types'
 
 const props = {
@@ -70,11 +75,10 @@ const props = {
    * 请求函数的参数。
    * 该属性用于配置请求函数的参数。
    *
-   * @default {}
+   * @default undefined
    */
   requestConfig: {
     type: Object as PropType<TableRequestConfig>,
-    default: () => ({}),
   },
   /**
    *
@@ -100,6 +104,19 @@ const props = {
   remote: {
     type: Boolean,
     default: true,
+  },
+  /**
+   *
+   * @description
+   * 分页器前缀。
+   * 自定义配置分页器前缀。
+   *
+   * @default (info) => `共 ${info.itemCount} 条`
+   */
+  paginationPrefix: {
+    type: Function as PropType<PaginationPrefix>,
+    default: (info: Parameters<NonNullable<PaginationPrefix>>[0]) =>
+      `共 ${info.itemCount} 条`,
   },
 }
 

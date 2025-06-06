@@ -42,12 +42,12 @@ import type { PrintDomOptions } from '@/utils'
  */
 const useTable = () => {
   const tableRef = shallowRef<RTableInst>()
-  let extra = {} as TableProvider
+  const extraRef = shallowRef<TableProvider>({} as TableProvider)
 
   const register: UseTableRegister = (inst, extraInfo) => {
     if (inst) {
       tableRef.value = inst
-      extra = extraInfo
+      extraRef.value = extraInfo
     }
   }
 
@@ -140,7 +140,7 @@ const useTable = () => {
    * 打印表格。
    */
   const print = (options?: PrintDomOptions) => {
-    const { uuidWrapper } = extra
+    const { uuidWrapper } = extraRef.value ?? {}
 
     if (uuidWrapper) {
       const tableWrapperElement = document.getElementById(uuidWrapper)
@@ -165,6 +165,7 @@ const useTable = () => {
       sort,
       print,
       filter,
+      config: extraRef,
     },
   ] as const
 }

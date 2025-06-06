@@ -7,8 +7,10 @@ import type {
   DialogApi,
   LoadingBarApi,
   NotificationApi,
+  DataTableColumns,
 } from 'naive-ui'
 import type { NativeElements, ReservedProps, VNode } from 'vue'
+import type { Recordable } from './modules/helper'
 
 export declare global {
   declare interface UnknownObjectKey {
@@ -69,4 +71,8 @@ export declare global {
 
     msCrypto: Crypto
   }
+
+  declare interface GlobalDataTableColumns<T> extends DataTableColumns<T> {}
+
+  declare type GlobalRecordable<T> = Recordable<T>
 }

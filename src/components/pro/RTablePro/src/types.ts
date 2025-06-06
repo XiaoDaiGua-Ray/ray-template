@@ -1,5 +1,5 @@
 import type { TableProps, RTableInst } from '@/components'
-import type { UsePaginationReturn } from '@/hooks'
+import type { UsePaginationOptions } from '@/hooks'
 import type { Recordable } from '@/types'
 
 export type FormatRangeTime = {
@@ -22,12 +22,18 @@ export type FormatRangeTime = {
  * @description
  * Pagination 分页配置。
  */
-export type TablePagination = Pick<
-  UsePaginationReturn[1],
-  'getItemCount' | 'getPage' | 'getPageSize'
->
+export interface TablePagination {
+  page: number
+  pageSize: number
+  itemCount: number
+}
 
-export interface TableRequestConfig<Params = Recordable> {
+export type PaginationPrefix = UsePaginationOptions['prefix']
+
+export interface TableRequestConfig<
+  Params = Recordable,
+  ExcludeParams extends keyof Params = keyof Params,
+> {
   /**
    *
    * @description
@@ -45,6 +51,14 @@ export interface TableRequestConfig<Params = Recordable> {
    * @default undefined
    */
   formatRangeTime?: FormatRangeTime[]
+  /**
+   *
+   * @description
+   * 排除的请求参数，该字段用于排除请求参数。
+   *
+   * @default undefined
+   */
+  excludeParams?: ExcludeParams[]
 }
 
 export type TableProProps = Omit<TableProps, 'pagination'>
@@ -54,28 +68,67 @@ export interface TableProInst extends Omit<RTableInst, 'getTableInstance'> {
    *
    * @description
    * 获取 pagination 更新值。
+   *
+   * @example
+   * const [register, { getTablePagination }] = useTablePro()
+   *
+   * // 获取当前 pagination 的值
+   * const pagination = getTablePagination()
    */
   getTablePagination: () => TablePagination
   /**
    *
+   * @param extraConfig 额外请求合并配置项
+   * @param reset 是否重置分页请求
+   *
    * @description
    * 手动触发表格请求，用于手动刷新表格。
+   *
+   * @example
+   * const [register, { runTableRequest }] = useTablePro()
+   *
+   * // 重置分页请求
+   * runTableRequest(void 0, true)
+   * runTableRequest()
+   * // 不重置分页请求
+   * runTableRequest(void 0, false)
    */
-  runTableRequest: (extraConfig?: TableRequestConfig) => void
+  runTableRequest: <
+    T extends Recordable,
+    ExcludeParams extends keyof T = keyof T,
+  >(
+    extraConfig?: TableRequestConfig<T, ExcludeParams>,
+    reset?: boolean,
+  ) => void
   /**
    *
    * @param extraConfig 额外请求合并配置项
    *
    * @description
    * 获取当前内部表格请求参数。
+   *
+   * @example
+   * const [register, { getCurrentTableRequestParams }] = useTablePro()
+   *
+   * // 获取当前内部表格请求参数
+   * const params = getCurrentTableRequestParams()
    */
-  getCurrentTableRequestParams: <T = Recordable>(
-    extraConfig?: TableRequestConfig<T>,
-  ) => TableRequestConfig<T>['params'] & Recordable
+  getCurrentTableRequestParams: <
+    T extends Recordable,
+    ExcludeParams extends keyof T = keyof T,
+  >(
+    extraConfig?: TableRequestConfig<T, ExcludeParams>,
+  ) => TableRequestConfig<T, ExcludeParams>['params'] & Recordable
   /**
    *
    * @description
    * 重置表格分页。
+   *
+   * @example
+   * const [register, { resetTablePagination }] = useTablePro()
+   *
+   * // 重置表格分页为初始化状态，即第 1 页，每页 10 条数据
+   * resetTablePagination()
    */
   resetTablePagination: () => void
 }

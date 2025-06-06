@@ -238,6 +238,17 @@ const props = {
     type: [Function, Array] as PropType<MaybeArray<UseTableRegister>>,
     default: null,
   },
+  /**
+   *
+   * @description
+   * 是否自动继承高度。
+   *
+   * @default false
+   */
+  flexAutoHeight: {
+    type: Boolean,
+    default: false,
+  },
 } as const
 
 export default props

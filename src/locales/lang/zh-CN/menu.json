@@ -9,8 +9,10 @@
   "Doc": "文档",
   "DocLocal": "文档 (加速地址)",
   "DocLocalInside": "文档（内嵌）",
+  "DraggableCard": "拖拽卡片",
   "Echart": "可视化",
   "Error": "错误页",
+  "Flow": "流程图",
   "Form": "表单",
   "Mock": "Mock 数据",
   "Modal": "模态框",
@@ -26,9 +28,8 @@
   "Segment": "分段器",
   "SvgIcon": "SVG 图标",
   "Table": "表格",
-  "TemplateHooks": "模板内置 Api",
-  "scrollReveal": "滚动动画",
+  "TableAutoHeight": "自适应高度表格",
   "TablePro": "高级表格",
-  "Flow": "流程图",
-  "DraggableCard": "拖拽卡片"
+  "TemplateHooks": "模板内置 Api",
+  "scrollReveal": "滚动动画"
 }
