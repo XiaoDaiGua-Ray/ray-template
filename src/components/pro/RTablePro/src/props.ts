@@ -4,9 +4,9 @@ import { omit } from 'lodash-es'
 import type { PropType } from 'vue'
 import type {
   TableProInst,
-  TablePagination,
   TableRequestConfig,
   PaginationPrefix,
+  TablePaginationUpdate,
 } from './types'
 import type { AnyFC } from '@/types'
 
@@ -67,7 +67,7 @@ const props = {
    * @default undefined
    */
   onTablePaginationUpdate: {
-    type: Function as PropType<(pagination: TablePagination) => void>,
+    type: Function as PropType<TablePaginationUpdate>,
   },
   /**
    *

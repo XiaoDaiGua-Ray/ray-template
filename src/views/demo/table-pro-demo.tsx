@@ -19,20 +19,19 @@ import { uuid } from '@/utils'
 import { useHookPlusRequest } from '@/axios'
 import Mock from 'mockjs'
 import dayjs from 'dayjs'
-import { useTablePro } from '@/components'
-import { useCheckedRowKeys } from '@/components'
+import { useCheckedRowKeys, useTablePro, useForm } from '@/components'
 import { useDayjs } from '@/hooks'
 
 import type { DataTableColumns } from 'naive-ui'
 
 type RowData = {
   key: number | string
-  name: string
+  name: string | null
   age: number
   address: string
   tags: string[]
   remark: string
-  status: string
+  status: string | null
   statusText: string
   signTimeEnd: number
   signTimeStart: number
@@ -100,6 +99,11 @@ export default defineComponent({
   setup() {
     const { format } = useDayjs()
 
+    const [register, { formModel, reset }] = useForm<ParamsRef>({
+      RangeTime: null,
+      name: null,
+      status: null,
+    })
     /**
      *
      * @description
@@ -109,7 +113,13 @@ export default defineComponent({
      */
     const [
       tableProRegister,
-      { runTableRequest, getCurrentTableRequestParams, print, downloadCsv },
+      {
+        runTableRequest,
+        getCurrentTableRequestParams,
+        print,
+        downloadCsv,
+        runAsyncTableRequest,
+      },
     ] = useTablePro()
     // 表格数据
     const tableDataRef = ref<RowData[]>([])
@@ -163,7 +173,7 @@ export default defineComponent({
     // 表格分页数据
     const itemCountRef = ref(0)
     // 查询条件
-    const conditionRef = ref<ParamsRef>({})
+    const conditionRef = ref<ParamsRef>(formModel())
     // 缓存模拟数据，不用关心
     const mockPersonList = ref<RowData[]>(
       (() => {
@@ -227,7 +237,7 @@ export default defineComponent({
         const defaultLength = mockPersonList.value.length
 
         if (name) {
-          list = list.filter((curr) => curr.name.includes(name))
+          list = list.filter((curr) => curr.name!.includes(name))
         }
 
         if (status) {
@@ -294,6 +304,8 @@ export default defineComponent({
       clearAll,
       collapseRef,
       selectKey,
+      register,
+      reset,
     }
   },
   render() {
@@ -315,11 +327,13 @@ export default defineComponent({
       clearKey,
       clearAll,
       selectKey,
+      register,
+      reset,
     } = this
 
     return (
       <NFlex vertical>
-        <RCollapse open={this.collapseRef} bordered>
+        <RCollapse open={this.collapseRef} onRegister={register}>
           {{
             default: () => (
               <>
@@ -356,6 +370,7 @@ export default defineComponent({
             ),
             action: () => (
               <NFlex>
+                <NButton onClick={() => reset(this.conditionRef)}>重置</NButton>
                 <NButton
                   type="primary"
                   onClick={() => runTableRequest()}

@@ -195,6 +195,29 @@ export const useTablePro = () => {
   const resetTablePagination = () =>
     getTableProInstance().resetTablePagination.call(null)
 
+  /**
+   *
+   * @param extraConfig 额外请求合并配置项
+   * @param reset 是否重置分页请求
+   *
+   * @description
+   * 异步手动触发表格请求，用于手动刷新表格。
+   */
+  const runAsyncTableRequest = <
+    T extends Recordable,
+    ExcludeParams extends keyof T = keyof T,
+  >(
+    extraConfig?: TableRequestConfig<T, ExcludeParams>,
+    reset?: boolean,
+  ) => getTableProInstance().runAsyncTableRequest.call(null, extraConfig, reset)
+
+  /**
+   *
+   * @description
+   * 获取 TablePro 组件配置。
+   */
+  const getTableProConfig = () => getTableProInstance().config
+
   return [
     register,
     {
@@ -211,6 +234,8 @@ export const useTablePro = () => {
       print,
       getCurrentTableRequestParams,
       resetTablePagination,
+      runAsyncTableRequest,
+      getTableProConfig,
     },
   ] as const
 }

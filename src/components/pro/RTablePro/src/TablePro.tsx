@@ -7,11 +7,13 @@ import { usePagination } from '@/hooks'
 import { omit } from 'lodash-es'
 
 import type { TablePagination, TableRequestConfig, TableProInst } from './types'
+import type { RTableInst } from '../../..'
 
 export default defineComponent({
   name: 'RTablePro',
   props,
-  setup(props) {
+  setup(props, ctx) {
+    const { expose } = ctx
     const [register, tableFns] = useTable()
     const [
       paginationRef,
@@ -92,9 +94,9 @@ export default defineComponent({
       return requestParams
     }
 
-    // 会重置 pagination 的请求，默认会重置
-    const runResetPaginationRequest = (
-      extraConfig?: TableRequestConfig,
+    // 同步执行 request 请求，允许重置 pagination 请求，返回 Promise 对象
+    const runResetPaginationRequest: TableProInst['runTableRequest'] = (
+      extraConfig,
       reset = true,
     ) => {
       if (reset) {
@@ -105,6 +107,20 @@ export default defineComponent({
 
       tableRequestRef.value?.(requestParams)
     }
+
+    // 异步执行 request 请求，允许重置 pagination 请求，返回 Promise 对象
+    const runResetPaginationRequestAsync: TableProInst['runAsyncTableRequest'] =
+      (extraConfig, reset = true) => {
+        return new Promise((resolve, reject) => {
+          try {
+            runResetPaginationRequest(extraConfig, reset)
+
+            resolve(void 0)
+          } catch (e) {
+            reject(e)
+          }
+        })
+      }
 
     watchEffect(() => {
       setItemCount(props.paginationCount)
@@ -124,14 +140,16 @@ export default defineComponent({
 
       if (onRegister) {
         call(onRegister, {
-          ...tableFns,
+          ...(tableFns as unknown as RTableInst),
           getTablePagination: update,
           runTableRequest: runResetPaginationRequest,
+          runAsyncTableRequest: runResetPaginationRequestAsync,
           getCurrentTableRequestParams: combineRequestParams,
           resetTablePagination: resetPagination,
-        } as unknown as TableProInst)
+        })
       }
     })
+    expose()
 
     return {
       register,

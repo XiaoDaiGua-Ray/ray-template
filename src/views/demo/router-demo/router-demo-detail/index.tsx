@@ -2,11 +2,20 @@ import { NCard, NFlex } from 'naive-ui'
 
 const RouterDemoDetail = defineComponent({
   name: 'RouterDemoDetail',
+  setup() {
+    const route = useRoute()
+
+    return {
+      route,
+    }
+  },
   render() {
+    const { route } = this
+
     return (
       <NFlex>
-        <NCard title={(this.$route.query.name as string) || 'hello'}>
-          你好 {this.$route.query.name}
+        <NCard title={(route.query.name as string) || 'hello'}>
+          你好 {route.query.name}
         </NCard>
         <NCard title="平层路由详情页面">我是平层路由详情页面</NCard>
         <NCard title="TIP">

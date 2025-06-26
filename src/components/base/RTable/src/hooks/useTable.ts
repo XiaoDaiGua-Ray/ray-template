@@ -149,8 +149,22 @@ const useTable = () => {
     }
   }
 
+  /**
+   *
+   * @description
+   * 设定表格的过滤状态。
+   *
+   * @see https://www.naiveui.com/zh-CN/dark/components/data-table#DataTable-Methods
+   */
   const filter = (filters: FilterState | null) =>
     getTableInstance().filter.call(null, filters)
+
+  /**
+   *
+   * @description
+   * 获取 Table 组件配置。
+   */
+  const getTableConfig = () => extraRef.value
 
   return [
     register,
@@ -165,7 +179,7 @@ const useTable = () => {
       sort,
       print,
       filter,
-      config: extraRef,
+      getTableConfig,
     },
   ] as const
 }

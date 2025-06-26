@@ -1,3 +1,18 @@
+## 5.2.1
+
+## Feats
+
+- `RTablePro` 组件相关
+  - 新增 `runAsyncTableRequest` 方法，与 `runTableRequest` 方法功能一致，但是返回 `Promise` 对象
+  - 现在不允许使用 `useTemplateRef` 方法注册 `dom` 模板引用，约定强制使用 `useTablePro` 方法的 `register` 方法注册 `hook` 使用相关方法
+- `useTablePro` 方法新增 `getTableProConfig` 方法，与 `useTable` 方法的 `getTableConfig` 方法功能一致，获取 `RTablePro` 组件额外注入配置
+- `useTable` 方法新增 `getTableConfig` 方法，获取 `RTable` 组件额外注入配置
+- 更新包为主流版本
+  - `vue-router` 因为在 [4.4.1](https://github.com/vuejs/router/blob/main/packages/router/CHANGELOG.md#441-2024-07-31) 版本中有破坏性的更新，所以在 `jsx` 函数式组件使用 `this.$route`, `this.$router` 会提示类型报错，所以现在强制约定需要使用 `useRoute`, `useRouter` 方法显示的声明与使用
+  - 更新 `naive-ui` 版本至 `2.42.0`
+  - 更新 `vue` 版本至 `3.5.17`
+- `useForm` 方法新增 `reset` 方法，允许重置表单值，该方法依赖 `useForm` 方法的初始化 `formModel` 参数，所以请确保初始化 `formModel` 参数
+
 ## 5.2.0
 
 一些破坏性更新，请谨慎更新。

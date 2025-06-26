@@ -17,16 +17,20 @@ export type FormatRangeTime = {
   target: [string | number, string | number]
 }
 
+export interface BasePagination {
+  page: number
+  pageSize: number
+  itemCount: number
+}
+
 /**
  *
  * @description
  * Pagination 分页配置。
  */
-export interface TablePagination {
-  page: number
-  pageSize: number
-  itemCount: number
-}
+export type TablePagination = BasePagination
+
+export type TablePaginationUpdate = (pagination: TablePagination) => void
 
 export type PaginationPrefix = UsePaginationOptions['prefix']
 
@@ -103,6 +107,30 @@ export interface TableProInst extends Omit<RTableInst, 'getTableInstance'> {
   /**
    *
    * @param extraConfig 额外请求合并配置项
+   * @param reset 是否重置分页请求
+   *
+   * @description
+   * 异步手动触发表格请求，用于手动刷新表格。
+   *
+   * @example
+   * const [register, { runAsyncTableRequest }] = useTablePro()
+   *
+   * // 重置分页请求
+   * runAsyncTableRequest(void 0, true)
+   * runAsyncTableRequest()
+   * // 不重置分页请求
+   * runAsyncTableRequest(void 0, false)
+   */
+  runAsyncTableRequest: <
+    T extends Recordable,
+    ExcludeParams extends keyof T = keyof T,
+  >(
+    extraConfig?: TableRequestConfig<T, ExcludeParams>,
+    reset?: boolean,
+  ) => Promise<void>
+  /**
+   *
+   * @param extraConfig 额外请求合并配置项
    *
    * @description
    * 获取当前内部表格请求参数。
@@ -131,4 +159,25 @@ export interface TableProInst extends Omit<RTableInst, 'getTableInstance'> {
    * resetTablePagination()
    */
   resetTablePagination: () => void
+}
+
+export interface TableProFieldNames {
+  /**
+   *
+   * @description
+   * 分页器页码字段。
+   */
+  page: string
+  /**
+   *
+   * @description
+   * 分页器每页条数字段。
+   */
+  pageSize: string
+  /**
+   *
+   * @description
+   * 分页器总条数字段。
+   */
+  itemCount: string
 }
