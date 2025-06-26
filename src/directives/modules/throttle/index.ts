@@ -41,15 +41,16 @@ const throttleDirective: CustomDirectiveFC<
 
       throttleFunction = throttle(func, wait, Object.assign({}, options))
 
-      useEventListener(el, trigger, throttleFunction)
+      cleanup = useEventListener(el, trigger, throttleFunction)
     },
     beforeUnmount: () => {
       if (throttleFunction) {
         throttleFunction.cancel()
-        cleanup?.()
       }
 
       throttleFunction = null
+
+      cleanup?.()
     },
   }
 }
