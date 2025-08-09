@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-type RecordKey = string | number | symbol
+export type RecordKey = string | number | symbol
 
 /**
  *

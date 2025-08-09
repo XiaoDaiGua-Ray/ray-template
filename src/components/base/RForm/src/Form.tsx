@@ -1,17 +1,41 @@
-import { NForm } from 'naive-ui'
+import { NForm, NSpin } from 'naive-ui'
 
 import props from './props'
-import { call } from '@/utils'
+import { call, unrefElement } from '@/utils'
 import { useTemplateRef } from 'vue'
+import { useEventListener } from '@vueuse/core'
 
 import type { RFormInst } from './types'
-import type { FormProps } from 'naive-ui'
+import type { ShallowRef } from 'vue'
 
 export default defineComponent({
   name: 'RForm',
   props,
   setup(props, { expose }) {
     const formRef = useTemplateRef<RFormInst>('formRef')
+    const currentSubmitFn = computed(() => props.onFinish ?? Promise.resolve)
+
+    const bindKeydownListener = (e: KeyboardEvent) => {
+      const keyCode = e.code
+
+      if (keyCode === 'Enter') {
+        e.stopPropagation()
+        e.preventDefault()
+
+        formRef.value?.validate().then(currentSubmitFn.value)
+      }
+    }
+
+    if (props.submitWhenEnter) {
+      useEventListener(
+        formRef as unknown as ShallowRef<HTMLElement>,
+        'keydown',
+        bindKeydownListener,
+        {
+          capture: true,
+        },
+      )
+    }
 
     onMounted(() => {
       // 主动调用 register 方法，满足 useForm 方法正常调用
@@ -19,6 +43,16 @@ export default defineComponent({
 
       if (onRegister && formRef.value) {
         call(onRegister, formRef.value)
+      }
+
+      if (formRef.value) {
+        const formElement = unrefElement(
+          formRef.value as unknown as HTMLFormElement,
+        )
+
+        if (formElement) {
+          formElement.autocomplete = props.autocomplete
+        }
       }
     })
 
@@ -30,13 +64,22 @@ export default defineComponent({
   },
   render() {
     const { $attrs, $props, $slots } = this
+    const { loading, loadingDescription, ...restProps } = $props
 
     return (
-      <NForm {...$attrs} {...($props as FormProps)} ref="formRef">
-        {{
-          ...$slots,
+      <NSpin
+        show={loading}
+        description={loadingDescription}
+        style={{
+          height: 'auto',
         }}
-      </NForm>
+      >
+        <NForm {...$attrs} {...restProps} ref="formRef">
+          {{
+            ...$slots,
+          }}
+        </NForm>
+      </NSpin>
     )
   },
 })

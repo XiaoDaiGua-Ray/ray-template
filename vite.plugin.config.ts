@@ -13,6 +13,7 @@ import viteEslint from 'vite-plugin-eslint'
 import mockDevServerPlugin from 'vite-plugin-mock-dev-server'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import unpluginViteComponents from 'unplugin-vue-components/vite'
+import unoCSS from 'unocss/vite'
 
 import { cdn as viteCDNPlugin } from 'vite-plugin-cdn2'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
@@ -212,6 +213,7 @@ function baseOptions(mode: string): PluginOption[] {
       inject: 'body-last',
       customDomId: '__svg__icons__dom__',
     }),
+    unoCSS(),
   ]
 }
 

@@ -5,6 +5,7 @@ import './app-components/provider/provider.scss' // 初始化 provider 包注入
 import 'vue3-next-qrcode/es/style.css' // vue3-next-qrcode 样式
 
 import 'virtual:svg-icons-register' // vite-plugin-svg-icons 脚本，启用 svg 雪碧图
+import 'virtual:uno.css'
 
 import { setupRouter } from './router'
 import { setupStore } from './store'

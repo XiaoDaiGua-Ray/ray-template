@@ -88,6 +88,7 @@
     "useModel": true,
     "useTemplateRef": true,
     "Slot": true,
-    "Slots": true
+    "Slots": true,
+    "NFormItem": true
   }
 }

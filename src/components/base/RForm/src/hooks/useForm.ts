@@ -40,10 +40,11 @@ const useForm = <
   T extends Recordable = Recordable,
   R extends RFormRules = RFormRules,
 >(
-  model?: T,
-  rules?: R,
+  model?: T | (() => T),
+  rules?: R | (() => R),
 ) => {
   const formRef = shallowRef<RFormInst>()
+  const formModelRef = ref<T>()
 
   const register = (inst: RFormInst) => {
     if (inst) {
@@ -59,6 +60,15 @@ const useForm = <
     }
 
     return formRef.value
+  }
+
+  // 初始化 formModelRef 的值，根据 model 的类型进行初始化
+  const initialFormModel = () => {
+    if (typeof model === 'function') {
+      formModelRef.value = model() ?? ({} as T)
+    } else {
+      formModelRef.value = cloneDeep(model) ?? ({} as T)
+    }
   }
 
   /**
@@ -91,6 +101,9 @@ const useForm = <
    * 该方法可以实现重置表单的需求，因为在 vue 的设计理念中，表单的值绑定是直接绑定在每个组件上，
    * 而不是利用 Form 表单机制，所以需要这么去做表单的初始化操作维护机制。
    *
+   * 在 5.2.2 版本中，新增了 formConditionRef 属性，现在可以解构获取一个 ref 包裹的响应式初始化表单对象值；
+   * 这样就可以直接在 hook 中调用一个响应式的表单对象值。
+   *
    * @example
    *
    * interface FormModel {
@@ -109,7 +122,13 @@ const useForm = <
    *  formModelRef.value = formModel()
    * }
    */
-  const formModel = () => cloneDeep(model) || ({} as T)
+  const formModel = (): T & Recordable => {
+    if (typeof model === 'function') {
+      return model()
+    }
+
+    return cloneDeep(model) || ({} as T)
+  }
 
   /**
    *
@@ -118,12 +137,17 @@ const useForm = <
    *
    * 调用该方法时，需要确保初始化 useForm 方法的时候传入了 rules，否则可能有意想不到的问题发生。
    */
-  const formRules = () => cloneDeep(rules) || ({} as R)
+  const formRules = () => {
+    if (typeof rules === 'function') {
+      return rules()
+    }
+
+    return cloneDeep(rules) || ({} as R)
+  }
 
   /**
    *
-   * @param values 需要重置的表单值
-   * @param extraValues 额外的表单值，当你需要初始化额外的表单值的时候，可以传入该参数
+   * @param values 需要重置的表单值，该参数会覆盖初始化值
    *
    * @warning
    * 请注意初始化值的问题，如果设置初始化值为 undefined，
@@ -137,13 +161,79 @@ const useForm = <
    * 所以，最佳的实践应该是初始化 useForm 方法的时候，就应该确定好初始化值。
    * 然后，在需要重置表单的时候，直接调用该方法即可。
    */
-  const reset = <Values extends T = T>(
-    values: Values & Recordable,
-    extraValues?: Recordable,
-  ) => {
-    Object.assign(values ?? {}, formModel(), extraValues)
+  const reset = <Values extends T = T>(values?: Values & Recordable) => {
+    formModelRef.value = Object.assign(
+      formModelRef.value as T,
+      formModel(),
+      values,
+    )
     restoreValidation()
   }
+
+  /**
+   *
+   * @param key 需要验证的表单项的 key
+   *
+   * @see https://www.naiveui.com/zh-CN/dark/components/form#partially-apply-rules.vue
+   *
+   * @description
+   * 验证表单项的规则。
+   *
+   * 注意，该方法想要正常运转，需要在定义 rules 时定义唯一 key；
+   * 否则，该逻辑执行会失败。
+   *
+   * @example
+   * const [register, { validateTargetField }] = useForm(
+   *  {
+   *    name: null,
+   *  },
+   *  {
+   *    name: {
+   *      required: true,
+   *      message: 'name is required',
+   *      trigger: ['blur', 'change'],
+   *      type: 'string',
+   *      key: 'name',
+   *    },
+   *  },
+   * )
+   *
+   * validateTargetField('name')
+   */
+  const validateTargetField = (key: string) => {
+    if (!key || typeof key !== 'string') {
+      throw new Error(
+        `[useForm-validateTargetField]: except key is string, but got ${typeof key}.`,
+      )
+    }
+
+    return validate(void 0, (rules) => {
+      return rules?.key === key
+    })
+  }
+
+  /**
+   *
+   * @description
+   * 更新表单的值，该方法会覆盖初始化值。
+   * 推荐在表单组件中使用该方法，而不是直接修改表单的值，符合函数式的理念。
+   *
+   * @example
+   * const [register, { updateFormCondition }] = useForm(
+   *  {
+   *    name: null,
+   *  },
+   * )
+   *
+   * updateFormCondition({
+   *  name: 'John',
+   * })
+   */
+  const updateFormCondition = (values: T & Recordable) => {
+    formModelRef.value = Object.assign(formModelRef.value as T, values)
+  }
+
+  initialFormModel()
 
   return [
     register,
@@ -154,6 +244,9 @@ const useForm = <
       formModel,
       formRules,
       reset,
+      validateTargetField,
+      formConditionRef: formModelRef as Ref<T>,
+      updateFormCondition,
     },
   ] as const
 }

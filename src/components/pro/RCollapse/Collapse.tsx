@@ -5,6 +5,26 @@ import collapseGridProps from '../../base/RCollapseGrid/src/props'
 
 import type { GridProps } from 'naive-ui'
 
+export const collapseProps = Object.assign({}, formProps, {
+  ...collapseGridProps,
+  open: {
+    type: Boolean,
+    default: true,
+  },
+  cols: {
+    type: [Number, String] as PropType<GridProps['cols']>,
+    default: '4 xs:1 s:2 m:2 l:4 xl:4 2xl:6',
+  },
+  bordered: {
+    type: Boolean,
+    default: true,
+  },
+  responsive: {
+    type: String as PropType<GridProps['responsive']>,
+    default: 'screen',
+  },
+})
+
 /**
  *
  * @description
@@ -13,25 +33,7 @@ import type { GridProps } from 'naive-ui'
  */
 export default defineComponent({
   name: 'RCollapse',
-  props: Object.assign({}, formProps, {
-    ...collapseGridProps,
-    open: {
-      type: Boolean,
-      default: true,
-    },
-    cols: {
-      type: [Number, String] as PropType<GridProps['cols']>,
-      default: '4 xs:1 s:2 m:2 l:4 xl:4 2xl:6',
-    },
-    bordered: {
-      type: Boolean,
-      default: true,
-    },
-    responsive: {
-      type: String as PropType<GridProps['responsive']>,
-      default: 'screen',
-    },
-  }),
+  props: collapseProps,
   render() {
     const { $slots, $props } = this
     const { labelPlacement, showFeedback, ...rest } = $props
