@@ -51,13 +51,13 @@ export const APP_THEME: AppTheme = {
     dark: {
       common: {
         borderRadius: '4px',
-        baseColor: 'rgb(18, 18, 18)',
+        baseColor: 'rgba(18, 18, 18, 1)',
       },
     },
     light: {
       common: {
         borderRadius: '4px',
-        baseColor: 'rgb(255, 255, 255)',
+        baseColor: 'rgba(255, 255, 255, 1)',
       },
     },
   },

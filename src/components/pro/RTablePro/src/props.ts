@@ -118,6 +118,20 @@ const props = {
     default: (info: Parameters<NonNullable<PaginationPrefix>>[0]) =>
       `共 ${info.itemCount} 条`,
   },
+  /**
+   *
+   * @description
+   * 是否接管表格的渲染。
+   * 如果你觉得配置 flexAutoHeight 属性过于麻烦，可以设置为 true，然后就能直接使用 flexAutoHeight，无需做过多的配置。
+   *
+   * 并且，一旦启用该属性，flexAutoHeight 属性将强制启用。
+   *
+   * @default false
+   */
+  takeoverAutoHeight: {
+    type: Boolean,
+    default: false,
+  },
 }
 
 export default props

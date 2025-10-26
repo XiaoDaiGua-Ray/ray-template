@@ -1,3 +1,21 @@
+## 5.2.3
+
+## Feats
+
+- 更新依赖为主流版本
+- `RTablePro` 组件相关
+  - 新增 `takeoverAutoHeight` 配置项，允许接管表格的流体高度渲染，一旦启用该属性，`flexAutoHeight` 属性将强制启用
+  - 新增 `collapse` 插槽，配合 `takeoverAutoHeight` 配置项使用，允许自定义表格常见的顶部操作区域，当然也可以做点其他的，但是该插槽仅在启用 `takeoverAutoHeight` 配置项时生效
+    > 该属性可以让流体高度功能使用更加优雅，有点用处。
+  - 新增暴露 `setPage`, `setPageSize`, `getPage`, `getPageSize` 方法
+- `naive-ui` 最新版本有依赖问题，暂时回退升级
+- `echarts` 更新至 `6.0.0` 版本，并且完成适配
+
+## Fixes
+
+- 修复 `usePagination.resetPagination` 方法在重置分页时，没有正确触发 `pageChange`, `pageSizeChange` 回调函数的问题
+- 修复 `resetTablePagination` 方法在重置分页时，没有正确触发 `onTablePaginationUpdate` 回调函数的问题
+
 ## 5.2.2
 
 ## Feats

@@ -123,101 +123,95 @@ export default defineComponent({
     const { mockPersonList, baseColumns, switchRef } = this
 
     return (
-      <NFlex vertical class="flex-vertical">
-        <RCollapse bordered>
-          {{
-            default: () => (
-              <>
-                <NFormItemGi label="用户名">
-                  <NInput clearable />
-                </NFormItemGi>
-                <NFormItemGi label="状态">
-                  <NSelect
-                    clearable
-                    options={[
-                      {
-                        label: '成功',
-                        value: 'success',
-                      },
-                      {
-                        label: '失败',
-                        value: 'error',
-                      },
-                    ]}
-                  />
-                </NFormItemGi>
-                <NFormItemGi label="登陆时间">
-                  <NDatePicker type="datetimerange" clearable />
-                </NFormItemGi>
-                <NFormItemGi label="演示折叠的条件框">
-                  <NInput clearable />
-                </NFormItemGi>
-                <NFormItemGi label="演示折叠的条件框">
-                  <NInput clearable />
-                </NFormItemGi>
-                <NFormItemGi label="演示折叠的条件框">
-                  <NInput clearable />
-                </NFormItemGi>
-                <NFormItemGi label="演示折叠的条件框">
-                  <NInput clearable />
-                </NFormItemGi>
-                <NFormItemGi label="演示折叠的条件框">
-                  <NInput clearable />
-                </NFormItemGi>
-                <NFormItemGi label="演示折叠的条件框">
-                  <NInput clearable />
-                </NFormItemGi>
-              </>
-            ),
-            action: () => (
-              <NFlex>
-                <NButton type="primary">查询</NButton>
-              </NFlex>
-            ),
-          }}
-        </RCollapse>
-        <RTablePro
-          data={mockPersonList}
-          v-model:columns={baseColumns}
-          showPagination
-          paginationCount={mockPersonList.length}
-          remote={false}
-          flexAutoHeight={switchRef.flexAutoHeight}
-          title={
-            <NFlex>
-              <NFlex align="center">
-                <NButton text focusable={false}>
-                  流体高度
-                </NButton>
-                <NSwitch v-model:value={switchRef.flexAutoHeight} />
-              </NFlex>
-              <NFlex align="center">
-                <NButton text focusable={false}>
-                  底部区域插槽
-                </NButton>
-                <NSwitch v-model:value={switchRef.footer} />
-              </NFlex>
-              <NFlex align="center">
-                <NButton text focusable={false}>
-                  操作区域插槽
-                </NButton>
-                <NSwitch v-model:value={switchRef.action} />
-              </NFlex>
+      <RTablePro
+        takeoverAutoHeight
+        data={mockPersonList}
+        v-model:columns={baseColumns}
+        showPagination
+        paginationCount={mockPersonList.length}
+        remote={false}
+        title={
+          <NFlex>
+            <NFlex align="center">
+              <NButton text focusable={false}>
+                底部区域插槽
+              </NButton>
+              <NSwitch v-model:value={switchRef.footer} />
             </NFlex>
-          }
-        >
-          {{
-            tableFooter: () =>
-              switchRef.footer
-                ? '表格的底部内容区域插槽，有时候你可能会用上'
-                : null,
-            tableAction: () =>
-              switchRef.action
-                ? '表格的操作区域内容插槽，有时候可能会用上'
-                : null,
-          }}
-        </RTablePro>
-      </NFlex>
+            <NFlex align="center">
+              <NButton text focusable={false}>
+                操作区域插槽
+              </NButton>
+              <NSwitch v-model:value={switchRef.action} />
+            </NFlex>
+          </NFlex>
+        }
+      >
+        {{
+          collapse: () => (
+            <RCollapse bordered open={false}>
+              {{
+                default: () => (
+                  <>
+                    <NFormItemGi label="用户名">
+                      <NInput clearable />
+                    </NFormItemGi>
+                    <NFormItemGi label="状态">
+                      <NSelect
+                        clearable
+                        options={[
+                          {
+                            label: '成功',
+                            value: 'success',
+                          },
+                          {
+                            label: '失败',
+                            value: 'error',
+                          },
+                        ]}
+                      />
+                    </NFormItemGi>
+                    <NFormItemGi label="登陆时间">
+                      <NDatePicker type="datetimerange" clearable />
+                    </NFormItemGi>
+                    <NFormItemGi label="演示折叠的条件框">
+                      <NInput clearable />
+                    </NFormItemGi>
+                    <NFormItemGi label="演示折叠的条件框">
+                      <NInput clearable />
+                    </NFormItemGi>
+                    <NFormItemGi label="演示折叠的条件框">
+                      <NInput clearable />
+                    </NFormItemGi>
+                    <NFormItemGi label="演示折叠的条件框">
+                      <NInput clearable />
+                    </NFormItemGi>
+                    <NFormItemGi label="演示折叠的条件框">
+                      <NInput clearable />
+                    </NFormItemGi>
+                    <NFormItemGi label="演示折叠的条件框">
+                      <NInput clearable />
+                    </NFormItemGi>
+                  </>
+                ),
+                action: () => (
+                  <NFlex>
+                    <NButton type="primary">查询</NButton>
+                  </NFlex>
+                ),
+              }}
+            </RCollapse>
+          ),
+          tableFooter: () =>
+            switchRef.footer
+              ? '表格的底部内容区域插槽，有时候你可能会用上'
+              : null,
+          tableAction: () =>
+            switchRef.action
+              ? '表格的操作区域内容插槽，有时候可能会用上'
+              : null,
+        }}
+      </RTablePro>
     )
   },
 })

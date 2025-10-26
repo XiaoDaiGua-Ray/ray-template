@@ -1,4 +1,5 @@
 import { RTable } from '../../../base/RTable'
+import { NFlex } from 'naive-ui'
 
 import props from './props'
 import useTable from '../../../base/RTable/src/hooks/useTable'
@@ -24,6 +25,8 @@ export default defineComponent({
         setItemCount,
         resetPagination,
         getItemCount,
+        setPage,
+        setPageSize,
       },
     ] = usePagination(void 0, {
       prefix: props.paginationPrefix,
@@ -146,6 +149,10 @@ export default defineComponent({
           runAsyncTableRequest: runResetPaginationRequestAsync,
           getCurrentTableRequestParams: combineRequestParams,
           resetTablePagination: resetPagination,
+          setPage,
+          setPageSize,
+          getPage,
+          getPageSize,
         })
       }
     })
@@ -158,16 +165,44 @@ export default defineComponent({
   },
   render() {
     const { register, $props, paginationRef, $slots } = this
-    const { onRegister, showPagination, ...rest } = $props
+    const {
+      onRegister,
+      showPagination,
+      takeoverAutoHeight,
+      flexAutoHeight,
+      ...rest
+    } = $props
+    const baseProps = {
+      onRegister: register,
+      pagination: showPagination ? paginationRef : void 0,
+    }
+    const { collapse, ...restSlots } = $slots
 
-    return (
-      <RTable
-        {...rest}
-        onRegister={register}
-        pagination={showPagination ? paginationRef : void 0}
-      >
-        {$slots}
-      </RTable>
-    )
+    if (takeoverAutoHeight) {
+      return (
+        <NFlex vertical class="flex-vertical">
+          {{
+            default: () => (
+              <>
+                {collapse?.()}
+                <RTable {...baseProps} {...rest} flexAutoHeight>
+                  {{
+                    ...restSlots,
+                  }}
+                </RTable>
+              </>
+            ),
+          }}
+        </NFlex>
+      )
+    } else {
+      return (
+        <RTable {...baseProps} {...rest} flexAutoHeight={flexAutoHeight}>
+          {{
+            ...restSlots,
+          }}
+        </RTable>
+      )
+    }
   },
 })

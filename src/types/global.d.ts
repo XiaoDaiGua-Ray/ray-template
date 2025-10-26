@@ -11,6 +11,7 @@ import type {
 } from 'naive-ui'
 import type { NativeElements, ReservedProps, VNode } from 'vue'
 import type { Recordable } from './modules/helper'
+import type { ECharts, EChartsCoreOption } from 'echarts/core'
 
 export declare global {
   declare interface UnknownObjectKey {
@@ -75,4 +76,8 @@ export declare global {
   declare interface GlobalDataTableColumns<T> extends DataTableColumns<T> {}
 
   declare type GlobalRecordable<T> = Recordable<T>
+
+  declare type GlobalECharts = ECharts
+
+  declare type GlobalEChartsCoreOption = EChartsCoreOption
 }

@@ -196,11 +196,16 @@ export const usePagination = <T extends AnyFC>(
    * 如果，pageSizes 为空，则设置每页条数为 10。
    */
   const resetPagination = () => {
-    const { pageSizes } = paginationRef.value
+    const { pageSizes, pageChange, pageSizeChange } = mergedOptions.value
 
     paginationRef.value.page = DEFAULT_OPTIONS.page
     paginationRef.value.pageSize =
       (pageSizes?.[0] as number) || DEFAULT_OPTIONS.pageSize
+
+    callbackRef.value?.()
+
+    pageChange?.(paginationRef.value.page!)
+    pageSizeChange?.(paginationRef.value.pageSize!)
   }
 
   effectDispose(() => {

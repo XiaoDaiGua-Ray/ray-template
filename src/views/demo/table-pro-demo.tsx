@@ -119,6 +119,9 @@ export default defineComponent({
         print,
         downloadCsv,
         runAsyncTableRequest,
+        setPage,
+        setPageSize,
+        resetTablePagination,
       },
     ] = useTablePro()
     // 表格数据
@@ -306,6 +309,9 @@ export default defineComponent({
       selectKey,
       register,
       reset,
+      setPage,
+      setPageSize,
+      resetTablePagination,
     }
   },
   render() {
@@ -329,10 +335,13 @@ export default defineComponent({
       selectKey,
       register,
       reset,
+      setPage,
+      setPageSize,
+      resetTablePagination,
     } = this
 
     return (
-      <NFlex vertical>
+      <NFlex vertical class="h-full">
         <RCollapse open={this.collapseRef} onRegister={register}>
           {{
             default: () => (
@@ -422,6 +431,15 @@ export default defineComponent({
             <NButton type="primary" onClick={() => downloadCsv()}>
               下载 csv
             </NButton>
+            <NButton type="primary" onClick={() => setPage(2)}>
+              设置分页页码为 2
+            </NButton>
+            <NButton type="primary" onClick={() => setPageSize(20)}>
+              设置分页每页条数为 20
+            </NButton>
+            <NButton type="primary" onClick={() => resetTablePagination()}>
+              重置分页
+            </NButton>
           </NFlex>
         </NCard>
         <NCard title="useCheckedRowKeys 部分方法">
@@ -465,6 +483,7 @@ export default defineComponent({
           </NFlex>
         </NCard>
         <RTablePro
+          takeoverAutoHeight
           onRegister={tableProRegister}
           data={tableDataRef}
           v-model:columns={this.baseColumns}

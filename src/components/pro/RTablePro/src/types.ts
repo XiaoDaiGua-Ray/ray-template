@@ -159,6 +159,54 @@ export interface TableProInst extends Omit<RTableInst, 'getTableInstance'> {
    * resetTablePagination()
    */
   resetTablePagination: () => void
+  /**
+   *
+   * @description
+   * 设置表格分页页码。
+   *
+   * @example
+   * const [register, { setPage }] = useTablePro()
+   *
+   * // 设置表格分页页码为 2
+   * setPage(2)
+   */
+  setPage: (page: number) => void
+  /**
+   *
+   * @description
+   * 设置表格分页每页条数。
+   *
+   * @example
+   * const [register, { setPageSize }] = useTablePro()
+   *
+   * // 设置表格分页每页条数为 20
+   * setPageSize(20)
+   */
+  setPageSize: (pageSize: number) => void
+  /**
+   *
+   * @description
+   * 获取表格分页页码。
+   *
+   * @example
+   * const [register, { getPage }] = useTablePro()
+   *
+   * // 获取表格分页页码
+   * const page = getPage()
+   */
+  getPage: () => number
+  /**
+   *
+   * @description
+   * 获取表格分页每页条数。
+   *
+   * @example
+   * const [register, { getPageSize }] = useTablePro()
+   *
+   * // 获取表格分页每页条数
+   * const pageSize = getPageSize()
+   */
+  getPageSize: () => number
 }
 
 export interface TableProFieldNames {
@@ -166,18 +214,24 @@ export interface TableProFieldNames {
    *
    * @description
    * 分页器页码字段。
+   *
+   * @default 'page'
    */
   page: string
   /**
    *
    * @description
    * 分页器每页条数字段。
+   *
+   * @default 'pageSize'
    */
   pageSize: string
   /**
    *
    * @description
    * 分页器总条数字段。
+   *
+   * @default 'itemCount'
    */
   itemCount: string
 }

@@ -29,7 +29,7 @@ const Echart = defineComponent({
       loading1: false,
     })
 
-    const baseOptions = {
+    const baseOptions: GlobalEChartsCoreOption = {
       legend: {},
       tooltip: {},
       xAxis: {
@@ -60,7 +60,7 @@ const Echart = defineComponent({
         },
       ],
     }
-    const basePieOptions = {
+    const basePieOptions: GlobalEChartsCoreOption = {
       title: {
         text: 'Referer of a Website',
         subtext: 'Fake Data',
@@ -124,10 +124,13 @@ const Echart = defineComponent({
         data: ['Email', 'Union Ads', 'Video Ads', 'Direct', 'Search Engine'],
       },
       grid: {
-        left: '3%',
+        left: '4%',
         right: '4%',
-        bottom: '3%',
-        containLabel: true,
+        top: '2%',
+        outerBounds: {
+          bottom: '10%',
+        },
+        outerBoundsMode: 'auto',
       },
       xAxis: [
         {

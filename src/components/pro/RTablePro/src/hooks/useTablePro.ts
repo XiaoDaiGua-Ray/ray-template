@@ -218,6 +218,40 @@ export const useTablePro = () => {
    */
   const getTableProConfig = () => getTableProInstance().config
 
+  /**
+   *
+   * @description
+   * 获取表格分页页码。
+   */
+  const getPage = () => getTableProInstance().getPage.call(null)
+
+  /**
+   *
+   * @description
+
+  /**
+   *
+   * @description
+   * 获取表格分页每页条数。
+   */
+  const getPageSize = () => getTableProInstance().getPageSize.call(null)
+
+  /**
+   *
+   * @description
+   * 设置表格分页页码。
+   */
+  const setPage = (page: number) =>
+    getTableProInstance().setPage.call(null, page)
+
+  /**
+   *
+   * @description
+   * 设置表格分页每页条数。
+   */
+  const setPageSize = (pageSize: number) =>
+    getTableProInstance().setPageSize.call(null, pageSize)
+
   return [
     register,
     {
@@ -236,6 +270,10 @@ export const useTablePro = () => {
       resetTablePagination,
       runAsyncTableRequest,
       getTableProConfig,
+      getPage,
+      getPageSize,
+      setPage,
+      setPageSize,
     },
   ] as const
 }

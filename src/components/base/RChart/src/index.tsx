@@ -19,7 +19,7 @@ import {
   ScatterChart,
   PictorialBarChart,
 } from 'echarts/charts' // 系列类型(后缀都为 SeriesOption)
-import { LabelLayout, UniversalTransition } from 'echarts/features' // 标签自动布局, 全局过渡动画等特性
+import { LegacyGridContainLabel, UniversalTransition } from 'echarts/features' // 标签自动布局, 全局过渡动画等特性
 import { CanvasRenderer } from 'echarts/renderers' // echarts 渲染器
 import { NCard } from 'naive-ui'
 
@@ -154,7 +154,7 @@ export default defineComponent({
         ScatterChart,
         PictorialBarChart,
       ]) // 注册 chart series type
-      use([LabelLayout, UniversalTransition]) // 注册布局, 过度效果
+      use([LegacyGridContainLabel, UniversalTransition]) // 注册布局, 过度效果
       use([CanvasRenderer]) // 注册渲染器
 
       try {
