@@ -88,7 +88,7 @@ export default defineComponent({
   setup(props, { expose }) {
     const { getAppTheme } = useSettingGetters()
     // echart 容器实例
-    const rayChartRef = useTemplateRef<HTMLElement>('rayChartRef')
+    const chartRef = useTemplateRef<HTMLElement>('chartRef')
     // echart 父容器实例
     const rayChartWrapperRef = useTemplateRef<HTMLElement>('rayChartWrapperRef')
     // echart 实例
@@ -113,8 +113,8 @@ export default defineComponent({
     ])
     const cssVarsRef = computed(() => {
       return {
-        '--ray-chart-width': completeSize(props.width),
-        '--ray-chart-height': completeSize(props.height),
+        '--r-chart-width': completeSize(props.width),
+        '--r-chart-height': completeSize(props.height),
       }
     })
     // 目标是否可见
@@ -241,7 +241,7 @@ export default defineComponent({
      */
     const renderChart = (theme: string = echartTheme) => {
       // 获取 dom 容器
-      const element = rayChartRef.value as HTMLElement
+      const element = chartRef.value as HTMLElement
       // 获取配置项
       const options = combineChartOptions(props.options)
       // 获取 dom 容器实际宽高
@@ -264,7 +264,7 @@ export default defineComponent({
 
         // 是否强制下一队列渲染图表
         if (props.nextTick) {
-          echartInstanceRef.value.setOption({})
+          // echartInstanceRef.value.setOption({})
 
           nextTick(() => {
             options && echartInstanceRef.value?.setOption(options)
@@ -435,6 +435,8 @@ export default defineComponent({
     watchEffect(() => {
       // 是否启用了可视区域监听
       if (props.intersectionObserver) {
+        intersectionObserverReturn?.stop()
+
         intersectionObserverReturn = useIntersectionObserver(
           props.intersectionObserverTarget || rayChartWrapperRef,
           ([entry]) => {
@@ -442,10 +444,14 @@ export default defineComponent({
           },
           props.intersectionOptions,
         )
+      } else {
+        intersectionObserverReturn?.stop()
       }
 
       // 监听 options 变化
       if (props.watchOptions) {
+        watchThrottledCallback?.()
+
         watchThrottledCallback = watchThrottled(
           () => props.options,
           (ndata) => {
@@ -462,7 +468,7 @@ export default defineComponent({
           },
           {
             // 深度监听 options
-            deep: true,
+            deep: props.watchDeep,
             throttle: props.watchOptionsThrottleWait,
           },
         )
@@ -506,7 +512,7 @@ export default defineComponent({
     })
 
     return {
-      rayChartRef,
+      chartRef,
       cssVarsRef,
       rayChartWrapperRef,
       moreDropDownOptions,
@@ -536,7 +542,7 @@ export default defineComponent({
       >
         {{
           default: renderNode(
-            <div class="ray-chart__container" ref="rayChartRef"></div>,
+            <div class="ray-chart__container" ref="chartRef"></div>,
           ),
           header: renderNode(title, {
             defaultElement: <div style="display: none;"></div>,
@@ -557,7 +563,7 @@ export default defineComponent({
       </NCard>
     ) : (
       <div class="ray-chart" style={[this.cssVarsRef]} ref="rayChartWrapperRef">
-        <div class="ray-chart__container" ref="rayChartRef"></div>
+        <div class="ray-chart__container" ref="chartRef"></div>
       </div>
     )
   },

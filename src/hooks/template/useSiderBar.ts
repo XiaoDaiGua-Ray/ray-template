@@ -12,7 +12,8 @@ export type CloseMenuTag = Key | MenuTagOptions
  * @param target 标签页对象、索引、key
  * @param fn 触发函数
  *
- * 该方法用于统一获取目标标签页方法
+ * @description
+ * 该方法用于统一获取目标标签页方法。
  */
 const normalMenuTagOption = (target: CloseMenuTag, fn: string) => {
   const { getMenuTagOptions } = useMenuGetters()
@@ -82,27 +83,14 @@ export function useSiderBar() {
     resolveOption,
   } = useMenuActions()
 
-  /**
-   *
-   * @remark 获取当前激活标签页索引位置
-   */
+  // 获取当前激活标签页索引位置
   const getCurrentTagIndex = () => {
     return getMenuTagOptions.value.findIndex(
       (curr) => curr.fullPath === getMenuKey.value,
     )
   }
 
-  /**
-   *
-   * @param target 当前关闭项
-   *
-   * 传递参数类型情况:
-   * - number: 关闭当前项索引
-   * - string: 关闭当前项 key，其实 key 也是一个具体的页面 url 地址
-   * - AppMenuOption: 关闭当前项
-   *
-   * @remark 校验指定标签右侧是否有可关闭的标签
-   */
+  // 校验指定标签右侧是否有可关闭的标签
   const checkCloseRight = (target: CloseMenuTag) => {
     const normal = normalMenuTagOption(target, 'checkCloseRight')
 
@@ -116,17 +104,7 @@ export function useSiderBar() {
     return false
   }
 
-  /**
-   *
-   * @param target 当前关闭项
-   *
-   * 传递参数类型情况:
-   * - number: 关闭当前项索引
-   * - string: 关闭当前项 key，其实 key 也是一个具体的页面 url 地址
-   * - AppMenuOption: 关闭当前项
-   *
-   * @remark 校验指定标签左侧是否有可关闭的标签
-   */
+  // 校验指定标签左侧是否有可关闭的标签
   const checkCloseLeft = (target: CloseMenuTag) => {
     const normal = normalMenuTagOption(target, 'checkCloseRight')
 
@@ -148,15 +126,7 @@ export function useSiderBar() {
     return false
   }
 
-  /**
-   *
-   * @param target 当前关闭项
-   *
-   * 传递参数类型情况:
-   * - number: 关闭当前项索引
-   * - string: 关闭当前项 key，其实 key 也是一个具体的页面 url 地址
-   * - AppMenuOption: 关闭当前项
-   */
+  // 关闭当前标签
   const close = (target: CloseMenuTag) => {
     const normal = normalMenuTagOption(target, 'close')
 
@@ -187,10 +157,7 @@ export function useSiderBar() {
     }
   }
 
-  /**
-   *
-   * 关闭所有标签并且导航至 root path
-   */
+  // 关闭所有标签并且导航至 root path
   const closeAll = () => {
     spliceMenTagOptions(0, getMenuTagOptions.value.length)
 
@@ -217,18 +184,7 @@ export function useSiderBar() {
     }
   }
 
-  /**
-   *
-   * @param target 目标标签页
-   *
-   * 关闭以当前项为索引的右侧标签
-   * 如果当前选择标签与 menuKey 不匹配并且包含了当前激活标签页，则会关闭当前标签右侧所有变迁并且跳转至该页面
-   *
-   * 传递参数类型情况:
-   * - number: 关闭当前项索引
-   * - string: 关闭当前项 key，其实 key 也是一个具体的页面 url 地址
-   * - AppMenuOption: 关闭当前项
-   */
+  // 目标标签页右侧所有标签页
   const closeRight = (target: CloseMenuTag) => {
     const normal = normalMenuTagOption(target, 'closeRight')
 
@@ -247,18 +203,7 @@ export function useSiderBar() {
     }
   }
 
-  /**
-   *
-   * @param target 目标标签页
-   *
-   * 关闭以当前项左侧所有标签
-   * 如果当前选择标签与 menuKey 不匹配并且包含了当前激活标签页，则会关闭当前标签左侧所有变迁并且跳转至该页面
-   *
-   * 传递参数类型情况:
-   * - number: 关闭当前项索引
-   * - string: 关闭当前项 key，其实 key 也是一个具体的页面 url 地址
-   * - AppMenuOption: 关闭当前项
-   */
+  // 关闭目标标签页左侧所有标签页
   const closeLeft = (target: CloseMenuTag) => {
     const normal = normalMenuTagOption(target, 'closeLeft')
 
@@ -276,17 +221,7 @@ export function useSiderBar() {
     }
   }
 
-  /**
-   *
-   * @param target 目标标签页
-   *
-   * 会关闭除了当前索引的所有菜单项
-   *
-   * 传递参数类型情况:
-   * - number: 关闭当前项索引
-   * - string: 关闭当前项 key，其实 key 也是一个具体的页面 url 地址
-   * - AppMenuOption: 关闭当前项
-   */
+  // 关闭除了当前索引的所有菜单项
   const closeOther = (target: CloseMenuTag) => {
     const normal = normalMenuTagOption(target, 'closeOther')
 

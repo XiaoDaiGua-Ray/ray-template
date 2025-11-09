@@ -10,15 +10,15 @@ export default defineComponent({
     const symbolId = computed(() => `#${props.prefix}-${props.name}`)
     const cssVars = computed(() => {
       const cssVar = {
-        '--ray-icon-width': props.width
+        '--r-icon-width': props.width
           ? completeSize(props.width)
           : completeSize(props.size),
-        '--ray-icon-height': props.height
+        '--r-icon-height': props.height
           ? completeSize(props.height)
           : completeSize(props.size),
-        '--ray-icon-depth': props.depth,
-        '--ray-icon-cursor': props.cursor,
-        '--ray-icon-color': props.color,
+        '--r-icon-depth': props.depth,
+        '--r-icon-cursor': props.cursor,
+        '--r-icon-color': props.color,
       }
 
       return cssVar
@@ -41,13 +41,13 @@ export default defineComponent({
   render() {
     return (
       <span
-        class={['ray-icon', this.customClassName]}
+        class={['r-icon', this.customClassName]}
         style={[this.cssVars]}
-        onClick={this.iconClick.bind(this)}
+        onClick={this.iconClick}
       >
         <svg
           {...({
-            RayIconAttribute: 'ray-icon',
+            RIconAttribute: 'r-icon',
             ariaHidden: true,
           } as object)}
         >

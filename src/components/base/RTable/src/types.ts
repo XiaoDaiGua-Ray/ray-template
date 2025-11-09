@@ -35,6 +35,7 @@ export interface TableProvider {
   uuidWrapper: string
   uuidTable: string
   wrapperRef: Readonly<ShallowRef<HTMLElement | null>>
+  tableRef: Readonly<ShallowRef<RTableInst | null>>
 }
 
 export interface C extends DataTableBaseColumn {

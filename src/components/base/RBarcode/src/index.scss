@@ -9,8 +9,27 @@
   }
 }
 
+.r-barcode-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .r-barcode {
+    width: 100%;
+    height: 100%;
+  }
+}
+
 .r-barcode-spin,
 .r-barcode-spin .n-spin-content {
   width: max-content !important;
   height: max-content !important;
+}
+
+.r-barcode-spin:has(.r-barcode-container),
+.r-barcode-spin:has(.r-barcode-container) .n-spin-content {
+  width: 100% !important;
+  height: 100% !important;
 }

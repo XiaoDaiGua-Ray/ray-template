@@ -13,10 +13,6 @@ $menuTagWrapperWidth: 76px;
     & .menu-tag-wrapper {
       width: calc(100% - $space * 2 - $menuTagWrapperWidth);
     }
-
-    & .ray-icon {
-      cursor: pointer;
-    }
   }
 
   & .n-tag {
@@ -51,15 +47,14 @@ $menuTagWrapperWidth: 76px;
   }
 }
 
-.ray-template--light {
-  .menu-tag__btn-icon:hover {
-    filter: brightness(1.2);
-  }
-}
-
+.ray-template--light,
 .ray-template--dark {
-  .menu-tag__btn-icon:hover {
-    filter: brightness(0.8);
+  .menu-tag__btn .menu-tag__btn-icon {
+    border-radius: 2px;
+
+    &:hover {
+      background-color: var(--n-color-hover);
+    }
   }
 }
 

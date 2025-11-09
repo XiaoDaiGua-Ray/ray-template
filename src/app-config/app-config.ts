@@ -12,8 +12,8 @@ import type { MessageProviderProps } from 'naive-ui'
 export const GLOBAL_CLASS_NAMES = {
   darkClassName: 'ray-template--dark',
   lightClassName: 'ray-template--light',
-  rayTemplateThemePrimaryColor: '--ray-theme-primary-color',
-  rayTemplateThemePrimaryFadeColor: '--ray-theme-primary-fade-color',
+  rayTemplateThemePrimaryColor: '--r-theme-primary-color',
+  rayTemplateThemePrimaryFadeColor: '--r-theme-primary-fade-color',
   preLoadingAnimation: 'pre-loading-animation',
   htmlHeight: '--html-height',
   htmlWidth: '--html-width',

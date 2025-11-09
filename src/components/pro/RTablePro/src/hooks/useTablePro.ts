@@ -1,5 +1,3 @@
-import { printDom } from '@/utils'
-
 import type { Recordable } from '@/types'
 import type { TableProInst, TableRequestConfig } from '../types'
 import type {
@@ -156,16 +154,8 @@ export const useTablePro = () => {
    * @description
    * 打印表格。
    */
-  const print = (options?: PrintDomOptions) => {
-    const { config } = getTableProInstance()
-    const { uuidWrapper } = config ?? {}
-
-    if (uuidWrapper) {
-      const tableWrapperElement = document.getElementById(uuidWrapper)
-
-      printDom(tableWrapperElement, options)
-    }
-  }
+  const print = (options?: PrintDomOptions) =>
+    getTableProInstance().print.call(null, options)
 
   /**
    *

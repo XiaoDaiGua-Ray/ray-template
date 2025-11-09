@@ -17,4 +17,5 @@ module.exports = {
   htmlWhitespaceSensitivity: 'css', // 根据显示样式决定 `html` 要不要折行
   endOfLine: 'lf', // 换行符使用 `lf`,
   singleAttributePerLine: false,
+  bracketSameLine: false,
 }

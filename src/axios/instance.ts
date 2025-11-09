@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { AXIOS_CONFIG } from '@/app-config'
-import { useAxiosInterceptor } from '@/axios/utils/interceptor'
+import { axiosInterceptor } from '@/axios/utils/interceptor'
 import {
   setupResponseInterceptor,
   setupResponseErrorInterceptor,
@@ -15,7 +15,7 @@ import type { AxiosInstanceExpand, RequestInterceptorConfig } from './types'
 // 创建 axios 实例
 const server: AxiosInstanceExpand = axios.create(AXIOS_CONFIG)
 // 获取拦截器实例
-const { createAxiosInstance, beforeFetch, fetchError } = useAxiosInterceptor()
+const { createAxiosInstance, beforeFetch, fetchError } = axiosInterceptor()
 
 // 请求拦截器
 server.interceptors.request.use(

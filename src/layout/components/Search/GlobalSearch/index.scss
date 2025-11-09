@@ -14,8 +14,8 @@ $globalSearchWidth: 650px;
       border-radius: 6px;
       min-width: 560px;
 
-      & .ray-icon {
-        color: var(--ray-theme-primary-color);
+      & .r-icon {
+        color: var(--r-theme-primary-color);
       }
 
       & .n-card__action {
@@ -59,7 +59,7 @@ $globalSearchWidth: 650px;
 .n-flex.global-search__card-content {
   & .content-item.content-item--active,
   & .content-item:hover {
-    background-color: var(--ray-theme-primary-fade-color);
+    background-color: var(--r-theme-primary-fade-color);
   }
 
   & .content-item {

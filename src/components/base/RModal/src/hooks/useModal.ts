@@ -4,6 +4,15 @@ import { R_MODAL_CLASS, CSS_VARS_KEYS } from '../constant'
 
 import type { RModalProps } from '../types'
 
+/**
+ *
+ * @deprecated
+ *
+ * @see https://www.naiveui.com/zh-CN/dark/components/modal#useModal-API
+ *
+ * @description
+ * 请使用官方的 `useModal` 方法。
+ */
 const useModal = () => {
   const { create: naiveCreate, destroyAll: naiveDestroyAll } = useNaiveModal()
 

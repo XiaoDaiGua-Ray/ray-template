@@ -1,3 +1,45 @@
+## 5.2.4
+
+## Feats
+
+- 新增 `.cursorrules` 文件，用于配置 `cursor` 的规则
+- `RChart` 组件相关
+  - 新增 `watchDeep` 配置项，允许配置是否深度监听 `options` 配置项，在某些场景下不希望监听 `options` 配置项的变动时，可以配置该项为 `false`
+  - 修改自定义样式名，由 `--r` 前缀改为 `--r` 前缀
+- 优化 `RTable`, `RTablePro` 组件与相关 `hook`
+  - 移除未使用的导入（`DataTableInst`、`ExtractPublicPropTypes`、`emit`）
+  - 将 `contextMenuSelect` 中的状态更新提前
+  - 提取 `handleContextMenu` 函数，避免重复创建
+  - 优化 `combineRowProps` 的条件判断
+  - 提取 `renderDefaultToolOptions` 为独立函数
+  - 简化 `tool` 函数的条件判断
+  - 移除不必要的 `.bind(this)` 调用
+  - 如果未启用 `onUpdateColumns` 或 `onUpdate:columns` 事件（也就是双向绑定 `columns` 配置项），则认为不需要渲染 `C` 组件，因为有时候你可能希望 `columns` 配置项可能就是写死的，不需要动态修改
+  - 使用 `nextTick` 优化列配置更新（`C` 组件）
+  - 减少函数重复创建
+  - 优化条件判断逻辑
+  - `selectKeys(keys: RowKey[])` - 批量选中
+  - `toggleKey(key: RowKey)` - 切换选中状态
+  - `isKeySelected(key: RowKey)` - 检查是否选中
+  - 新增 `autoDeleteDuplicateKeys` 配置项，允许自定义是否移除重复请求 `key`
+- `usePagination` 方法相关
+  - 修改 `getCallback` 方法返回值类型，现在会自动推导回调函数类型（仅在默认传递回调函数时有效）
+  - 修改 `getCallback` 方法使用方式，改为函数调用
+- `RBarcode` 组件相关
+  - 新增 `responsive` 配置项，允许配置是否启用响应式尺寸，当容器大小变化时自动重新渲染条形码，但是该属性让 `width` 与 `height` 配置项失效
+- 新增 `.vscode` 配置规则，默认强制使用 `prettier` 格式化代码，并且使用 `eslint` 检查代码规范
+- 移除所有 `--ray` 的前缀为 `-r`
+- 统一自定义组件的文件分包格式
+- 标记自定义 `useModal` 方法为遗弃方法
+- `useAxiosInterceptor` 更名为 `axiosInterceptor` 方法，旧方法名不符合语义化，现在更加语义化
+- 优化 `useElementFullscreen` 方法
+- 调整 `MenuTag` 组件样式，现在会根据主题色自动适配关闭按钮颜色
+
+## Fixes
+
+- 修复 `useTablePro.print` 方法无效的问题
+- 修复 `vitest` 插件启动会提示失败的问题
+
 ## 5.2.3
 
 ## Feats
@@ -2258,7 +2300,7 @@ useAppTheme key 类型: 'dark' | 'light'
 ### Feats
 
 - 修改 Menu 菜单过滤逻辑，现在如果权限不匹配或者设置了 hidden 属性，则会被过滤掉
-- 移除 $activedColor 全局 sass 变量，使用 --ray-theme-primary-color 替代
+- 移除 $activedColor 全局 sass 变量，使用 --r-theme-primary-color 替代
 - 新增路由菜单检索功能
 - 移除 App.tsx 中同步主题方法，改为使用 cfg 配置并且使用 ejs 注入
 - 移除 MenuTag 默认主题色，现在会以当前主题色为主色

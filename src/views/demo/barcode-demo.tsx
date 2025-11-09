@@ -39,12 +39,13 @@ export default defineComponent({
           </NCard>
         </NGridItem>
         <NGridItem span={1}>
-          <NCard title="基础条形码">
+          <NCard title="根据尺寸自动更新的条形码">
             <RBarcode
               text="RayTemplate"
               options={{
                 ...baseOptions,
               }}
+              responsive
             />
           </NCard>
         </NGridItem>

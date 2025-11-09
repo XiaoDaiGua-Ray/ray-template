@@ -1,4 +1,4 @@
-import RChart from './src'
+import RChart from './src/Chart'
 import chartProps from './src/props'
 import useChart from './src/hooks/useChart'
 

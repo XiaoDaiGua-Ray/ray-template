@@ -13,27 +13,25 @@ import { config } from './shared'
 import { pick } from 'lodash-es'
 import { useTemplateRef } from 'vue'
 
-import type { DropdownOption, DataTableInst, DataTableProps } from 'naive-ui'
+import type { DropdownOption, DataTableProps } from 'naive-ui'
 import type { ComponentSize } from '@/types'
 import type {
   C as CType,
   PropsComponentPopselectKeys,
   RTableInst,
 } from './types'
-import type { ExtractPublicPropTypes } from 'vue'
 
 export default defineComponent({
   name: 'RTable',
   inheritAttrs: false,
   props,
   setup(props, ctx) {
-    const { expose, emit } = ctx
+    const { expose } = ctx
 
     const rTableInst = useTemplateRef<RTableInst>('rTableInst')
     const wrapperRef = useTemplateRef<HTMLElement>('wrapperRef')
-
-    const uuidWrapper = uuid(16) // wrapper id
-    const uuidTable = uuid(16) // table id
+    const uuidWrapper = uuid(16)
+    const uuidTable = uuid(16)
     /**
      *
      * x: 横坐标
@@ -94,53 +92,70 @@ export default defineComponent({
 
     /**
      *
-     * @param key key
-     * @param option context menu select  option
+     * @param key 当前选中项的 key
+     * @param option 当前选中项
+     *
+     * @description
+     * 右键菜单选择事件回调。
      */
     const contextMenuSelect = (
       key: number | string,
       option: DropdownOption,
     ) => {
+      contextMenuReactive.showContextMenu = false
+
       const { onContextMenuClick } = props
 
       if (onContextMenuClick) {
         call(onContextMenuClick, key, option)
       }
-
-      contextMenuReactive.showContextMenu = false
     }
 
     /**
      *
-     * 合并 RTable 的所有 rowProps
-     * 如果开启了右键菜单功能，自动会拦截右键事件
+     * @param e 鼠标点击事件
+     *
+     * @description
+     * 处理右键菜单事件。
+     */
+    const tableContextMenu = (e: MouseEvent) => {
+      e.preventDefault()
+      contextMenuReactive.showContextMenu = false
+
+      nextTick().then(() => {
+        contextMenuReactive.showContextMenu = true
+        contextMenuReactive.x = e.clientX
+        contextMenuReactive.y = e.clientY
+      })
+    }
+
+    /**
+     *
+     * @param row 当前行数据
+     * @param idx 当前行索引
+     *
+     * @description
+     * 合并 RTable 的所有 rowProps，如果开启了右键菜单功能，自动会拦截右键事件。
      */
     const combineRowProps = (row: Record<string, unknown>, idx: number) => {
-      const interceptRowProps = props.rowProps?.(row, idx)
+      const interceptRowProps = props.rowProps?.(row, idx) || {}
+
+      if (props.disabledContextMenu) {
+        return interceptRowProps
+      }
 
       return {
         ...interceptRowProps,
-        onContextmenu: props.disabledContextMenu
-          ? void 0
-          : (e: MouseEvent) => {
-              e.preventDefault()
-
-              contextMenuReactive.showContextMenu = false
-
-              nextTick().then(() => {
-                contextMenuReactive.showContextMenu = true
-                contextMenuReactive.x = e.clientX
-                contextMenuReactive.y = e.clientY
-              })
-            },
+        onContextmenu: tableContextMenu,
       }
     }
 
     /**
      *
-     * @param size table size
+     * @param size 表格尺寸
      *
-     * 修改 table size
+     * @description
+     * 修改表格尺寸。
      */
     const changeTableSize = (size: ComponentSize) => {
       privateReactive.size = size
@@ -148,9 +163,10 @@ export default defineComponent({
 
     /**
      *
-     * @param options table columns
+     * @param options 表格列配置项
      *
-     * 更新 table columns，同时触发 onUpdateColumns 和 onUpdate:columns 事件
+     * @description
+     * 更新 table columns，同时触发 onUpdateColumns 和 onUpdate:columns 事件。
      */
     const updateTableColumn = (options: CType[]) => {
       const { onUpdateColumns, 'onUpdate:columns': $onUpdateColumns } = props
@@ -166,8 +182,9 @@ export default defineComponent({
 
     /**
      *
-     * 处理自定义的 toolOptions
-     * 匹配所有符合条件的 toolOptions，然后执行
+     * @description
+     * 处理自定义的 toolOptions。
+     * 匹配所有符合条件的 toolOptions，然后执行。
      */
     const renderToolOptions = () => {
       const { toolOptions } = props
@@ -189,45 +206,56 @@ export default defineComponent({
 
     /**
      *
-     * @param p props
-     *
-     * 处理 toolOptions，合并渲染所有的 toolOptions
+     * @description
+     * 渲染默认工具栏。
      */
-    const tool = (p: typeof props) => {
-      const { tool } = p
+    const renderDefaultToolOptions = () => {
+      const { onUpdateColumns, 'onUpdate:columns': rOnUpdateColumns } = props
+      const needSettingComponent = !!onUpdateColumns || !!rOnUpdateColumns
 
-      if (!tool) {
-        return
-      }
-
-      const renderDefaultToolOptions = () => (
+      return (
         <NFlex align="center">
-          <Print {...p} />
-          <Size {...p} onChangeSize={changeTableSize.bind(this)} />
+          <Print {...props} />
+          <Size {...props} onChangeSize={changeTableSize} />
           <Fullscreen />
-          <C {...p} onUpdateColumn={updateTableColumn.bind(this)} />
+          {needSettingComponent ? (
+            <C {...props} onUpdateColumn={updateTableColumn} />
+          ) : null}
           <TablePropsSelect
-            {...p}
-            onPopselectChange={popselectChange.bind(this)}
-            onInitialed={popselectChange.bind(this)}
+            {...props}
+            onPopselectChange={popselectChange}
+            onInitialed={popselectChange}
           />
         </NFlex>
       )
+    }
 
-      if (!props.toolOptions) {
-        return renderDefaultToolOptions
-      } else {
-        if (props.coverTool) {
-          return () => <NFlex align="center">{renderToolOptions()}</NFlex>
-        } else {
-          return () => (
-            <NFlex align="center">
-              {renderDefaultToolOptions()}
-              {renderToolOptions()}
-            </NFlex>
-          )
-        }
+    /**
+     *
+     * @param p props
+     *
+     * @description
+     * 处理 toolOptions，合并渲染所有的 toolOptions。
+     */
+    const tool = (p: typeof props) => {
+      if (!p.tool) {
+        return
       }
+
+      if (!p.toolOptions) {
+        return renderDefaultToolOptions
+      }
+
+      if (p.coverTool) {
+        return () => <NFlex align="center">{renderToolOptions()}</NFlex>
+      }
+
+      return () => (
+        <NFlex align="center">
+          {renderDefaultToolOptions()}
+          {renderToolOptions()}
+        </NFlex>
+      )
     }
 
     onMounted(() => {
@@ -239,6 +267,7 @@ export default defineComponent({
           uuidTable,
           uuidWrapper,
           wrapperRef,
+          tableRef: rTableInst,
         })
       }
     })
@@ -263,6 +292,7 @@ export default defineComponent({
       propsPopselectValue,
       cardHeaderStyle,
       flexAutoHeightStyle,
+      tableContextMenu,
     }
   },
   render() {

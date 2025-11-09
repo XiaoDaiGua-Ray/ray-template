@@ -24,3 +24,6 @@ export type RBarcodeFormat =
   | 'MSI1110'
   | 'pharmacode'
   | 'codabar'
+
+// 使用模板字面量类型来保留字面量提示
+export type RBarcodeSize = number | 'auto' | (string & {})

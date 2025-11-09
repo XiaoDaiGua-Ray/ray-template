@@ -203,7 +203,7 @@ export default defineComponent({
               maximize(!this.maximizeRef, {
                 scrollToOptions: {
                   left: 0,
-                  top: 0,
+                  top: -9999,
                 },
               })
             }}

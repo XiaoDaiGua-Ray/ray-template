@@ -48,26 +48,19 @@ const DEFAULT_OPTIONS: UsePaginationOptions = {
  * @param options 配置项
  *
  * @description
- * 便捷分页 hook。
+ * Naive UI Pagination 便捷分页 hook。
+ *
+ * @example
+ * const [paginationRef, { getItemCount, setItemCount, getPage, setPage, getPageSize, setPageSize, getPagination, getCallback, setCallback, resetPagination }] = usePagination(() => {
+ *   // do something...
+ * }, {
+ *   // ...options
+ * })
  */
 export const usePagination = <T extends AnyFC>(
   callback?: T,
   options?: UsePaginationOptions,
 ) => {
-  // 配置合并
-  const mergedOptions = computed(() => ({
-    ...DEFAULT_OPTIONS,
-    ...omit(options, [
-      'on-update:page',
-      'on-update:page-size',
-      'onUpdatePage',
-      'onUpdatePageSize',
-      'onUpdate:page',
-      'onUpdate:page-size',
-      'onUpdate:pageSize',
-    ]),
-    ...paginationMethods,
-  }))
   // 回调函数
   const callbackRef = shallowRef(callback)
   // 分页方法
@@ -90,6 +83,20 @@ export const usePagination = <T extends AnyFC>(
       pageSizeChange?.(pageSize)
     },
   }
+  // 配置合并
+  const mergedOptions = computed(() => ({
+    ...DEFAULT_OPTIONS,
+    ...omit(options, [
+      'on-update:page',
+      'on-update:page-size',
+      'onUpdatePage',
+      'onUpdatePageSize',
+      'onUpdate:page',
+      'onUpdate:page-size',
+      'onUpdate:pageSize',
+    ]),
+    ...paginationMethods,
+  }))
   // 分页配置
   const paginationRef = ref<PaginationProps>(mergedOptions.value)
 
@@ -171,7 +178,12 @@ export const usePagination = <T extends AnyFC>(
    * @description
    * 获取回调函数。
    */
-  const getCallback = callbackRef.value as T
+  const getCallback = <Fn extends AnyFC = T>(): Fn extends
+    | undefined
+    | null
+    | unknown
+    ? T
+    : Fn => callbackRef.value
 
   /**
    *
@@ -183,7 +195,7 @@ export const usePagination = <T extends AnyFC>(
    * @example
    * setCallback(() => {})
    */
-  const setCallback = (callback: AnyFC) => {
+  const setCallback = <Fn extends AnyFC = AnyFC>(callback: Fn) => {
     callbackRef.value = callback
   }
 

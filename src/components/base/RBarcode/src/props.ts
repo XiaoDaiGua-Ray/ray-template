@@ -1,4 +1,9 @@
-import type { RBarcodeRender, RBarcodeOptions, RBarcodeFormat } from './types'
+import type {
+  RBarcodeRender,
+  RBarcodeOptions,
+  RBarcodeFormat,
+  RBarcodeSize,
+} from './types'
 import type { PropType } from 'vue'
 import type { MaybeArray } from '@/types'
 
@@ -7,23 +12,39 @@ const props = {
    *
    * @description
    * 条形码宽度。
+   * - 数字：固定宽度（单位：px）
+   * - 'auto'：自动宽度
+   * - 其他字符串：CSS 宽度值（如 '100%', '200px'）
    *
    * @default 'auto'
+   * @example
+   * width={200}
+   * width="auto"
+   * width="responsive"
+   * width="100%"
    */
   width: {
-    type: [String, Number] as PropType<string | number>,
-    default: 'auto',
+    type: [String, Number] as PropType<RBarcodeSize>,
+    default: 'auto' as const,
   },
   /**
    *
    * @description
    * 条形码高度。
+   * - 数字：固定高度（单位：px）
+   * - 'auto'：自动高度
+   * - 其他字符串：CSS 高度值（如 '100%', '200px'）
    *
    * @default 'auto'
+   * @example
+   * height={100}
+   * height="auto"
+   * height="responsive"
+   * height="50%"
    */
   height: {
-    type: [String, Number] as PropType<string | number>,
-    default: 'auto',
+    type: [String, Number] as PropType<RBarcodeSize>,
+    default: 'auto' as const,
   },
   /**
    *
@@ -131,6 +152,19 @@ const props = {
    */
   onFinally: {
     type: [Function, Array] as PropType<MaybeArray<() => void>>,
+  },
+  /**
+   *
+   * @description
+   * 是否启用响应式尺寸，当容器大小变化时自动重新渲染条形码。
+   *
+   * 如果启用了该属性，width 和 height 配置项将失效。
+   *
+   * @default false
+   */
+  responsive: {
+    type: Boolean,
+    default: false,
   },
 } as const
 

@@ -12,6 +12,7 @@ import {
   NSelect,
   NDatePicker,
   NText,
+  useDialog,
 } from 'naive-ui'
 import { RIcon } from '@/components'
 
@@ -98,6 +99,7 @@ export default defineComponent({
   name: 'TableProDemo',
   setup() {
     const { format } = useDayjs()
+    const { info: infoDialog } = useDialog()
 
     const [register, { formModel, reset }] = useForm<ParamsRef>({
       RangeTime: null,
@@ -312,6 +314,7 @@ export default defineComponent({
       setPage,
       setPageSize,
       resetTablePagination,
+      infoDialog,
     }
   },
   render() {
@@ -338,6 +341,7 @@ export default defineComponent({
       setPage,
       setPageSize,
       resetTablePagination,
+      infoDialog,
     } = this
 
     return (
@@ -428,7 +432,20 @@ export default defineComponent({
             <NButton type="primary" onClick={() => print()}>
               打印
             </NButton>
-            <NButton type="primary" onClick={() => downloadCsv()}>
+            <NButton
+              type="primary"
+              onClick={() => {
+                infoDialog({
+                  title: '下载 CSV',
+                  content: '下载 CSV',
+                  positiveText: '下载',
+                  negativeText: '取消',
+                  onPositiveClick: () => {
+                    downloadCsv()
+                  },
+                })
+              }}
+            >
               下载 csv
             </NButton>
             <NButton type="primary" onClick={() => setPage(2)}>

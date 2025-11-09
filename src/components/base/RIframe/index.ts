@@ -1,4 +1,4 @@
-import RIframe from './src'
+import RIframe from './src/Iframe'
 import iframeProps from './src/props'
 
 import type * as RIframeType from './src/types'

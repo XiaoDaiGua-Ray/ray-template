@@ -30,7 +30,9 @@ export interface BasePagination {
  */
 export type TablePagination = BasePagination
 
-export type TablePaginationUpdate = (pagination: TablePagination) => void
+export type TablePaginationUpdate = (
+  pagination: Readonly<TablePagination>,
+) => void
 
 export type PaginationPrefix = UsePaginationOptions['prefix']
 
@@ -63,6 +65,14 @@ export interface TableRequestConfig<
    * @default undefined
    */
   excludeParams?: ExcludeParams[]
+  /**
+   *
+   * @description
+   * 是否自动移除重复的请求参数。
+   *
+   * @default true
+   */
+  autoDeleteDuplicateKeys?: boolean
 }
 
 export type TableProProps = Omit<TableProps, 'pagination'>

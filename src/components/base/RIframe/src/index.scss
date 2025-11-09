@@ -1,8 +1,8 @@
 .ray-iframe {
-  width: var(--ray-iframe-width);
-  height: var(--ray-iframe-height);
+  width: var(--r-iframe-width);
+  height: var(--r-iframe-height);
   box-sizing: border-box;
-  border: var(--ray-iframe-frameborder);
+  border: var(--r-iframe-frameborder);
 
   & .ray-iframe__container {
     width: 100%;

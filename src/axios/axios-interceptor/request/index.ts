@@ -1,7 +1,7 @@
-import { useAxiosInterceptor } from '@/axios/utils/interceptor'
+import { axiosInterceptor } from '@/axios/utils/interceptor'
 import implement from './provider'
 
-const { setImplement } = useAxiosInterceptor()
+const { setImplement } = axiosInterceptor()
 
 export const setupRequestInterceptor = () => {
   const { implementRequestInterceptorArray } = implement

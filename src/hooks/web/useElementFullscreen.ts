@@ -1,4 +1,5 @@
-import { unrefElement, effectDispose, isValueType, setStyle } from '@/utils'
+import { unrefElement, effectDispose, isValueType } from '@/utils'
+import { pick } from 'lodash-es'
 
 import type { BasicTarget } from '@/types'
 
@@ -61,10 +62,9 @@ export interface UseElementFullscreenOptions {
   transition?: string
 }
 
-let currentZIndex = 999
-let isAppend = false
-const ID_TAG = 'ELEMENT-FULLSCREEN-RAY'
-const styleElement = document.createElement('style')
+// 全局 z-index 管理
+let globalZIndex = 999
+const ID_TAG = 'data-element-fullscreen'
 
 /**
  *
@@ -101,141 +101,163 @@ export const useElementFullscreen = (
     exit: _exit,
     backgroundColor,
     zIndex,
-    transition = 'transform 0.3s var(--r-bezier)',
+    transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   } = options ?? {}
-  let isSetup = false
-  const catchBoundingClientRect: {
-    x: number | null
-    y: number | null
-  } = {
-    x: null,
-    y: null,
-  }
-  // 使用 ref 来追踪状态
-  const isFullscreen = ref(false)
 
-  const updateStyle = () => {
+  // 每个实例独立的状态
+  const isFullscreen = ref(false)
+  const instanceZIndex = ref(0)
+  const originalStyles = {
+    position: '',
+    width: '',
+    height: '',
+    top: '',
+    left: '',
+    transform: '',
+    transition: '',
+    zIndex: '',
+    backgroundColor: '',
+  }
+
+  const enter = () => {
     const element = unrefElement(target) as HTMLElement | null
 
     if (!element) {
       return
     }
 
-    const { left, top } = element.getBoundingClientRect()
-
-    if (
-      catchBoundingClientRect.x === null &&
-      catchBoundingClientRect.y === null
-    ) {
-      catchBoundingClientRect.x = -left
-      catchBoundingClientRect.y = -top
-    }
-
-    setStyle(document.body, {
-      '--element-fullscreen-z-index':
-        isValueType<null>(zIndex, 'Null') ||
-        isValueType<undefined>(zIndex, 'Undefined')
-          ? currentZIndex
-          : zIndex,
-      '--element-fullscreen-transition': transition,
-      '--element-fullscreen-background-color': backgroundColor,
-      '--element-fullscreen-width': 'var(--html-width)',
-      '--element-fullscreen-height': 'var(--html-height)',
-      '--element-fullscreen-transform-x': `${catchBoundingClientRect.x}px`,
-      '--element-fullscreen-transform-y': `${catchBoundingClientRect.y}px`,
-    })
-
-    const cssContent = `
-          [${ID_TAG}] {
-            position: fixed;
-            width: var(--element-fullscreen-width) !important;
-            height: var(--element-fullscreen-height) !important;
-            transform: translate(var(--element-fullscreen-transform-x), var(--element-fullscreen-transform-y)) !important;
-            transition: var(--element-fullscreen-transition);
-            z-index: var(--element-fullscreen-z-index) !important;
-            background-color: var(--element-fullscreen-background-color);
-          }
-        `.trim()
-
-    styleElement.innerHTML = cssContent
-
-    // 避免重复添加 style 标签
-    if (!isAppend) {
-      document.head.appendChild(styleElement)
-    }
-  }
-
-  const enter = () => {
-    const element = unrefElement(target) as HTMLElement | null
-
     beforeEnter?.()
 
-    if (element) {
-      if (!element.getAttribute(ID_TAG)) {
-        element.setAttribute(ID_TAG, ID_TAG)
-      }
+    // 保存原始样式（只在第一次进入时保存）
+    if (!isFullscreen.value) {
+      const o = pick(element.style, [
+        'position',
+        'width',
+        'height',
+        'top',
+        'left',
+        'transform',
+        'transition',
+        'zIndex',
+        'backgroundColor',
+      ])
 
-      if (!isSetup) {
-        isSetup = true
-        currentZIndex += 1
-      }
-
-      if (!isAppend) {
-        updateStyle()
-
-        isAppend = true
-      }
-
-      element.style.transition = transition
-      isFullscreen.value = true
-
-      _enter?.()
+      Object.assign(originalStyles, o)
     }
+
+    // 获取当前位置
+    const { top, left, width, height } = element.getBoundingClientRect()
+
+    // 分配 z-index
+    if (instanceZIndex.value === 0) {
+      if (
+        isValueType<null>(zIndex, 'Null') ||
+        isValueType<undefined>(zIndex, 'Undefined')
+      ) {
+        globalZIndex += 1
+        instanceZIndex.value = globalZIndex
+      } else {
+        instanceZIndex.value = zIndex
+      }
+    }
+
+    // 设置全屏样式
+    element.setAttribute(ID_TAG, 'true')
+
+    // 设置初始位置（不设置 transition）
+    element.style.position = 'fixed'
+    element.style.top = `${top}px`
+    element.style.left = `${left}px`
+    element.style.width = `${width}px`
+    element.style.height = `${height}px`
+    element.style.transform = 'translate(0, 0)'
+    element.style.zIndex = String(instanceZIndex.value)
+
+    if (backgroundColor) {
+      element.style.backgroundColor = backgroundColor
+    }
+
+    // 强制重排
+    void element.offsetHeight
+
+    // 添加 transition
+    element.style.transition = transition
+
+    // 使用 requestAnimationFrame 应用最终样式
+    requestAnimationFrame(() => {
+      element.style.top = '0px'
+      element.style.left = '0px'
+      element.style.width = '100vw'
+      element.style.height = '100vh'
+    })
+
+    // 先更新状态
+    isFullscreen.value = true
+
+    _enter?.()
   }
 
   const exit = () => {
-    beforeExit?.()
+    const element = unrefElement(target) as HTMLElement | null
 
-    const element = unrefElement(target)
-
-    if (element) {
-      element.removeAttribute(ID_TAG)
+    if (!element) {
+      return
     }
 
+    beforeExit?.()
+
+    // 先更新状态
     isFullscreen.value = false
+
+    // 恢复原始样式
+    element.removeAttribute(ID_TAG)
+
+    // 样式属性映射表（camelCase -> kebab-case）
+    const styleMap: Record<keyof typeof originalStyles, string> = {
+      position: 'position',
+      width: 'width',
+      height: 'height',
+      top: 'top',
+      left: 'left',
+      transform: 'transform',
+      transition: 'transition',
+      zIndex: 'z-index',
+      backgroundColor: 'background-color',
+    }
+
+    // 批量恢复样式
+    Object.entries(originalStyles).forEach(([key, value]) => {
+      const styleName = styleMap[key as keyof typeof originalStyles]
+
+      if (!value) {
+        element.style.removeProperty(styleName)
+      } else {
+        element.style.setProperty(styleName, value)
+      }
+    })
 
     _exit?.()
   }
 
   const toggleFullscreen = () => {
-    const element = unrefElement(target)
-
-    if (element) {
-      if (element.getAttribute(ID_TAG)) {
-        exit()
-      } else {
-        enter()
-      }
+    if (isFullscreen.value) {
+      exit()
+    } else {
+      enter()
     }
   }
 
   effectDispose(() => {
-    const element = unrefElement(target) as HTMLElement | null
-
-    if (element) {
-      element.removeAttribute(ID_TAG)
+    if (isFullscreen.value) {
+      exit()
     }
-
-    // 回滚 z-index 值，避免无限增加
-    currentZIndex = Math.max(999, currentZIndex - 1) // 防止 zIndex 小于初始值
-    isFullscreen.value = false
   })
 
   return {
     enter,
     exit,
     toggleFullscreen,
-    isFullscreen: readonly(isFullscreen), // 暴露只读状态
+    isFullscreen: readonly(isFullscreen),
   }
 }
 

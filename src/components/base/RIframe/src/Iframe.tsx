@@ -13,9 +13,9 @@ export default defineComponent({
   setup(props, { expose }) {
     const cssVars = computed(() => {
       const cssVar = {
-        '--ray-iframe-frameborder': completeSize(props.frameborder),
-        '--ray-iframe-width': completeSize(props.width),
-        '--ray-iframe-height': completeSize(props.height),
+        '--r-iframe-frameborder': completeSize(props.frameborder),
+        '--r-iframe-width': completeSize(props.width),
+        '--r-iframe-height': completeSize(props.height),
       }
 
       return cssVar

@@ -303,6 +303,43 @@ const useCheckedRowKeys = <
     }
   }
 
+  /**
+   *
+   * @param keys 批量选中的 keys
+   *
+   * @description
+   * 批量选中指定的 keys。
+   */
+  const selectKeys = (keys: RowKey[]) => {
+    keys.forEach((key) => selectKey(key))
+  }
+
+  /**
+   *
+   * @param key 需要切换的 key
+   *
+   * @description
+   * 切换指定 key 的选中状态。
+   */
+  const toggleKey = (key: RowKey) => {
+    if (keysRef.value.includes(key)) {
+      clearKey(key)
+    } else {
+      selectKey(key)
+    }
+  }
+
+  /**
+   *
+   * @param key 需要检查的 key
+   *
+   * @description
+   * 检查指定 key 是否被选中。
+   */
+  const isKeySelected = (key: RowKey) => {
+    return keysRef.value.includes(key)
+  }
+
   effectDispose(() => {
     clearAll()
   })
@@ -317,6 +354,9 @@ const useCheckedRowKeys = <
       clearAll,
       clearKey,
       selectKey,
+      selectKeys,
+      toggleKey,
+      isKeySelected,
     },
   ] as const
 }

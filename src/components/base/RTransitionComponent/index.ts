@@ -1,4 +1,4 @@
-import RTransitionComponent from './src/index.vue'
+import RTransitionComponent from './src/TransitionComponent.vue'
 import transitionComponentProps from './src/props'
 
 import type * as RTransitionComponentType from './src/types'

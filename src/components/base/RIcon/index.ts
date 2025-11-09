@@ -1,4 +1,4 @@
-import RIcon from './src'
+import RIcon from './src/Icon'
 import iconProps from './src/props'
 
 import type { ExtractPublicPropTypes } from 'vue'

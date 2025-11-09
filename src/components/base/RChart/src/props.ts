@@ -344,6 +344,17 @@ const props = {
   /**
    *
    * @description
+   * 是否深度监听 options 配置项。
+   *
+   * @default true
+   */
+  watchDeep: {
+    type: Boolean,
+    default: true,
+  },
+  /**
+   *
+   * @description
    * 是否将渲染放置下一个队列。
    * 该配置项在渲染很多图表的时候可以有很不错的性能提升。
    *

@@ -91,7 +91,7 @@ export default [
           ignoreRestArgs: true,
         },
       ],
-      'prettier/prettier': 'error',
+      'prettier/prettier': ['error', {}],
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
       '@typescript-eslint/ban-types': 'off',

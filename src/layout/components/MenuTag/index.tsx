@@ -21,14 +21,7 @@
 
 import './index.scss'
 
-import {
-  NScrollbar,
-  NFlex,
-  NLayoutHeader,
-  NDropdown,
-  NButton,
-  NIcon,
-} from 'naive-ui'
+import { NScrollbar, NFlex, NLayoutHeader, NDropdown, NButton } from 'naive-ui'
 import { RIcon, RMoreDropdown } from '@/components'
 
 import { useMenuGetters, useMenuActions } from '@/store'
@@ -451,7 +444,7 @@ export default defineComponent({
             show={this.actionState.actionDropdownShow}
             trigger="manual"
             placement="bottom-start"
-            onSelect={actionDropdownSelect.bind(this)}
+            onSelect={actionDropdownSelect}
             onClickoutside={() => {
               if (!isMouseInMenuTag) {
                 this.actionState.actionDropdownShow = false
@@ -544,6 +537,7 @@ export default defineComponent({
                           {...{
                             onMousedown: closeCurrentMenuTag.bind(this, idx),
                           }}
+                          cursor="pointer"
                         />
                       ),
                     }}

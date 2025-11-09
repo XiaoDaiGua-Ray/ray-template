@@ -191,7 +191,12 @@ function baseOptions(mode: string): PluginOption[] {
       preloadingConfig,
       appPrimaryColor,
     }),
-    viteInspect(), // 仅适用于开发模式(检查 `Vite` 插件的中间状态)
+    // 仅适用于开发模式(检查 `Vite` 插件的中间状态)
+    mode === 'development'
+      ? viteInspect({
+          enabled: true,
+        })
+      : null,
     mockDevServerPlugin({
       include: ['mock/**/*.mock.ts'],
       exclude: [

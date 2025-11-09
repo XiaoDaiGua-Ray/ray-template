@@ -1,6 +1,5 @@
 import { setVariable, getVariableToRefs } from '@/global-variable'
 import { LAYOUT_CONTENT_REF } from '@/app-config'
-import { unrefElement } from '@/utils'
 import { useElementFullscreen } from '../web'
 
 import type { UseElementFullscreenOptions } from '../web'
@@ -24,7 +23,13 @@ export interface MaximizeOptions extends UseElementFullscreenOptions {
   scrollToOptions?: ScrollToOptions
 }
 
-export const useMaximize = () => {
+export const useMaximize = (options?: MaximizeOptions) => {
+  const contentEl = LAYOUT_CONTENT_REF as Ref<HTMLElement>
+  const { enter, exit, toggleFullscreen, isFullscreen } = useElementFullscreen(
+    contentEl,
+    options,
+  )
+
   /**
    *
    * 当前 LayoutContent 是处于否全屏状态
@@ -46,25 +51,30 @@ export const useMaximize = () => {
    * 该方法仅针对于 LayoutContent 区域，并且依赖全局属性 layoutContentMaximize。
    *
    * @example
-   * maximize(true, { MaximizeOptions }) 全屏内容区域
-   * maximize(false, { MaximizeOptions }) 取消全屏内容区域
+   * maximize(true) 全屏内容区域
+   * maximize(false) 取消全屏内容区域
    */
   const maximize = (full: boolean, options?: MaximizeOptions) => {
     const { scrollToOptions } = options ?? {}
-    const contentEl = unrefElement(LAYOUT_CONTENT_REF as Ref<HTMLElement>)
-    const { toggleFullscreen } = useElementFullscreen(contentEl, options)
 
     setVariable('layoutContentMaximize', full)
-    toggleFullscreen()
+
+    if (full) {
+      enter()
+    } else {
+      exit()
+    }
 
     if (scrollToOptions && full) {
-      LAYOUT_CONTENT_REF?.value?.scrollTo(scrollToOptions)
+      contentEl?.value?.scrollTo(scrollToOptions)
     }
   }
 
   return {
     isLayoutContentMaximized,
+    isFullscreen,
     maximize,
+    toggleFullscreen,
   }
 }
 

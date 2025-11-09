@@ -177,7 +177,10 @@ export default defineComponent({
       const { onUpdateColumn } = props
 
       if (onUpdateColumn) {
-        call(onUpdateColumn, options)
+        // 使用 nextTick 确保 DOM 更新后再触发事件
+        nextTick(() => {
+          call(onUpdateColumn, options)
+        })
       }
     }
 
