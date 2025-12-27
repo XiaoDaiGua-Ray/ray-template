@@ -1,10 +1,8 @@
 import './index.scss'
-
-import { NEllipsis, NTooltip, NGradientText } from 'naive-ui'
 import { RIcon } from '@/components'
-
-import { isValueType, renderNode } from '@/utils'
 import { useSettingGetters } from '@/store'
+import { isValueType, renderNode } from '@/utils'
+import { NEllipsis, NGradientText, NTooltip } from 'naive-ui'
 
 export const SIDER_BAR_LOGO = shallowRef<HTMLElement>()
 

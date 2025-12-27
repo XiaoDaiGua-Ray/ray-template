@@ -1,27 +1,23 @@
 import './index.scss'
-
+import { RIcon, useModal } from '@/components'
+import { useMenuActions, useSettingActions, useSettingGetters } from '@/store'
+import { getDefaultSettingConfig } from '@/store/modules/setting/constant'
+import type { SettingState } from '@/store/modules/setting/types'
+import { cloneDeep, forIn, throttle } from 'lodash-es'
 import {
+  drawerProps,
+  NButton,
   NDrawer,
   NDrawerContent,
   NFlex,
-  NButton,
-  NTabs,
   NTabPane,
+  NTabs,
 } from 'naive-ui'
-import { RIcon } from '@/components'
+import { SETTING_DRAWER_INJECT_KEY } from './constant'
 import SegmentViewsAppearance from './segment-views/Appearance'
 import SegmentViewsCommon from './segment-views/Common'
-import SegmentViewsWatermark from './segment-views/Watermark'
 import SegmentViewsCustomMenu from './segment-views/CustomMenu'
-
-import { useSettingGetters, useSettingActions, useMenuActions } from '@/store'
-import { SETTING_DRAWER_INJECT_KEY } from './constant'
-import { cloneDeep, forIn, throttle } from 'lodash-es'
-import { drawerProps } from 'naive-ui'
-import { useModal } from '@/components'
-import { getDefaultSettingConfig } from '@/store/modules/setting/constant'
-
-import type { SettingState } from '@/store/modules/setting/types'
+import SegmentViewsWatermark from './segment-views/Watermark'
 
 export default defineComponent({
   name: 'SettingDrawer',

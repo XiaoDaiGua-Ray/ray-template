@@ -1,7 +1,6 @@
 import './index.scss'
-
-import { NFlex, NCard, NPopover } from 'naive-ui'
 import { RIcon } from '@/components'
+import { NCard, NFlex, NPopover } from 'naive-ui'
 
 const PreviewSVGIcons = defineComponent({
   name: 'PreviewSVGIcons',

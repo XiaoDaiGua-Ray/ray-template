@@ -4,11 +4,10 @@
  * 如果不是最新版本则弹出提示框，提示用户更新，点击确认后退出登录并且刷新资源
  */
 
-import { RModal } from '@/components'
-
-import { getStorage, setStorage } from '@/utils'
-import { useSigningActions } from '@/store'
 import { APP_CATCH_KEY } from '@/app-config'
+import { RModal } from '@/components'
+import { useSigningActions } from '@/store'
+import { getStorage, setStorage } from '@/utils'
 
 export default defineComponent({
   name: 'AppVersionProvider',

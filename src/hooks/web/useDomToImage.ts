@@ -1,14 +1,13 @@
+import type { BasicTarget, TargetType } from '@/types'
 import { unrefElement } from '@/utils'
 import {
-  toPng,
-  toJpeg,
   toBlob,
-  toPixelData,
-  toSvg,
   toCanvas,
+  toJpeg,
+  toPixelData,
+  toPng,
+  toSvg,
 } from 'html-to-image'
-
-import type { BasicTarget, TargetType } from '@/types'
 
 // html-to-image 方法
 const domToImageMethods = {

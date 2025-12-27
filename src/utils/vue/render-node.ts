@@ -1,6 +1,5 @@
 import { isValueType } from '@/utils'
-
-import type { VNode, Slot } from 'vue'
+import type { Slot, VNode } from 'vue'
 
 export type RenderVNodeType<T = unknown> =
   | VNode

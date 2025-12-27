@@ -1,5 +1,5 @@
-import setupMiniApp from '../utils/setupMiniApp'
 import { useAppRoot } from '../../src/hooks/template/useAppRoot'
+import setupMiniApp from '../utils/setupMiniApp'
 
 describe('useAppRoot', async () => {
   await setupMiniApp()

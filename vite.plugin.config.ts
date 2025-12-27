@@ -1,31 +1,24 @@
-import path from 'node:path'
-
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'url'
+import viteVeI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import vue from '@vitejs/plugin-vue'
 import viteVueJSX from '@vitejs/plugin-vue-jsx'
-import viteVeI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
-import viteInspect from 'vite-plugin-inspect'
-import viteSvgLoader from 'vite-svg-loader'
-import { analyzer } from 'vite-bundle-analyzer'
 import gzipPlugin from 'rollup-plugin-gzip'
-import { ViteEjsPlugin as viteEjsPlugin } from 'vite-plugin-ejs'
-import viteAutoImport from 'unplugin-auto-import/vite'
-import viteEslint from 'vite-plugin-eslint'
-import mockDevServerPlugin from 'vite-plugin-mock-dev-server'
-import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
-import unpluginViteComponents from 'unplugin-vue-components/vite'
 import unoCSS from 'unocss/vite'
-
-import { cdn as viteCDNPlugin } from 'vite-plugin-cdn2'
+import viteAutoImport from 'unplugin-auto-import/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
-
+import unpluginViteComponents from 'unplugin-vue-components/vite'
+import type { PluginOption } from 'vite'
+import { analyzer } from 'vite-bundle-analyzer'
+import { cdn as viteCDNPlugin } from 'vite-plugin-cdn2'
+import { ViteEjsPlugin as viteEjsPlugin } from 'vite-plugin-ejs'
+import viteEslint from 'vite-plugin-eslint'
+import viteInspect from 'vite-plugin-inspect'
+import { mockDevServerPlugin } from 'vite-plugin-mock-dev-server'
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import viteSvgLoader from 'vite-svg-loader'
 import { cdnResolve, svgIconResolve } from './vite-helper'
 import config from './vite.custom.config'
-
-import type { PluginOption } from 'vite'
-
-function pathResolve(dir: string) {
-  return path.resolve(__dirname, dir)
-}
 
 // 仅适用于报告模式（report）
 function onlyReportOptions(mode: string): PluginOption[] {
@@ -139,11 +132,9 @@ function baseOptions(mode: string): PluginOption[] {
     viteVueJSX(),
     title,
     viteVeI18nPlugin({
-      runtimeOnly: true,
-      compositionOnly: true,
-      forceStringify: true,
-      defaultSFCLang: 'json',
-      include: [pathResolve('../locales/**')],
+      include: [
+        resolve(dirname(fileURLToPath(import.meta.url)), './locales/*.json'),
+      ],
     }),
     viteAutoImport({
       eslintrc: {
@@ -192,11 +183,9 @@ function baseOptions(mode: string): PluginOption[] {
       appPrimaryColor,
     }),
     // 仅适用于开发模式(检查 `Vite` 插件的中间状态)
-    mode === 'development'
-      ? viteInspect({
-          enabled: true,
-        })
-      : null,
+    viteInspect({
+      dev: false,
+    }),
     mockDevServerPlugin({
       include: ['mock/**/*.mock.ts'],
       exclude: [

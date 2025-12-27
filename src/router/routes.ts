@@ -1,6 +1,6 @@
+import { t } from '@/hooks/web/useI18n'
 import Layout from '@/layout'
 import { appExpandRoutes } from './app-route-modules'
-import { t } from '@/hooks/web/useI18n'
 
 export default [
   /**

@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { AnyFn } from '@/types'
 import type {
+  Axios,
+  AxiosDefaults,
+  AxiosError,
   AxiosHeaders,
   AxiosRequestConfig,
-  HeadersDefaults,
-  AxiosDefaults,
-  Axios,
-  AxiosResponse,
-  AxiosError,
-  InternalAxiosRequestConfig,
   AxiosRequestHeaders,
+  AxiosResponse,
+  HeadersDefaults,
+  InternalAxiosRequestConfig,
 } from 'axios'
-import type { AnyFC } from '@/types'
 
 export type AxiosHeaderValue =
   | AxiosHeaders
@@ -136,13 +136,13 @@ export type RequestInterceptorConfig<T = any> = AppRawRequestConfig<T>
 export type ResponseInterceptorConfig<T = any, K = any> = AxiosResponse<T, K>
 
 export interface ImplementQueue {
-  implementRequestInterceptorArray: AnyFC[]
-  implementResponseInterceptorArray: AnyFC[]
+  implementRequestInterceptorArray: AnyFn[]
+  implementResponseInterceptorArray: AnyFn[]
 }
 
 export interface ErrorImplementQueue {
-  implementRequestInterceptorErrorArray: AnyFC[]
-  implementResponseInterceptorErrorArray: AnyFC[]
+  implementRequestInterceptorErrorArray: AnyFn[]
+  implementResponseInterceptorErrorArray: AnyFn[]
 }
 
 export type FetchType = 'ok' | 'error'

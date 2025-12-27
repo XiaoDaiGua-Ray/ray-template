@@ -16,11 +16,10 @@
  *   - useVedic default: `false`(分组格式化值, demo: currency(1234567.89, { useVedic: true }).format() => '12,34,567.89')
  */
 
-import currency from 'currency.js'
-import { cloneDeep } from 'lodash-es'
 import { isValueType } from '@/utils'
-
+import currency from 'currency.js'
 import type { Options } from 'currency.js'
+import { cloneDeep } from 'lodash-es'
 
 export type CurrencyArguments = string | number | currency
 

@@ -14,10 +14,6 @@ import type { Recordable } from './modules/helper'
 import type { ECharts, EChartsCoreOption } from 'echarts/core'
 
 export declare global {
-  declare interface UnknownObjectKey {
-    [propName: string]: any
-  }
-
   namespace JSX {
     export interface Element extends VNode {}
     export interface ElementClass {
@@ -75,7 +71,7 @@ export declare global {
 
   declare interface GlobalDataTableColumns<T> extends DataTableColumns<T> {}
 
-  declare type GlobalRecordable<T> = Recordable<T>
+  declare type GlobalRecordable<T = any> = Recordable<T>
 
   declare type GlobalECharts = ECharts
 

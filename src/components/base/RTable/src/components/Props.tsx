@@ -1,11 +1,9 @@
-import { NPopselect } from 'naive-ui'
 import { RIcon } from '@/components'
-
-import { call } from '@/utils'
-import { config, propsOptions } from '../shared'
-import props from '../props'
-
 import type { MaybeArray } from '@/types'
+import { call } from '@/utils'
+import { NPopselect } from 'naive-ui'
+import props from '../props'
+import { config, propsOptions } from '../shared'
 import type { PropsComponentPopselectKeys } from '../types'
 
 export default defineComponent({

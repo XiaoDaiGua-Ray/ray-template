@@ -1,9 +1,8 @@
-import { useMenuGetters, useMenuActions } from '@/store'
-import { useVueRouter, useAppRoot } from '@/hooks'
-import { pick } from 'lodash-es'
+import { useAppRoot, useVueRouter } from '@/hooks'
+import { useMenuActions, useMenuGetters } from '@/store'
 import { pickRouteRecordNormalizedConstant } from '@/store/modules/menu/constant'
-
-import type { MenuTagOptions, Key, AppMenuOption } from '@/types'
+import type { AppMenuOption, Key, MenuTagOptions } from '@/types'
+import { pick } from 'lodash-es'
 
 export type CloseMenuTag = Key | MenuTagOptions
 

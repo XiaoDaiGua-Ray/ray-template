@@ -1,52 +1,53 @@
 import './index.scss'
-
-import { use, registerTheme, init } from 'echarts/core' // echarts 核心模块
-import {
-  TitleComponent,
-  TooltipComponent,
-  GridComponent,
-  DatasetComponent,
-  TransformComponent,
-  LegendComponent,
-  ToolboxComponent,
-  AriaComponent,
-} from 'echarts/components' // 提示框, 标题, 直角坐标系, 数据集, 内置数据转换器等组件(组件后缀都为 Component)
-import {
-  BarChart,
-  LineChart,
-  PieChart,
-  CandlestickChart,
-  ScatterChart,
-  PictorialBarChart,
-} from 'echarts/charts' // 系列类型(后缀都为 SeriesOption)
-import { LegacyGridContainLabel, UniversalTransition } from 'echarts/features' // 标签自动布局, 全局过渡动画等特性
-import { CanvasRenderer } from 'echarts/renderers' // echarts 渲染器
-import { NCard } from 'naive-ui'
-
-import props from './props'
-import { throttle } from 'lodash-es'
-import { completeSize, downloadBase64File, call, renderNode } from '@/utils'
-import { getCustomEchartTheme, loadingOptions, setEchartOptions } from './utils'
 import { APP_THEME } from '@/app-config'
-import {
-  useResizeObserver,
-  useIntersectionObserver,
-  watchThrottled,
-} from '@vueuse/core'
 import { RMoreDropdown } from '@/components'
 import { useSettingGetters } from '@/store'
-import { useTemplateRef } from 'vue'
-import { USE_CHART_PROVIDER_KEY } from './config'
-
-import type { WatchStopHandle } from 'vue'
-import type { AnyFC } from '@/types'
-import type { DebouncedFunc } from 'lodash-es'
-import type {
-  UseResizeObserverReturn,
-  UseIntersectionObserverReturn,
+import type { AnyFn } from '@/types'
+import { call, completeSize, downloadBase64File, renderNode } from '@/utils'
+import {
+  useIntersectionObserver,
+  useResizeObserver,
+  watchThrottled,
 } from '@vueuse/core'
+import type {
+  UseIntersectionObserverReturn,
+  UseResizeObserverReturn,
+} from '@vueuse/core'
+// 提示框, 标题, 直角坐标系, 数据集, 内置数据转换器等组件(组件后缀都为 Component)
+import {
+  BarChart,
+  CandlestickChart,
+  LineChart,
+  PictorialBarChart,
+  PieChart,
+  ScatterChart,
+} from 'echarts/charts'
+import {
+  AriaComponent,
+  DatasetComponent,
+  GridComponent,
+  LegendComponent,
+  TitleComponent,
+  ToolboxComponent,
+  TooltipComponent,
+  TransformComponent,
+} from 'echarts/components'
+import { init, registerTheme, use } from 'echarts/core' // echarts 核心模块
+
 import type { ECharts, EChartsCoreOption } from 'echarts/core'
-import type { DropdownProps, DropdownOption } from 'naive-ui'
+// 系列类型(后缀都为 SeriesOption)
+import { LegacyGridContainLabel, UniversalTransition } from 'echarts/features' // 标签自动布局, 全局过渡动画等特性
+import { CanvasRenderer } from 'echarts/renderers' // echarts 渲染器
+
+import { throttle } from 'lodash-es'
+import type { DebouncedFunc } from 'lodash-es'
+import { NCard } from 'naive-ui'
+import type { DropdownOption, DropdownProps } from 'naive-ui'
+import { useTemplateRef } from 'vue'
+import type { WatchStopHandle } from 'vue'
+import { USE_CHART_PROVIDER_KEY } from './config'
+import props from './props'
+import { getCustomEchartTheme, loadingOptions, setEchartOptions } from './utils'
 
 // 获取 chart 主题
 const echartThemes = getCustomEchartTheme()
@@ -94,7 +95,7 @@ export default defineComponent({
     // echart 实例
     const echartInstanceRef = shallowRef<ECharts>()
     // resize 防抖方法实例
-    let resizeThrottleReturn: DebouncedFunc<AnyFC> | null
+    let resizeThrottleReturn: DebouncedFunc<AnyFn> | null
     // resize observer 实例
     let resizeObserverReturn: UseResizeObserverReturn | null
     // 当前配置主题
@@ -366,7 +367,7 @@ export default defineComponent({
         if (!resizeObserverReturn) {
           resizeObserverReturn = useResizeObserver(
             props.autoResizeObserverTarget || rayChartWrapperRef,
-            resizeThrottleReturn as AnyFC,
+            resizeThrottleReturn as AnyFn,
           )
         }
       }

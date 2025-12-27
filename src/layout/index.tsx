@@ -10,21 +10,19 @@
  */
 
 import './index.scss'
-
+import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
+import UnlockScreen from '@/app-components/app/AppLockScreen/components/UnlockScreen'
+import { LAYOUT_CONTENT_REF } from '@/app-config'
+import { layoutCssVars } from '@/layout/layout-css-vars'
+import { useSettingGetters } from '@/store'
 import { NLayout, NLayoutContent } from 'naive-ui'
 import Menu from './components/Menu'
 import {
   ContentWrapper,
+  FeatureWrapper,
   FooterWrapper,
   HeaderWrapper,
-  FeatureWrapper,
 } from './default'
-import UnlockScreen from '@/app-components/app/AppLockScreen/components/UnlockScreen'
-
-import { LAYOUT_CONTENT_REF } from '@/app-config'
-import { layoutCssVars } from '@/layout/layout-css-vars'
-import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
-import { useSettingGetters } from '@/store'
 
 export default defineComponent({
   name: 'RLayout',

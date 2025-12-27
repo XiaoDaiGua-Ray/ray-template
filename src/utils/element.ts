@@ -1,12 +1,11 @@
 import { APP_REGEX } from '@/app-config'
-import { effectDispose, unrefElement, isValueType } from '@/utils'
-
 import type {
   BasicTarget,
-  QueryElementsOptions,
   ElementSelector,
+  QueryElementsOptions,
   Recordable,
 } from '@/types'
+import { effectDispose, isValueType, unrefElement } from '@/utils'
 import type { CSSProperties } from 'vue'
 
 /**

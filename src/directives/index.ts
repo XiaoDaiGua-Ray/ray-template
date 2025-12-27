@@ -1,8 +1,7 @@
-import { combineDirective } from './utils/combine'
-import { forIn } from 'lodash-es'
-
-import type { App } from 'vue'
 import type { DirectiveModules } from '@/directives/types'
+import { forIn } from 'lodash-es'
+import type { App } from 'vue'
+import { combineDirective } from './utils/combine'
 
 /**
  *

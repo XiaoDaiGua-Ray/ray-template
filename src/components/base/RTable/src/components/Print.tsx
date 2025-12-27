@@ -1,9 +1,7 @@
 import { RIcon } from '@/components'
-
-import { config } from '../shared'
-import props from '../props'
 import { printDom } from '@/utils/dom'
-
+import props from '../props'
+import { config } from '../shared'
 import type { TableProvider } from '../types'
 
 export default defineComponent({

@@ -1,17 +1,16 @@
-import {
-  NFlex,
-  NColorPicker,
-  NFormItem,
-  NDivider,
-  NSelect,
-  NSwitch,
-  NForm,
-} from 'naive-ui'
-import ThemeSegment from '../components/ThemeSegment'
-
-import { SETTING_DRAWER_INJECT_KEY } from '../constant'
 import { APP_THEME, CONTENT_TRANSITION_OPTIONS } from '@/app-config'
 import { useSettingActions } from '@/store'
+import {
+  NColorPicker,
+  NDivider,
+  NFlex,
+  NForm,
+  NFormItem,
+  NSelect,
+  NSwitch,
+} from 'naive-ui'
+import ThemeSegment from '../components/ThemeSegment'
+import { SETTING_DRAWER_INJECT_KEY } from '../constant'
 
 export default defineComponent({
   name: 'SegmentViewsAppearance',

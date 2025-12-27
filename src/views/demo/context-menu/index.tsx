@@ -1,6 +1,5 @@
-import { NFlex, NCard, NDropdown } from 'naive-ui'
-
 import { useContextmenuCoordinate } from '@/hooks'
+import { NCard, NDropdown, NFlex } from 'naive-ui'
 
 export default defineComponent({
   name: 'ContextMenuDemo',

@@ -1,6 +1,5 @@
-import { useWindowSize } from '@vueuse/core'
 import { watchEffectWithTarget } from '@/utils'
-
+import { useWindowSize } from '@vueuse/core'
 import type { UseWindowSizeOptions } from '@vueuse/core'
 
 type Callback = (

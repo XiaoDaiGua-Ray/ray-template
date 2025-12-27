@@ -1,4 +1,4 @@
-import type { RawAxiosRequestHeaders, AxiosRequestConfig } from 'axios'
+import type { AxiosRequestConfig, RawAxiosRequestHeaders } from 'axios'
 import type { RequestHeaderOptions } from '../types'
 
 /**

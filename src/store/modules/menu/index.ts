@@ -1,25 +1,23 @@
-import { NEllipsis } from 'naive-ui'
-
-import { setStorage, equalRouterPath, updateObjectValue } from '@/utils'
-import { validRole, validMenuItemShow, canSkipRoute } from '@/router/utils'
-import {
-  parseAndFindMatchingNodes,
-  updateDocumentTitle,
-  createMenuIcon,
-  getCatchMenuKey,
-  createMenuExtra,
-  getCatchMenuTagOptions,
-} from './utils'
+import { APP_CATCH_KEY } from '@/app-config'
 import { useI18n } from '@/hooks'
 import { getAppRawRoutes } from '@/router/app-route-modules'
+import { canSkipRoute, validMenuItemShow, validRole } from '@/router/utils'
 import { useKeepAliveActions } from '@/store'
-import { APP_CATCH_KEY } from '@/app-config'
-import { pick } from 'lodash-es'
-import { pickRouteRecordNormalizedConstant } from './constant'
-
-import type { AppMenuOption, MenuTagOptions, AnyFC } from '@/types'
 import type { MenuState } from '@/store/modules/menu/types'
+import type { AnyFn, AppMenuOption, MenuTagOptions } from '@/types'
+import { equalRouterPath, setStorage, updateObjectValue } from '@/utils'
+import { pick } from 'lodash-es'
+import { NEllipsis } from 'naive-ui'
 import type { LocationQuery } from 'vue-router'
+import { pickRouteRecordNormalizedConstant } from './constant'
+import {
+  createMenuExtra,
+  createMenuIcon,
+  getCatchMenuKey,
+  getCatchMenuTagOptions,
+  parseAndFindMatchingNodes,
+  updateDocumentTitle,
+} from './utils'
 
 let cachePreNormal: AppMenuOption | undefined = void 0
 
@@ -92,7 +90,7 @@ export const piniaMenuStore = defineStore(
     const updateMenuState = <T extends keyof MenuState>(
       key: T,
       value: Partial<MenuState[T]>,
-      cb?: AnyFC,
+      cb?: AnyFn,
     ) => {
       updateObjectValue(menuState, key, value as MenuState[T], cb)
     }
@@ -270,7 +268,7 @@ export const piniaMenuStore = defineStore(
           const breadcrumbOption = pick(
             resolveOption(option),
             pickRouteRecordNormalizedConstant,
-          ) as unknown as AppMenuOption
+          ) as AppMenuOption
           // 查看是否重复
           const find = menuState.breadcrumbOptions.find(
             (curr) => curr.key === breadcrumbOption.key,
@@ -342,6 +340,7 @@ export const piniaMenuStore = defineStore(
       return new Promise<void>((resolve) => {
         const resolveRoutes = (routes: AppMenuOption[], parentPath: string) => {
           const catchArr: AppMenuOption[] = []
+          const regex = /\/+/g
 
           for (const curr of routes) {
             let fullPath = `${
@@ -349,7 +348,7 @@ export const piniaMenuStore = defineStore(
             }${curr.path}`
 
             // 使用正则表达式替换重复的 '/'
-            fullPath = fullPath.replace(/\/+/g, '/')
+            fullPath = fullPath.replace(regex, '/')
 
             if (curr.children?.length) {
               curr.children = resolveRoutes(curr.children, fullPath)

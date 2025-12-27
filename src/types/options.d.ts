@@ -1,9 +1,9 @@
-export {}
-
 import type {
-  RouteLocationNormalizedGeneric,
   NavigationGuardNext,
+  RouteLocationNormalizedGeneric,
 } from 'vue-router'
+
+export {}
 
 // 为 defineComponent 添加自定义选项
 // https://cn.vuejs.org/guide/typescript/options-api.html#augmenting-custom-options

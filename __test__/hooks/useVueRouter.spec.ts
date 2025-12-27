@@ -1,5 +1,5 @@
-import setupMiniApp from '../utils/setupMiniApp'
 import { useVueRouter } from '../../src/hooks/web/useVueRouter'
+import setupMiniApp from '../utils/setupMiniApp'
 
 describe('useVueRouter', async () => {
   await setupMiniApp()

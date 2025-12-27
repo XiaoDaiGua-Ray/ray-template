@@ -6,8 +6,8 @@
  * 做了简单的一个组件封装, 希望有用
  */
 
-import { NCard, NFlex } from 'naive-ui'
 import { RIframe } from '@/components'
+import { NCard, NFlex } from 'naive-ui'
 
 const IframeDemo = defineComponent({
   name: 'IframeDemo',

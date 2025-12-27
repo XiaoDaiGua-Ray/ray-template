@@ -1,5 +1,4 @@
 import { USE_CHART_PROVIDER_KEY } from '../config'
-
 import type { ChartTheme } from '../types'
 
 export interface ChartProviderOptions {

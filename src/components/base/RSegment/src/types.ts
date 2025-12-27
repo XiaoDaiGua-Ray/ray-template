@@ -1,6 +1,6 @@
-import type { TabsProps, TabPaneProps, PopoverProps } from 'naive-ui'
+import type { PopoverProps, TabPaneProps, TabsProps } from 'naive-ui'
+import type { ExtractPublicPropTypes, VNode, VNodeChild } from 'vue'
 import type { OMIT_TABS_PROPS_KEYS } from './constant'
-import type { VNode, VNodeChild, ExtractPublicPropTypes } from 'vue'
 
 export type OmitTabsPropsKeys = (typeof OMIT_TABS_PROPS_KEYS)[number]
 

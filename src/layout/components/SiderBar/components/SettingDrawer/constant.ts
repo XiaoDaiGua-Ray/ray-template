@@ -1,6 +1,6 @@
 import type { SettingState } from '@/store/modules/setting/types'
-import type { InjectionKey, Reactive } from 'vue'
 import type { DebouncedFunc } from 'lodash-es'
+import type { InjectionKey, Reactive } from 'vue'
 
 interface SettingDrawerInjectKey extends SettingState {
   throttleSetupAppMenu: DebouncedFunc<() => Promise<void>>

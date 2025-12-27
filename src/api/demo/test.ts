@@ -9,11 +9,10 @@
  */
 
 import { request } from '@/axios'
-
 import type { BasicResponse } from '@/types'
 
-interface AxiosTestResponse extends UnknownObjectKey {
-  data: UnknownObjectKey[]
+interface AxiosTestResponse extends GlobalRecordable {
+  data: GlobalRecordable[]
   city?: string
 }
 

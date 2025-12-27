@@ -1,4 +1,4 @@
-import { setStyle, removeStyle } from '../../src/utils/element'
+import { removeStyle, setStyle } from '../../src/utils/element'
 import createRefElement from '../utils/createRefElement'
 
 describe('setStyle', () => {

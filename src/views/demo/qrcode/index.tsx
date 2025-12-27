@@ -1,9 +1,7 @@
-import { NFlex, NCard, NButton } from 'naive-ui'
-import { Vue3NextQrcode } from 'vue3-next-qrcode'
-
 import LOGO from '@/assets/images/ray.svg'
-
-import type { QRCodeStatus, QRCodeInst } from 'vue3-next-qrcode'
+import { NButton, NCard, NFlex } from 'naive-ui'
+import { Vue3NextQrcode } from 'vue3-next-qrcode'
+import type { QRCodeInst, QRCodeStatus } from 'vue3-next-qrcode'
 
 export default defineComponent({
   name: 'RQRCodeDemo',

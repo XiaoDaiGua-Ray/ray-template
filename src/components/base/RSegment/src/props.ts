@@ -1,9 +1,8 @@
-import { tabsProps } from 'naive-ui'
 import { omit } from 'lodash-es'
-import { OMIT_TABS_PROPS_KEYS } from './constant'
-
-import type { RSegmentOptions, RSegmentWidth } from './types'
+import { tabsProps } from 'naive-ui'
 import type { PropType } from 'vue'
+import { OMIT_TABS_PROPS_KEYS } from './constant'
+import type { RSegmentOptions, RSegmentWidth } from './types'
 
 /**
  *

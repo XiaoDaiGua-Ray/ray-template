@@ -1,12 +1,9 @@
-import { NForm, NFormItem, NInput, NButton } from 'naive-ui'
-import { RForm } from '@/components'
-
-import { setStorage } from '@/utils'
-import { useI18n, useAppRoot } from '@/hooks'
 import { APP_CATCH_KEY } from '@/app-config'
+import { RForm, useForm } from '@/components'
+import { useAppRoot, useI18n } from '@/hooks'
 import { useSigningActions } from '@/store'
-import { useForm } from '@/components'
-
+import { setStorage } from '@/utils'
+import { NButton, NForm, NFormItem, NInput } from 'naive-ui'
 import type { FormInst } from 'naive-ui'
 
 export default defineComponent({

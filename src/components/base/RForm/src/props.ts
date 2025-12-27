@@ -1,7 +1,6 @@
-import { formProps } from 'naive-ui'
+import type { AnyFn, MaybeArray } from '@/types'
 import { omit } from 'lodash-es'
-
-import type { MaybeArray, AnyFC } from '@/types'
+import { formProps } from 'naive-ui'
 import type { RFormInst } from './types'
 
 const props = {
@@ -67,7 +66,7 @@ const props = {
    * @default null
    */
   onFinish: {
-    type: Function as PropType<AnyFC>,
+    type: Function as PropType<AnyFn>,
     default: null,
   },
   /**

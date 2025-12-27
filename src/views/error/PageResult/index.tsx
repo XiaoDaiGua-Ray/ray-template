@@ -7,13 +7,9 @@
  */
 
 import './index.scss'
-
-import { NResult, NButton, NFlex } from 'naive-ui'
-
 import { redirectRouterToDashboard } from '@/router/utils'
-import { resultProps } from 'naive-ui'
 import { useSettingGetters } from '@/store'
-
+import { NButton, NFlex, NResult, resultProps } from 'naive-ui'
 import type { ResultProps } from 'naive-ui'
 
 const PageResult = defineComponent({

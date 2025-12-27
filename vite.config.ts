@@ -1,9 +1,8 @@
 import { defineConfig } from 'vite'
-
-import config from './vite.custom.config'
 import pkg from './package.json'
-import vitePlugins from './vite.plugin.config'
 import { chunksCopilot } from './vite-helper'
+import config from './vite.custom.config'
+import vitePlugins from './vite.plugin.config'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -65,9 +64,11 @@ export default defineConfig(({ mode }) => {
       ],
     },
     esbuild: {
-      pure: ['console.log'],
+      pure: mode === 'production' ? ['console.log', 'console.warn'] : [],
+      drop: mode === 'production' ? ['console', 'debugger'] : [],
     },
     build: {
+      transpile: ['vue-i18n'],
       ...buildOptions(mode),
       rollupOptions: {
         output: {

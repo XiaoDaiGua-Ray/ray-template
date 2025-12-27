@@ -1,8 +1,7 @@
-import setupMiniApp from '../utils/setupMiniApp'
 import { useBadge } from '../../src/hooks/template/useBadge'
-import { useMenuGetters } from '../../src/store'
-
 import type { AppMenuExtraOptions } from '../../src/router/types'
+import { useMenuGetters } from '../../src/store'
+import setupMiniApp from '../utils/setupMiniApp'
 
 describe('useBadge', async () => {
   await setupMiniApp()

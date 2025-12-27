@@ -1,5 +1,5 @@
-import { useSettingGetters } from '@/store'
 import { useVueRouter } from '@/hooks'
+import { useSettingGetters } from '@/store'
 
 /**
  *

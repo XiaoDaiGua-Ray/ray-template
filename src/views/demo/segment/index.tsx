@@ -1,20 +1,19 @@
-import {
-  NCard,
-  NFlex,
-  NAlert,
-  NRadioGroup,
-  NRadio,
-  NGrid,
-  NGridItem,
-} from 'naive-ui'
-import { RSegment, RIcon } from '@/components'
-
-import type { ComponentSize } from '@/types'
+import { RIcon, RSegment } from '@/components'
 import type {
-  RSegmentWidth,
   RSegmentOptions,
   RSegmentPopover,
+  RSegmentWidth,
 } from '@/components'
+import type { ComponentSize } from '@/types'
+import {
+  NAlert,
+  NCard,
+  NFlex,
+  NGrid,
+  NGridItem,
+  NRadio,
+  NRadioGroup,
+} from 'naive-ui'
 
 export default defineComponent({
   name: 'SegmentDemo',

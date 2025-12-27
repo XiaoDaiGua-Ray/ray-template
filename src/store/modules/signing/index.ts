@@ -8,16 +8,15 @@
  * 默认仅缓存 SigningCallback 属性
  */
 
-import { isEmpty } from 'lodash-es'
-import { removeStorage } from '@/utils'
 import { APP_CATCH_KEY } from '@/app-config'
 import { useSiderBar } from '@/hooks'
-
 import type {
-  SigningForm,
   SigningCallback,
+  SigningForm,
   SigningResponse,
 } from '@/store/modules/signing/types'
+import { removeStorage } from '@/utils'
+import { isEmpty } from 'lodash-es'
 
 export const piniaSigningStore = defineStore(
   'signing',
@@ -34,17 +33,19 @@ export const piniaSigningStore = defineStore(
 
     /**
      *
-     * @param SigningForm 用户登录信息
+     * @param signingFormValue 用户登录信息
      *
      * @description
      * 0: 登陆成功, 1: 登陆失败
      */
-    const signing = (SigningForm: SigningForm): Promise<SigningResponse> => {
+    const signing = (
+      signingFormValue: SigningForm,
+    ): Promise<SigningResponse> => {
       return new Promise((resolve, reject) => {
-        if (!isEmpty(SigningForm)) {
+        if (!isEmpty(signingFormValue)) {
           state.signingCallback = {
             role: 'admin',
-            name: SigningForm.name,
+            name: signingFormValue.name,
             avatar: 'https://avatars.githubusercontent.com/u/51957438?v=4',
           }
 

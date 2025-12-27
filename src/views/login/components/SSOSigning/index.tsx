@@ -6,9 +6,8 @@
  */
 
 import './index.scss'
-
-import { NFlex, NPopover } from 'naive-ui'
 import { RIcon } from '@/components'
+import { NFlex, NPopover } from 'naive-ui'
 
 interface SSOSigningOptions {
   icon: string

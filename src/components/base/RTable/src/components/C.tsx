@@ -7,18 +7,15 @@
  * 2. 大量数据的时候，可能会出现性能问题
  */
 
-import { NPopover, NFlex, NTree } from 'naive-ui'
 import { RIcon } from '@/components'
-
-import { config } from '../shared'
-import props from '../props'
+import type { AnyFn, MaybeArray } from '@/types'
 import { call } from '@/utils'
 import { cloneDeep, isEmpty } from 'lodash-es'
-
-import type { TreeOption, TreeDropInfo } from 'naive-ui'
+import { NFlex, NPopover, NTree } from 'naive-ui'
+import type { TreeDropInfo, TreeOption } from 'naive-ui'
+import props from '../props'
+import { config } from '../shared'
 import type { C } from '../types'
-import type { AnyFC } from '@/types'
-import type { MaybeArray } from '@/types'
 
 type FixedClick = (type: 'left' | 'right', option: C, index: number) => void
 
@@ -34,7 +31,7 @@ const RowIconRender = ({
 }: {
   icon: string
   title: string
-  onClick?: AnyFC
+  onClick?: AnyFn
   customClassName?: string
 }) => {
   return (

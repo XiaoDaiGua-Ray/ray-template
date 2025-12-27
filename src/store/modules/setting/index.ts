@@ -1,13 +1,12 @@
-import { getAppDefaultLanguage } from '@/locales/utils'
-import { colorToRgba, setStorage, updateObjectValue, setStyle } from '@/utils'
-import { useI18n, useDayjs } from '@/hooks'
 import { APP_CATCH_KEY, APP_THEME, GLOBAL_CLASS_NAMES } from '@/app-config'
-import { getDefaultSettingConfig } from './constant'
-import { cloneDeep, merge } from 'lodash-es'
-
-import type { SettingState } from '@/store/modules/setting/types'
+import { useDayjs, useI18n } from '@/hooks'
 import type { LocalKey } from '@/hooks'
-import type { AnyFC } from '@/types'
+import { getAppDefaultLanguage } from '@/locales/utils'
+import type { SettingState } from '@/store/modules/setting/types'
+import type { AnyFn } from '@/types'
+import { colorToRgba, setStorage, setStyle, updateObjectValue } from '@/utils'
+import { cloneDeep, merge } from 'lodash-es'
+import { getDefaultSettingConfig } from './constant'
 
 export const piniaSettingStore = defineStore(
   'setting',
@@ -101,7 +100,7 @@ export const piniaSettingStore = defineStore(
     const updateSettingState = <
       T extends keyof SettingState,
       V extends typeof settingState,
-      C extends AnyFC,
+      C extends AnyFn,
     >(
       key: T,
       value: Partial<V[T]>,

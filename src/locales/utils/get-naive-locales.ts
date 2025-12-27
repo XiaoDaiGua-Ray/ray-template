@@ -1,4 +1,4 @@
-import { zhCN, dateZhCN } from 'naive-ui' // 导入 `naive ui` 中文包
+import { dateZhCN, zhCN } from 'naive-ui' // 导入 `naive ui` 中文包
 
 /**
  *

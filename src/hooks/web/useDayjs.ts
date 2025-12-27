@@ -1,7 +1,6 @@
-import dayjs from 'dayjs'
-import { DEFAULT_DAYJS_LOCAL, DAYJS_LOCAL_MAP } from '@/app-config'
-
+import { DAYJS_LOCAL_MAP, DEFAULT_DAYJS_LOCAL } from '@/app-config'
 import type { DayjsLocalMap } from '@/types'
+import dayjs from 'dayjs'
 
 export interface FormatOption {
   format?: string

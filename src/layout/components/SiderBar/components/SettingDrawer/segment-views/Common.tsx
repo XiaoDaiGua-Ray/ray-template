@@ -1,16 +1,15 @@
-import {
-  NFlex,
-  NFormItem,
-  NDivider,
-  NSwitch,
-  NForm,
-  NInputNumber,
-  NDynamicTags,
-} from 'naive-ui'
 import { RIcon } from '@/components'
-
-import { SETTING_DRAWER_INJECT_KEY } from '../constant'
 import { useSettingActions } from '@/store'
+import {
+  NDivider,
+  NDynamicTags,
+  NFlex,
+  NForm,
+  NFormItem,
+  NInputNumber,
+  NSwitch,
+} from 'naive-ui'
+import { SETTING_DRAWER_INJECT_KEY } from '../constant'
 
 export default defineComponent({
   name: 'SegmentViewsCommon',

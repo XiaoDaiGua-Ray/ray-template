@@ -1,13 +1,13 @@
-import type { Recordable } from '@/types'
-import type { TableProInst, TableRequestConfig } from '../types'
 import type {
+  ColumnKey,
   CsvOptionsType,
   FilterState,
   ScrollToOptions,
-  ColumnKey,
   SortOrder,
 } from '@/components/base/RTable/src/types'
+import type { Recordable } from '@/types'
 import type { PrintDomOptions } from '@/utils'
+import type { TableProInst, TableRequestConfig } from '../types'
 
 /**
  *

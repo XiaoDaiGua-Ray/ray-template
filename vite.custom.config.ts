@@ -1,11 +1,9 @@
 import path from 'node:path'
-
-import { htmlTitlePlugin, mixinCss } from './vite-helper'
-import { APP_THEME } from './src/app-config/design-config'
-import { PRE_LOADING_CONFIG } from './src/app-config/app-config'
-
 import type { AppConfigExport } from '@/types'
 import type { BuildOptions } from 'vite'
+import { PRE_LOADING_CONFIG } from './src/app-config/app-config'
+import { APP_THEME } from './src/app-config/design-config'
+import { htmlTitlePlugin, mixinCss } from './vite-helper'
 
 const config: AppConfigExport = {
   // 是否启用 cdn 构建项目
@@ -60,34 +58,16 @@ const config: AppConfigExport = {
 
   // 打包相关配置
   buildOptions: (mode: string): BuildOptions => {
-    const productionBuildOptions = {
-      sourcemap: false,
-      terserOptions: {
-        compress: {
-          drop_console: true,
-          drop_debugger: true,
-        },
-      },
-    }
-    const defaultOptions = {
-      sourcemap: true,
-      terserOptions: {
-        compress: {
-          drop_console: false,
-          drop_debugger: false,
-        },
-      },
-    }
     const outDir = `dist/${mode}`
 
     return mode === 'production'
       ? {
-          ...productionBuildOptions,
           outDir,
+          sourcemap: false,
         }
       : {
-          ...defaultOptions,
           outDir,
+          sourcemap: true,
         }
   },
 

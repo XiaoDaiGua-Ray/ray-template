@@ -1,6 +1,5 @@
 import { APP_CATCH_KEY_PREFIX } from '@/app-config'
-
-import type { StorageLike, StorageOptions, RemoveStorageFC } from '@/types'
+import type { RemoveStorageFC, StorageLike, StorageOptions } from '@/types'
 
 /**
  * @param type 存储类型

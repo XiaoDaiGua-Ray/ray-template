@@ -1,14 +1,13 @@
-import RTablePro from './src/TablePro'
-import tableProProps from './src/props'
-import { useTablePro } from './src/hooks/useTablePro'
-
 import type { ExtractPropTypes } from 'vue'
+import { useTablePro } from './src/hooks/useTablePro'
+import tableProProps from './src/props'
+import RTablePro from './src/TablePro'
 import type {
   BasePagination,
-  TablePagination,
   FormatRangeTime,
-  TableRequestConfig,
+  TablePagination,
   TableProFieldNames,
+  TableRequestConfig,
 } from './src/types'
 
 type TableProProps = ExtractPropTypes<typeof tableProProps>

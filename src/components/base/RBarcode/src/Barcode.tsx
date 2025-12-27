@@ -1,15 +1,12 @@
 import './index.scss'
-
-import { NSpin } from 'naive-ui'
-
-import barcode from 'jsbarcode'
-import props from './props'
-import { completeSize, call } from '@/utils'
-import { useTemplateRef } from 'vue'
+import { call, completeSize } from '@/utils'
 import { useResizeObserver } from '@vueuse/core'
-
-import type { WatchStopHandle } from 'vue'
 import type { UseResizeObserverReturn } from '@vueuse/core'
+import barcode from 'jsbarcode'
+import { NSpin } from 'naive-ui'
+import { useTemplateRef } from 'vue'
+import type { WatchStopHandle } from 'vue'
+import props from './props'
 
 export default defineComponent({
   name: 'RBarcode',

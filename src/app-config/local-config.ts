@@ -1,5 +1,9 @@
-import type { TemplateLocale, LocalOptions, DayjsLocalMap } from '@/types'
-import type { ValueOf } from '@/types'
+import type {
+  DayjsLocalMap,
+  LocalOptions,
+  TemplateLocale,
+  ValueOf,
+} from '@/types'
 
 /**
  *

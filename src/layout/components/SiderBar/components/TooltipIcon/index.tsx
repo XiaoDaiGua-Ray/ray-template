@@ -1,10 +1,6 @@
 import './index.scss'
-
-import { NTooltip } from 'naive-ui'
 import { RIcon } from '@/components'
-
-import { tooltipProps } from 'naive-ui'
-
+import { NTooltip, tooltipProps } from 'naive-ui'
 import type { TooltipProps } from 'naive-ui'
 
 export default defineComponent({

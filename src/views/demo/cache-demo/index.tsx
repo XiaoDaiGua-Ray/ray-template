@@ -1,3 +1,4 @@
+import { getStorage, hasStorage, removeStorage, setStorage } from '@/utils'
 import {
   NButton,
   NCard,
@@ -6,8 +7,6 @@ import {
   NInputGroup,
   NInputGroupLabel,
 } from 'naive-ui'
-
-import { getStorage, setStorage, removeStorage, hasStorage } from '@/utils'
 
 export default defineComponent({
   name: 'CacheDemo',

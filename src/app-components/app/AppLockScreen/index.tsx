@@ -1,7 +1,6 @@
 import { RModal } from '@/components'
+import { useSettingActions, useSettingGetters } from '@/store'
 import LockScreen from './components/LockScreen'
-
-import { useSettingGetters, useSettingActions } from '@/store'
 
 const AppLockScreen = defineComponent({
   name: 'AppLockScreen',

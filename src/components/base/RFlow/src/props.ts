@@ -1,8 +1,7 @@
-import { getDefaultFlowOptions } from './constant'
-
-import type { FlowGraphData, FlowOptions, ExtensionType } from './types'
-import type LogicFlow from '@logicflow/core'
 import type { MaybeArray } from '@/types'
+import type LogicFlow from '@logicflow/core'
+import { getDefaultFlowOptions } from './constant'
+import type { ExtensionType, FlowGraphData, FlowOptions } from './types'
 
 const props = {
   /**

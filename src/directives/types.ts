@@ -1,5 +1,5 @@
-import type { Directive, App } from 'vue'
 import type { Recordable } from '@/types'
+import type { App, Directive } from 'vue'
 
 export type { DebounceBindingOptions } from './modules/debounce/types'
 export type { ThrottleBindingOptions } from './modules/throttle/types'

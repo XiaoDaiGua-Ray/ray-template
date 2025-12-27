@@ -1,13 +1,9 @@
-import { NFlex, NCard, NButton, NFormItemGi, NInput, NForm } from 'naive-ui'
-import { RTable } from '@/components'
-import { RCollapse } from '@/components'
-
-import { useHookPlusRequest } from '@/axios'
 import { getPersonList } from '@/api/demo/mock/person'
-import { usePagination } from '@/hooks'
-import { useCheckedRowKeys } from '@/components'
-
 import type { Person } from '@/api/demo/mock/person'
+import { useHookPlusRequest } from '@/axios'
+import { RCollapse, RTable, useCheckedRowKeys } from '@/components'
+import { usePagination } from '@/hooks'
+import { NButton, NCard, NFlex, NForm, NFormItemGi, NInput } from 'naive-ui'
 
 const MockDemo = defineComponent({
   name: 'MockDemo',

@@ -1,4 +1,4 @@
-import type { AppMenuOption, MenuTagOptions, AppMenuKey, AnyFC } from '@/types'
+import type { AnyFn, AppMenuKey, AppMenuOption, MenuTagOptions } from '@/types'
 
 export interface MenuState {
   menuKey: AppMenuKey

@@ -1,8 +1,7 @@
 import { APP_CATCH_KEY } from '@/app-config'
-import { piniaSettingStore } from '../setting'
-
-import type { KeepAliveStoreState } from './types'
 import type { AppMenuOption } from '@/types'
+import { piniaSettingStore } from '../setting'
+import type { KeepAliveStoreState } from './types'
 
 export const piniaKeepAliveStore = defineStore(
   'keepAlive',

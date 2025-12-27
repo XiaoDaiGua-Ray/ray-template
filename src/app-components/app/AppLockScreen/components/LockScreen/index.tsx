@@ -1,16 +1,13 @@
-import { NInput, NFormItem, NButton } from 'naive-ui'
 import AppAvatar from '@/app-components/app/AppAvatar'
-import { RForm } from '@/components'
-
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
 import { rules, useCondition } from '@/app-components/app/AppLockScreen/shared'
-import { useSettingActions } from '@/store'
-import { useTemplateRef } from 'vue'
-import { useForm } from '@/components'
 import { APP_CATCH_KEY } from '@/app-config'
-import { setStorage, encrypt } from '@/utils'
-
+import { RForm, useForm } from '@/components'
+import { useSettingActions } from '@/store'
+import { encrypt, setStorage } from '@/utils'
+import { NButton, NFormItem, NInput } from 'naive-ui'
 import type { InputInst } from 'naive-ui'
+import { useTemplateRef } from 'vue'
 
 const LockScreen = defineComponent({
   name: 'LockScreen',

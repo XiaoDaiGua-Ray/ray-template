@@ -1,22 +1,25 @@
 import {
-  NTag,
-  NButton,
-  NGridItem,
-  NSelect,
-  NInput,
-  NDatePicker,
-  NSwitch,
-  NFlex,
-  NPopover,
-  NCard,
-  NAlert,
-} from 'naive-ui'
-import { RTable, RIcon, RMoreDropdown } from '@/components'
-import { RCollapse } from '@/components'
-
+  RCollapse,
+  RIcon,
+  RMoreDropdown,
+  RTable,
+  useCheckedRowKeys,
+  useTable,
+} from '@/components'
 import { uuid } from '@/utils'
-import { useTable, useCheckedRowKeys } from '@/components'
-
+import {
+  NAlert,
+  NButton,
+  NCard,
+  NDatePicker,
+  NFlex,
+  NGridItem,
+  NInput,
+  NPopover,
+  NSelect,
+  NSwitch,
+  NTag,
+} from 'naive-ui'
 import type { DataTableColumns } from 'naive-ui'
 
 type RowData = {

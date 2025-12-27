@@ -1,8 +1,7 @@
-import print from 'print-js'
+import type { BasicTarget } from '@/types'
 import { unrefElement } from '@/utils'
 import { omit } from 'lodash-es'
-
-import type { BasicTarget } from '@/types'
+import print from 'print-js'
 
 export interface UsePrintOptions
   extends Omit<print.Configuration, 'printable'> {}

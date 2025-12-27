@@ -1,11 +1,11 @@
 import {
-  isCurrency,
-  format,
   add,
-  subtract,
-  multiply,
-  divide,
   distribute,
+  divide,
+  format,
+  isCurrency,
+  multiply,
+  subtract,
 } from '../../src/utils/precision'
 
 describe('precision', () => {

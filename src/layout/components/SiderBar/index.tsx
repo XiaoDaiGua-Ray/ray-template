@@ -7,32 +7,29 @@
  */
 
 import './index.scss'
-
-import { NLayoutHeader, NFlex, NDropdown, NButton, NScrollbar } from 'naive-ui'
+import AppAvatar from '@/app-components/app/AppAvatar'
+import { LOCAL_OPTIONS } from '@/app-config'
 import { RIcon } from '@/components'
+import { getVariableToRefs, setVariable } from '@/global-variable'
+import { useDevice, useI18n } from '@/hooks'
+import { useSettingActions, useSettingGetters } from '@/store'
+import { NButton, NDropdown, NFlex, NLayoutHeader, NScrollbar } from 'naive-ui'
+import type { VNode } from 'vue'
+import { useFullscreen } from 'vue-hooks-plus'
 import {
-  TooltipIcon,
-  SettingDrawer,
   Breadcrumb,
   GlobalSearch,
   GlobalSearchButton,
+  SettingDrawer,
+  TooltipIcon,
 } from './components'
-import AppAvatar from '@/app-components/app/AppAvatar'
-
-import { LOCAL_OPTIONS } from '@/app-config'
 import {
-  createAvatarOptions,
   avatarDropdownClick,
+  createAvatarOptions,
   createLeftIconOptions,
   createRightIconOptions,
 } from './shared'
-import { useDevice, useI18n } from '@/hooks'
-import { getVariableToRefs, setVariable } from '@/global-variable'
-import { useFullscreen } from 'vue-hooks-plus'
-import { useSettingGetters, useSettingActions } from '@/store'
-
 import type { IconEventMapOptions } from './type'
-import type { VNode } from 'vue'
 
 export default defineComponent({
   name: 'AppSiderBar',

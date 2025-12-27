@@ -1,5 +1,5 @@
-import type LogicFlow from '@logicflow/core'
 import type { Recordable, SetRequired } from '@/types'
+import type LogicFlow from '@logicflow/core'
 
 /**
  *

@@ -6,9 +6,8 @@
  * 把所有路由提升为顶层路由
  */
 
-import { cloneDeep } from 'lodash-es'
-
 import type { AppRouteRecordRaw } from '@/router/types'
+import { cloneDeep } from 'lodash-es'
 
 // 是否为根路由
 const isRootPath = (path: string) => path[0] === '/'

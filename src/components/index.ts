@@ -1,5 +1,5 @@
-import RCollapse from '../components/pro/RCollapse/Collapse'
 import RDraggableCard from '../components/base/RDraggableCard/DraggableCard'
+import RCollapse from '../components/pro/RCollapse/Collapse'
 
 // 导出所有自定义组件
 export * from './base/RChart'

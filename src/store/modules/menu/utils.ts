@@ -1,16 +1,14 @@
 /** 本方法感谢 <https://yunkuangao.me/> 的支持 */
 
-import { RIcon } from '@/components'
-
 import { APP_CATCH_KEY } from '@/app-config'
-import { getStorage, isValueType } from '@/utils'
+import { RIcon } from '@/components'
 import { useAppRoot, useI18n } from '@/hooks'
+import type { AppMenuKey, AppMenuOption } from '@/types/modules/app'
+import { getStorage, isValueType } from '@/utils'
 import { NTag } from 'naive-ui'
-import { piniaSettingStore } from '../setting'
-import { piniaMenuStore } from '.'
-
-import type { AppMenuOption, AppMenuKey } from '@/types/modules/app'
 import type { TagProps } from 'naive-ui'
+import { piniaMenuStore } from '.'
+import { piniaSettingStore } from '../setting'
 
 /**
  *

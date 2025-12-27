@@ -8,33 +8,30 @@
  */
 
 import './index.scss'
-
+import { RIcon } from '@/components'
+import { useDevice } from '@/hooks'
+import type { AppRouteMeta } from '@/router/types'
+import { validMenuItemShow } from '@/router/utils'
+import { useMenuActions } from '@/store'
+import type { AppMenuOption } from '@/types'
 import {
+  positionSelectedMenuItem,
+  queryElements,
+  removeClass,
+  setClass,
+} from '@/utils'
+import { useEventListener } from '@vueuse/core'
+import { pick, throttle } from 'lodash-es'
+import {
+  NCard,
+  NFlex,
   NInput,
   NModal,
   NResult,
   NScrollbar,
-  NFlex,
   NSpin,
-  NCard,
   NText,
 } from 'naive-ui'
-import { RIcon } from '@/components'
-
-import {
-  queryElements,
-  setClass,
-  removeClass,
-  positionSelectedMenuItem,
-} from '@/utils'
-import { throttle, pick } from 'lodash-es'
-import { useMenuActions } from '@/store'
-import { validMenuItemShow } from '@/router/utils'
-import { useDevice } from '@/hooks'
-import { useEventListener } from '@vueuse/core'
-
-import type { AppRouteMeta } from '@/router/types'
-import type { AppMenuOption } from '@/types'
 
 export default defineComponent({
   name: 'GlobalSearch',

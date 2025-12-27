@@ -1,8 +1,7 @@
-import { permissionRouter } from './permission'
 import { SETUP_ROUTER_ACTION } from '@/app-config'
-import { setupRouterLoadingBar } from './setup-router-loading-bar'
-
 import type { Router } from 'vue-router'
+import { permissionRouter } from './permission'
+import { setupRouterLoadingBar } from './setup-router-loading-bar'
 
 /**
  *

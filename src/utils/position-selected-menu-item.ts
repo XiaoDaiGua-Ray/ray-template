@@ -1,7 +1,7 @@
 import { LAYOUT_SIDER_REF } from '@/app-config'
 import { useSiderScroll } from '@/hooks'
-import { unrefElement } from '@/utils'
 import { SIDER_BAR_LOGO } from '@/layout/components/Menu/components/SiderBarLogo'
+import { unrefElement } from '@/utils'
 
 // 菜单激活样式 class name
 const MENU_ITEM_SELECTED = '.n-menu-item-content--selected'

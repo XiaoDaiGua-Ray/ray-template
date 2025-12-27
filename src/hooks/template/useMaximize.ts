@@ -1,7 +1,6 @@
-import { setVariable, getVariableToRefs } from '@/global-variable'
 import { LAYOUT_CONTENT_REF } from '@/app-config'
+import { getVariableToRefs, setVariable } from '@/global-variable'
 import { useElementFullscreen } from '../web'
-
 import type { UseElementFullscreenOptions } from '../web'
 
 export interface ScrollToOptions {

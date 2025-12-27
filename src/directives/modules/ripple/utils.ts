@@ -9,8 +9,7 @@
  */
 
 import { isValueType } from '@/utils'
-
-import type { RippleOptions, RippleElement, RippleBindingValue } from './types'
+import type { RippleBindingValue, RippleElement, RippleOptions } from './types'
 
 const animationClasses = {
   vRippleAnimationEnter: 'v-ripple__animation--enter',

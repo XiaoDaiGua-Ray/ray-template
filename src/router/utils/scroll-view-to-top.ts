@@ -1,5 +1,4 @@
 import { LAYOUT_CONTENT_REF } from '@/app-config'
-
 import type { RouteLocationNormalized } from 'vue-router'
 
 /**

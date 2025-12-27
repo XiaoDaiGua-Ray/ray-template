@@ -1,5 +1,5 @@
-import type { PropType } from 'vue'
 import type { MaybeArray } from '@/types'
+import type { PropType } from 'vue'
 
 const props = {
   color: {

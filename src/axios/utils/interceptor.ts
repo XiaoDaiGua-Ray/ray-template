@@ -1,16 +1,15 @@
-import RequestCanceler from '@/axios/utils/RequestCanceler'
-import { getAppEnvironment } from '@/utils'
-
 import type {
-  RequestInterceptorConfig,
-  ResponseInterceptorConfig,
-  ImplementQueue,
+  AxiosFetchError,
+  AxiosFetchInstance,
   ErrorImplementQueue,
   FetchType,
-  AxiosFetchInstance,
-  AxiosFetchError,
+  ImplementQueue,
+  RequestInterceptorConfig,
+  ResponseInterceptorConfig,
 } from '@/axios/types'
-import type { AnyFC } from '@/types'
+import RequestCanceler from '@/axios/utils/RequestCanceler'
+import type { AnyFn } from '@/types'
+import { getAppEnvironment } from '@/utils'
 import type { AxiosError } from 'axios'
 
 type ImplementKeys = keyof ImplementQueue
@@ -88,7 +87,7 @@ export const axiosInterceptor = () => {
    */
   const setImplement = (
     key: ImplementKeys | ErrorImplementKeys,
-    func: AnyFC[],
+    func: AnyFn[],
     fetchType: FetchType,
   ): void => {
     if (fetchType === 'ok') {
@@ -111,7 +110,7 @@ export const axiosInterceptor = () => {
   const getImplement = (
     key: ImplementKeys | ErrorImplementKeys,
     fetchType: FetchType,
-  ): AnyFC[] => {
+  ): AnyFn[] => {
     return fetchType === 'ok'
       ? implement[key as ImplementKeys]
       : errorImplement[key as ErrorImplementKeys]
@@ -125,7 +124,7 @@ export const axiosInterceptor = () => {
    * @description
    * 队列执行器 - 执行所有拦截器函数。
    */
-  const executeQueue = (funcs: AnyFC[], ...args: unknown[]): void => {
+  const executeQueue = (funcs: AnyFn[], ...args: unknown[]): void => {
     funcs.forEach((func) => {
       if (typeof func === 'function') {
         func(...args)

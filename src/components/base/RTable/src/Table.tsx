@@ -1,20 +1,17 @@
 import './index.scss'
-
+import type { ComponentSize } from '@/types'
+import { call, completeSize, renderNode, uuid } from '@/utils'
+import { pick } from 'lodash-es'
 import { NCard, NDataTable, NDropdown, NFlex } from 'naive-ui'
-import Size from './components/Size'
-import Fullscreen from './components/Fullscreen'
+import type { DataTableProps, DropdownOption } from 'naive-ui'
+import { useTemplateRef } from 'vue'
 import C from './components/C'
+import Fullscreen from './components/Fullscreen'
 import Print from './components/Print'
 import TablePropsSelect from './components/Props'
-
+import Size from './components/Size'
 import props from './props'
-import { call, renderNode, uuid, completeSize } from '@/utils'
 import { config } from './shared'
-import { pick } from 'lodash-es'
-import { useTemplateRef } from 'vue'
-
-import type { DropdownOption, DataTableProps } from 'naive-ui'
-import type { ComponentSize } from '@/types'
 import type {
   C as CType,
   PropsComponentPopselectKeys,

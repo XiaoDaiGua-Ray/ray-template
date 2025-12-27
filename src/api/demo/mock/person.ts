@@ -1,5 +1,4 @@
 import { request } from '@/axios'
-
 import type { PaginationResponse } from '@/types'
 
 export interface MockListParams {

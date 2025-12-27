@@ -1,12 +1,9 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
-import { scrollViewToTop } from '@/router/utils'
-import { vueRouterRegister } from '@/router/utils'
 import { useVueRouter } from '@/hooks'
-
-import constantRoutes from './routes'
-
+import { scrollViewToTop, vueRouterRegister } from '@/router/utils'
 import type { App } from 'vue'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
+import constantRoutes from './routes'
 
 export const router = createRouter({
   history: createWebHashHistory(),

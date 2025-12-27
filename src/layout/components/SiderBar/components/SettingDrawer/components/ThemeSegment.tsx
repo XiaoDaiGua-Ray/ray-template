@@ -1,9 +1,7 @@
-import { RSegment, RIcon } from '@/components'
-
-import { useSettingGetters, useSettingActions } from '@/store'
-import { useColorMode } from '@vueuse/core'
-
+import { RIcon, RSegment } from '@/components'
+import { useSettingActions, useSettingGetters } from '@/store'
 import type { SettingState } from '@/store/modules/setting/types'
+import { useColorMode } from '@vueuse/core'
 
 export default defineComponent({
   name: 'ThemeSegment',

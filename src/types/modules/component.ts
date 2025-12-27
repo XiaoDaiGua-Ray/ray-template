@@ -1,4 +1,4 @@
-import type { MenuOption, MenuDividerOption, MenuGroupOption } from 'naive-ui'
+import type { MenuDividerOption, MenuGroupOption, MenuOption } from 'naive-ui'
 
 export type ComponentSize = 'small' | 'medium' | 'large'
 

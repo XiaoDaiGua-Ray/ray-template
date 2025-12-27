@@ -8,15 +8,12 @@
  */
 
 import './index.scss'
-
-import { NDropdown, NBreadcrumb, NBreadcrumbItem } from 'naive-ui'
-import { TransitionGroup } from 'vue'
-
-import { useMenuGetters, useMenuActions } from '@/store'
 import { useDevice } from '@/hooks'
-
-import type { DropdownOption } from 'naive-ui'
+import { useMenuActions, useMenuGetters } from '@/store'
 import type { AppMenuOption } from '@/types'
+import { NBreadcrumb, NBreadcrumbItem, NDropdown } from 'naive-ui'
+import type { DropdownOption } from 'naive-ui'
+import { TransitionGroup } from 'vue'
 
 export default defineComponent({
   name: 'SiderBarBreadcrumb',

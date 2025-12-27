@@ -1,16 +1,15 @@
-import { get } from 'lodash-es'
+import { APP_CATCH_KEY, APP_THEME, GLOBAL_CLASS_NAMES } from '@/app-config'
+import { useSettingGetters } from '@/store'
+import type { SettingState } from '@/store/modules/setting/types'
 import {
-  setClass,
-  removeClass,
-  setStyle,
   colorToRgba,
   getStorage,
+  removeClass,
+  setClass,
+  setStyle,
 } from '@/utils'
-import { useSettingGetters } from '@/store'
-import { APP_CATCH_KEY, GLOBAL_CLASS_NAMES, APP_THEME } from '@/app-config'
 import { useWindowSize } from '@vueuse/core'
-
-import type { SettingState } from '@/store/modules/setting/types'
+import { get } from 'lodash-es'
 
 export default defineComponent({
   name: 'AppStyleProvider',

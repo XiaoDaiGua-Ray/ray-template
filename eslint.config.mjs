@@ -1,12 +1,12 @@
-import vue from 'eslint-plugin-vue'
-import typescriptEslint from '@typescript-eslint/eslint-plugin'
-import prettier from 'eslint-plugin-prettier'
-import globals from 'globals'
-import parser from 'vue-eslint-parser'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import js from '@eslint/js'
 import { FlatCompat } from '@eslint/eslintrc'
+import js from '@eslint/js'
+import typescriptEslint from '@typescript-eslint/eslint-plugin'
+import prettier from 'eslint-plugin-prettier'
+import vue from 'eslint-plugin-vue'
+import globals from 'globals'
+import parser from 'vue-eslint-parser'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -44,14 +44,11 @@ export default [
   {
     files: ['**/*.js', '**/*.ts', '**/*.jsx', '**/*.tsx', '**/*.vue'],
   },
+  js.configs.recommended,
+  ...vue.configs['flat/recommended'],
   ...compat.extends(
-    'eslint-config-prettier',
-    'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
-    'plugin:vue/vue3-recommended',
-    'plugin:vue/vue3-essential',
     'plugin:prettier/recommended',
-    'prettier',
     './unplugin/.eslintrc-auto-import.json',
   ),
   {
@@ -213,7 +210,7 @@ export default [
         },
       ],
       'vue/v-on-event-hyphenation': ['error', 'never'],
-      'vue/component-tags-order': [
+      'vue/block-order': [
         'error',
         {
           order: ['template', 'script', 'style'],
@@ -258,92 +255,30 @@ export default [
       ],
       'padding-line-between-statements': [
         'error',
-        {
-          blankLine: 'always',
-          prev: ['import'],
-          next: '*',
-        },
-        {
-          blankLine: 'any',
-          prev: 'import',
-          next: 'import',
-        },
-        {
-          blankLine: 'always',
-          prev: '*',
-          next: 'export',
-        },
-        {
-          blankLine: 'any',
-          prev: 'export',
-          next: 'export',
-        },
-        {
-          blankLine: 'always',
-          prev: ['const', 'let', 'var'],
-          next: '*',
-        },
+        { blankLine: 'always', prev: 'import', next: '*' },
+        { blankLine: 'any', prev: 'import', next: 'import' },
+        { blankLine: 'always', prev: '*', next: 'export' },
+        { blankLine: 'always', prev: 'export', next: '*' },
+        { blankLine: 'any', prev: 'export', next: 'export' },
+        { blankLine: 'always', prev: ['const', 'let', 'var'], next: '*' },
         {
           blankLine: 'any',
           prev: ['const', 'let', 'var'],
           next: ['const', 'let', 'var'],
         },
-        {
-          blankLine: 'always',
-          prev: 'directive',
-          next: '*',
-        },
-        {
-          blankLine: 'any',
-          prev: 'directive',
-          next: 'directive',
-        },
-        {
-          blankLine: 'always',
-          prev: '*',
-          next: [
-            'if',
-            'class',
-            'for',
-            'do',
-            'while',
-            'switch',
-            'try',
-            'with',
-            'function',
-            'block',
-            'block-like',
-            'break',
-            'case',
-            'continue',
-            'return',
-            'throw',
-            'debugger',
-          ],
-        },
-        {
-          blankLine: 'always',
-          prev: [
-            'if',
-            'class',
-            'for',
-            'do',
-            'while',
-            'switch',
-            'try',
-            'with',
-            'function',
-            'block',
-            'block-like',
-            'break',
-            'case',
-            'continue',
-            'return',
-            'throw',
-            'debugger',
-          ],
-          next: '*',
-        },
+        { blankLine: 'always', prev: '*', next: 'function' },
+        { blankLine: 'always', prev: 'function', next: '*' },
+        { blankLine: 'always', prev: '*', next: 'return' },
+        { blankLine: 'always', prev: '*', next: 'if' },
+        { blankLine: 'always', prev: 'if', next: '*' },
+        { blankLine: 'always', prev: '*', next: 'for' },
+        { blankLine: 'always', prev: 'for', next: '*' },
+        { blankLine: 'always', prev: '*', next: 'while' },
+        { blankLine: 'always', prev: 'while', next: '*' },
+        { blankLine: 'always', prev: '*', next: 'class' },
+        { blankLine: 'always', prev: 'class', next: '*' },
+        { blankLine: 'always', prev: '*', next: 'try' },
+        { blankLine: 'always', prev: 'try', next: '*' },
       ],
       '@typescript-eslint/no-unused-expressions': [
         'error',

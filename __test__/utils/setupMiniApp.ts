@@ -1,6 +1,6 @@
-import { setupStore } from '../../src/store'
-import { setupRouter } from '../../src/router'
 import { setupI18n } from '../../src/locales'
+import { setupRouter } from '../../src/router'
+import { setupStore } from '../../src/store'
 import renderHook from '../utils/renderHook'
 
 /**

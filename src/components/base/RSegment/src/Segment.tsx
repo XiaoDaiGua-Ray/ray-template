@@ -1,12 +1,9 @@
 import './index.scss'
-
-import { NTabs, NTab, NPopover, NFlex } from 'naive-ui'
-
-import props from './props'
-import { themeOverrides } from './constant'
 import { completeSize, isValueType, renderNode } from '@/utils'
-
+import { NFlex, NPopover, NTab, NTabs } from 'naive-ui'
 import type { TabsProps } from 'naive-ui'
+import { themeOverrides } from './constant'
+import props from './props'
 import type { RSegmentOptions } from './types'
 
 const iconSegmentTab = (option: RSegmentOptions) => {

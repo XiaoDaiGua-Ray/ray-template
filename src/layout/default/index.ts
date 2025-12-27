@@ -1,6 +1,6 @@
 import ContentWrapper from './ContentWrapper'
+import FeatureWrapper from './FeatureWrapper'
 import FooterWrapper from './FooterWrapper'
 import HeaderWrapper from './HeaderWrapper'
-import FeatureWrapper from './FeatureWrapper'
 
 export { ContentWrapper, FooterWrapper, HeaderWrapper, FeatureWrapper }

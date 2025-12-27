@@ -1,8 +1,7 @@
 import { useDomToImage, usePrint } from '@/hooks'
-import { omit } from 'lodash-es'
-
-import type { UsePrintOptions, UseDomToImageOptions } from '@/hooks'
+import type { UseDomToImageOptions, UsePrintOptions } from '@/hooks'
 import type { BasicTarget } from '@/types'
+import { omit } from 'lodash-es'
 
 export interface PrintDomOptions {
   printOptions?: Omit<UsePrintOptions, 'printable' | 'type' | 'base64'>

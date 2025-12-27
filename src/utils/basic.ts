@@ -1,10 +1,9 @@
 import { OperatingSystem } from '@/types'
-
 import type {
-  ValidateValueType,
-  DownloadAnyFileDataType,
+  AnyFn,
   BasicTypes,
-  AnyFC,
+  DownloadAnyFileDataType,
+  ValidateValueType,
 } from '@/types'
 
 /**
@@ -291,9 +290,9 @@ export const isPromise = <T>(value: unknown): value is Promise<T> => {
  * callWithErrorHandling((x: number) => { return x }, () => {}, [123]) => 123
  * callWithErrorHandling((x: number) => { throw new Error('error') }, (error) => { console.log(error) }, [123]) => undefined
  */
-export const callWithErrorHandling = <T extends AnyFC, E extends Error>(
+export const callWithErrorHandling = <T extends AnyFn, E extends Error>(
   fn: T,
-  errorCallback: AnyFC<E, void>,
+  errorCallback: AnyFn<E, void>,
   args?: Parameters<T>,
 ) => {
   let result: ReturnType<T> | undefined
@@ -322,7 +321,7 @@ export const callWithErrorHandling = <T extends AnyFC, E extends Error>(
  * callWithAsyncErrorHandling(async () => { return Promise.resolve('hello') }, () => {}, []) => Promise { 'hello' }
  */
 export const callWithAsyncErrorHandling = async <
-  T extends AnyFC,
+  T extends AnyFn,
   E extends Error,
 >(
   fn: T,

@@ -1,6 +1,5 @@
-import { NFlex, NButton } from 'naive-ui'
 import { RTable } from '@/components'
-
+import { NButton, NFlex } from 'naive-ui'
 import type { DataTableColumns } from 'naive-ui'
 
 export interface RowData {

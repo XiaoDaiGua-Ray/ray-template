@@ -1,4 +1,4 @@
-import type { TableProps, RTableInst } from '@/components'
+import type { RTableInst, TableProps } from '@/components'
 import type { UsePaginationOptions } from '@/hooks'
 import type { Recordable } from '@/types'
 

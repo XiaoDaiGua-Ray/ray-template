@@ -1,12 +1,10 @@
-import { NForm, NSpin } from 'naive-ui'
-
-import props from './props'
 import { call, unrefElement } from '@/utils'
-import { useTemplateRef } from 'vue'
 import { useEventListener } from '@vueuse/core'
-
-import type { RFormInst } from './types'
+import { NForm, NSpin } from 'naive-ui'
+import { useTemplateRef } from 'vue'
 import type { ShallowRef } from 'vue'
+import props from './props'
+import type { RFormInst } from './types'
 
 export default defineComponent({
   name: 'RForm',

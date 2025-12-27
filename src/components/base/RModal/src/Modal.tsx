@@ -1,16 +1,13 @@
 import './index.scss'
-
-import { NModal } from 'naive-ui'
-
-import props from './props'
 import { completeSize, uuid } from '@/utils'
+import { NModal } from 'naive-ui'
+import type { ModalProps } from 'naive-ui'
 import {
+  CSS_VARS_KEYS,
   FULLSCREEN_CARD_TYPE_CLASS,
   R_MODAL_CLASS,
-  CSS_VARS_KEYS,
 } from './constant'
-
-import type { ModalProps } from 'naive-ui'
+import props from './props'
 
 export default defineComponent({
   name: 'RModal',

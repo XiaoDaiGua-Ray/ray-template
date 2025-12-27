@@ -1,6 +1,5 @@
-import { getAppEnvironment } from '@/utils'
-
 import type { AppMenuOption } from '@/types'
+import { getAppEnvironment } from '@/utils'
 
 /**
  *

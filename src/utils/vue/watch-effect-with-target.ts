@@ -1,7 +1,6 @@
-import { effectDispose } from './effect-dispose'
-
+import type { AnyFn } from '@/types'
 import type { WatchOptionsBase } from 'vue'
-import type { AnyFC } from '@/types'
+import { effectDispose } from './effect-dispose'
 
 /**
  *
@@ -18,7 +17,7 @@ import type { AnyFC } from '@/types'
  *
  * watchEffectWithTarget(watcher)
  */
-export function watchEffectWithTarget<T extends AnyFC>(
+export function watchEffectWithTarget<T extends AnyFn>(
   fn: T,
   watchOptions?: WatchOptionsBase,
 ) {

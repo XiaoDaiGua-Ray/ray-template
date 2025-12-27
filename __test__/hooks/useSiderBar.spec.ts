@@ -1,9 +1,8 @@
-import setupMiniApp from '../utils/setupMiniApp'
 import { useSiderBar } from '../../src/hooks/template/useSiderBar'
-import { useMenuGetters, useMenuActions } from '../../src/store'
 import { useVueRouter } from '../../src/hooks/web/useVueRouter'
-
+import { useMenuActions, useMenuGetters } from '../../src/store'
 import type { AppMenuOption, MenuTagOptions } from '../../src/types/modules/app'
+import setupMiniApp from '../utils/setupMiniApp'
 
 describe('useSiderBar', async () => {
   await setupMiniApp()

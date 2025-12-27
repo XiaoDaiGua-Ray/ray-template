@@ -1,6 +1,5 @@
-import { useMenuGetters } from '@/store'
 import { useVueRouter } from '@/hooks'
-
+import { useMenuGetters } from '@/store'
 import type { AppMenuOption } from '@/types'
 import type { LocationQuery } from 'vue-router'
 

@@ -1,5 +1,4 @@
 import { i18n } from '@/locales'
-
 import type { I18n } from 'vue-i18n'
 
 export interface OverrideUseI18nReturnType

@@ -1,14 +1,12 @@
 import './index.scss'
 import '@logicflow/core/lib/style/index.css'
-
-import { useTemplateRef } from 'vue'
-import props from './props'
-import { completeSize, call } from '@/utils'
+import { call, completeSize } from '@/utils'
 import LogicFlow from '@logicflow/core'
 import { omit } from 'lodash-es'
-
-import type { FlowGraphData, G } from './types'
+import { useTemplateRef } from 'vue'
 import type { WatchStopHandle } from 'vue'
+import props from './props'
+import type { FlowGraphData, G } from './types'
 
 // 是否首次注册插件
 let isSetup = false

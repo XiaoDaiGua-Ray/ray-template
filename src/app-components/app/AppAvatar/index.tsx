@@ -6,13 +6,10 @@
  * 默认读取本地 session catch 缓存
  */
 
-import { NAvatar, NButton, NFlex } from 'naive-ui'
-
-import { avatarProps } from 'naive-ui'
 import { useSigningGetters } from '@/store'
-
-import type { PropType } from 'vue'
+import { avatarProps, NAvatar, NButton, NFlex } from 'naive-ui'
 import type { AvatarProps, FlexProps } from 'naive-ui'
+import type { PropType } from 'vue'
 
 const AppAvatar = defineComponent({
   name: 'AppAvatar',

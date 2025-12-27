@@ -1,5 +1,5 @@
-import setupMiniApp from '../utils/setupMiniApp'
 import { useTheme } from '../../src/hooks/template/useTheme'
+import setupMiniApp from '../utils/setupMiniApp'
 
 describe('useTheme', async () => {
   await setupMiniApp()

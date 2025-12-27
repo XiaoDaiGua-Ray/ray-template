@@ -1,15 +1,14 @@
-import axios from 'axios'
 import { AXIOS_CONFIG } from '@/app-config'
-import { axiosInterceptor } from '@/axios/utils/interceptor'
 import {
-  setupResponseInterceptor,
-  setupResponseErrorInterceptor,
-} from '@/axios/axios-interceptor/response'
-import {
-  setupRequestInterceptor,
   setupRequestErrorInterceptor,
+  setupRequestInterceptor,
 } from '@/axios/axios-interceptor/request'
-
+import {
+  setupResponseErrorInterceptor,
+  setupResponseInterceptor,
+} from '@/axios/axios-interceptor/response'
+import { axiosInterceptor } from '@/axios/utils/interceptor'
+import axios from 'axios'
 import type { AxiosInstanceExpand, RequestInterceptorConfig } from './types'
 
 // 创建 axios 实例

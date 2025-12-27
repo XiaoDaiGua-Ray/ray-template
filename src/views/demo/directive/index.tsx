@@ -1,18 +1,17 @@
+import type { ConditionalPick } from '@/types'
 import {
-  NFlex,
-  NCard,
-  NInput,
-  NInputGroup,
+  NAlert,
   NButton,
-  NSwitch,
+  NCard,
+  NFlex,
   NForm,
   NFormItem,
+  NInput,
+  NInputGroup,
   NInputNumber,
+  NSwitch,
   NTag,
-  NAlert,
 } from 'naive-ui'
-
-import type { ConditionalPick } from '@/types'
 
 const RDirective = defineComponent({
   name: 'RDirective',

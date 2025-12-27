@@ -6,21 +6,20 @@
  * 如果需要更改弹出位置, 需要在需要地方重新定义组件注册
  */
 
-import {
-  NDialogProvider,
-  NLoadingBarProvider,
-  NMessageProvider,
-  NNotificationProvider,
-  NConfigProvider,
-  createDiscreteApi,
-  darkTheme,
-  NGlobalStyle,
-  NModalProvider,
-} from 'naive-ui'
-
+import { MESSAGE_PROVIDER } from '@/app-config'
 import { getNaiveLocales } from '@/locales/utils'
 import { useSettingGetters } from '@/store'
-import { MESSAGE_PROVIDER } from '@/app-config'
+import {
+  createDiscreteApi,
+  darkTheme,
+  NConfigProvider,
+  NDialogProvider,
+  NGlobalStyle,
+  NLoadingBarProvider,
+  NMessageProvider,
+  NModalProvider,
+  NNotificationProvider,
+} from 'naive-ui'
 
 export default defineComponent({
   name: 'GlobalProvider',

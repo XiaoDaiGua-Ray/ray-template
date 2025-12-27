@@ -1,7 +1,4 @@
-import { RFlow, RForm } from '@/components'
-
-import { useFlow } from '@/components'
-
+import { RFlow, RForm, useFlow } from '@/components'
 import type { FlowGraphData } from '@/components'
 import { NCard, NFlex, NFormItemGridItem, NGrid, NSwitch } from 'naive-ui'
 

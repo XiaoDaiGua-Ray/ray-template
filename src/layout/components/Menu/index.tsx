@@ -1,17 +1,13 @@
 import './index.scss'
-
-import { NMenu, NLayoutSider, NDrawer } from 'naive-ui'
-import SiderBarLogo from './components/SiderBarLogo'
-
 import { LAYOUT_SIDER_REF } from '@/app-config'
-import { useDevice } from '@/hooks'
 import { getVariableToRefs, setVariable } from '@/global-variable'
-import { useMenuGetters, useMenuActions, useSettingGetters } from '@/store'
+import { useDevice } from '@/hooks'
+import { useMenuActions, useMenuGetters, useSettingGetters } from '@/store'
+import type { AppMenuOption, NaiveMenuOptions } from '@/types'
 import { positionSelectedMenuItem } from '@/utils'
-
+import { NDrawer, NLayoutSider, NMenu } from 'naive-ui'
 import type { MenuInst } from 'naive-ui'
-import type { NaiveMenuOptions } from '@/types'
-import type { AppMenuOption } from '@/types'
+import SiderBarLogo from './components/SiderBarLogo'
 
 export default defineComponent({
   name: 'AppMenu',

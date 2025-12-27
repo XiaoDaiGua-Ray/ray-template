@@ -1,13 +1,12 @@
-import type { VNodeChild } from 'vue'
-import type {
-  ServerOptions,
-  BuildOptions,
-  AliasOptions,
-  UserConfigExport,
-} from 'vite'
 import type { Recordable } from '@/types'
 import type { GlobalThemeOverrides } from 'naive-ui'
-import type { VNode } from 'vue'
+import type {
+  AliasOptions,
+  BuildOptions,
+  ServerOptions,
+  UserConfigExport,
+} from 'vite'
+import type { VNode, VNodeChild } from 'vue'
 
 export interface LayoutSideBarLogo {
   icon?: string | VNode

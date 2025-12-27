@@ -1,8 +1,8 @@
 import {
-  hasStorage,
-  setStorage,
   getStorage,
+  hasStorage,
   removeStorage,
+  setStorage,
 } from '../../src/utils/cache'
 
 describe('cache utils', () => {

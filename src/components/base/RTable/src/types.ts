@@ -1,16 +1,16 @@
-import type {
-  DropdownOption,
-  DropdownGroupOption,
-  DropdownDividerOption,
-  DropdownRenderOption,
-  DataTableInst,
-  DataTableColumn,
-  DataTableBaseColumn,
-  CardProps,
-} from 'naive-ui'
-import type { VNode, CSSProperties, ShallowRef } from 'vue'
 import type { Recordable } from '@/types'
 import type { PrintDomOptions } from '@/utils/dom'
+import type {
+  CardProps,
+  DataTableBaseColumn,
+  DataTableColumn,
+  DataTableInst,
+  DropdownDividerOption,
+  DropdownGroupOption,
+  DropdownOption,
+  DropdownRenderOption,
+} from 'naive-ui'
+import type { CSSProperties, ShallowRef, VNode } from 'vue'
 
 export interface RTableCardProps extends CardProps {
   style?: CSSProperties

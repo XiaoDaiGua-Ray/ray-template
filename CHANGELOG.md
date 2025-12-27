@@ -1,3 +1,13 @@
+## 5.2.5
+
+## Feats
+
+- 升级 `vite` 版本至 `7.x`，为了后面无缝衔接 `rolldown-vite` 做准备
+- 升级所有主流依赖为 `7.x` 的配套
+- 增强 `eslint`, `prettier` 规则，加强项目统一化的范式
+- `typescript` 版本更新至 `5.9.3`
+- 移除 `UnknownObjectKey` 类型，现在统一使用 `Recordable` 类型替代，或者全局的 `GlobalRecordable` 类型替代
+
 ## 5.2.4
 
 ## Feats
@@ -779,7 +789,7 @@ const [
 补充拓展了 `useModal` 方法，支持 `dad`, `fullscreen` 等拓展配置项。
 
 ```ts
-import { useTable, useForm } from '@/components'
+import { useForm, useTable } from '@/components'
 
 const [registerTable, { getTableInstance }] = useTable()
 const [registerForm, { getFormInstance }] = useForm()
@@ -799,8 +809,7 @@ const [registerForm, { getFormInstance }] = useForm()
 > 该方法比起常见的 `ref` 注册，然后 `tableRef.value.xxx` 的方法获取表格方法更为简洁一点。但是也值得注意的是，需要手动调用一次 `register` 方法，否则会报错；还有值得注意的是，需要注意表格方法的调用时机，需要等待表格注册完成后才能正常调用。如果需要在 `Parent Create` 阶段调用，可以尝试 `nextTick` 包裹一层。
 
 ```tsx
-import { RTable } from '@/components'
-import { useTable } from '@/components'
+import { RTable, useTable } from '@/components'
 
 defineComponent({
   setup() {
@@ -1972,7 +1981,7 @@ const demo2 = null
 - 新增切换路由自动取消上一路由所有请求。但是可以通过配置 `useRequest` 与 `request` 方法的 `cancelConfig.cancel` 属性控制是否需要自动取消该请求。该配置默认为 `true`，当配置为 `false` 时，则不会被取消器取消
 
 ```ts
-import { useRequest, useHookPlusRequest } from '@/axios/index'
+import { useHookPlusRequest, useRequest } from '@/axios/index'
 
 // useRequest
 const { data, loading, run } = useRequest<{
@@ -2038,8 +2047,8 @@ request({
   - useHookPlusRequest 支持接收一个 Promise 返回值的方法，可以用来包裹 axios 方法然后进行请求配置
 
 ```ts
+import { useHookPlusRequest, useRequest } from '@/axios/index'
 import axiosInstance from '@/axios/instance'
-import { useRequest, useHookPlusRequest } from '@/axios/index'
 
 // 使用 useRequest
 const { data, loading, run } = useRequest<{

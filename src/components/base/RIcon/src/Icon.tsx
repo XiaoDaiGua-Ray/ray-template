@@ -1,6 +1,5 @@
 import './index.scss'
-
-import { completeSize, call } from '@/utils'
+import { call, completeSize } from '@/utils'
 import props from './props'
 
 export default defineComponent({

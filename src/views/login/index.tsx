@@ -1,27 +1,25 @@
 import './index.scss'
-
+import AppShareLink from '@/app-components/app/AppShareLink'
+import { LOCAL_OPTIONS } from '@/app-config'
+import { RIcon } from '@/components'
+import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch'
+import { useSettingActions } from '@/store'
+import { useWindowSize } from '@vueuse/core'
 import {
-  NFlex,
   NCard,
-  NTabs,
-  NTabPane,
-  NGradientText,
-  NDropdown,
   NDivider,
+  NDropdown,
+  NFlex,
+  NGradientText,
   NGrid,
   NGridItem,
+  NTabPane,
+  NTabs,
 } from 'naive-ui'
-import Signing from './components/Signing'
-import Register from './components/Register'
 import QRCodeSigning from './components/QRCodeSigning'
+import Register from './components/Register'
+import Signing from './components/Signing'
 import SSOSigning from './components/SSOSigning'
-import { RIcon } from '@/components'
-import AppShareLink from '@/app-components/app/AppShareLink'
-import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch'
-
-import { LOCAL_OPTIONS } from '@/app-config'
-import { useWindowSize } from '@vueuse/core'
-import { useSettingActions } from '@/store'
 
 const Login = defineComponent({
   name: 'RLogin',

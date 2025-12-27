@@ -15,9 +15,8 @@
  * createVariableState({ your state })
  */
 
+import type { AnyFn } from '@/types'
 import { updateObjectValue } from '@/utils'
-
-import type { AnyFC } from '@/types'
 
 /**
  *
@@ -54,7 +53,7 @@ type ReadonlyVariableState<T> = {
  * setVariable('globalSpinning', true) // 设置全局加载状态为 true
  * setVariable('globalSpinning', true, () => {}) // 设置全局加载状态为 true，并且在设置完成后执行回调函数
  */
-export function setVariable<T extends VariableStateKey, FC extends AnyFC>(
+export function setVariable<T extends VariableStateKey, FC extends AnyFn>(
   key: T,
   value: VariableState[T],
   cb?: FC,

@@ -1,6 +1,5 @@
+import type { AnyFn, Recordable } from '@/types'
 import { isValueType } from '@/utils'
-
-import type { Recordable, AnyFC } from '@/types'
 
 /**
  *
@@ -25,7 +24,7 @@ export const updateObjectValue = <
   Target extends Recordable,
   Key extends keyof Target,
   Value extends Target[Key], // 移除 Partial，使类型更准确
-  Callback extends AnyFC = AnyFC, // 添加默认类型
+  Callback extends AnyFn = AnyFn, // 添加默认类型
 >(
   targetObject: Target,
   key: Key,

@@ -12,11 +12,10 @@
  *   - 建议按照主流约定语言包命名
  */
 
-import { createI18n } from 'vue-i18n'
+import { LOCAL_OPTIONS, SYSTEM_FALLBACK_LOCALE } from '@/app-config'
 import { getAppDefaultLanguage, getAppLocalMessages } from '@/locales/utils'
-import { SYSTEM_FALLBACK_LOCALE, LOCAL_OPTIONS } from '@/app-config'
-
 import type { App } from 'vue'
+import { createI18n } from 'vue-i18n'
 import type { I18n, I18nOptions } from 'vue-i18n'
 
 /** i18n 实例 */

@@ -1,7 +1,6 @@
-import { omit } from 'lodash-es'
+import type { AnyFn } from '@/types'
 import { effectDispose } from '@/utils'
-
-import type { AnyFC } from '@/types'
+import { omit } from 'lodash-es'
 import type { PaginationProps } from 'naive-ui'
 import type { Ref } from 'vue'
 
@@ -57,7 +56,7 @@ const DEFAULT_OPTIONS: UsePaginationOptions = {
  *   // ...options
  * })
  */
-export const usePagination = <T extends AnyFC>(
+export const usePagination = <T extends AnyFn>(
   callback?: T,
   options?: UsePaginationOptions,
 ) => {
@@ -178,7 +177,7 @@ export const usePagination = <T extends AnyFC>(
    * @description
    * 获取回调函数。
    */
-  const getCallback = <Fn extends AnyFC = T>(): Fn extends
+  const getCallback = <Fn extends AnyFn = T>(): Fn extends
     | undefined
     | null
     | unknown
@@ -195,7 +194,7 @@ export const usePagination = <T extends AnyFC>(
    * @example
    * setCallback(() => {})
    */
-  const setCallback = <Fn extends AnyFC = AnyFC>(callback: Fn) => {
+  const setCallback = <Fn extends AnyFn = AnyFn>(callback: Fn) => {
     callbackRef.value = callback
   }
 

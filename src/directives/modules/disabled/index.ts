@@ -14,9 +14,8 @@
  * </template>
  */
 
-import { setClass, removeClass } from '@/utils'
-
 import type { CustomDirectiveFC } from '@/directives/types'
+import { removeClass, setClass } from '@/utils'
 
 const updateElementDisabledType = (el: HTMLElement, value: boolean) => {
   if (el) {

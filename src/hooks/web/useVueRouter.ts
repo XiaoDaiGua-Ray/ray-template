@@ -1,5 +1,4 @@
 import { router } from '@/router'
-
 import type { Router } from 'vue-router'
 
 /**

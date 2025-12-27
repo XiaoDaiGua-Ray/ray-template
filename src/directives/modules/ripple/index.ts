@@ -24,11 +24,9 @@
  */
 
 import './index.scss'
-
-import { updateRipple, removeListeners, isRippleEnabled } from './utils'
-
 import type { CustomDirectiveFC } from '@/directives/types'
-import type { RippleValue, RippleElement } from './types'
+import type { RippleElement, RippleValue } from './types'
+import { isRippleEnabled, removeListeners, updateRipple } from './utils'
 
 const copyDirective: CustomDirectiveFC<RippleElement, RippleValue> = () => {
   return {

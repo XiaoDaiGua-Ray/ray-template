@@ -1,8 +1,7 @@
 import './index.scss'
-
-import { NCard, NLayout, NFlex, NInput, NButton } from 'naive-ui'
-import { getWeather, getTypicCode } from '@/api/demo/test'
-import { useRequest, useHookPlusRequest } from '@/axios'
+import { getTypicCode, getWeather } from '@/api/demo/test'
+import { useHookPlusRequest, useRequest } from '@/axios'
+import { NButton, NCard, NFlex, NInput, NLayout } from 'naive-ui'
 
 const Axios = defineComponent({
   name: 'RAxios',

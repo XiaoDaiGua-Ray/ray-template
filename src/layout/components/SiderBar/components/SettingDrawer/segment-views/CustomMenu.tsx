@@ -1,18 +1,17 @@
-import {
-  NFlex,
-  NFormItem,
-  NDivider,
-  NSwitch,
-  NForm,
-  NTooltip,
-  NText,
-  NInputNumber,
-  NButton,
-} from 'naive-ui'
 import { RIcon } from '@/components'
-
-import { SETTING_DRAWER_INJECT_KEY } from '../constant'
 import { useSettingActions } from '@/store'
+import {
+  NButton,
+  NDivider,
+  NFlex,
+  NForm,
+  NFormItem,
+  NInputNumber,
+  NSwitch,
+  NText,
+  NTooltip,
+} from 'naive-ui'
+import { SETTING_DRAWER_INJECT_KEY } from '../constant'
 
 export default defineComponent({
   name: 'SegmentViewsCustomMenu',

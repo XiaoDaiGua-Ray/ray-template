@@ -1,17 +1,16 @@
 import './index.scss'
-
+import AppShareLink from '@/app-components/app/AppShareLink'
+import { RIcon } from '@/components'
 import {
   NCard,
   NDescriptions,
   NDescriptionsItem,
-  NTag,
   NFlex,
-  NP,
   NH6,
+  NP,
+  NTag,
   NText,
 } from 'naive-ui'
-import { RIcon } from '@/components'
-import AppShareLink from '@/app-components/app/AppShareLink'
 
 const Dashboard = defineComponent({
   name: 'RDashboard',

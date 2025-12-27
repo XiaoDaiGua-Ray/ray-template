@@ -5,16 +5,13 @@
  */
 
 import './index.scss'
-
-import { NSpin } from 'naive-ui'
-import { RTransitionComponent, RIcon } from '@/components'
 import AppRequestCancelerProvider from '@/app-components/provider/AppRequestCancelerProvider'
-
-import { getVariable } from '@/global-variable'
-import { useSettingGetters } from '@/store'
-import { useMaximize } from '@/hooks'
 import { LAYOUT_CONTENT_SPIN_WHEN_ROUTE_CHANGE } from '@/app-config'
-
+import { RIcon, RTransitionComponent } from '@/components'
+import { getVariable } from '@/global-variable'
+import { useMaximize } from '@/hooks'
+import { useSettingGetters } from '@/store'
+import { NSpin } from 'naive-ui'
 import type { GlobalThemeOverrides } from 'naive-ui'
 
 export default defineComponent({

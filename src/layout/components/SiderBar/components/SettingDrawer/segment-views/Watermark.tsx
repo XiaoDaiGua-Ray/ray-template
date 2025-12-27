@@ -1,15 +1,14 @@
-import {
-  NFlex,
-  NFormItem,
-  NDivider,
-  NSwitch,
-  NForm,
-  NInputNumber,
-  NInput,
-} from 'naive-ui'
-
-import { SETTING_DRAWER_INJECT_KEY } from '../constant'
 import { useSettingActions } from '@/store'
+import {
+  NDivider,
+  NFlex,
+  NForm,
+  NFormItem,
+  NInput,
+  NInputNumber,
+  NSwitch,
+} from 'naive-ui'
+import { SETTING_DRAWER_INJECT_KEY } from '../constant'
 
 export default defineComponent({
   name: 'SegmentViewsWatermark',

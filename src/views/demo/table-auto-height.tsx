@@ -1,19 +1,18 @@
-import { RTablePro, RCollapse } from '@/components'
+import { RCollapse, RTablePro } from '@/components'
+import { useDayjs } from '@/hooks'
+import { uuid } from '@/utils'
+import dayjs from 'dayjs'
+import Mock from 'mockjs'
 import {
+  NButton,
+  NDatePicker,
   NFlex,
   NFormItemGi,
   NInput,
   NSelect,
-  NDatePicker,
-  NButton,
-  NTag,
   NSwitch,
+  NTag,
 } from 'naive-ui'
-
-import dayjs from 'dayjs'
-import { uuid } from '@/utils'
-import Mock from 'mockjs'
-import { useDayjs } from '@/hooks'
 
 type RowData = {
   key: number | string

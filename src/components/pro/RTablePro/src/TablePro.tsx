@@ -1,15 +1,13 @@
-import { RTable } from '../../../base/RTable'
-import { NFlex } from 'naive-ui'
-
-import props from './props'
-import useTable from '../../../base/RTable/src/hooks/useTable'
-import { call, removeDuplicateKeys } from '@/utils'
 import { usePagination } from '@/hooks'
-import { omit } from 'lodash-es'
-
-import type { TablePagination, TableRequestConfig, TableProInst } from './types'
-import type { RTableInst } from '../../..'
 import type { Recordable } from '@/types'
+import { call, removeDuplicateKeys } from '@/utils'
+import { omit } from 'lodash-es'
+import { NFlex } from 'naive-ui'
+import type { RTableInst } from '../../..'
+import { RTable } from '../../../base/RTable'
+import useTable from '../../../base/RTable/src/hooks/useTable'
+import props from './props'
+import type { TablePagination, TableProInst, TableRequestConfig } from './types'
 
 export default defineComponent({
   name: 'RTablePro',

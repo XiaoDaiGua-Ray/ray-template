@@ -1,5 +1,5 @@
-import { useDayjs } from '../../src/hooks/web/useDayjs'
 import dayjs from 'dayjs'
+import { useDayjs } from '../../src/hooks/web/useDayjs'
 
 describe('useDayjs', () => {
   const {

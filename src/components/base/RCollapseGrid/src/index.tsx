@@ -9,14 +9,11 @@
  */
 
 import './index.scss'
-
-import { NCard, NGrid, NGridItem, NFlex } from 'naive-ui'
 import { RIcon } from '@/components'
-
 import { call } from '@/utils'
-import props from './props'
-
+import { NCard, NFlex, NGrid, NGridItem } from 'naive-ui'
 import type { GridProps } from 'naive-ui'
+import props from './props'
 
 export default defineComponent({
   name: 'RCollapseGrid',

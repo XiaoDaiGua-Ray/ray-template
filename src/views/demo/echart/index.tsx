@@ -1,11 +1,7 @@
 import './index.scss'
-
-import { NCard, NSwitch, NFlex, NButton } from 'naive-ui'
-import { RChart } from '@/components'
-
-import { useChart } from '@/components'
-
+import { RChart, useChart } from '@/components'
 import type { RChartType } from '@/components'
+import { NButton, NCard, NFlex, NSwitch } from 'naive-ui'
 
 const Echart = defineComponent({
   name: 'REchart',

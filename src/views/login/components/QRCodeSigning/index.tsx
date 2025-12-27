@@ -1,8 +1,6 @@
 import './index.scss'
-
-import { Vue3NextQrcode } from 'vue3-next-qrcode'
-
 import LOGO from '@/assets/images/ray.svg'
+import { Vue3NextQrcode } from 'vue3-next-qrcode'
 
 /**
  *

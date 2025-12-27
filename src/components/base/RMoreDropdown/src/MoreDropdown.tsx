@@ -1,10 +1,8 @@
-import { NDropdown } from 'naive-ui'
 import { RIcon } from '@/components'
-
-import props from './props'
 import { renderNode } from '@/utils'
-
+import { NDropdown } from 'naive-ui'
 import type { DropdownProps } from 'naive-ui'
+import props from './props'
 
 export default defineComponent({
   name: 'RMoreDropdown',

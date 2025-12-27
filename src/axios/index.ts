@@ -10,11 +10,10 @@
  * 由于中间件注册了自动取消重复请求的方法，所以会导致方法在初始化时，会抛出一个重复请求被取消的错误（该问题不影响使用）
  */
 
-import useHookPlusRequest from 'vue-hooks-plus/es/useRequest'
 import request from '@/axios/instance'
-
-import type { UseRequestOptions } from 'vue-hooks-plus/es/useRequest/types'
 import type { AppRawRequestConfig } from '@/axios/types'
+import useHookPlusRequest from 'vue-hooks-plus/es/useRequest'
+import type { UseRequestOptions } from 'vue-hooks-plus/es/useRequest/types'
 
 /**
  *

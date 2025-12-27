@@ -16,19 +16,18 @@
  * </template>
  */
 
-import { throttle } from 'lodash-es'
-import { useEventListener } from '@vueuse/core'
-
-import type { ThrottleBindingOptions } from './types'
-import type { AnyFC } from '@/types'
-import type { DebouncedFunc } from 'lodash-es'
 import type { CustomDirectiveFC } from '@/directives/types'
+import type { AnyFn } from '@/types'
+import { useEventListener } from '@vueuse/core'
+import { throttle } from 'lodash-es'
+import type { DebouncedFunc } from 'lodash-es'
+import type { ThrottleBindingOptions } from './types'
 
 const throttleDirective: CustomDirectiveFC<
   HTMLElement,
   ThrottleBindingOptions
 > = () => {
-  let throttleFunction: DebouncedFunc<AnyFC> | null
+  let throttleFunction: DebouncedFunc<AnyFn> | null
   let cleanup: () => void
 
   return {

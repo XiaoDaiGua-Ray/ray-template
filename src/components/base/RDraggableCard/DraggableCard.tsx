@@ -1,15 +1,11 @@
 import './index.scss'
-
-import { NCard } from 'naive-ui'
-import { Teleport, Transition } from 'vue'
-
-import interact from 'interactjs'
-import { cardProps } from 'naive-ui'
-import { unrefElement, completeSize, queryElements } from '@/utils'
-
-import type { VNode } from 'vue'
+import type { AnyFn } from '@/types'
+import { completeSize, queryElements, unrefElement } from '@/utils'
 import type { MaybeElement, MaybeRefOrGetter } from '@vueuse/core'
-import type { AnyFC } from '@/types'
+import interact from 'interactjs'
+import { cardProps, NCard } from 'naive-ui'
+import { Teleport, Transition } from 'vue'
+import type { VNode } from 'vue'
 
 type RestrictRectOptions = Parameters<typeof interact.modifiers.restrictRect>[0]
 
@@ -323,7 +319,7 @@ export default defineComponent({
     }
 
     // 更新拖拽
-    const refreshDraggableWhenPropsChange = (fn: AnyFC) => {
+    const refreshDraggableWhenPropsChange = (fn: AnyFn) => {
       isSetup = false
 
       fn()

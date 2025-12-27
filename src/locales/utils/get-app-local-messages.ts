@@ -1,7 +1,7 @@
 import type {
-  AppLocalesModules,
-  AppLocalesDropdownMixedOption,
   AppCurrentAppMessages,
+  AppLocalesDropdownMixedOption,
+  AppLocalesModules,
 } from '@/locales/types'
 
 /**

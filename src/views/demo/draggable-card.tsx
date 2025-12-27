@@ -1,7 +1,6 @@
 import { RDraggableCard } from '@/components'
-import { NButton, NCard, NFlex, NRadio, NRadioGroup, NSwitch } from 'naive-ui'
-
 import type { DefaultPosition } from '@/components'
+import { NButton, NCard, NFlex, NRadio, NRadioGroup, NSwitch } from 'naive-ui'
 
 export default defineComponent({
   name: 'DraggableCardDemo',

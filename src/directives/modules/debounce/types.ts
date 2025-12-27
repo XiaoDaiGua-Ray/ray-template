@@ -1,8 +1,8 @@
+import type { AnyFn } from '@/types'
 import type { DebounceSettings } from 'lodash-es'
-import type { AnyFC } from '@/types'
 
 export interface DebounceBindingOptions {
-  func: AnyFC
+  func: AnyFn
   trigger?: string
   wait?: number
   options?: DebounceSettings

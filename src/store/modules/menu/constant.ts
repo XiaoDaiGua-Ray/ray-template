@@ -8,4 +8,4 @@ export const pickRouteRecordNormalizedConstant = [
   'path',
   'show',
   'fullPath',
-]
+] as const

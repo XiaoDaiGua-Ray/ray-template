@@ -1,6 +1,5 @@
-import { useSigningActions, useSettingActions } from '@/store'
-
-import type { IconOptionsFC, IconOptions } from './type'
+import { useSettingActions, useSigningActions } from '@/store'
+import type { IconOptions, IconOptionsFC } from './type'
 
 /**
  *

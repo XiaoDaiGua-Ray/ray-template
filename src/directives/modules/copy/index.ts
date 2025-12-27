@@ -13,10 +13,9 @@
  * </template>
  */
 
-import ClipboardJS from 'clipboard'
-
-import type { CopyElement } from './types'
 import type { CustomDirectiveFC } from '@/directives/types'
+import ClipboardJS from 'clipboard'
+import type { CopyElement } from './types'
 
 const createClipboard = (el: CopyElement, value: string) => {
   const clipboard = new ClipboardJS(el, {

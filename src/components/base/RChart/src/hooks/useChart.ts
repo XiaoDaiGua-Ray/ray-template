@@ -1,5 +1,5 @@
-import type { ECharts } from 'echarts/core'
 import type { VoidFC } from '@/types'
+import type { ECharts } from 'echarts/core'
 
 /**
  *

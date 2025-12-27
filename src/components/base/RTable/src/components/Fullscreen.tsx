@@ -1,8 +1,6 @@
 import { RIcon } from '@/components'
-
-import { config } from '../shared'
 import { useFullscreen } from 'vue-hooks-plus'
-
+import { config } from '../shared'
 import type { TableProvider } from '../types'
 
 export default defineComponent({

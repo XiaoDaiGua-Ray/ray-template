@@ -1,6 +1,5 @@
-import { useTheme } from '@/hooks'
-
 import type { LoadingOptions } from '@/components/base/RChart/src/types'
+import { useTheme } from '@/hooks'
 
 /**
  *

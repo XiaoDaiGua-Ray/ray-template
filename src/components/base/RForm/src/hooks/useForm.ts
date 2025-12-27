@@ -1,12 +1,11 @@
-import { cloneDeep } from 'lodash-es'
-
-import type {
-  RFormInst,
-  FormValidateCallback,
-  ShouldRuleBeApplied,
-  RFormRules,
-} from '../types'
 import type { Recordable } from '@/types'
+import { cloneDeep } from 'lodash-es'
+import type {
+  FormValidateCallback,
+  RFormInst,
+  RFormRules,
+  ShouldRuleBeApplied,
+} from '../types'
 
 /**
  *

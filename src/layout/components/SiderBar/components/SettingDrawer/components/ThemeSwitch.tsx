@@ -1,8 +1,7 @@
-import { NFlex, NSwitch, NTooltip } from 'naive-ui'
 import { RIcon } from '@/components'
-
-import { useSettingGetters } from '@/store'
 import { useTheme } from '@/hooks'
+import { useSettingGetters } from '@/store'
+import { NFlex, NSwitch, NTooltip } from 'naive-ui'
 
 export default defineComponent({
   name: 'ThemeSwitch',

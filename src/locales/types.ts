@@ -1,10 +1,10 @@
+import type { Recordable } from '@/types'
 import type {
-  DropdownOption,
-  DropdownGroupOption,
   DropdownDividerOption,
+  DropdownGroupOption,
+  DropdownOption,
   DropdownRenderOption,
 } from 'naive-ui'
-import type { Recordable } from '@/types'
 
 export interface AppCurrentAppMessages {
   'zh-CN': object
@@ -19,7 +19,7 @@ export type AppLocalesDropdownMixedOption =
 
 export interface AppLocalesModules {
   default: {
-    message: UnknownObjectKey
+    message: GlobalRecordable
   }
 }
 

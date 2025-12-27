@@ -1,5 +1,5 @@
 import { APP_CATCH_KEY } from '@/app-config'
-import { useVueRouter, useAppRoot } from '@/hooks'
+import { useAppRoot, useVueRouter } from '@/hooks'
 import { setStorage } from '@/utils'
 
 /**

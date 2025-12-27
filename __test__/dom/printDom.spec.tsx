@@ -1,5 +1,5 @@
-import { printDom } from '../../src/utils/dom'
 import { mount } from '@vue/test-utils'
+import { printDom } from '../../src/utils/dom'
 import renderHook from '../utils/renderHook'
 
 // happy-dom 官方有一个 bug，无法使用 canvas.toDataURL 方法。所以该模块单测暂时无法通过

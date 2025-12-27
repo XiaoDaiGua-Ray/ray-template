@@ -1,7 +1,6 @@
-import { useModal as useNaiveModal, NScrollbar } from 'naive-ui'
-import { queryElements, setStyle, completeSize, setClass } from '@/utils'
-import { R_MODAL_CLASS, CSS_VARS_KEYS } from '../constant'
-
+import { completeSize, queryElements, setClass, setStyle } from '@/utils'
+import { NScrollbar, useModal as useNaiveModal } from 'naive-ui'
+import { CSS_VARS_KEYS, R_MODAL_CLASS } from '../constant'
 import type { RModalProps } from '../types'
 
 /**

@@ -9,14 +9,12 @@
  * 当然, 你可以指定一个超级管理员角色, 默认获取全部路由
  */
 
-import { WHITE_ROUTES, APP_CATCH_KEY } from '@/app-config'
-import { redirectRouterToDashboard } from '@/router/utils'
-import { validRole } from '@/router/utils'
-import { isValueType, getStorage } from '@/utils'
+import { APP_CATCH_KEY, WHITE_ROUTES } from '@/app-config'
 import { useAppRoot } from '@/hooks'
-
-import type { Router, RouteLocationNormalized } from 'vue-router'
 import type { AppRouteMeta } from '@/router/types'
+import { redirectRouterToDashboard, validRole } from '@/router/utils'
+import { getStorage, isValueType } from '@/utils'
+import type { RouteLocationNormalized, Router } from 'vue-router'
 
 /** 路由守卫 */
 export const permissionRouter = (router: Router) => {

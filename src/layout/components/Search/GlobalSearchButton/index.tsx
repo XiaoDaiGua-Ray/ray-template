@@ -1,12 +1,9 @@
 import './index.scss'
-
-import { NButton, NFlex } from 'naive-ui'
 import { RIcon } from '@/components'
-
-import { detectOperatingSystem, call } from '@/utils'
-
-import type { PropType } from 'vue'
 import type { MaybeArray } from '@/types'
+import { call, detectOperatingSystem } from '@/utils'
+import { NButton, NFlex } from 'naive-ui'
+import type { PropType } from 'vue'
 
 export default defineComponent({
   name: 'GlobalSearchButton',

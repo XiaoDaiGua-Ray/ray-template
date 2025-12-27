@@ -1,9 +1,8 @@
-import { useEventListener, onClickOutside } from '@vueuse/core'
-
 import type { BasicTarget } from '@/types'
+import { onClickOutside, useEventListener } from '@vueuse/core'
 import type {
-  MaybeElementRef,
   MaybeElement,
+  MaybeElementRef,
   MaybeRefOrGetter,
   OnClickOutsideHandler,
 } from '@vueuse/core'

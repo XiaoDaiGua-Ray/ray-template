@@ -8,9 +8,8 @@
  * 当然你也可以通过 useWatermark hook 自定义控制水印的显示以及内容
  */
 
-import { NWatermark } from 'naive-ui'
-
 import { useSettingGetters } from '@/store'
+import { NWatermark } from 'naive-ui'
 
 export default defineComponent({
   name: 'AppWatermarkProvider',

@@ -1,6 +1,5 @@
-import { axiosCanceler } from '@/axios/utils/interceptor'
-
 import type { AxiosRequestInterceptor, FetchErrorFunction } from '@/axios/types'
+import { axiosCanceler } from '@/axios/utils/interceptor'
 
 /**
  *

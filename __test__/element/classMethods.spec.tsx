@@ -1,4 +1,4 @@
-import { setClass, hasClass, removeClass } from '../../src/utils/element'
+import { hasClass, removeClass, setClass } from '../../src/utils/element'
 import createRefElement from '../utils/createRefElement'
 
 describe('setClass', () => {

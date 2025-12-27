@@ -1,6 +1,6 @@
 import { useContextmenuCoordinate } from '../../src/hooks/components/useContextmenuCoordinate'
-import renderHook from '../utils/renderHook'
 import createRefElement from '../utils/createRefElement'
+import renderHook from '../utils/renderHook'
 
 describe('useContextmenuCoordinate', () => {
   const wrapperRef = createRefElement()

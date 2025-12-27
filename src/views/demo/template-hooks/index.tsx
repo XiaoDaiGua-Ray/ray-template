@@ -1,16 +1,15 @@
-import { NFlex, NCard, NButton, NInput } from 'naive-ui'
 import { RIcon } from '@/components'
-
+import { getVariableToRefs } from '@/global-variable'
 import {
   useAppNavigation,
+  useBadge,
   useMaximize,
   useSpinning,
-  useWatermark,
   useTheme,
-  useBadge,
+  useWatermark,
 } from '@/hooks'
-import { getVariableToRefs } from '@/global-variable'
 import { useSettingGetters } from '@/store'
+import { NButton, NCard, NFlex, NInput } from 'naive-ui'
 
 export default defineComponent({
   name: 'TemplateHooks',

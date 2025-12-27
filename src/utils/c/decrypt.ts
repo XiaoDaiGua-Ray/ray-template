@@ -1,6 +1,5 @@
 import { AES, enc } from 'crypto-js'
 import { CRYPTO_KEY } from './constant'
-
 import type { CipherParams, WordArray } from './types'
 
 /**

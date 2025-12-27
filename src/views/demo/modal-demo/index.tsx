@@ -1,7 +1,5 @@
-import { RModal } from '@/components'
+import { RModal, useModal } from '@/components'
 import { NButton, NCard, NFlex } from 'naive-ui'
-
-import { useModal } from '@/components'
 
 export default defineComponent({
   name: 'ModalDemo',

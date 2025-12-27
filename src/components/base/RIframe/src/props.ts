@@ -1,6 +1,6 @@
-import type { PropType } from 'vue'
 import type { MaybeArray } from '@/types'
 import type { SpinProps } from 'naive-ui'
+import type { PropType } from 'vue'
 import type { Lazy } from './types'
 
 const props = {

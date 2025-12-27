@@ -24,9 +24,8 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { useSettingGetters, useKeepAliveGetters } from '@/store'
+import { useKeepAliveGetters, useSettingGetters } from '@/store'
 import props from './props'
-
 import type { TransitionProps } from './types'
 
 /**

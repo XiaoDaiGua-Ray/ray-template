@@ -1,7 +1,6 @@
-import { unrefElement, effectDispose, isValueType } from '@/utils'
-import { pick } from 'lodash-es'
-
 import type { BasicTarget } from '@/types'
+import { effectDispose, isValueType, unrefElement } from '@/utils'
+import { pick } from 'lodash-es'
 
 export interface UseElementFullscreenOptions {
   /**

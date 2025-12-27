@@ -1,6 +1,6 @@
-import { useSettingActions, useSettingGetters } from '@/store'
-import { useI18n } from '@/hooks'
 import { APP_THEME } from '@/app-config'
+import { useI18n } from '@/hooks'
+import { useSettingActions, useSettingGetters } from '@/store'
 import { useColorMode } from '@vueuse/core'
 import { merge } from 'lodash-es'
 

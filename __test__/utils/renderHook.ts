@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createApp, defineComponent } from 'vue'
-
 import type { App } from 'vue'
 
 export default function renderHook<R = any>(

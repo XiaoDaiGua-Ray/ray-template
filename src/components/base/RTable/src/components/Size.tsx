@@ -1,12 +1,9 @@
-import { NPopselect } from 'naive-ui'
 import { RIcon } from '@/components'
-
+import type { ComponentSize, MaybeArray } from '@/types'
 import { call } from '@/utils'
+import { NPopselect } from 'naive-ui'
 import props from '../props'
 import { config } from '../shared'
-
-import type { ComponentSize } from '@/types'
-import type { MaybeArray } from '@/types'
 
 export default defineComponent({
   name: 'TableSizeSelect',

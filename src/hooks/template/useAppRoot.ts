@@ -1,5 +1,4 @@
-import { useSettingGetters, useSettingActions } from '@/store'
-
+import { useSettingActions, useSettingGetters } from '@/store'
 import type { AppRootRoute } from '@/store/modules/setting/types'
 
 export function useAppRoot() {

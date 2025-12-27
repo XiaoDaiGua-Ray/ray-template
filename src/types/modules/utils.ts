@@ -91,7 +91,7 @@ export type WordArray = CryptoJS.lib.WordArray
 
 export type CipherParams = CryptoJS.lib.CipherParams
 
-export type AnyFC<P = any, R = any> = (...args: P[]) => R
+export type AnyFn<P = any, R = any> = (...args: P[]) => R
 
 export type VoidFC = (...args: any[]) => void
 

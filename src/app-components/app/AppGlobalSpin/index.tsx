@@ -15,11 +15,8 @@
  *   2. 如果需要使用该组件请注意控制取消时机
  */
 
-import { NSpin } from 'naive-ui'
-
-import { spinProps } from 'naive-ui'
 import { getVariableToRefs } from '@/global-variable'
-
+import { NSpin, spinProps } from 'naive-ui'
 import type { SpinProps } from 'naive-ui'
 
 const GlobalSpin = defineComponent({

@@ -1,16 +1,15 @@
 import { printDom } from '@/utils'
-
+import type { PrintDomOptions } from '@/utils'
 import type {
-  RTableInst,
+  ColumnKey,
   CsvOptionsType,
   FilterState,
+  RTableInst,
   ScrollToOptions,
-  ColumnKey,
   SortOrder,
-  UseTableRegister,
   TableProvider,
+  UseTableRegister,
 } from '../types'
-import type { PrintDomOptions } from '@/utils'
 
 /**
  *

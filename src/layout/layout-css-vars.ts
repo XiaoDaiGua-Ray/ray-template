@@ -1,5 +1,4 @@
 import { useElementBounding } from '@vueuse/core'
-
 import type { Ref } from 'vue'
 
 /**

@@ -1,5 +1,5 @@
-import type { VNode } from 'vue'
 import type { AppRouteMeta } from '@/router/types'
+import type { VNode } from 'vue'
 
 export type Key = string | number
 

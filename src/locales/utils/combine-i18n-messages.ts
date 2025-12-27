@@ -1,7 +1,6 @@
-import { set } from 'lodash-es'
-
-import type { Recordable } from '@/types'
 import type { I18nModules } from '@/locales/types'
+import type { Recordable } from '@/types'
+import { set } from 'lodash-es'
 
 /**
  *

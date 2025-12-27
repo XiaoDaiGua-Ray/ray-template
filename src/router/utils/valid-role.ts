@@ -1,7 +1,6 @@
 import { SUPER_ADMIN } from '@/app-config'
-import { useSigningGetters } from '@/store'
-
 import type { AppRouteMeta } from '@/router/types'
+import { useSigningGetters } from '@/store'
 
 /**
  *

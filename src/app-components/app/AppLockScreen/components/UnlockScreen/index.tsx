@@ -1,17 +1,14 @@
 import '../../index.scss'
-
-import { NInput, NFormItem, NButton, NFlex } from 'naive-ui'
 import AppAvatar from '@/app-components/app/AppAvatar'
-import { RForm } from '@/components'
-
-import dayjs from 'dayjs'
-import { useSigningActions, useSettingActions } from '@/store'
-import { rules, useCondition } from '@/app-components/app/AppLockScreen/shared'
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
-import { useDevice } from '@/hooks'
-import { useForm } from '@/components'
+import { rules, useCondition } from '@/app-components/app/AppLockScreen/shared'
 import { APP_CATCH_KEY } from '@/app-config'
-import { removeStorage, decrypt, getStorage } from '@/utils'
+import { RForm, useForm } from '@/components'
+import { useDevice } from '@/hooks'
+import { useSettingActions, useSigningActions } from '@/store'
+import { decrypt, getStorage, removeStorage } from '@/utils'
+import dayjs from 'dayjs'
+import { NButton, NFlex, NFormItem, NInput } from 'naive-ui'
 
 export default defineComponent({
   name: 'UnlockScreen',

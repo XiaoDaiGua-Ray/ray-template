@@ -1,11 +1,9 @@
 import './index.scss'
-
-import { NSpin } from 'naive-ui'
-
 import { call, completeSize } from '@/utils'
-import props from './props'
 import { useEventListener } from '@vueuse/core'
+import { NSpin } from 'naive-ui'
 import { useTemplateRef } from 'vue'
+import props from './props'
 
 export default defineComponent({
   name: 'RIframe',

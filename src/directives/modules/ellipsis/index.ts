@@ -16,9 +16,8 @@
  * </template>
  */
 
-import { setStyle, completeSize } from '@/utils'
-
 import type { CustomDirectiveFC } from '@/directives/types'
+import { completeSize, setStyle } from '@/utils'
 import type { EllipsisBindingValue } from './types'
 
 /**

@@ -1,11 +1,11 @@
+import type { MaybeArray } from '@/types'
+import type { PropType } from 'vue'
 import type {
-  RBarcodeRender,
-  RBarcodeOptions,
   RBarcodeFormat,
+  RBarcodeOptions,
+  RBarcodeRender,
   RBarcodeSize,
 } from './types'
-import type { PropType } from 'vue'
-import type { MaybeArray } from '@/types'
 
 const props = {
   /**

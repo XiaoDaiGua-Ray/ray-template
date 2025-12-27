@@ -1,14 +1,13 @@
 import { tableProps } from '@/components'
+import type { AnyFn } from '@/types'
 import { omit } from 'lodash-es'
-
 import type { PropType } from 'vue'
 import type {
-  TableProInst,
-  TableRequestConfig,
   PaginationPrefix,
   TablePaginationUpdate,
+  TableProInst,
+  TableRequestConfig,
 } from './types'
-import type { AnyFC } from '@/types'
 
 const props = {
   ...omit(tableProps, ['pagination']),
@@ -57,7 +56,7 @@ const props = {
    * @default undefined
    */
   request: {
-    type: Function as PropType<AnyFC>,
+    type: Function as PropType<AnyFn>,
   },
   /**
    *

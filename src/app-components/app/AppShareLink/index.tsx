@@ -1,4 +1,4 @@
-import { NAvatar, NTooltip, NFlex } from 'naive-ui'
+import { NAvatar, NFlex, NTooltip } from 'naive-ui'
 
 interface AvatarOptions {
   key: string

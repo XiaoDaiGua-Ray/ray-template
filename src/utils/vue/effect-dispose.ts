@@ -1,6 +1,5 @@
+import type { AnyFn } from '@/types'
 import { getCurrentScope, onScopeDispose } from 'vue'
-
-import type { AnyFC } from '@/types'
 
 /**
  *
@@ -16,7 +15,7 @@ import type { AnyFC } from '@/types'
  * effectDispose(watchStop)
  * effectDispose(watchEffectStop)
  */
-export function effectDispose<T extends AnyFC>(fn: T) {
+export function effectDispose<T extends AnyFn>(fn: T) {
   if (getCurrentScope()) {
     onScopeDispose(fn)
 

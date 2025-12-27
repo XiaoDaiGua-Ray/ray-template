@@ -13,12 +13,12 @@ import type { ECharts } from 'echarts/core'
 import type { CanvasRenderer } from 'echarts/renderers' // `echarts` 渲染器
 
 export interface ChartThemeRawModules {
-  default: Record<string, UnknownObjectKey>
+  default: Record<string, GlobalRecordable>
 }
 
 export interface ChartThemeRawArray {
   name: string
-  theme: UnknownObjectKey
+  theme: GlobalRecordable
 }
 
 export interface LoadingOptions {

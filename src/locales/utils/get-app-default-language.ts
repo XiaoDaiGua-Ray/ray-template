@@ -1,7 +1,6 @@
-import { getStorage } from '@/utils'
 import { APP_CATCH_KEY, SYSTEM_DEFAULT_LOCAL } from '@/app-config'
-
 import type { AppCurrentAppMessages } from '@/locales/types'
+import { getStorage } from '@/utils'
 
 /**
  *

@@ -7,7 +7,7 @@ export interface IconEventMapOptions {
 
 export type IconEventMap = keyof IconEventMapOptions
 
-export interface IconDropdownOptions extends UnknownObjectKey {
+export interface IconDropdownOptions extends GlobalRecordable {
   event?: string
   switch: boolean
   options: DropdownOption[]

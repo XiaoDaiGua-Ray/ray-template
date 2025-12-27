@@ -20,18 +20,15 @@
  */
 
 import './index.scss'
-
-import { NScrollbar, NFlex, NLayoutHeader, NDropdown, NButton } from 'naive-ui'
 import { RIcon, RMoreDropdown } from '@/components'
-
-import { useMenuGetters, useMenuActions } from '@/store'
-import { hasClass, uuid, queryElements } from '@/utils'
-import { useMaximize, useSpinning, useAppRoot, useSiderBar } from '@/hooks'
 import { getVariableToRefs } from '@/global-variable'
-import { useTemplateRef } from 'vue'
-
+import { useAppRoot, useMaximize, useSiderBar, useSpinning } from '@/hooks'
+import { useMenuActions, useMenuGetters } from '@/store'
+import type { AppMenuOption, MenuTagOptions } from '@/types'
+import { hasClass, queryElements, uuid } from '@/utils'
+import { NButton, NDropdown, NFlex, NLayoutHeader, NScrollbar } from 'naive-ui'
 import type { ScrollbarInst } from 'naive-ui'
-import type { MenuTagOptions, AppMenuOption } from '@/types'
+import { useTemplateRef } from 'vue'
 
 export default defineComponent({
   name: 'AppMenuTag',
@@ -470,6 +467,7 @@ export default defineComponent({
                     name="expanded"
                     width={iconConfig.size}
                     height={iconConfig.size}
+                    cursor="pointer"
                     customClassName="menu-tag__left-arrow"
                   />
                 ),
@@ -561,6 +559,7 @@ export default defineComponent({
                       style={{
                         transform: 'rotate(180deg)',
                       }}
+                      cursor="pointer"
                     />
                   ),
                 }}
@@ -577,6 +576,7 @@ export default defineComponent({
                       name="fullscreen_fold"
                       width={iconConfig.size}
                       height={iconConfig.size}
+                      cursor="pointer"
                     />
                   ),
                 }}
@@ -600,6 +600,7 @@ export default defineComponent({
                           ? 'menu-tag__right-setting--spinning'
                           : ''
                       }`}
+                      cursor="pointer"
                     />
                   ),
                 }}
@@ -611,6 +612,7 @@ export default defineComponent({
                 onSelect={this.actionDropdownSelect.bind(this)}
                 iconSize={18}
                 keyboard={false}
+                cursor="pointer"
               >
                 <NButton
                   quaternary
@@ -624,6 +626,7 @@ export default defineComponent({
                         name="more"
                         width={iconConfig.size}
                         height={iconConfig.size}
+                        cursor="pointer"
                       />
                     ),
                   }}

@@ -1,5 +1,5 @@
-import type { AppRouteRecordRaw } from '../types'
 import type { AppMenuOption } from '@/types'
+import type { AppRouteRecordRaw } from '../types'
 
 type LikeTemplateRouteOption = AppRouteRecordRaw | AppMenuOption
 

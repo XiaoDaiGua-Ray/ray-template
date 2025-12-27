@@ -1,6 +1,6 @@
-import setupMiniApp from '../utils/setupMiniApp'
+import { getVariableToRefs, setVariable } from '../../src/global-variable'
 import { useSpinning } from '../../src/hooks/template/useSpinning'
-import { setVariable, getVariableToRefs } from '../../src/global-variable'
+import setupMiniApp from '../utils/setupMiniApp'
 
 describe('useSpinning', async () => {
   await setupMiniApp()

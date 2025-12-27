@@ -1,11 +1,10 @@
-import { appendRequestHeaders } from '@/axios/utils/append-request-headers'
 import { APP_CATCH_KEY } from '@/app-config'
-import { getStorage } from '@/utils'
-
 import type {
-  RequestInterceptorConfig,
   AxiosRequestInterceptor,
+  RequestInterceptorConfig,
 } from '@/axios/types'
+import { appendRequestHeaders } from '@/axios/utils/append-request-headers'
+import { getStorage } from '@/utils'
 
 /**
  *

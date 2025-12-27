@@ -1,10 +1,10 @@
-import type { GlobalThemeOverrides } from 'naive-ui'
 import type {
-  Placement,
-  LayoutSideBarLogo,
   AppKeepAlive,
   AppMenuConfig,
+  LayoutSideBarLogo,
+  Placement,
 } from '@/types'
+import type { GlobalThemeOverrides } from 'naive-ui'
 
 export interface WatermarkConfig {
   content: string

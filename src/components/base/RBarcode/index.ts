@@ -1,7 +1,6 @@
+import type { ExtractPublicPropTypes } from 'vue'
 import RBarcode from './src/Barcode'
 import barcodeProps from './src/props'
-
-import type { ExtractPublicPropTypes } from 'vue'
 import type { RBarcodeSize } from './src/types'
 
 // 扩展 BarcodeProps 以提供更好的类型提示

@@ -1,4 +1,4 @@
-import type { DirectiveModules, CustomDirectiveFC } from '@/directives/types'
+import type { CustomDirectiveFC, DirectiveModules } from '@/directives/types'
 
 export const combineDirective = <
   T extends Record<string, DirectiveModules>,
