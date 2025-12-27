@@ -1,7 +1,7 @@
 import { createServer } from 'node:http';
 import connect from 'connect';
 import corsMiddleware from 'cors';
-import { baseMiddleware, createLogger, mockWebSocket } from 'vite-plugin-mock-dev-server/server';
+import { createMockMiddleware, createLogger, mockWebSocket } from 'vite-plugin-mock-dev-server/server';
 import mockData from './mock-data.js';
 
 const app = connect();
@@ -17,7 +17,7 @@ const compiler = { mockData }
 mockWebSocket(compiler, server, { wsProxies, cookiesOptions, logger });
 
 app.use(corsMiddleware());
-app.use(baseMiddleware(compiler, {
+app.use(createMockMiddleware(compiler, {
   formidableOptions: { multiples: true },
   proxies,
   priority,

@@ -6,9 +6,8 @@
   },
   "dependencies": {
     "connect": "^3.7.0",
-    "vite-plugin-mock-dev-server": "^1.8.2",
-    "cors": "^2.8.5",
-    "mockjs": "1.1.0"
+    "vite-plugin-mock-dev-server": "^2.0.4",
+    "cors": "^2.8.5"
   },
   "pnpm": {
     "peerDependencyRules": {
