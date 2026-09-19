@@ -1,0 +1,5 @@
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+  rs-module-lexer: true
+  vue-demi: true
