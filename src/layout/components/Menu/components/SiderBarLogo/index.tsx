@@ -64,10 +64,7 @@ export default defineComponent({
 
     return sideBarLogo?.title ? (
       <div
-        class={[
-          'ray-menu__logo',
-          sideBarLogo?.url ? 'ray-menu__logo-url' : null,
-        ]}
+        class={['r-menu__logo', sideBarLogo?.url ? 'r-menu__logo-url' : null]}
         onClick={sideBarLogoClick.bind(this)}
         ref={SIDER_BAR_LOGO}
       >
@@ -101,8 +98,8 @@ export default defineComponent({
         ) : null}
         <NGradientText
           class={[
-            !collapsed ? 'ray-menu__logo-title--open' : null,
-            'ray-menu__logo-title',
+            !collapsed ? 'r-menu__logo-title--open' : null,
+            'r-menu__logo-title',
             'class="n-menu-item-content"',
           ]}
           type="primary"

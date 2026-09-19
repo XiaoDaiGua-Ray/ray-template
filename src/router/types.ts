@@ -103,7 +103,7 @@ export interface AppRouteMeta {
    * 页面缓存。
    *
    * 如果缓存会出现失败的情况，请查看该文档排查。
-   * @see https://xiaodaigua-ray.github.io/ray-template-doc/ray-template-docs/common-problem/keep-alive.html
+   * @see https://xiaodaigua-ray.github.io/r-template-doc/r-template-docs/common-problem/keep-alive.html
    */
   keepAlive?: boolean
   /**

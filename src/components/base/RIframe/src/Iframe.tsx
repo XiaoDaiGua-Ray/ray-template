@@ -56,16 +56,13 @@ export default defineComponent({
   },
   render() {
     return (
-      <div
-        class={['ray-iframe', this.iframeWrapperClass]}
-        style={[this.cssVars]}
-      >
+      <div class={['r-iframe', this.iframeWrapperClass]} style={[this.cssVars]}>
         <NSpin {...this.customSpinProps} show={this.spinShow}>
           {{
             ...this.$slots,
             default: () => (
               <iframe
-                class={['ray-iframe__container', this.iframeClass]}
+                class={['r-iframe__container', this.iframeClass]}
                 ref="iframeRef"
                 src={this.src}
                 allow={this.allow}

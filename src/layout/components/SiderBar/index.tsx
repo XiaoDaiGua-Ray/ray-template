@@ -82,7 +82,7 @@ export default defineComponent({
         showSettings.value = true
       },
       github: () => {
-        window.open('https://github.com/XiaoDaiGua-Ray/ray-template')
+        window.open('https://github.com/XiaoDaiGua-Ray/r-template')
       },
       fullscreen: () => {
         if (!isEnabled) {

@@ -10,8 +10,8 @@ import type { MessageProviderProps } from 'naive-ui'
  * 避免样式出现奇奇怪怪的问题。
  */
 export const GLOBAL_CLASS_NAMES = {
-  darkClassName: 'ray-template--dark',
-  lightClassName: 'ray-template--light',
+  darkClassName: 'r-template--dark',
+  lightClassName: 'r-template--light',
   rayTemplateThemePrimaryColor: '--r-theme-primary-color',
   rayTemplateThemePrimaryFadeColor: '--r-theme-primary-fade-color',
   preLoadingAnimation: 'pre-loading-animation',
@@ -72,9 +72,9 @@ export const PRE_LOADING_CONFIG: PreloadingConfig = {
  * 默认不启用。
  *
  * @example
- * export const APP_CATCH_KEY_PREFIX = 'ray-template:'
+ * export const APP_CATCH_KEY_PREFIX = 'r-template:'
  *
- * 转换后的缓存 key: ray-template:signing。
+ * 转换后的缓存 key: r-template:signing。
  */
 export const APP_CATCH_KEY_PREFIX = ''
 

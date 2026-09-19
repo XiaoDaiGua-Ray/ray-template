@@ -25,7 +25,7 @@
   }
 }
 
-.ray-template--light {
+.r-template--light {
   .layout-content__maximize-out {
     background-color: #d5d3d1;
     color: #44403c;
@@ -37,7 +37,7 @@
   }
 }
 
-.ray-template--dark {
+.r-template--dark {
   .layout-content__maximize-out {
     background-color: #44403c;
     color: #d5d3d1;
@@ -49,10 +49,10 @@
   }
 }
 
-.ray-template--dark .r-layout-full__viewer-content {
+.r-template--dark .r-layout-full__viewer-content {
   background-color: $layoutContentBackgroundColorDark;
 }
 
-.ray-template--light .r-layout-full__viewer-content {
+.r-template--light .r-layout-full__viewer-content {
   background-color: $layoutContentBackgroundColorLight;
 }

@@ -1,4 +1,4 @@
-.ray-menu__logo {
+.r-menu__logo {
   height: $layoutHeaderHeight;
   padding: 0 18px 0 24px;
   display: flex;
@@ -9,7 +9,7 @@
   font-weight: 600;
   overflow: hidden;
 
-  &.ray-menu__logo-url {
+  &.r-menu__logo-url {
     position: sticky;
     top: 0;
     cursor: pointer;
@@ -17,13 +17,13 @@
     z-index: 20;
   }
 
-  & .ray-menu__logo-title {
+  & .r-menu__logo-title {
     opacity: 0;
     display: none;
     flex: 1;
     @include overflowEllipsis;
 
-    &.ray-menu__logo-title--open {
+    &.r-menu__logo-title--open {
       opacity: 1;
       display: inline-block;
     }

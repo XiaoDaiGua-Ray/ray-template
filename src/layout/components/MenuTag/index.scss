@@ -47,8 +47,8 @@ $menuTagWrapperWidth: 76px;
   }
 }
 
-.ray-template--light,
-.ray-template--dark {
+.r-template--light,
+.r-template--dark {
   .menu-tag__btn .menu-tag__btn-icon {
     border-radius: 2px;
 
@@ -70,11 +70,11 @@ $menuTagWrapperWidth: 76px;
   animation: elementRotate 0.8s linear infinite;
 }
 
-.ray-template--light .menu-tag {
+.r-template--light .menu-tag {
   box-shadow: 0 2px 2px $layoutShadowColorLight;
 }
 
-.ray-template--dark .menu-tag {
+.r-template--dark .menu-tag {
   box-shadow: 0 2px 2px $layoutShadowColorDark;
 }
 

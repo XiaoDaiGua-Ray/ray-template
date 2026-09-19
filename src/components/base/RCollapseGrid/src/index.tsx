@@ -87,7 +87,7 @@ export default defineComponent({
         {{
           default: () => (
             <NGrid
-              class="ray-collapse-grid"
+              class="r-collapse-grid"
               {...($props as GridProps)}
               collapsed={modelCollapsed}
               xGap={xGap || 12}
@@ -97,7 +97,7 @@ export default defineComponent({
               {defaultSlot?.()}
               <NGridItem
                 suffix
-                class="ray-collapse-grid__suffix--btn"
+                class="r-collapse-grid__suffix--btn"
                 span={actionSpan}
               >
                 <NFlex justify="end" align="center">

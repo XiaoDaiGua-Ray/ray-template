@@ -534,7 +534,7 @@ export default defineComponent({
 
     return preset === 'card' ? (
       <NCard
-        class="ray-chart"
+        class="r-chart"
         ref="rayChartWrapperRef"
         style={[this.cssVarsRef]}
         contentStyle={contentStyle}
@@ -543,7 +543,7 @@ export default defineComponent({
       >
         {{
           default: renderNode(
-            <div class="ray-chart__container" ref="chartRef"></div>,
+            <div class="r-chart__container" ref="chartRef"></div>,
           ),
           header: renderNode(title, {
             defaultElement: <div style="display: none;"></div>,
@@ -563,8 +563,8 @@ export default defineComponent({
         }}
       </NCard>
     ) : (
-      <div class="ray-chart" style={[this.cssVarsRef]} ref="rayChartWrapperRef">
-        <div class="ray-chart__container" ref="chartRef"></div>
+      <div class="r-chart" style={[this.cssVarsRef]} ref="rayChartWrapperRef">
+        <div class="r-chart__container" ref="chartRef"></div>
       </div>
     )
   },

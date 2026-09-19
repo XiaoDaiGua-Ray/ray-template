@@ -18,7 +18,8 @@ $positionY: 24px;
         position: absolute;
         width: var(--login-height);
         height: 2px;
-        background: linear-gradient(
+        background:
+          linear-gradient(
             135deg,
             transparent,
             transparent 75%,
@@ -91,7 +92,7 @@ $positionY: 24px;
   }
 }
 
-.ray-template--light {
+.r-template--light {
   & .login__left-wrapper {
     background-color: rgba(32, 128, 240, 0.22);
   }
@@ -101,7 +102,7 @@ $positionY: 24px;
   }
 }
 
-.ray-template--dark {
+.r-template--dark {
   & .login__left-wrapper {
     background-color: #2c354b;
   }

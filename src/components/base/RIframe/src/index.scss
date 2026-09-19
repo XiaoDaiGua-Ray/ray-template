@@ -1,10 +1,10 @@
-.ray-iframe {
+.r-iframe {
   width: var(--r-iframe-width);
   height: var(--r-iframe-height);
   box-sizing: border-box;
   border: var(--r-iframe-frameborder);
 
-  & .ray-iframe__container {
+  & .r-iframe__container {
     width: 100%;
     height: 100%;
     border: 0;
