@@ -37,11 +37,7 @@ export interface LoadingOptions {
 }
 
 export type ChartTheme =
-  | 'macarons-dark'
-  | 'macarons'
-  | 'default'
-  | string
-  | null
+  'macarons-dark' | 'macarons' | 'default' | string | null
 
 export interface RChartInst {
   /**

@@ -1,4 +1,4 @@
-import Mock from 'mockjs'
+import { faker } from '@faker-js/faker/locale/zh_CN'
 
 /**
  *
@@ -9,11 +9,11 @@ import Mock from 'mockjs'
 export function tableMock(option?: object) {
   return {
     ...option,
-    id: Mock.Random.guid(),
-    address: Mock.Random.county(true),
-    email: Mock.Random.email(),
-    name: Mock.Random.cname(),
-    age: Mock.Random.integer(18, 60),
-    createDate: Mock.Random.date(),
+    id: faker.string.uuid(),
+    address: faker.location.state() + faker.location.city(),
+    email: faker.internet.email(),
+    name: faker.person.fullName(),
+    age: faker.number.int({ min: 18, max: 60 }),
+    createDate: faker.date.past().toISOString().slice(0, 10),
   }
 }

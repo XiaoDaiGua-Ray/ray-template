@@ -5,9 +5,9 @@
   & .n-card__content {
     overflow: scroll;
     max-height: calc(
-      var(--html-height) - var(--n-padding-bottom) - var(--n-padding-bottom) - var(
-          --n-padding-top
-        )
+      var(--html-height) - var(--n-padding-bottom) - var(
+          --n-padding-bottom
+        ) - var(--n-padding-top)
     );
   }
 }

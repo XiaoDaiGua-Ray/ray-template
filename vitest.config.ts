@@ -1,12 +1,12 @@
 import { configDefaults, defineConfig, mergeConfig } from 'vitest/config'
-import viteConfig from './vite.config'
+import viteConfig from './vite.config.ts'
 
 export default defineConfig((configEnv) =>
   mergeConfig(
     viteConfig(configEnv),
     defineConfig({
       test: {
-        include: ['./__test__/**/*.(spec).(ts|tsx)'],
+        include: ['__test__/**/*.spec.{ts,tsx}'],
         exclude: [
           ...configDefaults.exclude,
           '**/src/**',

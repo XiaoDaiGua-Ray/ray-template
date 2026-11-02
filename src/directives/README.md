@@ -23,9 +23,9 @@
 // 2. modules/demo 目录下创建 index.ts 文件
 // 3. 进行自定义指令开发
 
+import type { CustomDirectiveFC } from '@/directives/type'
 import type { Directive } from 'vue'
 import type { RoleBindingValue } from './type'
-import type { CustomDirectiveFC } from '@/directives/type'
 
 const demoDirective: CustomDirectiveFC<HTMLElement, RoleBindingValue> = () => {
   return {

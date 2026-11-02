@@ -56,7 +56,7 @@ export interface UseElementFullscreenOptions {
    * @description
    * 手动设定 transition 过度效果。
    *
-   * @default 'transform 0.3s var(--r-bezier)'
+   * @default 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
    */
   transition?: string
 }

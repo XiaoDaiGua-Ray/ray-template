@@ -6,7 +6,9 @@ export default defineComponent({
   name: 'RIcon',
   props,
   setup(props) {
-    const symbolId = computed(() => `#${props.prefix}-${props.name}`)
+    const symbolId = computed(
+      () => `/__spritemap#${props.prefix}-${props.name}`,
+    )
     const cssVars = computed(() => {
       const cssVar = {
         '--r-icon-width': props.width
@@ -47,15 +49,10 @@ export default defineComponent({
         <svg
           {...({
             RIconAttribute: 'r-icon',
-            ariaHidden: true,
+            'aria-hidden': true,
           } as object)}
         >
-          <use
-            {...{
-              'xlink:href': this.symbolId,
-            }}
-            fill={this.color}
-          />
+          <use href={this.symbolId} fill={this.color} />
         </svg>
       </span>
     )

@@ -204,8 +204,7 @@ interface NonKeepAliveAppRouteRecordRaw extends BaseAppRouteRecordRaw {
 }
 
 export type AppRouteRecordRaw =
-  | KeepAliveAppRouteRecordRaw
-  | NonKeepAliveAppRouteRecordRaw
+  KeepAliveAppRouteRecordRaw | NonKeepAliveAppRouteRecordRaw
 
 export interface RouteModules {
   [propName: string]: {

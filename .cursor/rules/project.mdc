@@ -1,0 +1,6 @@
+---
+description: Ray Template 项目开发、维护和验证约定
+alwaysApply: true
+---
+
+先读取并遵循仓库根目录的 `AGENTS.md`。按任务需要查看 `docs/architecture.md` 和 `docs/ai-development.md`，不要在此复制项目规则。

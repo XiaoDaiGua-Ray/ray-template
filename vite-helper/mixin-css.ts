@@ -15,7 +15,7 @@ export const mixinCss = (options?: string[]) => {
   const mixinString = options.reduce((pre, curr) => {
     const temp = `@use "${curr}" as *;`
 
-    return (pre += temp)
+    return pre + temp
   }, '')
 
   return mixinString as string

@@ -11,6 +11,4 @@ export type TargetType =
   | ComponentPublicInstance
 
 export type BasicTarget<T extends TargetType = Element> =
-  | (() => TargetValue<T>)
-  | TargetValue<T>
-  | Ref<TargetValue<T>>
+  (() => TargetValue<T>) | TargetValue<T> | Ref<TargetValue<T>>

@@ -54,7 +54,7 @@ export default defineComponent({
   setup(props, { expose }) {
     const cssVars = computed(() => {
       const { width: propsWidth } = props
-      let segmentWidthVar = ''
+      let segmentWidthVar: string
 
       switch (propsWidth) {
         case 'block':

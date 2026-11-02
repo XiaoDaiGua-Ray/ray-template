@@ -1,54 +1,54 @@
 import { useElementFullscreen } from '../../src/hooks/web/useElementFullscreen'
 
-describe('useElementFullscreen', async () => {
-  const div = document.createElement('div')
-  const transition = 'all 0.3s var(--r-bezier)'
-  const __ID__ = '__ID__'
+// Happy DOM 验证状态与样式恢复；实际布局和动画仍需在浏览器验收。
+describe('useElementFullscreen', () => {
+  let div: HTMLDivElement
 
-  div.setAttribute('id', __ID__)
-  document.body.appendChild(div)
-
-  const resetDivStyle = () => {
-    const element = document.getElementById(__ID__)
-
-    if (element) {
-      element.style.transition = ''
-    }
-  }
-
-  const { enter, exit, toggleFullscreen } = useElementFullscreen(div)
-
-  it('should enter fullscreen', async () => {
-    resetDivStyle()
-    enter()
-
-    await nextTick()
-
-    expect(div.style.transition).toBe(transition)
+  beforeEach(() => {
+    div = document.createElement('div')
+    document.body.appendChild(div)
   })
 
-  it('should exit fullscreen', async () => {
-    resetDivStyle()
+  afterEach(() => {
+    div.remove()
+  })
+
+  it('enters fullscreen and restores the original styles on exit', () => {
+    div.style.position = 'relative'
+    div.style.width = '240px'
+    div.style.transition = 'opacity 1s ease'
+
+    const { enter, exit, isFullscreen } = useElementFullscreen(div)
+
+    enter()
+
+    expect(isFullscreen.value).toBe(true)
+    expect(div.getAttribute('data-element-fullscreen')).toBe('true')
+    expect(div.style.position).toBe('fixed')
+    expect(div.style.transition).toBe('all 0.3s cubic-bezier(0.4, 0, 0.2, 1)')
+
     exit()
 
-    await nextTick()
-
-    expect(div.style.transition).toBe('')
+    expect(isFullscreen.value).toBe(false)
+    expect(div.hasAttribute('data-element-fullscreen')).toBe(false)
+    expect(div.style.position).toBe('relative')
+    expect(div.style.width).toBe('240px')
+    expect(div.style.transition).toBe('opacity 1s ease')
   })
 
-  it('should toggle fullscreen', async () => {
-    resetDivStyle()
-    enter()
-    enter() // 为了兼容测试环境，故而调用两次
-
-    await nextTick()
-
-    expect(div.style.transition).toBe(transition)
+  it('toggles fullscreen and honors a custom transition', () => {
+    const { toggleFullscreen, isFullscreen } = useElementFullscreen(div, {
+      transition: 'none',
+    })
 
     toggleFullscreen()
 
-    await nextTick()
+    expect(isFullscreen.value).toBe(true)
+    expect(div.style.transition).toBe('none')
 
-    expect(!div.style.transition).not.toBe(true)
+    toggleFullscreen()
+
+    expect(isFullscreen.value).toBe(false)
+    expect(div.style.transition).toBe('')
   })
 })

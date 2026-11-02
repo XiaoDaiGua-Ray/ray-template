@@ -1,19 +1,19 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export {}
-
-import type { AppConfig } from './modules/vite-custom-config'
+import type { ECharts, EChartsCoreOption } from 'echarts/core'
 import type {
-  MessageApi,
+  DataTableColumns,
   DialogApi,
   LoadingBarApi,
+  MessageApi,
   NotificationApi,
-  DataTableColumns,
 } from 'naive-ui'
 import type { NativeElements, ReservedProps, VNode } from 'vue'
 import type { Recordable } from './modules/helper'
-import type { ECharts, EChartsCoreOption } from 'echarts/core'
+import type { AppConfig } from './modules/vite-custom-config'
 
-export declare global {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export {}
+
+declare global {
   namespace JSX {
     export interface Element extends VNode {}
     export interface ElementClass {

@@ -279,7 +279,7 @@ export default defineComponent({
           call(onError)
         }
 
-        throw new Error(`[RChart render error]: ${e}`)
+        throw new Error(`[RChart render error]: ${e}`, { cause: e })
       } finally {
         const { onFinally } = props
 

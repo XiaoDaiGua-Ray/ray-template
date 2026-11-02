@@ -1,0 +1,38 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      vue:
+        patterns:
+          [
+            'vue',
+            'vue-router',
+            'pinia',
+            'pinia-plugin-persistedstate',
+            '@vue/*',
+            '@vueuse/*',
+          ]
+      testing:
+        patterns: ['vitest', '@vitest/*', 'happy-dom']
+      lint:
+        patterns:
+          [
+            'eslint*',
+            '@eslint/*',
+            'typescript-eslint',
+            'vue-eslint-parser',
+            'prettier',
+            '@ianvs/*',
+          ]
+    ignore:
+      # Vue Language Tools 和 typescript-eslint 尚不支持 TypeScript 7。
+      - dependency-name: typescript
+        versions: ['>=7']
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

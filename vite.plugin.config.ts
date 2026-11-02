@@ -1,6 +1,7 @@
 import { dirname, resolve } from 'node:path'
-import { fileURLToPath } from 'url'
+import { fileURLToPath } from 'node:url'
 import viteVeI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
+import svgSpritemap from '@spiriit/vite-plugin-svg-spritemap'
 import vue from '@vitejs/plugin-vue'
 import viteVueJSX from '@vitejs/plugin-vue-jsx'
 import gzipPlugin from 'rollup-plugin-gzip'
@@ -12,13 +13,11 @@ import type { PluginOption } from 'vite'
 import { analyzer } from 'vite-bundle-analyzer'
 import { cdn as viteCDNPlugin } from 'vite-plugin-cdn2'
 import { ViteEjsPlugin as viteEjsPlugin } from 'vite-plugin-ejs'
-import viteEslint from 'vite-plugin-eslint'
 import viteInspect from 'vite-plugin-inspect'
 import { mockDevServerPlugin } from 'vite-plugin-mock-dev-server'
-import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import viteSvgLoader from 'vite-svg-loader'
-import { cdnResolve, svgIconResolve } from './vite-helper'
-import config from './vite.custom.config'
+import { cdnResolve } from './vite-helper/index.ts'
+import config from './vite.custom.config.ts'
 
 // 仅适用于报告模式（report）
 function onlyReportOptions(mode: string): PluginOption[] {
@@ -28,10 +27,10 @@ function onlyReportOptions(mode: string): PluginOption[] {
 
   return [
     analyzer({
-      // 以默认服务器代理打开文件
-      analyzerMode: 'server',
-      // 以默认服务器代理打开文件
-      openAnalyzer: true,
+      // 输出静态报告，适合终端与 CI
+      analyzerMode: 'static',
+      // 不自动打开浏览器
+      openAnalyzer: false,
     }),
   ]
 }
@@ -49,47 +48,47 @@ function onlyBuildOptions(mode: string): PluginOption[] {
             {
               name: 'vue',
               global: 'Vue',
-              relativeModule: 'vue.global.prod.min.js',
+              relativeModule: 'dist/vue.global.prod.js',
             },
             {
               name: 'vue-demi',
               global: 'VueDemi',
-              relativeModule: 'index.iife.min.js',
+              relativeModule: 'lib/index.iife.js',
             },
             {
               name: 'naive-ui',
               global: 'naive',
-              relativeModule: 'index.prod.js',
+              relativeModule: 'dist/index.prod.js',
             },
             {
               name: 'pinia',
               global: 'Pinia',
-              relativeModule: 'pinia.iife.min.js',
+              relativeModule: 'dist/pinia.iife.prod.js',
             },
             {
               name: 'vue-router',
               global: 'VueRouter',
-              relativeModule: 'vue-router.global.min.js',
+              relativeModule: 'dist/vue-router.global.prod.js',
             },
             {
               name: 'vue-i18n',
               global: 'VueI18n',
-              relativeModule: 'vue-i18n.global.min.js',
+              relativeModule: 'dist/vue-i18n.global.prod.js',
             },
             {
               name: 'echarts',
               global: 'echarts',
-              relativeModule: 'echarts.min.js',
+              relativeModule: 'dist/echarts.min.js',
             },
             {
               name: 'axios',
               global: 'axios',
-              relativeModule: 'axios.min.js',
+              relativeModule: 'dist/axios.min.js',
             },
             {
               name: 'jsbarcode',
               global: 'JsBarcode',
-              relativeModule: 'JsBarcode.all.min.js',
+              relativeModule: 'dist/JsBarcode.all.min.js',
             },
             {
               name: 'dayjs',
@@ -97,16 +96,9 @@ function onlyBuildOptions(mode: string): PluginOption[] {
               relativeModule: 'dayjs.min.js',
             },
             {
-              name: 'dom-to-image',
-              global: 'domtoimage',
-              relativeModule: 'dom-to-image.min.js',
-            },
-            {
-              // 如果需要修改版本，需要同时修改 index.html 中对应的 css
-              // 可以全局搜索 https://lib.baomitu.com/print-js/1.6.0/print.min.css
               name: 'print-js',
               global: 'printJS',
-              relativeModule: 'print.min.js',
+              relativeModule: 'dist/print.js',
             },
           ]
         : [],
@@ -123,19 +115,11 @@ function onlyDevOptions(mode: string): PluginOption[] {
   return []
 }
 
-// 基础插件配置
-function baseOptions(mode: string): PluginOption[] {
-  const { title, appPrimaryColor, preloadingConfig } = config
-
+// 开发、构建和单元测试共用 Vue/TSX 与自动导入转换。
+function vueTransformPlugins(): PluginOption[] {
   return [
     vue(),
     viteVueJSX(),
-    title,
-    viteVeI18nPlugin({
-      include: [
-        resolve(dirname(fileURLToPath(import.meta.url)), './locales/*.json'),
-      ],
-    }),
     viteAutoImport({
       eslintrc: {
         enabled: true,
@@ -161,23 +145,29 @@ function baseOptions(mode: string): PluginOption[] {
         },
       ],
     }),
+  ]
+}
+
+// 基础插件配置
+function baseOptions(mode: string): PluginOption[] {
+  const { title, appPrimaryColor, preloadingConfig } = config
+
+  return [
+    ...vueTransformPlugins(),
+    title,
+    viteVeI18nPlugin({
+      include: [
+        resolve(
+          dirname(fileURLToPath(import.meta.url)),
+          './src/locales/lang/**/*.json',
+        ),
+      ],
+    }),
     gzipPlugin(),
     viteSvgLoader({
       defaultImport: 'url', // 默认以 url 形式导入 svg
     }),
 
-    // 基础插件配置，在 report 模式下不需要 eslint 插件
-    mode !== 'report'
-      ? viteEslint({
-          lintOnStart: true,
-          failOnError: true,
-          failOnWarning: true,
-          fix: true,
-          exclude: ['dist/**', '**/node_modules/**', 'vite-env.d.ts', '*.md'],
-          include: ['src/**/*.{vue,js,jsx,ts,tsx}'],
-          cache: true,
-        })
-      : null,
     viteEjsPlugin({
       preloadingConfig,
       appPrimaryColor,
@@ -187,31 +177,28 @@ function baseOptions(mode: string): PluginOption[] {
       dev: false,
     }),
     mockDevServerPlugin({
-      include: ['mock/**/*.mock.ts'],
-      exclude: [
-        '**/node_modules/**',
-        '**/test/**',
-        '**/cypress/**',
-        'src/**',
-        '**/.vscode/**',
-        '**/.git/**',
-        '**/dist/**',
-        'mock/shared/**',
-      ],
+      dir: 'mock',
+      include: ['**/*.mock.ts'],
+      exclude: ['shared/**'],
+      awaitInitialLoad: true,
       reload: true,
       build: true,
     }),
-    createSvgIconsPlugin({
-      iconDirs: svgIconResolve(),
-      symbolId: 'icon-[dir]-[name]',
-      inject: 'body-last',
-      customDomId: '__svg__icons__dom__',
+    svgSpritemap('./src/icons/**/*.svg', {
+      prefix: 'icon-',
+      output: { hrefAttribute: 'href' },
+      svgo: false,
     }),
     unoCSS(),
   ]
 }
 
 export default function (mode: string): PluginOption[] {
+  // 单元测试无需启动 mock 服务、HTML 注入、图标扫描或压缩输出。
+  if (mode === 'test') {
+    return vueTransformPlugins()
+  }
+
   const plugins =
     mode === 'development' ? onlyDevOptions(mode) : onlyBuildOptions(mode)
   const reportPlugins = mode === 'report' ? onlyReportOptions(mode) : []

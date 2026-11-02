@@ -1,111 +1,55 @@
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { FlatCompat } from '@eslint/eslintrc'
 import js from '@eslint/js'
-import typescriptEslint from '@typescript-eslint/eslint-plugin'
-import prettier from 'eslint-plugin-prettier'
+import prettier from 'eslint-config-prettier/flat'
 import vue from 'eslint-plugin-vue'
+import { defineConfig, globalIgnores } from 'eslint/config'
 import globals from 'globals'
-import parser from 'vue-eslint-parser'
+import tseslint from 'typescript-eslint'
+import autoImports from './unplugin/.eslintrc-auto-import.json' with { type: 'json' }
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
-})
-
-export default [
+export default defineConfig([
+  globalIgnores([
+    '**/node_modules/**',
+    '**/dist/**',
+    '**/coverage/**',
+    '**/.ai-local/**',
+    '**/public/**',
+    'unplugin/**',
+    '**/*.d.ts',
+    '**/.husky/_/**',
+  ]),
   {
-    ignores: [
-      '**/node_modules/',
-      '**/dist/',
-      'dist/*',
-      'node_modules/*',
-      '**/auto-imports.d.ts',
-      '**/components.d.ts',
-      '**/.gitignore',
-      '**/.vscode',
-      '**/public',
-      '**/yarn.*',
-      '**/vite-env.*',
-      '**/.prettierrc.*',
-      '**/visualizer.*',
-      '**/visualizer.html',
-      '**/.env.*',
-      'src/locales/lang',
-      '**/.depcheckrc',
-      'src/app-config/echart-themes/**/*.json',
-      '**/*.md',
-      'src/icons/*.svg',
+    files: ['**/*.{js,mjs,cjs,ts,tsx,vue}'],
+    extends: [
+      js.configs.recommended,
+      ...tseslint.configs.recommended,
+      ...vue.configs['flat/recommended'],
     ],
-  },
-  {
-    files: ['**/*.js', '**/*.ts', '**/*.jsx', '**/*.tsx', '**/*.vue'],
-  },
-  js.configs.recommended,
-  ...vue.configs['flat/recommended'],
-  ...compat.extends(
-    'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended',
-    './unplugin/.eslintrc-auto-import.json',
-  ),
-  {
-    plugins: {
-      vue,
-      '@typescript-eslint': typescriptEslint,
-      prettier,
-    },
     languageOptions: {
+      ecmaVersion: 'latest',
       globals: {
         ...globals.browser,
         ...globals.node,
-        defineProps: 'readonly',
-        defineEmits: 'readonly',
-        defineExpose: 'readonly',
-        withDefaults: 'readonly',
-        defineOptions: 'readonly',
-        defineModel: 'readonly',
-      },
-      parser: parser,
-      ecmaVersion: 2020,
-      sourceType: 'module',
-      parserOptions: {
-        parser: '@typescript-eslint/parser',
-        ecmaFeatures: {
-          jsx: true,
-          tsx: true,
-        },
+        ...globals.vitest,
+        ...autoImports.globals,
       },
     },
     rules: {
       'no-undefined': ['error'],
-      'linebreak-style': ['error', 'unix'],
       '@typescript-eslint/no-explicit-any': [
         'error',
         {
           ignoreRestArgs: true,
         },
       ],
-      'prettier/prettier': ['error', {}],
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
-      '@typescript-eslint/ban-types': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
-      '@typescript-eslint/no-var-requires': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
       '@typescript-eslint/no-non-null-asserted-optional-chain': 'off',
       '@typescript-eslint/consistent-type-imports': [
         'error',
         {
           disallowTypeAnnotations: false,
-        },
-      ],
-      '@typescript-eslint/no-empty-interface': [
-        'error',
-        {
-          allowSingleExtends: true,
         },
       ],
       'accessor-pairs': 2,
@@ -116,7 +60,6 @@ export default [
       'no-array-constructor': 2,
       'no-bitwise': 0,
       'no-caller': 1,
-      'no-catch-shadow': 2,
       'no-class-assign': 2,
       'no-cond-assign': 2,
       'no-const-assign': 2,
@@ -166,8 +109,6 @@ export default [
         },
       ],
       'no-new-func': 2,
-      'no-new-object': 2,
-      'no-new-require': 2,
       'no-sparse-arrays': 2,
       'no-trailing-spaces': 1,
       'no-unreachable': 2,
@@ -297,4 +238,12 @@ export default [
       ],
     },
   },
-]
+  {
+    files: ['**/*.vue'],
+    languageOptions: {
+      parserOptions: { parser: tseslint.parser },
+    },
+  },
+  // Formatting belongs to Prettier; keep ESLint focused on code and Vue correctness.
+  prettier,
+])

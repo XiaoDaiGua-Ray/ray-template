@@ -12,7 +12,7 @@ import axios from 'axios'
 import type { AxiosInstanceExpand, RequestInterceptorConfig } from './types'
 
 // 创建 axios 实例
-const server: AxiosInstanceExpand = axios.create(AXIOS_CONFIG)
+const server = axios.create(AXIOS_CONFIG)
 // 获取拦截器实例
 const { createAxiosInstance, beforeFetch, fetchError } = axiosInterceptor()
 
@@ -65,4 +65,5 @@ server.interceptors.response.use(
   },
 )
 
-export default server
+// 所有响应已在上面的成功拦截器中解包为 data；在此边界公开对应类型。
+export default server as AxiosInstanceExpand

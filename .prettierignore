@@ -9,3 +9,9 @@ visualizer.*
 visualizer.html
 .env.*
 *-lock.yaml
+coverage/
+.husky/_/
+.ai-local/
+CHANGELOG.md
+src/icons/
+src/app-config/echart-themes/

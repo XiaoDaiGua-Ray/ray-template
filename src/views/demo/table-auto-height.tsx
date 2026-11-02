@@ -1,8 +1,8 @@
 import { RCollapse, RTablePro } from '@/components'
 import { useDayjs } from '@/hooks'
 import { uuid } from '@/utils'
+import { faker } from '@faker-js/faker/locale/zh_CN'
 import dayjs from 'dayjs'
-import Mock from 'mockjs'
 import {
   NButton,
   NDatePicker,
@@ -87,9 +87,9 @@ export default defineComponent({
         for (let i = 0; i < length; i++) {
           list.push({
             key: uuid(),
-            name: Mock.Random.cname(),
+            name: faker.person.fullName(),
             age: i + 20,
-            address: Mock.Random.city(),
+            address: faker.location.city(),
             tags: ['nice', 'developer'],
             remark: '我是一条很长很长的备注',
             status: i % 2 === 0 ? 'success' : 'error',
@@ -119,13 +119,13 @@ export default defineComponent({
     }
   },
   render() {
-    const { mockPersonList, baseColumns, switchRef } = this
+    const { mockPersonList, switchRef } = this
 
     return (
       <RTablePro
         takeoverAutoHeight
         data={mockPersonList}
-        v-model:columns={baseColumns}
+        v-model:columns={this.baseColumns}
         showPagination
         paginationCount={mockPersonList.length}
         remote={false}

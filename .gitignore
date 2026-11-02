@@ -27,4 +27,9 @@ visualizer.*
 *.sw?
 yarn-*.*
 yarn.*
-pnpm.*
+package-lock.json
+npm-shrinkwrap.json
+coverage/
+.env.local
+.env.*.local
+.ai-local/

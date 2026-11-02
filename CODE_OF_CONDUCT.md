@@ -1,4 +1,3 @@
-
 # Contributor Covenant Code of Conduct
 
 ## Our Pledge
@@ -18,23 +17,23 @@ diverse, inclusive, and healthy community.
 Examples of behavior that contributes to a positive environment for our
 community include:
 
-* Demonstrating empathy and kindness toward other people
-* Being respectful of differing opinions, viewpoints, and experiences
-* Giving and gracefully accepting constructive feedback
-* Accepting responsibility and apologizing to those affected by our mistakes,
+- Demonstrating empathy and kindness toward other people
+- Being respectful of differing opinions, viewpoints, and experiences
+- Giving and gracefully accepting constructive feedback
+- Accepting responsibility and apologizing to those affected by our mistakes,
   and learning from the experience
-* Focusing on what is best not just for us as individuals, but for the overall
+- Focusing on what is best not just for us as individuals, but for the overall
   community
 
 Examples of unacceptable behavior include:
 
-* The use of sexualized language or imagery, and sexual attention or advances of
+- The use of sexualized language or imagery, and sexual attention or advances of
   any kind
-* Trolling, insulting or derogatory comments, and personal or political attacks
-* Public or private harassment
-* Publishing others' private information, such as a physical or email address,
+- Trolling, insulting or derogatory comments, and personal or political attacks
+- Public or private harassment
+- Publishing others' private information, such as a physical or email address,
   without their explicit permission
-* Other conduct which could reasonably be considered inappropriate in a
+- Other conduct which could reasonably be considered inappropriate in a
   professional setting
 
 ## Enforcement Responsibilities
@@ -144,19 +143,19 @@ For answers to common questions about this code of conduct, see the FAQ at
 
 有助于为我们的社区创造积极环境的行为例子包括但不限于：
 
-* 表现出对他人的同情和善意
-* 尊重不同的主张、观点和感受
-* 提出和大方接受建设性意见
-* 承担责任并向受我们错误影响的人道歉
-* 注重社区共同诉求，而非个人得失
+- 表现出对他人的同情和善意
+- 尊重不同的主张、观点和感受
+- 提出和大方接受建设性意见
+- 承担责任并向受我们错误影响的人道歉
+- 注重社区共同诉求，而非个人得失
 
 不当行为例子包括：
 
-* 使用情色化的语言或图像，及性引诱或挑逗
-* 嘲弄、侮辱或诋毁性评论，以及人身或政治攻击
-* 公开或私下的骚扰行为
-* 未经他人明确许可，公布他人的私人信息，如物理或电子邮件地址
-* 其他有理由认定为违反职业操守的不当行为
+- 使用情色化的语言或图像，及性引诱或挑逗
+- 嘲弄、侮辱或诋毁性评论，以及人身或政治攻击
+- 公开或私下的骚扰行为
+- 未经他人明确许可，公布他人的私人信息，如物理或电子邮件地址
+- 其他有理由认定为违反职业操守的不当行为
 
 ## 责任和权力
 

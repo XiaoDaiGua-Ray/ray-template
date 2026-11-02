@@ -1,8 +1,10 @@
 import { i18n } from '@/locales'
 import type { I18n } from 'vue-i18n'
 
-export interface OverrideUseI18nReturnType
-  extends Omit<I18n['global'], 't' | 'locale'> {
+export interface OverrideUseI18nReturnType extends Omit<
+  I18n['global'],
+  't' | 'locale'
+> {
   t: <T = unknown>(key: string, ...args: T[]) => T
   locale: (lang: string) => void
 }

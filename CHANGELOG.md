@@ -1,3 +1,17 @@
+## Unreleased（2026-11-02）
+
+### Feats
+
+- 依赖更新为当前稳定版本，采用 Node.js 26 LTS、pnpm 12、Vite 8 / Rolldown、Vue Router 5、Pinia 4、Vitest 5 和 ESLint 10，并完成应用、构建与测试适配。
+- 补齐 AI 辅助开发约定、架构地图、Codex / Cursor / Copilot / Claude 入口、质量检查命令、跨平台 CI 和依赖更新配置。
+- 修复 Mock 文件目录匹配，使用维护中的 Faker 生成中文示例数据；SVG 插件与可选 CDN 均适配当前发布包和部署子路径。
+- 增加 Axios 数据解包、Mock 字段和路由权限回归；修复既有颜色转换用例暴露的问题。
+
+### Compatibility
+
+- TypeScript 使用最新兼容版本 6.0.3；待 Vue Language Tools 与 typescript-eslint 支持 TypeScript 7 后再升级。
+- CryptoJS 仍保留最后发布的 4.2.0，以保持同步加密接口及既有密文兼容；后续迁移条件、间接依赖覆盖和完整验证见 [工具链升级记录](docs/toolchain-upgrade.md)。
+
 ## 5.2.5
 
 ## Feats

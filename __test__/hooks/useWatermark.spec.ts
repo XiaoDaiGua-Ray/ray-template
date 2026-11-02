@@ -9,12 +9,11 @@ describe('useWatermark', async () => {
 
   it('should set watermark content', () => {
     const { getWatermarkConfig } = useSettingGetters()
-    const watermarkConfig = getWatermarkConfig.value
     const content = 'Ray Template Yes!'
 
     setWatermarkContent(content)
 
-    expect(watermarkConfig.content).toBe(content)
+    expect(getWatermarkConfig.value.content).toBe(content)
   })
 
   it('should update watermark', () => {

@@ -1,6 +1,5 @@
 import { tableMock } from '@mock/shared/database'
 import { array, pagination, response, stringify } from '@mock/shared/utils'
-import Mock from 'mockjs'
 import { defineMock } from 'vite-plugin-mock-dev-server'
 
 export const getPersonList = defineMock({

@@ -13,12 +13,7 @@ import type {
 } from 'axios'
 
 export type AxiosHeaderValue =
-  | AxiosHeaders
-  | string
-  | string[]
-  | number
-  | boolean
-  | null
+  AxiosHeaders | string | string[] | number | boolean | null
 
 export interface RequestHeaderOptions {
   key: string
@@ -68,10 +63,24 @@ export interface AppRawRequestConfig<T = any> extends AxiosRequestConfig<T> {
 }
 
 export interface CancelerParams<T = any, D = any>
-  extends AppRawRequestConfig<T>,
-    AxiosError<T, D> {}
+  extends AppRawRequestConfig<T>, AxiosError<T, D> {}
 
-export interface AxiosInstanceExpand extends Axios {
+// 响应拦截器返回 data，因此替换原始方法签名，而不是重写 Axios 的泛型契约。
+type DataRequestMethod =
+  | 'request'
+  | 'get'
+  | 'delete'
+  | 'head'
+  | 'options'
+  | 'post'
+  | 'put'
+  | 'patch'
+  | 'postForm'
+  | 'putForm'
+  | 'patchForm'
+  | 'query'
+
+export interface AxiosInstanceExpand extends Omit<Axios, DataRequestMethod> {
   <T = any, D = any>(config: AppRawRequestConfig<D>): Promise<T>
   <T = any, D = any>(url: string, config?: AppRawRequestConfig<D>): Promise<T>
 
@@ -123,6 +132,11 @@ export interface AxiosInstanceExpand extends Axios {
     data?: D,
     config?: AppRawRequestConfig<D>,
   ): Promise<R>
+  query<R = any, D = any>(
+    url: string,
+    data?: D,
+    config?: AppRawRequestConfig<D>,
+  ): Promise<R>
 
   defaults: Omit<AxiosDefaults, 'headers' | 'cancelToken'> & {
     headers: HeadersDefaults & {
@@ -157,8 +171,9 @@ export interface AxiosFetchError<T = any> {
   responseError: T | null
 }
 
-interface AxiosResponseConfigInterceptor<T = any>
-  extends AppRawRequestConfig<T> {
+interface AxiosResponseConfigInterceptor<
+  T = any,
+> extends AppRawRequestConfig<T> {
   headers: AxiosRequestHeaders
 }
 

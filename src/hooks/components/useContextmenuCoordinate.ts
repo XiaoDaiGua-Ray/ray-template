@@ -3,9 +3,9 @@ import { onClickOutside, useEventListener } from '@vueuse/core'
 import type {
   MaybeElement,
   MaybeElementRef,
-  MaybeRefOrGetter,
   OnClickOutsideHandler,
 } from '@vueuse/core'
+import type { MaybeRefOrGetter } from 'vue'
 
 export interface UseContextmenuCoordinateOptions {
   /**

@@ -64,22 +64,14 @@ const Dashboard = defineComponent({
         span: 2,
       },
     ]
+    const { dependencies, devDependencies } = __APP_CFG__.pkg
     const technologyTagOptions = [
+      { label: `Vue ${dependencies.vue}`, value: 'vue' },
+      { label: `Vite ${devDependencies.vite}`, value: 'vite' },
+      { label: `Pinia ${dependencies.pinia}`, value: 'pinia' },
       {
-        label: 'Vue3.x',
-        value: 'Vue3.x',
-      },
-      {
-        label: 'Vite5.x',
-        value: 'Vite5.x',
-      },
-      {
-        label: 'Pinia',
-        value: 'Pinia',
-      },
-      {
-        label: 'TS(X)',
-        value: 'TS(X)',
+        label: `TypeScript ${devDependencies.typescript} / TSX`,
+        value: 'typescript',
       },
     ]
 

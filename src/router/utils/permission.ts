@@ -1,80 +1,36 @@
 /**
- *
- * 路由守卫
- * 进行路由鉴权操作
- *
- * 根据 meta role 与 BASIC_ROUTER 结合进行跳转路由鉴权操作
- * 如果 meta role 为空则会默认认为全局可用
- * 如果需要指定角色, 则添加该属性并且添加角色
- * 当然, 你可以指定一个超级管理员角色, 默认获取全部路由
+ * 路由权限由 token、白名单和 meta.role 共同决定；实际后端仍须独立鉴权。
+ * 使用返回值守卫，让 Router 5 管理重定向，避免在守卫内另起一次导航。
  */
-
 import { APP_CATCH_KEY, WHITE_ROUTES } from '@/app-config'
 import { useAppRoot } from '@/hooks'
-import type { AppRouteMeta } from '@/router/types'
-import { redirectRouterToDashboard, validRole } from '@/router/utils'
-import { getStorage, isValueType } from '@/utils'
-import type { RouteLocationNormalized, Router } from 'vue-router'
+import { getStorage, setStorage } from '@/utils'
+import type { Router } from 'vue-router'
+import { validRole } from './valid-role'
 
-/** 路由守卫 */
 export const permissionRouter = (router: Router) => {
-  const { beforeEach } = router
   const { getRootPath } = useAppRoot()
 
-  const isToLogin = (
-    to: RouteLocationNormalized,
-    from: RouteLocationNormalized,
-  ) => to.path === '/' || from.path === '/login'
-
-  beforeEach((to, from, next) => {
+  router.beforeEach((to) => {
     const token = getStorage<string>(APP_CATCH_KEY.token, 'localStorage')
-    const catchRoutePath = getStorage(
-      APP_CATCH_KEY.appMenuKey,
-      'sessionStorage',
-      {
-        defaultValue: getRootPath.value,
-      },
-    )
-    const { meta, name } = to
+    const isLogin = to.path === '/'
 
-    /** 是否含有 token */
-    if (token !== null) {
-      /** 是否在有 token 时去到登陆页 */
-      if (isToLogin(to, from)) {
-        redirectRouterToDashboard(true)
-      } else {
-        /** 是否为白名单 */
-        if (
-          !isValueType<symbol>(name, 'Symbol') &&
-          name &&
-          WHITE_ROUTES.includes(name)
-        ) {
-          next()
-        } else {
-          /** 是否有权限 */
-          if (validRole(meta as AppRouteMeta)) {
-            /** 是否在有权限时去到登陆页 */
-            if (isToLogin(to, from)) {
-              /** 容错处理, 如果没有预设地址与获取到缓存地址, 则重定向到首页去 */
-              if (catchRoutePath) {
-                next(catchRoutePath)
-              } else {
-                redirectRouterToDashboard(true)
-              }
-            } else {
-              next()
-            }
-          } else {
-            redirectRouterToDashboard(true)
-          }
-        }
-      }
-    } else {
-      if (isToLogin(to, from)) {
-        next()
-      } else {
-        next('/')
-      }
+    if (token === null) {
+      return isLogin ? true : { path: '/', replace: true }
     }
+
+    const isWhiteRoute =
+      typeof to.name === 'string' && WHITE_ROUTES.includes(to.name)
+
+    if (isLogin || (!isWhiteRoute && !validRole(to.meta))) {
+      const rootPath = getRootPath.value
+
+      // 保留既有重定向时的缓存行为；若首页本身无权限，取消导航以免循环。
+      setStorage(APP_CATCH_KEY.appMenuKey, rootPath, 'localStorage')
+
+      return to.path === rootPath ? false : { path: rootPath, replace: true }
+    }
+
+    return true
   })
 }

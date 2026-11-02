@@ -1,17 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Recordable } from '@/types'
 import { effectDispose } from '@/utils'
-import type { MaybeRef } from '@vueuse/core'
 import type { DataTableColumns, DataTableSelectionColumn } from 'naive-ui'
+import type { MaybeRef } from 'vue'
 
 export type RowKey = string | number
 
 export type Action =
-  | 'check'
-  | 'uncheck'
-  | 'checkAll'
-  | 'uncheckAll'
-  | 'multipleCheck'
+  'check' | 'uncheck' | 'checkAll' | 'uncheckAll' | 'multipleCheck'
 
 export interface UseCheckedRowKeysOptions<T = unknown> {
   /**

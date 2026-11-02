@@ -8,7 +8,7 @@
 #### 示例
 
 ```tsx
-import { NFlex, NCard, NInput, NInputGroup, NButton, NSwitch } from 'naive-ui'
+import { NButton, NCard, NFlex, NInput, NInputGroup, NSwitch } from 'naive-ui'
 
 const Demo = defineComponent({
   name: 'Demo',
@@ -46,7 +46,7 @@ const Demo = defineComponent({
 #### 示例
 
 ```tsx
-import { NFlex, NCard, NInput, NInputGroup, NButton, NSwitch } from 'naive-ui'
+import { NButton, NCard, NFlex, NInput, NInputGroup, NSwitch } from 'naive-ui'
 
 const Demo = defineComponent({
   name: 'Demo',
@@ -99,7 +99,7 @@ const Demo = defineComponent({
 #### 示例
 
 ```tsx
-import { NFlex, NCard, NInput, NInputGroup, NButton, NSwitch } from 'naive-ui'
+import { NButton, NCard, NFlex, NInput, NInputGroup, NSwitch } from 'naive-ui'
 
 const Demo = defineComponent({
   name: 'Demo',
@@ -149,14 +149,14 @@ const Demo = defineComponent({
 
 ```tsx
 import {
-  NFlex,
-  NCard,
-  NInput,
-  NInputGroup,
   NButton,
-  NSwitch,
+  NCard,
+  NFlex,
   NForm,
   NFormItem,
+  NInput,
+  NInputGroup,
+  NSwitch,
 } from 'naive-ui'
 
 const Demo = defineComponent({

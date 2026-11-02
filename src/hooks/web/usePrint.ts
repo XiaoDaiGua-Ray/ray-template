@@ -3,15 +3,13 @@ import { unrefElement } from '@/utils'
 import { omit } from 'lodash-es'
 import print from 'print-js'
 
-export interface UsePrintOptions
-  extends Omit<print.Configuration, 'printable'> {}
+export interface UsePrintOptions extends Omit<
+  print.Configuration,
+  'printable'
+> {}
 
 export type UsePrintTarget<T = unknown> =
-  | BasicTarget
-  | string
-  | Blob
-  | Uint8ClampedArray
-  | T[]
+  BasicTarget | string | Blob | Uint8ClampedArray | T[]
 
 /**
  *

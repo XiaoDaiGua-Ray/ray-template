@@ -1,11 +1,11 @@
 import { downloadAnyFile } from '../../src/utils/basic'
 
 describe('downloadAnyFile', () => {
-  it('should download data when data is a string', () => {
+  it('should download data when data is a string', async () => {
     const data = 'test data'
     const fileName = 'test.txt'
 
-    expect(downloadAnyFile(data, fileName)).resolves.toBeUndefined()
+    await expect(downloadAnyFile(data, fileName)).resolves.toBeUndefined()
   })
 
   // it('should download data when data is a ArrayBuffer', () => {

@@ -1,11 +1,11 @@
 import './index.scss'
 import type { AnyFn } from '@/types'
 import { completeSize, queryElements, unrefElement } from '@/utils'
-import type { MaybeElement, MaybeRefOrGetter } from '@vueuse/core'
+import type { MaybeElement } from '@vueuse/core'
 import interact from 'interactjs'
 import { cardProps, NCard } from 'naive-ui'
 import { Teleport, Transition } from 'vue'
-import type { VNode } from 'vue'
+import type { MaybeRefOrGetter, VNode } from 'vue'
 
 type RestrictRectOptions = Parameters<typeof interact.modifiers.restrictRect>[0]
 
@@ -164,7 +164,7 @@ export default defineComponent({
         typeof props.restrictionElement === 'string'
           ? queryElements<HTMLElement>(props.restrictionElement)
           : props.restrictionElement
-      let restrictionElement: HTMLElement | null = null
+      let restrictionElement: HTMLElement | null
 
       if (Array.isArray(re)) {
         restrictionElement = re[0]

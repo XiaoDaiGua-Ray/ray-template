@@ -25,11 +25,10 @@
  */
 
 import { appendRequestHeaders } from '@/axios/helper/axiosCopilot'
-
 import type {
-  RequestInterceptorConfig,
-  FetchFunction,
   FetchErrorFunction,
+  FetchFunction,
+  RequestInterceptorConfig,
 } from '@/axios/types'
 
 const injectRequestHeaderOfEnv: FetchFunction<RequestInterceptorConfig> = (

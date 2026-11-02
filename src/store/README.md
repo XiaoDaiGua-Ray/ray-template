@@ -28,7 +28,7 @@ export const piniaDemoStore = defineStore(
   {
     persist: {
       key: 'piniaDemoStore',
-      paths: ['demoRef'],
+      pick: ['demoRef'],
       storage: sessionStorage | localStorage,
     },
   },

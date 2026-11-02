@@ -1,20 +1,12 @@
 import './index.scss'
 import { RIcon } from '@/components'
 import { NCard, NFlex, NPopover } from 'naive-ui'
+import { iconNames } from './icons'
 
 const PreviewSVGIcons = defineComponent({
   name: 'PreviewSVGIcons',
   setup() {
-    const icons = ref<string[]>([])
-    const iconsModules = import.meta.glob('@/icons/**/**.svg')
-
-    Object.keys(iconsModules).forEach((curr) => {
-      const iconName = curr.match(/\/(\w+)\.svg/)?.[1]
-
-      if (iconName) {
-        icons.value.push(iconName)
-      }
-    })
+    const icons = iconNames
 
     return {
       icons,

@@ -5,10 +5,7 @@ import type { CSSProperties } from 'vue'
 export type StorageLike = 'sessionStorage' | 'localStorage'
 
 export type RemoveStorageKey =
-  | string
-  | '__all__'
-  | '__all_sessionStorage__'
-  | '__all_localStorage__'
+  string | '__all__' | '__all_sessionStorage__' | '__all_localStorage__'
 
 export type RemoveStorageFC = <T extends RemoveStorageKey>(
   key: T,

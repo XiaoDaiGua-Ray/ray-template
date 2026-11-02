@@ -2,15 +2,12 @@ module.exports = {
   plugins: {
     autoprefixer: {
       overrideBrowserslist: [
-        'Android 4.1',
-        'iOS 7.1',
-        'Chrome > 31',
-        'ff > 31',
-        'ie >= 8',
-        'last 10 versions',
-        'not dead',
+        'Chrome >= 111',
+        'Edge >= 111',
+        'Firefox >= 114',
+        'Safari >= 16.4',
+        'iOS >= 16.4',
       ],
-      grid: true,
     },
     // 为了适配 postcss8.x 版本的转换库
     'postcss-px-to-viewport-8-with-include': {

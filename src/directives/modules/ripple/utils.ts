@@ -90,7 +90,7 @@ const calculate = (
   const localX = e.clientX - offset.left // 点击位置距离 el 水平距离
   const localY = e.clientY - offset.top // 点击位置距离 el 垂直距离
 
-  let radius = 0 // 圆半径
+  let radius: number // 圆半径
   let scale = 0.3 // 缩放比例
 
   // 计算点击位置到 el 顶点最远距离，即为圆的最大半径（勾股定理）

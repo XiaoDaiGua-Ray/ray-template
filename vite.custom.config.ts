@@ -1,12 +1,12 @@
-import path from 'node:path'
+import { fileURLToPath, URL } from 'node:url'
 import type { AppConfigExport } from '@/types'
 import type { BuildOptions } from 'vite'
-import { PRE_LOADING_CONFIG } from './src/app-config/app-config'
-import { APP_THEME } from './src/app-config/design-config'
-import { htmlTitlePlugin, mixinCss } from './vite-helper'
+import { PRE_LOADING_CONFIG } from './src/app-config/app-config.ts'
+import { APP_THEME } from './src/app-config/design-config.ts'
+import { htmlTitlePlugin, mixinCss } from './vite-helper/index.ts'
 
 const config: AppConfigExport = {
-  // 是否启用 cdn 构建项目
+  // 是否使用 jsDelivr 的精确 npm 版本构建（默认离线可用的本地 bundle）
   cdn: false,
 
   // 公共基础路径配置, 如果为空则会默认以 '/' 填充
@@ -39,13 +39,12 @@ const config: AppConfigExport = {
 
   // 配置 HMR 特定选项（端口、主机、路径和协议）
   server: {
-    host: '0.0.0.0',
+    host: '127.0.0.1',
     port: 9527,
     open: false,
     strictPort: false,
-    fs: {
-      strict: false,
-      allow: [],
+    watch: {
+      ignored: ['**/dist/**', '**/.ai-local/**'],
     },
     proxy: {
       '^/api': {
@@ -76,15 +75,15 @@ const config: AppConfigExport = {
    * @description
    * 预设别名:
    * - @: src 根目录
-   * - @api: src/axios/api 根目录
+   * - @api: src/api 根目录
    * - @images: src/assets/images 根目录
    * - @mock: mock 根目录
    */
   alias: {
-    '@': path.resolve(__dirname, './src'),
-    '@api': path.resolve(__dirname, './src/axios/api'),
-    '@images': path.resolve(__dirname, './src/assets/images'),
-    '@mock': path.resolve(__dirname, './mock'),
+    '@': fileURLToPath(new URL('./src', import.meta.url)),
+    '@api': fileURLToPath(new URL('./src/api', import.meta.url)),
+    '@images': fileURLToPath(new URL('./src/assets/images', import.meta.url)),
+    '@mock': fileURLToPath(new URL('./mock', import.meta.url)),
   },
 }
 

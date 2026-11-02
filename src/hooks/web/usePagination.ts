@@ -178,9 +178,7 @@ export const usePagination = <T extends AnyFn>(
    * 获取回调函数。
    */
   const getCallback = <Fn extends AnyFn = T>(): Fn extends
-    | undefined
-    | null
-    | unknown
+    undefined | null | unknown
     ? T
     : Fn => callbackRef.value
 

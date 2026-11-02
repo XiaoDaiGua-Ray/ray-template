@@ -1,10 +1,9 @@
 import { defineConfig } from 'vite'
-import pkg from './package.json'
-import { chunksCopilot } from './vite-helper'
-import config from './vite.custom.config'
-import vitePlugins from './vite.plugin.config'
+import pkg from './package.json' with { type: 'json' }
+import config from './vite.custom.config.ts'
+import vitePlugins from './vite.plugin.config.ts'
 
-// https://vitejs.dev/config/
+// https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const { dependencies, devDependencies, name, version } = pkg
   const {
@@ -16,7 +15,6 @@ export default defineConfig(({ mode }) => {
     appPrimaryColor,
     base,
   } = config
-  const { isUtils, isHooks, isNodeModules } = chunksCopilot()
 
   const __APP_CFG__ = {
     pkg: {
@@ -42,6 +40,7 @@ export default defineConfig(({ mode }) => {
     },
     plugins: vitePlugins(mode),
     optimizeDeps: {
+      entries: ['index.html'],
       include: [
         'vue',
         'vue-demi',
@@ -60,36 +59,20 @@ export default defineConfig(({ mode }) => {
         'interactjs',
         'pinia-plugin-persistedstate',
         'currency.js',
-        'mockjs',
+        '@faker-js/faker/locale/zh_CN',
       ],
     },
-    esbuild: {
-      pure: mode === 'production' ? ['console.log', 'console.warn'] : [],
-      drop: mode === 'production' ? ['console', 'debugger'] : [],
-    },
     build: {
-      transpile: ['vue-i18n'],
       ...buildOptions(mode),
-      rollupOptions: {
+      target: 'baseline-widely-available',
+      rolldownOptions: {
         output: {
-          manualChunks: (id) => {
-            const index = id.includes('pnpm') ? 1 : 0 // 兼容 pnpm, yarn, npm 包管理器差异
-
-            if (isUtils(id)) {
-              return 'utils'
-            }
-
-            if (isHooks(id)) {
-              return 'hooks'
-            }
-
-            if (isNodeModules(id)) {
-              return id
-                .toString()
-                .split('node_modules/')[1]
-                .split('/')
-                [index].toString()
-            }
+          // 交由 Rolldown 按依赖图拆包，避免手动按 pnpm 目录分组造成循环依赖。
+          minify: {
+            compress: {
+              dropConsole: mode === 'production',
+              dropDebugger: mode === 'production',
+            },
           },
           assetFileNames: '[ext]/[name]-[hash][extname]',
           chunkFileNames: 'js/[name]-[hash].js',

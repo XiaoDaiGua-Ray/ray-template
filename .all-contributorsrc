@@ -1,7 +1,5 @@
 {
-  "files": [
-    "README.md"
-  ],
+  "files": ["README.md"],
   "imageSize": 100,
   "commit": false,
   "commitConvention": "angular",
@@ -11,9 +9,7 @@
       "name": "Cloud",
       "avatar_url": "https://avatars.githubusercontent.com/u/40163747?v=4",
       "profile": "https://heartofyun.com",
-      "contributions": [
-        "tool"
-      ]
+      "contributions": ["tool"]
     }
   ],
   "contributorsPerLine": 7,

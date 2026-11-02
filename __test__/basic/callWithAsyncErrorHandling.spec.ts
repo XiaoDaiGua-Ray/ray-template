@@ -1,12 +1,14 @@
 import { callWithAsyncErrorHandling } from '../../src/utils/basic'
 
 describe('callWithAsyncErrorHandling', () => {
-  it('should call the function and return the result', () => {
+  it('should call the function and return the result', async () => {
     const fn = (x: number) => x
 
     const callbackFn = () => {}
 
-    expect(callWithAsyncErrorHandling(fn, callbackFn, [1])).resolves.toBe(1)
+    await expect(callWithAsyncErrorHandling(fn, callbackFn, [1])).resolves.toBe(
+      1,
+    )
   })
 
   it('should call the callback function when the function throws an error', () => {

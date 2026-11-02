@@ -120,10 +120,9 @@ export const uuid = (length = 16, radix = 62) => {
   const arr: string[] = []
   // 获取加密对象，兼容 IE11
   const cryptoObj = window.crypto || window.msCrypto
-  let i = 0
 
   // 循环 length 次，生成随机字符，并添加到数组中
-  for (i = 0; i < length; i++) {
+  for (let i = 0; i < length; i++) {
     // 生成一个随机数
     const randomValues = new Uint32Array(1)
 

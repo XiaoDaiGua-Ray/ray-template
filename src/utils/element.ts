@@ -302,7 +302,8 @@ export const removeStyle = (
  * @param defaultColor 默认颜色值
  *
  * @description
- * 将任意颜色值转为 rgba，如果本身为 rgba 或者其它非法颜色值则直接返回。
+ * 转换 rgb/hex/hsl 颜色；已有 rgba/hsla 会更新 alpha，八位 hex 保留自带透明度。
+ * 无法识别时返回默认色或原始值。
  *
  * @example
  * colorToRgba('#123632', 0.8) // rgba(18, 54, 50, 0.8)
@@ -326,7 +327,8 @@ export const colorToRgba = (
   if (color.includes('rgba')) {
     return color.replace(
       /rgba\((.*?),(.*?),(.*?),.*?\)/,
-      `rgba($1,$2,$3,${alpha})`,
+      (_, r: string, g: string, b: string) =>
+        `rgba(${r.trim()}, ${g.trim()}, ${b.trim()}, ${alpha})`,
     )
   }
 
@@ -339,7 +341,8 @@ export const colorToRgba = (
   if (color.includes('hsla')) {
     return color.replace(
       /hsla\((.*?),(.*?),(.*?),.*?\)/,
-      `hsla($1,$2,$3,${alpha})`,
+      (_, h: string, s: string, l: string) =>
+        `hsla(${h.trim()}, ${s.trim()}, ${l.trim()}, ${alpha})`,
     )
   }
 
@@ -361,7 +364,7 @@ export const colorToRgba = (
           return `rgba(${parseInt(hex.slice(0, 2), 16)}, ${parseInt(hex.slice(2, 4), 16)}, ${parseInt(hex.slice(4, 6), 16)}, ${alpha})`
 
         case 8:
-          return `rgba(${parseInt(hex.slice(0, 2), 16)}, ${parseInt(hex.slice(2, 4), 16)}, ${parseInt(hex.slice(4, 6), 16)}, ${alpha})`
+          return `rgba(${parseInt(hex.slice(0, 2), 16)}, ${parseInt(hex.slice(2, 4), 16)}, ${parseInt(hex.slice(4, 6), 16)}, ${Number((parseInt(hex.slice(6, 8), 16) / 255).toFixed(2))})`
 
         default:
           return defaultColor || color
