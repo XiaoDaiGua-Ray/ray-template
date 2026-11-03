@@ -1,4 +1,4 @@
-import { RTable } from '@/components'
+import { RTablePro } from '@/components'
 import { NButton, NFlex } from 'naive-ui'
 import type { DataTableColumns } from 'naive-ui'
 
@@ -72,7 +72,7 @@ const RouterDemoHome = defineComponent({
   render() {
     return (
       <NFlex>
-        <RTable v-model:columns={this.columns} data={this.dataSource} />
+        <RTablePro bare columns={this.columns} data={this.dataSource} />
       </NFlex>
     )
   },

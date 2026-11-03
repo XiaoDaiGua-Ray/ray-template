@@ -2,10 +2,10 @@ import { useRuntimeGetters } from '@/store'
 import './index.scss'
 import AppRequestCancelerProvider from '@/app-components/provider/AppRequestCancelerProvider'
 import { LAYOUT_CONTENT_SPIN_WHEN_ROUTE_CHANGE } from '@/app-config'
-import { RIcon, RTransitionComponent } from '@/components'
-import { useI18n, useMaximize } from '@/hooks'
+import { RTransitionComponent } from '@/components'
+import { useI18n } from '@/hooks'
 import { useSettingGetters } from '@/store'
-import { NButton, NSpin } from 'naive-ui'
+import { NSpin } from 'naive-ui'
 import type { GlobalThemeOverrides } from 'naive-ui'
 
 export default defineComponent({
@@ -14,17 +14,12 @@ export default defineComponent({
     const router = useRouter()
     const { t } = useI18n()
 
-    const { maximize } = useMaximize()
     const { getContentTransition } = useSettingGetters()
     const spinning = ref(false)
     const themeOverridesSpin: GlobalThemeOverrides['Spin'] = {
       opacitySpinning: '0',
     }
-    const {
-      globalMainLayoutLoad,
-      layoutContentMaximize,
-      layoutContentSpinning,
-    } = useRuntimeGetters()
+    const { globalMainLayoutLoad, layoutContentSpinning } = useRuntimeGetters()
 
     const setupLayoutContentSpin = () => {
       const removeBefore = router.beforeEach(() => {
@@ -53,17 +48,13 @@ export default defineComponent({
       spinning,
       themeOverridesSpin,
       getContentTransition,
-      layoutContentMaximize,
-      maximize,
       layoutContentSpinning,
     }
   },
   render() {
     const {
       globalMainLayoutLoad,
-      layoutContentMaximize,
       layoutContentSpinning,
-      maximize,
       spinning,
       themeOverridesSpin,
       getContentTransition,
@@ -76,24 +67,8 @@ export default defineComponent({
         description={this.t('layout.loading')}
         size="large"
         themeOverrides={themeOverridesSpin}
-        class={[
-          'layout-content-spin',
-          layoutContentMaximize
-            ? 'r-layout-full__viewer-content--maximize'
-            : null,
-        ]}
+        class="layout-content-spin"
       >
-        {layoutContentMaximize ? (
-          <NButton
-            class="layout-content__maximize-out"
-            aria-label={this.t('layout.restore')}
-            onClick={() => {
-              maximize(false)
-            }}
-          >
-            <RIcon name="action/out" size="16" cursor="pointer" />
-          </NButton>
-        ) : null}
         <AppRequestCancelerProvider />
         {globalMainLayoutLoad ? (
           <RTransitionComponent

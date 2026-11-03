@@ -35,7 +35,7 @@
   },
   "api": {
     "description": "API、Axios 拦截器与演示 Mock",
-    "paths": ["src/api", "src/axios/README.md", "mock/demo", "mock/shared"],
+    "paths": ["src/api", "src/axios/README.md", "mock/demo", "src/demo-data"],
     "tests": ["__test__/axios/", "__test__/mock/"]
   },
   "icons": {

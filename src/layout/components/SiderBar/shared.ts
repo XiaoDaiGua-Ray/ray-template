@@ -101,11 +101,11 @@ export const createLeftIconOptions = (opts: IconOptionsFC) => {
  *   - false: 不展示搜索按钮
  */
 export const createRightIconOptions = (opts: IconOptionsFC) => {
-  const { isTabletOrSmaller } = opts
+  const { isTabletOrSmaller, isFullscreen } = opts
 
   const basicOptions: IconOptions[] = [
     {
-      name: 'action/fullscreen',
+      name: isFullscreen.value ? 'action/fullscreen_fold' : 'action/fullscreen',
       size: 18,
       eventKey: 'fullscreen',
     },

@@ -550,7 +550,8 @@ export default defineComponent({
               <NButton
                 quaternary
                 class="override-button__menu-tag"
-                focusable={false}
+                aria-label={$t('layout.maximize')}
+                {...{ title: $t('layout.maximize') }}
                 onClick={maximizeBtnClick}
               >
                 {{

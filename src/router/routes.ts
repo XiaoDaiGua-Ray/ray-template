@@ -24,6 +24,11 @@ export default [
     component: Layout,
     children: [
       ...appExpandRoutes(),
+      { path: '/tables', redirect: '/tables/basic' },
+      { path: '/table', redirect: '/tables/basic' },
+      { path: '/table-pro', redirect: '/tables/remote' },
+      { path: '/mock-demo', redirect: '/tables/remote' },
+      { path: '/table-auto-height', redirect: '/tables/auto-height' },
       /**
        *
        * @description

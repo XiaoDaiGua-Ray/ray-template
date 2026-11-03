@@ -1,8 +1,9 @@
 import { shallowMount } from '@vue/test-utils'
 import { createPinia, disposePinia, setActivePinia } from 'pinia'
-import { h } from 'vue'
+import { h, nextTick } from 'vue'
 import Layout from '../../src/layout'
 import { router } from '../../src/router'
+import { piniaRuntimeStore } from '../../src/store/modules/runtime'
 import { piniaSettingStore } from '../../src/store/modules/setting'
 
 it('lets a custom header replace the complete default header and top navigation', () => {
@@ -29,6 +30,38 @@ it('lets a custom header replace the complete default header and top navigation'
     expect(custom.find('top-navigation-stub').exists()).toBe(false)
   } finally {
     custom.unmount()
+    disposePinia(pinia)
+  }
+})
+
+it('offers a restore button for custom content and also exits with Escape', async () => {
+  const pinia = createPinia()
+
+  setActivePinia(pinia)
+  const runtime = piniaRuntimeStore()
+  const wrapper = shallowMount(Layout, {
+    global: { renderStubDefaultSlot: true, plugins: [router, pinia] },
+    slots: {
+      default: () => h('div', { 'data-test': 'custom-content' }, 'Custom'),
+    },
+  })
+
+  try {
+    expect(wrapper.find('.r-layout-content-restore__button').exists()).toBe(
+      false,
+    )
+    runtime.setRuntimeState('layoutContentMaximize', true)
+    await nextTick()
+    expect(wrapper.find('[data-test="custom-content"]').exists()).toBe(true)
+    await wrapper.get('.r-layout-content-restore__button').trigger('click')
+    expect(runtime.layoutContentMaximize).toBe(false)
+
+    runtime.setRuntimeState('layoutContentMaximize', true)
+    await nextTick()
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+    expect(runtime.layoutContentMaximize).toBe(false)
+  } finally {
+    wrapper.unmount()
     disposePinia(pinia)
   }
 })

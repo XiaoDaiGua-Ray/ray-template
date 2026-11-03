@@ -44,6 +44,7 @@
 - Vitest 测试只复用 Vue/TSX 与自动导入转换，不启动 Mock 服务、HTML 注入、图标扫描或压缩插件。修复遗漏 `await` 的断言，更新水印/全屏用例中的过期预期，保留行为断言。
 - 既有颜色转换回归暴露 rgba 空格不一致与八位 hex 透明度丢失，已修正；图表异常保留原始 `cause`。
 - Mock.js 存在未修复的原型污染公告，且包含直接 `eval`；替换为 Faker 的中文实例，保持人员字段、分页接口和表格示例能力。新版 Mock 插件的 include 相对 `dir` 匹配，修正原先重复的 `mock/` 前缀并等待首次加载，实际验证了 API 响应。
+- 开发时打开 `#/tables/remote`，在 Network 的 Fetch/XHR 分类查看 `GET /api/list?page=1&pageSize=10`。接口使用站点根路径 `/api/list`，不带 `/ray-template/`。Vite 按启动日志中的实际端口访问；静态构建的页面使用同一套本地示例生成逻辑，不依赖 Mock 服务器。
 - 浏览器构建和 Autoprefixer 统一到 Vite 8 Baseline Widely Available。开发服务默认 loopback，局域网访问需显式 `--host`。监听排除全部构建目录和 `.ai-local`，避免构建报告时触发页面重复重载。
 - CI 与 Docker 使用同一 Node/pnpm，冻结锁文件安装。CI 合并重复流程并覆盖类型、lint、格式、测试、构建；保留检查通过后部署 `main` 到 `dist` 分支的行为。
 

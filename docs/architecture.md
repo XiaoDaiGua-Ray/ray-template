@@ -16,7 +16,7 @@ Ray Template 是前端中后台模板，包含可运行的组件与路由示例�
 | 权限与守卫     | `src/router/utils/vue-router-register.ts`、`src/router/utils/permission.ts` | 同时检查菜单显示与实际导航；前端权限不能替代后端授权                               |
 | 全局状态       | `src/store/modules`、`src/store/hooks`                                      | [Store 文档](../src/store/README.md)，持久化配置使用 `pick`/`omit`                 |
 | 请求与接口     | `src/api`、`src/axios`                                                      | [请求文档](../src/axios/README.md)，请求/响应拦截器分开注册                        |
-| 演示接口       | `mock/demo`、`mock/shared`                                                  | `vite-plugin-mock-dev-server`，生产环境按实际后端切换                              |
+| 演示接口       | `mock/demo`、`src/demo-data`                                                | `vite-plugin-mock-dev-server`，生产环境按实际后端切换                              |
 | 通用组件       | `src/components/base`、`src/components/pro`                                 | 组件、props、types、hook、样式放在同一功能目录                                     |
 | 模板绑定组件   | `src/app-components`                                                        | [组件说明](../src/app-components/README.md)                                        |
 | 公共工具       | `src/utils`                                                                 | [分包、兼容入口和测试](../src/utils/README.md)                                     |

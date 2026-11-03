@@ -109,6 +109,7 @@ export default defineComponent({
 
     return {
       t,
+      isFullscreen,
       leftIconOptions,
       rightTooltipIconOptions,
       toolIconClick,
@@ -172,16 +173,17 @@ export default defineComponent({
                 class="override-button__layout"
                 quaternary
                 size="medium"
-                key={curr.name}
+                key={curr.eventKey ?? curr.name}
                 aria-label={this.t<string>(
                   curr.eventKey === 'setting'
                     ? 'headerTooltip.Setting'
                     : curr.eventKey === 'github'
                       ? 'headerTooltip.Github'
-                      : 'headerTooltip.FullScreen',
+                      : this.isFullscreen
+                        ? 'headerTooltip.CancelFullScreen'
+                        : 'headerTooltip.FullScreen',
                 )}
                 onClick={toolIconClick.bind(this, curr.eventKey ?? curr.name)}
-                focusable={false}
               >
                 <RIcon name={curr.name} size={16} cursor="pointer" />
               </NButton>

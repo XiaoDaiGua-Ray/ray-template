@@ -1,26 +1,24 @@
 import { request } from '@/axios'
+import type { Person, PersonListParams } from '@/demo-data/people'
 import type { PaginationResponse } from '@/types'
 
-export interface MockListParams {
-  page: number
-  pageSize: number
-}
+export type { Person, PersonListParams } from '@/demo-data/people'
 
-export interface Person {
-  name: string
-  id: string
-  age: number
-  address: string
-  createDate: string
-  email: string | null
-}
-
-export const getPersonList = (
-  params: Partial<Pick<MockListParams & Person, 'email' | 'pageSize' | 'page'>>,
+export const getPersonList = async (
+  params: PersonListParams,
+  signal?: AbortSignal,
 ) => {
-  return request<PaginationResponse<Person[]>>({
-    url: '/api/list',
-    method: 'get',
-    params,
-  })
+  if (import.meta.env.DEV) {
+    return request<PaginationResponse<Person[]>>({
+      url: '/api/list',
+      method: 'get',
+      params,
+      signal,
+      cancelConfig: { cancel: !signal },
+    })
+  }
+
+  const { listPeople } = await import('@/demo-data/people')
+
+  return listPeople(params)
 }

@@ -185,7 +185,7 @@ function baseOptions(mode: string): PluginOption[] {
     mockDevServerPlugin({
       dir: 'mock',
       include: ['**/*.mock.ts'],
-      exclude: ['shared/**'],
+      prefix: '/api',
       awaitInitialLoad: true,
       reload: true,
       build: true,

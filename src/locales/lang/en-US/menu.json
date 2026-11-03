@@ -27,11 +27,16 @@
   "RouterDemo": "Same Level Router Demo",
   "Segment": "Segment",
   "SvgIcon": "SVG Icon",
-  "Table": "Table",
-  "TableAutoHeight": "Table Auto Height",
+  "Table": "Tables",
+  "TableAutoHeight": "Auto height",
   "TablePro": "Table Pro",
   "TemplateHooks": "Template Hooks",
   "scrollReveal": "Scroll Reveal",
   "LayoutDemo": "Layout playground",
-  "WebHooks": "Web Hooks"
+  "WebHooks": "Web Hooks",
+  "TableBasic": "Basic table",
+  "TableRemote": "Remote search and pagination",
+  "TableColumns": "Column preferences",
+  "TablePrinting": "Printing and custom regions",
+  "TableCustom": "Slots and instance methods"
 }

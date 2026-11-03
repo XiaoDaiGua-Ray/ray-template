@@ -1,41 +1,19 @@
-import { tableMock } from '@mock/shared/database'
-import { array, pagination, response, stringify } from '@mock/shared/utils'
+import { listPeople } from '@/demo-data/people'
 import { defineMock } from 'vite-plugin-mock-dev-server'
 
-export const getPersonList = defineMock({
+export default defineMock({
   url: '/api/list',
   method: 'GET',
-  delay: 500,
-  response: (req, res) => {
-    const {
-      query: { page, pageSize, email },
-    } = req
-    let list = array(100).map(() => tableMock())
-    let length = list.length
-
-    if (!page || !pageSize) {
-      res.end(
-        stringify(
-          response(list, 200, '请求成功', {
-            total: length,
-          }),
-        ),
-      )
-    } else {
-      list = pagination(page, pageSize, list)
-
-      if (email) {
-        list = list.filter((curr) => curr.email.includes(email))
-        length = list.length
-      }
-
-      res.end(
-        stringify(
-          response(list, 200, '请求成功', {
-            total: length,
-          }),
-        ),
-      )
-    }
-  },
+  delay: 250,
+  body: ({ query }) =>
+    listPeople({
+      page: Number(query.page),
+      pageSize: Number(query.pageSize),
+      email: typeof query.email === 'string' ? query.email : void 0,
+      name: typeof query.name === 'string' ? query.name : void 0,
+      sortAge:
+        query.sortAge === 'ascend' || query.sortAge === 'descend'
+          ? query.sortAge
+          : void 0,
+    }),
 })
