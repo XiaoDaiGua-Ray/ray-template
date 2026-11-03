@@ -1,26 +1,9 @@
-/**
- *
- * 文档地址: <https://currency.js.org/#subtract>
- *
- * Options 默认值
- *   - symbol default: `$`(货币符号)
- *   - separator default: `,`(数字分隔符, demo: 1234.56 => '1,234.56')
- *   - decimal default: `.`(十进制分隔符, demo: 1.23 => '1.23')
- *   - precision default: `2`(精度保留位数)
- *   - pattern default: `!#`(!: 货币符号代替, #: 货币金额代替)
- *   - negativePattern default: `!#`(!: 货币符号代替, #: 货币金额代替)
- *   - format default: `null`(默认格式化方法替代, 看文档)
- *   - fromCents default: `false`(尊重精度选项)
- *   - errorOnInvalid default: `false`(传入 null undefined 直接抛出错误)
- *   - increment default: `null`(四舍五入增量值)
- *   - useVedic default: `false`(分组格式化值, demo: currency(1234567.89, { useVedic: true }).format() => '12,34,567.89')
- */
-
 import { isValueType } from '@/utils'
 import currency from 'currency.js'
 import type { Options } from 'currency.js'
 import { cloneDeep } from 'lodash-es'
 
+/** 金额运算接受的输入类型。 */
 export type CurrencyArguments = string | number | currency
 
 export type OriginalValueType = 'string' | 'number'

@@ -1,129 +1,152 @@
 import './index.scss'
+import AppPageHeader from '@/app-components/app/AppPageHeader'
 import AppShareLink from '@/app-components/app/AppShareLink'
 import { RIcon } from '@/components'
-import {
-  NCard,
-  NDescriptions,
-  NDescriptionsItem,
-  NFlex,
-  NH6,
-  NP,
-  NTag,
-  NText,
-} from 'naive-ui'
+import { useI18n } from '@/hooks'
+import { useMenuGetters } from '@/store'
+import { NCard, NDescriptions, NDescriptionsItem } from 'naive-ui'
+import { RouterLink } from 'vue-router'
 
-const Dashboard = defineComponent({
+export default defineComponent({
   name: 'RDashboard',
   setup() {
-    const coverLetterOptions = [
-      {
-        label: '掌握搬砖框架',
-        des: () => (
-          <NFlex>
-            <NTag type="success">Vue3.x</NTag>
-            <NTag type="info">React</NTag>
-          </NFlex>
-        ),
-      },
-      {
-        label: '从事搬砖时长',
-        des: () => (
-          <NFlex>
-            <NTag type="success">练习时长两年半的小白前端搬砖师</NTag>
-          </NFlex>
-        ),
-      },
-      {
-        label: '个人',
-        des: () => (
-          <NFlex align="center">
-            <RIcon name="ray" size="22" />
-            努力搬砖、努力摸鱼, 建设美丽家园
-          </NFlex>
-        ),
-        span: 2,
-      },
-      {
-        label: '补充说明',
-        des: () => (
-          <NFlex align="center">
-            如果有希望补充的功能可以在
-            <NText
-              tag="a"
-              class="dashboard-link"
-              type="primary"
-              {...{
-                href: 'https://github.com/XiaoDaiGua-Ray/ray-template/issues',
-              }}
-            >
-              GitHub
-            </NText>
-            提一个 Issues
-          </NFlex>
-        ),
-        span: 2,
-      },
-    ]
+    const { t } = useI18n('dashboard')
+    const text = (key: string) => t<string>(key)
+    const { getMenuOptions } = useMenuGetters()
     const { dependencies, devDependencies } = __APP_CFG__.pkg
-    const technologyTagOptions = [
-      { label: `Vue ${dependencies.vue}`, value: 'vue' },
-      { label: `Vite ${devDependencies.vite}`, value: 'vite' },
-      { label: `Pinia ${dependencies.pinia}`, value: 'pinia' },
+    const stack = [
+      { name: 'Vue', version: dependencies.vue, detail: 'Composition API' },
+      { name: 'Vite', version: devDependencies.vite, detail: 'Rolldown' },
       {
-        label: `TypeScript ${devDependencies.typescript} / TSX`,
-        value: 'typescript',
+        name: 'TypeScript',
+        version: devDependencies.typescript,
+        detail: 'TSX',
+      },
+      {
+        name: 'Pinia',
+        version: dependencies.pinia,
+        detail: text('stateManagement'),
       },
     ]
+    const destinations = [
+      {
+        path: '/template-hooks',
+        icon: 'action/setting',
+        title: 'hooks',
+        description: 'hooksDescription',
+      },
+      {
+        path: '/layout-demo',
+        icon: 'navigation/menu',
+        title: 'layout',
+        description: 'layoutDescription',
+      },
+      {
+        path: '/svg-icons',
+        icon: 'directional/resize_h',
+        title: 'icons',
+        description: 'iconsDescription',
+      },
+    ] as const
+    const shortcuts = computed(() =>
+      destinations.filter((item) =>
+        getMenuOptions.value.some(
+          (menu) => menu.fullPath === item.path && menu.show !== false,
+        ),
+      ),
+    )
 
-    return {
-      coverLetterOptions,
-      technologyTagOptions,
-    }
-  },
-  render() {
-    return (
-      <NFlex vertical>
-        <NCard>
-          {{
-            header: () => <RIcon name="ray" size="64" />,
-            default: () => '当你看见这个页面后, 就说明项目已经启动成功了~',
-          }}
-        </NCard>
-        <NCard title="个人介绍">
-          <NDescriptions bordered labelPlacement="left" column={2}>
-            {this.coverLetterOptions.map((curr) => (
-              <NDescriptionsItem
-                key={curr.label}
-                label={curr.label}
-                span={curr?.span}
-              >
-                {curr.des()}
-              </NDescriptionsItem>
-            ))}
-          </NDescriptions>
-        </NCard>
-        <NCard title="项目介绍">
-          <NH6>技术栈</NH6>
-          <NP>
-            <NFlex>
-              {this.technologyTagOptions.map((curr) => (
-                <NTag key={curr.value} type="info">
-                  {curr.label}
-                </NTag>
+    return () => (
+      <section class="r-dashboard">
+        <AppPageHeader
+          title={text('title')}
+          description={text('description')}
+          eyebrow="RAY TEMPLATE / WORKSPACE"
+        >
+          <span class="r-dashboard__brand">
+            <RIcon name="logo/ray" size={44} />
+          </span>
+        </AppPageHeader>
+        <div class="r-dashboard-stack">
+          {stack.map((item) => (
+            <article key={item.name} class="r-dashboard-stack__item">
+              <span>{item.name}</span>
+              <strong>{item.version}</strong>
+              <small>
+                {item.name === 'Pinia' ? text('stateManagement') : item.detail}
+              </small>
+            </article>
+          ))}
+        </div>
+        {shortcuts.value.length ? (
+          <NCard title={text('explore')}>
+            <div class="r-dashboard-shortcuts">
+              {shortcuts.value.map((item) => (
+                <RouterLink
+                  key={item.path}
+                  to={item.path}
+                  class="r-dashboard-shortcut"
+                >
+                  <span class="r-dashboard-shortcut__icon">
+                    <RIcon name={item.icon} size={20} />
+                  </span>
+                  <span>
+                    <strong>{text(item.title)}</strong>
+                    <small>{text(item.description)}</small>
+                  </span>
+                  <RIcon
+                    class="r-dashboard-shortcut__arrow"
+                    name="directional/expanded"
+                    size={14}
+                  />
+                </RouterLink>
               ))}
-            </NFlex>
-          </NP>
-          <NH6>项目介绍</NH6>
-          <NP>
-            预设了最佳构建体验的配置与常用搬砖工具。意在提供一个简洁、快速上手的模板。
-          </NP>
+            </div>
+          </NCard>
+        ) : null}
+        <div class="r-dashboard-info">
+          <NCard title={text('project')}>
+            <p class="r-dashboard-info__intro">{text('projectDescription')}</p>
+            <div class="r-dashboard-features">
+              <span>Vue 3 + TSX</span>
+              <span>Naive UI</span>
+              <span>{text('routing')}</span>
+              <span>{text('themeAndLocale')}</span>
+            </div>
+            <p class="r-dashboard-info__feedback">
+              {text('feedbackBefore')}{' '}
+              <a
+                href="https://github.com/XiaoDaiGua-Ray/ray-template/issues"
+                target="_blank"
+                rel="noreferrer"
+              >
+                GitHub Issues <RIcon name="action/shared" size={12} />
+              </a>
+              {text('feedbackAfter')}
+            </p>
+          </NCard>
+          <NCard title={text('author')}>
+            <NDescriptions
+              column={1}
+              labelPlacement="left"
+              labelStyle={{ width: '92px' }}
+            >
+              <NDescriptionsItem label={text('frameworks')}>
+                Vue3.x / React
+              </NDescriptionsItem>
+              <NDescriptionsItem label={text('experience')}>
+                {text('experienceValue')}
+              </NDescriptionsItem>
+              <NDescriptionsItem label={text('bio')}>
+                {text('bioValue')}
+              </NDescriptionsItem>
+            </NDescriptions>
+          </NCard>
+        </div>
+        <NCard title={text('linksTitle')}>
+          <AppShareLink variant="cards" />
         </NCard>
-        <NCard title="友情链接">
-          <AppShareLink />
-        </NCard>
-      </NFlex>
+      </section>
     )
   },
 })
-
-export default Dashboard

@@ -1,9 +1,3 @@
-/**
- *
- * 正则入口
- * 系统公共正则, 配置在该文件中
- */
-
 export const APP_REGEX: Record<string, RegExp> = {
   /** css 尺寸单位匹配 */
   cssUnit:

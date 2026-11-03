@@ -7,7 +7,7 @@ const qrcode: AppRouteRecordRaw = {
   component: () => import('@/views/demo/qrcode/index'),
   meta: {
     i18nKey: t('menu.QRCode'),
-    icon: 'other',
+    icon: 'navigation/other',
     order: 2,
   },
 }

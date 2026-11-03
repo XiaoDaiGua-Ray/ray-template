@@ -1,35 +1,14 @@
-/**
- *
- * directive name: ellipsis
- *
- * @description
- * 该指令用于处理文本溢出省略，使用的时候必须传递正确的 width 值。
- *
- * 其中 line 和 type 是可选的，line 默认为 1，type 默认为 block。
- *
- * @example
- * <template>
- *  <div v-ellipsis="{ line: 2, width: 200 }">这是一段需要省略的文字</div>
- * </template>
- * <template>
- *  <div v-ellipsis="{ type: 'block', width: 200 }">这是一段需要省略的文字</div>
- * </template>
- */
-
 import type { CustomDirectiveFC } from '@/directives/types'
 import { completeSize, setStyle } from '@/utils'
 import type { EllipsisBindingValue } from './types'
 
 /**
  *
- * @param el 待绑定的元素
- * @param options 配置项
+ * @param el 待设置省略样式的元素
+ * @param options 宽度、行数、渲染方式与悬浮文本选项
  *
  * @description
- * 绑定省略样式。
- *
- * @example
- * bindEllipsis(el, { line: 2, width: 200 })
+ * 根据绑定值设置文本省略样式；缺少 width 时记录错误，不写入样式。
  */
 const bindEllipsis = (el: HTMLElement, options: EllipsisBindingValue) => {
   const { line = 1, type = 'block', width, popoverText } = options

@@ -44,8 +44,8 @@ export default defineComponent({
                 }
               >
                 {{
-                  'checked-icon': () => <RIcon name="dark" />,
-                  'unchecked-icon': () => <RIcon name="light" />,
+                  'checked-icon': () => <RIcon name="system/dark" />,
+                  'unchecked-icon': () => <RIcon name="system/light" />,
                   checked: () => '亮',
                   unchecked: () => '暗',
                 }}

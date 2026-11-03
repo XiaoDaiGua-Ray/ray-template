@@ -55,7 +55,11 @@ export default defineComponent({
         trigger="click"
         onUpdateValue={this.updatePopselectValue.bind(this)}
       >
-        <RIcon name="adjustment" size={config.tableIconSize} cursor="pointer" />
+        <RIcon
+          name="action/adjustment"
+          size={config.tableIconSize}
+          cursor="pointer"
+        />
       </NPopselect>
     )
   },

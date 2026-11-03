@@ -23,12 +23,6 @@ export const collapseProps = Object.assign({}, formProps, {
   },
 })
 
-/**
- *
- * @description
- * 基于 RCollapseGrid 和 RForm 的折叠表单组件；
- * 同样也继承了 RCollapseGrid 组件的缺点，必须使用 NFormItemGi, NGridItem 组件包裹表单项。
- */
 export default defineComponent({
   name: 'RCollapse',
   props: collapseProps,

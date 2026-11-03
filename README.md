@@ -188,3 +188,10 @@ Build target: Vite 8 Baseline Widely Available (Chrome/Edge 111+, Firefox 114+, 
 ## 📄 License
 
 [MIT License](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/LICENSE) © 2022-PRESENT [Ray](https://github.com/XiaoDaiGua-Ray)
+
+## Hooks, Layout & Icons
+
+- [Hooks examples](src/hooks/README.md): `/template-hooks`, `/web-hooks`, covering all 19 custom hooks.
+- [Layout modes and slots](src/layout/README.md): `/layout-demo`, with live persistent preferences.
+- [Namespaced SVG icons](src/icons/A_README.md): `/svg-icons`; `pnpm icons:generate`, `pnpm icons:check`.
+- [Pinia state](src/store/README.md): temporary UI state in `runtime`, saved preferences in `setting`.

@@ -6,53 +6,13 @@
   }
 }
 
-.r-layout-full__viewer-content--maximize .layout-content__maximize-out {
+.layout-content__maximize-out {
   position: fixed;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  cursor: pointer;
-  z-index: 99;
-  right: -40px;
-  top: -40px;
-  @include flexCenter;
-  transition:
-    color 0.3s var(--r-bezier),
-    background-color 0.3s var(--r-bezier);
-
-  & .r-icon {
-    transform: translate(-14px, 14px);
-  }
+  top: 12px;
+  right: 20px;
+  z-index: 1000;
 }
 
-.r-template--light {
-  .layout-content__maximize-out {
-    background-color: #d5d3d1;
-    color: #44403c;
-
-    &:hover {
-      color: #2c2a28;
-      background: #757473;
-    }
-  }
-}
-
-.r-template--dark {
-  .layout-content__maximize-out {
-    background-color: #44403c;
-    color: #d5d3d1;
-
-    &:hover {
-      color: #eae9e8;
-      background: #a19f9d;
-    }
-  }
-}
-
-.r-template--dark .r-layout-full__viewer-content {
-  background-color: $layoutContentBackgroundColorDark;
-}
-
-.r-template--light .r-layout-full__viewer-content {
-  background-color: $layoutContentBackgroundColorLight;
+.r-layout-full__viewer-content {
+  background-color: var(--r-canvas);
 }

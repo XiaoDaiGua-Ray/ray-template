@@ -1,7 +1,6 @@
 import { APP_THEME } from '@/app-config'
 import { useI18n } from '@/hooks'
 import { useSettingActions, useSettingGetters } from '@/store'
-import { useColorMode } from '@vueuse/core'
 import { merge } from 'lodash-es'
 
 export type ThemeLabel = 'Dark' | 'Light'
@@ -114,9 +113,11 @@ export const useTheme = () => {
   const syncSystemTheme = () => {
     const { getAppTheme } = useSettingGetters()
     const { updateSettingState } = useSettingActions()
-    const { system } = useColorMode()
 
-    updateSettingState('_appTheme', system.value === 'dark')
+    updateSettingState(
+      '_appTheme',
+      window.matchMedia('(prefers-color-scheme: dark)').matches,
+    )
     updateSettingState('appTheme', 'auto')
     setThemeOverrides(getAppTheme.value)
   }

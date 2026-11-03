@@ -1,12 +1,14 @@
 import { APP_CATCH_KEY, APP_THEME, GLOBAL_CLASS_NAMES } from '@/app-config'
 import { useDayjs, useI18n } from '@/hooks'
 import type { LocalKey } from '@/hooks'
+import { resolveIconName } from '@/icons'
 import { getAppDefaultLanguage } from '@/locales/utils'
 import type { SettingState } from '@/store/modules/setting/types'
 import type { AnyFn } from '@/types'
 import { colorToRgba, setStorage, setStyle, updateObjectValue } from '@/utils'
+import { usePreferredDark } from '@vueuse/core'
 import { cloneDeep, merge } from 'lodash-es'
-import { getDefaultSettingConfig } from './constant'
+import { getDefaultSettingConfig, normalizeLayoutConfig } from './constant'
 
 export const piniaSettingStore = defineStore(
   'setting',
@@ -16,6 +18,7 @@ export const piniaSettingStore = defineStore(
     } = APP_THEME
     const { locale } = useI18n()
     const { locale: dayjsLocal } = useDayjs()
+    const preferredDark = usePreferredDark()
 
     const settingState = reactive<SettingState>({
       // 默认主题色
@@ -42,7 +45,7 @@ export const piniaSettingStore = defineStore(
       },
       // 侧边栏设置
       sideBarLogo: {
-        icon: 'ray',
+        icon: 'logo/ray',
         title: 'Ray Template',
         url: '/dashboard',
         jumpType: 'station',
@@ -106,6 +109,16 @@ export const piniaSettingStore = defineStore(
       value: Partial<V[T]>,
       cb?: C,
     ) => {
+      if (key === 'layoutConfig') {
+        settingState.layoutConfig = normalizeLayoutConfig({
+          ...settingState.layoutConfig,
+          ...(value as object),
+        })
+        cb?.()
+
+        return
+      }
+
       updateObjectValue(settingState, key, value as V[T], cb)
     }
 
@@ -125,6 +138,9 @@ export const piniaSettingStore = defineStore(
      * 该方法会在初始化时执行一次，之后会在切换主题色时执行。
      */
     watchEffect(() => {
+      if (settingState.appTheme === 'auto')
+        settingState._appTheme = preferredDark.value
+
       settingState._appTheme
         ? (settingState.primaryColorOverride = merge(
             {},
@@ -157,6 +173,13 @@ export const piniaSettingStore = defineStore(
       key: APP_CATCH_KEY.appPiniaSettingStore,
       omit: ['lockScreenSwitch'],
       storage: window.localStorage,
+      afterHydrate: ({ store }) => {
+        store.layoutConfig = normalizeLayoutConfig(store.layoutConfig)
+
+        if (typeof store.sideBarLogo?.icon === 'string') {
+          store.sideBarLogo.icon = resolveIconName(store.sideBarLogo.icon)
+        }
+      },
     },
   },
 )

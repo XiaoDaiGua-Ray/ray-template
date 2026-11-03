@@ -1,4 +1,5 @@
 import type { BasicTarget } from '@/types'
+import { effectDispose } from '@/utils'
 import { onClickOutside, useEventListener } from '@vueuse/core'
 import type {
   MaybeElement,
@@ -43,6 +44,8 @@ export const useContextmenuCoordinate = (
   const y = ref(0) // 鼠标 y 坐标
   const show = ref(false) // 是否显示右键菜单
   const { clickOutside } = options ?? {}
+  let stopped = false
+  let generation = 0
 
   /**
    *
@@ -52,6 +55,8 @@ export const useContextmenuCoordinate = (
    * 更新右键菜单的显示状态。
    */
   const updateShow = (value: boolean) => {
+    if (!value) generation += 1
+
     show.value = value
   }
 
@@ -67,8 +72,11 @@ export const useContextmenuCoordinate = (
     evt.preventDefault()
 
     updateShow(false)
+    const current = generation
 
     nextTick().then(() => {
+      if (stopped || current !== generation) return
+
       const { clientX, clientY } = evt as MouseEvent
 
       x.value = clientX
@@ -78,16 +86,13 @@ export const useContextmenuCoordinate = (
     })
   }
 
-  if (clickOutside) {
-    /**
-     *
-     * @description
-     * 自定义点击元素外部时的回调函数。
-     */
-    onClickOutside(target as MaybeElementRef<MaybeElement>, (detectIframe) => {
-      clickOutside(detectIframe)
-    })
-  }
+  const cleanupOutside = onClickOutside(
+    target as MaybeElementRef<MaybeElement>,
+    (event) => {
+      updateShow(false)
+      clickOutside?.(event)
+    },
+  )
 
   /**
    *
@@ -117,9 +122,14 @@ export const useContextmenuCoordinate = (
    * 仅注销该方法绑定的事件。
    */
   const stop = () => {
+    stopped = true
+    updateShow(false)
     cleanupContextmenu()
     cleanupClick()
+    cleanupOutside()
   }
+
+  effectDispose(stop)
 
   return {
     stop,

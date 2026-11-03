@@ -1,10 +1,12 @@
+import type { IconName } from '@/icons'
 import { dropdownProps } from 'naive-ui'
+import type { PropType } from 'vue'
 
 const props = {
   ...dropdownProps,
   icon: {
-    type: String,
-    default: 'more',
+    type: String as PropType<IconName>,
+    default: 'action/more',
   },
   iconSize: {
     type: Number,

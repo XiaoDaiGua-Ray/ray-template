@@ -1,13 +1,11 @@
 .layout-footer-wrapper {
-  height: 48px;
-  text-align: center;
-  line-height: 48px;
-}
-
-.r-template--dark .layout-footer-wrapper {
-  background-color: $layoutFooterBackgroundColorDark;
-}
-
-.r-template--light .layout-footer-wrapper {
-  background-color: $layoutFooterBackgroundColorLight;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid var(--r-line);
+  background: var(--r-surface);
+  color: var(--r-text-muted);
+  font-size: 12px;
+  letter-spacing: 0.01em;
 }

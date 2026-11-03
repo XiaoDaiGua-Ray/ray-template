@@ -1,15 +1,3 @@
-/**
- *
- * 基于 vue-hook-plus 与 axios 封装
- *
- * (vue-hook-plus 参考文档)[https://inhiblab-core.gitee.io/docs/hooks/useRequest/basic/]
- *
- * 借助 vue-hook-plus useRequest 方法实现拓展功能
- * 结合模板已封装好的 axios 实现了该 hook
- *
- * 由于中间件注册了自动取消重复请求的方法，所以会导致方法在初始化时，会抛出一个重复请求被取消的错误（该问题不影响使用）
- */
-
 import request from '@/axios/instance'
 import type { AppRawRequestConfig } from '@/axios/types'
 import useHookPlusRequest from 'vue-hooks-plus/es/useRequest'
@@ -17,19 +5,13 @@ import type { UseRequestOptions } from 'vue-hooks-plus/es/useRequest/types'
 
 /**
  *
- * @param fetchOption axios 请求配置
- * @param option useRequest 配置项
+ * @param fetchOptions Axios 请求配置
+ * @param option vue-hooks-plus 请求选项
  *
  * @description
- * 该方法有一定的局限性，仅可在 effect 作用域中使用，
- * 如果在非 vue effect scope 中使用，会抛出一些警告。
+ * 使用项目 Axios 实例创建请求 Hook，应在有效的 Vue effect 作用域中调用。
  *
- * @example
- * // 请求函数
- * const getUser = () => request({ url: 'http://localhost:3000/user' })
- *
- * // effect 中使用
- * const { data } = useHookPlusRequest(getUser)
+ * @returns 请求状态与控制方法
  */
 function useRequest<
   Response,

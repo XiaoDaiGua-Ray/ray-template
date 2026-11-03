@@ -1,4 +1,5 @@
 import { LAYOUT_CONTENT_REF } from '@/app-config'
+import type { LayoutInst } from 'naive-ui'
 
 /**
  *
@@ -14,15 +15,16 @@ import { LAYOUT_CONTENT_REF } from '@/app-config'
  * contentScrollTo(10, 10) // x, y 方向滚动到 10 位置
  */
 export const useContentScroll = () => {
-  const contentInst = LAYOUT_CONTENT_REF.value
+  // 在事件触发时读取当前实例，支持 setup 中调用和布局重新挂载。
+  const scrollTo: LayoutInst['scrollTo'] = (
+    options: number | object,
+    y?: number,
+  ) => {
+    const content = LAYOUT_CONTENT_REF.value
 
-  const { scrollTo: contentScrollTo } = contentInst || {}
-
-  if (!contentScrollTo) {
-    throw new Error(
-      `[useContentScroll]: LAYOUT_CONTENT_REF is not ready yet. please wait component mounted!`,
-    )
+    if (typeof options === 'number') content?.scrollTo(options, y ?? 0)
+    else content?.scrollTo(options)
   }
 
-  return contentScrollTo
+  return scrollTo
 }

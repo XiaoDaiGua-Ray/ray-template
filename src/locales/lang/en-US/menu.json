@@ -30,6 +30,8 @@
   "Table": "Table",
   "TableAutoHeight": "Table Auto Height",
   "TablePro": "Table Pro",
-  "TemplateHooks": "Template Api",
-  "scrollReveal": "Scroll Reveal"
+  "TemplateHooks": "Template Hooks",
+  "scrollReveal": "Scroll Reveal",
+  "LayoutDemo": "Layout playground",
+  "WebHooks": "Web Hooks"
 }

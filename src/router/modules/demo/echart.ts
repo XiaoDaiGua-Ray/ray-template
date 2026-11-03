@@ -7,7 +7,7 @@ const echart: AppRouteRecordRaw = {
   component: () => import('@/views/demo/echart/index'),
   meta: {
     i18nKey: t('menu.Echart'),
-    icon: 'echart',
+    icon: 'navigation/echart',
     order: 1,
     extra: {
       label: 'useChart',

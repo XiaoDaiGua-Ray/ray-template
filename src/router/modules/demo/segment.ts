@@ -7,7 +7,7 @@ const segment: AppRouteRecordRaw = {
   component: () => import('@/views/demo/segment'),
   meta: {
     i18nKey: t('menu.Segment'),
-    icon: 'other',
+    icon: 'navigation/other',
     order: 3,
     extra: {
       label: 'segment',

@@ -1,21 +1,3 @@
-/**
- *
- * directive name: throttle
- *
- * @description
- * 该指令用于处理节流，使用的时候必须传递正确的 func 值。
- *
- * 其中 trigger 和 wait 是可选的，trigger 默认为 click，wait 默认为 500。
- *
- * @example
- * <template>
- *  <div v-throttle="{ func: () => console.log('throttle') }">这是一个节流指令</div>
- * </template>
- * <template>
- *  <div v-throttle="{ func: () => console.log('throttle'), trigger: 'click', wait: 500 }">这是一个节流指令</div>
- * </template>
- */
-
 import type { CustomDirectiveFC } from '@/directives/types'
 import type { AnyFn } from '@/types'
 import { useEventListener } from '@vueuse/core'

@@ -1,3 +1,4 @@
+import type { IconName } from '@/icons'
 import type { Recordable } from '@/types'
 import type { GlobalThemeOverrides } from 'naive-ui'
 import type {
@@ -9,7 +10,7 @@ import type {
 import type { VNode, VNodeChild } from 'vue'
 
 export interface LayoutSideBarLogo {
-  icon?: string | VNode
+  icon?: IconName | VNode
   title?: string
   url?: string
   jumpType?: 'station' | 'outsideStation'

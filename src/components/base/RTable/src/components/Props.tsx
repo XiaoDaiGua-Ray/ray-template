@@ -69,7 +69,7 @@ export default defineComponent({
         onUpdateValue={this.updatePopselectValue.bind(this)}
       >
         <RIcon
-          name="expanded"
+          name="directional/expanded"
           size={config.tableIconSize}
           cursor="pointer"
           style="transform: rotate(270deg);"

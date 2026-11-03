@@ -1,11 +1,3 @@
-/**
- *
- * 该功能基于 <https://me.yka.moe/> 提供代码改进实现
- *
- * 自动展开所有路由
- * 把所有路由提升为顶层路由
- */
-
 import type { AppRouteRecordRaw } from '@/router/types'
 import { cloneDeep } from 'lodash-es'
 

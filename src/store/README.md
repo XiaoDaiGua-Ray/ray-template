@@ -1,6 +1,6 @@
 ## 描述
 
-> pinia store 仓库包。存放全局公共状态。如果不需要 pinia 但是又希望使用全局变量，可以使用 `global-variable` 管理数据。
+> 所有全局可变 UI 状态统一由 Pinia 管理，按用途分包，通过 `src/store/hooks` 暴露响应式 getters 和 actions。
 
 ## 约束
 
@@ -29,7 +29,7 @@ export const piniaDemoStore = defineStore(
     persist: {
       key: 'piniaDemoStore',
       pick: ['demoRef'],
-      storage: sessionStorage | localStorage,
+      storage: localStorage,
     },
   },
 )
@@ -71,3 +71,22 @@ export { useDemoGetters, useMenuActions } from './modules/demo'
 ```ts
 import { useDemoGetters, useMenuActions } from '@/store'
 ```
+
+## 运行时状态与布局偏好
+
+- `runtime`：全局加载、移动抽屉、页面刷新、内容最大化和内容加载动画。通过 `useRuntimeGetters` / `useRuntimeActions` 读取和修改；不持久化，应用卸载时释放 Store 与计时器。
+- `lock-screen`：锁屏状态也归入 Pinia，保留历史布尔值格式、缓存 key 与跨标签页同步。
+- `setting.layoutConfig`：布局模式、内容宽度与间距、顶栏和页脚固定方式。通过现有 `useSettingGetters` / `useSettingActions` 操作，使用原有设置缓存 key。旧缓存补默认值，不清空历史偏好。
+- 删除了独立的 `global-variable` 包；原五个状态名保留在 runtime 中，调用方改为 Store hooks。新增全局状态继续按用途放入 `src/store/modules`，不在普通模块创建共享 reactive 单例。
+
+```ts
+import { useRuntimeActions, useRuntimeGetters } from '@/store'
+
+const { globalSpinning } = useRuntimeGetters()
+const { setRuntimeState } = useRuntimeActions()
+setRuntimeState('globalSpinning', true)
+// 异步任务结束后，务必恢复加载状态。
+setRuntimeState('globalSpinning', false)
+```
+
+布局用法和插槽见 [布局说明](../layout/README.md)。

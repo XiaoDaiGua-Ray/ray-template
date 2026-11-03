@@ -1,27 +1,6 @@
-/**
- *
- * @description
- * 操作说明:
- *   - 关闭全部: 关闭所有标签页，并且重定向至根页面 rootRoute.path
- *   - 关闭右侧: 关闭右侧所有标签，如果选中标签页与当前激活页不一致并且激活页在右侧，则会重定向至当前选中标签页
- *   - 关闭左侧: 关闭左侧所有标签，如果选中标签页与当前激活页不一致并且激活页在左侧，则会重定向至当前选中标签页
- *   - 关闭其他: 关闭其他所有标签，如果选中标签页与当前激活页不一致并且激活页在其中，则会重定向至当前选中标签页
- *   - 关闭所有: 关闭所有标签页，并且重定向至 root page
- *
- * root path 标签不可被关闭。
- * 页面刷新后，仅会保留刷新前激活 key 的 tag 标签。
- *
- * 注入 MENU_TAG_DATA 属性，用于动态更新 MenuTag 标签所在的位置。
- *
- * 该模板中引入了 Root Path 概念，在 MenuTag 中除了关闭左右侧标签操作能主动移除 Root Tag 之外其余的操作都不允许。
- *
- * outsideClick 方法优先级不如 contextmenu 事件高，所以可能会出现重复右键菜单时，闪烁问题；
- * 虽然使用 throttle 方法进行优化，但是该问题本质并没有解决（v5.0.2 版本修复了该问题）。
- */
-
+import { useRuntimeGetters } from '@/store'
 import './index.scss'
 import { RIcon, RMoreDropdown } from '@/components'
-import { getVariableToRefs } from '@/global-variable'
 import { useAppRoot, useMaximize, useSiderBar, useSpinning } from '@/hooks'
 import { useMenuActions, useMenuGetters } from '@/store'
 import type { AppMenuOption, MenuTagOptions } from '@/types'
@@ -65,22 +44,24 @@ export default defineComponent({
       {
         label: '关闭当前页面',
         key: 'closeCurrentPage',
-        icon: () => <RIcon name="close" size={iconConfig.size} />,
+        icon: () => <RIcon name="action/close" size={iconConfig.size} />,
       },
       {
         label: '最大化当前页面',
         key: 'maximizeLayoutContent',
-        icon: () => <RIcon name="fullscreen_fold" size={iconConfig.size} />,
+        icon: () => (
+          <RIcon name="action/fullscreen_fold" size={iconConfig.size} />
+        ),
       },
       {
         label: '刷新当前页面',
         key: 'reloadCurrentPage',
-        icon: () => <RIcon name="reload" size={iconConfig.size} />,
+        icon: () => <RIcon name="action/reload" size={iconConfig.size} />,
       },
       {
         label: '新窗口打开',
         key: 'windowOpenTab',
-        icon: () => <RIcon name="shared" size={iconConfig.size} />,
+        icon: () => <RIcon name="action/shared" size={iconConfig.size} />,
       },
       {
         type: 'divider',
@@ -89,12 +70,12 @@ export default defineComponent({
       {
         label: '关闭左侧标签页',
         key: 'closeLeft',
-        icon: () => <RIcon name="close_left" size={iconConfig.size} />,
+        icon: () => <RIcon name="action/close_left" size={iconConfig.size} />,
       },
       {
         label: '关闭右侧标签页',
         key: 'closeRight',
-        icon: () => <RIcon name="close_right" size={iconConfig.size} />,
+        icon: () => <RIcon name="action/close_right" size={iconConfig.size} />,
       },
       {
         type: 'divider',
@@ -103,12 +84,14 @@ export default defineComponent({
       {
         label: '关闭其他标签页',
         key: 'closeOther',
-        icon: () => <RIcon name="close_other" size={iconConfig.size} />,
+        icon: () => <RIcon name="action/close_other" size={iconConfig.size} />,
       },
       {
         label: '关闭所有标签页',
         key: 'closeAll',
-        icon: () => <RIcon name="resize_h" size={iconConfig.size} />,
+        icon: () => (
+          <RIcon name="directional/resize_h" size={iconConfig.size} />
+        ),
         disabled: false,
       },
     ])
@@ -162,7 +145,7 @@ export default defineComponent({
     })
     // 注入 tag 前缀
     const MENU_TAG_DATA = 'menu_tag_data'
-    const globalMainLayoutLoad = getVariableToRefs('globalMainLayoutLoad')
+    const globalMainLayoutLoad = useRuntimeGetters().globalMainLayoutLoad
     // naive scrollbar 容器 class
     const naiveScrollbarContainerClass = 'n-scrollbar-container'
     // 缓存上一次的菜单 key
@@ -464,7 +447,7 @@ export default defineComponent({
               {{
                 icon: () => (
                   <RIcon
-                    name="expanded"
+                    name="directional/expanded"
                     width={iconConfig.size}
                     height={iconConfig.size}
                     cursor="pointer"
@@ -530,7 +513,7 @@ export default defineComponent({
                       icon: () => (
                         <RIcon
                           customClassName="menu-tag__btn-icon"
-                          name="close"
+                          name="action/close"
                           size="15"
                           {...{
                             onMousedown: closeCurrentMenuTag.bind(this, idx),
@@ -553,7 +536,7 @@ export default defineComponent({
                 {{
                   icon: () => (
                     <RIcon
-                      name="expanded"
+                      name="directional/expanded"
                       width={iconConfig.size}
                       height={iconConfig.size}
                       style={{
@@ -573,7 +556,7 @@ export default defineComponent({
                 {{
                   icon: () => (
                     <RIcon
-                      name="fullscreen_fold"
+                      name="action/fullscreen_fold"
                       width={iconConfig.size}
                       height={iconConfig.size}
                       cursor="pointer"
@@ -592,7 +575,7 @@ export default defineComponent({
                 {{
                   icon: () => (
                     <RIcon
-                      name="reload"
+                      name="action/reload"
                       width={iconConfig.size}
                       height={iconConfig.size}
                       customClassName={`${
@@ -623,7 +606,7 @@ export default defineComponent({
                   {{
                     icon: () => (
                       <RIcon
-                        name="more"
+                        name="action/more"
                         width={iconConfig.size}
                         height={iconConfig.size}
                         cursor="pointer"

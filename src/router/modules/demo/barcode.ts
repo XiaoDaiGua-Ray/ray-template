@@ -7,7 +7,7 @@ const barcode: AppRouteRecordRaw = {
   component: () => import('@/views/demo/barcode-demo'),
   meta: {
     i18nKey: t('menu.Barcode'),
-    icon: 'other',
+    icon: 'navigation/other',
     order: 2,
     extra: {
       label: 'new',

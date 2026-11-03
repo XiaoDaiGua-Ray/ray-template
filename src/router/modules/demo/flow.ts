@@ -7,7 +7,7 @@ const r: AppRouteRecordRaw = {
   component: () => import('@/views/demo/flow-demo'),
   meta: {
     i18nKey: t('menu.Flow'),
-    icon: 'other',
+    icon: 'navigation/other',
     order: 2,
   },
 }

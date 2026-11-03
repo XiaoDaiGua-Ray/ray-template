@@ -7,7 +7,7 @@ const r: AppRouteRecordRaw = {
   component: () => import('@/views/demo/table-pro-demo'),
   meta: {
     i18nKey: t('menu.TablePro'),
-    icon: 'other',
+    icon: 'navigation/other',
     order: 2,
     extra: {
       label: 'TablePro',

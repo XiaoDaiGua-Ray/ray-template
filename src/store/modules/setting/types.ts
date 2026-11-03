@@ -25,7 +25,17 @@ export interface AppRootRoute {
   path: string
 }
 
+export interface LayoutConfig {
+  mode: 'side' | 'top' | 'mixed'
+  contentWidth: 'fluid' | 'fixed'
+  contentMaxWidth: number
+  contentPadding: number
+  fixedHeader: boolean
+  fixedFooter: boolean
+}
+
 export interface SettingState {
+  layoutConfig: LayoutConfig
   drawerPlacement: Placement
   primaryColorOverride: GlobalThemeOverrides
   appTheme: 'dark' | 'light' | 'auto'

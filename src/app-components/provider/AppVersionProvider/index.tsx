@@ -1,9 +1,3 @@
-/**
- *
- * 检测当前版本是否为最新版本
- * 如果不是最新版本则弹出提示框，提示用户更新，点击确认后退出登录并且刷新资源
- */
-
 import { APP_CATCH_KEY } from '@/app-config'
 import { RModal } from '@/components'
 import { useSigningActions } from '@/store'

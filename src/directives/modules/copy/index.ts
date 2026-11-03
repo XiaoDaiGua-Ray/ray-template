@@ -1,18 +1,3 @@
-/**
- *
- * directive name: copy
- *
- * @description
- * 该指令用于处理复制，使用的时候必须传递正确的 value 值。
- *
- * 指令基于 clipboard.js 实现。
- *
- * @example
- * <template>
- *  <button v-copy="copyText">复制</button>
- * </template>
- */
-
 import type { CustomDirectiveFC } from '@/directives/types'
 import ClipboardJS from 'clipboard'
 import type { CopyElement } from './types'

@@ -8,7 +8,7 @@ const axios: AppRouteRecordRaw = {
   component: () => import('@/views/demo/axios/index'),
   meta: {
     i18nKey: t('menu.Axios'),
-    icon: 'axios',
+    icon: 'logo/axios',
     order: 3,
     keepAlive: true,
   },

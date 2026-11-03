@@ -1,110 +1,92 @@
 import './index.scss'
 import { LAYOUT_SIDER_REF } from '@/app-config'
-import { getVariableToRefs, setVariable } from '@/global-variable'
 import { useDevice } from '@/hooks'
-import { useMenuActions, useMenuGetters, useSettingGetters } from '@/store'
+import {
+  useMenuActions,
+  useMenuGetters,
+  useRuntimeActions,
+  useRuntimeGetters,
+  useSettingGetters,
+} from '@/store'
 import type { AppMenuOption, NaiveMenuOptions } from '@/types'
 import { positionSelectedMenuItem } from '@/utils'
 import { NDrawer, NLayoutSider, NMenu } from 'naive-ui'
 import type { MenuInst } from 'naive-ui'
+import type { PropType } from 'vue'
 import SiderBarLogo from './components/SiderBarLogo'
 
 export default defineComponent({
   name: 'AppMenu',
-  setup() {
-    // 这里使用 shallowRef 而不是 useTemplateRef 是因为在这里有一个特殊情况，会导致一个 readonly 的警告
-    const menuRef = shallowRef<MenuInst | null>()
-
+  props: {
+    options: { type: Array as PropType<AppMenuOption[]>, default: void 0 },
+    showLogo: { type: Boolean, default: true },
+  },
+  setup(props) {
+    const menuRef = shallowRef<MenuInst | null>(null)
     const { changeMenuModelValue, collapsedMenu, updateMenuState } =
       useMenuActions()
     const { getMenuConfig } = useSettingGetters()
     const { getMenuOptions, getCollapsed, getMenuKey } = useMenuGetters()
-    const modelMenuKey = computed({
-      get: () => {
-        /**
-         *
-         * @description
-         * 禁用该 eslint 规则，因为在 computed 中使用了异步操作。
-         * 该规则只是为了避免异步的 computed get 获取值出现问题；
-         * 但是，在这里获取值的操作是同步行为，只是为了在获取值以后将对应菜单项展开；
-         * 所以，这里不会出现异步获取值的问题，所以可以禁用该规则。
-         */
-        // eslint-disable-next-line vue/no-async-in-computed-properties
-        setTimeout(() => {
-          showMenuOption()
-          positionSelectedMenuItem()
-        }, 300)
-
-        return getMenuKey.value
-      },
-      set: () => {
-        if (isTabletOrSmaller.value) {
-          setVariable('globalDrawerValue', false)
-        }
-      },
-    })
-    const { isTabletOrSmaller } = useDevice({
+    const { globalDrawerValue } = useRuntimeGetters()
+    const { setRuntimeState } = useRuntimeActions()
+    const { isTabletOrSmaller, width } = useDevice({
       observer: (isSmaller) => {
-        if (isSmaller) {
-          // 避免菜单折叠时，在小尺寸屏幕导致菜单显示不完整
-          updateMenuState('collapsed', false)
-        }
-      },
-    })
-    const modelGlobalDrawerValue = computed({
-      get: () => getVariableToRefs('globalDrawerValue').value,
-      set: (val) => {
-        setVariable('globalDrawerValue', val)
+        if (isSmaller) updateMenuState('collapsed', false)
+        else setRuntimeState('globalDrawerValue', false)
       },
     })
 
-    /**
-     *
-     * @description
-     * 手动展开当前激活菜单项。
-     */
-    const showMenuOption = () => {
-      const key = modelMenuKey.value
+    watch(
+      [getMenuKey, () => props.options, menuRef],
+      async () => {
+        await nextTick()
 
-      if (key !== void 0 && key !== null) {
-        nextTick(() => menuRef.value?.showOption?.(key))
-      }
-    }
+        if (getMenuKey.value != null)
+          menuRef.value?.showOption(String(getMenuKey.value))
 
-    const BasicMenu = () => (
+        positionSelectedMenuItem()
+      },
+      { flush: 'post' },
+    )
+
+    const basicMenu = () => (
       <NLayoutSider
         class="app-menu__sider"
         showTrigger={!isTabletOrSmaller.value}
         collapseMode={getMenuConfig.value.collapsedMode}
         collapsedWidth={getMenuConfig.value.collapsedWidth}
-        onUpdateCollapsed={collapsedMenu.bind(this)}
-        width={getMenuConfig.value.menuWidth}
+        onUpdateCollapsed={collapsedMenu}
+        width={
+          isTabletOrSmaller.value
+            ? Math.min(getMenuConfig.value.menuWidth, width.value - 32)
+            : getMenuConfig.value.menuWidth
+        }
         nativeScrollbar={getMenuConfig.value.nativeScrollbar}
         ref={LAYOUT_SIDER_REF}
-        collapsed={getCollapsed.value}
-        onExpand={() => {
-          updateMenuState('collapsed', false)
-        }}
-        onCollapse={() => {
-          updateMenuState('collapsed', true)
-        }}
+        collapsed={isTabletOrSmaller.value ? false : getCollapsed.value}
         inverted={getMenuConfig.value.inverted}
       >
-        {getMenuConfig.value.menuSiderBarLogo ? (
+        {props.showLogo && getMenuConfig.value.menuSiderBarLogo ? (
           <SiderBarLogo collapsed={getCollapsed.value} />
         ) : null}
         <NMenu
           ref={menuRef}
           class="r-menu--app"
           keyField="fullPath"
-          v-model:value={modelMenuKey.value}
-          options={getMenuOptions.value as NaiveMenuOptions[]}
+          value={getMenuKey.value}
+          options={
+            (props.options ??
+              getMenuOptions.value) as unknown as NaiveMenuOptions[]
+          }
           indent={getMenuConfig.value.collapsedIndent}
-          collapsed={getCollapsed.value}
+          collapsed={isTabletOrSmaller.value ? false : getCollapsed.value}
           collapsedIconSize={getMenuConfig.value.collapsedIconSize}
           collapsedWidth={getMenuConfig.value.collapsedWidth}
-          onUpdateValue={(key, op) => {
-            changeMenuModelValue(key, op as unknown as AppMenuOption)
+          onUpdateValue={(key, option) => {
+            changeMenuModelValue(key, option as unknown as AppMenuOption)
+
+            if (isTabletOrSmaller.value)
+              setRuntimeState('globalDrawerValue', false)
           }}
           accordion={getMenuConfig.value.accordion}
           iconSize={getMenuConfig.value.iconSize}
@@ -113,27 +95,20 @@ export default defineComponent({
       </NLayoutSider>
     )
 
-    return {
-      isTabletOrSmaller,
-      BasicMenu,
-      modelGlobalDrawerValue,
-    }
-  },
-  render() {
-    const { isTabletOrSmaller, BasicMenu } = this
-
-    return !isTabletOrSmaller ? (
-      <BasicMenu />
-    ) : (
-      <NDrawer
-        class="app-menu__drawer"
-        v-model:show={this.modelGlobalDrawerValue}
-        placement="left"
-        displayDirective="show"
-        autoFocus={false}
-      >
-        <BasicMenu />
-      </NDrawer>
-    )
+    return () =>
+      isTabletOrSmaller.value ? (
+        <NDrawer
+          class="app-menu__drawer"
+          show={globalDrawerValue.value}
+          onUpdateShow={(value) => setRuntimeState('globalDrawerValue', value)}
+          placement="left"
+          displayDirective="show"
+          autoFocus={false}
+        >
+          {basicMenu()}
+        </NDrawer>
+      ) : (
+        basicMenu()
+      )
   },
 })

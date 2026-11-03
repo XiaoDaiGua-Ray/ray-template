@@ -1,4 +1,5 @@
 import { LAYOUT_SIDER_REF } from '@/app-config'
+import type { LayoutInst } from 'naive-ui'
 
 /**
  *
@@ -14,14 +15,15 @@ import { LAYOUT_SIDER_REF } from '@/app-config'
  * siderScrollTo(0, 0) // x, y 方向滚动到 0 位置
  */
 export const useSiderScroll = () => {
-  const siderInst = LAYOUT_SIDER_REF.value
-  const { scrollTo: siderScrollTo } = siderInst || {}
+  const scrollTo: LayoutInst['scrollTo'] = (
+    options: number | object,
+    y?: number,
+  ) => {
+    const sider = LAYOUT_SIDER_REF.value
 
-  if (!siderScrollTo) {
-    throw new Error(
-      `[useSiderScroll]: LAYOUT_SIDER_REF is not ready yet. please wait component mounted!`,
-    )
+    if (typeof options === 'number') sider?.scrollTo(options, y ?? 0)
+    else sider?.scrollTo(options)
   }
 
-  return siderScrollTo
+  return scrollTo
 }

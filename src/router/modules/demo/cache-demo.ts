@@ -7,7 +7,7 @@ const cacheDemo: AppRouteRecordRaw = {
   component: () => import('@/views/demo/cache-demo/index'),
   meta: {
     i18nKey: t('menu.CacheDemo'),
-    icon: 'other',
+    icon: 'navigation/other',
     order: 3,
   },
 }

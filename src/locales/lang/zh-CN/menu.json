@@ -30,6 +30,8 @@
   "Table": "表格",
   "TableAutoHeight": "自适应高度表格",
   "TablePro": "高级表格",
-  "TemplateHooks": "模板内置 Api",
-  "scrollReveal": "滚动动画"
+  "TemplateHooks": "模板 Hooks",
+  "scrollReveal": "滚动动画",
+  "LayoutDemo": "布局实验室",
+  "WebHooks": "Web Hooks"
 }

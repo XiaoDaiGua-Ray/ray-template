@@ -62,7 +62,7 @@ const Login = defineComponent({
         >
           <div class={['login-wrapper__content']}>
             <NFlex align="center" class="login-title__wrapper">
-              <RIcon name="ray" size="48" />
+              <RIcon name="logo/ray" size="48" />
               <NGradientText class="login-title" type="info" size={28}>
                 Ray Template
               </NGradientText>
@@ -76,7 +76,7 @@ const Login = defineComponent({
               >
                 <RIcon
                   customClassName="login-icon"
-                  name="language"
+                  name="system/language"
                   size="18"
                   cursor="pointer"
                 />
@@ -92,7 +92,11 @@ const Login = defineComponent({
                 class="login__left-wrapper"
               >
                 <NFlex align="center" vertical>
-                  <RIcon name="login_bg" width="368" height="368" />
+                  <RIcon
+                    name="illustration/login_bg"
+                    width="368"
+                    height="368"
+                  />
                   <NGradientText class="login-title" type="info" size={36}>
                     {$t('views.login.index.RayTemplate')}
                   </NGradientText>

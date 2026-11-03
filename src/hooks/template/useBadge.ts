@@ -6,22 +6,15 @@ import { isValueType } from '@/utils'
 
 export type BadgeKey = string | AppMenuOption
 
-let cachePreNormal: AppMenuOption | undefined = void 0
-
 // 渲染 extra
 const renderExtra = (
   option: AppMenuOption,
   assignExtra: AppMenuExtraOptions,
 ) => {
-  const { show, ...params } = assignExtra
-
   option.meta.extra = Object.assign({}, option.meta.extra, {
-    ...params,
-    show: show,
+    ...assignExtra,
   })
   option.extra = createMenuExtra(option)
-
-  cachePreNormal = option
 }
 
 // 根据匹配的菜单项渲染 extra

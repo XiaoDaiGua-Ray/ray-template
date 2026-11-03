@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { IconName } from '@/icons/manifest'
 import type { Recordable } from '@/types'
 import type { TagProps } from 'naive-ui'
 import type { DefineComponent, VNode } from 'vue'
@@ -57,7 +58,7 @@ export interface AppRouteMeta {
    * 如果配置为 string，则会自动使用 RIcon 尝试获取 icons 包下的图标。
    * VNode 类型，会直接使用传递图标渲染。
    */
-  icon?: string | VNode
+  icon?: IconName | VNode
   /**
    *
    * @description

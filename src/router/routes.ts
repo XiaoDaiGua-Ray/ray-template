@@ -33,7 +33,7 @@ export default [
         component: () => import('@/views/error/views/Error404'),
         meta: {
           i18nKey: t('menu.Error'),
-          icon: 'error',
+          icon: 'status/error',
           hidden: true,
           sameLevel: true,
         },

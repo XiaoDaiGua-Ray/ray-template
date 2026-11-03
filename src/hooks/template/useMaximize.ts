@@ -1,6 +1,5 @@
 import { LAYOUT_CONTENT_REF } from '@/app-config'
-import { getVariableToRefs, setVariable } from '@/global-variable'
-import { useElementFullscreen } from '../web'
+import { useRuntimeActions, useRuntimeGetters } from '@/store'
 import type { UseElementFullscreenOptions } from '../web'
 
 export interface ScrollToOptions {
@@ -10,70 +9,48 @@ export interface ScrollToOptions {
 }
 
 export interface MaximizeOptions extends UseElementFullscreenOptions {
-  /**
-   *
-   * 配置全屏后滚动的位置，left、top、behavior
-   * 基于 LAYOUT_CONTENT_REF 实现
-   *
-   * 但是，该配置项仅在传递 true 时生效
-   *
-   * @default undefined
-   */
   scrollToOptions?: ScrollToOptions
 }
 
-export const useMaximize = (options?: MaximizeOptions) => {
-  const contentEl = LAYOUT_CONTENT_REF as Ref<HTMLElement>
-  const { enter, exit, toggleFullscreen, isFullscreen } = useElementFullscreen(
-    contentEl,
-    options,
-  )
+export const useMaximize = (defaults?: MaximizeOptions) => {
+  const { layoutContentMaximize } = useRuntimeGetters()
+  const { setRuntimeState } = useRuntimeActions()
 
-  /**
-   *
-   * 当前 LayoutContent 是处于否全屏状态
-   * - true: 全屏
-   * - false: 非全屏
-   *
-   * @example
-   * isLayoutContentMaximized() // true or false
-   */
-  const isLayoutContentMaximized = computed(
-    () => getVariableToRefs('layoutContentMaximize').value,
-  )
-
-  /**
-   *
-   * @param full 是否网页全屏内容区域
-   *
-   * @description
-   * 该方法仅针对于 LayoutContent 区域，并且依赖全局属性 layoutContentMaximize。
-   *
-   * @example
-   * maximize(true) 全屏内容区域
-   * maximize(false) 取消全屏内容区域
-   */
+  // 最大化由布局 class 驱动；不同页面、标签菜单与退出按钮共享同一状态。
   const maximize = (full: boolean, options?: MaximizeOptions) => {
-    const { scrollToOptions } = options ?? {}
+    if (layoutContentMaximize.value === full) return
 
-    setVariable('layoutContentMaximize', full)
+    const config = { ...defaults, ...options }
 
     if (full) {
-      enter()
+      config.beforeEnter?.()
+      setRuntimeState('layoutContentMaximizeStyle', {
+        zIndex: config.zIndex ?? 999,
+        backgroundColor: config.backgroundColor,
+        transition: config.transition,
+      })
     } else {
-      exit()
+      config.beforeExit?.()
     }
 
-    if (scrollToOptions && full) {
-      contentEl?.value?.scrollTo(scrollToOptions)
-    }
+    setRuntimeState('layoutContentMaximize', full)
+    nextTick(() => {
+      if (layoutContentMaximize.value !== full) return
+
+      if (full && config.scrollToOptions) {
+        LAYOUT_CONTENT_REF.value?.scrollTo(config.scrollToOptions)
+      }
+
+      if (full) config.enter?.()
+      else config.exit?.()
+    })
   }
 
   return {
-    isLayoutContentMaximized,
-    isFullscreen,
+    isLayoutContentMaximized: layoutContentMaximize,
+    isFullscreen: layoutContentMaximize,
     maximize,
-    toggleFullscreen,
+    toggleFullscreen: () => maximize(!layoutContentMaximize.value),
   }
 }
 

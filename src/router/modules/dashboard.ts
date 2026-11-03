@@ -7,7 +7,7 @@ const dashboard: AppRouteRecordRaw = {
   component: () => import('@/views/dashboard'),
   meta: {
     i18nKey: t('menu.Dashboard'),
-    icon: 'dashboard',
+    icon: 'navigation/dashboard',
     order: 0,
   },
 }

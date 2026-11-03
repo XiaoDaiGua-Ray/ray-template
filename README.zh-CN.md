@@ -188,3 +188,10 @@ pnpm report
 ## 📄 证书
 
 [MIT License](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/LICENSE) © 2022-PRESENT [Ray](https://github.com/XiaoDaiGua-Ray)
+
+## Hooks、布局与图标
+
+- [Hooks 示例与约定](src/hooks/README.md)：`/template-hooks`、`/web-hooks`，覆盖 19 个自定义 Hook。
+- [布局模式与插槽](src/layout/README.md)：`/layout-demo`，可即时调整并保存偏好。
+- [分包图标与类型提示](src/icons/A_README.md)：`/svg-icons`；使用 `pnpm icons:generate` 与 `pnpm icons:check` 维护名称。
+- [全局状态](src/store/README.md)：临时状态归入 Pinia `runtime`，偏好保留在 `setting`。

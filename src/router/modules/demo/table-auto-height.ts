@@ -8,7 +8,7 @@ const axios: AppRouteRecordRaw = {
   component: () => import('@/views/demo/table-auto-height'),
   meta: {
     i18nKey: t('menu.TableAutoHeight'),
-    icon: 'other',
+    icon: 'navigation/other',
     order: 3,
     extra: {
       label: 'new',

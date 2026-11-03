@@ -6,7 +6,7 @@ const contextMenu: AppRouteRecordRaw = {
   component: () => import('@/views/demo/context-menu/index'),
   meta: {
     i18nKey: t('menu.ContextMenu'),
-    icon: 'other',
+    icon: 'navigation/other',
     order: 2,
   },
 }

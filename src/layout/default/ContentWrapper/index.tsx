@@ -1,23 +1,18 @@
-/**
- *
- * 使用 NSpin 组件实现 loading 效果
- * 默认添加 300ms 延迟
- */
-
+import { useRuntimeGetters } from '@/store'
 import './index.scss'
 import AppRequestCancelerProvider from '@/app-components/provider/AppRequestCancelerProvider'
 import { LAYOUT_CONTENT_SPIN_WHEN_ROUTE_CHANGE } from '@/app-config'
 import { RIcon, RTransitionComponent } from '@/components'
-import { getVariable } from '@/global-variable'
-import { useMaximize } from '@/hooks'
+import { useI18n, useMaximize } from '@/hooks'
 import { useSettingGetters } from '@/store'
-import { NSpin } from 'naive-ui'
+import { NButton, NSpin } from 'naive-ui'
 import type { GlobalThemeOverrides } from 'naive-ui'
 
 export default defineComponent({
   name: 'LayoutContentWrapper',
   setup() {
     const router = useRouter()
+    const { t } = useI18n()
 
     const { maximize } = useMaximize()
     const { getContentTransition } = useSettingGetters()
@@ -29,16 +24,23 @@ export default defineComponent({
       globalMainLayoutLoad,
       layoutContentMaximize,
       layoutContentSpinning,
-    } = getVariable()
+    } = useRuntimeGetters()
 
     const setupLayoutContentSpin = () => {
-      router.beforeEach(() => {
+      const removeBefore = router.beforeEach(() => {
         spinning.value = true
       })
 
-      router.afterEach(() => {
+      const removeAfter = router.afterEach(() => {
         spinning.value = false
       })
+      const removeError = router.onError(() => {
+        spinning.value = false
+      })
+
+      onScopeDispose(removeBefore)
+      onScopeDispose(removeAfter)
+      onScopeDispose(removeError)
     }
 
     if (LAYOUT_CONTENT_SPIN_WHEN_ROUTE_CHANGE) {
@@ -46,6 +48,7 @@ export default defineComponent({
     }
 
     return {
+      t,
       globalMainLayoutLoad,
       spinning,
       themeOverridesSpin,
@@ -69,7 +72,8 @@ export default defineComponent({
     return (
       <NSpin
         show={spinning || !globalMainLayoutLoad || layoutContentSpinning}
-        description="loading..."
+        delay={300}
+        description={this.t('layout.loading')}
         size="large"
         themeOverrides={themeOverridesSpin}
         class={[
@@ -79,14 +83,15 @@ export default defineComponent({
         ]}
       >
         {layoutContentMaximize ? (
-          <div
+          <NButton
             class="layout-content__maximize-out"
+            aria-label={this.t('layout.restore')}
             onClick={() => {
               maximize(false)
             }}
           >
-            <RIcon name="out" size="16" cursor="pointer" />
-          </div>
+            <RIcon name="action/out" size="16" cursor="pointer" />
+          </NButton>
         ) : null}
         <AppRequestCancelerProvider />
         {globalMainLayoutLoad ? (

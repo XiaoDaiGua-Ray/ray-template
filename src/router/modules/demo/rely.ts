@@ -7,7 +7,7 @@ const rely: AppRouteRecordRaw = {
   component: () => import('@/views/demo/rely/views/rely-about/index'),
   meta: {
     i18nKey: t('menu.RelyAbout'),
-    icon: 'rely',
+    icon: 'navigation/rely',
     order: 999,
   },
 }

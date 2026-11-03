@@ -1,11 +1,3 @@
-/**
- *
- * 系统管理员头像与名称
- *
- * 头像展示基于 naive ui Avatar 组件, 继承该组件所有属性与方法
- * 默认读取本地 session catch 缓存
- */
-
 import { useSigningGetters } from '@/store'
 import { avatarProps, NAvatar, NButton, NFlex } from 'naive-ui'
 import type { AvatarProps, FlexProps } from 'naive-ui'

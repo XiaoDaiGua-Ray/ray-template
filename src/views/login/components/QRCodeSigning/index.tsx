@@ -2,13 +2,6 @@ import './index.scss'
 import LOGO from '@/assets/images/ray.svg'
 import { Vue3NextQrcode } from 'vue3-next-qrcode'
 
-/**
- *
- * 二维码登陆
- *
- * 可以根据业务需求自行更改
- */
-
 const QRCodeSigning = defineComponent({
   name: 'QRCodeSigning',
   setup() {

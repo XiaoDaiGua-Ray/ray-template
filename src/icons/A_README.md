@@ -1,30 +1,39 @@
-## 说明
+# SVG 图标
 
-该文件包属于全局 `svg icon`，配合 `RIcon` 组件使用。
+图标使用相对目录作为完整名称，不再依赖全局唯一的文件名：
 
-## TIP
+```tsx
+import { RIcon } from '@/components'
+import type { IconName } from '@/icons'
 
-添加新的 `svg` 图标时，应该注意图标自带 `fill` 属性的管理。如果自带了 `fill` 属性的图标，则会导致使用组件 `color` 属性失效的问题。所以如果是需要动态使用 `css` 属性控制样式的图标，应该去掉其 `fill` 属性或者配置为 `fill = currentColor`。
-
-```html
-<svg fill="currentColor"></svg>
+const name: IconName = 'directional/resize_h'
+<RIcon name={name} size={24} />
 ```
 
-## 使用方法
-
-- 导入 `svg` 图标
-- 命名（`命名必须全局唯一，并且尽量避免使用特殊符号`）
-- 导入 `RIcon` 组件，配置 `name` 属性即可将 `svg` 作为图标使用
+`RIcon.name`、路由 `meta.icon`、侧栏 Logo 和图标包装组件共享严格的 `IconName` 联合类型。输入 `name` 时可获得完整分包路径提示，裸名称与不存在的路径会被 TypeScript 拒绝。类型来自文件生成，并非 TypeScript 自行读取文件系统。
 
 ## 分包
 
-从 `4.8.0` 版本起，支持了 `svg icon` 分包，可以按照业务模块进行分包管理。
+| 目录 | 用途 |
+| --- | --- |
+| `action` | 搜索、刷新、关闭、全屏、设置、打印等操作 |
+| `directional` | 箭头、方向、行首行尾与尺寸方向 |
+| `navigation` | 页面和功能导航 |
+| `logo` | 品牌及产品标识 |
+| `status` | 错误、帮助等状态提示 |
+| `system` | 语言、明暗主题与系统偏好 |
+| `illustration` | 保留原色的插画 |
 
-仅需要在 `src/icons` 目录下新建一个文件夹，然后将对应的 `svg` 图标放入其中即可。
+文件/目录使用小写字母、数字、下划线或连字符，首字符为字母；SVG 必须位于分包内。允许嵌套，例如 `business/orders/approved.svg` 对应 `business/orders/approved`。不同分包允许同名文件。
 
+单色图标使用 `currentColor`，有意留白用 `none`。品牌和插画保留原色，不保证 `color` 覆盖其所有颜色。避免包含内置脚本、事件处理器和外部资源。
 
-## 构建说明
+## 自动生成与注入
 
-`@spiriit/vite-plugin-svg-spritemap` 将图标打包为独立的带 hash 雪碧图。`RIcon` 使用标准 `href` 引用，开发和生产路径会跟随 Vite `base`，调用方仍然只需传递原有 `name`。
+- 新增、修改、删除或移动 SVG 时，开发服务自动检查并同步 `src/icons/manifest.ts`；增加或删除整个分包时自动重启开发服务。
+- `pnpm dev`、`build`、`dev-build`、`report` 和 `check` 都先自动生成清单；直接调用 Vite 时也由插件在启动/构建阶段同步。`typecheck` 与 `icons:check` 继续保持只读。也可单独运行 `pnpm icons:generate`。将更新后的清单与 SVG 一起维护。生成文件由项目 Prettier 配置格式化，模板同时遵守 ESLint 的声明空行规则。
+- `pnpm icons:check` 检查清单是否与目录一致，`pnpm typecheck` 和 `pnpm check` 会执行它。请修改生成脚本，不手工维护联合类型。
+- 每个顶层分包输出独立带 hash 的 SVG 雪碧图。生成的分包地址由 Spritemap 插件转换为随 Vite base 的开发/生产路径，`RIcon` 根据 name 的包名选择地址，再引用包含完整路径的 symbol ID。
+- `/svg-icons` 提供分包筛选、路径搜索和点击复制完整 TSX 用法。
 
-图标名称全局唯一，即使分在不同目录也不能重复。预览页的文件扫描放在独立 `.ts` 文件中，避免 Vite 8 对 `import.meta.glob` 与 JSX 混用的扫描限制；上游修复后可重新评估这一拆分。
+旧版本缓存里的裸 Logo 或菜单图标名在读取边界通过 `resolveIconName` 迁移；仅当文件名唯一时转换。新代码必须使用完整路径，不为裸名放宽组件类型。

@@ -63,7 +63,7 @@ export function useAppNavigation() {
 
     if (typeof target === 'number') {
       // 校验是否为 NaN
-      if (isNaN(target)) {
+      if (!Number.isInteger(target) || target < 0) {
         console.warn(`[navigationTo]: The ${target} is NaN, expect number.`)
 
         return
@@ -72,7 +72,7 @@ export function useAppNavigation() {
       const { getMenuOptions } = useMenuGetters()
 
       // 校验是否超出最大菜单长度
-      if (target > getMenuOptions.value.length) {
+      if (target >= getMenuOptions.value.length) {
         console.warn(
           `[navigationTo]: The current ${target} exceeds the maximum number of menus.`,
         )
@@ -89,25 +89,23 @@ export function useAppNavigation() {
             children: [firstChild],
           } = routes
 
-          deepNavigation(firstChild)
-
-          return
+          return deepNavigation(firstChild)
         }
 
-        isPushNavigation(routes.fullPath)
+        return isPushNavigation(routes.fullPath)
       }
 
-      deepNavigation(option)
+      return deepNavigation(option)
     } else if (typeof target === 'string') {
       const fd = getRoutes().find((curr) => curr.path === target)
 
       if (fd) {
-        isPushNavigation(fd.path)
+        return isPushNavigation(fd.path)
       } else {
         console.warn(`[navigationTo]: The path "${target}" is not found.`)
       }
     } else {
-      isPushNavigation(target.fullPath)
+      return isPushNavigation(target.fullPath)
     }
   }
 

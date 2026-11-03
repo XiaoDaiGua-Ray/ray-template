@@ -1,12 +1,3 @@
-/**
- *
- * app search 搜索功能
- * 递归模糊查找所有在 getMenuOptions 中匹配的项
- * 只有在满足 validMenuItemShow 的时候，才会出现在搜索结果中
- *
- * 该功能不会在小尺寸屏幕中启用（isTabletOrSmaller = true）
- */
-
 import './index.scss'
 import { RIcon } from '@/components'
 import { useDevice } from '@/hooks'
@@ -81,14 +72,6 @@ export default defineComponent({
     let searchElementIndex = 0
     // 缓存索引
     let preSearchElementIndex = searchElementIndex
-    const { isTabletOrSmaller } = useDevice({
-      observer: (val) => {
-        // 当处于小尺寸状态时，自动关闭搜索框
-        if (val) {
-          modelShow.value = false
-        }
-      },
-    })
     const loading = ref(false)
     // 激活样式 class name
     const ACTIVE_CLASS = 'content-item--active'
@@ -100,6 +83,16 @@ export default defineComponent({
       searchElementIndex = 0
       preSearchElementIndex = searchElementIndex
     }
+
+    // 断点 observer 会同步执行，先初始化其调用的重置函数。
+    const { isTabletOrSmaller } = useDevice({
+      observer: (val) => {
+        // 当处于小尺寸状态时，自动关闭搜索框
+        if (val) {
+          modelShow.value = false
+        }
+      },
+    })
 
     // 按下 ctrl + k 或者 command + k 激活搜索栏
     const registerArouseKeyboard = (e: KeyboardEvent) => {
@@ -227,7 +220,7 @@ export default defineComponent({
       } else if (typeof icon === 'function') {
         return <icon />
       } else {
-        return <RIcon name="search" size="24" />
+        return <RIcon name="action/search" size="24" />
       }
     }
 
@@ -306,7 +299,7 @@ export default defineComponent({
         <div class="content-item-icon">{RenderPreIcon(menuOption.meta)}</div>
         <div class="content-item-label">{menuOption.breadcrumbLabel}</div>
         <RIcon
-          name="enter"
+          name="directional/enter"
           size="18"
           customClassName="content-item-icon__enter"
         />
@@ -371,7 +364,7 @@ export default defineComponent({
                     onInput={fuzzySearchMenuOptions.bind(this)}
                   >
                     {{
-                      prefix: () => <RIcon name="search" size="24" />,
+                      prefix: () => <RIcon name="action/search" size="24" />,
                     }}
                   </NInput>
                 ),

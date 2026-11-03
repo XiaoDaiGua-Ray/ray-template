@@ -1,16 +1,8 @@
-/**
- *
- * 本来想通过写数据配置化的方式实现顶部的功能小按钮, 结果事实发现...
- * 但是我又不想改, 就这样吧
- *
- * 如果你希望自己 diy 一些东西，可以自己使用 computed 实现
- */
-
+import { useRuntimeActions, useRuntimeGetters } from '@/store'
 import './index.scss'
 import AppAvatar from '@/app-components/app/AppAvatar'
 import { LOCAL_OPTIONS } from '@/app-config'
 import { RIcon } from '@/components'
-import { getVariableToRefs, setVariable } from '@/global-variable'
 import { useDevice, useI18n } from '@/hooks'
 import { useSettingActions, useSettingGetters } from '@/store'
 import { NButton, NDropdown, NFlex, NLayoutHeader, NScrollbar } from 'naive-ui'
@@ -50,7 +42,7 @@ export default defineComponent({
     // 当前是否为平板或者更小的设备
     const { isTabletOrSmaller } = useDevice()
     // 获取全局 drawer 的值
-    const globalDrawerValue = getVariableToRefs('globalDrawerValue')
+    const globalDrawerValue = useRuntimeGetters().globalDrawerValue
 
     /**
      *
@@ -95,7 +87,10 @@ export default defineComponent({
         updateSettingState('lockScreenSwitch', true)
       },
       menu: () => {
-        setVariable('globalDrawerValue', !globalDrawerValue.value)
+        useRuntimeActions().setRuntimeState(
+          'globalDrawerValue',
+          !globalDrawerValue.value,
+        )
       },
     }
 
@@ -113,6 +108,7 @@ export default defineComponent({
     }
 
     return {
+      t,
       leftIconOptions,
       rightTooltipIconOptions,
       toolIconClick,
@@ -144,15 +140,20 @@ export default defineComponent({
         >
           <NFlex align="center" wrap={false}>
             {leftIconOptions.map((curr) => (
-              <TooltipIcon
+              <NButton
+                quaternary
                 key={curr.name}
-                iconName={curr.name}
-                tooltipText={
-                  isRef(curr.tooltip) ? curr.tooltip.value : curr.tooltip
-                }
-                customClassName={curr.iconClass}
-                onClick={toolIconClick.bind(this, curr.name)}
-              />
+                aria-label={this.t<string>('layout.toggleMenu')}
+                onClick={toolIconClick.bind(this, curr.eventKey ?? curr.name)}
+              >
+                <TooltipIcon
+                  iconName={curr.name}
+                  tooltipText={
+                    isRef(curr.tooltip) ? curr.tooltip.value : curr.tooltip
+                  }
+                  customClassName={curr.iconClass}
+                />
+              </NButton>
             ))}
             {getBreadcrumbSwitch ? <Breadcrumb /> : null}
           </NFlex>
@@ -172,7 +173,14 @@ export default defineComponent({
                 quaternary
                 size="medium"
                 key={curr.name}
-                onClick={toolIconClick.bind(this, curr.name)}
+                aria-label={this.t<string>(
+                  curr.eventKey === 'setting'
+                    ? 'headerTooltip.Setting'
+                    : curr.eventKey === 'github'
+                      ? 'headerTooltip.Github'
+                      : 'headerTooltip.FullScreen',
+                )}
+                onClick={toolIconClick.bind(this, curr.eventKey ?? curr.name)}
                 focusable={false}
               >
                 <RIcon name={curr.name} size={16} cursor="pointer" />
@@ -185,12 +193,13 @@ export default defineComponent({
             >
               <NButton
                 quaternary
+                aria-label={this.t<string>('layout.language')}
                 class="override-button__layout"
                 focusable={false}
               >
                 <RIcon
                   customClassName="layout-header__method--icon"
-                  name="language"
+                  name="system/language"
                   size="16"
                   cursor="pointer"
                 />

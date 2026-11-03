@@ -1,11 +1,3 @@
-/**
- *
- * RIframe 组件使用示例
- *
- * 具体使用参考 props 代码注释
- * 做了简单的一个组件封装, 希望有用
- */
-
 import { RIframe } from '@/components'
 import { NCard, NFlex } from 'naive-ui'
 

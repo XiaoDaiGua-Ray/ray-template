@@ -1,11 +1,3 @@
-/**
- *
- * 全局注入 naive ui 提示性组件
- * 使用该组件注册后, 可以直接通过 window.$message、window.$notification、window.$dialog、window.$loadingBar 访问
- * 但是, 使用该组件注册后, 使用 window.$notification 组件时不能更改 placement 位置(只能默认右上角弹出)
- * 如果需要更改弹出位置, 需要在需要地方重新定义组件注册
- */
-
 import { MESSAGE_PROVIDER } from '@/app-config'
 import { getNaiveLocales } from '@/locales/utils'
 import { useSettingGetters } from '@/store'
@@ -35,11 +27,8 @@ export default defineComponent({
 
     /**
      *
-     * 使用 createDiscreteApi 脱离上下文 api 注入一些常用的组件
-     * 通过 window.$message、window.$notification、window.$dialog、window.$loadingBar 访问
-     * 但是，使用该组件注册后，使用 window.$notification 组件时不能更改 placement 位置（只能默认右上角弹出）
-     *
-     * 改为函数包裹，避免 `slot default invoked outside of render` 警告
+     * @description
+     * 在渲染作用域内创建全局提示实例，使离散提示与当前主题和语言保持一致。
      */
     const discreteApi = () => {
       const { message, notification, dialog, loadingBar } = createDiscreteApi(
@@ -47,6 +36,9 @@ export default defineComponent({
         {
           configProviderProps: computed(() => ({
             theme: getAppTheme.value ? darkTheme : null,
+            themeOverrides: getPrimaryColorOverride.value,
+            locale: localePackage.value.locale,
+            dateLocale: localePackage.value.dateLocal,
           })),
         },
       )

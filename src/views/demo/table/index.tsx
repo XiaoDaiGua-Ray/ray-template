@@ -354,7 +354,7 @@ const TableView = defineComponent({
               {{
                 trigger: () => (
                   <RIcon
-                    name="search"
+                    name="action/search"
                     size="18"
                     cursor="pointer"
                     onClick={() => {

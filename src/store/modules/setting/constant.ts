@@ -1,6 +1,7 @@
-import type { SettingState } from './types'
+import type { LayoutConfig, SettingState } from './types'
 
 type OmitKeys =
+  | 'layoutConfig'
   | 'contentTransition'
   | 'watermarkSwitch'
   | 'keepAliveConfig'
@@ -17,6 +18,14 @@ interface Config extends Pick<SettingState, OmitKeys> {}
 
 // SettingDrawer 默认配置系统配置项
 const defaultSettingConfig: Readonly<Config> = {
+  layoutConfig: {
+    mode: 'side',
+    contentWidth: 'fluid',
+    contentMaxWidth: 1200,
+    contentPadding: 16,
+    fixedHeader: true,
+    fixedFooter: true,
+  },
   // 切换过渡效果
   contentTransition: 'scale',
   // 水印开关
@@ -86,4 +95,50 @@ export const getDefaultSettingConfig = (): Readonly<Config> => {
  */
 export const updateDefaultSettingConfig = (config: Partial<SettingState>) => {
   Object.assign(defaultSettingConfig, config)
+}
+
+export function normalizeLayoutConfig(value: unknown): LayoutConfig {
+  const defaults = defaultSettingConfig.layoutConfig
+  const config = value && typeof value === 'object' ? value : {}
+  const source = config as Partial<LayoutConfig>
+  const numberInRange = (
+    value: unknown,
+    fallback: number,
+    min: number,
+    max: number,
+  ) =>
+    typeof value === 'number' && Number.isFinite(value)
+      ? Math.min(max, Math.max(min, value))
+      : fallback
+
+  return {
+    mode:
+      source.mode === 'side' || source.mode === 'top' || source.mode === 'mixed'
+        ? source.mode
+        : defaults.mode,
+    contentWidth:
+      source.contentWidth === 'fixed' || source.contentWidth === 'fluid'
+        ? source.contentWidth
+        : defaults.contentWidth,
+    contentMaxWidth: numberInRange(
+      source.contentMaxWidth,
+      defaults.contentMaxWidth,
+      640,
+      2560,
+    ),
+    contentPadding: numberInRange(
+      source.contentPadding,
+      defaults.contentPadding,
+      0,
+      48,
+    ),
+    fixedHeader:
+      typeof source.fixedHeader === 'boolean'
+        ? source.fixedHeader
+        : defaults.fixedHeader,
+    fixedFooter:
+      typeof source.fixedFooter === 'boolean'
+        ? source.fixedFooter
+        : defaults.fixedFooter,
+  }
 }

@@ -28,12 +28,6 @@ import { useKeepAliveGetters, useSettingGetters } from '@/store'
 import props from './props'
 import type { TransitionProps } from './types'
 
-/**
- *
- * @description
- * 使用宏编译模式时，可以使用 defineOptions 声明组件选项。
- * 常用方法即是声明该组件的 name inheritAttrs 等属性。
- */
 defineOptions({
   name: 'RTransitionComponent',
 })

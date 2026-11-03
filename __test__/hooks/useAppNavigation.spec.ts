@@ -1,18 +1,42 @@
 import { useAppNavigation } from '../../src/hooks/template/useAppNavigation'
-import { useMenuGetters } from '../../src/store'
-import setupMiniApp from '../utils/setupMiniApp'
 
-describe('useAppNavigation', async () => {
-  await setupMiniApp()
+const { push, replace, menus } = vi.hoisted(() => ({
+  push: vi.fn().mockResolvedValue(void 0),
+  replace: vi.fn().mockResolvedValue(void 0),
+  menus: [{ fullPath: '/parent', children: [{ fullPath: '/target' }] }],
+}))
 
-  const { navigationTo } = useAppNavigation()
-  const { getMenuOptions } = useMenuGetters()
+vi.mock('../../src/hooks', () => ({
+  useVueRouter: () => ({
+    router: { push, replace, getRoutes: () => [{ path: '/target' }] },
+  }),
+}))
+vi.mock('../../src/store', () => ({
+  useMenuGetters: () => ({ getMenuOptions: { value: menus } }),
+}))
 
-  it('navigationTo', () => {
-    const [dashboard] = getMenuOptions.value
+describe('useAppNavigation', () => {
+  beforeEach(() => vi.clearAllMocks())
 
-    expect(navigationTo(dashboard.fullPath)).toBeUndefined()
-    expect(navigationTo(dashboard)).toBeUndefined()
-    expect(navigationTo(0)).toBeUndefined()
+  it('returns the navigation promise and supports paths, menu objects and indices', async () => {
+    const { navigationTo } = useAppNavigation()
+
+    expect(navigationTo('/target')).toBeInstanceOf(Promise)
+    await navigationTo(0)
+    expect(push).toHaveBeenLastCalledWith({ path: '/target', query: void 0 })
+    await navigationTo('/target', { isPush: false, query: { from: 'demo' } })
+    expect(replace).toHaveBeenCalledWith({
+      path: '/target',
+      query: { from: 'demo' },
+    })
+  })
+
+  it.each([-1, NaN, Infinity, 0.5, 1])('ignores invalid index %s', (index) => {
+    const warning = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+    expect(() => useAppNavigation().navigationTo(index)).not.toThrow()
+    expect(push).not.toHaveBeenCalled()
+    expect(warning).toHaveBeenCalled()
+    warning.mockRestore()
   })
 })

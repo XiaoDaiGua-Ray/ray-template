@@ -40,7 +40,7 @@ export default defineComponent({
   render() {
     return (
       <RIcon
-        name="print"
+        name="action/print"
         size={config.tableIconSize}
         cursor="pointer"
         onClick={this.printTableClick.bind(this)}

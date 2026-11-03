@@ -13,17 +13,17 @@ export default defineComponent({
       {
         label: '深色',
         key: 'dark',
-        icon: () => <RIcon name="dark" size="16" />,
+        icon: () => <RIcon name="system/dark" size="16" />,
       },
       {
         label: '浅色',
         key: 'light',
-        icon: () => <RIcon name="light" size="16" />,
+        icon: () => <RIcon name="system/light" size="16" />,
       },
       {
         label: '自动',
         key: 'auto',
-        icon: () => <RIcon name="system_os" size="16" />,
+        icon: () => <RIcon name="system/system_os" size="16" />,
       },
     ]
     const modelAppTheme = computed({

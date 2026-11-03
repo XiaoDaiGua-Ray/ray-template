@@ -7,7 +7,7 @@ const mockDemo: AppRouteRecordRaw = {
   component: () => import('@/views/demo/modal-demo/index'),
   meta: {
     i18nKey: t('menu.Modal'),
-    icon: 'other',
+    icon: 'navigation/other',
     order: 3,
   },
 }

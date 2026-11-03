@@ -20,30 +20,22 @@ $menuTagWrapperWidth: 76px;
   }
 }
 
-// 激活标签页关闭按钮样式
 .menu-tag .menu-tag__btn {
-  transition:
-    color 0.3s var(--n-bezier),
-    background-color 0.3s var(--n-bezier),
-    opacity 0.3s var(--n-bezier),
-    border-color 0.3s var(--n-bezier),
-    width 0.3s var(--n-bezier);
+  border-radius: 7px;
+  font-weight: 500;
 
   .n-button__icon {
-    opacity: 0;
-    width: 0;
+    width: var(--n-icon-size);
     height: var(--n-icon-size);
-    transition: all 0.3s var(--r-bezier);
-    margin-left: 0px;
-    transform: translateX(4px);
+    margin-left: 4px;
+    opacity: 0;
+    transition: opacity 0.18s ease;
   }
 
-  &:hover {
-    .n-button__icon {
-      opacity: 1;
-      width: var(--n-icon-size);
-      transition: all 0.3s var(--r-bezier);
-    }
+  &:hover .n-button__icon,
+  &:focus-visible .n-button__icon,
+  &.n-button--primary-type .n-button__icon {
+    opacity: 1;
   }
 }
 
@@ -70,12 +62,10 @@ $menuTagWrapperWidth: 76px;
   animation: elementRotate 0.8s linear infinite;
 }
 
-.r-template--light .menu-tag {
-  box-shadow: 0 2px 2px $layoutShadowColorLight;
-}
-
-.r-template--dark .menu-tag {
-  box-shadow: 0 2px 2px $layoutShadowColorDark;
+.menu-tag {
+  border-bottom: 1px solid var(--r-line);
+  box-shadow: none;
+  background: var(--r-surface);
 }
 
 .override-button__menu-tag {

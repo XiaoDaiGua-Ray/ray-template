@@ -1,13 +1,3 @@
-/**
- *
- * 该方法演示如何封装一个通用请求方法
- *
- * 步骤：
- * 1. 定义一个方法（见下面的 demo 方法）
- * 2. 暴露该函数
- * 3. 如果该方法在 setup 环境中使用，则可以使用 useHookPlusRequest 包裹该方法，即可便捷使用该请求函数。如果请求方法在非 setup 环境中使用，直接使用即可
- */
-
 import { request } from '@/axios'
 import type { BasicResponse } from '@/types'
 
@@ -25,9 +15,12 @@ interface JSONPlaceholder {
 
 /**
  *
- * @returns 测试
+ * @param city 天气查询接口所需的城市名称
  *
- * @method get
+ * @description
+ * 按城市名称请求演示天气接口。
+ *
+ * @returns 演示接口的响应 Promise
  */
 export const getWeather = (city: string) => {
   return request<AxiosTestResponse>({

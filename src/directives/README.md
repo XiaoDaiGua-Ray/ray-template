@@ -39,3 +39,9 @@ export default demoDirective
 
 // 4. 按照上述步骤执行后，会自动在模板中创建一个 v-demo 的指令供全局使用
 ```
+
+## 说明与来源
+
+指令用法与绑定值示例统一维护在 [使用说明](README.DIR.md)，不在指令工厂前重复整段教程。`disabled` 仅限制 CSS 交互，业务权限和提交校验仍需独立处理。
+
+水波纹辅助实现保留原有 [Pure Admin 来源标注](https://github.dev/pure-admin/vue-pure-admin/blob/main/src/components/ReCol/index.ts)。新增注释遵循 [仓库注释规范](../../docs/comment-style.md)。

@@ -1,4 +1,8 @@
-import { NAvatar, NFlex, NTooltip } from 'naive-ui'
+import './index.scss'
+import { RIcon } from '@/components'
+import { useI18n } from '@/hooks'
+import { NAvatar } from 'naive-ui'
+import type { PropType } from 'vue'
 
 interface AvatarOptions {
   key: string
@@ -9,66 +13,64 @@ interface AvatarOptions {
 
 export default defineComponent({
   name: 'AppShareLink',
+  props: {
+    variant: {
+      type: String as PropType<'compact' | 'cards'>,
+      default: 'compact',
+    },
+  },
   setup() {
+    const { t } = useI18n('dashboard')
     const avatarOptions: AvatarOptions[] = [
       {
         key: 'ray-js-note',
         src: 'https://note.youdao.com/s/ObWEe2BB',
-        tooltip: 'Ray的前端学习笔记',
+        tooltip: 'links.notes',
         icon: 'https://avatars.githubusercontent.com/u/51957438?v=4',
       },
       {
         key: 'ray-js-cover',
         src: 'https://note.youdao.com/s/IC8xKPdB',
-        tooltip: 'Ray的面试题总结',
+        tooltip: 'links.interviews',
         icon: 'https://avatars.githubusercontent.com/u/51957438?v=4',
       },
       {
         key: 'ray-template-doc',
         src: 'https://xiaodaigua-ray.github.io/ray-template-doc/',
-        tooltip: 'Ray Template Doc',
+        tooltip: 'links.docs',
         icon: 'https://avatars.githubusercontent.com/u/51957438?v=4',
       },
       {
         key: 'ray-template-doc-out',
         src: 'https://ray-template.yunkuangao.com/',
-        tooltip: 'Ray Template Doc (国内地址)',
+        tooltip: 'links.docsMirror',
         icon: 'https://avatars.githubusercontent.com/u/51957438?v=4',
       },
     ]
 
-    const handleLinkClick = (item: AvatarOptions) => {
-      window.open(item.src)
-    }
-
-    return {
-      handleLinkClick,
-      avatarOptions,
-    }
+    return { avatarOptions, t }
   },
   render() {
     return (
-      <NFlex>
-        {this.avatarOptions.map((curr) => (
-          <NTooltip key={curr.key}>
-            {{
-              trigger: () => (
-                <NAvatar
-                  round
-                  src={curr.icon}
-                  style={['cursor: pointer']}
-                  {...{
-                    onClick: this.handleLinkClick.bind(this, curr),
-                  }}
-                  objectFit="cover"
-                  size={24}
-                />
-              ),
-              default: () => curr.tooltip,
-            }}
-          </NTooltip>
-        ))}
-      </NFlex>
+      <div class={['r-share-links', `r-share-links--${this.variant}`]}>
+        <div class="r-share-links__grid">
+          {this.avatarOptions.map((item) => (
+            <a
+              class="r-share-link"
+              href={item.src}
+              aria-label={this.t<string>(item.tooltip)}
+              title={this.t<string>(item.tooltip)}
+              target="_blank"
+              rel="noreferrer"
+              key={item.key}
+            >
+              <NAvatar round src={item.icon} size={24} />
+              <span>{this.t(item.tooltip)}</span>
+              <RIcon name="action/shared" size={13} />
+            </a>
+          ))}
+        </div>
+      </div>
     )
   },
 })

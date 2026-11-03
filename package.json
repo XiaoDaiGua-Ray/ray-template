@@ -8,12 +8,14 @@
     "pnpm": "12.16.1"
   },
   "scripts": {
-    "dev": "vite",
-    "typecheck": "vue-tsc --noEmit",
-    "build": "pnpm typecheck && vite build",
+    "dev": "pnpm icons:generate && vite",
+    "icons:generate": "node scripts/icons.mjs",
+    "icons:check": "node scripts/icons.mjs --check",
+    "typecheck": "pnpm icons:check && vue-tsc --noEmit",
+    "build": "pnpm icons:generate && pnpm typecheck && vite build",
     "preview": "vite preview",
-    "dev-build": "pnpm typecheck && vite build --mode development",
-    "report": "vite build --mode report",
+    "dev-build": "pnpm icons:generate && pnpm typecheck && vite build --mode development",
+    "report": "pnpm icons:generate && vite build --mode report",
     "prepare": "husky",
     "test": "vitest",
     "test:run": "vitest run",
@@ -22,7 +24,7 @@
     "lint:fix": "eslint . --fix --max-warnings=0",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check": "pnpm env:check && pnpm typecheck && pnpm lint && pnpm format:check && pnpm test:run && vite build",
+    "check": "pnpm env:check && pnpm icons:generate && pnpm typecheck && pnpm lint && pnpm format:check && pnpm test:run && vite build",
     "env:check": "node scripts/doctor.mjs"
   },
   "lint-staged": {

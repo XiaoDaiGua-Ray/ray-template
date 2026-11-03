@@ -81,7 +81,7 @@ export const createLeftIconOptions = (opts: IconOptionsFC) => {
   const notTableOrSmallerOptions: IconOptions[] = []
   const tableOrSmallerOptions: IconOptions[] = [
     {
-      name: 'menu',
+      name: 'navigation/menu',
       size: 18,
       eventKey: 'menu',
     },
@@ -105,23 +105,25 @@ export const createRightIconOptions = (opts: IconOptionsFC) => {
 
   const basicOptions: IconOptions[] = [
     {
-      name: 'fullscreen',
+      name: 'action/fullscreen',
       size: 18,
-      eventKey: 'screen',
+      eventKey: 'fullscreen',
     },
     {
-      name: 'github',
+      name: 'logo/github',
       size: 18,
       eventKey: 'github',
     },
     {
-      name: 'setting',
+      name: 'action/setting',
       size: 18,
       eventKey: 'setting',
     },
   ]
   const notTableOrSmallerOptions: IconOptions[] = [...basicOptions]
-  const tableOrSmallerOptions: IconOptions[] = [...basicOptions]
+  const tableOrSmallerOptions: IconOptions[] = basicOptions.filter(
+    (option) => option.eventKey === 'setting',
+  )
 
   return isTabletOrSmaller!.value
     ? tableOrSmallerOptions

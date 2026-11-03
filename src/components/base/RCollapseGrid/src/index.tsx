@@ -1,13 +1,3 @@
-/**
- *
- * <https://www.naiveui.com/zh-CN/dark/components/grid>
- *
- * 可折叠操作栏
- * 可以结合表单或者表格使用，让你快捷的实现高级搜索功能
- *
- * 该组件完全基于 `NGrid` `NGridItem` 实现, 所以需要在使用该组件时使用 `NGridItem` 包裹元素
- */
-
 import './index.scss'
 import { RIcon } from '@/components'
 import { call } from '@/utils'
@@ -51,7 +41,7 @@ export default defineComponent({
           customClassName={`collapse-icon--arrow ${
             collapse ? '' : 'collapse-icon--arrow__expanded'
           }`}
-          name="expanded"
+          name="directional/expanded"
           size="14"
         />
       </div>

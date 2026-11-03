@@ -1,227 +1,337 @@
 import { RIcon } from '@/components'
-import { getVariableToRefs } from '@/global-variable'
 import {
   useAppNavigation,
+  useAppRoot,
   useBadge,
+  useContentScroll,
+  useI18n,
   useMaximize,
+  useSiderBar,
+  useSiderScroll,
   useSpinning,
   useTheme,
+  useVueRouter,
   useWatermark,
 } from '@/hooks'
-import { useSettingGetters } from '@/store'
-import { NButton, NCard, NFlex, NInput } from 'naive-ui'
+import { useMenuGetters, useRuntimeGetters, useSettingGetters } from '@/store'
+import { useTimeoutFn } from '@vueuse/core'
+import { NButton, NFlex, NInput, NTag } from 'naive-ui'
+import DemoPage from '../components/DemoPage'
+import HookExample from '../hooks/HookExample'
 
 export default defineComponent({
   name: 'TemplateHooks',
   setup() {
-    const currentMenuOption = ref('')
-    const maximizeRef = getVariableToRefs('layoutContentMaximize')
-    const watermark = ref(useSettingGetters().getWatermarkConfig.value.content)
-    const badgeValue = ref('new')
-
+    const { t } = useI18n('hooks')
+    const text = (key: string) => t<string>(key)
+    const { t: showcaseT } = useI18n('showcase')
+    const label = (key: string) => showcaseT<string>(key)
+    const { router } = useVueRouter()
+    const theme = useTheme()
+    const watermark = useWatermark()
+    const badge = useBadge()
+    const spinning = useSpinning()
+    const maximize = useMaximize()
+    const root = useAppRoot()
+    const tags = useSiderBar()
     const { navigationTo } = useAppNavigation()
-    const { maximize, isLayoutContentMaximized } = useMaximize()
-    const { reload, openSpin, closeSpin } = useSpinning()
-    const {
-      showWatermark,
-      hiddenWatermark,
-      setWatermarkContent,
-      toggleWatermark,
-    } = useWatermark()
-    const { darkTheme, lightTheme, toggleTheme, getAppTheme, syncSystemTheme } =
-      useTheme()
-    const {
-      hidden: badgeHidden,
-      show: badgeShow,
-      update: badgeUpdateLabel,
-    } = useBadge()
+    const contentScrollTo = useContentScroll()
+    const siderScrollTo = useSiderScroll()
+    const settings = useSettingGetters()
+    const { getMenuTagOptions } = useMenuGetters()
+    const runtime = useRuntimeGetters()
+    const badgeLabel = ref('new')
+    const watermarkText = ref(settings.getWatermarkConfig.value.content)
+    const { start: stopSpinLater } = useTimeoutFn(spinning.closeSpin, 800, {
+      immediate: false,
+    })
 
-    return {
-      navigationTo,
-      reload,
-      currentMenuOption,
-      maximize,
-      maximizeRef,
-      openSpin,
-      closeSpin,
-      showWatermark,
-      hiddenWatermark,
-      setWatermarkContent,
-      watermark,
-      toggleWatermark,
-      darkTheme,
-      lightTheme,
-      toggleTheme,
-      getAppTheme,
-      isLayoutContentMaximized,
-      badgeHidden,
-      badgeShow,
-      badgeUpdateLabel,
-      badgeValue,
-      syncSystemTheme,
-    }
-  },
-  render() {
-    const {
-      navigationTo,
-      reload,
-      maximize,
-      openSpin,
-      closeSpin,
-      showWatermark,
-      hiddenWatermark,
-      setWatermarkContent,
-      toggleWatermark,
-      darkTheme,
-      lightTheme,
-      toggleTheme,
-      getAppTheme,
-      isLayoutContentMaximized,
-      badgeHidden,
-      badgeShow,
-      badgeUpdateLabel,
-      syncSystemTheme,
-    } = this
+    onBeforeUnmount(spinning.closeSpin)
+    // 过渡期间组件仍可能渲染，操作目标保持为本示例页面。
+    const currentPath = router.currentRoute.value.path
+    const current = () => currentPath
+    const hasCurrentTag = computed(() =>
+      getMenuTagOptions.value.some((tag) => tag.fullPath === currentPath),
+    )
+    const example = (
+      name: string,
+      code: string,
+      children: () => JSX.Element,
+    ) => (
+      <HookExample
+        name={name}
+        description={text(`descriptions.${name}`)}
+        code={code}
+      >
+        {children()}
+      </HookExample>
+    )
 
-    return (
-      <NFlex vertical>
-        <NCard title="接口说明">
-          <h3>
-            hooks/template 包存放模板专属 hook
-            方法。这里不做过多的赘述，可以查看文档具体描述。
-          </h3>
-        </NCard>
-        <NCard title="useBadge 菜单标记">
-          <NFlex vertical>
-            <NInput v-model:value={this.badgeValue} />
-            <NFlex>
-              <NButton onClick={() => badgeHidden('/template-hooks')}>
-                隐藏当前菜单标记
-              </NButton>
-              <NButton
-                onClick={() =>
-                  badgeShow('/template-hooks', {
-                    label: this.badgeValue,
-                  })
-                }
-              >
-                显示当前菜单标记
-              </NButton>
-              <NButton
-                onClick={() =>
-                  badgeUpdateLabel('/template-hooks', {
-                    label: this.badgeValue,
-                  })
-                }
-              >
-                更新当前菜单标记
-              </NButton>
-              <NButton
-                onClick={() => {
-                  badgeUpdateLabel('/template-hooks', {
-                    label: this.badgeValue,
-                    icon: <RIcon name="error" size="18" />,
-                  })
-                }}
-              >
-                添加标记图标
-              </NButton>
-              <NButton
-                onClick={() => {
-                  badgeUpdateLabel('/template-hooks', {
-                    label: this.badgeValue,
-                    icon: void 0,
-                  })
-                }}
-              >
-                隐藏标记图标
-              </NButton>
-            </NFlex>
-          </NFlex>
-        </NCard>
-        <NCard title="useTheme 主题">
-          <NFlex vertical>
-            <h3>getAppTheme 获取当前主题色: {getAppTheme().themeLabel}</h3>
-            <NFlex>
-              <NButton onClick={() => darkTheme()}>切换暗黑主题</NButton>
-              <NButton onClick={() => lightTheme()}>切换明亮主题</NButton>
-              <NButton onClick={() => syncSystemTheme()}>跟随主题</NButton>
-              <NButton onClick={() => toggleTheme()}>切换主题</NButton>
-            </NFlex>
-          </NFlex>
-        </NCard>
-        <NCard title="useWatermark 水印">
-          <NFlex vertical>
-            <NInput
-              v-model:value={this.watermark}
-              onInput={(val) => {
-                setWatermarkContent(val)
-              }}
-            />
-            <NFlex>
-              <NButton onClick={() => showWatermark()}>显示水印</NButton>
-              <NButton onClick={() => hiddenWatermark()}>隐藏水印</NButton>
-              <NButton onClick={() => toggleWatermark()}>切换水印</NButton>
-            </NFlex>
-          </NFlex>
-        </NCard>
-        <NCard title="useSpinning">
-          <h3>
-            手动刷新内容区域，会使得当前路由页面内容强制重新加载（会执行完整的
-            vue 生命周期）。默认 800ms 延迟。
-          </h3>
-          <br />
-          <NFlex>
-            <NButton
-              onClick={() => {
-                reload()
-              }}
-            >
-              刷新（强制刷新）
-            </NButton>
-            <NButton
-              onClick={() => {
-                openSpin()
-
-                setTimeout(() => {
-                  closeSpin()
-                }, 800)
-              }}
-            >
-              触发加载动画（不强制刷新）
-            </NButton>
-          </NFlex>
-        </NCard>
-        <NCard title="useMaximize 内容区域最大化">
-          <h3>
-            isLayoutContentMaximized 检测当前内容区域是否最大化:
-            {isLayoutContentMaximized ? '最大化' : '正常尺寸'}
-          </h3>
-          <NButton
-            onClick={() => {
-              maximize(!this.maximizeRef, {
-                scrollToOptions: {
-                  left: 0,
-                  top: -9999,
-                },
-              })
-            }}
-          >
-            最大化内容区域，并且滚动至顶部
-          </NButton>
-        </NCard>
-        <NCard title="useAppNavigation 导航方法">
-          <h3>
-            navigationTo
-            参数为正整数时，会更具当前的菜单顺序进行自动导航匹配。但是此方法仅能导航一级菜单。并且如果导航菜单非根菜单项，会自动递归导航至一子菜单。
-            支持传入完整的菜单路径，如：/multi/multi-menu-one。
-          </h3>
-          <br />
-          <NButton onClick={() => navigationTo('/multi/multi-menu-one')}>
-            跳转至多级菜单
-          </NButton>
-        </NCard>
-      </NFlex>
+    return () => (
+      <DemoPage
+        title={label('templateTitle')}
+        description={text('templateIntro')}
+        eyebrow={label('templateEyebrow')}
+        meta="10 Hooks"
+      >
+        <h2 class="r-demo-section-heading">{label('appearanceAndPage')}</h2>
+        <div class="r-hook-grid">
+          {example(
+            'useTheme',
+            `const { darkTheme, lightTheme, toggleTheme, syncSystemTheme, getAppTheme } = useTheme()\ntoggleTheme()\ngetAppTheme().themeLabel`,
+            () => (
+              <NFlex align="center">
+                <NTag>{theme.getAppTheme().themeI18nLabel}</NTag>
+                <NButton onClick={theme.darkTheme}>{text('dark')}</NButton>
+                <NButton onClick={theme.lightTheme}>{text('light')}</NButton>
+                <NButton onClick={theme.syncSystemTheme}>
+                  {text('system')}
+                </NButton>
+                <NButton onClick={theme.toggleTheme}>{text('toggle')}</NButton>
+              </NFlex>
+            ),
+          )}
+          {example(
+            'useSpinning',
+            `const { openSpin, closeSpin, reload } = useSpinning()\nopenSpin()\n// Call closeSpin() when work finishes.\nreload(800)`,
+            () => (
+              <NFlex>
+                <NButton
+                  onClick={() => {
+                    spinning.openSpin()
+                    stopSpinLater()
+                  }}
+                >
+                  {text('spin')}
+                </NButton>
+                <NButton onClick={() => spinning.reload()}>
+                  {text('reload')}
+                </NButton>
+                <NTag>{String(runtime.layoutContentSpinning.value)}</NTag>
+              </NFlex>
+            ),
+          )}
+          {example(
+            'useMaximize',
+            `const { maximize, isLayoutContentMaximized, toggleFullscreen } = useMaximize()\nmaximize(true, { scrollToOptions: { top: 0 } })\nmaximize(false)`,
+            () => (
+              <NFlex align="center">
+                <NTag>{String(maximize.isLayoutContentMaximized.value)}</NTag>
+                <NButton onClick={maximize.toggleFullscreen}>
+                  {text('maximize')}
+                </NButton>
+              </NFlex>
+            ),
+          )}
+        </div>
+        <h2 class="r-demo-section-heading">{label('globalMarkers')}</h2>
+        <div class="r-hook-grid">
+          {example(
+            'useBadge',
+            `const { show, update, hidden } = useBadge()\nshow('/template-hooks', { label: 'new' })\nupdate('/template-hooks', { label: '3', type: 'warning' })\nhidden('/template-hooks')`,
+            () => (
+              <NFlex vertical>
+                <NInput
+                  value={badgeLabel.value}
+                  onUpdateValue={(value) => {
+                    badgeLabel.value = value
+                  }}
+                  aria-label={text('badgeLabel')}
+                />
+                <NFlex>
+                  <NButton
+                    onClick={() =>
+                      badge.show(current(), { label: badgeLabel.value })
+                    }
+                  >
+                    {text('show')}
+                  </NButton>
+                  <NButton
+                    onClick={() =>
+                      badge.update(current(), {
+                        label: badgeLabel.value,
+                        icon: <RIcon name="status/error" />,
+                        type: 'warning',
+                      })
+                    }
+                  >
+                    {text('update')}
+                  </NButton>
+                  <NButton
+                    onClick={() => badge.update(current(), { icon: void 0 })}
+                  >
+                    {text('clearIcon')}
+                  </NButton>
+                  <NButton onClick={() => badge.hidden(current())}>
+                    {text('hide')}
+                  </NButton>
+                </NFlex>
+              </NFlex>
+            ),
+          )}
+          {example(
+            'useWatermark',
+            `const { setWatermarkContent, showWatermark, hiddenWatermark, toggleWatermark } = useWatermark()\nsetWatermarkContent('Ray Template')\nshowWatermark()`,
+            () => (
+              <NFlex vertical>
+                <NInput
+                  value={watermarkText.value}
+                  onUpdateValue={(value) => {
+                    watermarkText.value = value
+                    watermark.setWatermarkContent(value)
+                  }}
+                  aria-label={text('watermarkText')}
+                />
+                <NFlex>
+                  <NButton onClick={watermark.showWatermark}>
+                    {text('show')}
+                  </NButton>
+                  <NButton onClick={watermark.hiddenWatermark}>
+                    {text('hide')}
+                  </NButton>
+                  <NButton onClick={watermark.toggleWatermark}>
+                    {text('toggle')}
+                  </NButton>
+                </NFlex>
+              </NFlex>
+            ),
+          )}
+        </div>
+        <h2 class="r-demo-section-heading">{label('navigationAndTabs')}</h2>
+        <div class="r-hook-grid">
+          {example(
+            'useAppNavigation',
+            `const { navigationTo } = useAppNavigation()\nawait navigationTo('/web-hooks', { query: { from: 'hooks' } })\n// A zero-based index navigates to the first child of that section.\nawait navigationTo(0)`,
+            () => (
+              <NFlex>
+                <NButton
+                  onClick={() =>
+                    navigationTo('/web-hooks', { query: { from: 'hooks' } })
+                  }
+                >
+                  {text('openWeb')}
+                </NButton>
+                <NButton onClick={() => navigationTo('/multi/multi-menu-one')}>
+                  {text('openNested')}
+                </NButton>
+                <NButton onClick={() => navigationTo(0)}>
+                  {text('firstMenu')}
+                </NButton>
+              </NFlex>
+            ),
+          )}
+          {example(
+            'useAppRoot',
+            `const { getRootRoute, getRootPath, getRootName, setRootRoute } = useAppRoot()\nsetRootRoute({ name: 'TemplateHooks', path: '/template-hooks' })`,
+            () => (
+              <NFlex vertical>
+                <code>{JSON.stringify(root.getRootRoute.value)}</code>
+                <NFlex>
+                  <NButton
+                    onClick={() =>
+                      root.setRootRoute({
+                        name: 'TemplateHooks',
+                        path: '/template-hooks',
+                      })
+                    }
+                  >
+                    {text('useCurrentHome')}
+                  </NButton>
+                  <NButton
+                    onClick={() =>
+                      root.setRootRoute({
+                        name: 'Dashboard',
+                        path: '/dashboard',
+                      })
+                    }
+                  >
+                    {text('restoreHome')}
+                  </NButton>
+                </NFlex>
+              </NFlex>
+            ),
+          )}
+          {example(
+            'useSiderBar',
+            `const { close, closeAll, closeLeft, closeRight, closeOther, getCurrentTagIndex } = useSiderBar()\ncloseOther('/template-hooks')`,
+            () => (
+              <NFlex vertical>
+                <code>
+                  {getMenuTagOptions.value
+                    .map((tag) => tag.fullPath)
+                    .join(' · ')}
+                </code>
+                <NFlex>
+                  <NButton onClick={() => tags.closeOther(current())}>
+                    {text('closeOther')}
+                  </NButton>
+                  <NButton
+                    disabled={
+                      !hasCurrentTag.value || !tags.checkCloseLeft(current())
+                    }
+                    onClick={() => tags.closeLeft(current())}
+                  >
+                    {text('closeLeft')}
+                  </NButton>
+                  <NButton
+                    disabled={
+                      !hasCurrentTag.value || !tags.checkCloseRight(current())
+                    }
+                    onClick={() => tags.closeRight(current())}
+                  >
+                    {text('closeRight')}
+                  </NButton>
+                  <NButton onClick={() => tags.close(current())}>
+                    {text('closeCurrent')}
+                  </NButton>
+                  <NButton onClick={tags.closeAll}>{text('closeAll')}</NButton>
+                </NFlex>
+              </NFlex>
+            ),
+          )}
+        </div>
+        <h2 class="r-demo-section-heading">{label('scrollControls')}</h2>
+        <div class="r-hook-grid">
+          {example(
+            'useContentScroll',
+            `const contentScrollTo = useContentScroll()\ncontentScrollTo({ top: 0, behavior: 'smooth' })\ncontentScrollTo(0, 300)`,
+            () => (
+              <NFlex>
+                <NButton
+                  onClick={() =>
+                    contentScrollTo({ top: 0, behavior: 'smooth' })
+                  }
+                >
+                  {text('contentTop')}
+                </NButton>
+                <NButton onClick={() => contentScrollTo(0, 300)}>
+                  {text('content300')}
+                </NButton>
+              </NFlex>
+            ),
+          )}
+          {example(
+            'useSiderScroll',
+            `const siderScrollTo = useSiderScroll()\nsiderScrollTo({ top: 0, behavior: 'smooth' })\nsiderScrollTo(0, 300)`,
+            () => (
+              <NFlex>
+                <NButton
+                  disabled={settings.getLayoutConfig.value.mode === 'top'}
+                  onClick={() => siderScrollTo({ top: 0, behavior: 'smooth' })}
+                >
+                  {text('siderTop')}
+                </NButton>
+                <NButton
+                  disabled={settings.getLayoutConfig.value.mode === 'top'}
+                  onClick={() => siderScrollTo(0, 300)}
+                >
+                  {text('sider300')}
+                </NButton>
+              </NFlex>
+            ),
+          )}
+        </div>
+      </DemoPage>
     )
   },
 })

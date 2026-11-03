@@ -1,0 +1,71 @@
+:root {
+  --r-primary-text: var(--r-theme-primary-color);
+  --r-selected-text: var(--r-theme-primary-color);
+  --r-canvas: #f5f7fb;
+  --r-surface: #ffffff;
+  --r-surface-muted: #f7f9fc;
+  --r-surface-hover: #eef2f8;
+  --r-line: #e4e9f1;
+  --r-control-border: #8492a8;
+  --r-text: #1d2a3e;
+  --r-text-secondary: #52647c;
+  --r-text-muted: #617187;
+  --r-shadow-soft: 0 1px 2px rgb(25 43 74 / 3%), 0 6px 20px rgb(25 43 74 / 3%);
+  --r-radius: 12px;
+  --r-font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  color-scheme: light;
+}
+
+.r-template--dark {
+  --r-primary-text: var(--r-text-secondary);
+  --r-selected-text: var(--r-text);
+  --r-canvas: #101722;
+  --r-surface: #172131;
+  --r-surface-muted: #1c293b;
+  --r-surface-hover: #243247;
+  --r-line: #2c394d;
+  --r-control-border: #687b96;
+  --r-text: #e9eef7;
+  --r-text-secondary: #b3c0d3;
+  --r-text-muted: #a0b0c6;
+  --r-shadow-soft: 0 1px 2px rgb(0 0 0 / 10%), 0 8px 24px rgb(0 0 0 / 10%);
+  color-scheme: dark;
+}
+
+@media (forced-colors: active) {
+  :root,
+  .r-template--dark {
+    --r-primary-text: CanvasText;
+    --r-selected-text: CanvasText;
+    --r-canvas: Canvas;
+    --r-surface: Canvas;
+    --r-surface-muted: Canvas;
+    --r-surface-hover: Canvas;
+    --r-line: CanvasText;
+    --r-control-border: ButtonText;
+    --r-text: CanvasText;
+    --r-text-secondary: CanvasText;
+    --r-text-muted: CanvasText;
+    --r-shadow-soft: none;
+  }
+}
+
+:where(button, a, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--r-theme-primary-color);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .r-layout-full *,
+  .r-layout-full *::before,
+  .r-layout-full *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.r-template--dark .menu-tag .menu-tag__btn.n-button--primary-type,
+.r-template--dark .r-layout-settings .r-layout-preset[aria-pressed='true'] {
+  color: var(--r-text);
+}

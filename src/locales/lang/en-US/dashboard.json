@@ -1,0 +1,31 @@
+{
+  "title": "Your workspace is ready.",
+  "description": "Explore the components, layouts and tools that help you focus on building your application.",
+  "stateManagement": "Reactive state management",
+  "explore": "Explore the template",
+  "hooks": "Template Hooks",
+  "hooksDescription": "Interactive composable examples",
+  "layout": "Layout playground",
+  "layoutDescription": "Preview navigation and content layouts",
+  "icons": "SVG icon library",
+  "iconsDescription": "Packages and full-path completion",
+  "project": "Project overview",
+  "projectDescription": "A practical set of engineering defaults and development tools for a straightforward start to your application.",
+  "routing": "Routing & access",
+  "themeAndLocale": "Themes & locales",
+  "feedbackBefore": "Share your suggestions in",
+  "feedbackAfter": ".",
+  "author": "About the author",
+  "frameworks": "Frameworks",
+  "experience": "Experience",
+  "experienceValue": "A frontend learner with two and a half years of practice",
+  "bio": "Introduction",
+  "bioValue": "Work hard, take a break, and keep making things better.",
+  "linksTitle": "Documentation & learning resources",
+  "links": {
+    "notes": "Ray’s frontend notes",
+    "interviews": "Ray’s interview notes",
+    "docs": "Ray Template documentation",
+    "docsMirror": "Ray Template documentation (China)"
+  }
+}

@@ -400,14 +400,14 @@ export default defineComponent({
                 <NButton onClick={() => (this.collapseRef = true)} secondary>
                   {{
                     default: () => '受控展开',
-                    icon: () => <RIcon name="dark" size="18" />,
+                    icon: () => <RIcon name="system/dark" size="18" />,
                   }}
                 </NButton>
               ) : (
                 <NButton onClick={() => (this.collapseRef = false)} secondary>
                   {{
                     default: () => '受控收起',
-                    icon: () => <RIcon name="light" size="18" />,
+                    icon: () => <RIcon name="system/light" size="18" />,
                   }}
                 </NButton>
               ),

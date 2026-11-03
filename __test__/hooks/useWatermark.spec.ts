@@ -29,4 +29,11 @@ describe('useWatermark', async () => {
 
     expect(hidden.value).toBe(false)
   })
+  it('keeps the previous text when an empty string is supplied', () => {
+    setWatermarkContent('Keep this')
+    setWatermarkContent('')
+    expect(useSettingGetters().getWatermarkConfig.value.content).toBe(
+      'Keep this',
+    )
+  })
 })

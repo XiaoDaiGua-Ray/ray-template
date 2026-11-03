@@ -1,3 +1,4 @@
+import type { IconName } from '@/icons/manifest'
 import type { MaybeArray } from '@/types'
 import type { PropType } from 'vue'
 
@@ -11,8 +12,8 @@ const props = {
     default: 'icon',
   },
   name: {
-    type: String,
-    required: true,
+    type: String as PropType<IconName>,
+    required: true as const,
   },
   size: {
     type: [Number, String],

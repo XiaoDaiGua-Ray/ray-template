@@ -63,4 +63,14 @@ describe('useBadge', async () => {
 
     expect(dashboard.meta.extra?.label).toBe(label)
   })
+  it('preserves explicit visibility when updating only the label', () => {
+    const [dashboard] = getMenuOptions.value
+
+    hidden(dashboard)
+    update(dashboard, { label: 'Changed while hidden' })
+    expect(dashboard.meta.extra?.show).toBe(false)
+    show(dashboard)
+    update(dashboard, { label: 'Changed while visible' })
+    expect(dashboard.meta.extra?.show).toBe(true)
+  })
 })

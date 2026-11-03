@@ -1,0 +1,19 @@
+{
+  "preview": "Interactive example",
+  "code": "View usage",
+  "copyCode": "Copy code",
+  "templateTitle": "Template Hooks",
+  "templateEyebrow": "COMPOSABLES / TEMPLATE",
+  "webTitle": "Web Hooks",
+  "webEyebrow": "COMPOSABLES / WEB",
+  "appearanceAndPage": "Appearance & page state",
+  "globalMarkers": "Global markers",
+  "navigationAndTabs": "Navigation & tabs",
+  "scrollControls": "Scroll controls",
+  "commonUtilities": "Common utilities",
+  "browserCapabilities": "Browser capabilities",
+  "layoutEyebrow": "WORKSPACE / LAYOUT",
+  "iconsEyebrow": "ASSETS / ICONS",
+  "livePreferences": "Live preview · Saved automatically",
+  "layoutControls": "Layout & display"
+}

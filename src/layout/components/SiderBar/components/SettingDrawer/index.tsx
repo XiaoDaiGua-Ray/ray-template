@@ -1,3 +1,5 @@
+import { useI18n } from '@/hooks'
+import LayoutSettings from '@/layout/components/LayoutSettings'
 import './index.scss'
 import { RIcon, useModal } from '@/components'
 import { useMenuActions, useSettingActions, useSettingGetters } from '@/store'
@@ -23,6 +25,7 @@ export default defineComponent({
   name: 'SettingDrawer',
   props: drawerProps,
   setup() {
+    const { t } = useI18n()
     const { create: createModal } = useModal()
     const { changePrimaryColor, updateSettingState } = useSettingActions()
     const {
@@ -72,8 +75,6 @@ export default defineComponent({
             // @ts-ignore
             modelReactive[key] = value
 
-            console.log(value, key)
-
             updateSettingState(key as keyof SettingState, value)
           })
 
@@ -85,6 +86,7 @@ export default defineComponent({
     provide(SETTING_DRAWER_INJECT_KEY, modelReactive)
 
     return {
+      t,
       changePrimaryColor,
       getAppTheme,
       getPrimaryColorOverride,
@@ -103,10 +105,13 @@ export default defineComponent({
           {{
             default: () => (
               <NTabs type="bar" animated defaultValue="appearance">
+                <NTabPane name="layout" tab={this.t<string>('layout.tab')}>
+                  <LayoutSettings />
+                </NTabPane>
                 <NTabPane name="appearance" tab="外观">
                   <SegmentViewsAppearance />
                 </NTabPane>
-                <NTabPane name="menu" tab="菜单">
+                <NTabPane name="navigation/menu" tab="菜单">
                   <SegmentViewsCustomMenu />
                 </NTabPane>
                 <NTabPane name="watermark" tab="水印">
@@ -121,7 +126,7 @@ export default defineComponent({
               <NFlex justify="flex-start">
                 <NButton type="warning" onClick={defaultSettingBtnClick}>
                   {{
-                    icon: () => <RIcon name="reload" />,
+                    icon: () => <RIcon name="action/reload" />,
                     default: () => '初始化配置',
                   }}
                 </NButton>

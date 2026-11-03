@@ -106,6 +106,8 @@ export const useElementFullscreen = (
   // 每个实例独立的状态
   const isFullscreen = ref(false)
   const instanceZIndex = ref(0)
+  let frame: number | undefined
+  let activeElement: HTMLElement | null = null
   const originalStyles = {
     position: '',
     width: '',
@@ -116,6 +118,7 @@ export const useElementFullscreen = (
     transition: '',
     zIndex: '',
     backgroundColor: '',
+    boxSizing: '',
   }
 
   const enter = () => {
@@ -125,7 +128,12 @@ export const useElementFullscreen = (
       return
     }
 
+    if (activeElement === element) return
+
+    if (activeElement) exit()
+
     beforeEnter?.()
+    activeElement = element
 
     // 保存原始样式（只在第一次进入时保存）
     if (!isFullscreen.value) {
@@ -139,6 +147,7 @@ export const useElementFullscreen = (
         'transition',
         'zIndex',
         'backgroundColor',
+        'boxSizing',
       ])
 
       Object.assign(originalStyles, o)
@@ -165,6 +174,7 @@ export const useElementFullscreen = (
 
     // 设置初始位置（不设置 transition）
     element.style.position = 'fixed'
+    element.style.boxSizing = 'border-box'
     element.style.top = `${top}px`
     element.style.left = `${left}px`
     element.style.width = `${width}px`
@@ -183,11 +193,12 @@ export const useElementFullscreen = (
     element.style.transition = transition
 
     // 使用 requestAnimationFrame 应用最终样式
-    requestAnimationFrame(() => {
+    frame = requestAnimationFrame(() => {
       element.style.top = '0px'
       element.style.left = '0px'
-      element.style.width = '100vw'
-      element.style.height = '100vh'
+      element.style.width = '100dvw'
+      element.style.height = '100dvh'
+      frame = void 0
     })
 
     // 先更新状态
@@ -197,13 +208,17 @@ export const useElementFullscreen = (
   }
 
   const exit = () => {
-    const element = unrefElement(target) as HTMLElement | null
+    const element = activeElement
 
     if (!element) {
       return
     }
 
     beforeExit?.()
+
+    if (frame !== void 0) cancelAnimationFrame(frame)
+
+    frame = void 0
 
     // 先更新状态
     isFullscreen.value = false
@@ -222,6 +237,7 @@ export const useElementFullscreen = (
       transition: 'transition',
       zIndex: 'z-index',
       backgroundColor: 'background-color',
+      boxSizing: 'box-sizing',
     }
 
     // 批量恢复样式
@@ -235,6 +251,7 @@ export const useElementFullscreen = (
       }
     })
 
+    activeElement = null
     _exit?.()
   }
 

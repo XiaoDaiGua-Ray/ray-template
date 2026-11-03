@@ -7,7 +7,7 @@ const r: AppRouteRecordRaw = {
   component: () => import('@/views/demo/draggable-card'),
   meta: {
     i18nKey: t('menu.DraggableCard'),
-    icon: 'other',
+    icon: 'navigation/other',
     order: 2,
     extra: {
       label: 'drag',

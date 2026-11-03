@@ -1,3 +1,5 @@
+import type { IconName } from '@/icons'
+import type { PropType } from 'vue'
 import './index.scss'
 import { RIcon } from '@/components'
 import { NTooltip, tooltipProps } from 'naive-ui'
@@ -8,7 +10,7 @@ export default defineComponent({
   props: {
     ...tooltipProps,
     iconName: {
-      type: String,
+      type: String as PropType<IconName>,
       required: true,
     },
     customClassName: {

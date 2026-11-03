@@ -7,7 +7,7 @@ const previewSVGIcons: AppRouteRecordRaw = {
   component: () => import('@/views/demo/svg-icons/index'),
   meta: {
     i18nKey: t('menu.SvgIcon'),
-    icon: 'other',
+    icon: 'navigation/other',
     order: 3,
   },
 }

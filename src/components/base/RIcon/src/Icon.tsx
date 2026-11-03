@@ -1,4 +1,6 @@
 import './index.scss'
+import type { IconPackage } from '@/icons'
+import { iconSprites } from '@/icons/manifest'
 import { call, completeSize } from '@/utils'
 import props from './props'
 
@@ -7,7 +9,8 @@ export default defineComponent({
   props,
   setup(props) {
     const symbolId = computed(
-      () => `/__spritemap#${props.prefix}-${props.name}`,
+      () =>
+        `${iconSprites[props.name.split('/')[0] as IconPackage]}#${props.prefix}-${props.name}`,
     )
     const cssVars = computed(() => {
       const cssVar = {

@@ -1,0 +1,9 @@
+{
+  "title": "SVG icon library",
+  "description": "Browse icons by package and click to copy their full-path usage. Icon edits automatically synchronize types and asset references.",
+  "search": "Search icon paths",
+  "allPackages": "All packages",
+  "copy": "Click an icon to copy TSX usage",
+  "empty": "No matching icons",
+  "packagesLabel": "packages"
+}

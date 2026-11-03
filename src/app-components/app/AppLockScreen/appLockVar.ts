@@ -1,25 +1,12 @@
-import { APP_CATCH_KEY } from '@/app-config'
-import { useStorage } from '@vueuse/core'
-
-const appLockScreen = useStorage(
-  APP_CATCH_KEY.isAppLockScreen,
-  false,
-  window.localStorage,
-  {
-    mergeDefaults: true,
-  },
-)
+import { useLockScreenActions, useLockScreenGetters } from '@/store'
 
 const useAppLockScreen = () => {
-  const setLockAppScreen = (bool: boolean) => {
-    appLockScreen.value = bool
-  }
-
-  const getLockAppScreen = () => appLockScreen.value
+  const { getLocked } = useLockScreenGetters()
+  const { setLocked } = useLockScreenActions()
 
   return {
-    setLockAppScreen,
-    getLockAppScreen,
+    setLockAppScreen: setLocked,
+    getLockAppScreen: () => getLocked.value,
   }
 }
 

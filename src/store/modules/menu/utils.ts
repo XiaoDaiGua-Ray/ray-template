@@ -1,8 +1,7 @@
-/** 本方法感谢 <https://yunkuangao.me/> 的支持 */
-
 import { APP_CATCH_KEY } from '@/app-config'
 import { RIcon } from '@/components'
 import { useAppRoot, useI18n } from '@/hooks'
+import { resolveIconName } from '@/icons'
 import type { AppMenuKey, AppMenuOption } from '@/types/modules/app'
 import { getStorage, isValueType } from '@/utils'
 import { NTag } from 'naive-ui'
@@ -12,12 +11,14 @@ import { piniaSettingStore } from '../setting'
 
 /**
  *
- * @param node 当前节点
- * @param key 动态字段
- * @param value 匹配值
+ * @param node 待检查的菜单节点
+ * @param key 需要比较的属性
+ * @param value 目标属性值
  *
  * @description
- * 检查是否为所需项。
+ * 比较菜单节点的指定属性，原实现参考 https://yunkuangao.me/。
+ *
+ * @returns 节点有效且指定属性匹配时返回 true
  */
 const isMatch = (
   node: AppMenuOption,
@@ -150,10 +151,14 @@ export const createMenuIcon = (option: AppMenuOption) => {
 
   const { menuConfig } = piniaSettingStore()
   const { collapsed } = piniaMenuStore()
+  const name = resolveIconName(icon)
+
+  if (!name) return
+
   const _icon = h(
     RIcon,
     {
-      name: icon,
+      name,
       size: collapsed ? menuConfig.collapsedIconSize : menuConfig.iconSize,
       cursor: 'pointer',
     },

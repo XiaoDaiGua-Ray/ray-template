@@ -7,7 +7,7 @@ const table: AppRouteRecordRaw = {
   component: () => import('@/views/demo/table/index'),
   meta: {
     i18nKey: t('menu.Table'),
-    icon: 'other',
+    icon: 'navigation/other',
     order: 2,
     extra: {
       label: 'useTable',

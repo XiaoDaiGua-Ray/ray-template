@@ -1,29 +1,26 @@
-/**
- *
- * 注册 `vue-i18n`
- *
- * 预设 `localeLanguage` 作为缓存 `key`
- *
- * 预设中文作为基础语言
- *
- * `naive ui` 语言包切换
- *
- * 注意:
- *   - 建议按照主流约定语言包命名
- */
-
 import { LOCAL_OPTIONS, SYSTEM_FALLBACK_LOCALE } from '@/app-config'
 import { getAppDefaultLanguage, getAppLocalMessages } from '@/locales/utils'
 import type { App } from 'vue'
 import { createI18n } from 'vue-i18n'
 import type { I18n, I18nOptions } from 'vue-i18n'
 
-/** i18n 实例 */
-export let i18n: I18n
+/** 已安装的国际化实例；热更新期间保留同一个实例。 */
+export let i18n: I18n | undefined = import.meta.hot?.data.i18n as
+  I18n | undefined
+
+if (import.meta.hot) {
+  import.meta.hot.dispose((data) => {
+    // 组件热更新不会重新安装 Vue 插件，保留语言和消息的原有引用。
+    data.i18n = i18n
+  })
+}
 
 /**
  *
- * 获取所有语言包，创建 i18n 实例
+ * @description
+ * 加载本地语言包，并按缓存语言创建国际化实例。
+ *
+ * @returns 尚未安装到应用的国际化实例
  */
 const createI18nOptions = async () => {
   const locale = getAppDefaultLanguage()
@@ -44,9 +41,10 @@ const createI18nOptions = async () => {
 
 /**
  *
- * @param app vue app instance
+ * @param app 需要注册国际化插件的 Vue 应用
  *
- * 注册 i18n，并且缓存实例
+ * @description
+ * 安装国际化插件，并更新共享的国际化实例。
  */
 export const setupI18n = async (app: App<Element>) => {
   const i18nInstance = await createI18nOptions()

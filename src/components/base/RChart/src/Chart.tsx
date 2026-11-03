@@ -59,30 +59,6 @@ echartThemes.forEach((curr) => {
   registerTheme(curr.name, curr.theme)
 })
 
-/**
- *
- * @description
- * 基于 echarts 的图表组件。
- *
- * 让你仅需要关注 echarts options 的配置管理，而不需要关心 echarts 的初始化、销毁、主题切换等操作。
- *
- * 如果需要拓展配置项，进需要在使用该组件的时候使用 use 方法注册对应 chart 组件即可。
- *
- * @example
- * <template>
- *  <RChart :options="options" @register="register" />
- * </template>
- *
- * <script setup>
- * import { RChart } from '@/components'
- *
- * import { useChart } from 'vue'
- * import { ref } from 'vue'
- *
- * const [register, { ...Hooks }] = useChart()
- * const options = ref({ ... })
- * </script>
- */
 export default defineComponent({
   name: 'RChart',
   props,

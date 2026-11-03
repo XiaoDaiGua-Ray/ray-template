@@ -5,7 +5,7 @@ const iframe: AppRouteRecordRaw = {
   path: '/iframe',
   component: () => import('@/views/demo/iframe/index'),
   meta: {
-    icon: 'other',
+    icon: 'navigation/other',
     order: 2,
     noLocalTitle: 'iframe',
   },

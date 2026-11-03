@@ -1,0 +1,52 @@
+.r-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-block: 8px 4px;
+
+  &__copy {
+    min-width: 0;
+  }
+
+  &__eyebrow {
+    margin-block-end: 10px;
+    color: var(--r-text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    color: var(--r-text);
+    font-size: clamp(1.5rem, calc(1.15rem + 1cqi), 1.875rem);
+    line-height: 1.3;
+    font-weight: 650;
+    letter-spacing: -0.03em;
+  }
+
+  &__description {
+    max-width: 68ch;
+    margin-block-start: 12px;
+    color: var(--r-text-secondary);
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+}
+
+@container (max-width: 600px) {
+  .r-page-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+  }
+}

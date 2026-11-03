@@ -7,7 +7,7 @@ const routerDemo: AppRouteRecordRaw = {
   component: LAYOUT,
   meta: {
     i18nKey: t('menu.RouterDemo'),
-    icon: 'other',
+    icon: 'navigation/other',
     order: 3,
   },
   children: [

@@ -15,6 +15,8 @@ export const useWatermark = () => {
    * setWatermarkContent(undefined) // 沿用上次一次的水印内容
    */
   const setWatermarkContent = (content: string) => {
+    if (!content) return
+
     const { getWatermarkConfig } = useSettingGetters()
     const assignWatermark = Object.assign({}, getWatermarkConfig.value, {
       content,

@@ -1,16 +1,7 @@
-/**
- *
- * @description
- * 该方法借鉴 pure admin ripple directive 实现。
- *
- * 在原有指令实现基础上，补充了 ts 签名与注释。并且结合本模板的特性实现。
- *
- * @see https://github.dev/pure-admin/vue-pure-admin/blob/main/src/components/ReCol/index.ts
- */
-
 import { isValueType } from '@/utils'
 import type { RippleBindingValue, RippleElement, RippleOptions } from './types'
 
+/** 水波纹动画使用的样式类名。 */
 const animationClasses = {
   vRippleAnimationEnter: 'v-ripple__animation--enter',
   vRippleAnimationVisible: 'v-ripple__animation--visible',

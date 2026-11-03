@@ -1,8 +1,9 @@
+import { resolveIconName } from '@/icons'
 import './index.scss'
 import { RIcon } from '@/components'
 import { useSettingGetters } from '@/store'
 import { isValueType, renderNode } from '@/utils'
-import { NEllipsis, NGradientText, NTooltip } from 'naive-ui'
+import { NEllipsis, NTooltip } from 'naive-ui'
 
 export const SIDER_BAR_LOGO = shallowRef<HTMLElement>()
 
@@ -41,7 +42,7 @@ export default defineComponent({
       if (typeof getSideBarLogo.value.icon === 'string') {
         return (
           <RIcon
-            name={getSideBarLogo.value.icon as string}
+            name={resolveIconName(getSideBarLogo.value.icon) ?? 'logo/ray'}
             size="30"
             cursor={cursor}
           />
@@ -63,7 +64,9 @@ export default defineComponent({
     const { sideBarLogo, collapsed, TemplateLogo, sideBarLogoClick } = this
 
     return sideBarLogo?.title ? (
-      <div
+      <button
+        type="button"
+        disabled={!sideBarLogo?.url}
         class={['r-menu__logo', sideBarLogo?.url ? 'r-menu__logo-url' : null]}
         onClick={sideBarLogoClick.bind(this)}
         ref={SIDER_BAR_LOGO}
@@ -88,26 +91,23 @@ export default defineComponent({
           <NTooltip placement="right">
             {{
               trigger: () => (
-                <NGradientText type="primary" size={18}>
+                <span class="r-menu__logo-initial">
                   {sideBarLogo.title?.[0] || null}
-                </NGradientText>
+                </span>
               ),
               default: () => sideBarLogo.title,
             }}
           </NTooltip>
         ) : null}
-        <NGradientText
+        <span
           class={[
             !collapsed ? 'r-menu__logo-title--open' : null,
             'r-menu__logo-title',
-            'class="n-menu-item-content"',
           ]}
-          type="primary"
-          size={18}
         >
           <NEllipsis>{sideBarLogo.title}</NEllipsis>
-        </NGradientText>
-      </div>
+        </span>
+      </button>
     ) : null
   },
 })

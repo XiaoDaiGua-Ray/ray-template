@@ -1,14 +1,3 @@
-/**
- *
- * @author Ray <https://github.com/XiaoDaiGua-Ray>
- *
- * @date 2023-07-22
- *
- * @workspace ray-template
- *
- * @remark 今天也是元气满满撸代码的一天
- */
-
 import type { ECharts } from 'echarts/core'
 import type { CanvasRenderer } from 'echarts/renderers' // `echarts` 渲染器
 

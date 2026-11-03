@@ -1,11 +1,3 @@
-/**
- *
- * 错误页面
- *
- * 基于 NResult 组件实现, 继承该组件所有 props 与 slots
- * 可以当作一个组件使用, 也可以当作一个页面调用
- */
-
 import './index.scss'
 import { redirectRouterToDashboard } from '@/router/utils'
 import { useSettingGetters } from '@/store'

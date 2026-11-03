@@ -66,17 +66,17 @@ export default defineComponent({
       {
         label: '设置',
         key: 'setting',
-        icon: <RIcon name="setting" />,
+        icon: <RIcon name="action/setting" />,
       },
       {
         label: '刷新',
         key: 'reload',
-        icon: <RIcon name="reload" />,
+        icon: <RIcon name="action/reload" />,
       },
       {
         label: '搜索',
         key: 'search',
-        icon: <RIcon name="search" />,
+        icon: <RIcon name="action/search" />,
         popover: '我是搜索',
       },
     ]

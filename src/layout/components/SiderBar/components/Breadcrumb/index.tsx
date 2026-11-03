@@ -1,12 +1,3 @@
-/**
- *
- * 顶部面包屑
- *
- * 如果下拉菜单条目小于一条, 则不会触发下拉菜单
- *
- * 添加 <span> 标签, 避免 Runtime directive used on component... 警告
- */
-
 import './index.scss'
 import { useDevice } from '@/hooks'
 import { useMenuActions, useMenuGetters } from '@/store'

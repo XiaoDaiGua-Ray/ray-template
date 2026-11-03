@@ -19,7 +19,7 @@ const demo: AppRouteRecordRaw = {
   meta: {
     /** t 方法是一个纯函数，为了配合 i18n ally 插件提示使用 */
     i18nKey: t('menu.Demo'),
-    icon: 'demo',
+    icon: 'navigation/other',
     order: 0,
   },
   children: [
@@ -29,7 +29,7 @@ const demo: AppRouteRecordRaw = {
       component: () => import('@/views/demo-child/index'),
       meta: {
         i18nKey: t('menu.DemoChild'),
-        icon: 'demo',
+        icon: 'navigation/other',
         order: 0,
       },
     },
@@ -45,7 +45,7 @@ export default dashboard
 interface RouteMeta {
   order?: number
   i18nKey: string
-  icon?: string
+  icon?: IconName
   windowOpen?: string
   role?: string[]
   hidden?: boolean
@@ -95,7 +95,7 @@ const demo = {
   name: 'MultiMenu',
   meta: {
     i18nKey: 'MultiMenu',
-    icon: 'table',
+    icon: 'navigation/table',
   },
   children: [
     {
@@ -158,3 +158,5 @@ const transform = [
   },
 ]
 ```
+
+图标使用分包路径 `IconName`，例如 `directional/resize_h`，详见 [图标类型与生成流程](../icons/A_README.md)。

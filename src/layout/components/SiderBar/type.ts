@@ -1,3 +1,4 @@
+import type { IconName } from '@/icons'
 import type { DropdownOption } from 'naive-ui'
 import type { ComputedRef, Ref, VNode } from 'vue'
 
@@ -15,7 +16,7 @@ export interface IconDropdownOptions extends GlobalRecordable {
 }
 
 export interface IconOptions {
-  name: string
+  name: IconName
   size?: number
   tooltip?: ComputedRef<string> | string
   eventKey?: string

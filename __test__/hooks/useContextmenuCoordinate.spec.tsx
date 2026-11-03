@@ -47,4 +47,17 @@ describe('useContextmenuCoordinate', () => {
     expect(result.x.value).toBe(100)
     expect(result.y.value).toBe(200)
   })
+  it('does not reopen after stop interrupts a pending context-menu event', async () => {
+    const target = document.createElement('div')
+    const [menu, app] = renderHook(() => useContextmenuCoordinate(target))
+
+    target.dispatchEvent(new MouseEvent('contextmenu'))
+    menu.stop()
+    await nextTick()
+    expect(menu.show.value).toBe(false)
+    target.dispatchEvent(new MouseEvent('contextmenu'))
+    await nextTick()
+    expect(menu.show.value).toBe(false)
+    app.unmount()
+  })
 })

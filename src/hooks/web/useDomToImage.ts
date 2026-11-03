@@ -63,7 +63,10 @@ type Options<
    *
    * @default undefined
    */
-  created?: (result: DomToImageReturnType<ImageType>, element: T) => void
+  created?: (
+    result: DomToImageReturnType<DomToImageMethodKeys>,
+    element: T,
+  ) => void
   /**
    *
    * @param error dom to image error
@@ -82,12 +85,12 @@ type Options<
    *
    * @default undefined
    */
-  finally?: (element: T) => void
+  finally?: (element: T | null | undefined) => void
 }
 
 export type UseDomToImageOptions<
   T extends TargetType = Element,
-  ImageType extends DomToImageMethodKeys = DomToImageMethodKeys,
+  ImageType extends DomToImageMethodKeys = 'jpeg',
 > = Options<T, ImageType> & HtmlToImageOptions
 
 /**
@@ -105,21 +108,21 @@ export type UseDomToImageOptions<
  * 当然，你也可以不传递 imageType 参数，此时会使用 options.imageType，
  * 如果都未传递，则默认使用 jpeg。
  *
- * 如果希望 created 获得准确的类型，可以给 useDomToImage 手动声明第二个类型参数；
- * 或者就是在显式声明 options.imageType 参数。
+ * create 的返回类型跟随配置或本次传入的格式；created 可能接收覆盖格式后的结果，
+ * 因此应先用 typeof / instanceof 判断回调中的结果类型。
  *
  * @example
  * const refDom = ref<HTMLElement>()
  * const { create } = useDomToImage(refDom, {
  *   beforeCreate: (element) => { ... },
- *   created: (element, result) => { ... },
+ *   created: (result, element) => { ... },
  *   createdError: (error) => { ... },
  *   finally: () => { ... },
  * })
  */
 export const useDomToImage = <
   T extends HTMLElement,
-  ImageType extends DomToImageMethodKeys = DomToImageMethodKeys,
+  ImageType extends DomToImageMethodKeys = 'jpeg',
 >(
   target: BasicTarget<T>,
   options?: UseDomToImageOptions<T, ImageType>,
@@ -132,40 +135,30 @@ export const useDomToImage = <
     imageType: _imageType,
   } = options ?? {}
 
-  const run = <ImageType extends DomToImageMethodKeys = 'jpeg'>(
-    imageType?: ImageType,
-  ): Promise<DomToImageReturnType<ImageType>> => {
-    return new Promise((resolve, reject) => {
-      const element = unrefElement(target)
+  const run = async <OutputType extends DomToImageMethodKeys = ImageType>(
+    imageType?: OutputType,
+  ): Promise<DomToImageReturnType<OutputType>> => {
+    const element = unrefElement(target)
 
+    try {
       beforeCreate?.(element)
 
-      if (!element) {
-        createdError?.()
+      if (!element)
+        throw new Error('[useDomToImage]: target element is undefined.')
 
-        return reject(`[useDomToImage]: target element is undefined.`)
-      }
+      const imageTypeKey = imageType ?? _imageType ?? 'jpeg'
+      const result = await domToImageMethods[imageTypeKey](element, options)
 
-      const imageTypeKey = (imageType ??
-        _imageType ??
-        'jpeg') as DomToImageMethodKeys
+      // 分发映射的返回类型与传入的 imageType 一一对应。
+      created?.(result, element)
 
-      domToImageMethods[imageTypeKey]?.(element, options)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .then((res: any) => {
-          created?.(res, element)
-
-          return resolve(res)
-        })
-        .catch((error: Error) => {
-          createdError?.(error)
-
-          return reject(error)
-        })
-        .finally(() => {
-          _finally?.(element)
-        })
-    })
+      return result as DomToImageReturnType<OutputType>
+    } catch (error) {
+      createdError?.(error instanceof Error ? error : new Error(String(error)))
+      throw error
+    } finally {
+      _finally?.(element)
+    }
   }
 
   return {

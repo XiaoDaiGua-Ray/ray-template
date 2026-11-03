@@ -51,4 +51,49 @@ describe('useElementFullscreen', () => {
     expect(isFullscreen.value).toBe(false)
     expect(div.style.transition).toBe('')
   })
+  it('cancels a pending animation frame when exiting immediately', () => {
+    vi.useFakeTimers()
+    div.style.width = '240px'
+    const { enter, exit } = useElementFullscreen(div)
+
+    enter()
+    exit()
+    vi.runAllTimers()
+    expect(div.style.width).toBe('240px')
+    expect(div.style.position).toBe('')
+    vi.useRealTimers()
+  })
+
+  it('restores the original element if the target ref changes while fullscreen', () => {
+    const target = ref(div)
+    const { enter, exit } = useElementFullscreen(target)
+
+    enter()
+    target.value = document.createElement('div')
+    exit()
+    expect(div.hasAttribute('data-element-fullscreen')).toBe(false)
+    expect(div.style.position).toBe('')
+  })
+  it('keeps transitions retryable when a before callback rejects the action', () => {
+    const beforeEnter = vi.fn().mockImplementationOnce(() => {
+      throw new Error('enter refused')
+    })
+    const beforeExit = vi.fn().mockImplementationOnce(() => {
+      throw new Error('exit refused')
+    })
+    const { enter, exit, isFullscreen } = useElementFullscreen(div, {
+      beforeEnter,
+      beforeExit,
+    })
+
+    expect(enter).toThrow('enter refused')
+    expect(isFullscreen.value).toBe(false)
+    enter()
+    expect(isFullscreen.value).toBe(true)
+    expect(exit).toThrow('exit refused')
+    expect(isFullscreen.value).toBe(true)
+    exit()
+    expect(isFullscreen.value).toBe(false)
+    expect(div.style.position).toBe('')
+  })
 })

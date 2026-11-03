@@ -7,7 +7,7 @@ const form: AppRouteRecordRaw = {
   component: () => import('@/views/demo/form'),
   meta: {
     i18nKey: t('menu.Form'),
-    icon: 'other',
+    icon: 'navigation/other',
     order: 2,
     extra: {
       label: 'useForm',

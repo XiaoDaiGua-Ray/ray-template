@@ -33,7 +33,7 @@ export default defineComponent({
           <NFlex wrap={false} align="center" size={[4, 0]}>
             <NTooltip placement="top" showArrow={false}>
               {{
-                trigger: () => <RIcon name="question" size="16" />,
+                trigger: () => <RIcon name="status/question" size="16" />,
                 default: () =>
                   '菜单更新是一个复杂、耗时的操作，请手动点击【更新菜单】按钮更新设置',
               }}

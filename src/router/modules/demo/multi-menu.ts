@@ -7,7 +7,7 @@ const multiMenu: AppRouteRecordRaw = {
   component: LAYOUT,
   meta: {
     i18nKey: t('menu.MultiMenu'),
-    icon: 'other',
+    icon: 'navigation/other',
     order: 4,
     extra: {
       label: 'cache',

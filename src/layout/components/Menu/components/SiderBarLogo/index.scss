@@ -1,19 +1,27 @@
 .r-menu__logo {
+  width: 100%;
   height: $layoutHeaderHeight;
+  box-sizing: border-box;
+  border: 0;
+  border-bottom: 1px solid var(--r-line);
+  color: var(--r-text);
+  background: inherit;
+  font-size: 16px;
+  text-align: left;
   padding: 0 18px 0 24px;
   display: flex;
   flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
   gap: 8px 12px;
-  font-weight: 600;
+  font-weight: 650;
   overflow: hidden;
 
   &.r-menu__logo-url {
     position: sticky;
     top: 0;
     cursor: pointer;
-    background-color: var(--n-color);
+    background-color: inherit;
     z-index: 20;
   }
 
@@ -28,4 +36,10 @@
       display: inline-block;
     }
   }
+}
+
+.r-menu__logo-initial {
+  color: var(--r-theme-primary-color);
+  font-size: 18px;
+  font-weight: 600;
 }

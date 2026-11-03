@@ -1,38 +1,50 @@
-import { getVariableToRefs, setVariable } from '../../src/global-variable'
+import { createPinia, disposePinia, setActivePinia } from 'pinia'
 import { useSpinning } from '../../src/hooks/template/useSpinning'
-import setupMiniApp from '../utils/setupMiniApp'
+import { piniaRuntimeStore } from '../../src/store/modules/runtime'
 
-describe('useSpinning', async () => {
-  await setupMiniApp()
+describe('useSpinning', () => {
+  let pinia: ReturnType<typeof createPinia>
 
-  const { reload, openSpin, closeSpin } = useSpinning()
-  const globalMainLayoutLoad = getVariableToRefs('globalMainLayoutLoad')
-
-  it('should open spinning', () => {
-    openSpin()
-
-    expect(globalMainLayoutLoad.value).toBe(true)
+  beforeEach(() => {
+    vi.useFakeTimers()
+    pinia = createPinia()
+    setActivePinia(pinia)
   })
 
-  it('should close spinning', () => {
+  afterEach(() => {
+    disposePinia(pinia)
+    vi.useRealTimers()
+  })
+
+  it('opens and closes the content spinner without remounting the page', () => {
+    const { openSpin, closeSpin } = useSpinning()
+    const store = piniaRuntimeStore()
+
     openSpin()
-
-    expect(globalMainLayoutLoad.value).toBe(true)
-
+    expect(store.layoutContentSpinning).toBe(true)
+    expect(store.globalMainLayoutLoad).toBe(true)
     closeSpin()
-
-    expect(globalMainLayoutLoad.value).toBe(true)
+    expect(store.layoutContentSpinning).toBe(false)
   })
 
-  it('should reload', () => {
-    const wait = 1000
+  it('keeps a remount pending until the latest reload finishes, across callers', () => {
+    const store = piniaRuntimeStore()
 
-    reload(wait)
+    useSpinning().reload(1000)
+    vi.advanceTimersByTime(500)
+    useSpinning().reload(1000)
+    vi.advanceTimersByTime(500)
+    expect(store.globalMainLayoutLoad).toBe(false)
+    vi.advanceTimersByTime(500)
+    expect(store.globalMainLayoutLoad).toBe(true)
+  })
 
-    expect(globalMainLayoutLoad.value).toBe(false)
-
-    setTimeout(() => {
-      expect(globalMainLayoutLoad.value).toBe(true)
-    }, wait)
+  it('disposes timers and isolates runtime state between applications', () => {
+    useSpinning().reload()
+    disposePinia(pinia)
+    expect(vi.getTimerCount()).toBe(0)
+    pinia = createPinia()
+    setActivePinia(pinia)
+    expect(piniaRuntimeStore().globalMainLayoutLoad).toBe(true)
   })
 })

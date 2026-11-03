@@ -16,6 +16,8 @@ import { ViteEjsPlugin as viteEjsPlugin } from 'vite-plugin-ejs'
 import viteInspect from 'vite-plugin-inspect'
 import { mockDevServerPlugin } from 'vite-plugin-mock-dev-server'
 import viteSvgLoader from 'vite-svg-loader'
+import { iconNameFromPath, scanIcons } from './scripts/icons.mjs'
+import { iconManifestPlugin } from './vite-helper/icons.ts'
 import { cdnResolve } from './vite-helper/index.ts'
 import config from './vite.custom.config.ts'
 
@@ -151,9 +153,13 @@ function vueTransformPlugins(): PluginOption[] {
 // 基础插件配置
 function baseOptions(mode: string): PluginOption[] {
   const { title, appPrimaryColor, preloadingConfig } = config
+  const iconPackages = [
+    ...new Set(scanIcons().map((name) => name.split('/')[0])),
+  ]
 
   return [
     ...vueTransformPlugins(),
+    iconManifestPlugin(iconPackages),
     title,
     viteVeI18nPlugin({
       include: [
@@ -184,11 +190,15 @@ function baseOptions(mode: string): PluginOption[] {
       reload: true,
       build: true,
     }),
-    svgSpritemap('./src/icons/**/*.svg', {
-      prefix: 'icon-',
-      output: { hrefAttribute: 'href' },
-      svgo: false,
-    }),
+    ...iconPackages.map((name) =>
+      svgSpritemap(`./src/icons/${name}/**/*.svg`, {
+        prefix: 'icon-',
+        idify: (_name, svg) => iconNameFromPath(svg.filePath),
+        route: { url: `/__spritemap-${name}` },
+        output: { name: `icons-${name}.svg`, hrefAttribute: 'href' },
+        svgo: false,
+      }),
+    ),
     unoCSS(),
   ]
 }

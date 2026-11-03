@@ -1,13 +1,3 @@
-/**
- *
- * 出于便捷性考虑, 将用户部分信息存于 pinia 仓库
- * 可以存储: 头像, 权限, 以及基于你项目实际情况的一些附带信息
- *
- * 使用 sessionStorage 缓存部分用户信息
- *
- * 默认仅缓存 SigningCallback 属性
- */
-
 import { APP_CATCH_KEY } from '@/app-config'
 import { useSiderBar } from '@/hooks'
 import type {
@@ -18,6 +8,7 @@ import type {
 import { removeStorage } from '@/utils'
 import { isEmpty } from 'lodash-es'
 
+/** 登录状态仓库，使用 localStorage 持久化 signingCallback。 */
 export const piniaSigningStore = defineStore(
   'signing',
   () => {

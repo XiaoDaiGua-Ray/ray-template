@@ -1,0 +1,19 @@
+{
+  "preview": "交互演示",
+  "code": "查看用法",
+  "copyCode": "复制代码",
+  "templateTitle": "模板 Hooks",
+  "templateEyebrow": "COMPOSABLES / TEMPLATE",
+  "webTitle": "Web Hooks",
+  "webEyebrow": "COMPOSABLES / WEB",
+  "appearanceAndPage": "外观与页面控制",
+  "globalMarkers": "全局标记",
+  "navigationAndTabs": "导航与标签",
+  "scrollControls": "滚动控制",
+  "commonUtilities": "通用工具",
+  "browserCapabilities": "浏览器能力",
+  "layoutEyebrow": "WORKSPACE / LAYOUT",
+  "iconsEyebrow": "ASSETS / ICONS",
+  "livePreferences": "即时预览 · 自动保存",
+  "layoutControls": "布局与显示"
+}

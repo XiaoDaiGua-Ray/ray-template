@@ -19,14 +19,14 @@ const normalMenuTagOption = (target: CloseMenuTag, fn: string) => {
 
   if (typeof target === 'number') {
     // 判断是否为 NaN
-    if (isNaN(target)) {
+    if (!Number.isInteger(target)) {
       console.warn(`${fn}: The ${target} is NaN, expect number.`)
 
       return
     }
 
     // 判断是否超出当前标签页列表最大长度或者是否为负数
-    if (target > getMenuTagOptions.value.length || target < -1) {
+    if (target >= getMenuTagOptions.value.length || target < 0) {
       console.warn(
         `${fn}: The incoming index ${target} did not match the corresponding item.`,
       )

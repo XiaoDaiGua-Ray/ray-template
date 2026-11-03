@@ -2,6 +2,7 @@ import { piniaSettingStore } from '../modules/setting'
 
 export const useSettingGetters = () => {
   const variable = piniaSettingStore()
+  const getLayoutConfig = computed(() => variable.layoutConfig)
 
   /**
    *
@@ -120,6 +121,7 @@ export const useSettingGetters = () => {
   const getDynamicDocumentTitle = computed(() => variable.dynamicDocumentTitle)
 
   return {
+    getLayoutConfig,
     getDrawerPlacement,
     getPrimaryColorOverride,
     getAppTheme,

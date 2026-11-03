@@ -23,7 +23,7 @@ export default defineComponent({
 
     return (
       <RIcon
-        name="fullscreen"
+        name="action/fullscreen"
         size={config.tableIconSize}
         cursor="pointer"
         onClick={() => {

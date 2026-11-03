@@ -1,13 +1,5 @@
-/**
- *
- * 自定义表格列的顺序
- *
- * 但是该方法有几个缺陷地方:
- * 1. 只能代理第一层的数据，也就意味着深层次的子列不支持配置操作，只会跟随根列更新
- * 2. 大量数据的时候，可能会出现性能问题
- */
-
 import { RIcon } from '@/components'
+import type { IconName } from '@/icons'
 import type { AnyFn, MaybeArray } from '@/types'
 import { call } from '@/utils'
 import { cloneDeep, isEmpty } from 'lodash-es'
@@ -20,7 +12,7 @@ import type { C } from '../types'
 type FixedClick = (type: 'left' | 'right', option: C, index: number) => void
 
 const renderSwitcherIcon = () => (
-  <RIcon name="draggable" size={14} cursor="grab" />
+  <RIcon name="action/draggable" size={14} cursor="grab" />
 )
 
 const RowIconRender = ({
@@ -29,7 +21,7 @@ const RowIconRender = ({
   onClick,
   customClassName,
 }: {
-  icon: string
+  icon: IconName
   title: string
   onClick?: AnyFn
   customClassName?: string
@@ -130,7 +122,7 @@ export default defineComponent({
             suffix: () => (
               <NFlex style="padding-left: 32px;">
                 <RowIconRender
-                  icon="row_head"
+                  icon="directional/row_head"
                   title="固定在列首"
                   customClassName={
                     isLeftFixedActivated ? R_TABLE_C_TOOL_ICON_ACTIVE : ''
@@ -141,7 +133,7 @@ export default defineComponent({
                   {{
                     trigger: () => (
                       <RIcon
-                        name="resize_h"
+                        name="directional/resize_h"
                         size={config.tableIconSize}
                         cursor="pointer"
                         customClassName={
@@ -154,7 +146,7 @@ export default defineComponent({
                   }}
                 </NPopover>
                 <RowIconRender
-                  icon="row_end"
+                  icon="directional/row_end"
                   title="固定在列尾"
                   customClassName={
                     isRightFixedActivated ? R_TABLE_C_TOOL_ICON_ACTIVE : ''
@@ -249,7 +241,7 @@ export default defineComponent({
         {{
           trigger: () => (
             <RIcon
-              name="setting"
+              name="action/setting"
               size={config.tableIconSize}
               cursor="pointer"
               customClassName="r-table__setting"

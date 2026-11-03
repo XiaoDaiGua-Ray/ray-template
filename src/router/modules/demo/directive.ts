@@ -7,7 +7,7 @@ const directive: AppRouteRecordRaw = {
   component: () => import('@/views/demo/directive/index'),
   meta: {
     i18nKey: t('menu.Directive'),
-    icon: 'other',
+    icon: 'navigation/other',
     order: 2,
     extra: {
       label: 'ellipsis',

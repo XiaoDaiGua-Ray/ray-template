@@ -1,16 +1,10 @@
-/**
- *
- * SSO 单点登录模块组件
- *
- * 按照需求自行增减
- */
-
+import type { IconName } from '@/icons'
 import './index.scss'
 import { RIcon } from '@/components'
 import { NFlex, NPopover } from 'naive-ui'
 
 interface SSOSigningOptions {
-  icon: string
+  icon: IconName
   key: string
   tooltipLabel: string
 }
@@ -18,19 +12,19 @@ interface SSOSigningOptions {
 const SSOSigning = defineComponent({
   name: 'SSOSigning',
   setup() {
-    const ssoSigningOptions = [
+    const ssoSigningOptions: SSOSigningOptions[] = [
       {
-        icon: 'github',
+        icon: 'logo/github',
         key: 'github',
         tooltipLabel: 'Github登陆',
       },
       {
-        icon: 'google',
+        icon: 'logo/google',
         key: 'google',
         tooltipLabel: 'Google登陆',
       },
       {
-        icon: 'twitter',
+        icon: 'logo/twitter',
         key: 'twitter',
         tooltipLabel: 'Twitter登陆',
       },
