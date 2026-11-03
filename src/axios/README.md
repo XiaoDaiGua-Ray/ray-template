@@ -1,71 +1,23 @@
-## 说明
+# 请求与拦截器
 
-> axios 包，全局的 axios 使用入口
-> `src/axios/instance.ts` 文件为 axios 实例文件，应该不可更改，如果需要有拦截器相关的操作，应该在 `src/axios/inject` 文件下按照需求在对应注册器中进行注册相关方法。该项目将 axios instance 与 axios interceptor 进行解耦，避免实例文件的臃肿。
+业务接口放在 `src/api`，使用 `@/axios` 导出的 `request`。成功拦截器返回响应体，`request<T>()` 解析为 `T`；失败仍拒绝。需要响应头或 HTTP 状态时，使用保留完整响应的 Axios 实例。
 
-## 工具函数
+默认请求配置位于 `src/app-config/request-config.ts`。通用请求和响应逻辑分别放入 `axios-interceptor/request/plugins` 与 `axios-interceptor/response/plugins`，在各自的 `provider.ts` 中登记。成功队列使用 `AxiosRequestInterceptor` 或 `AxiosResponseInterceptor`，失败队列使用 `FetchErrorFunction`；调整队列顺序时核对前置逻辑。
 
-- FetchFunction
-- FetchErrorFunction
+## 取消请求
 
-> 两个工具函数方便类型推导。
-
-## 约束
-
-### 拦截器添加
-
-> 这里以请求拦截器添加为示例
+默认取消器按 URL、方法、序列化参数与请求体识别重复请求，并为当前请求注入 signal。默认布局中的 `AppRequestCancelerProvider` 会在路由更新前取消受它管理的待处理请求。
 
 ```ts
-/**
- *
- * 拦截器说明
- *
- * 注册一个根据系统当前环境是否携带测试环境请求拦截器
- */
+import { request } from '@/axios'
 
-import { appendRequestHeaders } from '@/axios/helper/axiosCopilot'
-import type {
-  FetchErrorFunction,
-  FetchFunction,
-  RequestInterceptorConfig,
-} from '@/axios/types'
-
-const injectRequestHeaderOfEnv: FetchFunction<RequestInterceptorConfig> = (
-  ins,
-  mode,
-) => {
-  if (mode === 'development') {
-    appendRequestHeaders(ins, [
-      {
-        key: 'Development-Mode',
-        value: 'development',
-      },
-    ])
-  }
-}
-
-/**
- *
- * 在 setupRequestInterceptor 中注册
- */
-
-export const setupRequestInterceptor = () => {
-  setImplement(
-    'implementRequestInterceptorArray',
-    [injectRequestHeaderOfEnv],
-    'ok',
-  )
-}
-
-/** 至此完成了请求拦截器的注册 */
+const loadOrders = (signal: AbortSignal) =>
+  request<{ id: string }[]>({
+    url: '/api/orders',
+    method: 'get',
+    signal,
+    cancelConfig: { cancel: false },
+  })
 ```
 
-### 注册器
-
-> 每个类型注册器都有两个方法，用于注册拦截器方法。都以 setupXXX 开头命名。注册器以队列形式管理拦截器方法，所以可能需要注意执行顺序。如果有新的拦截器方法，需要根据其使用场景在对应的注册器中注册（注册器第二个参数中注册）。
-
-- 请求注册器: setupRequestInterceptor
-- 请求错误注册器: setupRequestErrorInterceptor
-- 响应注册器: setupResponseInterceptor
-- 响应错误注册器: setupResponseErrorInterceptor
+调用方提供 signal 时，将 `cancelConfig.cancel` 设为 `false`，避免被默认取消器覆盖，并由调用方负责中止。人员列表展示了 [TablePro 传递 signal 的方式](../api/demo/mock/person.ts)。`useRequest` 包装同一实例，需在有效的 Vue effect 作用域中调用。

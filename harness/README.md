@@ -51,4 +51,6 @@ GitHub Actions 在 Linux、Windows 和 macOS 运行同一份 `pnpm check`。单�
 
 ## 维护
 
+影响外部读者的功能或兼容性改动，按 [站外文档交接](../docs/docs-handoff.md) 同步到文档仓库。
+
 任务域的路径或测试位置变化时，更新 `scopes.json` 并运行 `pnpm harness check`。测试目录以 `/` 结尾，单个文件使用仓库相对路径。优先完善现有测试和上下文入口，把可稳定复现的失败纳入共同检查。
