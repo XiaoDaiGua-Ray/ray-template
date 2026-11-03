@@ -1,0 +1,1 @@
+import{_n as e,gn as t,hn as n}from"./replaceable-B-PFC1y9.js";import{z as r}from"./toString-BWDzaUQG.js";import{t as i}from"./Input-DtTntG9_.js";var a=e({name:`MultiMenuOne`,setup(){return{inputValue:r(null)}},render(){return t(`div`,null,[n(`多级菜单-1`),t(i,{modelValue:this.inputValue,"onUpdate:modelValue":e=>this.inputValue=e},null)])}});export{a as default};

@@ -6,8 +6,9 @@
   },
   "dependencies": {
     "connect": "^3.7.0",
-    "vite-plugin-mock-dev-server": "^2.0.4",
-    "cors": "^2.8.5"
+    "vite-plugin-mock-dev-server": "^2.7.1",
+    "cors": "^2.8.6",
+    "@faker-js/faker": "^10.6.0"
   },
   "pnpm": {
     "peerDependencyRules": {
