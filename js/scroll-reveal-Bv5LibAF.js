@@ -1,1 +1,0 @@
-import{_n as e,gn as t,hn as n}from"./replaceable-B-PFC1y9.js";import{t as r}from"./Card-BB74FRP1.js";var i=e({name:`ScrollReveal`,render(){return t(`div`,{class:`scroll-reveal`},[t(r,{title:`提示`},{default:()=>[n(`RayScrollReveal组件有点问题, 暂时移除. 不能正常的实现滚动动画. 很是操蛋!!!`)]})])}});export{i as default};

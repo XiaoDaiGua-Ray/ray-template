@@ -7,7 +7,7 @@ import mockData from './mock-data.js';
 const app = connect();
 const server = createServer(app);
 const logger = createLogger('mock-server', "error");
-const proxies = ["^/api"];
+const proxies = ["/api","^/api"];
 const wsProxies = [];
 const cookiesOptions = {};
 const bodyParserOptions = {};

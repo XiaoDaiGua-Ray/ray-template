@@ -1,1 +1,0 @@
-function e(e=8){return Math.random().toString(16).slice(2,2+e)}function t(e,t){let n=[];for(let r=0;r<e;++r)n.push(t);return n}export{t as n,e as t};

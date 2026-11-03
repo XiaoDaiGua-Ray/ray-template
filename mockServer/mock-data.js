@@ -12,16 +12,10 @@ var __exportAll = (all, no_symbols) => {
 	if (!no_symbols) __defProp(target, Symbol.toStringTag, { value: "Module" });
 	return target;
 };
-// mock/shared/database.ts
-/**
-*
-* @param option 自定义配置
-*
-* 基础表格数据
-*/
-function tableMock(option) {
-	return {
-		...option,
+// src/demo-data/people.ts
+let people;
+const listPeople = ({ page, pageSize, email, name, sortAge } = {}) => {
+	people ??= Array.from({ length: 100 }, () => ({
 		id: faker.string.uuid(),
 		address: faker.location.state() + faker.location.city(),
 		email: faker.internet.email(),
@@ -31,69 +25,39 @@ function tableMock(option) {
 			max: 60
 		}),
 		createDate: faker.date.past().toISOString().slice(0, 10)
-	};
-}
-// mock/shared/utils.ts
-function array(length) {
-	return new Array(length).fill(0);
-}
-/**
-*
-* @param pageCurrent 当前页码
-* @param pageSize 分页展示条数
-* @param array 数据
-*
-* mock 分页展示数据
-*/
-function pagination(pageCurrent, pageSize, array) {
-	const offset = (pageCurrent - 1) * Number(pageSize);
-	return offset + Number(pageSize) >= array.length ? array.slice(offset, array.length) : array.slice(offset, offset + Number(pageSize));
-}
-/**
-*
-* @param value 原始数据
-*
-* 格式化数据为 json 格式
-*/
-function stringify(value) {
-	return JSON.stringify(value);
-}
-/**
-*
-* @param res 数据
-* @param code 响应码
-* @param msg 响应信息
-*/
-function response(res, code, msg, params) {
+	}));
+	const emailQuery = email?.trim().toLowerCase();
+	const nameQuery = name?.trim().toLowerCase();
+	const matches = people.filter((person) => (!emailQuery || person.email.toLowerCase().includes(emailQuery)) && (!nameQuery || person.name.toLowerCase().includes(nameQuery)));
+	if (sortAge) {
+		const direction = sortAge === "ascend" ? 1 : -1;
+		matches.sort((left, right) => direction * (left.age - right.age));
+	}
+	const validPage = page !== void 0 && Number.isSafeInteger(page) && page > 0;
+	const validSize = pageSize !== void 0 && Number.isSafeInteger(pageSize) && pageSize > 0;
+	const start = validPage && validSize ? (page - 1) * pageSize : 0;
 	return {
-		code,
-		msg,
-		data: res,
-		...params
+		code: 200,
+		msg: "请求成功",
+		data: validPage && validSize ? matches.slice(start, start + pageSize) : matches,
+		total: matches.length
 	};
-}
+};
 // mock/demo/person.mock.ts
-var person_mock_exports = /* @__PURE__ */ __exportAll({ getPersonList: () => getPersonList });
-const getPersonList = defineMock({
+var person_mock_exports = /* @__PURE__ */ __exportAll({ default: () => person_mock_default });
+var person_mock_default = defineMock({
 	url: "/api/list",
 	method: "GET",
-	delay: 500,
-	response: (req, res) => {
-		const { query: { page, pageSize, email } } = req;
-		let list = array(100).map(() => tableMock());
-		let length = list.length;
-		if (!page || !pageSize) res.end(stringify(response(list, 200, "请求成功", { total: length })));
-		else {
-			list = pagination(page, pageSize, list);
-			if (email) {
-				list = list.filter((curr) => curr.email.includes(email));
-				length = list.length;
-			}
-			res.end(stringify(response(list, 200, "请求成功", { total: length })));
-		}
-	}
+	delay: 250,
+	body: ({ query }) => listPeople({
+		page: Number(query.page),
+		pageSize: Number(query.pageSize),
+		email: typeof query.email === "string" ? query.email : void 0,
+		name: typeof query.name === "string" ? query.name : void 0,
+		sortAge: query.sortAge === "ascend" || query.sortAge === "descend" ? query.sortAge : void 0
+	})
 });
-// mock-data-1793689420684.js
+// mock-data-1793693290158.js
 const mockList = [[person_mock_exports, "mock/demo/person.mock.ts"]].map(([mod, filepath]) => processRawData(mod.default || mod, filepath));
-var mock_data_1793689420684_default = processMockData(mockList);
-export { mock_data_1793689420684_default as default };
+var mock_data_1793693290158_default = processMockData(mockList);
+export { mock_data_1793693290158_default as default };
