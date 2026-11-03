@@ -25,3 +25,30 @@ describe('call', () => {
     expect(fn).toHaveBeenCalledWith(1, 2)
   })
 })
+
+it('forwards variadic arguments in order and stops when a callback throws', () => {
+  const first = vi.fn(
+    (_a: number, _b: string, _c: boolean, _d: null, _e: number) => {},
+  )
+  const error = new Error('stop')
+  const last = vi.fn()
+
+  expect(() =>
+    call(
+      [
+        first,
+        () => {
+          throw error
+        },
+        last,
+      ],
+      1,
+      'a',
+      false,
+      null,
+      2,
+    ),
+  ).toThrow(error)
+  expect(first).toHaveBeenCalledExactlyOnceWith(1, 'a', false, null, 2)
+  expect(last).not.toHaveBeenCalled()
+})

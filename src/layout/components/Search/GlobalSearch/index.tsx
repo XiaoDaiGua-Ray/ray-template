@@ -1,3 +1,4 @@
+import { positionSelectedMenuItem } from '@/layout/utils/position-selected-menu-item'
 import './index.scss'
 import { RIcon } from '@/components'
 import { useDevice } from '@/hooks'
@@ -5,12 +6,7 @@ import type { AppRouteMeta } from '@/router/types'
 import { validMenuItemShow } from '@/router/utils'
 import { useMenuActions } from '@/store'
 import type { AppMenuOption } from '@/types'
-import {
-  positionSelectedMenuItem,
-  queryElements,
-  removeClass,
-  setClass,
-} from '@/utils'
+import { queryElements, removeClass, setClass } from '@/utils'
 import { useEventListener } from '@vueuse/core'
 import { pick, throttle } from 'lodash-es'
 import {

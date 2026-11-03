@@ -69,3 +69,23 @@ describe('setStyle', () => {
     expect(style.height).toBe('100px')
   })
 })
+
+it('keeps existing styles, parses complete CSS values, and removes camelCase names', () => {
+  const element = document.createElement('div')
+
+  element.style.color = 'red'
+  setStyle(element, { zIndex: 3, '--Token': 'large' })
+  expect(element.style.zIndex).toBe('3')
+  expect(element.style.getPropertyValue('--Token')).toBe('large')
+  setStyle(
+    element,
+    'width: 20px !important; background-image: url("https://example.test/a:b");',
+  )
+  expect(element.style.color).toBe('red')
+  expect(element.style.getPropertyPriority('width')).toBe('important')
+  expect(element.style.backgroundImage).toContain('https://example.test/a:b')
+  removeStyle(element, ['zIndex', '--Token', 'backgroundImage'])
+  expect(element.style.zIndex).toBe('')
+  expect(element.style.getPropertyValue('--Token')).toBe('')
+  expect(element.style.backgroundImage).toBe('')
+})

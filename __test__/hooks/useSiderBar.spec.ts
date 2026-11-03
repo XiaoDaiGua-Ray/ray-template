@@ -1,3 +1,4 @@
+import { useAppRoot } from '../../src/hooks/template/useAppRoot'
 import { useSiderBar } from '../../src/hooks/template/useSiderBar'
 import { useVueRouter } from '../../src/hooks/web/useVueRouter'
 import { useMenuActions, useMenuGetters } from '../../src/store'
@@ -162,5 +163,22 @@ describe('useSiderBar', async () => {
 
     expect(checkCloseRight(s.fullPath)).toBe(true)
     expect(checkCloseLeft(s.fullPath)).toBe(true)
+  })
+  it('keeps existing tags if the configured home route is no longer registered', () => {
+    updateMenuTagOptions()
+    const { getMenuTagOptions } = useMenuGetters()
+    const { getRootRoute, setRootRoute } = useAppRoot()
+    const currentRoot = { ...getRootRoute.value }
+    const currentTags = getMenuTagOptions.value.map((item) => item.fullPath)
+
+    try {
+      setRootRoute({ path: '/deleted-home-route' })
+      closeAll()
+      expect(getMenuTagOptions.value.map((item) => item.fullPath)).toEqual(
+        currentTags,
+      )
+    } finally {
+      setRootRoute(currentRoot)
+    }
   })
 })

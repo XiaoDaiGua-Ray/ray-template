@@ -1,6 +1,6 @@
 import { APP_CATCH_KEY } from '@/app-config'
 import { useAppRoot, useVueRouter } from '@/hooks'
-import { setStorage } from '@/utils'
+import { setStorage } from '@/utils/cache'
 
 /**
  *

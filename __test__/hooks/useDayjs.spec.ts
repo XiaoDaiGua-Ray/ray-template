@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import { DEFAULT_DAYJS_LOCAL } from '../../src/app-config'
 import { useDayjs } from '../../src/hooks/web/useDayjs'
 
 describe('useDayjs', () => {
@@ -11,16 +12,19 @@ describe('useDayjs', () => {
     isDateInRange,
   } = useDayjs()
 
-  it('check whether the locale method runs properly', () => {
-    const m = {
-      locale,
+  it('switches the global Day.js locale and falls back for unrecognized keys', () => {
+    const previous = dayjs.locale()
+
+    try {
+      locale('zh-CN')
+      expect(dayjs.locale()).toBe('zh-cn')
+      locale('en-US')
+      expect(dayjs.locale()).toBe('en')
+      locale('unsupported' as never)
+      expect(dayjs.locale()).toBe(DEFAULT_DAYJS_LOCAL)
+    } finally {
+      dayjs.locale(previous)
     }
-    const localSpy = vi.spyOn(m, 'locale')
-
-    m.locale('en-US')
-    m.locale('zh-CN')
-
-    expect(localSpy).toHaveBeenCalledTimes(2)
   })
 
   it('gets Returns the current date, start time, and end time of the current date ', () => {

@@ -1,4 +1,3 @@
-import { useVueRouter } from '@/hooks'
 import { scrollViewToTop, vueRouterRegister } from '@/router/utils'
 import type { App } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
@@ -23,7 +22,5 @@ export const router = createRouter({
 export const setupRouter = (app: App<Element>) => {
   app.use(router)
 
-  // 等待 router 挂载后，初始化 useRouter 方法
-  useVueRouter()
   vueRouterRegister(router)
 }

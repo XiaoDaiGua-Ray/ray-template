@@ -1,5 +1,5 @@
 import type { BasicTarget } from '@/types'
-import { effectDispose } from '@/utils'
+import { effectDispose } from '@/utils/vue/effect-dispose'
 import { onClickOutside, useEventListener } from '@vueuse/core'
 import type {
   MaybeElement,
@@ -9,41 +9,37 @@ import type {
 import type { MaybeRefOrGetter } from 'vue'
 
 export interface UseContextmenuCoordinateOptions {
-  /**
-   *
-   * 自定义点击元素外部时的回调函数。
-   * 但是值得注意的事，该方法的优先级很高，可能会优先于其他方法执行
-   *
-   * @default null
-   */
+  /** 关闭菜单后执行的外部点击回调。 */
   clickOutside?: OnClickOutsideHandler
 }
 
 /**
  *
- * @param target 绑定元素
+ * @param target 绑定右键菜单的元素
+ * @param options 外部点击回调和监听器配置
  *
  * @description
- * 右键点击元素时，获取鼠标坐标。该方法结合 NDropdown 组件使用，可以实现右键菜单功能。
+ * 右键时阻止原生菜单并读取视口坐标；作用域销毁时停止监听。
  *
- * @example
- * const target = useTemplateRef<HTMLElement | null>('target')
- * const { x, y, show, stop } = useContextmenuCoordinate(target)
- *
- * 如果需要手动停止右键菜单，可以调用 stop 方法
- * stop()
- *
- * <NDropdown show={show} x={x} y={y} trigger="manual" placement="bottom-start" />
+ * @returns 只读坐标、菜单显隐状态和更新、停止方法。
  */
 export const useContextmenuCoordinate = (
   target: BasicTarget,
-  options?: UseContextmenuCoordinateOptions &
-    MaybeRefOrGetter<boolean | AddEventListenerOptions>,
+  options?: MaybeRefOrGetter<
+    boolean | (UseContextmenuCoordinateOptions & AddEventListenerOptions)
+  >,
 ) => {
   const x = ref(0) // 鼠标 x 坐标
   const y = ref(0) // 鼠标 y 坐标
   const show = ref(false) // 是否显示右键菜单
-  const { clickOutside } = options ?? {}
+  const getEventOptions = () => {
+    const current = toValue(options)
+
+    // 必须允许 preventDefault，才能阻止原生菜单和自定义菜单同时打开。
+    return typeof current === 'boolean'
+      ? { capture: current, passive: false }
+      : { ...current, passive: false }
+  }
   let stopped = false
   let generation = 0
 
@@ -55,6 +51,8 @@ export const useContextmenuCoordinate = (
    * 更新右键菜单的显示状态。
    */
   const updateShow = (value: boolean) => {
+    if (stopped && value) return
+
     if (!value) generation += 1
 
     show.value = value
@@ -90,27 +88,19 @@ export const useContextmenuCoordinate = (
     target as MaybeElementRef<MaybeElement>,
     (event) => {
       updateShow(false)
-      clickOutside?.(event)
+      const current = toValue(options)
+
+      if (typeof current === 'object') current.clickOutside?.(event)
     },
   )
 
-  /**
-   *
-   * @description
-   * 为传递 ref dom 绑定右键菜单事件。
-   */
   const cleanupContextmenu = useEventListener(
     target,
     'contextmenu',
     bindContextMenuEvent,
-    options,
+    getEventOptions,
   )
 
-  /**
-   *
-   * @description
-   * 为传递 ref dom 绑定点击事件。
-   */
   const cleanupClick = useEventListener(target, 'click', () => {
     updateShow(false)
   })
@@ -118,8 +108,7 @@ export const useContextmenuCoordinate = (
   /**
    *
    * @description
-   * 注销绑定的右键菜单事件、点击事件。
-   * 仅注销该方法绑定的事件。
+   * 取消待显示的菜单并注销当前实例的所有监听。
    */
   const stop = () => {
     stopped = true

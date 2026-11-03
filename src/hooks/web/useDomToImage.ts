@@ -1,5 +1,5 @@
 import type { BasicTarget, TargetType } from '@/types'
-import { unrefElement } from '@/utils'
+import { unrefElement } from '@/utils/vue/unref-element'
 import {
   toBlob,
   toCanvas,
@@ -35,56 +35,18 @@ type Options<
   T extends TargetType = Element,
   ImageType extends DomToImageMethodKeys = DomToImageMethodKeys,
 > = {
-  /**
-   *
-   * @description
-   * 指定图片类型，允许传递 imageType 参数，用于指定图片类型。
-   *
-   * @default jpeg
-   */
+  /** 默认输出格式，可由 create 覆盖，缺省为 JPEG。 */
   imageType?: ImageType
-  /**
-   *
-   * @param element current dom
-   *
-   * @description
-   * 在 dom 转换为图片之前执行。
-   *
-   * @default undefined
-   */
+  /** 渲染前调用；目标未挂载时可能为空。 */
   beforeCreate?: (element: T | null | undefined) => void
-  /**
-   *
-   * @param element current dom
-   * @param result dom to image result
-   *
-   * @description
-   * 在 dom 转换为图片之后执行。
-   *
-   * @default undefined
-   */
+  /** 渲染成功后的回调；结果类型随本次格式变化。 */
   created?: (
     result: DomToImageReturnType<DomToImageMethodKeys>,
     element: T,
   ) => void
-  /**
-   *
-   * @param error dom to image error
-   *
-   * 在 dom 转换为图片失败时执行
-   *
-   * @default undefined
-   */
+  /** 渲染、目标解析或前置回调抛错时通知。 */
   createdError?: (error?: Error) => void
-  /**
-   *
-   * @param element current dom
-   *
-   * @description
-   * 无论 dom 转换为图片成功或失败，都会执行。
-   *
-   * @default undefined
-   */
+  /** 一次创建结束时执行；目标解析失败时参数为空。 */
   finally?: (element: T | null | undefined) => void
 }
 
@@ -95,30 +57,13 @@ export type UseDomToImageOptions<
 
 /**
  *
- * @param target ref dom
- * @param options html-to-image options
- *
- * @see https://github.com/bubkoo/html-to-image
+ * @param target 截图目标，执行时解包
+ * @param options 默认格式、渲染配置与生命周期回调
  *
  * @description
- * 使用 html-to-image 将 dom 转换为图片。
- * 拓展了 imageType 参数，用于指定图片类型。
+ * 本次 create 的格式覆盖默认配置，缺省为 JPEG；created 可能收到不同格式的结果。
  *
- * create 方法支持在执行时传递 imageType 参数，用于指定图片类型。并且优先级大于 options.imageType；
- * 当然，你也可以不传递 imageType 参数，此时会使用 options.imageType，
- * 如果都未传递，则默认使用 jpeg。
- *
- * create 的返回类型跟随配置或本次传入的格式；created 可能接收覆盖格式后的结果，
- * 因此应先用 typeof / instanceof 判断回调中的结果类型。
- *
- * @example
- * const refDom = ref<HTMLElement>()
- * const { create } = useDomToImage(refDom, {
- *   beforeCreate: (element) => { ... },
- *   created: (result, element) => { ... },
- *   createdError: (error) => { ... },
- *   finally: () => { ... },
- * })
+ * @returns create 方法，其 Promise 结果类型跟随所选格式。
  */
 export const useDomToImage = <
   T extends HTMLElement,
@@ -133,29 +78,44 @@ export const useDomToImage = <
     createdError,
     finally: _finally,
     imageType: _imageType,
+    ...imageOptions
   } = options ?? {}
 
+  /**
+   *
+   * @param imageType 仅覆盖本次创建的输出格式
+   *
+   * @returns 对应格式的渲染结果。
+   *
+   * @throws 解析目标或渲染失败时拒绝，并调用错误与清理回调。
+   */
   const run = async <OutputType extends DomToImageMethodKeys = ImageType>(
     imageType?: OutputType,
   ): Promise<DomToImageReturnType<OutputType>> => {
-    const element = unrefElement(target)
+    let element: T | null | undefined
 
     try {
+      element = unrefElement(target)
       beforeCreate?.(element)
 
       if (!element)
         throw new Error('[useDomToImage]: target element is undefined.')
 
       const imageTypeKey = imageType ?? _imageType ?? 'jpeg'
-      const result = await domToImageMethods[imageTypeKey](element, options)
+      const result = await domToImageMethods[imageTypeKey](
+        element,
+        imageOptions,
+      )
 
       // 分发映射的返回类型与传入的 imageType 一一对应。
       created?.(result, element)
 
       return result as DomToImageReturnType<OutputType>
     } catch (error) {
-      createdError?.(error instanceof Error ? error : new Error(String(error)))
-      throw error
+      const cause = error instanceof Error ? error : new Error(String(error))
+
+      createdError?.(cause)
+      throw cause
     } finally {
       _finally?.(element)
     }

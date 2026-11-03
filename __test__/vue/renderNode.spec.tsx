@@ -12,3 +12,12 @@ describe('renderNode', () => {
     expect(text).toBe('hello world')
   })
 })
+
+it('renders numbers and empty text without falling back', () => {
+  const fallback = h('span', 'fallback')
+
+  expect(renderNode(0, { defaultElement: fallback })()).toBe(0)
+  expect(renderNode('', { defaultElement: fallback })()).toBe('')
+  expect(renderNode(42)()).toBe(42)
+  expect(renderNode(null, { defaultElement: fallback })()).toBe(fallback)
+})

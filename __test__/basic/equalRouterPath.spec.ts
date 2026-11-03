@@ -15,3 +15,9 @@ describe('equalRouterPath', () => {
     expect(equalRouterPath(p1, p2)).toBe(true)
   })
 })
+
+it('ignores query, hash and trailing slashes and handles an empty route', () => {
+  expect(equalRouterPath('/items///?q=1#row', '/items#header')).toBe(true)
+  expect(equalRouterPath('', '?')).toBe(true)
+  expect(equalRouterPath('/a', '/aa')).toBe(false)
+})

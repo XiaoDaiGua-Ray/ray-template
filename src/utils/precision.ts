@@ -1,7 +1,5 @@
-import { isValueType } from '@/utils'
 import currency from 'currency.js'
 import type { Options } from 'currency.js'
-import { cloneDeep } from 'lodash-es'
 
 /** 金额运算接受的输入类型。 */
 export type CurrencyArguments = string | number | currency
@@ -12,256 +10,117 @@ export interface CurrencyOptions extends Options {
   type?: OriginalValueType
 }
 
-// currency.js 默认配置
-const defaultOptions: Partial<CurrencyOptions> = {
-  precision: 8,
-  decimal: '.',
-} as const
-// currency.js 原型属性集合
-const currencyPrototypeKeys = [
-  's',
-  'intValue',
-  'p',
-  'value',
-  'toJSON',
-  'add',
-  'cents',
-  'distribute',
-  'divide',
-  'dollars',
-  'format',
-  'multiply',
-  'subtract',
-  'toString',
-] as const
+const defaultOptions = { precision: 8, decimal: '.' }
+
+export const isCurrency = (value: unknown): value is currency =>
+  value instanceof currency
 
 /**
  *
- * @param valueOptions 待计算参数列表
- * @param dividend 初始值
- * @param cb 回调方法
+ * @param value 金额
+ * @param options currency.js 精度配置与返回类型
  *
- * @description
- * 计算基础方法, 仅限于该处使用。
- */
-const basic = (
-  valueOptions: CurrencyArguments[],
-  dividend: CurrencyArguments,
-  cb: (
-    pre: currency,
-    curr: CurrencyArguments,
-    idx: number,
-    arr: CurrencyArguments[],
-  ) => currency,
-): currency => {
-  // 如果 valueOptions 为空，则返回 0
-  if (!valueOptions?.length) {
-    return currency(0, defaultOptions)
-  }
-
-  // 如果 valueOptions 长度为 1，则返回 valueOptions[0]
-  if (valueOptions.length === 1) {
-    return currency(valueOptions[0], defaultOptions)
-  }
-
-  // 初始值
-  const initialValue = currency(dividend, defaultOptions)
-
-  // 计算
-  return valueOptions.reduce(cb, initialValue)
-}
-
-/**
- *
- * @param value 待判断值
- *
- * 检查一个对象是否为 currency.js 的对象
- * 当该对象含有 s, intValue, p, value... 属性时, 则认为该对象为 currency.js 的对象
- *
- * @example
- * isCurrency(1.23) // false
- * isCurrency('1.23') // false
- * isCurrency({ s: 1, intValue: 1, p: 1, value: 1 }) // false
- * isCurrency(currency(1)) // true
- */
-export const isCurrency = (value: unknown): value is currency => {
-  // 如果 value 不是对象类型，则返回 false
-  if (!isValueType<object>(value, 'Object')) {
-    return false
-  }
-
-  // 如果 value 对象的属性在 currencyPrototypeKeys 中，则返回 true
-  return currencyPrototypeKeys.every((key) => key in value)
-}
-
-/**
- *
- * @description
- * 格式化一个数据值, 并且返回其原始值。
- *
- * 默认以 number 格式返回。
- *
- * 如果需要格式化为其他格式(如: 货币单位、分组、分隔符等), 请使用 currency format 方法格式。
- *
- * @example
- * format(0.1) // 0.1
- * format(0.1, { symbol: '¥' }) // ¥0.1
+ * @returns 默认返回数字；type 为 string 时返回保留精度的数字字符串。
  */
 export const format = (value: CurrencyArguments, options?: CurrencyOptions) => {
-  // 合并默认配置和传入配置
-  const assignOptions = { ...defaultOptions, ...options }
-  // 将 value 转换为 currency 对象
-  const v = currency(value, assignOptions)
-  // 获取 type 配置，如果 type 不存在，则使用 'number'
-  const { type = 'number' } = assignOptions
+  const result = currency(value, { ...defaultOptions, ...options })
 
-  // 如果 type 为 'number'，则返回 value 的值，否则返回 value 的字符串
-  return type === 'number' ? v.value : v.toString()
+  return options?.type === 'string' ? result.toString() : result.value
 }
 
 /**
  *
- * @description
- * 加法。
+ * @param args 按顺序相加的金额
  *
- * @example
- * format(add(0.1, 0.2)) // 0.3
- * format(add(0.2, 0.33)) // 0.53
+ * @returns 八位小数精度的和；无参数时为零。
  */
-export const add = (...args: CurrencyArguments[]): currency => {
-  // 如果 args 为空，则返回 0
-  if (!args.length) {
-    return currency(0, defaultOptions)
-  }
-
-  // 如果 args 长度为 1，则返回 args[0] 加上 0
-  if (args.length === 1) {
-    return currency(args[0], defaultOptions).add(0)
-  }
-
-  // 计算
-  return basic(args, 0, (pre, curr) => pre.add(curr))
-}
+export const add = (...args: CurrencyArguments[]): currency =>
+  args.reduce<currency>(
+    (total, value) => total.add(value),
+    currency(0, defaultOptions),
+  )
 
 /**
  *
- * @description
- * 减法。
+ * @param args 首项为被减数，其余为减数
  *
- * @example
- * format(subtract(0.1, 0.12312)) // -0.02
- * format(subtract(0.2, 0.33)) // -0.13
+ * @returns 八位小数精度的差；无参数时为零。
  */
 export const subtract = (...args: CurrencyArguments[]): currency => {
-  // 如果 args 为空，则返回 0
-  if (!args.length) {
-    return currency(0, defaultOptions)
-  }
+  const [first = 0, ...rest] = args
 
-  // 如果 args 长度为 1，则返回 args[0] 减去 0
-  if (args.length === 1) {
-    return currency(args[0], defaultOptions).subtract(0)
-  }
-
-  // 如果 args 长度为 2，则返回 args[0] 减去 args[1]
-  if (args.length === 2) {
-    const [one, two] = args
-
-    return currency(one, defaultOptions).subtract(two)
-  }
-
-  const [first, ...rest] = args
-
-  return basic(rest, first, (pre, curr) => pre.subtract(curr))
+  return rest.reduce<currency>(
+    (total, value) => total.subtract(value),
+    currency(first, defaultOptions),
+  )
 }
 
 /**
  *
- * @description
- * 乘法。
+ * @param args 按顺序相乘的金额
  *
- * @example
- * format(multiply(1, 0.2)) // 0.2
- * format(multiply(0.2, 0.33)) // 0.07
+ * @returns 八位小数精度的积；无参数时为零。
  */
 export const multiply = (...args: CurrencyArguments[]) => {
-  // 如果 args 长度为 1，则返回 args[0] 乘以 1
-  if (args.length === 1) {
-    return currency(args[0], defaultOptions).multiply(1)
-  }
+  const [first = 0, ...rest] = args
 
-  // 计算
-  return basic(args, 1, (pre, curr) => {
-    return currency(pre, defaultOptions).multiply(curr)
-  })
+  return rest.reduce<currency>(
+    (total, value) => {
+      const factor =
+        typeof value === 'string'
+          ? currency(value, defaultOptions).value
+          : value
+
+      return total.multiply(factor)
+    },
+    currency(first, defaultOptions),
+  )
 }
 
 /**
  *
- * @description
- * 除法。
+ * @param args 首项为被除数，其余为除数
  *
- * @example
- * format(divide(1, 0.2)) // 5
- * format(divide(0.2, 0.33)) // 0.61
+ * @returns 八位小数精度的商；无参数时为零。
+ *
+ * @throws 除数为零或结果非有限时抛出 RangeError。
  */
 export const divide = (...args: CurrencyArguments[]) => {
-  // 如果 args 为空，则返回 0
-  if (args.length === 1) {
-    return currency(args[0], defaultOptions).divide(1)
-  }
+  const [first = 0, ...rest] = args
 
-  // 如果 args 长度为 2，则返回 args[0] 除以 args[1]
-  if (args.length === 2) {
-    const [one, two] = args
+  return rest.reduce<currency>(
+    (total, value) => {
+      const result = total.divide(value)
 
-    return currency(one, defaultOptions).divide(two)
-  }
+      if (!Number.isFinite(result.value))
+        throw new RangeError('[divide]: Invalid divisor or result.')
 
-  // 深度克隆 args
-  const cloneDeepArgs = cloneDeep(args)
-  // 获取 dividend
-  const dividend = cloneDeepArgs.shift() as CurrencyArguments
-
-  return basic(cloneDeepArgs, dividend, (pre, curr) => {
-    return currency(pre, defaultOptions).divide(curr)
-  })
+      return result
+    },
+    currency(first, defaultOptions),
+  )
 }
 
 /**
  *
- * @description
- * 平分(将一个数值平均分配到一个数组中)，
- * 如果值为 undefined null 会自动转换为 0
+ * @param value 要分配的金额
+ * @param length 份数，0 或 1 均视为一份
+ * @param options 精度与返回类型
  *
- * @example
- * distribute(0, 1) // [0]
- * distribute(2, 3) // [0.67, 0.67, 0.67]
- * distribute(3, 3) // [1, 1, 1]
+ * @returns 总和等于按配置舍入后的金额；余数优先分到前面的份额。
+ *
+ * @throws 份数不是非负整数时抛出 RangeError。
  */
 export const distribute = (
   value: CurrencyArguments,
   length: number,
   options?: CurrencyOptions,
 ) => {
-  // 如果 length 小于等于 1，则返回一个包含 value 的数组
-  if (length <= 1) {
-    return [value ? value : 0]
-  } else {
-    // 如果 value 为 undefined null，则返回一个长度为 length 的 0 数组
-    if (!value) {
-      return new Array(length).fill(0)
-    }
+  if (!Number.isSafeInteger(length) || length < 0) {
+    throw new RangeError('[distribute]: Invalid length.')
   }
 
-  // 合并配置项
-  const assignOptions = { ...defaultOptions, ...options }
-
-  const result = currency(value, assignOptions)
-    .distribute(length)
-    .map((curr) => {
-      return format(curr, assignOptions)
-    })
-
-  return result
+  return currency(value, { ...defaultOptions, ...options })
+    .distribute(Math.max(1, length))
+    .map((part) => (options?.type === 'string' ? part.toString() : part.value))
 }

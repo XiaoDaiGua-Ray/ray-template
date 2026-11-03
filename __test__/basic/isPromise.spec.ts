@@ -25,9 +25,16 @@ describe('isPromise', () => {
     expect(isPromise(fn)).toBe(false)
   })
 
-  it('should return true if the value is an async function', () => {
+  it('should distinguishes an async function from its result', () => {
     const asyncFn = async () => {}
 
-    expect(isPromise(asyncFn)).toBe(true)
+    expect(isPromise(asyncFn)).toBe(false)
+    expect(isPromise(asyncFn())).toBe(true)
   })
+})
+
+it('recognizes thenables without accepting non-callable then properties', () => {
+  expect(isPromise({ then: vi.fn() })).toBe(true)
+  expect(isPromise({ then: true })).toBe(false)
+  expect(isPromise(null)).toBe(false)
 })

@@ -1,28 +1,16 @@
 import { APP_THEME } from '@/app-config'
-import { useI18n } from '@/hooks'
 import { useSettingActions, useSettingGetters } from '@/store'
 import { merge } from 'lodash-es'
+import { useI18n } from './useI18n'
 
 export type ThemeLabel = 'Dark' | 'Light'
 
 export interface AppThemeInfo {
-  /**
-   *
-   * @description
-   * 当前主题状态，true 为暗色主题，false 为明色主题
-   */
+  /** true 表示暗色主题。 */
   theme: boolean
-  /**
-   *
-   * @description
-   * 当前主题描述，默认描述。
-   */
+  /** 固定英文标签 Dark 或 Light。 */
   themeLabel: ThemeLabel
-  /**
-   *
-   * @description
-   * 当前主题描述，国际化描述，会根据当前语言环境自动切换。
-   */
+  /** 随语言切换的主题标签。 */
   themeI18nLabel: string
 }
 
@@ -49,13 +37,7 @@ const setThemeOverrides = (theme: boolean) => {
 export const useTheme = () => {
   /**
    *
-   * @description
-   * 获取当前主题色与主题色描述
-   * 并且描述会根据当前语言环境自动切换
-   *
-   * @example
-   * getAppTheme() // { theme: true, themeLabel: '暗色' | 'Dark' }
-   * getAppTheme() // { theme: false, themeLabel: '亮色' | 'Light' }
+   * @returns 当前主题、固定英文标签和随语言切换的翻译标签。
    */
   const getAppTheme = (): AppThemeInfo => {
     const { getAppTheme } = useSettingGetters()
@@ -74,9 +56,6 @@ export const useTheme = () => {
    *
    * @description
    * 切换至暗色主题
-   *
-   * @example
-   * darkTheme()
    */
   const darkTheme = () => {
     const { updateSettingState } = useSettingActions()
@@ -90,9 +69,6 @@ export const useTheme = () => {
    *
    * @description
    * 切换至明色主题
-   *
-   * @example
-   * lightTheme()
    */
   const lightTheme = () => {
     const { updateSettingState } = useSettingActions()
@@ -106,9 +82,6 @@ export const useTheme = () => {
    *
    * @description
    * 同步系统主题。
-   *
-   * @example
-   * syncSystemTheme()
    */
   const syncSystemTheme = () => {
     const { getAppTheme } = useSettingGetters()
@@ -124,19 +97,12 @@ export const useTheme = () => {
 
   /**
    *
-   * @param theme 当前主题色
-   *
    * @description
-   * 当前主题有明暗两套
-   *
-   * @example
-   * 假设当前主题为暗色主题
-   * toggleTheme() // 切换至明色主题
-   * 假设当前主题为明色主题
-   * toggleTheme() // 切换至暗色主题
+   * 切换到与当前相反的手动主题。
    */
   const toggleTheme = () => {
-    const { theme } = getAppTheme()
+    const { getAppTheme } = useSettingGetters()
+    const theme = getAppTheme.value
     const { updateSettingState } = useSettingActions()
 
     updateSettingState('_appTheme', !theme)

@@ -68,3 +68,21 @@ describe('useDomToImage', () => {
     expect(finished).toHaveBeenCalledTimes(1)
   })
 })
+
+it('notifies errors and cleanup even if the target getter throws', async () => {
+  const createdError = vi.fn()
+  const done = vi.fn()
+  const { create } = useDomToImage(
+    () => {
+      throw 'getter failed'
+    },
+    {
+      createdError,
+      finally: done,
+    },
+  )
+
+  await expect(create()).rejects.toThrow('getter failed')
+  expect(createdError).toHaveBeenCalledWith(expect.any(Error))
+  expect(done).toHaveBeenCalledExactlyOnceWith(void 0)
+})

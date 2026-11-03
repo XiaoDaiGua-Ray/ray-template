@@ -24,3 +24,28 @@ it('shares maximize state across callers and cancels stale completion callbacks'
     disposePinia(pinia)
   }
 })
+
+it('runs only the last completion after an enter-exit-enter sequence', async () => {
+  const pinia = createPinia()
+
+  setActivePinia(pinia)
+
+  try {
+    const obsolete = vi.fn()
+    const exit = vi.fn()
+    const current = vi.fn()
+    const page = useMaximize()
+    const toolbar = useMaximize()
+
+    page.maximize(true, { enter: obsolete })
+    toolbar.maximize(false, { exit })
+    page.maximize(true, { enter: current })
+    await nextTick()
+
+    expect(obsolete).not.toHaveBeenCalled()
+    expect(exit).not.toHaveBeenCalled()
+    expect(current).toHaveBeenCalledOnce()
+  } finally {
+    disposePinia(pinia)
+  }
+})

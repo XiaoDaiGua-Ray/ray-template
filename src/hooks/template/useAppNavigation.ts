@@ -1,65 +1,38 @@
-import { useVueRouter } from '@/hooks'
+import { NOT_FOUND_ROUTE_PATH } from '@/router/constant'
 import { useMenuGetters } from '@/store'
 import type { AppMenuOption } from '@/types'
-import type { LocationQuery } from 'vue-router'
+import type { LocationQuery, RouteLocationRaw } from 'vue-router'
+import { useVueRouter } from './useVueRouter'
 
 export type Target = number | AppMenuOption | string
 
 export interface NavigationToOptions {
-  /**
-   *
-   * 是否为 push 模式
-   * 如果设置为 true， 则会使用 vue-router 的 push 方法进行导航，否则使用 replace 方法进行导航
-   *
-   * @default true
-   */
+  /** 默认 push；设为 false 时替换当前历史项。 */
   isPush?: boolean
-  /**
-   *
-   * 跳转参数
-   *
-   * @default undefined
-   */
+  /** 随导航传递的查询参数。 */
   query?: LocationQuery
 }
 
 /**
  *
- * 导航函数
- * 但是该方法仅限于在登入后调用
+ * @returns 模板菜单导航方法；按索引导航需要先加载菜单。
  */
 export function useAppNavigation() {
   /**
    *
-   * @param target 需要导航的目标地址
+   * @param target 从 0 开始的菜单索引、菜单项或已注册路由路径
+   * @param option 导航模式与查询参数
    *
-   * 当传递参数为 number:
-   * - 当传入参数值超过最大菜单长度，也会跳转失败并且抛出警告
-   * - 如果传递参数需要导航的菜单项为非根菜单项，会自动的递归导航至第一个子菜单项
+   * @description
+   * 索引指向父菜单时，沿首个子项查找叶节点。
    *
-   * 当传递参数为 AppMenuOption 类型，会直接导航至目标页面。该方法可以不区分菜单层级
-   *
-   * @example
-   * navigationTo(1) // 导航至第二个菜单项，如果为根菜单项，会自动的递归导航至第一个子菜单项
-   * navigationTo({ AppMenuOption }) // 导航至目标菜单项
-   * navigationTo('path') // 导航至目标路由
+   * @returns 导航 Promise；目标无效时记录警告并返回 undefined。
    */
   const navigationTo = (target: Target, option?: NavigationToOptions) => {
-    const {
-      router: { getRoutes, push, replace },
-    } = useVueRouter()
-    const { isPush = true, query } = option || {}
-
-    const isPushNavigation = (path: string) =>
-      isPush
-        ? push({
-            path,
-            query,
-          })
-        : replace({
-            path,
-            query,
-          })
+    const { router } = useVueRouter()
+    const { isPush = true, query } = option ?? {}
+    const navigate = (location: RouteLocationRaw) =>
+      isPush ? router.push(location) : router.replace(location)
 
     if (typeof target === 'number') {
       // 校验是否为 NaN
@@ -80,7 +53,7 @@ export function useAppNavigation() {
         return
       }
 
-      const option = getMenuOptions.value[target]
+      const menu = getMenuOptions.value[target]
 
       // 递归获取第一级子菜单
       const deepNavigation = (routes: AppMenuOption) => {
@@ -92,21 +65,31 @@ export function useAppNavigation() {
           return deepNavigation(firstChild)
         }
 
-        return isPushNavigation(routes.fullPath)
+        return navigate({ path: routes.fullPath, query })
       }
 
-      return deepNavigation(option)
-    } else if (typeof target === 'string') {
-      const fd = getRoutes().find((curr) => curr.path === target)
-
-      if (fd) {
-        return isPushNavigation(fd.path)
-      } else {
-        console.warn(`[navigationTo]: The path "${target}" is not found.`)
-      }
-    } else {
-      return isPushNavigation(target.fullPath)
+      return deepNavigation(menu)
     }
+
+    if (typeof target !== 'string')
+      return navigate({ path: target.fullPath, query })
+
+    const resolved = router.resolve(target)
+
+    if (
+      !resolved.matched.length ||
+      resolved.matched.at(-1)?.path === NOT_FOUND_ROUTE_PATH
+    ) {
+      console.warn(`[navigationTo]: The path "${target}" is not found.`)
+
+      return
+    }
+
+    return navigate({
+      path: resolved.path,
+      hash: resolved.hash,
+      query: { ...resolved.query, ...query },
+    })
   }
 
   return {

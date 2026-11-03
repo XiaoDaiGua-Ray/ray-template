@@ -9,6 +9,7 @@ export const useRuntimeGetters = () => {
     globalDrawerValue: readonly(state.globalDrawerValue),
     globalMainLayoutLoad: readonly(state.globalMainLayoutLoad),
     layoutContentMaximize: readonly(state.layoutContentMaximize),
+    layoutContentMaximizeVersion: readonly(state.layoutContentMaximizeVersion),
     layoutContentSpinning: readonly(state.layoutContentSpinning),
     layoutContentMaximizeStyle: readonly(state.layoutContentMaximizeStyle),
   }

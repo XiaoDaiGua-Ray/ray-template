@@ -3,7 +3,8 @@ import { RIcon } from '@/components'
 import { useAppRoot, useI18n } from '@/hooks'
 import { resolveIconName } from '@/icons'
 import type { AppMenuKey, AppMenuOption } from '@/types/modules/app'
-import { getStorage, isValueType } from '@/utils'
+import { getStorage } from '@/utils/cache'
+import { isValueType } from '@/utils/core'
 import { NTag } from 'naive-ui'
 import type { TagProps } from 'naive-ui'
 import { piniaMenuStore } from '.'
@@ -273,11 +274,10 @@ export const getCatchMenuKey = () => {
  * @returns 获取缓存的菜单标签页
  */
 export const getCatchMenuTagOptions = () => {
-  return getStorage<AppMenuOption[]>(
-    APP_CATCH_KEY.appMenuTagOptions,
-    'sessionStorage',
-    {
-      defaultValue: [],
-    },
+  return (
+    getStorage<AppMenuOption[]>(
+      APP_CATCH_KEY.appMenuTagOptions,
+      'sessionStorage',
+    ) ?? []
   )
 }

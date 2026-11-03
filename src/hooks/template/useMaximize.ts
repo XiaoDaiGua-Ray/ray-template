@@ -12,8 +12,18 @@ export interface MaximizeOptions extends UseElementFullscreenOptions {
   scrollToOptions?: ScrollToOptions
 }
 
+/**
+ *
+ * @param defaults 每次切换的默认回调与样式
+ *
+ * @description
+ * 操作当前 Pinia 实例的布局最大化状态；连续切换仅执行最新的完成回调。
+ *
+ * @returns 只读状态和布局切换方法。
+ */
 export const useMaximize = (defaults?: MaximizeOptions) => {
-  const { layoutContentMaximize } = useRuntimeGetters()
+  const { layoutContentMaximize, layoutContentMaximizeVersion } =
+    useRuntimeGetters()
   const { setRuntimeState } = useRuntimeActions()
 
   // 最大化由布局 class 驱动；不同页面、标签菜单与退出按钮共享同一状态。
@@ -34,8 +44,10 @@ export const useMaximize = (defaults?: MaximizeOptions) => {
     }
 
     setRuntimeState('layoutContentMaximize', full)
+    const version = layoutContentMaximizeVersion.value
+
     nextTick(() => {
-      if (layoutContentMaximize.value !== full) return
+      if (layoutContentMaximizeVersion.value !== version) return
 
       if (full && config.scrollToOptions) {
         LAYOUT_CONTENT_REF.value?.scrollTo(config.scrollToOptions)

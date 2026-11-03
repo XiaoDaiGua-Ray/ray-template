@@ -1,6 +1,7 @@
 import './index.scss'
 import { LAYOUT_SIDER_REF } from '@/app-config'
 import { useDevice } from '@/hooks'
+import { positionSelectedMenuItem } from '@/layout/utils/position-selected-menu-item'
 import {
   useMenuActions,
   useMenuGetters,
@@ -9,7 +10,6 @@ import {
   useSettingGetters,
 } from '@/store'
 import type { AppMenuOption, NaiveMenuOptions } from '@/types'
-import { positionSelectedMenuItem } from '@/utils'
 import { NDrawer, NLayoutContent, NLayoutSider, NMenu } from 'naive-ui'
 import type { MenuInst } from 'naive-ui'
 import type { PropType } from 'vue'

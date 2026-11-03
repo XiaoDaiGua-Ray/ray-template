@@ -5,7 +5,7 @@ import type {
   SigningForm,
   SigningResponse,
 } from '@/store/modules/signing/types'
-import { removeStorage } from '@/utils'
+import { removeStorage } from '@/utils/cache'
 import { isEmpty } from 'lodash-es'
 
 /** 登录状态仓库，使用 localStorage 持久化 signingCallback。 */

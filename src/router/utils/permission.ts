@@ -1,6 +1,6 @@
 import { APP_CATCH_KEY, WHITE_ROUTES } from '@/app-config'
 import { useAppRoot } from '@/hooks'
-import { getStorage, setStorage } from '@/utils'
+import { getStorage, setStorage } from '@/utils/cache'
 import type { Router } from 'vue-router'
 import { validRole } from './valid-role'
 

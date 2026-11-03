@@ -46,3 +46,10 @@ describe('isValueType', () => {
     expect(isValueType<Function>(/a/i, 'Function')).toBe(false)
   })
 })
+
+it('matches a full tag and treats async functions as functions', () => {
+  expect(isValueType(new Uint8Array(), 'Array')).toBe(false)
+  expect(isValueType(new Map(), 'WeakMap')).toBe(false)
+  expect(isValueType(new WeakMap(), 'Map')).toBe(false)
+  expect(isValueType(async () => {}, 'Function')).toBe(true)
+})

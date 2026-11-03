@@ -15,3 +15,11 @@ describe('completeSize', () => {
     expect(completeSize(0)).toBe('0px')
   })
 })
+
+it('only adds a unit to numbers and preserves valid CSS expressions and keywords', () => {
+  expect(completeSize(' 12.5 ', 'rem')).toBe('12.5rem')
+  expect(completeSize('-.5')).toBe('-.5px')
+  expect(completeSize('calc(100% - 2rem)')).toBe('calc(100% - 2rem)')
+  expect(completeSize('var(--card-width)')).toBe('var(--card-width)')
+  expect(completeSize('fit-content')).toBe('fit-content')
+})

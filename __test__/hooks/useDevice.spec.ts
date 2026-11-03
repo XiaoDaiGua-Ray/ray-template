@@ -114,3 +114,40 @@ describe('useDevice', () => {
     expect(isTabletOrSmaller.value).toBe(true)
   })
 })
+
+it('observes changes at the custom breakpoint and stops after scope disposal', async () => {
+  const before = window.innerWidth
+  const scope = effectScope()
+  const unrelated = ref(0)
+  const observer = vi.fn(() => unrelated.value)
+
+  window.innerWidth = 640
+
+  try {
+    const state = scope.run(() => useDevice({ media: 640, observer }))!
+
+    await nextTick()
+    expect(state.isTabletOrSmaller.value).toBe(true)
+    expect(observer).toHaveBeenLastCalledWith(true, {
+      width: 640,
+      height: window.innerHeight,
+    })
+    observer.mockClear()
+    unrelated.value += 1
+    await nextTick()
+    expect(observer).not.toHaveBeenCalled()
+    window.innerWidth = 641
+    window.dispatchEvent(new Event('resize'))
+    await nextTick()
+    expect(state.isTabletOrSmaller.value).toBe(false)
+
+    scope.stop()
+    observer.mockClear()
+    window.dispatchEvent(new Event('resize'))
+    await nextTick()
+    expect(observer).not.toHaveBeenCalled()
+  } finally {
+    scope.stop()
+    window.innerWidth = before
+  }
+})

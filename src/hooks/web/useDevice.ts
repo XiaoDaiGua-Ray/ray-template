@@ -1,4 +1,3 @@
-import { watchEffectWithTarget } from '@/utils'
 import { useWindowSize } from '@vueuse/core'
 import type { UseWindowSizeOptions } from '@vueuse/core'
 
@@ -8,60 +7,42 @@ type Callback = (
 ) => void
 
 export interface UseDeviceOptions extends UseWindowSizeOptions {
-  /**
-   *
-   * @description
-   * 自定义 isTabletOrSmaller 的判断尺寸。
-   *
-   * @default 768
-   */
+  /** 平板宽度上限，默认 768 像素。 */
   media?: number
-  /**
-   *
-   * @description
-   * 当尺寸更新后的回调函数。
-   *
-   * @default undefined
-   */
+  /** 窗口尺寸或断点结果更新后执行。 */
   observer?: Callback
 }
 
 /**
  *
- * @param options 配置项
+ * @param options 窗口尺寸选项、断点与观察回调
  *
  * @description
- * 检测当前尺寸是否为平板或者更小
- * 默认主流平板尺寸为 768px
+ * 默认断点为 768 像素（含等于）。
  *
- * @example
- * const { width, height, isTabletOrSmaller } = useDevice()
- *
- * isTabletOrSmaller.value => true // 当前尺寸为平板或者更小
- * isTabletOrSmaller.value => false // 当前尺寸为桌面或者更大
+ * @returns 响应式窗口宽高和只读的断点判断。
  */
 export function useDevice(options?: UseDeviceOptions) {
   const { width, height } = useWindowSize(options)
-  const isTabletOrSmaller = ref(false)
-  const { observer } = options ?? {}
+  const isTabletOrSmaller = computed(
+    () => width.value <= (options?.media ?? 768),
+  )
 
-  const update = () => {
-    const { media = 768 } = options ?? {}
-
-    isTabletOrSmaller.value = width.value <= media
-
-    observer?.(isTabletOrSmaller.value, {
-      width: width.value,
-      height: height.value,
-    })
+  if (options?.observer) {
+    // 只跟踪尺寸与断点，避免观察回调读到的其他状态触发重复通知。
+    watch(
+      [isTabletOrSmaller, width, height],
+      ([smaller, width, height]) => {
+        options.observer?.(smaller, { width, height })
+      },
+      { immediate: true },
+    )
   }
-
-  watchEffectWithTarget(update)
 
   return {
     width,
     height,
-    isTabletOrSmaller: readonly(isTabletOrSmaller),
+    isTabletOrSmaller,
   } as const
 }
 

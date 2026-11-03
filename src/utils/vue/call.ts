@@ -1,37 +1,19 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import type { AnyFn, MaybeArray } from '@/types'
+import type { MaybeArray } from '@/types'
 
-function call(funcs: MaybeArray<() => void>): void
-
-function call<A1>(funcs: MaybeArray<(a1: A1) => void>, a1: A1): void
-
-function call<A1, A2>(
-  funcs: MaybeArray<(a1: A1, a2: A2) => void>,
-  a1: A1,
-  a2: A2,
-): void
-
-function call<A1, A2, A3>(
-  funcs: MaybeArray<(a1: A1, a2: A2, a3: A3) => void>,
-  a1: A1,
-  a2: A2,
-  a3: A3,
-): void
-
-function call<A1, A2, A3, A4>(
-  funcs: MaybeArray<(a1: A1, a2: A2, a3: A3, a4: A4) => void>,
-  a1: A1,
-  a2: A2,
-  a3: A3,
-  a4: A4,
-): void
-
-function call<A extends any[]>(funcs: AnyFn[] | AnyFn, ...args: A) {
+/**
+ *
+ * @param funcs 单个回调或按顺序调用的回调数组
+ * @param args 传给每个回调的参数
+ *
+ * @throws 任一回调抛错时立即中断并传播该错误。
+ */
+export function call<Args extends unknown[]>(
+  funcs: MaybeArray<(...args: Args) => void>,
+  ...args: Args
+): void {
   if (Array.isArray(funcs)) {
-    funcs.forEach((func) => (call as any)(func, ...args))
+    funcs.forEach((fn) => fn(...args))
   } else {
-    return funcs(...args)
+    funcs(...args)
   }
 }
-
-export { call }

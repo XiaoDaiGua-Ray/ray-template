@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
 import { APP_CATCH_KEY, DAYJS_LOCAL_MAP } from '@/app-config'
 import type { SettingState } from '@/store/modules/setting/types'
-import { getStorage } from '@/utils'
+import { getStorage } from '@/utils/cache'
 
 /**
  *
@@ -13,15 +13,12 @@ import { getStorage } from '@/utils'
  * 初始化 dayjs 的语言环境。
  */
 export const setupDayjs = () => {
-  const { localeLanguage } = getStorage<SettingState>(
+  const setting = getStorage<SettingState>(
     APP_CATCH_KEY.appPiniaSettingStore,
     'localStorage',
-    {
-      defaultValue: {} as SettingState,
-    },
   )
   const local =
-    DAYJS_LOCAL_MAP[localeLanguage as keyof typeof DAYJS_LOCAL_MAP] ||
+    DAYJS_LOCAL_MAP[setting?.localeLanguage as keyof typeof DAYJS_LOCAL_MAP] ||
     DEFAULT_DAYJS_LOCAL
 
   dayjs.locale(local)

@@ -3,17 +3,9 @@ import { getCurrentScope, onScopeDispose } from 'vue'
 
 /**
  *
- * @param fn effect 作用域卸载时需执行函数
+ * @param fn 作用域销毁时执行的清理函数
  *
- * @description
- * 返回 true 表示获取到 effect 作用域并且卸载；false 表示未存在 effect 作用域。
- *
- * @example
- * const watchStop = watch(() => {}, () => {})
- * const watchEffectStop = watchEffect(() => {})
- *
- * effectDispose(watchStop)
- * effectDispose(watchEffectStop)
+ * @returns 是否已在当前作用域登记清理；无作用域时返回 false。
  */
 export function effectDispose<T extends AnyFn>(fn: T) {
   if (getCurrentScope()) {

@@ -1,66 +1,50 @@
-import { useDomToImage, usePrint } from '@/hooks'
-import type { UseDomToImageOptions, UsePrintOptions } from '@/hooks'
+import { useDomToImage } from '@/hooks/web/useDomToImage'
+import type { UseDomToImageOptions } from '@/hooks/web/useDomToImage'
+import { usePrint } from '@/hooks/web/usePrint'
+import type { UsePrintOptions } from '@/hooks/web/usePrint'
 import type { BasicTarget } from '@/types'
-import { omit } from 'lodash-es'
 
-export interface PrintDomOptions {
-  printOptions?: Omit<UsePrintOptions, 'printable' | 'type' | 'base64'>
-  domToImageOptions?: Omit<UseDomToImageOptions, 'imageType'>
+export interface PrintDomOptions<T extends HTMLElement = HTMLElement> {
+  printOptions?: Omit<UsePrintOptions, 'type' | 'base64'>
+  domToImageOptions?: Omit<UseDomToImageOptions<T>, 'imageType'>
 }
 
 /**
  *
- * @param target ref dom
- * @param options print-dom options, dom-to-image options
+ * @param target 截图的 DOM 目标，执行时解包
+ * @param options 截图与打印配置
  *
  * @description
- * 基于 useDomToImage 和 print-js 封装，允许 Ref 注册 Dom 直接调用打印。
- * 避免直接打印 dom 时出现一些诡异的问题。
+ * 将目标转成 JPEG 后交给打印预览，并同步全局加载条。
  *
- * 该方法会强制剔除 printOptions 中的 printable, type, base64 属性，即使忽略了 ts 的类型检查。
- * 并且在绘制图片的时候，强制使用 jpeg 格式，即使是指定了其他格式。
- *
- * 支持 useDomToImage 方法的所有配置项，除了 imageType。
- * 支持 print-js 的所有配置项，除了 printable 和 type。
- *
- * @example
- * const refDom = ref<HTMLElement>()
- *
- * printDom(refDom, {
- *  printOptions: { title: 'Demo Print', ... },
- *  domToImageOptions: { ... }
- * })
+ * @returns 已调用打印预览时返回 true；截图或调用失败时记录错误并返回 false。
  */
-export const printDom = <T extends HTMLElement>(
+export const printDom = async <T extends HTMLElement>(
   target: BasicTarget<T>,
-  options?: PrintDomOptions,
+  options?: PrintDomOptions<T>,
 ) => {
-  const { domToImageOptions, printOptions } = options ?? {}
+  const loading = window.$loadingBar
 
-  const { create } = useDomToImage(target, {
-    ...domToImageOptions,
-    beforeCreate: (element) => {
-      domToImageOptions?.beforeCreate?.(element)
-      window.$loadingBar?.start()
-    },
-    created(result, element) {
-      domToImageOptions?.created?.(result, element)
-      window.$loadingBar?.finish()
-    },
-    createdError(error) {
-      domToImageOptions?.createdError?.(error)
-      window.$loadingBar?.error()
-    },
-  } as UseDomToImageOptions)
+  try {
+    loading?.start()
 
-  create('jpeg')?.then((res) => {
-    const { print } = usePrint(res, {
+    const { create } = useDomToImage(target, options?.domToImageOptions)
+    const image = await create('jpeg')
+
+    await usePrint(image, {
+      targetStyles: ['*'],
+      ...options?.printOptions,
       type: 'image',
       base64: true,
-      targetStyles: ['*'],
-      ...omit(printOptions as UsePrintOptions, ['type', 'base64']),
-    })
+    }).print()
 
-    print()
-  })
+    loading?.finish()
+
+    return true
+  } catch (error) {
+    loading?.error()
+    console.error('[printDom]: Could not open print preview.', error)
+
+    return false
+  }
 }

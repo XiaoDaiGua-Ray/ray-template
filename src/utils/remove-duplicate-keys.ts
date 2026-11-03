@@ -1,25 +1,13 @@
 import type { Recordable } from '@/types'
-import { reduce } from 'lodash-es'
 
 /**
  *
- * @param targetObject target object
+ * @param targetObject 已按 JavaScript 规则合并同名键的对象
  *
- * @description
- * 移除对象中重复的键。
- * 以最后一次出现的键为准。
- *
- * @example
- * removeDuplicateKeys({ a: 1, b: 2, a: 3 }) // { a: 3, b: 2 }
+ * @returns 可枚举自有属性的浅拷贝，包含 Symbol 键。
  */
-export const removeDuplicateKeys = <T extends Recordable>(targetObject: T) => {
-  return reduce(
-    Object.entries(targetObject).reverse(),
-    (result, [key, value]) => {
-      result[key as keyof T] = value
-
-      return result
-    },
-    {} as T,
-  )
-}
+export const removeDuplicateKeys = <T extends Recordable>(
+  targetObject: T,
+): T => ({
+  ...targetObject,
+})

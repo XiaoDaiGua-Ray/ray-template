@@ -66,3 +66,32 @@ describe('setClass', () => {
     expect(classList.includes(CLASS_NAME)).toBe(false)
   })
 })
+
+it('uses exact class tokens on SVG, clears all classes, and follows target replacement', async () => {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+  const target = shallowRef<Element | null>(svg)
+  const scope = effectScope()
+
+  try {
+    setClass(svg, 'foo-bar\tready\nactive')
+    expect(hasClass(svg, 'foo').value).toBe(false)
+    expect(hasClass(svg, ['miss', 'ready']).value).toBe(true)
+    removeClass(svg, 'removeAllClass')
+    expect(svg.classList.length).toBe(0)
+    scope.run(() => setClass(target, 'selected'))
+    expect(svg.classList.contains('selected')).toBe(true)
+    const div = document.createElement('div')
+
+    target.value = div
+    await nextTick()
+    expect(div.classList.contains('selected')).toBe(true)
+    scope.stop()
+    const replacement = document.createElement('div')
+
+    target.value = replacement
+    await nextTick()
+    expect(replacement.classList.contains('selected')).toBe(false)
+  } finally {
+    scope.stop()
+  }
+})

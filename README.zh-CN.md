@@ -191,6 +191,7 @@ pnpm report
 
 ## Hooks、布局与图标
 
+- [工具分包与兼容契约](src/utils/README.md)：公共工具入口、边界和回归测试。
 - [Hooks 示例与约定](src/hooks/README.md)：`/template-hooks`、`/web-hooks`，覆盖 19 个自定义 Hook。
 - [布局模式与插槽](src/layout/README.md)：`/layout-demo`，可即时调整并保存偏好。
 - [分包图标与类型提示](src/icons/A_README.md)：`/svg-icons`；使用 `pnpm icons:generate` 与 `pnpm icons:check` 维护名称。

@@ -1,62 +1,47 @@
-import { APP_CATCH_KEY_PREFIX } from '@/app-config'
 import type { RemoveStorageFC, StorageLike, StorageOptions } from '@/types'
+import { prefixCacheKey } from './app/prefix-cache-key'
 
-/**
- * @param type 存储类型
- * @returns Storage 实例
- */
 const getStorageInstance = (type: StorageLike = 'sessionStorage'): Storage =>
   type === 'localStorage' ? window.localStorage : window.sessionStorage
 
-/**
- * 获取带前缀的键名
- * @param key 原始键名
- * @param options 配置项
- * @returns 处理后的键名
- */
-const getKeyWithPrefix = (key: string, options?: StorageOptions): string => {
-  const { prefix, prefixKey } = options ?? {}
-
-  return prefix ? (prefixKey || APP_CATCH_KEY_PREFIX) + key : key
-}
+const getKeyWithPrefix = (key: string, options?: StorageOptions): string =>
+  options?.prefix
+    ? prefixCacheKey(key, { customPrefix: options.prefixKey })
+    : key
 
 /**
- * @param key 需要查找的缓存值key
- * @param storageType 需要查找的缓存类型
- * @param options 配置项
  *
- * @description
- * 查找当前缓存中是否含有某个 key。
- * 默认查找 sessionStorage。
+ * @param key 缓存键
+ * @param storageType 存储区域，默认 sessionStorage
+ * @param options 键前缀配置
  *
- * @example
- * hasStorage('signing') // 查找 session 中 signing 缓存字段
+ * @returns 键是否存在；浏览器拒绝访问存储时返回 false。
  */
 function hasStorage(
   key: string,
   storageType: StorageLike = 'sessionStorage',
   options?: StorageOptions,
 ) {
-  const prefixedKey = getKeyWithPrefix(key, options)
-  const storage = getStorageInstance(storageType)
-
-  return Object.keys(storage).includes(prefixedKey)
+  try {
+    return (
+      getStorageInstance(storageType).getItem(
+        getKeyWithPrefix(key, options),
+      ) !== null
+    )
+  } catch {
+    return false
+  }
 }
 
 /**
- * @param key 需要设置的缓存值key
- * @param value 需要设置的值
- * @param storageType 需要设置的缓存类型
- * @param options 配置项
+ *
+ * @param key 非空缓存键
+ * @param value 可序列化为 JSON 的值
+ * @param storageType 存储区域，默认 sessionStorage
+ * @param options 键前缀配置
  *
  * @description
- * 设置缓存值，默认设置 sessionStorage。
- * 如果 key 为空，则会打印错误信息。
- *
- * @example
- * setStorage('demo', 'hi') // 设置 session 中 demo 缓存字段
- * setStorage('demo', 'hi', 'localStorage') // 设置 local 中 demo 缓存字段
- * setStorage('demo', 'hi', 'sessionStorage', { prefix: true, prefixKey: 'ray' }) // 设置 session 中 ray_demo 缓存字段
+ * 写入 JSON；键为空、值不可序列化或浏览器拒绝写入时记录错误。
  */
 function setStorage<T = unknown>(
   key: string,
@@ -70,11 +55,15 @@ function setStorage<T = unknown>(
     return
   }
 
-  const prefixedKey = getKeyWithPrefix(key, options)
-  const storage = getStorageInstance(storageType)
-
   try {
-    storage.setItem(prefixedKey, JSON.stringify(value))
+    const data = JSON.stringify(value)
+
+    if (data === void 0) throw new TypeError('Value is not JSON serializable.')
+
+    getStorageInstance(storageType).setItem(
+      getKeyWithPrefix(key, options),
+      data,
+    )
   } catch (error) {
     console.error(
       `[setStorage]: Failed to set stored data for key '${key}'`,
@@ -83,72 +72,45 @@ function setStorage<T = unknown>(
   }
 }
 
-function getStorage<T = unknown>(
-  key: string,
-  storageType: StorageLike,
-  options: StorageOptions<T> & { defaultValue: T },
-): T
-
-function getStorage<T = unknown>(
-  key: string,
-  storageType?: StorageLike,
-  options?: Omit<StorageOptions<T>, 'defaultValue'>,
-): T | null
-
 /**
- * @param key 需要获取的缓存值key
- * @param storageType 需要获取的缓存类型
- * @param options 配置项
  *
- * @description
- * 获取缓存值。
- * 默认获取 sessionStorage。
- * 如果 key 为空，则会打印错误信息。
+ * @param key 缓存键
+ * @param storageType 存储区域，默认 sessionStorage
+ * @param options 键前缀与回退值配置
  *
- * @example
- * getStorage('demo') // 获取 session 中 demo 缓存字段
- * getStorage('demo', 'localStorage') // 获取 local 中 demo 缓存字段
- * getStorage('demo', 'sessionStorage', { prefix: true, prefixKey: 'ray' }) // 获取 session 中 ray_demo 缓存字段
+ * @returns JSON 值；键不存在、内容损坏或无法读取时返回回退值或 null。
  */
 function getStorage<T = unknown>(
   key: string,
   storageType: StorageLike = 'sessionStorage',
   options?: StorageOptions<T>,
 ): T | null {
-  const prefixedKey = getKeyWithPrefix(key, options)
-  const storage = getStorageInstance(storageType)
-  const { defaultValue } = options ?? {}
+  const fallback = options?.defaultValue ?? null
 
   try {
-    const data = storage.getItem(prefixedKey)
+    const data = getStorageInstance(storageType).getItem(
+      getKeyWithPrefix(key, options),
+    )
 
-    return data === null ? (defaultValue ?? null) : (JSON.parse(data) as T)
+    return data === null ? fallback : (JSON.parse(data) as T)
   } catch (error) {
     console.error(
       `[getStorage]: Failed to get stored data for key '${key}'`,
       error,
     )
 
-    return defaultValue ?? null
+    return fallback
   }
 }
 
 /**
- * @param key 需要删除的缓存值key
- * @param storageType 需要删除的缓存类型
- * @param options 配置项
+ *
+ * @param key 缓存键，或批量删除标识 __all__、__all_sessionStorage__、__all_localStorage__
+ * @param storageType 目标存储区域；批量删除时由标识决定
+ * @param options 键前缀配置；批量删除时只清理符合前缀的键
  *
  * @description
- * 删除缓存值。
- * 默认删除 sessionStorage。
- * 预保留了 __all__、__all_sessionStorage__、__all_localStorage__ 三个 key，
- * 分别代表清空所有缓存、清空 sessionStorage 缓存、清空 localStorage 缓存。
- *
- * @example
- * removeStorage('__all__', 'all') // 清空所有缓存
- * removeStorage('__all_sessionStorage__', 'sessionStorage') // 清空 sessionStorage 缓存
- * removeStorage('__all_localStorage__', 'localStorage') // 清空 localStorage 缓存
- * removeStorage('signing', 'sessionStorage' || 'localStorage') // 清空 session 或者 localStorage 中 signing 缓存字段
+ * 删除缓存；浏览器拒绝操作时记录错误。
  */
 const removeStorage: RemoveStorageFC = (key, storageType, options) => {
   if (!key) {
@@ -157,38 +119,50 @@ const removeStorage: RemoveStorageFC = (key, storageType, options) => {
     return
   }
 
-  const prefixedKey = getKeyWithPrefix(key, options)
-  const localStorage = window.localStorage
-  const sessionStorage = window.sessionStorage
+  const remove = (type: StorageLike, all = false) => {
+    try {
+      const storage = getStorageInstance(type)
 
-  /**
-   * @param storage 存储实例
-   */
-  const removeFromStorage = (storage: Storage) => {
-    Object.keys(storage).forEach((k) =>
-      storage.removeItem(getKeyWithPrefix(k, options)),
-    )
+      if (!all) {
+        storage.removeItem(getKeyWithPrefix(key, options))
+
+        return
+      }
+
+      const prefix = getKeyWithPrefix('', options)
+
+      if (!prefix) {
+        storage.clear()
+
+        return
+      }
+
+      for (let index = storage.length - 1; index >= 0; index--) {
+        const storedKey = storage.key(index)
+
+        if (storedKey?.startsWith(prefix)) storage.removeItem(storedKey)
+      }
+    } catch (error) {
+      console.error(
+        `[removeStorage]: Failed to remove stored data for key '${key}'`,
+        error,
+      )
+    }
   }
 
   switch (key) {
     case '__all__':
-      removeFromStorage(localStorage)
-      removeFromStorage(sessionStorage)
-
+      remove('localStorage', true)
+      remove('sessionStorage', true)
       break
-
     case '__all_sessionStorage__':
-      removeFromStorage(sessionStorage)
-
+      remove('sessionStorage', true)
       break
-
     case '__all_localStorage__':
-      removeFromStorage(localStorage)
-
+      remove('localStorage', true)
       break
-
     default:
-      getStorageInstance(storageType as StorageLike).removeItem(prefixedKey)
+      remove(storageType === 'localStorage' ? 'localStorage' : 'sessionStorage')
   }
 }
 

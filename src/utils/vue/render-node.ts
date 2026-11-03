@@ -1,4 +1,3 @@
-import { isValueType } from '@/utils'
 import type { Slot, VNode } from 'vue'
 
 export type RenderVNodeType<T = unknown> =
@@ -11,46 +10,39 @@ export type RenderVNodeType<T = unknown> =
   | JSX.Element
   | Slot<T>
 
-export type DefaultElement<T = unknown> = NonNullable<
-  Omit<RenderVNodeType<T>, 'string' | 'number'>
->
+export type DefaultElement<T = unknown> = NonNullable<RenderVNodeType<T>>
 
 export interface RenderNodeOptions<T extends DefaultElement> {
   defaultElement?: T
 }
 
+type SimpleRenderNode = Exclude<RenderVNodeType, Slot>
+
 /**
  *
- * @param vnode 将 jsx element, slot, h, string 等渲染为 vnode
- * @param options 配置项
+ * @param vnode VNode、文本、数字或渲染回调
+ * @param options 空节点的回退内容
  *
- * 可以将常见的类型转换为 vnode
- *
- * @example
- * renderNode('hello world') // () => 'hello world'
- * renderNode(<div>hello world</div>) // () => <div>hello world</div>
- * renderNode(() => <div>hello world</div>) // () => <div>hello world</div>
- * renderNode(null, { defaultElement: () => <span>hello world</span> }) // () => <span>hello world</span>
+ * @returns 渲染函数；零和空字符串按原值渲染。
  */
+export function renderNode<T extends NonNullable<SimpleRenderNode>>(
+  vnode: SimpleRenderNode,
+  options?: RenderNodeOptions<T>,
+): () => VNode | JSX.Element | string | number | null
+export function renderNode<T extends DefaultElement>(
+  vnode: RenderVNodeType,
+  options?: RenderNodeOptions<T>,
+): RenderNodeType
 export function renderNode<T extends DefaultElement>(
   vnode: RenderVNodeType,
   options?: RenderNodeOptions<T>,
 ) {
-  if (!vnode) {
-    const { defaultElement = null } = options ?? {}
+  const node = vnode ?? options?.defaultElement ?? null
 
-    return typeof defaultElement === 'function'
-      ? defaultElement
-      : () => defaultElement
-  }
-
-  if (typeof vnode === 'string' || isValueType<object>(vnode, 'Object')) {
-    return () => vnode
-  }
-
-  if (typeof vnode === 'function') {
-    return vnode
-  }
+  return typeof node === 'function' ? node : () => node
 }
+
+type RenderNodeType =
+  (() => VNode | JSX.Element | string | number | null) | Slot
 
 export type RenderNodeReturn = ReturnType<typeof renderNode>

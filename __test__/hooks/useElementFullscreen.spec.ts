@@ -97,3 +97,31 @@ describe('useElementFullscreen', () => {
     expect(div.style.position).toBe('')
   })
 })
+
+it('restores original style priority and releases ownership even when manual exit is vetoed', () => {
+  const element = document.createElement('div')
+
+  element.style.setProperty('width', '240px', 'important')
+  element.setAttribute('data-element-fullscreen', 'prior')
+  const scope = effectScope()
+  const first = scope.run(() =>
+    useElementFullscreen(element, {
+      beforeExit: () => {
+        throw new Error('veto')
+      },
+    }),
+  )!
+  const second = useElementFullscreen(element)
+
+  first.enter()
+  second.enter()
+  expect(second.isFullscreen.value).toBe(false)
+  expect(first.exit).toThrow('veto')
+  scope.stop()
+  expect(element.style.width).toBe('240px')
+  expect(element.style.getPropertyPriority('width')).toBe('important')
+  expect(element.getAttribute('data-element-fullscreen')).toBe('prior')
+  second.enter()
+  expect(second.isFullscreen.value).toBe(true)
+  second.exit()
+})

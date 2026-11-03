@@ -3,16 +3,7 @@ import type { LayoutInst } from 'naive-ui'
 
 /**
  *
- * @description
- * 滚动侧边栏。
- *
- * @see https://www.naiveui.com/zh-CN/dark/components/layout#scroll-to.vue
- *
- * @example
- * const siderScrollTo = useSiderScroll()
- *
- * siderScrollTo({ top: 0, behavior: 'smooth' }) // y 方向侧边栏滚动
- * siderScrollTo(0, 0) // x, y 方向滚动到 0 位置
+ * @returns 侧栏 scrollTo；调用时读取当前布局实例，未挂载时不操作。
  */
 export const useSiderScroll = () => {
   const scrollTo: LayoutInst['scrollTo'] = (

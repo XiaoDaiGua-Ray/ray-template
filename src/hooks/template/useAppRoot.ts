@@ -5,23 +5,8 @@ export function useAppRoot() {
   const { getAppRootRoute } = useSettingGetters()
   const { updateSettingState } = useSettingActions()
 
-  /**
-   *
-   * @description
-   * 获取根路由。
-   */
   const getRootRoute = getAppRootRoute
-  /**
-   *
-   * @description
-   * 获取根路由 path。
-   */
   const getRootPath = computed(() => getAppRootRoute.value.path)
-  /**
-   *
-   * @description
-   * 获取根路由 name。
-   */
   const getRootName = computed(() => getAppRootRoute.value.name)
 
   /**
@@ -30,9 +15,6 @@ export function useAppRoot() {
    *
    * @description
    * 设置根路由。
-   *
-   * @example
-   * setRootRoute({ path: '/your root path', name: 'your root name' })
    */
   const setRootRoute = (route: Partial<AppRootRoute>) => {
     updateSettingState(

@@ -56,3 +56,16 @@ describe('useI18n namespaces', () => {
     expect(hook.t('code')).toBe('updated:hooks.code')
   })
 })
+
+it('forwards interpolation and leaves plain text and route keys untouched', async () => {
+  const native = vi.fn((key: string) => `translated:${key}`)
+
+  state.instance!.global.t = native
+  const { t: translate } = useI18n()
+  const { t } = await import('../../src/hooks/template/useI18n')
+
+  expect(translate('Already readable')).toBe('Already readable')
+  expect(t('menu.Dashboard')).toBe('menu.Dashboard')
+  expect(translate('hooks.count', { count: 2 })).toBe('translated:hooks.count')
+  expect(native).toHaveBeenCalledExactlyOnceWith('hooks.count', { count: 2 })
+})

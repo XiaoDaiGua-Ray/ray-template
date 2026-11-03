@@ -19,6 +19,7 @@ Ray Template 是前端中后台模板，包含可运行的组件与路由示例�
 | 演示接口       | `mock/demo`、`mock/shared`                                                  | `vite-plugin-mock-dev-server`，生产环境按实际后端切换                              |
 | 通用组件       | `src/components/base`、`src/components/pro`                                 | 组件、props、types、hook、样式放在同一功能目录                                     |
 | 模板绑定组件   | `src/app-components`                                                        | [组件说明](../src/app-components/README.md)                                        |
+| 公共工具       | `src/utils`                                                                 | [分包、兼容入口和测试](../src/utils/README.md)                                     |
 | 组合式函数     | `src/hooks/web`、`template`、`components`                                   | [19 个 Hook 的示例与生命周期](../src/hooks/README.md)，回归测试在 `__test__/hooks` |
 | 国际化         | `src/locales/lang`、`src/hooks/web/useI18n.ts`                              | [国际化说明](../src/locales/README.md)，中文和英文成对维护                         |
 | 主题与全局样式 | `src/app-config/design-config.ts`、`src/styles`                             | 保留 CSS 变量和 Naive UI 明暗主题配置                                              |
@@ -33,7 +34,7 @@ Ray Template 是前端中后台模板，包含可运行的组件与路由示例�
 - `src/app-config` 管理模板配置。运行时 `__APP_CFG__` 由 Vite 注入；`__DEV__` 表示 development 模式。
 - 路径别名 `@`、`@api`、`@images`、`@mock` 在 Vite 和 TypeScript 中必须一致。
 - `src/store/hooks` 是已有业务对 Store 的访问层；所有全局可变 UI 状态统一归入 Pinia：临时状态由 `runtime` 管理且不持久化，布局偏好在 `setting.layoutConfig` 中沿用原缓存 key。
-- `src/utils/c` 仍使用 CryptoJS 4.2.0 的同步 AES 格式。改用 Web Crypto 前需设计异步接口和历史密文迁移，不能直接替换并让既有数据无法解密。
+- `src/utils/legacy-crypto`（原 `src/utils/c`）仍使用 CryptoJS 4.2.0 的同步 AES 格式。改用 Web Crypto 前需设计异步接口和历史密文迁移，不能直接替换并让既有数据无法解密。
 - 演示页与业务组件同样属于模板能力。删除 demo 或更换第三方库前需要明确任务范围；升级工具链时应保留示例功能。
 
 布局模式、配置与插槽见 [布局说明](../src/layout/README.md)。图标按包生成独立雪碧图，完整名称和严格类型由 `scripts/icons.mjs` 统一生成。

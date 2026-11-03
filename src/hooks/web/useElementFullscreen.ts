@@ -1,93 +1,36 @@
 import type { BasicTarget } from '@/types'
-import { effectDispose, isValueType, unrefElement } from '@/utils'
-import { pick } from 'lodash-es'
+import { effectDispose } from '@/utils/vue/effect-dispose'
+import { unrefElement } from '@/utils/vue/unref-element'
 
 export interface UseElementFullscreenOptions {
-  /**
-   *
-   * @description
-   * 进入全屏前的回调。
-   *
-   * @default undefined
-   */
+  /** 在覆盖样式前调用，抛错可取消进入。 */
   beforeEnter?: () => void
-  /**
-   *
-   * @description
-   * 进入全屏后的回调。
-   *
-   * @default undefined
-   */
+  /** 在进入状态后调用，最终尺寸会在下一帧应用。 */
   enter?: () => void
-  /**
-   *
-   * @description
-   * 退出全屏前的回调。
-   *
-   * @default undefined
-   */
+  /** 手动退出前调用，抛错可取消退出。 */
   beforeExit?: () => void
-  /**
-   *
-   * @description
-   * 退出全屏后的回调。
-   *
-   * @default undefined
-   */
+  /** 恢复原始样式后调用。 */
   exit?: () => void
-  /**
-   *
-   * @description
-   * 全屏时的 z-index。
-   *
-   * @default 999
-   */
+  /** 未指定时按进入顺序分配层级。 */
   zIndex?: number
-  /**
-   *
-   * @description
-   * 全屏时的背景色。
-   *
-   * @default null
-   */
   backgroundColor?: string
-  /**
-   *
-   * @description
-   * 手动设定 transition 过度效果。
-   *
-   * @default 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-   */
+  /** 全屏过渡样式；传入 none 禁用。 */
   transition?: string
 }
 
-// 全局 z-index 管理
 let globalZIndex = 999
 const ID_TAG = 'data-element-fullscreen'
+const activeElements = new WeakSet<HTMLElement>()
 
 /**
  *
- * @param target target dom
- * @param options useElementFullscreen options
+ * @param target 需要占满视口的元素
+ * @param options 生命周期回调和样式配置
  *
  * @description
- * 使元素全屏，但是不调用浏览器的全屏 API，仅使用纯 css 实现。
- * 该方法具有入侵性，并且会在元素上覆盖 transition 样式。
+ * 使用 CSS fixed 定位。每个元素同时只能由一个实例控制，退出或作用域销毁时恢复原有行内样式。
  *
- * 该方法虽然能够实现全屏，但是会覆盖元素的一些基本样式，因此需要注意管理元素的一些基本样式，例如：position、z-index、transition、transform、width、height。
- *
- * @example
- * <template>
- *  <div ref="refDom" />
- * </template>
- * <script lang="ts" setup>
- * const refDom = useTemplateRef<HTMLElement>('refDom')
- * const { enter, exit, toggleFullscreen } = useElementFullscreen(refDom, { UseElementFullscreenOptions })
- *
- * enter() // 进入全屏
- * exit() // 退出全屏
- * toggleFullscreen() // 切换全屏
- * </script>
+ * @returns 全屏状态以及进入、退出和切换方法。
  */
 export const useElementFullscreen = (
   target: BasicTarget,
@@ -96,185 +39,110 @@ export const useElementFullscreen = (
   const {
     beforeEnter,
     beforeExit,
-    enter: _enter,
-    exit: _exit,
+    enter: onEnter,
+    exit: onExit,
     backgroundColor,
     zIndex,
     transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   } = options ?? {}
 
-  // 每个实例独立的状态
   const isFullscreen = ref(false)
-  const instanceZIndex = ref(0)
   let frame: number | undefined
-  let activeElement: HTMLElement | null = null
-  const originalStyles = {
-    position: '',
-    width: '',
-    height: '',
-    top: '',
-    left: '',
-    transform: '',
-    transition: '',
-    zIndex: '',
-    backgroundColor: '',
-    boxSizing: '',
+  let restore: (() => void) | undefined
+
+  const exit = () => {
+    if (!restore) return
+
+    beforeExit?.()
+    restore()
+    onExit?.()
   }
 
   const enter = () => {
-    const element = unrefElement(target) as HTMLElement | null
+    const element = unrefElement(target)
 
-    if (!element) {
-      return
-    }
+    if (!(element instanceof HTMLElement) || activeElements.has(element)) return
 
-    if (activeElement === element) return
-
-    if (activeElement) exit()
+    if (restore) exit()
 
     beforeEnter?.()
-    activeElement = element
 
-    // 保存原始样式（只在第一次进入时保存）
-    if (!isFullscreen.value) {
-      const o = pick(element.style, [
-        'position',
-        'width',
-        'height',
-        'top',
-        'left',
-        'transform',
-        'transition',
-        'zIndex',
-        'backgroundColor',
-        'boxSizing',
-      ])
-
-      Object.assign(originalStyles, o)
-    }
-
-    // 获取当前位置
     const { top, left, width, height } = element.getBoundingClientRect()
+    const styles = {
+      position: 'fixed',
+      'box-sizing': 'border-box',
+      top: `${top}px`,
+      left: `${left}px`,
+      width: `${width}px`,
+      height: `${height}px`,
+      transform: 'translate(0, 0)',
+      'z-index': String(zIndex ?? ++globalZIndex),
+      transition: 'none',
+      ...(backgroundColor ? { 'background-color': backgroundColor } : {}),
+    }
+    const originalStyles = Object.keys(styles).map((property) => [
+      property,
+      element.style.getPropertyValue(property),
+      element.style.getPropertyPriority(property),
+    ])
+    const originalAttribute = element.getAttribute(ID_TAG)
 
-    // 分配 z-index
-    if (instanceZIndex.value === 0) {
-      if (
-        isValueType<null>(zIndex, 'Null') ||
-        isValueType<undefined>(zIndex, 'Undefined')
-      ) {
-        globalZIndex += 1
-        instanceZIndex.value = globalZIndex
-      } else {
-        instanceZIndex.value = zIndex
+    activeElements.add(element)
+    restore = () => {
+      if (frame !== void 0) cancelAnimationFrame(frame)
+
+      frame = void 0
+
+      for (const [property, value, priority] of originalStyles) {
+        element.style.setProperty(property, value, priority)
       }
+
+      if (originalAttribute === null) element.removeAttribute(ID_TAG)
+      else element.setAttribute(ID_TAG, originalAttribute)
+
+      restore = void 0
+      activeElements.delete(element)
+      isFullscreen.value = false
     }
 
-    // 设置全屏样式
     element.setAttribute(ID_TAG, 'true')
 
-    // 设置初始位置（不设置 transition）
-    element.style.position = 'fixed'
-    element.style.boxSizing = 'border-box'
-    element.style.top = `${top}px`
-    element.style.left = `${left}px`
-    element.style.width = `${width}px`
-    element.style.height = `${height}px`
-    element.style.transform = 'translate(0, 0)'
-    element.style.zIndex = String(instanceZIndex.value)
-
-    if (backgroundColor) {
-      element.style.backgroundColor = backgroundColor
+    for (const [property, value] of Object.entries(styles)) {
+      element.style.setProperty(property, value)
     }
 
-    // 强制重排
+    // 提交原始位置后再应用过渡，避免从未绘制的中间状态开始。
     void element.offsetHeight
-
-    // 添加 transition
     element.style.transition = transition
 
-    // 使用 requestAnimationFrame 应用最终样式
     frame = requestAnimationFrame(() => {
-      element.style.top = '0px'
-      element.style.left = '0px'
-      element.style.width = '100dvw'
-      element.style.height = '100dvh'
+      Object.assign(element.style, {
+        top: '0px',
+        left: '0px',
+        width: '100dvw',
+        height: '100dvh',
+      })
       frame = void 0
     })
 
-    // 先更新状态
     isFullscreen.value = true
-
-    _enter?.()
-  }
-
-  const exit = () => {
-    const element = activeElement
-
-    if (!element) {
-      return
-    }
-
-    beforeExit?.()
-
-    if (frame !== void 0) cancelAnimationFrame(frame)
-
-    frame = void 0
-
-    // 先更新状态
-    isFullscreen.value = false
-
-    // 恢复原始样式
-    element.removeAttribute(ID_TAG)
-
-    // 样式属性映射表（camelCase -> kebab-case）
-    const styleMap: Record<keyof typeof originalStyles, string> = {
-      position: 'position',
-      width: 'width',
-      height: 'height',
-      top: 'top',
-      left: 'left',
-      transform: 'transform',
-      transition: 'transition',
-      zIndex: 'z-index',
-      backgroundColor: 'background-color',
-      boxSizing: 'box-sizing',
-    }
-
-    // 批量恢复样式
-    Object.entries(originalStyles).forEach(([key, value]) => {
-      const styleName = styleMap[key as keyof typeof originalStyles]
-
-      if (!value) {
-        element.style.removeProperty(styleName)
-      } else {
-        element.style.setProperty(styleName, value)
-      }
-    })
-
-    activeElement = null
-    _exit?.()
+    onEnter?.()
   }
 
   const toggleFullscreen = () => {
-    if (isFullscreen.value) {
-      exit()
-    } else {
-      enter()
-    }
+    if (isFullscreen.value) exit()
+    else enter()
   }
 
   effectDispose(() => {
-    if (isFullscreen.value) {
-      exit()
-    }
+    if (!restore) return
+
+    // 作用域销毁必须释放样式和动画帧，不允许前置回调取消。
+    restore()
+    onExit?.()
   })
 
-  return {
-    enter,
-    exit,
-    toggleFullscreen,
-    isFullscreen: readonly(isFullscreen),
-  }
+  return { enter, exit, toggleFullscreen, isFullscreen: readonly(isFullscreen) }
 }
 
 export type UseElementFullscreenReturnTypes = ReturnType<

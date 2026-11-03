@@ -1,42 +1,22 @@
-import type { BasicTarget, TargetType, TargetValue } from '@/types'
+import type { BasicTarget, TargetType } from '@/types'
 import type { ComponentPublicInstance } from 'vue'
 
 /**
  *
- * @param target 获取 ref dom, vue instance 的 dom
- * @param defaultTarget 默认值
+ * @param target 元素、组件实例、引用或 getter
+ * @param defaultElement 目标为空时的回退值
  *
- * @example
- * <template>
- *  <div ref="refDom"></div>
- * </template>
- *
- * const refDom = ref<HTMLElement | null>(null)
- * const computedDom = computed(() => refDom.value)
- *
- * unrefElement(refDom) // div
- * unrefElement(computedDom) // div
+ * @returns 解包后的值；组件实例返回其根节点。
  */
 function unrefElement<T extends TargetType>(
   target: BasicTarget<T>,
   defaultElement?: T,
 ) {
-  if (!target) {
-    return defaultElement
-  }
+  const value = toValue(target)
+  const element = (value as ComponentPublicInstance | null | undefined)?.$el as
+    T | undefined
 
-  let targetElement: TargetValue<T>
-
-  if (typeof target === 'function') {
-    targetElement = target()
-  } else if (isRef(target)) {
-    targetElement =
-      (target.value as ComponentPublicInstance)?.$el ?? target.value
-  } else {
-    targetElement = target
-  }
-
-  return targetElement
+  return element ?? value ?? defaultElement
 }
 
 export { unrefElement }

@@ -5,7 +5,9 @@ import { canSkipRoute, validMenuItemShow, validRole } from '@/router/utils'
 import { useKeepAliveActions } from '@/store'
 import type { MenuState } from '@/store/modules/menu/types'
 import type { AnyFn, AppMenuOption, MenuTagOptions } from '@/types'
-import { equalRouterPath, setStorage, updateObjectValue } from '@/utils'
+import { setStorage } from '@/utils/cache'
+import { equalRouterPath } from '@/utils/equal-router-path'
+import { updateObjectValue } from '@/utils/update-object-value'
 import { pick } from 'lodash-es'
 import { NEllipsis } from 'naive-ui'
 import type { LocationQuery } from 'vue-router'
@@ -19,44 +21,24 @@ import {
   updateDocumentTitle,
 } from './utils'
 
-let cachePreNormal: AppMenuOption | undefined = void 0
-
 /**
  *
- * @param options 菜单列表或者类似菜单列表的数据结构
- * @param target 目标路径
+ * @param options 当前菜单树
+ * @param target 要匹配的路径
  *
- * @returns 匹配的菜单项
- *
- * @description
- * 递归查找匹配的菜单项，缓存上一次的匹配项。
- * 并且该方法一旦匹配成功就会立即返回。
- *
- * 通过 fullPath 进行匹配。
- *
- * @example
- * depthSearchAppMenu([{ path: '/dashboard', name: 'Dashboard', meta: { i18nKey: 'menu.Dashboard' } }], '/dashboard')
+ * @returns 菜单树中第一个路径匹配项。
  */
 export const depthSearchAppMenu = (
   options: AppMenuOption[],
   target: string,
-) => {
-  if (cachePreNormal && equalRouterPath(cachePreNormal.fullPath, target)) {
-    return cachePreNormal
-  }
+): AppMenuOption | undefined => {
+  for (const option of options) {
+    if (equalRouterPath(option.fullPath, target)) return option
 
-  for (const curr of options) {
-    if (equalRouterPath(curr.fullPath, target)) {
-      cachePreNormal = curr
+    const nested =
+      option.children && depthSearchAppMenu(option.children, target)
 
-      return curr
-    }
-
-    if (curr.children?.length) {
-      depthSearchAppMenu(curr.children, target)
-
-      continue
-    }
+    if (nested) return nested
   }
 }
 

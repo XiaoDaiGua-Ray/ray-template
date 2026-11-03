@@ -1,5 +1,5 @@
 import './index.scss'
-import { completeSize, isValueType, renderNode } from '@/utils'
+import { completeSize, isValueType } from '@/utils'
 import { NFlex, NPopover, NTab, NTabs } from 'naive-ui'
 import type { TabsProps } from 'naive-ui'
 import { themeOverrides } from './constant'
@@ -12,7 +12,7 @@ const iconSegmentTab = (option: RSegmentOptions) => {
   if (icon) {
     return (
       <NFlex align="center" wrap={false} size="small">
-        {renderNode(icon)?.()}
+        {typeof icon === 'function' ? icon() : icon}
         <div>{label}</div>
       </NFlex>
     )

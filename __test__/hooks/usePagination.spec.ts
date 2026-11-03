@@ -64,3 +64,33 @@ describe('usePagination', () => {
     expect(count).toBe(2)
   })
 })
+
+it('resets to the first object page size and reports new values to the current callbacks', () => {
+  const pageChange = vi.fn()
+  const pageSizeChange = vi.fn()
+  const oldCallback = vi.fn()
+  const callback = vi.fn()
+  const [pagination, api] = usePagination(oldCallback, {
+    page: 5,
+    pageSize: 10,
+    pageSizes: [{ label: 'Fifteen', value: 15 }],
+    pageChange,
+    pageSizeChange,
+  })
+
+  expect(api.getCallback()).toBe(oldCallback)
+  api.setCallback(callback)
+  api.resetPagination()
+
+  expect(api.getPagination()).toBe(pagination.value)
+  expect(api.getPage()).toBe(1)
+  expect(api.getPageSize()).toBe(15)
+  expect(pageChange).toHaveBeenCalledExactlyOnceWith(1)
+  expect(pageSizeChange).toHaveBeenCalledExactlyOnceWith(15)
+  expect(callback).toHaveBeenCalledOnce()
+  expect(oldCallback).not.toHaveBeenCalled()
+  api.setCallback()
+  api.setPage(2)
+  expect(api.getCallback()).toBeUndefined()
+  expect(callback).toHaveBeenCalledOnce()
+})

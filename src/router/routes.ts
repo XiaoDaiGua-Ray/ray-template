@@ -1,6 +1,7 @@
 import { t } from '@/hooks/web/useI18n'
 import Layout from '@/layout'
 import { appExpandRoutes } from './app-route-modules'
+import { NOT_FOUND_ROUTE_PATH } from './constant'
 
 export default [
   /**
@@ -29,7 +30,7 @@ export default [
        * 404 页面一定要放在最后面，避免奇奇怪怪的问题。
        */
       {
-        path: '/:catchAll(.*)',
+        path: NOT_FOUND_ROUTE_PATH,
         component: () => import('@/views/error/views/Error404'),
         meta: {
           i18nKey: t('menu.Error'),

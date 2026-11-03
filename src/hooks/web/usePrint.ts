@@ -1,51 +1,66 @@
 import type { BasicTarget } from '@/types'
-import { unrefElement } from '@/utils'
-import { omit } from 'lodash-es'
+import { fileToBase64 } from '@/utils/files'
+import { unrefElement } from '@/utils/vue/unref-element'
 import print from 'print-js'
 
-export interface UsePrintOptions extends Omit<
-  print.Configuration,
-  'printable'
-> {}
+export type UsePrintOptions = Omit<print.Configuration, 'printable'>
 
 export type UsePrintTarget<T = unknown> =
   BasicTarget | string | Blob | Uint8ClampedArray | T[]
 
 /**
  *
- * @param target useTemplateRef dom
- * @param options print-js options
+ * @param target DOM、元素引用或可打印的数据
+ * @param options print-js 配置；DOM 默认使用 html 模式
  *
- * @see https://printjs.crabbly.com/
- *
- * @description
- * 拓展 print-js 的 usePrint 方法，允许 useTemplateRef Dom 直接调用打印，其余的不变。
- *
- * @example
- * const refDom = useTemplateRef<HTMLElement>('refDom')
- *
- * const { print } = usePrint(refDom, {})
- *
- * @example
- * const { print } = usePrint('#id', {})
- * const { print } = usePrint('base64', {}) // 设置为 base64 时，一定要设置配置项 base64 为 true
- * const { print } = usePrint('https://xxx.com/xxx.png', {})
- * const { print } = usePrint(new Blob(), {})
+ * @returns print 方法；无目标时跳过，二进制内容需先读取。
  */
 export const usePrint = (target: UsePrintTarget, options?: UsePrintOptions) => {
+  /**
+   *
+   * @description
+   * 以执行时的目标打开打印预览，始终使用当前目标作为 printable。
+   *
+   * @returns 二进制内容返回读取并提交打印的 Promise；其余在当前调用中提交。
+   *
+   * @throws 读取失败或 print-js 不能打开预览时传递原始错误。
+   */
   const run = () => {
-    // 为了兼容 ref 注册的 dom；如果未获取到 dom，则会视为其他的输出方式，交由 print-js 处理
-    const _target = unrefElement(target as BasicTarget) || target
+    const printable = unrefElement(target as BasicTarget) as UsePrintTarget
+
+    if (printable == null || printable === '') return
+
+    if (printable instanceof Blob || printable instanceof Uint8ClampedArray) {
+      const type =
+        options?.type ??
+        (printable instanceof Blob && printable.type.startsWith('image/')
+          ? 'image'
+          : 'pdf')
+      const file =
+        printable instanceof Blob
+          ? new File([printable], '', { type: printable.type })
+          : new File([Uint8Array.from(printable)], '', {
+              type: 'application/pdf',
+            })
+
+      return fileToBase64(file).then((url) => {
+        print({
+          ...options,
+          type,
+          base64: type === 'pdf',
+          printable: type === 'pdf' ? url.slice(url.indexOf(',') + 1) : url,
+        })
+      })
+    }
 
     print({
-      ...omit(options, ['printable']),
-      printable: _target,
+      ...options,
+      type: options?.type ?? (printable instanceof Element ? 'html' : 'pdf'),
+      printable,
     })
   }
 
-  return {
-    print: run,
-  }
+  return { print: run }
 }
 
 export type UsePrintReturnType = ReturnType<typeof usePrint>

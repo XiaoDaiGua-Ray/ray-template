@@ -1,10 +1,12 @@
 import { useTheme } from '../../src/hooks/template/useTheme'
+import { useSettingGetters } from '../../src/store'
 import setupMiniApp from '../utils/setupMiniApp'
 
 describe('useTheme', async () => {
   await setupMiniApp()
 
-  const { darkTheme, lightTheme, toggleTheme, getAppTheme } = useTheme()
+  const { darkTheme, lightTheme, toggleTheme, getAppTheme, syncSystemTheme } =
+    useTheme()
 
   it('should change to dark theme', () => {
     darkTheme()
@@ -42,5 +44,20 @@ describe('useTheme', async () => {
 
     expect(__lightTheme).toBe(false)
     expect(__lightThemeLabel).toBe('Light')
+  })
+
+  it('selects auto mode and applies the system color preference', () => {
+    const spy = vi
+      .spyOn(window, 'matchMedia')
+      .mockReturnValue({ matches: true } as MediaQueryList)
+
+    try {
+      syncSystemTheme()
+      expect(getAppTheme()).toMatchObject({ theme: true, themeLabel: 'Dark' })
+      expect(useSettingGetters().getAppThemeStr.value).toBe('auto')
+    } finally {
+      lightTheme()
+      spy.mockRestore()
+    }
   })
 })

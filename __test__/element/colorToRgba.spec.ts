@@ -21,3 +21,9 @@ describe('colorToRgba', () => {
     expect(colorToRgba('hi')).toBe('hi')
   })
 })
+
+it('handles shorthand alpha, whitespace, uppercase colors, and invalid hex', () => {
+  expect(colorToRgba('#F008', 0.1)).toBe('rgba(255, 0, 0, 0.53)')
+  expect(colorToRgba(' RGB(1, 2, 3) ', 0.6)).toBe('rgba(1, 2, 3, 0.6)')
+  expect(colorToRgba('#XYZ', 0.5, 'fallback')).toBe('fallback')
+})

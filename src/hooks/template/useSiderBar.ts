@@ -1,76 +1,39 @@
-import { useAppRoot, useVueRouter } from '@/hooks'
 import { useMenuActions, useMenuGetters } from '@/store'
 import { pickRouteRecordNormalizedConstant } from '@/store/modules/menu/constant'
 import type { AppMenuOption, Key, MenuTagOptions } from '@/types'
 import { pick } from 'lodash-es'
+import { useAppRoot } from './useAppRoot'
+import { useVueRouter } from './useVueRouter'
 
 export type CloseMenuTag = Key | MenuTagOptions
 
 /**
  *
- * @param target 标签页对象、索引、key
- * @param fn 触发函数
+ * @param target 标签页对象、索引或路径
+ * @param fn 用于日志的调用方方法名
  *
- * @description
- * 该方法用于统一获取目标标签页方法。
+ * @returns 当前标签列表中的对象和索引，找不到时返回 undefined。
  */
 const normalMenuTagOption = (target: CloseMenuTag, fn: string) => {
   const { getMenuTagOptions } = useMenuGetters()
 
-  if (typeof target === 'number') {
-    // 判断是否为 NaN
-    if (!Number.isInteger(target)) {
-      console.warn(`${fn}: The ${target} is NaN, expect number.`)
-
-      return
-    }
-
-    // 判断是否超出当前标签页列表最大长度或者是否为负数
-    if (target >= getMenuTagOptions.value.length || target < 0) {
-      console.warn(
-        `${fn}: The incoming index ${target} did not match the corresponding item.`,
-      )
-
-      return
-    }
-
-    return {
-      option: getMenuTagOptions.value[target],
-      index: target,
-    }
-  } else if (typeof target === 'string') {
-    // 查找符合条件的 key
-    const index = getMenuTagOptions.value.findIndex(
-      (curr) => curr.fullPath === target,
-    )
-
-    return index > -1
-      ? {
-          option: getMenuTagOptions.value[index],
-          index,
-        }
-      : console.warn(
-          `${fn}: The incoming key ${target} did not match the corresponding item.`,
+  const tags = getMenuTagOptions.value
+  const index =
+    typeof target === 'number'
+      ? target
+      : tags.findIndex(
+          (tag) =>
+            tag.fullPath ===
+            (typeof target === 'string' ? target : target.fullPath),
         )
-  } else {
-    const { fullPath } = target
-    const index = getMenuTagOptions.value.findIndex(
-      (curr) => curr.fullPath === fullPath,
-    )
 
-    if (index === -1) {
-      console.warn(
-        `${fn}: The incoming menuTag option ${target.fullPath} did not match the corresponding item.`,
-      )
+  if (!Number.isInteger(index) || index < 0 || index >= tags.length) {
+    console.warn(`[${fn}]: Could not find menu tag.`)
 
-      return
-    }
-
-    return {
-      option: target,
-      index,
-    }
+    return
   }
+
+  return { option: tags[index], index }
 }
 
 export function useSiderBar() {
@@ -105,24 +68,9 @@ export function useSiderBar() {
 
   // 校验指定标签左侧是否有可关闭的标签
   const checkCloseLeft = (target: CloseMenuTag) => {
-    const normal = normalMenuTagOption(target, 'checkCloseRight')
+    const normal = normalMenuTagOption(target, 'checkCloseLeft')
 
-    if (normal) {
-      const { index } = normal
-      const length = getMenuTagOptions.value.length - 1
-
-      if (index === 0) {
-        return false
-      }
-
-      if (index > 0 && length > 0) {
-        return true
-      }
-
-      return false
-    }
-
-    return false
+    return !!normal && normal.index > 0
   }
 
   // 关闭当前标签
@@ -139,17 +87,7 @@ export function useSiderBar() {
       spliceMenTagOptions(index)
 
       if (option.fullPath === getMenuKey.value) {
-        let i = checkCloseLeft(index)
-          ? index - 1
-          : checkCloseRight(index)
-            ? index
-            : index - 1
-
-        if (i < 0) {
-          i = 0
-        }
-
-        const tag = getMenuTagOptions.value[i]
+        const tag = getMenuTagOptions.value[Math.max(0, index - 1)]
 
         tag && changeMenuModelValue(tag.fullPath, tag)
       }
@@ -158,8 +96,6 @@ export function useSiderBar() {
 
   // 关闭所有标签并且导航至 root path
   const closeAll = () => {
-    spliceMenTagOptions(0, getMenuTagOptions.value.length)
-
     const { getRootPath } = useAppRoot()
     const {
       router: { getRoutes },
@@ -170,6 +106,7 @@ export function useSiderBar() {
     )
 
     if (findMenuOption) {
+      spliceMenTagOptions(0, getMenuTagOptions.value.length)
       const pickOption = pick(findMenuOption, pickRouteRecordNormalizedConstant)
       const res = resolveOption(pickOption as unknown as AppMenuOption)
 

@@ -115,3 +115,53 @@ describe('cache utils', () => {
     ).toBe(false)
   })
 })
+
+describe('storage failures and namespace boundaries', () => {
+  beforeEach(() => {
+    localStorage.clear()
+    sessionStorage.clear()
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+  })
+
+  afterEach(() => vi.restoreAllMocks())
+
+  it('preserves falsy JSON values and leaves prior data intact on a bad write', () => {
+    setStorage('test', false)
+    setStorage('test', void 0)
+    expect(hasStorage('test')).toBe(true)
+    expect(getStorage('test')).toBe(false)
+    expect(console.error).toHaveBeenCalledOnce()
+    setStorage('test', null)
+    expect(getStorage('test', void 0, { defaultValue: 'fallback' })).toBeNull()
+  })
+
+  it('uses the fallback for corrupt JSON or an unavailable storage area', () => {
+    sessionStorage.setItem('broken', 'invalid JSON')
+    expect(
+      getStorage('broken', 'sessionStorage', { defaultValue: false }),
+    ).toBe(false)
+
+    vi.spyOn(window, 'sessionStorage', 'get').mockImplementation(() => {
+      throw new DOMException('blocked', 'SecurityError')
+    })
+    expect(hasStorage('test')).toBe(false)
+    expect(getStorage('test', 'sessionStorage', { defaultValue: 7 })).toBe(7)
+    expect(() => setStorage('test', 'value')).not.toThrow()
+    expect(() => removeStorage('test', 'sessionStorage')).not.toThrow()
+  })
+
+  it('removes prefixed keys from both stores without clearing adjacent namespaces', () => {
+    for (const storage of [localStorage, sessionStorage]) {
+      storage.setItem('test:a', '1')
+      storage.setItem('test:b', '2')
+      storage.setItem('test-other:a', '3')
+    }
+
+    removeStorage('__all__', 'all', { prefix: true, prefixKey: 'test:' })
+
+    for (const storage of [localStorage, sessionStorage]) {
+      expect(storage.length).toBe(1)
+      expect(storage.getItem('test-other:a')).toBe('3')
+    }
+  })
+})

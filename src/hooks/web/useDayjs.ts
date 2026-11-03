@@ -1,6 +1,7 @@
 import { DAYJS_LOCAL_MAP, DEFAULT_DAYJS_LOCAL } from '@/app-config'
 import type { DayjsLocalMap } from '@/types'
 import dayjs from 'dayjs'
+import 'dayjs/locale/zh-cn'
 
 export interface FormatOption {
   format?: string
@@ -27,10 +28,7 @@ const defaultDayjsFormat = 'YYYY-MM-DD HH:mm:ss'
 /**
  *
  * @description
- * dayjs hook。
- *
- * 说明:
- *   - locale: 切换 dayjs 语言配置
+ * 日期格式化使用本地时区；locale 修改 Day.js 全局语言。
  */
 export const useDayjs = () => {
   /**
@@ -39,10 +37,6 @@ export const useDayjs = () => {
    *
    * @description
    * 手动配置 dayjs 语言（国际化）。
-   *
-   * @example
-   * locale('zh-CN')
-   * locale('en-US')
    */
   const locale = (key: LocalKey) => {
     const locale = DAYJS_LOCAL_MAP[key]
@@ -56,11 +50,6 @@ export const useDayjs = () => {
    *
    * @description
    * 校验是否为 dayjs 对象。
-   *
-   * @example
-   * isDayjs('2022-11-11') // false
-   * isDayjs('1699687245973') // false
-   * isDayjs(dayjs()) // true
    */
   const isDayjs = (d: unknown) => {
     return dayjs.isDayjs(d)
@@ -73,11 +62,6 @@ export const useDayjs = () => {
    *
    * @description
    * 格式化日期。
-   *
-   * @example
-   * dayjs().format() // '2020-04-02T08:02:17-05:00'
-   * dayjs('2019-01-25').format('[YYYYescape] YYYY-MM-DDTHH:mm:ssZ[Z]') // 'YYYYescape 2019-01-25T00:00:00-02:00Z'
-   * dayjs('2019-01-25').format('DD/MM/YYYY') // '25/01/2019'
    */
   const format = (date: dayjs.ConfigType, formatOption?: FormatOption) => {
     const { format = defaultDayjsFormat } = formatOption ?? {}
@@ -126,11 +110,6 @@ export const useDayjs = () => {
    * 返回正数: date2 比 date1 晚。
    * 返回负数: date2 比 date1 早。
    * 返回零（0）: date2 等于 date1。
-   *
-   * @example
-   * daysDiff('2022-01-11', '2022-01-12') // 1
-   * daysDiff('2021-01-11', '2022-01-12') // 366
-   * daysDiff('2023-01-11', '2022-01-12') // -364
    */
   const daysDiff = (date1: dayjs.ConfigType, date2: dayjs.ConfigType) => {
     const start = dayjs(date1)
@@ -142,16 +121,9 @@ export const useDayjs = () => {
   /**
    *
    * @param date 待比较时间
-   * @param range 待比较开始与结束时间
+   * @param range 起止时间
    *
-   * @description
-   * 判断一个时间是否在 start date 与 end date 之间。
-   * 如果刚还是等于开始、结束时间，也会返回 false。
-   *
-   * @example
-   * isDateInRange('2023-01-16', { start: '2023-01-15', end: '2023-01-20' }) // true
-   * isDateInRange('2023-01-15', { start: '2023-01-15', end: '2023-01-20' }) // false
-   * isDateInRange('2023-01-20', { start: '2023-01-15', end: '2023-01-20' }) // false
+   * @returns 时间是否落在开区间内，等于端点时返回 false。
    */
   const isDateInRange = (date: dayjs.ConfigType, range: DateRange): boolean => {
     const { start, end } = range

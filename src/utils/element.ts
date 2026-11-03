@@ -1,298 +1,179 @@
-import { APP_REGEX } from '@/app-config'
 import type {
   BasicTarget,
   ElementSelector,
   QueryElementsOptions,
-  Recordable,
 } from '@/types'
-import { effectDispose, isValueType, unrefElement } from '@/utils'
 import type { CSSProperties } from 'vue'
+import { unrefElement } from './vue/unref-element'
+
+const classTokens = (names: string | string[]) =>
+  (typeof names === 'string' ? [names] : names)
+    .flatMap((name) => name.split(/[\t\n\f\r ]+/))
+    .filter(Boolean)
 
 /**
  *
- * @param target 目标元素或 ref 注册元素
- * @param classNames 所需添加类名
+ * @param target 元素或可响应的元素引用
+ * @param classNames 空白分隔的类名或类名数组
  *
  * @description
- * 为目标元素添加类名。
- *
- * @example
- * // targetDom 当前 class: a-class b-class
- * setClass(targetDom, 'c-class') // a-class b-class c-class
- * setClass(targetDom, ['c-class', 'c-class']) // a-class b-class c-class
+ * 给当前和后续替换的元素添加类名。
  */
 export const setClass = (
-  target: BasicTarget<Element | HTMLElement | SVGAElement>,
+  target: BasicTarget<Element>,
   classNames: string | string[],
 ) => {
-  const update = () => {
-    const element = unrefElement(target)
+  const tokens = classTokens(classNames)
 
-    if (element) {
-      const classes =
-        typeof classNames === 'string'
-          ? classNames.trim().split(' ')
-          : classNames
-
-      classes.forEach((item) => {
-        if (item) {
-          element.classList.add(item)
-        }
-      })
-    }
-  }
-
-  const watcher = watch(() => unrefElement(target), update, {
-    immediate: true,
-  })
-
-  effectDispose(watcher)
+  watch(
+    () => unrefElement(target),
+    (element) => element?.classList.add(...tokens),
+    { immediate: true },
+  )
 }
 
 /**
  *
- * @param target 目标元素或 ref 注册元素
- * @param className 所需删除类名
+ * @param target 元素或可响应的元素引用
+ * @param classNames 要移除的类名；removeAllClass 清空整个类名列表
  *
  * @description
- * 为目标元素删除类名。
- *
- * @example
- * // targetDom 当前 class: a-class b-class
- * removeClass(targetDom, 'a-class') // b-class
- * removeClass(targetDom, ['a-class', 'b-class']) // null
- * removeClass(targetDom, 'removeAllClass') // null
+ * 操作当前和后续替换的元素。
  */
 export const removeClass = (
-  target: BasicTarget<Element | HTMLElement | SVGAElement>,
-  classNames: string | 'removeAllClass' | string[],
+  target: BasicTarget<Element>,
+  classNames: string | string[],
 ) => {
-  const update = () => {
-    const element = unrefElement(target)
-
-    if (element) {
+  watch(
+    () => unrefElement(target),
+    (element) => {
       if (classNames === 'removeAllClass') {
-        const classList = element.classList
-
-        classList.forEach((curr) => classList.remove(curr))
+        element?.removeAttribute('class')
       } else {
-        const classes =
-          typeof classNames === 'string'
-            ? classNames.trim().split(' ')
-            : classNames
-
-        classes.forEach((item) => {
-          if (item) {
-            element.classList.remove(item)
-          }
-        })
+        element?.classList.remove(...classTokens(classNames))
       }
-    }
-  }
-
-  const watcher = watch(() => unrefElement(target), update, {
-    immediate: true,
-  })
-
-  effectDispose(watcher)
+    },
+    { immediate: true },
+  )
 }
 
 /**
  *
- * @param target 目标元素或 ref 注册元素
- * @param className 查询元素是否含有此类名
+ * @param target 元素或可响应的元素引用
+ * @param classNames 待查找的类名
  *
- * @description
- * 查询元素是否含有此类名。
- *
- * @example
- * hasClass(targetDom, 'matchClassName') // Ref<true> | Ref<false>
- * hasClass(targetDom, ['matchClassName', 'matchClassName']) // Ref<true> | Ref<false>
+ * @returns 当前元素是否含至少一个完整类名；随引用更新，不监听外部 class 修改。
  */
 export const hasClass = (
   target: BasicTarget<Element>,
   classNames: string | string[],
 ) => {
-  const hasClassRef = ref(false)
+  const result = ref(false)
+  const tokens = classTokens(classNames)
 
-  const update = () => {
-    const element = unrefElement(target)
+  watch(
+    () => unrefElement(target),
+    (element) => {
+      result.value = tokens.some((token) => element?.classList.contains(token))
+    },
+    { immediate: true },
+  )
 
-    if (!element) {
-      hasClassRef.value = false
-    } else {
-      const elementClassName = element.className
-
-      const classes =
-        typeof classNames === 'string'
-          ? classNames
-              .trim()
-              .split(' ')
-              .filter((curr: string) => curr !== '')
-          : classNames
-
-      hasClassRef.value = classes.some((curr) =>
-        elementClassName.includes(curr),
-      )
-    }
-  }
-
-  const watcher = watch(() => unrefElement(target), update, {
-    immediate: true,
-  })
-
-  effectDispose(watcher)
-
-  return hasClassRef
+  return result
 }
 
 /**
  *
- * @param style 所需添加样式
+ * @param style CSS 属性名
  *
- * @returns 添加前缀后的样式
- *
- * @description
- * 为样式添加浏览器前缀，返回一个对象。
- *
- * @example
- * autoPrefixStyle('transform') // {webkitTransform: 'transform', mozTransform: 'transform', msTransform: 'transform', oTransform: 'transform'}
+ * @returns 旧版兼容映射，包含原名和历史 camelCase 前缀名。
  */
-export const autoPrefixStyle = (style: string) => {
-  const prefixes = ['webkit', 'moz', 'ms', 'o']
-  const styleWithPrefixes: Recordable = {}
+export const autoPrefixStyle = (style: string) =>
+  Object.fromEntries([
+    ...['webkit', 'moz', 'ms', 'o'].map((prefix) => [
+      `${prefix}${style.charAt(0).toUpperCase()}${style.slice(1)}`,
+      style,
+    ]),
+    [style, style],
+  ])
 
-  prefixes.forEach((prefix) => {
-    styleWithPrefixes[
-      `${prefix}${style.charAt(0).toUpperCase()}${style.slice(1)}`
-    ] = style
-  })
-
-  styleWithPrefixes[style] = style
-
-  return styleWithPrefixes
-}
+const cssProperty = (key: string) =>
+  key.startsWith('--')
+    ? key
+    : key
+        .replace(/[A-Z]/g, (char) => `-${char.toLowerCase()}`)
+        .replace(/^(webkit|moz|ms|o)-/, '-$1-')
 
 /**
  *
- * @param target Target element dom
- * @param styles 所需绑定样式(如果为字符串, 则必须以分号结尾每个行内样式描述)
+ * @param target 元素或可响应的元素引用
+ * @param styles CSS 声明字符串、声明数组或属性对象
  *
  * @description
- * 为目标元素添加样式。
- *
- * @example
- * style of string
- * ```
- * const styles = 'width: 100px; height: 100px; background: red;'
- *
- * setStyle(styles)
- * ```
- * style of object
- * ```
- * const styles = {
- *   width: '100px',
- *   height: '100px',
- * }
- *
- * setStyle(styles)
- * ```
+ * 保留已有的其他行内样式，支持 camelCase、自定义属性和 !important。
  */
 export const setStyle = <Style extends CSSProperties>(
-  target: BasicTarget<HTMLElement | SVGAElement>,
+  target: BasicTarget<HTMLElement | SVGElement>,
   styles: Partial<Style> | string | string[],
 ) => {
-  const set = (styleStr: string, element: HTMLElement | SVGAElement) => {
-    styleStr.split(';').forEach((curr) => {
-      const [key, value] = curr.split(':')
+  watch(
+    () => unrefElement(target),
+    (element) => {
+      if (!element) return
 
-      if (key && value) {
-        const trimKey = key.trim()
-        const trimValue = value.trim()
+      if (typeof styles === 'string' || Array.isArray(styles)) {
+        const parsed = element.ownerDocument.createElement('span').style
 
-        // 是否为 css variable
-        if (key.startsWith('--')) {
-          element.style.setProperty(trimKey, trimValue)
-        } else if (key.startsWith('-')) {
-          element.style.setProperty(key, value)
-        } else {
-          // 兼容浏览器前缀
-          const kitFix = autoPrefixStyle(trimKey)
+        // 让浏览器解析带冒号、分号或引号的属性值。
+        parsed.cssText = typeof styles === 'string' ? styles : styles.join(';')
 
-          Object.keys(kitFix).forEach((key) => {
-            element.style.setProperty(key, kitFix[key])
-          })
+        for (let index = 0; index < parsed.length; index++) {
+          const key = parsed.item(index)
 
-          // 设置默认需要添加样式
-          element.style.setProperty(trimKey, trimValue)
+          element.style.setProperty(
+            key,
+            parsed.getPropertyValue(key),
+            parsed.getPropertyPriority(key),
+          )
+        }
+      } else {
+        for (const [key, value] of Object.entries(styles)) {
+          if (value == null) continue
+
+          const text = String(value)
+          const important = /\s*!important\s*$/i
+
+          element.style.setProperty(
+            cssProperty(key),
+            text.replace(important, ''),
+            important.test(text) ? 'important' : '',
+          )
         }
       }
-    })
-  }
-
-  const update = () => {
-    const element = unrefElement(target)
-
-    if (!element) {
-      return
-    }
-
-    if (isValueType<string>(styles, 'String')) {
-      set(styles, element)
-    } else if (isValueType<string[]>(styles, 'Array')) {
-      styles.forEach((curr) => {
-        set(curr, element)
-      })
-    } else {
-      const keys = Object.keys(styles)
-
-      keys.forEach((curr) => {
-        set(`${curr}: ${styles[curr as keyof typeof styles]}`, element)
-      })
-    }
-  }
-
-  const watcher = watch(() => unrefElement(target), update, {
-    immediate: true,
-  })
-
-  effectDispose(watcher)
+    },
+    { immediate: true },
+  )
 }
 
 /**
  *
- * @param el Target element dom
- * @param styles 所需卸载样式
+ * @param target 元素或可响应的元素引用
+ * @param styles 要删除的 CSS 属性名
  *
  * @description
- * 为目标元素卸载样式。
- *
- * 当你发现不能正常的移除某些样式的时候，应该考虑是否是样式表兼容问题。
- *
- * @example
- * removeStyle(['zIndex', 'z-index'])
+ * 支持 camelCase 和 CSS 原生属性名。
  */
 export const removeStyle = (
-  target: BasicTarget<HTMLElement | SVGAElement>,
-  styles: ((keyof CSSProperties & string) | string)[],
+  target: BasicTarget<HTMLElement | SVGElement>,
+  styles: string[],
 ) => {
-  const update = () => {
-    const element = unrefElement(target)
-
-    if (!element) {
-      return
-    }
-
-    styles.forEach((curr) => {
-      element.style.removeProperty(curr)
-    })
-  }
-
-  const watcher = watch(() => unrefElement(target), update, {
-    immediate: true,
-  })
-
-  effectDispose(watcher)
+  watch(
+    () => unrefElement(target),
+    (element) => {
+      styles.forEach((name) => element?.style.removeProperty(cssProperty(name)))
+    },
+    { immediate: true },
+  )
 }
 
 /**
@@ -302,17 +183,8 @@ export const removeStyle = (
  * @param defaultColor 默认颜色值
  *
  * @description
- * 转换 rgb/hex/hsl 颜色；已有 rgba/hsla 会更新 alpha，八位 hex 保留自带透明度。
+ * 转换 rgb/hex/hsl 颜色；已有 rgba/hsla 会更新 alpha，四位和八位 hex 保留自带透明度。
  * 无法识别时返回默认色或原始值。
- *
- * @example
- * colorToRgba('#123632', 0.8) // rgba(18, 54, 50, 0.8)
- * colorToRgba('rgb(18, 54, 50)', 0.8) // rgba(18, 54, 50, 0.8)
- * colorToRgba('#ee4f12', 0.3) // rgba(238, 79, 18, 0.3)
- * colorToRgba('rgba(238, 79, 18, 0.3)', 0.3) // rgba(238, 79, 18, 0.3)
- * colorToRgba('not a color', 0.3, '#000') // #000
- * colorToRgba('hsl(0, 100%, 50%)', 0.5) // hsla(0, 100%, 50%, 0.5)
- * colorToRgba('not a color') // not a color
  */
 export const colorToRgba = (
   color: string,
@@ -323,8 +195,12 @@ export const colorToRgba = (
     return defaultColor || color
   }
 
+  const original = color
+
+  color = color.trim().toLowerCase()
+
   // 处理 rgba 格式 - 替换原有的 alpha 值
-  if (color.includes('rgba')) {
+  if (/^rgba\([^,]+,[^,]+,[^,]+,[^,]+\)$/.test(color)) {
     return color.replace(
       /rgba\((.*?),(.*?),(.*?),.*?\)/,
       (_, r: string, g: string, b: string) =>
@@ -333,12 +209,12 @@ export const colorToRgba = (
   }
 
   // 处理 rgb 格式
-  if (color.includes('rgb(')) {
+  if (/^rgb\([^,]+,[^,]+,[^,]+\)$/.test(color)) {
     return color.replace('rgb', 'rgba').replace(')', `, ${alpha})`)
   }
 
   // 处理 hsla 格式 - 替换原有的 alpha 值
-  if (color.includes('hsla')) {
+  if (/^hsla\([^,]+,[^,]+,[^,]+,[^,]+\)$/.test(color)) {
     return color.replace(
       /hsla\((.*?),(.*?),(.*?),.*?\)/,
       (_, h: string, s: string, l: string) =>
@@ -347,58 +223,37 @@ export const colorToRgba = (
   }
 
   // 处理 hsl 格式
-  if (color.includes('hsl(')) {
+  if (/^hsl\([^,]+,[^,]+,[^,]+\)$/.test(color)) {
     return color.replace('hsl', 'hsla').replace(')', `, ${alpha})`)
   }
 
-  // 处理 hex 格式
-  if (color.startsWith('#')) {
-    const hex = color.replace('#', '')
+  if (/^#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/.test(color)) {
+    const hex = color.slice(1)
+    const channels =
+      hex.length <= 4
+        ? [...hex].map((channel) => parseInt(channel + channel, 16))
+        : hex.match(/../g)!.map((channel) => parseInt(channel, 16))
+    const [r, g, b, embeddedAlpha] = channels
+    const opacity =
+      embeddedAlpha === void 0
+        ? alpha
+        : Number((embeddedAlpha / 255).toFixed(2))
 
-    try {
-      switch (hex.length) {
-        case 3:
-          return `rgba(${parseInt(hex[0] + hex[0], 16)}, ${parseInt(hex[1] + hex[1], 16)}, ${parseInt(hex[2] + hex[2], 16)}, ${alpha})`
-
-        case 6:
-          return `rgba(${parseInt(hex.slice(0, 2), 16)}, ${parseInt(hex.slice(2, 4), 16)}, ${parseInt(hex.slice(4, 6), 16)}, ${alpha})`
-
-        case 8:
-          return `rgba(${parseInt(hex.slice(0, 2), 16)}, ${parseInt(hex.slice(2, 4), 16)}, ${parseInt(hex.slice(4, 6), 16)}, ${Number((parseInt(hex.slice(6, 8), 16) / 255).toFixed(2))})`
-
-        default:
-          return defaultColor || color
-      }
-    } catch {
-      return defaultColor || color
-    }
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`
   }
 
-  // 返回原始字符串或默认值
-  return defaultColor || color
+  return defaultColor ?? original
 }
 
 /**
  *
- * @param element 需要匹配元素参数名称
- * @returns 匹配元素列表
+ * @param selector CSS 选择器，也可用 attr: 前缀简写属性选择器
+ * @param options 无匹配或选择器无效时的回退元素
  *
  * @description
  * 使用 querySelectorAll 作为检索方法。
  *
- * 如果希望按照 attribute 匹配, 仅需要 'attr:xxx'传递参数即可。
- *
- * @example
- * // class:
- * const el = queryElements('.demo')
- * // id:
- * const el = queryElements('#demo')
- * // attribute:
- * const el = queryElements('attr:type=button')
- * // 或者可以这样写
- * const el = queryElements('attr:type')
- * // 默认元素
- * const el = queryElements('.demo', { defaultElement: document.body })
+ * @returns 匹配元素列表；选择器为空或无效且没有回退元素时返回 null。
  */
 export const queryElements = <T extends Element = Element>(
   selector: ElementSelector,
@@ -438,21 +293,9 @@ export const queryElements = <T extends Element = Element>(
  * @param unit 自动填充 css 尺寸单位
  *
  * @description
- * 自动补全尺寸。
+ * 仅给数字或无单位的数字字符串补单位；保留原有 CSS 关键字和表达式。
  */
-export const completeSize = (size: number | string, unit = 'px') => {
-  if (size === 'auto') {
-    return size
-  }
-
-  if (typeof size === 'number') {
-    return size.toString() + unit
-  } else if (
-    isValueType<string>(size, 'String') &&
-    APP_REGEX.cssUnit.test(size)
-  ) {
-    return size
-  } else {
-    return size + unit
-  }
-}
+export const completeSize = (size: number | string, unit = 'px') =>
+  typeof size === 'number' || /^[+-]?(?:\d+\.?\d*|\.\d+)$/.test(size.trim())
+    ? `${typeof size === 'number' ? size : size.trim()}${unit}`
+    : size

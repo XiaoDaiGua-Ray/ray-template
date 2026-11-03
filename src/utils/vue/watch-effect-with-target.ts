@@ -1,27 +1,13 @@
-import type { AnyFn } from '@/types'
-import type { WatchOptionsBase } from 'vue'
-import { effectDispose } from './effect-dispose'
+import type { WatchEffect, WatchOptionsBase } from 'vue'
 
 /**
  *
- * @param fn 副作用函数
- * @param watchOptions watchEffect 配置项
+ * @param fn 响应式副作用，可注册清理函数
+ * @param watchOptions Vue 监听配置
  *
- * @description
- * 该方法使用 watchEffect 实现副作用函数的执行，
- * 并且能够在 effect 作用域卸载时，自动停止监听。
- *
- * @example
- * const ref = ref(0)
- * const watcher = watch(()=> ref.value, (newVal, oldVal) => {})
- *
- * watchEffectWithTarget(watcher)
+ * @returns 停止句柄；在作用域内创建时也会随作用域停止。
  */
-export function watchEffectWithTarget<T extends AnyFn>(
-  fn: T,
+export const watchEffectWithTarget = (
+  fn: WatchEffect,
   watchOptions?: WatchOptionsBase,
-) {
-  const stop = watchEffect(fn, watchOptions)
-
-  effectDispose(stop)
-}
+) => watchEffect(fn, watchOptions)

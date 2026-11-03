@@ -61,3 +61,37 @@ describe('useContextmenuCoordinate', () => {
     app.unmount()
   })
 })
+
+it('honors the outside handler, prevents the native menu and cannot reopen after disposal', async () => {
+  const target = document.createElement('div')
+  const outside = document.createElement('button')
+
+  document.body.append(target, outside)
+  const clickOutside = vi.fn()
+  const [menu, app] = renderHook(() =>
+    useContextmenuCoordinate(target, { clickOutside, passive: true }),
+  )
+
+  try {
+    const event = new MouseEvent('contextmenu', {
+      cancelable: true,
+      clientX: 14,
+    })
+
+    target.dispatchEvent(event)
+    await nextTick()
+    expect(event.defaultPrevented).toBe(true)
+    expect(menu.show.value).toBe(true)
+    outside.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    await nextTick()
+    expect(clickOutside).toHaveBeenCalledOnce()
+    expect(menu.show.value).toBe(false)
+    menu.stop()
+    menu.updateShow(true)
+    expect(menu.show.value).toBe(false)
+  } finally {
+    app.unmount()
+    target.remove()
+    outside.remove()
+  }
+})

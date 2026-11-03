@@ -3,6 +3,7 @@ export interface RuntimeState {
   globalDrawerValue: boolean
   globalMainLayoutLoad: boolean
   layoutContentMaximize: boolean
+  layoutContentMaximizeVersion: number
   layoutContentSpinning: boolean
   layoutContentMaximizeStyle: {
     zIndex: number
@@ -17,6 +18,7 @@ export const piniaRuntimeStore = defineStore('runtime', () => {
     globalDrawerValue: false,
     globalMainLayoutLoad: true,
     layoutContentMaximize: false,
+    layoutContentMaximizeVersion: 0,
     layoutContentSpinning: false,
     layoutContentMaximizeStyle: { zIndex: 999 },
   })
@@ -26,6 +28,10 @@ export const piniaRuntimeStore = defineStore('runtime', () => {
     key: K,
     value: RuntimeState[K],
   ) => {
+    if (key === 'layoutContentMaximize' && state[key] !== value) {
+      state.layoutContentMaximizeVersion += 1
+    }
+
     state[key] = value
   }
 

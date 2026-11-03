@@ -1,30 +1,21 @@
 import type { AnyFn, Recordable } from '@/types'
-import { isValueType } from '@/utils'
+import { isPlainObject } from 'lodash-es'
 
 /**
  *
- * @param targetObject 目标对象值
- * @param key 目标 key
- * @param value 待修改值
- * @param callback 修改完成后的回调，只有修改成功才会触发
+ * @param targetObject 待更新对象
+ * @param key 对象自身的属性键
+ * @param value 新值
+ * @param callback 写入成功后的回调
  *
  * @description
- * 所以这是一个的更新对象值的方法。
- * 仅允许修改目标对象本身的属性值，不允许修改对象中嵌套的对象属性值与原型连上的值。
- * 如果更新未成功，不会触发 callback 回调方法。
- *
- * @example
- * const obj = { a: 1, b: 2, c: { d: 3 } }
- * updateObjectValue(obj, 'a', 2) // success
- * updateObjectValue(obj, 'b', 3) // success
- * updateObjectValue(obj, 'c', { d: 4 }) // success
- * updateObjectValue(obj, 'd', 5) // reject
+ * 仅更新自有属性。新旧值都是普通对象时浅合并，其余直接替换。
  */
 export const updateObjectValue = <
   Target extends Recordable,
   Key extends keyof Target,
-  Value extends Target[Key], // 移除 Partial，使类型更准确
-  Callback extends AnyFn = AnyFn, // 添加默认类型
+  Value extends Target[Key],
+  Callback extends AnyFn = AnyFn,
 >(
   targetObject: Target,
   key: Key,
@@ -43,7 +34,7 @@ export const updateObjectValue = <
     return
   }
 
-  if (isValueType<object>(value, 'Object')) {
+  if (isPlainObject(value) && isPlainObject(targetObject[key])) {
     targetObject[key] = {
       ...targetObject[key],
       ...value,
