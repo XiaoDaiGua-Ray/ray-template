@@ -12,6 +12,7 @@ visualizer.html
 coverage/
 .husky/_/
 .ai-local/
+.harness-local/
 CHANGELOG.md
 src/icons/
 src/app-config/echart-themes/

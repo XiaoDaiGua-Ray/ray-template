@@ -12,6 +12,7 @@ export default defineConfig([
     '**/dist/**',
     '**/coverage/**',
     '**/.ai-local/**',
+    '**/.harness-local/**',
     '**/public/**',
     'unplugin/**',
     '**/*.d.ts',

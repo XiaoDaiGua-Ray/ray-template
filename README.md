@@ -81,7 +81,7 @@ A `completely free`, `efficient`, `feature complete` and based on Vite 8, TypeSc
 - [TSX](https://github.com/vuejs/babel-plugin-jsx/blob/main/packages/babel-plugin-jsx/README-zh_CN.md) - tsx basic syntax
 - [Vitest](https://cn.vitest.dev/guide/) - vitest basic use
 
-## Toolchain and AI-assisted development
+## Toolchain and AI Harness
 
 Use Node.js **26.13.0 LTS** and pnpm **12.16.1**. Versions are pinned in `.nvmrc`, `package.json` and `pnpm-lock.yaml`. All retained direct dependencies use current stable versions, except TypeScript **6.0.3**: Vue Language Tools and typescript-eslint do not yet support TypeScript 7. See [upgrade notes and verification](docs/toolchain-upgrade.md).
 
@@ -107,11 +107,11 @@ pnpm check
 | `pnpm dev-build`                  | Build with sourcemaps into `dist/development`              |
 | `pnpm preview`                    | Serve the production build locally                         |
 | `pnpm report`                     | Write a static bundle report without opening a browser     |
-| `pnpm check`                      | Typecheck, lint, format, unit tests and production build   |
+| `pnpm check`                      | Validate the harness, types, lint, format, tests and build |
 
 CLI commands return a nonzero exit code on failure. Use `pnpm dev --host 0.0.0.0` only when you need LAN access. Build modes, CDN configuration, aliases and the deployment base are in `vite.custom.config.ts`.
 
-AI assistants share the repository's [AGENTS.md](AGENTS.md), [architecture map](docs/architecture.md) and [development guide](docs/ai-development.md). Codex, Cursor, Copilot and Claude have thin entry points into the same rules. This provides AI-assisted engineering without requiring model API keys or adding AI product features.
+Start with [AGENTS.md](AGENTS.md) and the [AI Harness](harness/README.md). Run `pnpm harness context` to find task entry points and `pnpm harness verify` to run the full checks and save a local verification report.
 
 CI runs `pnpm check` on Linux, Windows and macOS. Only successful `main` pushes deploy to the existing `dist` branch. Dependabot proposes weekly dependency and Actions updates.
 

@@ -1,1 +1,0 @@
-项目规则的唯一维护入口是根目录 AGENTS.md。开始任务时读取 AGENTS.md，并按其中链接查看 docs/architecture.md 与 docs/ai-development.md。

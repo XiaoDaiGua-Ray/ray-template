@@ -2,7 +2,7 @@
   "extends": "./tsconfig.app.json",
   "compilerOptions": {
     "types": ["vite/client", "naive-ui/volar", "node", "vitest/globals"],
-    "tsBuildInfoFile": "./.ai-local/tsconfig.test.tsbuildinfo"
+    "tsBuildInfoFile": "./node_modules/.cache/ray-template/tsconfig.test.tsbuildinfo"
   },
   "include": ["__test__/**/*", "src/**/*.d.ts", "unplugin/*.d.ts"]
 }

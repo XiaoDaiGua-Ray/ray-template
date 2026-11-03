@@ -2,6 +2,8 @@ node_modules/*
 dist/*
 visualizer.html
 .idea
+.ai-local/
+.harness-local/
 auto-imports.d.ts
 components.d.ts
 visualizer.html

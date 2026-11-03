@@ -1,0 +1,68 @@
+{
+  "routing": {
+    "description": "路由、菜单、权限与持久化",
+    "paths": [
+      "src/router",
+      "src/router/README.md",
+      "src/store",
+      "src/store/README.md"
+    ],
+    "tests": [
+      "__test__/router/",
+      "__test__/hooks/useVueRouter.spec.ts",
+      "__test__/hooks/useAppNavigation.spec.ts",
+      "__test__/layout/preferences.spec.ts",
+      "__test__/cache/"
+    ]
+  },
+  "ui": {
+    "description": "页面、组件、布局、主题与国际化",
+    "paths": [
+      "src/views",
+      "src/components/README.md",
+      "src/app-components/README.md",
+      "src/layout/README.md",
+      "src/locales/README.md",
+      "src/hooks/README.md",
+      "docs/ui-design.md"
+    ],
+    "tests": [
+      "__test__/app/",
+      "__test__/components/",
+      "__test__/hooks/",
+      "__test__/layout/"
+    ]
+  },
+  "api": {
+    "description": "API、Axios 拦截器与演示 Mock",
+    "paths": ["src/api", "src/axios/README.md", "mock/demo", "mock/shared"],
+    "tests": ["__test__/axios/", "__test__/mock/"]
+  },
+  "icons": {
+    "description": "图标分包、类型清单与热更新",
+    "paths": [
+      "src/icons/A_README.md",
+      "scripts/icons.mjs",
+      "vite.plugin.config.ts"
+    ],
+    "tests": ["__test__/icons/"]
+  },
+  "harness": {
+    "description": "工程协作入口、回归范围与验收报告",
+    "paths": ["harness/README.md", "harness/run.mjs", "harness/scopes.json"],
+    "tests": ["__test__/harness/"]
+  },
+  "utils": {
+    "description": "公共工具、兼容入口与数据契约",
+    "paths": ["src/utils/README.md", "src/utils/index.ts"],
+    "tests": [
+      "__test__/basic/",
+      "__test__/cache/",
+      "__test__/dom/",
+      "__test__/element/",
+      "__test__/precision/",
+      "__test__/utils-contracts/",
+      "__test__/vue/"
+    ]
+  }
+}

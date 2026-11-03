@@ -81,7 +81,7 @@
 - [TSX](https://github.com/vuejs/babel-plugin-jsx/blob/main/packages/babel-plugin-jsx/README-zh_CN.md) - tsx 基本语法
 - [Vitest](https://cn.vitest.dev/guide/) - vitest 基本使用
 
-## 工具链与 AI 辅助开发
+## 工具链与 AI Harness
 
 使用 Node.js **26.13.0 LTS** 和 pnpm **12.16.1**，版本由 `.nvmrc`、`package.json` 与 `pnpm-lock.yaml` 固定。保留的直接依赖均使用当前稳定版；TypeScript 使用最新兼容版 **6.0.3**，因为 Vue 类型检查器与 ESLint 解析器尚未完整支持 TypeScript 7。详见 [升级记录与验证](docs/toolchain-upgrade.md)。
 
@@ -107,11 +107,11 @@ pnpm check
 | `pnpm dev-build`                  | 生成带 sourcemap 的 `dist/development`          |
 | `pnpm preview`                    | 本地预览生产产物                                |
 | `pnpm report`                     | 静态体积报告，不自动打开浏览器                  |
-| `pnpm check`                      | 依次完成类型、lint、格式、单元测试和生产构建    |
+| `pnpm check`                      | 检查 Harness、类型、规范、格式、单测和生产构建  |
 
 检查失败时命令返回非零退出码。局域网调试按需执行 `pnpm dev --host 0.0.0.0`；部署子路径、CDN、代理和别名在 `vite.custom.config.ts` 中配置。
 
-AI 助手统一读取 [AGENTS.md](AGENTS.md)、[架构地图](docs/architecture.md) 和 [开发指南](docs/ai-development.md)。Codex、Cursor、Copilot、Claude 的入口指向同一套工程事实与验收标准；当前无需模型 API key，也未增加产品页面中的 AI 功能。
+工程协作从 [AGENTS.md](AGENTS.md) 和 [AI Harness](harness/README.md) 开始。运行 `pnpm harness context` 查找任务入口，运行 `pnpm harness verify` 执行全量检查并保存本机验收报告。
 
 CI 在 Linux、Windows、macOS 运行 `pnpm check`；`main` 的 push 仅在全部检查通过后更新原有 `dist` 部署分支。Dependabot 每周提出依赖与 Actions 更新 PR。
 

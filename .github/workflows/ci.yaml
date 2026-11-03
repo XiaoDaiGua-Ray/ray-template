@@ -28,7 +28,7 @@ jobs:
       - uses: pnpm/action-setup@v6.1.0
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Typecheck, lint, format, test and build
+      - name: Validate harness, typecheck, lint, format, test and build
         run: pnpm check
 
   deploy:

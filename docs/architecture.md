@@ -40,3 +40,15 @@ Ray Template 是前端中后台模板，包含可运行的组件与路由示例�
 布局模式、配置与插槽见 [布局说明](../src/layout/README.md)。图标按包生成独立雪碧图，完整名称和严格类型由 `scripts/icons.mjs` 统一生成。
 
 页面标题、配色与示例排版见 [视觉与排版](ui-design.md)；注释位置与格式遵循 [注释规范](comment-style.md)。
+
+## TypeScript 项目配置
+
+[根配置](../tsconfig.json) 引用应用、Node 和测试项目。严格模式、模块解析和类型检查别名集中在 [共享配置](../tsconfig.base.json)。修改别名时同步更新 `vite.custom.config.ts`。
+
+| 配置                          | 检查范围                                           |
+| ----------------------------- | -------------------------------------------------- |
+| [应用](../tsconfig.app.json)  | `src`、Vue JSX 与自动生成声明                      |
+| [Node](../tsconfig.node.json) | 构建与测试配置、`vite-helper`、`mock`              |
+| [测试](../tsconfig.test.json) | `__test__` 与引用源码，加载 Happy DOM 和 Node 类型 |
+
+`pnpm typecheck` 通过 `vue-tsc --build` 检查三个项目，增量缓存存放于 `node_modules/.cache/ray-template/`。需要完整重查时使用 `pnpm exec vue-tsc --build --force`。单独检查应用或测试可用 `pnpm exec vue-tsc -p tsconfig.app.json` 或 `pnpm exec vue-tsc -p tsconfig.test.json`，Node 配置可用 `pnpm exec tsc -p tsconfig.node.json`。

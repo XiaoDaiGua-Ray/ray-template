@@ -5,7 +5,7 @@
     "jsx": "preserve",
     "jsxImportSource": "vue",
     "types": ["vite/client", "naive-ui/volar"],
-    "tsBuildInfoFile": "./.ai-local/tsconfig.app.tsbuildinfo"
+    "tsBuildInfoFile": "./node_modules/.cache/ray-template/tsconfig.app.tsbuildinfo"
   },
   "include": ["src/**/*", "unplugin/*.d.ts"]
 }

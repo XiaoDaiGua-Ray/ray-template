@@ -24,7 +24,8 @@
     "lint:fix": "eslint . --fix --max-warnings=0",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check": "pnpm env:check && pnpm icons:generate && pnpm typecheck && pnpm lint && pnpm format:check && pnpm test:run && vite build",
+    "harness": "node harness/run.mjs",
+    "check": "pnpm env:check && pnpm harness check && pnpm icons:generate && pnpm typecheck && pnpm lint && pnpm format:check && pnpm test:run && vite build",
     "env:check": "node scripts/doctor.mjs"
   },
   "lint-staged": {
@@ -106,7 +107,7 @@
     "vue-eslint-parser": "10.4.1",
     "vue-tsc": "3.3.14"
   },
-  "description": "Vue 3 + TypeScript + Vite admin template with Naive UI, Pinia and AI-assisted development conventions.",
+  "description": "Vue 3 + TypeScript + Vite admin template with Naive UI, Pinia and a repository engineering harness.",
   "main": "index.ts",
   "repository": {
     "type": "git",

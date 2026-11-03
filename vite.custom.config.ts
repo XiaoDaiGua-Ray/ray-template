@@ -44,7 +44,7 @@ const config: AppConfigExport = {
     open: false,
     strictPort: false,
     watch: {
-      ignored: ['**/dist/**', '**/.ai-local/**'],
+      ignored: ['**/dist/**', '**/.ai-local/**', '**/.harness-local/**'],
     },
     proxy: {
       '^/api': {

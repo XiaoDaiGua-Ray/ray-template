@@ -3,7 +3,7 @@
   "compilerOptions": {
     "lib": ["ESNext"],
     "types": ["node"],
-    "tsBuildInfoFile": "./.ai-local/tsconfig.node.tsbuildinfo"
+    "tsBuildInfoFile": "./node_modules/.cache/ray-template/tsconfig.node.tsbuildinfo"
   },
   "include": ["*.config.ts", "vite-helper/**/*.ts", "mock/**/*.ts"]
 }

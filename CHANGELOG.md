@@ -3,7 +3,7 @@
 ### Feats
 
 - 依赖更新为当前稳定版本，采用 Node.js 26 LTS、pnpm 12、Vite 8 / Rolldown、Vue Router 5、Pinia 4、Vitest 5 和 ESLint 10，并完成应用、构建与测试适配。
-- 补齐 AI 辅助开发约定、架构地图、Codex / Cursor / Copilot / Claude 入口、质量检查命令、跨平台 CI 和依赖更新配置。
+- 统一到 AI Harness，提供任务上下文、定向回归、全量验收和本机报告。跨平台 CI 同步校验任务入口与回归路径。
 - 修复 Mock 文件目录匹配，使用维护中的 Faker 生成中文示例数据；SVG 插件与可选 CDN 均适配当前发布包和部署子路径。
 - 增加 Axios 数据解包、Mock 字段和路由权限回归；修复既有颜色转换用例暴露的问题。
 

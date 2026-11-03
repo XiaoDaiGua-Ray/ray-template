@@ -140,9 +140,17 @@ Pinia 设置沿用原持久化 key，旧裸 Logo 名称在读取时迁移；锁�
 
 旧配置只在 `vue-tsc` 命令行传入 `--noEmit`。直接读取项目配置时，`allowImportingTsExtensions` 会触发 TS5096。现在共享配置声明 `noEmit`，由根项目分别引用应用、Node 与测试配置。Vue JSX 和自动导入声明由应用及测试配置加载。TypeScript 6 的 `DOM` 已包含可迭代声明，Vite 继续通过 `build.sourcemap` 控制开发和生产的 sourcemap。
 
-依赖与锁文件沿用当前版本。完整命令和项目归属见 [TypeScript 项目配置](ai-development.md#typescript-项目配置)。
+依赖与锁文件沿用当前版本。完整命令和项目归属见 [TypeScript 项目配置](architecture.md#typescript-项目配置)。
 
 在 Node.js 26.13.0 与 pnpm 12.16.1 下，`pnpm check` 通过类型、ESLint、Prettier、59 个测试文件的 240 个用例和生产构建。`pnpm dev-build` 通过，并生成开发版 JS sourcemap。通过 TypeScript 服务核对了应用入口、Vite 配置、Mock 文件和测试文件各自使用的项目。
+
+## 2026-11-03 AI Harness 迁移
+
+任务入口、范围清单和验收命令集中在 [AI Harness](../harness/README.md)。GitHub Actions 通过 `pnpm check` 校验上下文与回归路径。旧工具配置和旧开发指南已移除，TypeScript 增量缓存迁至 `node_modules/.cache/ray-template/`。依赖与锁文件沿用当前版本。
+
+本机 macOS 使用 Node.js 26.13.0 和 pnpm 12.16.1。六个任务域的定向验证均通过。新增回归覆盖空测试目录，以及子命令失败时的退出码、停止执行和 JSON 报告。`pnpm harness verify` 通过 Harness 校验、类型、ESLint、Prettier、60 个测试文件的 242 个用例和生产构建。
+
+本机报告保存在 `.harness-local/runs/`，`npm pack --dry-run --ignore-scripts` 确认本机证据目录不进入发布包。Windows 和 Linux 的执行结果待远端 CI 验证，浏览器验收按 Harness 中的独立步骤执行。
 
 ## 参考资料
 
