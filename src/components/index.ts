@@ -1,34 +1,33 @@
-import RDraggableCard from '../components/base/RDraggableCard/DraggableCard'
-import RCollapse from '../components/pro/RCollapse/Collapse'
+import RDraggableCard from './RDraggableCard/DraggableCard'
 
 // 导出所有自定义组件
-export * from './base/RChart'
-export * from './base/RCollapseGrid'
-export * from './base/RIcon'
-export * from './base/RIframe'
-export * from './base/RModal'
-export * from './base/RMoreDropdown'
-export * from './base/RTablePro'
-export * from './base/RTransitionComponent'
-export * from './base/RForm'
-export * from './base/RSegment'
-export * from './base/RBarcode'
-export * from './base/RFlow'
-export { RCollapse, RDraggableCard }
+export * from './RChart'
+export * from './RCollapseGrid'
+export * from './RIcon'
+export * from './RIframe'
+export * from './RModal'
+export * from './RMoreDropdown'
+export * from './RTablePro'
+export * from './RTransitionComponent'
+export * from './RForm'
+export * from './RSegment'
+export * from './RBarcode'
+export * from './RFlow'
+export { RDraggableCard }
 
 // 导出自定义组件类型
-export type * from './base/RChart/src/types'
-export type * from './base/RCollapseGrid/src/types'
-export type * from './base/RIframe/src/types'
-export type * from './base/RTransitionComponent/src/types'
-export type * from './base/RForm/src/types'
-export type * from './base/RModal/src/types'
-export type * from './base/RSegment/src/types'
-export type * from './base/RBarcode/src/types'
+export type * from './RChart/src/types'
+export type * from './RCollapseGrid/src/types'
+export type * from './RIframe/src/types'
+export type * from './RTransitionComponent/src/types'
+export type * from './RForm/src/types'
+export type * from './RModal/src/types'
+export type * from './RSegment/src/types'
+export type * from './RBarcode/src/types'
 export type {
   NodeConfig,
   EdgeConfig,
   FlowGraphData,
   FlowOptions,
-} from './base/RFlow/src/types'
-export type { DefaultPosition } from './base/RDraggableCard/DraggableCard'
+} from './RFlow/src/types'
+export type { DefaultPosition } from './RDraggableCard/DraggableCard'

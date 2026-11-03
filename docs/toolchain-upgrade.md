@@ -153,6 +153,14 @@ Pinia 设置沿用原持久化 key，旧裸 Logo 名称在读取时迁移；锁�
 
 本机报告保存在 `.harness-local/runs/`，`npm pack --dry-run --ignore-scripts` 确认本机证据目录不进入发布包。Windows 和 Linux 的执行结果待远端 CI 验证，浏览器验收按 Harness 中的独立步骤执行。
 
+## 2026-11-03 组件目录与公开演示的检索配置
+
+通用组件统一放在 `src/components`，保留 `@/components` 入口并删除没有调用方的 `RCollapse`。双语 README 补充实际工作台截图、快速开始和二次开发入口。公开构建的 canonical、分享图和 sitemap 按 Vite base 生成，配置方式见[部署指南](architecture.md#deployment-and-search-discovery)。
+
+- `pnpm harness verify` 通过类型、ESLint、Prettier、63 个测试文件的 265 个用例和生产构建。
+- 检查了官方路径、自定义子路径与未设置站点源地址的构建。公开版本的首页、sitemap 和资源 URL 一致；普通构建输出 `noindex`。
+- Chrome 生产预览验证了桌面双列、390px 单列、中英文与明暗切换、预填演示登录，以及关闭 JavaScript 时的项目介绍和链接。GitHub About 描述、演示地址和主题已回读确认；未部署网站构建或验证搜索引擎收录。
+
 ## 参考资料
 
 - [Node.js 26.13.0 LTS](https://nodejs.org/en/blog/release/v26.13.0)

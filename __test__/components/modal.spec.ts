@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { RModal } from '../../src/components/base/RModal/index'
+import { RModal } from '../../src/components/RModal/index'
 
 describe('RModal', () => {
   it('should execute the onAfterEnter callback', () => {

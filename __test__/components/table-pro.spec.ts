@@ -1,9 +1,9 @@
-import { RTablePro } from '@/components/base/RTablePro'
+import { RTablePro } from '@/components/RTablePro'
 import type {
   TableProInst,
   TableProParams,
   TableProResult,
-} from '@/components/base/RTablePro'
+} from '@/components/RTablePro'
 import { flushPromises, mount } from '@vue/test-utils'
 import { NDataTable, NPagination } from 'naive-ui'
 

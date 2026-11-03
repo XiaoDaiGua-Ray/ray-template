@@ -23,11 +23,6 @@ export interface RootRoute {
   path: string
 }
 
-export interface HTMLTitle {
-  name: string
-  transformIndexHtml: (title: string) => string
-}
-
 export interface PreloadingConfig {
   title?: string
   tagColor?: string
@@ -44,7 +39,6 @@ export interface Config {
   server: ServerOptions
   buildOptions: (mode: string) => BuildOptions
   alias: AliasOptions
-  title: HTMLTitle
   copyright?: LayoutCopyright
   mixinCSS?: string
   preloadingConfig?: PreloadingConfig

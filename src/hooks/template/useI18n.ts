@@ -63,6 +63,8 @@ export const useI18n = (namespace?: string): OverrideUseI18nReturnType => {
     } else {
       instance.global.locale = lang
     }
+
+    document.documentElement.lang = lang
   }
 
   // 初始化前创建的 Hook 也在调用时读取实例，避免永久停留在回退函数上。

@@ -1,4 +1,4 @@
-import type { LoadingOptions } from '@/components/base/RChart/src/types'
+import type { LoadingOptions } from '@/components/RChart/src/types'
 import { useTheme } from '@/hooks'
 
 /**

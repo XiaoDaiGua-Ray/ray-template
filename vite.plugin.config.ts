@@ -19,6 +19,7 @@ import viteSvgLoader from 'vite-svg-loader'
 import { iconNameFromPath, scanIcons } from './scripts/icons.mjs'
 import { iconManifestPlugin } from './vite-helper/icons.ts'
 import { cdnResolve } from './vite-helper/index.ts'
+import { siteInfo, siteSeoPlugin } from './vite-helper/site-seo.ts'
 import config from './vite.custom.config.ts'
 
 // 仅适用于报告模式（report）
@@ -152,7 +153,7 @@ function vueTransformPlugins(): PluginOption[] {
 
 // 基础插件配置
 function baseOptions(mode: string): PluginOption[] {
-  const { title, appPrimaryColor, preloadingConfig } = config
+  const { appPrimaryColor, preloadingConfig } = config
   const iconPackages = [
     ...new Set(scanIcons().map((name) => name.split('/')[0])),
   ]
@@ -160,7 +161,7 @@ function baseOptions(mode: string): PluginOption[] {
   return [
     ...vueTransformPlugins(),
     iconManifestPlugin(iconPackages),
-    title,
+    siteSeoPlugin(),
     viteVeI18nPlugin({
       include: [
         resolve(
@@ -177,6 +178,7 @@ function baseOptions(mode: string): PluginOption[] {
     viteEjsPlugin({
       preloadingConfig,
       appPrimaryColor,
+      siteInfo,
     }),
     // 仅适用于开发模式(检查 `Vite` 插件的中间状态)
     viteInspect({

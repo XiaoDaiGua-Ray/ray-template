@@ -3,7 +3,7 @@ import type { AppConfigExport } from '@/types/modules/vite-custom-config'
 import type { BuildOptions } from 'vite'
 import { PRE_LOADING_CONFIG } from './src/app-config/app-config.ts'
 import { APP_THEME } from './src/app-config/design-config.ts'
-import { htmlTitlePlugin, mixinCss } from './vite-helper/index.ts'
+import { mixinCss } from './vite-helper/index.ts'
 
 const config: AppConfigExport = {
   // 是否使用 jsDelivr 的精确 npm 版本构建（默认离线可用的本地 bundle）
@@ -33,9 +33,6 @@ const config: AppConfigExport = {
 
   // 版权信息
   copyright: 'Copyright © 2022-present Ray',
-
-  // 浏览器标题
-  title: htmlTitlePlugin(PRE_LOADING_CONFIG.title || 'Ray Template'),
 
   // 配置 HMR 特定选项（端口、主机、路径和协议）
   server: {

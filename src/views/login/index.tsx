@@ -11,8 +11,6 @@ import {
   NDropdown,
   NFlex,
   NGradientText,
-  NGrid,
-  NGridItem,
   NTabPane,
   NTabs,
 } from 'naive-ui'
@@ -47,7 +45,7 @@ const Login = defineComponent({
     const { $t } = this
 
     return (
-      <div
+      <main
         class={['login']}
         style={[
           `height: ${this.windowHeight}px`,
@@ -63,9 +61,11 @@ const Login = defineComponent({
           <div class={['login-wrapper__content']}>
             <NFlex align="center" class="login-title__wrapper">
               <RIcon name="logo/ray" size="48" />
-              <NGradientText class="login-title" type="info" size={28}>
-                Ray Template
-              </NGradientText>
+              <h1 class="login-heading">
+                <NGradientText class="login-title" type="info" size={28}>
+                  Ray Template
+                </NGradientText>
+              </h1>
             </NFlex>
             <NFlex align="center" class="login-action__wrapper">
               <ThemeSwitch />
@@ -82,15 +82,8 @@ const Login = defineComponent({
                 />
               </NDropdown>
             </NFlex>
-            <NGrid
-              cols={'s:1 m:1 l:2 xl:2 2xl:2'}
-              itemResponsive={false}
-              responsive="screen"
-            >
-              <NGridItem
-                span={'s:0 m:0 l:1 xl:1 2xl:1'}
-                class="login__left-wrapper"
-              >
+            <div class="login-grid">
+              <div class="login__left-wrapper">
                 <NFlex align="center" vertical>
                   <RIcon
                     name="illustration/login_bg"
@@ -101,13 +94,16 @@ const Login = defineComponent({
                     {$t('views.login.index.RayTemplate')}
                   </NGradientText>
                 </NFlex>
-              </NGridItem>
-              <NGridItem span={1} class="login__right-wrapper">
+              </div>
+              <div class="login__right-wrapper">
                 <NCard
                   class="login__right-wrapper__content"
                   embedded
                   bordered={false}
                 >
+                  <p class="login-template-description">
+                    {$t('views.login.index.TemplateDescription')}
+                  </p>
                   <NTabs
                     v-model:value={this.tabsValue}
                     type="line"
@@ -139,13 +135,15 @@ const Login = defineComponent({
                       ),
                     }}
                   </NTabs>
-                  <NDivider>其他登陆方式</NDivider>
+                  <NDivider>
+                    {$t('views.login.index.OtherSignInOptions')}
+                  </NDivider>
                   <SSOSigning />
-                  <NDivider>友情链接</NDivider>
+                  <NDivider>{$t('views.login.index.Resources')}</NDivider>
                   <AppShareLink />
                 </NCard>
-              </NGridItem>
-            </NGrid>
+              </div>
+            </div>
             <NFlex
               align="center"
               justify="center"
@@ -155,7 +153,7 @@ const Login = defineComponent({
             </NFlex>
           </div>
         </div>
-      </div>
+      </main>
     )
   },
 })

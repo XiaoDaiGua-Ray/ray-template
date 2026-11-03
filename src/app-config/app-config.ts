@@ -50,11 +50,7 @@ export const LAYOUT_CONTENT_SPIN_WHEN_ROUTE_CHANGE = false
  */
 export const APP_GLOBAL_LOADING = 'loading'
 
-/**
- *
- * 首屏加载信息配置
- * 其中 title 属性会是默认的浏览器标题（初始化时）
- */
+/** 首屏加载动画显示的标题和颜色。 */
 export const PRE_LOADING_CONFIG: PreloadingConfig = {
   title: 'Ray Template',
   tagColor: '#ff6700',

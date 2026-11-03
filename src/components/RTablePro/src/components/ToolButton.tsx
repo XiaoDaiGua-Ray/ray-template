@@ -1,4 +1,4 @@
-import { RIcon } from '@/components/base/RIcon'
+import { RIcon } from '@/components/RIcon'
 import type { IconName } from '@/icons'
 import { NButton } from 'naive-ui'
 import type { PropType } from 'vue'

@@ -14,7 +14,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    TransitionComponent: typeof import('./../src/components/base/RTransitionComponent/src/TransitionComponent.vue')['default']
+    TransitionComponent: typeof import('./../src/components/RTransitionComponent/src/TransitionComponent.vue')['default']
   }
 }
 
@@ -22,5 +22,5 @@ declare module 'vue' {
 declare global {
   const RouterLink: typeof import('vue-router')['RouterLink']
   const RouterView: typeof import('vue-router')['RouterView']
-  const TransitionComponent: typeof import('./../src/components/base/RTransitionComponent/src/TransitionComponent.vue')['default']
+  const TransitionComponent: typeof import('./../src/components/RTransitionComponent/src/TransitionComponent.vue')['default']
 }

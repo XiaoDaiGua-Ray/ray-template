@@ -3,7 +3,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { iconNameFromPath, scanIcons } from '../../scripts/icons.mjs'
-import type { IconProps } from '../../src/components/base/RIcon'
+import type { IconProps } from '../../src/components/RIcon'
 import { iconNames, isIconName, resolveIconName } from '../../src/icons'
 import type { IconName } from '../../src/icons'
 

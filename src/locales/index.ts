@@ -52,4 +52,5 @@ export const setupI18n = async (app: App<Element>) => {
   app.use(i18nInstance)
 
   i18n = i18nInstance
+  document.documentElement.lang = i18nInstance.global.locale.value
 }

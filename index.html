@@ -1,131 +1,150 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/ray.svg" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
-    <title>Vite + Vue + TS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= siteInfo.title %></title>
+    <meta name="description" content="<%= siteInfo.description %>" />
+    <style>
+      :root {
+        --preloading-tag-color: <%= preloadingConfig.tagColor %>;
+        --preloading-title-color: <%= preloadingConfig.titleColor %>;
+        --r-theme-primary-fade-color: <%= appPrimaryColor.primaryFadeColor %>;
+        --r-theme-primary-color: <%= appPrimaryColor.primaryColor %>;
+        --global-loading-bg-color: #ffffff;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        #pre-loading-animation {
+          background-color: var(--global-loading-bg-color);
+        }
+      }
+
+      @media (prefers-color-scheme: light) {
+        #pre-loading-animation {
+          background-color: var(--global-loading-bg-color);
+        }
+      }
+
+      html.dark #pre-loading-animation {
+        background-color: var(--global-loading-bg-color);
+      }
+
+      html.light #pre-loading-animation {
+        background-color: var(--global-loading-bg-color);
+      }
+
+      #pre-loading-animation {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        color: var(--preloading-title-color);
+        text-align: center;
+        background-color: var(--global-loading-bg-color);
+      }
+
+      #pre-loading-animation .pre-loading-animation__wrapper {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #pre-loading-animation
+        .pre-loading-animation__wrapper
+        .pre-loading-animation__wrapper-title {
+        font-size: 32px;
+        padding-bottom: 48px;
+        font-weight: 500;
+      }
+
+      .pre-loading-animation__wrapper-loading {
+        display: block;
+        position: relative;
+        width: 6px;
+        height: 10px;
+
+        animation: rectangle infinite 1s ease-in-out -0.2s;
+
+        background-color: var(--preloading-tag-color);
+      }
+
+      .pre-loading-animation__wrapper-loading:before,
+      .pre-loading-animation__wrapper-loading:after {
+        position: absolute;
+        width: 6px;
+        height: 10px;
+        content: '';
+        background-color: var(--preloading-tag-color);
+      }
+
+      .pre-loading-animation__wrapper-loading:before {
+        left: -14px;
+
+        animation: rectangle infinite 1s ease-in-out -0.4s;
+      }
+
+      .pre-loading-animation__wrapper-loading:after {
+        right: -14px;
+
+        animation: rectangle infinite 1s ease-in-out;
+      }
+
+      @keyframes rectangle {
+        0%,
+        80%,
+        100% {
+          height: 20px;
+          box-shadow: 0 0 var(--preloading-tag-color);
+        }
+
+        40% {
+          height: 30px;
+          box-shadow: 0 -20px var(--preloading-tag-color);
+        }
+      }
+    </style>
+    <script>
+      ;(function () {
+        const html = document.documentElement
+        const store = window.localStorage.getItem('piniaSettingStore')
+        const { _appTheme = false } = store ? JSON.parse(store) : {}
+        const loadingBgColor = _appTheme ? '#1c1e23' : '#ffffff'
+
+        html.classList.add(_appTheme ? 'dark' : 'light')
+        html.style.setProperty('--global-loading-bg-color', loadingBgColor)
+        html.style.setProperty('background-color', loadingBgColor)
+      })()
+    </script>
+    <noscript>
+      <style>
+        #pre-loading-animation {
+          display: none;
+        }
+      </style>
+    </noscript>
   </head>
-  <style>
-    :root {
-      --preloading-tag-color: <%= preloadingConfig.tagColor %>;
-      --preloading-title-color: <%= preloadingConfig.titleColor %>;
-      --r-theme-primary-fade-color: <%= appPrimaryColor.primaryFadeColor %>;
-      --r-theme-primary-color: <%= appPrimaryColor.primaryColor %>;
-      --global-loading-bg-color: #ffffff;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      #pre-loading-animation {
-        background-color: var(--global-loading-bg-color);
-      }
-    }
-
-    @media (prefers-color-scheme: light) {
-      #pre-loading-animation {
-        background-color: var(--global-loading-bg-color);
-      }
-    }
-
-    html.dark #pre-loading-animation {
-      background-color: var(--global-loading-bg-color);
-    }
-
-    html.light #pre-loading-animation {
-      background-color: var(--global-loading-bg-color);
-    }
-
-    #pre-loading-animation {
-      position: fixed;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      color: var(--preloading-title-color);
-      text-align: center;
-      background-color: var(--global-loading-bg-color);
-    }
-
-    #pre-loading-animation .pre-loading-animation__wrapper {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-
-    #pre-loading-animation
-      .pre-loading-animation__wrapper
-      .pre-loading-animation__wrapper-title {
-      font-size: 32px;
-      padding-bottom: 48px;
-      font-weight: 500;
-    }
-
-    .pre-loading-animation__wrapper-loading {
-      display: block;
-      position: relative;
-      width: 6px;
-      height: 10px;
-
-      animation: rectangle infinite 1s ease-in-out -0.2s;
-
-      background-color: var(--preloading-tag-color);
-    }
-
-    .pre-loading-animation__wrapper-loading:before,
-    .pre-loading-animation__wrapper-loading:after {
-      position: absolute;
-      width: 6px;
-      height: 10px;
-      content: '';
-      background-color: var(--preloading-tag-color);
-    }
-
-    .pre-loading-animation__wrapper-loading:before {
-      left: -14px;
-
-      animation: rectangle infinite 1s ease-in-out -0.4s;
-    }
-
-    .pre-loading-animation__wrapper-loading:after {
-      right: -14px;
-
-      animation: rectangle infinite 1s ease-in-out;
-    }
-
-    @keyframes rectangle {
-      0%,
-      80%,
-      100% {
-        height: 20px;
-        box-shadow: 0 0 var(--preloading-tag-color);
-      }
-
-      40% {
-        height: 30px;
-        box-shadow: 0 -20px var(--preloading-tag-color);
-      }
-    }
-  </style>
-  <script>
-    ;(function () {
-      const html = document.documentElement
-      const store = window.localStorage.getItem('piniaSettingStore')
-      const { _appTheme = false } = store ? JSON.parse(store) : {}
-      const loadingBgColor = _appTheme ? '#1c1e23' : '#ffffff'
-
-      html.classList.add(_appTheme ? 'dark' : 'light')
-      html.style.setProperty('--global-loading-bg-color', loadingBgColor)
-      html.style.setProperty('background-color', loadingBgColor)
-    })()
-  </script>
   <body>
     <div id="app"></div>
+    <noscript>
+      <main>
+        <h1><%= siteInfo.title %></h1>
+        <p><%= siteInfo.description %></p>
+        <p>启用 JavaScript 后可体验在线演示。</p>
+        <p>
+          <a href="<%= siteInfo.repository %>">GitHub 源码</a>
+          ·
+          <a href="<%= siteInfo.repository %>/blob/main/README.zh-CN.md"
+            >中文使用指南</a
+          >
+        </p>
+      </main>
+    </noscript>
     <div id="pre-loading-animation">
       <div class="pre-loading-animation__wrapper">
         <div class="pre-loading-animation__wrapper-title">

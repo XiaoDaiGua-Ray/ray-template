@@ -7,5 +7,8 @@
   "Login": "登 陆",
   "Name": "用户名",
   "Password": "密码",
-  "RayTemplate": "开箱即用的中后台管理系统"
+  "RayTemplate": "构建你的中后台管理系统",
+  "TemplateDescription": "基于 Vue 3、TypeScript 和 Naive UI 的开源中后台管理模板。",
+  "OtherSignInOptions": "其他登录方式",
+  "Resources": "项目资源"
 }

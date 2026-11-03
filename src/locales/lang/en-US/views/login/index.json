@@ -7,5 +7,8 @@
   "Login": "Login",
   "Name": "User Name",
   "Password": "User Password",
-  "RayTemplate": "Fast Background Template"
+  "RayTemplate": "Build your next admin dashboard",
+  "TemplateDescription": "Open-source Vue 3 admin dashboard template with TypeScript and Naive UI.",
+  "OtherSignInOptions": "Other sign-in options",
+  "Resources": "Resources"
 }

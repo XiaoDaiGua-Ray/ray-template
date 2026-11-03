@@ -2,7 +2,7 @@ import './index.scss'
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
 import UnlockScreen from '@/app-components/app/AppLockScreen/components/UnlockScreen'
 import { LAYOUT_CONTENT_REF } from '@/app-config'
-import { RIcon } from '@/components/base/RIcon'
+import { RIcon } from '@/components/RIcon'
 import { useDevice, useI18n, useMaximize } from '@/hooks'
 import { layoutCssVars } from '@/layout/layout-css-vars'
 import {

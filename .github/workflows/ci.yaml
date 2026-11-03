@@ -46,6 +46,8 @@ jobs:
       - uses: pnpm/action-setup@v6.1.0
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
+        env:
+          RAY_TEMPLATE_SITE_ORIGIN: ${{ github.repository == 'XiaoDaiGua-Ray/ray-template' && 'https://xiaodaigua-ray.github.io' || vars.RAY_TEMPLATE_SITE_ORIGIN }}
       - uses: JamesIves/github-pages-deploy-action@v4.9.0
         with:
           branch: dist

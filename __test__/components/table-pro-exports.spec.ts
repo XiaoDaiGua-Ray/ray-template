@@ -1,7 +1,7 @@
-import { RTablePro } from '@/components/base/RTablePro'
-import type { TableProInst } from '@/components/base/RTablePro'
-import { buildTableCsv } from '@/components/base/RTablePro/src/csv'
-import * as printing from '@/components/base/RTablePro/src/printing'
+import { RTablePro } from '@/components/RTablePro'
+import type { TableProInst } from '@/components/RTablePro'
+import { buildTableCsv } from '@/components/RTablePro/src/csv'
+import * as printing from '@/components/RTablePro/src/printing'
 import { mount } from '@vue/test-utils'
 import type { DataTableColumn } from 'naive-ui'
 

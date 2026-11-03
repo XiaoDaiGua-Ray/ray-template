@@ -1,197 +1,145 @@
-<div align="center">
-  <a href="https://github.com/XiaoDaiGua-Ray/ray-template">
-    <img
-      alt="Ray Template"
-      width="200"
-      height="200"
-      src="https://avatars.githubusercontent.com/u/51957438?v=4"
-    />
-  </a>
-  <br />
-  <br />
-  <a href="https://nodejs.org/en/about/previous-releases"><img src="https://img.shields.io/node/v/vite.svg" alt="node compatibility"></a>
-  <a href="https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/LICENSE"
-    ><img
-      src="https://img.shields.io/github/license/XiaoDaiGua-Ray/ray-template"
-      alt="LICENSE"
-  /></a>
-  <a href="#badge"><img src="https://img.shields.io/github/languages/top/XiaoDaiGua-Ray/ray-template" alt="language"></a>
-  <a href="https://www.npmjs.com/package/ray-template"><img src="https://img.shields.io/npm/v/ray-template" alt="npm package"></a>
-</div>
+# Ray Template · Vue 3 Admin Dashboard Template
 
-<div align="center">
+[简体中文](README.zh-CN.md) · **[Live demo](https://xiaodaigua-ray.github.io/ray-template/)** · **[Documentation](https://xiaodaigua-ray.github.io/ray-template-doc/)** · [Quick start](#quick-start)
 
-# Ray Template
+Ray Template is an **open-source, ready-to-run frontend template** for admin dashboards, back-office tools, and internal apps. Run the demo to try a workspace with role-based menus and page tabs, then reuse TablePro list pages, workspace layouts, and route modules in your own app.
 
-English | [简体中文](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/README.zh-CN.md)
+**Stack**: Vue 3 · TypeScript / TSX · Naive UI · Vue Router · Pinia · Vue I18n · Vite / Rolldown · Axios · Vitest
 
-A `completely free`, `efficient`, `feature complete` and based on Vite 8, TypeScript, Pinia and Vue 3 in the background template.
+[![Ray Template's TablePro people directory with search, pagination, column settings, and sidebar navigation](docs/assets/tablepro-preview.jpg)](https://xiaodaigua-ray.github.io/ray-template/)
 
-</div>
+Sign in with the prefilled form. Open **Tables → Remote search and pagination** to try the list shown above, or **Layout playground** to experiment with the workspace.
 
-## 🌻 Intro
+## Core features
 
-`Ray Template` uses cutting-edge front-end technology, abandoning complexity and bloat, using modular design, decoupling data, methods and views, focusing on business development. Provide rich configuration and rich template `Hooks`, support personalized customization, to meet your project needs.
+### TablePro for simple tables and data-heavy pages
 
-## ✨ Features
+Use `RTablePro` with `bare` for a plain table, or add search, pagination, and a toolbar for a full list page. Column definitions, selection, sorting, and custom cells follow Naive UI DataTable.
 
-- `New technology stack:` using Vue 3 + TSX, Vite 8 / Rolldown, Pinia 4, Vue Router 5 and Naive UI
-- `Theme:` configurable theme
-- `Internationalization:` built-in perfect internationalization solution
-- `Permissions:` built-in perfect dynamic routing permission generation solution
-- `Components:` secondary encapsulation of multiple common components
-- `Toolkit:` common tool function packaging
-- `Cache:` arbitrary depth page caching
-- `Modular design:` decoupling management data, methods, views, rest assured secondary development
-- `Configurable:` support rich configuration items
-- `Code style:` built-in prettier, eslint and other code style tools
-- `Multi-terminal adaptation:` support pc, phone, pad
-- `Documentation:` complete documentation
-- `Mock data:` built-in Mock data solution
-- `Axios request:` the plug-in design is used to encapsulate the axios library interceptor twice, which makes the interceptor more flexible
-- `SVG:` built-in svg icon solution
-- `Hooks:` based on the template characteristics of the encapsulated hooks to make it easier to use some functions of the template
-- `TypeScript:` provide a complete type
-- `Vitest:` built-in vitest test solution
+- **Search and pagination**: Pass local `data` or a `request(params, signal)` function that returns `{ data, total }`. Remote queries accept only the latest result. A failed query keeps existing rows visible and lets users retry.
+- **Long lists and column controls**: Fill the available workspace and use virtual scrolling for large lists. Users can show, hide, reorder, or pin columns. Set `columnStateKey` to remember hidden columns across reloads.
+- **CSV and printing**: Export or print the current page's visible data columns by default. Point printing at a custom region for documents that need their own layout.
 
-## 👀 Preview
+[TablePro API and data contract](src/components/RTablePro/README.md)
 
-- [Preview](https://xiaodaigua-ray.github.io/ray-template/#/)
+### A configurable workspace
 
-## 📌 Documentation
+Switch between sidebar, top, and mixed navigation. Narrow screens use a menu drawer. The workspace supports fixed or fluid width, a pinned header and footer, and a maximized content area. Pinia saves layout preferences. Try changes live in the layout playground or use named slots to replace the header, sidebar, tabs, and footer.
 
-- [Documentation](https://xiaodaigua-ray.github.io/ray-template-doc/)
+Page tabs keep multiple tasks open, and breadcrumbs show where you are. Find menu items with `⌘/Ctrl + K`, and switch between light and dark themes or English and Simplified Chinese.
 
-## 🔋 Change Log
+[Layout playground source](src/views/demo/layout-demo.tsx) · [Layout configuration and slots](src/layout/README.md)
 
-- [Change Log](https://github.com/XiaoDaiGua-Ray/xiaodaigua-ray.github.io/blob/main/CHANGELOG.md)
+### Route modules connect pages, menus, and permissions
 
-## 🪴 Prepare
+Declare a page in `src/router/modules` to generate its navigation and breadcrumbs. Route metadata controls menu labels and icons, roles, visibility, and `keepAlive`. Detail pages can extend the breadcrumb while keeping the current menu and tab. Role checks cover both menu filtering and direct navigation. Connect your backend to validate sessions and authorize API requests.
 
-- [Node](https://nodejs.org/) and [git](https://git-scm.com/) - project development environment
-- [Vite](https://vite.dev/) - familiar with vite features
-- [Vue3](https://vuejs.org/) - familiar with Vue basic syntax
-- [TypeScript](https://www.typescriptlang.org/) - familiar with TypeScript basic syntax
-- [ES6+](http://es6.ruanyifeng.com/) - familiar with es6 basic syntax
-- [Vue-Hooks-Plus](https://inhiblabcore.github.io/docs/hooks/) - familiar with vue-hooks-plus useRequest method basic use
-- [Vue-Router-Next](https://router.vuejs.org/) - familiar with vue-router4.x basic use
-- [Naive-UI](https://www.naiveui.com) - naive ui basic use
-- [Faker](https://fakerjs.dev/) - localized demo data with vite-plugin-mock-dev-server
-- [Pinia](https://pinia.vuejs.org/zh/introduction.html) - state manager pinia usage
-- [TSX](https://github.com/vuejs/babel-plugin-jsx/blob/main/packages/babel-plugin-jsx/README-zh_CN.md) - tsx basic syntax
-- [Vitest](https://cn.vitest.dev/guide/) - vitest basic use
+[Routing guide](src/router/README.md) · [Nested navigation and caching example](src/router/modules/demo/multi-menu.ts)
 
-## Toolchain and AI Harness
+### Reusable components, composables, and SVG icons
 
-Use Node.js **26.13.0 LTS** and pnpm **12.16.1**. Versions are pinned in `.nvmrc`, `package.json` and `pnpm-lock.yaml`. All retained direct dependencies use current stable versions, except TypeScript **6.0.3**: Vue Language Tools and typescript-eslint do not yet support TypeScript 7. See [upgrade notes and verification](docs/toolchain-upgrade.md).
+- **Components**: Start with `RForm` and `RModal` for forms and dialogs. `RChart` manages ECharts initialization, resizing, and theme changes. The demo also includes LogicFlow diagrams, barcodes, and draggable cards. [Component guide](src/components/README.md)
+- **Composables**: Template hooks cover page refresh, content maximization, menu badges, and watermarks. Web hooks demonstrate screenshots, printing, and element fullscreen. The examples include expandable usage code. [Composables and examples](src/hooks/README.md)
+- **SVG icons**: Add an SVG to a group under `src/icons` to generate typed names and sprites. Routes and `RIcon` share names such as `navigation/dashboard`. The icon gallery lets you browse by group and copy TSX usage. [SVG icon workflow](src/icons/A_README.md)
 
-The example uses nvm; with fnm, replace the first two commands with `fnm install && fnm use`.
+## Quick start
+
+Use the pinned **Node.js 26.13.0** and **pnpm 12.16.1**. With nvm:
 
 ```sh
+git clone https://github.com/XiaoDaiGua-Ray/ray-template.git
+cd ray-template
 nvm install
 nvm use
 npm install --global pnpm@12.16.1
 pnpm install --frozen-lockfile
-pnpm env:check
-pnpm check
-```
-
-| Command                           | Purpose / output                                           |
-| --------------------------------- | ---------------------------------------------------------- |
-| `pnpm dev`                        | Start development at `http://127.0.0.1:9527/ray-template/` |
-| `pnpm typecheck`                  | Check application, test and build configuration types      |
-| `pnpm lint` / `pnpm format:check` | Read-only lint / formatting checks                         |
-| `pnpm lint:fix` / `pnpm format`   | Explicit code fixes / formatting                           |
-| `pnpm test:run`                   | Run unit tests once; `pnpm test` starts watch mode         |
-| `pnpm build`                      | Typecheck and build into `dist/production`                 |
-| `pnpm dev-build`                  | Build with sourcemaps into `dist/development`              |
-| `pnpm preview`                    | Serve the production build locally                         |
-| `pnpm report`                     | Write a static bundle report without opening a browser     |
-| `pnpm check`                      | Validate the harness, types, lint, format, tests and build |
-
-CLI commands return a nonzero exit code on failure. Use `pnpm dev --host 0.0.0.0` only when you need LAN access. Build modes, CDN configuration, aliases and the deployment base are in `vite.custom.config.ts`.
-
-Start with [AGENTS.md](AGENTS.md) and the [AI Harness](harness/README.md). Run `pnpm harness context` to find task entry points and `pnpm harness verify` to run the full checks and save a local verification report.
-
-CI runs `pnpm check` on Linux, Windows and macOS. Only successful `main` pushes deploy to the existing `dist` branch. Dependabot proposes weekly dependency and Actions updates.
-
-## 📦 Setup
-
-### Get Project
-
-```sh
-# github
-git clone https://github.com/XiaoDaiGua-Ray/ray-template.git
-```
-
-### Pull dependencies
-
-```sh
-pnpm install --frozen-lockfile
-```
-
-### Test project
-
-```sh
-
-pnpm test:run
-```
-
-### Startup project
-
-```sh
 pnpm dev
 ```
 
-### Build project
+Open [http://127.0.0.1:9527/ray-template/](http://127.0.0.1:9527/ray-template/) or use the URL printed by Vite. The prefilled demo sign-in and mock data let you run the template before connecting a backend.
 
-```sh
-pnpm build
+## Project structure
+
+```text
+.
+├── src/
+│   ├── main.ts              # Bootstraps the app, router, state, and i18n
+│   ├── App.tsx              # Root component with global providers and layout
+│   ├── views/               # Sign-in, dashboard, business pages, and demos
+│   │   └── demo/            # TablePro, layout playground, and hook examples
+│   ├── router/
+│   │   └── modules/         # Page routes, menu metadata, and roles
+│   ├── layout/              # Navigation, page tabs, breadcrumbs, and content
+│   ├── components/          # Shared UI exported through @/components
+│   ├── app-components/      # App-specific UI and global providers
+│   ├── api/                 # API functions grouped by feature
+│   ├── axios/               # HTTP client, interceptors, and cancellation
+│   ├── store/               # Pinia modules and access methods
+│   ├── hooks/               # Template, component, and browser composables
+│   ├── app-config/          # App, routing, theme, and language settings
+│   ├── locales/             # English and Simplified Chinese messages
+│   ├── icons/               # Grouped SVG sources and generated manifest
+│   ├── styles/              # Global styles, design tokens, and theme overrides
+│   ├── directives/          # Global Vue directives
+│   ├── types/               # Shared types and declarations
+│   ├── utils/               # Shared utility functions
+│   └── demo-data/           # Sample data for mock APIs and the static demo
+├── mock/                    # Mock endpoints for local development
+├── public/                  # Static assets copied into the build as is
+├── vite-helper/             # Build helpers for icons, CDN, and SEO
+├── vite.config.ts           # Vite entry for development and builds
+├── vite.custom.config.ts    # Deployment base, dev proxy, and build options
+├── tsconfig.json            # References the app, Node, and test TS projects
+├── package.json             # Dependencies, runtime versions, and commands
+├── scripts/                 # Environment checks and icon generation
+├── __test__/                # Vitest suites and test utilities
+├── harness/                 # Task scopes, targeted checks, and report generation
+├── .github/workflows/       # CI checks and GitHub Pages deployment
+└── docs/                    # Architecture, design, and engineering conventions
 ```
 
-### Preview project
+See the [architecture map](docs/architecture.md) for how these modules work together.
 
-```sh
-pnpm preview
+## Build your first business page
+
+This small people directory uses the template's mock query function. To adapt it for orders or inventory, replace the columns, search fields, and request function.
+
+```tsx
+import { getPersonList } from '@/api/demo/mock/person'
+import { RTablePro } from '@/components'
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  setup() {
+    return () => (
+      <RTablePro
+        columns={[
+          { title: 'Name', key: 'name' },
+          { title: 'Email', key: 'email' },
+        ]}
+        request={getPersonList}
+        search={[{ key: 'name', label: 'Name' }]}
+        columnStateKey="demo:people"
+      />
+    )
+  },
+})
 ```
 
-### Report project
+1. **Build the view.** Add a page in `src/views`. The [remote table example](src/views/demo/tables/remote.tsx) shows sorting, row selection, and toolbar actions.
+2. **Connect navigation.** Add a route in `src/router/modules` and give its menu entry English and Simplified Chinese labels. Follow the [routing guide](src/router/README.md) when setting up page caching.
+3. **Connect your data.** Define your API in `src/api`, use `src/axios` for interceptors and request cancellation, and connect your real sign-in and session. The people directory uses a mock HTTP endpoint in development and sample data in the static preview. [Request layer guide](src/axios/README.md)
 
-```sh
-pnpm report
-```
+## Checks, builds, and deployment
 
-### Development
+| Command                       | What it does                                                                                |
+| ----------------------------- | ------------------------------------------------------------------------------------------- |
+| `pnpm test:run`               | Run the Vitest suite                                                                        |
+| `pnpm check`                  | Run the same checks as CI, including types, lint, formatting, tests, and a production build |
+| `pnpm harness context`        | Find entry points and checks for areas such as routing, UI, and APIs                        |
+| `pnpm harness verify`         | Run the full check and save a local report, or pass a scope to run targeted checks          |
+| `pnpm build` / `pnpm preview` | Build into `dist/production` or serve the build locally                                     |
 
-Just delete the files under `views/demo`, `router/modules/demo` to get a clean project template.
+Use the [architecture map](docs/architecture.md) to find module and configuration entry points. See the [deployment guide](docs/architecture.md#deployment-and-search-discovery) for root or subpath hosting and search metadata. Contributors and coding agents share the instructions in [AGENTS.md](AGENTS.md) and the [AI Harness](harness/README.md).
 
-## 🪴 Project Activities
-
-![Alt](https://repobeats.axiom.co/api/embed/fab6071297ab281913a42f07a2779b488cfd62b8.svg 'Repobeats analytics image')
-
-### Contributors
-
-Thanks for all their contributions 🐝 !
-
-<a href="https://github.com/XiaoDaiGua-Ray/ray-template/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=XiaoDaiGua-Ray/ray-template" />
-</a>
-
-## Browser Support
-
-Build target: Vite 8 Baseline Widely Available (Chrome/Edge 111+, Firefox 114+, Safari/iOS 16.4+). Test product changes in current browsers; no IE support.
-
-| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt=" Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>IE | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt=" Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari |
-| :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|                                                                                             not support                                                                                              |                                                                                            last 2 versions                                                                                             |                                                                                                  last 2 versions                                                                                                  |                                                                                                last 2 versions                                                                                                |                                                                                                last 2 versions                                                                                                |
-
-## 📄 License
-
-[MIT License](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/LICENSE) © 2022-PRESENT [Ray](https://github.com/XiaoDaiGua-Ray)
-
-## Hooks, Layout & Icons
-
-- [Hooks examples](src/hooks/README.md): `/template-hooks`, `/web-hooks`, covering all 19 custom hooks.
-- [Layout modes and slots](src/layout/README.md): `/layout-demo`, with live persistent preferences.
-- [Namespaced SVG icons](src/icons/A_README.md): `/svg-icons`; `pnpm icons:generate`, `pnpm icons:check`.
-- [Pinia state](src/store/README.md): temporary UI state in `runtime`, saved preferences in `setting`.
+[MIT License](LICENSE) · [Changelog](CHANGELOG.md) · [Issues](https://github.com/XiaoDaiGua-Ray/ray-template/issues)

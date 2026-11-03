@@ -107,19 +107,22 @@
     "vue-eslint-parser": "10.4.1",
     "vue-tsc": "3.3.14"
   },
-  "description": "Vue 3 + TypeScript + Vite admin template with Naive UI, Pinia and a repository engineering harness.",
+  "description": "Ray Template is an open-source Vue 3 admin dashboard template built with TypeScript (TSX), Vite and Naive UI. Includes role-based routing, responsive layouts and data tables.",
   "main": "index.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/XiaoDaiGua-Ray/xiaodaigua-ray.github.io.git"
+    "url": "git+https://github.com/XiaoDaiGua-Ray/ray-template.git"
   },
   "keywords": [
     "ray-template",
-    "vue3-tsx-vite-pinia",
-    "ray template",
-    "vite",
+    "admin-dashboard",
+    "admin-template",
     "vue3",
-    "admin template",
+    "typescript",
+    "tsx",
+    "vite",
+    "naive-ui",
+    "pinia",
     "中后台模板"
   ],
   "license": "MIT",
@@ -128,8 +131,8 @@
     "url": "https://github.com/XiaoDaiGua-Ray"
   },
   "bugs": {
-    "url": "https://github.com/XiaoDaiGua-Ray/xiaodaigua-ray.github.io/issues"
+    "url": "https://github.com/XiaoDaiGua-Ray/ray-template/issues"
   },
-  "homepage": "https://github.com/XiaoDaiGua-Ray/xiaodaigua-ray.github.io#readme",
+  "homepage": "https://xiaodaigua-ray.github.io/ray-template/",
   "packageManager": "pnpm@12.16.1"
 }

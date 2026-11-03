@@ -17,7 +17,7 @@ Ray Template 是前端中后台模板，包含可运行的组件与路由示例�
 | 全局状态       | `src/store/modules`、`src/store/hooks`                                      | [Store 文档](../src/store/README.md)，持久化配置使用 `pick`/`omit`                 |
 | 请求与接口     | `src/api`、`src/axios`                                                      | [请求文档](../src/axios/README.md)，请求/响应拦截器分开注册                        |
 | 演示接口       | `mock/demo`、`src/demo-data`                                                | `vite-plugin-mock-dev-server`，生产环境按实际后端切换                              |
-| 通用组件       | `src/components/base`、`src/components/pro`                                 | 组件、props、types、hook、样式放在同一功能目录                                     |
+| 通用组件       | `src/components`                                                            | 组件、props、types、hook、样式放在同一功能目录                                     |
 | 模板绑定组件   | `src/app-components`                                                        | [组件说明](../src/app-components/README.md)                                        |
 | 公共工具       | `src/utils`                                                                 | [分包、兼容入口和测试](../src/utils/README.md)                                     |
 | 组合式函数     | `src/hooks/web`、`template`、`components`                                   | [19 个 Hook 的示例与生命周期](../src/hooks/README.md)，回归测试在 `__test__/hooks` |
@@ -52,3 +52,11 @@ Ray Template 是前端中后台模板，包含可运行的组件与路由示例�
 | [测试](../tsconfig.test.json) | `__test__` 与引用源码，加载 Happy DOM 和 Node 类型 |
 
 `pnpm typecheck` 通过 `vue-tsc --build` 检查三个项目，增量缓存存放于 `node_modules/.cache/ray-template/`。需要完整重查时使用 `pnpm exec vue-tsc --build --force`。单独检查应用或测试可用 `pnpm exec vue-tsc -p tsconfig.app.json` 或 `pnpm exec vue-tsc -p tsconfig.test.json`，Node 配置可用 `pnpm exec tsc -p tsconfig.node.json`。
+
+## Deployment and search discovery
+
+`pnpm build` 生成 `dist/production`；将该目录的内容部署到 `vite.custom.config.ts` 中 `base` 对应的路径。默认路径为 `/ray-template/`，部署在域名根目录时改用 `/`。
+
+官方 GitHub Pages 部署会设置 `RAY_TEMPLATE_SITE_ORIGIN=https://xiaodaigua-ray.github.io`。如需让自己的公开部署被搜索引擎检索，在生产构建中设置该变量为实际站点源地址，例如 `https://example.com`，路径由 Vite 的 `base` 提供。在 fork 的 GitHub Actions 中可以使用同名的仓库变量。未设置时，构建输出 `noindex`，适合预览和内部部署。
+
+公开构建在 HTML 中输出页面描述、规范链接（canonical）和分享预览，并生成 `sitemap.xml`。站点地图只列出公开首页；登录后的 hash 路由仍用作交互演示。可在 [Google Search Console](https://search.google.com/search-console/about) 提交部署路径下的 sitemap。若管理整个域名，也可从域名根目录的 `/robots.txt` 指向 sitemap；子目录里的 `robots.txt` 不会被识别。
