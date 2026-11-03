@@ -25,29 +25,22 @@ export default defineComponent({
       return getNaiveLocales(key)
     })
 
-    /**
-     *
-     * @description
-     * 在渲染作用域内创建全局提示实例，使离散提示与当前主题和语言保持一致。
-     */
-    const discreteApi = () => {
-      const { message, notification, dialog, loadingBar } = createDiscreteApi(
-        ['message', 'dialog', 'notification', 'loadingBar'],
-        {
-          configProviderProps: computed(() => ({
-            theme: getAppTheme.value ? darkTheme : null,
-            themeOverrides: getPrimaryColorOverride.value,
-            locale: localePackage.value.locale,
-            dateLocale: localePackage.value.dateLocal,
-          })),
-        },
-      )
+    // 离散 API 自行挂载 Vue 应用；配置响应式更新，切换主题时无需在 render 中重新挂载。
+    const { message, notification, dialog, loadingBar, unmount } =
+      createDiscreteApi(['message', 'dialog', 'notification', 'loadingBar'], {
+        configProviderProps: computed(() => ({
+          theme: getAppTheme.value ? darkTheme : null,
+          themeOverrides: getPrimaryColorOverride.value,
+          locale: localePackage.value.locale,
+          dateLocale: localePackage.value.dateLocal,
+        })),
+      })
 
-      window.$dialog = dialog // 注入 `dialog`
-      window.$message = message // 注入 `message`
-      window.$loadingBar = loadingBar // 注入 `loadingBar`
-      window.$notification = notification // 注入 `notification`
-    }
+    window.$dialog = dialog
+    window.$message = message
+    window.$loadingBar = loadingBar
+    window.$notification = notification
+    onScopeDispose(unmount)
 
     expose()
 
@@ -55,13 +48,11 @@ export default defineComponent({
       getPrimaryColorOverride,
       localePackage,
       getAppTheme,
-      discreteApi,
     }
   },
   render() {
     const {
       $slots: { default: slotDefault },
-      discreteApi,
     } = this
     const { getPrimaryColorOverride, getAppTheme, localePackage } = this
 
@@ -79,7 +70,6 @@ export default defineComponent({
                 <NNotificationProvider>
                   <NGlobalStyle />
                   {slotDefault?.()}
-                  {discreteApi()}
                 </NNotificationProvider>
               </NModalProvider>
             </NDialogProvider>

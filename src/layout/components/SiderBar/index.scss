@@ -3,15 +3,11 @@
   padding: 0 $layoutRouterViewContainer;
   display: flex;
   align-items: center;
+  border-bottom: 1px solid var(--r-line);
 
   > .layout-header__method {
     width: 100%;
   }
-}
-
-.layout-header {
-  border-bottom: 1px solid var(--r-line);
-  box-shadow: none;
 
   .n-breadcrumb {
     font-size: 13px;

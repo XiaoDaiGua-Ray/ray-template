@@ -1,11 +1,11 @@
 .r-menu__logo {
   width: 100%;
   height: $layoutHeaderHeight;
+  flex-shrink: 0;
   box-sizing: border-box;
   border: 0;
-  border-bottom: 1px solid var(--r-line);
   color: var(--r-text);
-  background: inherit;
+  background: transparent;
   font-size: 16px;
   text-align: left;
   padding: 0 18px 0 24px;
@@ -15,31 +15,28 @@
   align-items: center;
   gap: 8px 12px;
   font-weight: 650;
-  overflow: hidden;
 
   &.r-menu__logo-url {
-    position: sticky;
-    top: 0;
     cursor: pointer;
-    background-color: inherit;
-    z-index: 20;
+  }
+
+  &.r-menu__logo--collapsed {
+    padding-inline: 8px;
   }
 
   & .r-menu__logo-title {
-    opacity: 0;
     display: none;
     flex: 1;
+    min-width: 0;
     @include overflowEllipsis;
 
     &.r-menu__logo-title--open {
-      opacity: 1;
       display: inline-block;
     }
   }
 }
 
 .r-menu__logo-initial {
-  color: var(--r-theme-primary-color);
   font-size: 18px;
   font-weight: 600;
 }

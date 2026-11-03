@@ -1,14 +1,11 @@
 .r-modal.n-card.r-modal__preset-card--fullscreen {
-  width: 100%;
+  inline-size: 100%;
+  block-size: 100dvh;
 
-  // 当设置全屏时，启用滚动
-  & .n-card__content {
-    overflow: scroll;
-    max-height: calc(
-      var(--html-height) - var(--n-padding-bottom) - var(
-          --n-padding-bottom
-        ) - var(--n-padding-top)
-    );
+  > .n-card-content {
+    min-block-size: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
   }
 }
 

@@ -5,10 +5,12 @@ $menuTagWrapperWidth: 76px;
   display: flex;
   align-items: center;
   padding: 6px 0;
+  border-bottom: 1px solid var(--r-line);
+  background: var(--r-surface);
 
   & .menu-tag-space {
     width: calc(100% - $space * 2);
-    padding: 0px 18px;
+    padding: 0px $layoutRouterViewContainer;
 
     & .menu-tag-wrapper {
       width: calc(100% - $space * 2 - $menuTagWrapperWidth);
@@ -23,6 +25,10 @@ $menuTagWrapperWidth: 76px;
 .menu-tag .menu-tag__btn {
   border-radius: 7px;
   font-weight: 500;
+
+  &.n-button--primary-type {
+    color: var(--r-selected-text);
+  }
 
   .n-button__icon {
     width: var(--n-icon-size);
@@ -39,14 +45,11 @@ $menuTagWrapperWidth: 76px;
   }
 }
 
-.r-template--light,
-.r-template--dark {
-  .menu-tag__btn .menu-tag__btn-icon {
-    border-radius: 2px;
+.menu-tag__btn .menu-tag__btn-icon {
+  border-radius: 2px;
 
-    &:hover {
-      background-color: var(--n-color-hover);
-    }
+  &:hover {
+    background-color: var(--n-color-hover);
   }
 }
 
@@ -62,12 +65,13 @@ $menuTagWrapperWidth: 76px;
   animation: elementRotate 0.8s linear infinite;
 }
 
-.menu-tag {
-  border-bottom: 1px solid var(--r-line);
-  box-shadow: none;
-  background: var(--r-surface);
-}
-
 .override-button__menu-tag {
   padding: 0 6px;
+}
+
+@media (forced-colors: active) {
+  .menu-tag__btn.n-button--primary-type {
+    outline: 1px solid Highlight;
+    outline-offset: -2px;
+  }
 }

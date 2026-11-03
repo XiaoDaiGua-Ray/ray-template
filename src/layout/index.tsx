@@ -68,11 +68,15 @@ export default defineComponent({
     )
     const tabs = () =>
       getMenuTagSwitch.value ? (
-        <div ref={tagsRef}>{slots.tabs?.() ?? <FeatureWrapper />}</div>
+        <div ref={tagsRef} class="r-layout-tabs-region">
+          {slots.tabs?.() ?? <FeatureWrapper />}
+        </div>
       ) : null
     const footer = () =>
       getCopyrightSwitch.value ? (
-        <div ref={footerRef}>{slots.footer?.() ?? <FooterWrapper />}</div>
+        <div ref={footerRef} class="r-layout-footer-region">
+          {slots.footer?.() ?? <FooterWrapper />}
+        </div>
       ) : null
 
     return () => {
@@ -128,6 +132,7 @@ export default defineComponent({
                   : void 0
               }
               nativeScrollbar={false}
+              contentClass="r-layout-content-scroll"
             >
               {!config.fixedHeader ? (
                 <>

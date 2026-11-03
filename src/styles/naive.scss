@@ -1,38 +1,5 @@
-// layout content 区域默认开启继承宽高，避免 global loading 丢失高度
-.r-layout-full__viewer-content .n-spin-container,
-.r-layout-full__viewer-content .n-spin-container .n-spin-content {
-  width: 100%;
-  height: 100%;
-}
-
-// 手动设置 AppMenu Item Header 样式，兼容 extra 的情况
-.r-menu--app
-  .n-menu-item-content.n-menu-item-content--selected
-  .n-menu-item-content-header,
-.r-menu--app .n-menu-item-content .n-menu-item-content-header {
-  display: flex;
-  gap: 0 6px;
-  align-items: center;
-}
-
-// 调整自定义 AppMenu 样式
-.r-menu--app {
-  // 手动设置 label 宽度，兼容 extra 的情况
-  .n-menu-item-content-header .n-ellipsis {
-    width: calc(100% - 41px);
-  }
-
-  .n-menu-item-content-header__extra {
-    margin-right: 8px;
-  }
-}
-
-// 手动设置 NDatePicker, NInputNumber 样式
+// 表单类控件沿用模板的铺满宽度约定，组件专属覆盖放在各自目录。
 .n-date-picker,
 .n-input-number {
   width: 100%;
-}
-
-.n-flex.flex-vertical {
-  height: 100%;
 }

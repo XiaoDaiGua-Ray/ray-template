@@ -77,6 +77,7 @@ export default defineComponent({
         size="large"
         themeOverrides={themeOverridesSpin}
         class={[
+          'layout-content-spin',
           layoutContentMaximize
             ? 'r-layout-full__viewer-content--maximize'
             : null,

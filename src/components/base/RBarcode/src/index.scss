@@ -24,12 +24,12 @@
 
 .r-barcode-spin,
 .r-barcode-spin .n-spin-content {
-  width: max-content !important;
-  height: max-content !important;
+  width: max-content;
+  height: max-content;
 }
 
 .r-barcode-spin:has(.r-barcode-container),
 .r-barcode-spin:has(.r-barcode-container) .n-spin-content {
-  width: 100% !important;
-  height: 100% !important;
+  width: 100%;
+  height: 100%;
 }

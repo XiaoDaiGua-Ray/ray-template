@@ -1,3 +1,4 @@
+import './LayoutSettings.scss'
 import { useI18n } from '@/hooks'
 import { useSettingActions, useSettingGetters } from '@/store'
 import { getDefaultSettingConfig } from '@/store/modules/setting/constant'
@@ -29,14 +30,13 @@ export default defineComponent({
         {props.showDescription ? (
           <p class="r-layout-settings__hint">{text('description')}</p>
         ) : null}
-        <NFlex wrap={false} class="r-layout-presets">
+        <div class="r-layout-presets">
           {modes.map((mode) => (
-            <NButton
+            <button
+              type="button"
               class="r-layout-preset"
               key={mode}
               aria-pressed={getLayoutConfig.value.mode === mode}
-              type={getLayoutConfig.value.mode === mode ? 'primary' : 'default'}
-              secondary
               onClick={() => update({ mode })}
             >
               <span
@@ -53,9 +53,12 @@ export default defineComponent({
                   ✓
                 </span>
               ) : null}
-            </NButton>
+            </button>
           ))}
-        </NFlex>
+          <p class="r-layout-settings__hint">
+            {text(`modeHint.${getLayoutConfig.value.mode}`)}
+          </p>
+        </div>
         <NForm labelPlacement="top" showFeedback={false}>
           <NFormItem label={text('contentWidth')}>
             <NSelect

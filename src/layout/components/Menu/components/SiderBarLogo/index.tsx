@@ -5,8 +5,6 @@ import { useSettingGetters } from '@/store'
 import { isValueType, renderNode } from '@/utils'
 import { NEllipsis, NTooltip } from 'naive-ui'
 
-export const SIDER_BAR_LOGO = shallowRef<HTMLElement>()
-
 export default defineComponent({
   name: 'SiderBarLogo',
   props: {
@@ -67,9 +65,14 @@ export default defineComponent({
       <button
         type="button"
         disabled={!sideBarLogo?.url}
-        class={['r-menu__logo', sideBarLogo?.url ? 'r-menu__logo-url' : null]}
+        class={[
+          'r-menu__logo',
+          {
+            'r-menu__logo-url': sideBarLogo.url,
+            'r-menu__logo--collapsed': collapsed,
+          },
+        ]}
         onClick={sideBarLogoClick.bind(this)}
-        ref={SIDER_BAR_LOGO}
       >
         {sideBarLogo?.icon ? (
           collapsed ? (

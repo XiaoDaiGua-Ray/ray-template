@@ -1,4 +1,5 @@
 :root {
+  --r-bezier: cubic-bezier(0.4, 0, 0.2, 1);
   --r-primary-text: var(--r-theme-primary-color);
   --r-selected-text: var(--r-theme-primary-color);
   --r-canvas: #f5f7fb;
@@ -63,9 +64,4 @@
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
-}
-
-.r-template--dark .menu-tag .menu-tag__btn.n-button--primary-type,
-.r-template--dark .r-layout-settings .r-layout-preset[aria-pressed='true'] {
-  color: var(--r-text);
 }

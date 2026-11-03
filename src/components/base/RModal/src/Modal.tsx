@@ -41,7 +41,7 @@ export default defineComponent({
           R_MODAL_CLASS,
           isFullscreenCardType ? FULLSCREEN_CARD_TYPE_CLASS : '',
         ]}
-        style={[cssVars, isFullscreenCardType ? `height: 100vh` : '']}
+        style={cssVars}
         preset={preset}
         {...{
           id: uuidEl,

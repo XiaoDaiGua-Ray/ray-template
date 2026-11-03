@@ -1,9 +1,14 @@
 {
   "title": "Layout playground",
-  "description": "Changes apply immediately and are saved automatically. Mixed navigation shows the current section’s children. Small screens use a drawer while retaining desktop preferences.",
+  "description": "Changes apply immediately and are saved automatically. Small screens use a menu drawer and keep your desktop layout preference.",
   "side": "Sidebar",
   "top": "Top",
   "mixed": "Mixed",
+  "modeHint": {
+    "side": "All menus live in the sidebar. Expand a section to see its submenus.",
+    "top": "All menus are available from the top bar. Submenus open in dropdowns.",
+    "mixed": "The top bar shows first-level menus. The sidebar appears when the current section has visible submenus."
+  },
   "contentWidth": "Content width",
   "fluid": "Fluid",
   "fixed": "Centered",

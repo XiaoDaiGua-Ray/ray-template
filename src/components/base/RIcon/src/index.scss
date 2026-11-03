@@ -6,6 +6,7 @@
   outline: none;
   text-align: center;
   display: inline-flex;
+  flex-shrink: 0;
   justify-content: center;
   align-items: center;
   color: var(--r-icon-color);
@@ -14,6 +15,7 @@
   cursor: var(--r-icon-cursor);
 
   & svg[RIconAttribute='r-icon'] {
+    display: block;
     width: var(--r-icon-width);
     height: var(--r-icon-height);
     fill: currentColor;

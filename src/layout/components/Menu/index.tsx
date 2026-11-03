@@ -10,7 +10,7 @@ import {
 } from '@/store'
 import type { AppMenuOption, NaiveMenuOptions } from '@/types'
 import { positionSelectedMenuItem } from '@/utils'
-import { NDrawer, NLayoutSider, NMenu } from 'naive-ui'
+import { NDrawer, NLayoutContent, NLayoutSider, NMenu } from 'naive-ui'
 import type { MenuInst } from 'naive-ui'
 import type { PropType } from 'vue'
 import SiderBarLogo from './components/SiderBarLogo'
@@ -25,7 +25,7 @@ export default defineComponent({
     const menuRef = shallowRef<MenuInst | null>(null)
     const { changeMenuModelValue, collapsedMenu, updateMenuState } =
       useMenuActions()
-    const { getMenuConfig } = useSettingGetters()
+    const { getAppTheme, getMenuConfig } = useSettingGetters()
     const { getMenuOptions, getCollapsed, getMenuKey } = useMenuGetters()
     const { globalDrawerValue } = useRuntimeGetters()
     const { setRuntimeState } = useRuntimeActions()
@@ -35,6 +35,14 @@ export default defineComponent({
         else setRuntimeState('globalDrawerValue', false)
       },
     })
+    const menuWidth = computed(() =>
+      isTabletOrSmaller.value
+        ? Math.min(getMenuConfig.value.menuWidth, width.value - 32)
+        : getMenuConfig.value.menuWidth,
+    )
+    const collapsed = computed(
+      () => !isTabletOrSmaller.value && getCollapsed.value,
+    )
 
     watch(
       [getMenuKey, () => props.options, menuRef],
@@ -56,42 +64,56 @@ export default defineComponent({
         collapseMode={getMenuConfig.value.collapsedMode}
         collapsedWidth={getMenuConfig.value.collapsedWidth}
         onUpdateCollapsed={collapsedMenu}
-        width={
-          isTabletOrSmaller.value
-            ? Math.min(getMenuConfig.value.menuWidth, width.value - 32)
-            : getMenuConfig.value.menuWidth
-        }
-        nativeScrollbar={getMenuConfig.value.nativeScrollbar}
-        ref={LAYOUT_SIDER_REF}
-        collapsed={isTabletOrSmaller.value ? false : getCollapsed.value}
+        width={menuWidth.value}
+        contentClass="app-menu__body"
+        contentStyle={{ overflow: 'clip' }}
+        collapsed={collapsed.value}
         inverted={getMenuConfig.value.inverted}
       >
         {props.showLogo && getMenuConfig.value.menuSiderBarLogo ? (
-          <SiderBarLogo collapsed={getCollapsed.value} />
+          <SiderBarLogo collapsed={collapsed.value} />
         ) : null}
-        <NMenu
-          ref={menuRef}
-          class="r-menu--app"
-          keyField="fullPath"
-          value={getMenuKey.value}
-          options={
-            (props.options ??
-              getMenuOptions.value) as unknown as NaiveMenuOptions[]
+        <NLayoutContent
+          class="app-menu__scroll"
+          nativeScrollbar={getMenuConfig.value.nativeScrollbar}
+          themeOverrides={
+            getMenuConfig.value.inverted && !getAppTheme.value
+              ? {
+                  peers: {
+                    Scrollbar: {
+                      color: 'rgb(255 255 255 / 30%)',
+                      colorHover: 'rgb(255 255 255 / 40%)',
+                    },
+                  },
+                }
+              : void 0
           }
-          indent={getMenuConfig.value.collapsedIndent}
-          collapsed={isTabletOrSmaller.value ? false : getCollapsed.value}
-          collapsedIconSize={getMenuConfig.value.collapsedIconSize}
-          collapsedWidth={getMenuConfig.value.collapsedWidth}
-          onUpdateValue={(key, option) => {
-            changeMenuModelValue(key, option as unknown as AppMenuOption)
+          ref={LAYOUT_SIDER_REF}
+        >
+          <NMenu
+            ref={menuRef}
+            class="r-menu--app"
+            keyField="fullPath"
+            value={getMenuKey.value}
+            options={
+              (props.options ??
+                getMenuOptions.value) as unknown as NaiveMenuOptions[]
+            }
+            indent={getMenuConfig.value.collapsedIndent}
+            collapsed={collapsed.value}
+            collapsedIconSize={getMenuConfig.value.collapsedIconSize}
+            collapsedWidth={getMenuConfig.value.collapsedWidth}
+            onUpdateValue={(key, option) => {
+              changeMenuModelValue(key, option as unknown as AppMenuOption)
 
-            if (isTabletOrSmaller.value)
-              setRuntimeState('globalDrawerValue', false)
-          }}
-          accordion={getMenuConfig.value.accordion}
-          iconSize={getMenuConfig.value.iconSize}
-          inverted={getMenuConfig.value.inverted}
-        />
+              if (isTabletOrSmaller.value)
+                setRuntimeState('globalDrawerValue', false)
+            }}
+            accordion={getMenuConfig.value.accordion}
+            iconSize={getMenuConfig.value.iconSize}
+            inverted={getMenuConfig.value.inverted}
+          />
+        </NLayoutContent>
       </NLayoutSider>
     )
 
@@ -99,6 +121,7 @@ export default defineComponent({
       isTabletOrSmaller.value ? (
         <NDrawer
           class="app-menu__drawer"
+          width={menuWidth.value}
           show={globalDrawerValue.value}
           onUpdateShow={(value) => setRuntimeState('globalDrawerValue', value)}
           placement="left"

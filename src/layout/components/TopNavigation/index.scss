@@ -1,0 +1,17 @@
+.r-layout-top-navigation {
+  display: flex;
+  align-items: center;
+  min-inline-size: 0;
+  padding-inline: 16px;
+  border-block-end: 1px solid var(--r-line);
+  background: var(--r-surface);
+
+  .r-menu__logo {
+    inline-size: 200px;
+  }
+
+  .n-menu {
+    flex: 1;
+    min-inline-size: 0;
+  }
+}

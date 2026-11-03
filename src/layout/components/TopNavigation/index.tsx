@@ -1,3 +1,4 @@
+import './index.scss'
 import { useI18n } from '@/hooks'
 import { useMenuActions, useMenuGetters, useSettingGetters } from '@/store'
 import type { AppMenuOption, NaiveMenuOptions } from '@/types'
