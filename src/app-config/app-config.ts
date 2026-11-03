@@ -1,4 +1,5 @@
-import type { AppMenuConfig, PreloadingConfig } from '@/types'
+import type { AppMenuConfig } from '@/types/modules/app-config'
+import type { PreloadingConfig } from '@/types/modules/vite-custom-config'
 import type { MessageProviderProps } from 'naive-ui'
 
 /**

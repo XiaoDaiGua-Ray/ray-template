@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ESNext"],
+    "types": ["node"],
+    "tsBuildInfoFile": "./.ai-local/tsconfig.node.tsbuildinfo"
+  },
+  "include": ["*.config.ts", "vite-helper/**/*.ts", "mock/**/*.ts"]
+}

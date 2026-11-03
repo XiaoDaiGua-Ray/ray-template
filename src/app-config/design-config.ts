@@ -1,4 +1,4 @@
-import type { AppTheme } from '@/types'
+import type { AppTheme } from '@/types/modules/vite-custom-config'
 
 /** 明暗主题共用的菜单尺寸与前景色配置。 */
 const menuThemeOverrides = {

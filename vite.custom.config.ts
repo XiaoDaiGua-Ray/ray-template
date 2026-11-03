@@ -1,5 +1,5 @@
 import { fileURLToPath, URL } from 'node:url'
-import type { AppConfigExport } from '@/types'
+import type { AppConfigExport } from '@/types/modules/vite-custom-config'
 import type { BuildOptions } from 'vite'
 import { PRE_LOADING_CONFIG } from './src/app-config/app-config.ts'
 import { APP_THEME } from './src/app-config/design-config.ts'

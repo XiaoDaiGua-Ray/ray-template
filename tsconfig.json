@@ -1,39 +1,8 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "useDefineForClassFields": true,
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "strict": true,
-    "newLine": "LF",
-    "jsx": "preserve",
-    "sourceMap": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "allowImportingTsExtensions": true,
-    "esModuleInterop": true,
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "skipLibCheck": true,
-    "jsxImportSource": "vue",
-    "paths": {
-      "@": ["./src"],
-      "@/*": ["./src/*"],
-      "@api": ["./src/api"],
-      "@api/*": ["./src/api/*"],
-      "@images": ["./src/assets/images"],
-      "@images/*": ["./src/assets/images/*"],
-      "@mock/*": ["./mock/*"],
-      "@mock": ["./mock"]
-    },
-    "types": ["node", "vite/client", "vitest/globals", "naive-ui/volar"]
-  },
-  "include": [
-    "*.config.ts",
-    "vite-helper/**/*.ts",
-    "package.json",
-    "./unplugin/**/*",
-    "src/**/*",
-    "mock/**/*",
-    "__test__/**/*"
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" },
+    { "path": "./tsconfig.test.json" }
   ]
 }

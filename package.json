@@ -11,7 +11,7 @@
     "dev": "pnpm icons:generate && vite",
     "icons:generate": "node scripts/icons.mjs",
     "icons:check": "node scripts/icons.mjs --check",
-    "typecheck": "pnpm icons:check && vue-tsc --noEmit",
+    "typecheck": "pnpm icons:check && vue-tsc --build",
     "build": "pnpm icons:generate && pnpm typecheck && vite build",
     "preview": "vite preview",
     "dev-build": "pnpm icons:generate && pnpm typecheck && vite build --mode development",

@@ -1,5 +1,4 @@
-import type { IconName } from '@/icons'
-import type { Recordable } from '@/types'
+import type { IconName } from '@/icons/manifest'
 import type { GlobalThemeOverrides } from 'naive-ui'
 import type {
   AliasOptions,
@@ -8,6 +7,7 @@ import type {
   UserConfigExport,
 } from 'vite'
 import type { VNode, VNodeChild } from 'vue'
+import type { Recordable } from './helper'
 
 export interface LayoutSideBarLogo {
   icon?: IconName | VNode

@@ -136,6 +136,14 @@ Pinia 设置沿用原持久化 key，旧裸 Logo 名称在读取时迁移；锁�
 
 公共 chunk 大小、ContentWrapper 静态/动态导入与 Mock CORS 序列化提示仍保留，未降低检查严格度或调高告警门槛。
 
+## 2026-11-03 TypeScript 项目配置拆分
+
+旧配置只在 `vue-tsc` 命令行传入 `--noEmit`。直接读取项目配置时，`allowImportingTsExtensions` 会触发 TS5096。现在共享配置声明 `noEmit`，由根项目分别引用应用、Node 与测试配置。Vue JSX 和自动导入声明由应用及测试配置加载。TypeScript 6 的 `DOM` 已包含可迭代声明，Vite 继续通过 `build.sourcemap` 控制开发和生产的 sourcemap。
+
+依赖与锁文件沿用当前版本。完整命令和项目归属见 [TypeScript 项目配置](ai-development.md#typescript-项目配置)。
+
+在 Node.js 26.13.0 与 pnpm 12.16.1 下，`pnpm check` 通过类型、ESLint、Prettier、59 个测试文件的 240 个用例和生产构建。`pnpm dev-build` 通过，并生成开发版 JS sourcemap。通过 TypeScript 服务核对了应用入口、Vite 配置、Mock 文件和测试文件各自使用的项目。
+
 ## 参考资料
 
 - [Node.js 26.13.0 LTS](https://nodejs.org/en/blog/release/v26.13.0)

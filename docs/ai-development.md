@@ -26,7 +26,7 @@ Codex 自动读取根目录 `AGENTS.md`；Cursor、Copilot 和 Claude 的项目�
 | 命令                                                    | 用途与结果                                                           |
 | ------------------------------------------------------- | -------------------------------------------------------------------- |
 | `pnpm env:check`                                        | 检查 Node、pnpm 和依赖安装状态，失败时返回非零退出码并提示修复方式   |
-| `pnpm typecheck`                                        | 检查应用、测试和 Vite 配置类型，不输出构建文件                       |
+| `pnpm typecheck`                                        | 检查应用、测试、Node 构建配置和 Mock 类型，不生成 JS 或声明文件      |
 | `pnpm lint`                                             | 检查代码与 Vue 规则，不改文件；warning 也会失败                      |
 | `pnpm format:check`                                     | 检查格式，不改文件                                                   |
 | `pnpm lint:fix`                                         | 显式自动修复可修复的代码规范问题                                     |
@@ -42,6 +42,20 @@ Codex 自动读取根目录 `AGENTS.md`；Cursor、Copilot 和 Claude 的项目�
 | `pnpm check`                                            | 依次运行环境、类型、lint、格式、单测和生产构建，任一步失败即停止     |
 
 命令不接收业务参数；Vite/Vitest 参数使用对应 CLI 选项。日志来自各工具，退出码 `0` 表示本项检查通过。`pnpm check` 的生产产物写入 `dist/production`，需要保留源码之外的临时证据时放入 `.ai-local/`。
+
+## TypeScript 项目配置
+
+根目录的 [tsconfig.json](../tsconfig.json) 用项目引用组织三个检查单元。严格模式、模块解析和 TypeScript 路径别名集中在 [tsconfig.base.json](../tsconfig.base.json)。Vite 的运行时别名在 `vite.custom.config.ts`，更改别名时同步更新两处。
+
+| 配置                                        | 检查范围                                           | 环境                                            |
+| ------------------------------------------- | -------------------------------------------------- | ----------------------------------------------- |
+| [tsconfig.app.json](../tsconfig.app.json)   | `src` 和自动生成的 Vue 声明                        | 浏览器、Vue JSX 和 Vite 客户端                  |
+| [tsconfig.node.json](../tsconfig.node.json) | Vite、Vitest、UnoCSS 配置，`vite-helper` 和 `mock` | Node.js                                         |
+| [tsconfig.test.json](../tsconfig.test.json) | `__test__` 及测试所引用的源码                      | 应用类型、Happy DOM、Node.js 和 Vitest 全局类型 |
+
+项目的 `types` 列表控制自动加载的环境声明。依赖也能通过自身声明引入其他类型，例如 `vite-svg-loader` 的声明引用 Vite 的 Node 类型。
+
+`pnpm typecheck` 通过 `vue-tsc --build` 检查全部项目，增量缓存存放在 `.ai-local/`。需要从头检查时运行 `pnpm exec vue-tsc --build --force`。单独检查应用或测试可用 `pnpm exec vue-tsc -p tsconfig.app.json` 或 `pnpm exec vue-tsc -p tsconfig.test.json`，Node 配置可用 `pnpm exec tsc -p tsconfig.node.json`。VS Code 应通过工作区的 TypeScript 版本读取这些配置。
 
 ## 给 AI 的任务示例
 

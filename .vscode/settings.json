@@ -54,9 +54,8 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "alias-skip.mappings": {
     "@": "/src",
-    "@use-utils": "/src/utils",
-    "@use-api": "/src/axios/api",
-    "@use-images": "/src/assets/images",
+    "@api": "/src/api",
+    "@images": "/src/assets/images",
     "@mock": "/mock"
   },
   "alias-skip.allowedsuffix": ["ts", "tsx"],
