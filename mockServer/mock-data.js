@@ -93,7 +93,7 @@ const getPersonList = defineMock({
 		}
 	}
 });
-// mock-data-1793688209445.js
+// mock-data-1793689420684.js
 const mockList = [[person_mock_exports, "mock/demo/person.mock.ts"]].map(([mod, filepath]) => processRawData(mod.default || mod, filepath));
-var mock_data_1793688209445_default = processMockData(mockList);
-export { mock_data_1793688209445_default as default };
+var mock_data_1793689420684_default = processMockData(mockList);
+export { mock_data_1793689420684_default as default };
