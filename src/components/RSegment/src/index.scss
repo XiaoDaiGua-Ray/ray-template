@@ -1,3 +1,30 @@
 .r-segment {
   width: var(--r-segment-width);
+  max-inline-size: 100%;
+}
+
+.r-segment--intrinsic {
+  .n-tabs-nav {
+    overflow-x: auto;
+  }
+
+  .n-tabs-rail {
+    inline-size: max-content;
+    min-inline-size: 100%;
+  }
+
+  .n-tabs-tab-wrapper {
+    flex: 0 0 auto;
+  }
+
+  // 选中前后字重相同，避免 intrinsic rail 触发 Naive UI 的无动画 resize 同步。
+  .n-tabs-tab {
+    font-weight: var(--n-font-weight-strong);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .r-segment .n-tabs-rail .n-tabs-capsule {
+    transition-duration: 0s;
+  }
 }

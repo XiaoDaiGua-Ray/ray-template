@@ -92,7 +92,10 @@ export default defineComponent({
       <NTabs
         {...($props as TabsProps)}
         style={[cssVars]}
-        class="r-segment"
+        class={[
+          'r-segment',
+          { 'r-segment--intrinsic': this.width === 'fitContent' },
+        ]}
         type="segment"
         animated
         themeOverrides={Object.assign({}, themeOverrides, _themeOverrides)}
