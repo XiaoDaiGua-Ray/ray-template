@@ -12,6 +12,6 @@
 
   & .chart--container {
     width: 100%;
-    height: 500px;
+    height: clamp(300px, 55vh, 500px);
   }
 }

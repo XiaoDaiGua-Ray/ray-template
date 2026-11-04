@@ -1,5 +1,5 @@
-import { useHookPlusRequest } from '@/axios'
 import { RForm, useForm } from '@/components'
+import { useI18n } from '@/hooks'
 import {
   NButton,
   NCard,
@@ -11,186 +11,201 @@ import {
   NInputNumber,
   NRadio,
   NRadioGroup,
-  NSwitch,
-  NText,
 } from 'naive-ui'
+import DemoPage from '../components/DemoPage'
+import DemoResult from '../components/DemoResult'
 
 interface FormModel {
   name: string | null
   age: number | null
   gender: string | null
-  date: Date | null
+  date: number | null
   remark: string | null
 }
 
 export default defineComponent({
   name: 'RFormDemo',
   setup() {
-    // 使用以下 hooks 的时候，应该注意调用时机
+    const { t } = useI18n('demoDetails')
+    const rules = computed(() => ({
+      name: {
+        required: true,
+        message: t('form.nameRequired'),
+        trigger: ['blur', 'change'],
+        key: 'name',
+      },
+      age: {
+        required: true,
+        message: t('form.ageRequired'),
+        trigger: ['blur', 'change'],
+        type: 'number' as const,
+        min: 0,
+        max: 120,
+      },
+      date: {
+        required: true,
+        message: t('form.dateRequired'),
+        trigger: ['blur', 'change'],
+        type: 'number' as const,
+      },
+      gender: {
+        required: true,
+        message: t('form.genderRequired'),
+        trigger: 'change',
+      },
+    }))
     const [
       register,
       {
         validate,
         restoreValidation,
-        formRules,
-        reset,
         validateTargetField,
-        formConditionRef,
+        reset,
+        formConditionRef: model,
       },
-    ] = useForm<FormModel>(
-      {
-        name: null,
-        age: null,
-        gender: null,
-        date: null,
-        remark: null,
-      },
-      {
-        name: {
-          required: true,
-          message: '请输入姓名',
-          trigger: ['blur', 'change'],
-          key: 'name',
-        },
-        date: {
-          required: true,
-          message: '请选择日期',
-          trigger: ['blur', 'change'],
-          type: 'number',
-        },
-        gender: {
-          required: true,
-          message: '请选择性别',
-          trigger: 'change',
-        },
-        age: {
-          required: true,
-          message: '请输入年龄',
-          trigger: ['blur', 'change'],
-          type: 'number',
-        },
-      },
-    )
+    ] = useForm<FormModel>({
+      name: null,
+      age: null,
+      gender: null,
+      date: null,
+      remark: null,
+    })
+    const ids = { name: useId(), age: useId(), remark: useId() }
+    const submission = ref<string>()
+    const status = ref('form.waiting')
 
-    const formLoading = ref(false)
+    const submit = async (event: Event) => {
+      event.preventDefault()
 
-    const { run: runHookPlusRequest } = useHookPlusRequest(
-      () => {
-        return new Promise((resolve, reject) => {
-          validate()
-            .then(() => {
-              formLoading.value = true
-
-              setTimeout(() => {
-                window.$message.success('校验成功')
-                resolve(true)
-              }, 500)
-            })
-            .catch(reject)
-            .finally(() => {
-              formLoading.value = false
-            })
-        })
-      },
-      {
-        manual: true,
-      },
-    )
-
-    return {
-      register,
-      formConditionRef,
-      restoreValidation,
-      validate,
-      formRules,
-      validateTargetField,
-      reset,
-      formLoading,
-      runHookPlusRequest,
+      try {
+        await validate()
+        submission.value = JSON.stringify(model.value, null, 2)
+        status.value = 'form.submitted'
+      } catch {
+        submission.value = void 0
+        status.value = 'form.invalid'
+      }
     }
-  },
-  render() {
-    const { formConditionRef } = this
-    const {
-      register,
-      restoreValidation,
-      formRules,
-      validateTargetField,
-      reset,
-      runHookPlusRequest,
-    } = this
 
-    return (
-      <NCard
-        title={() => (
-          <NFlex align="center">
-            <NText>useForm 表单校验</NText>
-            <NSwitch v-model:value={this.formLoading} />
-          </NFlex>
-        )}
-      >
-        {{
-          default: () => (
+    return () => (
+      <DemoPage title={t('form.title')} description={t('form.intro')}>
+        <div class="r-demo-grid">
+          <NCard title={t('form.profile')}>
             <RForm
+              model={model.value}
+              rules={rules.value}
               onRegister={register}
-              rules={formRules()}
-              model={formConditionRef}
-              submitWhenEnter
-              onFinish={() => {
-                window.$message.success('表单提交成功')
-              }}
-              loading={this.formLoading}
+              onSubmit={submit}
             >
-              <NGrid cols={24} xGap={24}>
-                <NFormItemGi label="姓名" path="name" span={12}>
-                  <NInput v-model:value={formConditionRef.name} />
-                </NFormItemGi>
-                <NFormItemGi label="年龄" path="age" span={12}>
-                  <NInputNumber
-                    v-model:value={formConditionRef.age}
-                    showButton={false}
+              <NGrid cols="1 480:2" responsive="self" xGap={16}>
+                <NFormItemGi
+                  label={t('form.name')}
+                  labelProps={{ for: ids.name }}
+                  path="name"
+                >
+                  <NInput
+                    v-model:value={model.value.name}
+                    inputProps={{ id: ids.name }}
                   />
                 </NFormItemGi>
-                <NFormItemGi label="出生日期" path="date" span={12}>
-                  <NDatePicker v-model:value={formConditionRef.date} />
+                <NFormItemGi
+                  label={t('form.age')}
+                  labelProps={{ for: ids.age }}
+                  path="age"
+                >
+                  <NInputNumber
+                    v-model:value={model.value.age}
+                    inputProps={{ id: ids.age }}
+                    min={0}
+                    max={120}
+                  />
                 </NFormItemGi>
-                <NFormItemGi label="性别" path="gender" span={12}>
-                  <NRadioGroup v-model:value={formConditionRef.gender}>
-                    <NRadio value="girl">女</NRadio>
-                    <NRadio value="man">男</NRadio>
+                <NFormItemGi label={t('form.date')} path="date">
+                  <NDatePicker v-model:value={model.value.date} type="date" />
+                </NFormItemGi>
+                <NFormItemGi label={t('form.gender')} path="gender">
+                  <NRadioGroup
+                    v-model:value={model.value.gender}
+                    aria-label={t('form.gender')}
+                  >
+                    <NRadio value="female">{t('form.female')}</NRadio>
+                    <NRadio value="male">{t('form.male')}</NRadio>
                   </NRadioGroup>
                 </NFormItemGi>
-                <NFormItemGi label="备注信息" span={24}>
+                <NFormItemGi
+                  label={t('form.notes')}
+                  labelProps={{ for: ids.remark }}
+                  span={2}
+                >
                   <NInput
                     type="textarea"
-                    v-model:value={formConditionRef.remark}
+                    v-model:value={model.value.remark}
+                    inputProps={{ id: ids.remark }}
                   />
                 </NFormItemGi>
-                <NFormItemGi span={24}>
-                  <NFlex>
-                    <NButton type="info" onClick={() => reset()}>
-                      重置表单为初始状态
-                    </NButton>
-                    <NButton type="warning" onClick={restoreValidation}>
-                      移除校验状态
-                    </NButton>
-                    <NButton
-                      type="primary"
-                      onClick={() => validateTargetField('name')}
-                    >
-                      仅校验姓名字段
-                    </NButton>
-                    <NButton type="primary" onClick={runHookPlusRequest}>
-                      校验
-                    </NButton>
-                  </NFlex>
-                </NFormItemGi>
               </NGrid>
+              <NFlex>
+                <NButton type="primary" attrType="submit">
+                  {t('form.submit')}
+                </NButton>
+                <NButton
+                  onClick={() => {
+                    reset({
+                      name: 'Ray',
+                      age: 28,
+                      gender: 'female',
+                      date: new Date(1998, 6, 12).getTime(),
+                      remark: null,
+                    })
+                    submission.value = void 0
+                    status.value = 'form.waiting'
+                  }}
+                >
+                  {t('form.sample')}
+                </NButton>
+                <NButton
+                  onClick={() => {
+                    void validateTargetField('name')
+                      .then(() => {
+                        status.value = 'form.nameValid'
+                      })
+                      .catch(() => {
+                        status.value = 'form.nameRequired'
+                      })
+                  }}
+                >
+                  {t('form.validateName')}
+                </NButton>
+                <NButton
+                  onClick={() => {
+                    restoreValidation()
+                    status.value = 'form.waiting'
+                  }}
+                >
+                  {t('form.clear')}
+                </NButton>
+                <NButton
+                  onClick={() => {
+                    reset()
+                    submission.value = void 0
+                    status.value = 'form.waiting'
+                  }}
+                >
+                  {t('form.reset')}
+                </NButton>
+              </NFlex>
             </RForm>
-          ),
-          'header-extra': () => '输入表单的时候，试试按下 Enter 键',
-        }}
-      </NCard>
+          </NCard>
+          <NCard title={t('form.payload')}>
+            <DemoResult
+              label={t(status.value)}
+              error={status.value === 'form.invalid'}
+            >
+              <pre>{submission.value ?? t('empty')}</pre>
+            </DemoResult>
+          </NCard>
+        </div>
+      </DemoPage>
     )
   },
 })

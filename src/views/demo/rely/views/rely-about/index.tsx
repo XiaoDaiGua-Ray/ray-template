@@ -1,137 +1,97 @@
 import './index.scss'
-import { NCard, NDescriptions, NDescriptionsItem, NTag } from 'naive-ui'
-
-interface RelyDataOptions {
-  name: string
-  relyVersion: string
-  relyAddress: string
-}
-
-interface TemplateOptions {
-  name: string
-  label: string
-  url?: string
-}
+import { useI18n } from '@/hooks'
+import {
+  NButton,
+  NCard,
+  NFlex,
+  NInput,
+  NRadioButton,
+  NRadioGroup,
+  NTag,
+} from 'naive-ui'
+import DemoPage from '../../../components/DemoPage'
 
 export default defineComponent({
   name: 'RelyAbout',
   setup() {
-    const { pkg } = __APP_CFG__
-    const { dependencies, devDependencies, name, version } = pkg
+    const { t } = useI18n('demoDetails')
+    const { dependencies, devDependencies, name, version } = __APP_CFG__.pkg
+    const groups = { runtime: dependencies, development: devDependencies }
+    const scope = ref<keyof typeof groups>('runtime')
+    const query = ref('')
+    const packages = computed(() =>
+      Object.entries(groups[scope.value]).filter(([pkg]) =>
+        pkg.toLowerCase().includes(query.value.trim().toLowerCase()),
+      ),
+    )
 
-    const columns = [
-      {
-        title: '依赖名称',
-        key: 'name',
-      },
-      {
-        title: '依赖版本',
-        key: 'relyVersion',
-      },
-      {
-        title: '依赖地址',
-        key: 'relyAddress',
-      },
-    ]
-    const dependenciesOptions = ref<RelyDataOptions[]>([])
-    const devDependenciesOptions = ref<RelyDataOptions[]>([])
-
-    const templateOptions = [
-      {
-        name: '项目名称',
-        label: name,
-      },
-      {
-        name: '版本信息',
-        label: version,
-      },
-      {
-        name: '项目地址',
-        label: 'GitHub',
-        url: 'https://github.com/XiaoDaiGua-Ray/ray-template',
-      },
-    ]
-
-    const handleGetRelyData = () => {
-      const _arrayFrom = (obj: object) =>
-        Object.keys(obj).reduce((pre, curr) => {
-          pre.push({
-            name: curr,
-            relyVersion: obj[curr as keyof typeof obj],
-            relyAddress: '',
-          })
-
-          return pre
-        }, [] as RelyDataOptions[])
-
-      dependenciesOptions.value = _arrayFrom(dependencies)
-      devDependenciesOptions.value = _arrayFrom(devDependencies)
-    }
-
-    const handleTagClick = (item: TemplateOptions) => {
-      if (item.url) {
-        window.open(item.url)
-      }
-    }
-
-    onBeforeMount(() => {
-      handleGetRelyData()
-    })
-
-    return {
-      columns,
-      dependenciesOptions,
-      devDependenciesOptions,
-      templateOptions,
-      handleTagClick,
-    }
-  },
-  render() {
-    return (
-      <div class="rely-about">
-        <NCard title="关于项目">
-          ray template 是一个基于: tsx pinia vue3.x vite sass 的中后台解决方案.
-          项目干净与轻巧,
-          已经集成了很多项目中可能需要的搬砖工具可以让你快速起一个相关项目,
-          并且不需要剔除大量无用页面与组件.
-        </NCard>
-        <NCard title="项目信息">
-          <NDescriptions bordered labelPlacement="left">
-            {this.templateOptions.map((curr) => (
-              <NDescriptionsItem key={curr.name} label={curr.name}>
-                <NTag
-                  bordered={false}
-                  type="info"
-                  {...{
-                    onClick: this.handleTagClick.bind(this, curr),
-                  }}
-                  style={[curr.url ? 'cursor: pointer' : '']}
-                >
-                  {curr.label}
-                </NTag>
-              </NDescriptionsItem>
-            ))}
-          </NDescriptions>
-        </NCard>
-        <NCard title="生产依赖">
-          <NDescriptions bordered labelPlacement="left">
-            {this.dependenciesOptions.map((curr) => (
-              <NDescriptionsItem key={curr.name} label={curr.name}>
-                {curr.relyVersion}
-              </NDescriptionsItem>
-            ))}
-          </NDescriptions>
-        </NCard>
-        <NCard title="开发依赖">
-          <NDescriptions bordered labelPlacement="left">
-            {this.devDependenciesOptions.map((curr) => (
-              <NDescriptionsItem key={curr.name} label={curr.name}>
-                {curr.relyVersion}
-              </NDescriptionsItem>
-            ))}
-          </NDescriptions>
-        </NCard>
-      </div>
+    return () => (
+      <DemoPage title={t('about.title')} description={t('about.intro')}>
+        {{
+          actions: () => (
+            <NButton
+              tag="a"
+              {...{
+                href: 'https://github.com/XiaoDaiGua-Ray/ray-template',
+                target: '_blank',
+                rel: 'noreferrer',
+              }}
+              secondary
+            >
+              GitHub
+            </NButton>
+          ),
+          default: () => (
+            <NCard title={name} class="rely-about">
+              {{
+                'header-extra': () => (
+                  <NTag bordered={false} type="info">
+                    v{version}
+                  </NTag>
+                ),
+                default: () => (
+                  <div class="r-demo-card-stack">
+                    <NFlex align="center" justify="space-between">
+                      <NRadioGroup
+                        v-model:value={scope.value}
+                        aria-label={t('about.group')}
+                      >
+                        <NRadioButton value="runtime">
+                          {t('about.runtime')}
+                        </NRadioButton>
+                        <NRadioButton value="development">
+                          {t('about.development')}
+                        </NRadioButton>
+                      </NRadioGroup>
+                      <NInput
+                        class="rely-about__search"
+                        v-model:value={query.value}
+                        placeholder={t('about.search')}
+                        inputProps={{ 'aria-label': t('about.search') }}
+                        clearable
+                      />
+                    </NFlex>
+                    {packages.value.length ? (
+                      <ul class="rely-about__packages">
+                        {packages.value.map(([pkg, installed]) => (
+                          <li key={pkg}>
+                            <code>{pkg}</code>
+                            <NTag size="small" bordered={false}>
+                              {installed}
+                            </NTag>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p role="status">{t('about.noMatch')}</p>
+                    )}
+                  </div>
+                ),
+              }}
+            </NCard>
+          ),
+        }}
+      </DemoPage>
     )
   },
 })

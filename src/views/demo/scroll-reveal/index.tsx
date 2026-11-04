@@ -1,18 +1,27 @@
 import './index.scss'
 import { NCard } from 'naive-ui'
+import DemoPage from '../components/DemoPage'
 
-const ScrollReveal = defineComponent({
+export default defineComponent({
   name: 'ScrollReveal',
   render() {
     return (
-      <div class="scroll-reveal">
-        <NCard title="提示">
-          RayScrollReveal组件有点问题, 暂时移除. 不能正常的实现滚动动画.
-          很是操蛋!!!
-        </NCard>
-      </div>
+      <DemoPage
+        title={this.$t('menu.scrollReveal')}
+        description={this.$t('showcase.scrollDescription')}
+        eyebrow="RAY TEMPLATE / EXAMPLES"
+      >
+        <div class="scroll-reveal">
+          {Array.from({ length: 6 }, (_, index) => (
+            <NCard key={index}>
+              <strong class="scroll-reveal__number">
+                {String(index + 1).padStart(2, '0')}
+              </strong>
+              <p>{this.$t('showcase.scrollCard', { index: index + 1 })}</p>
+            </NCard>
+          ))}
+        </div>
+      </DemoPage>
     )
   },
 })
-
-export default ScrollReveal

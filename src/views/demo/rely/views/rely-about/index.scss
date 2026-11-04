@@ -1,9 +1,27 @@
 .rely-about {
-  & .n-card {
-    margin-top: 18px;
+  &__search {
+    inline-size: min(100%, 240px);
+  }
 
-    &:first-child {
-      margin-top: 0;
+  &__packages {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 235px), 1fr));
+    gap: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 10px;
+      border: 1px solid var(--r-line);
+      border-radius: 8px;
+      background: var(--r-surface-muted);
+      overflow-wrap: anywhere;
     }
   }
 }

@@ -1,133 +1,121 @@
 import { RBarcode } from '@/components'
-import {
-  NAlert,
-  NCard,
-  NFlex,
-  NGrid,
-  NGridItem,
-  NInput,
-  NSwitch,
-} from 'naive-ui'
+import { useI18n } from '@/hooks'
+import { NCard, NFlex, NFormItem, NInput, NSelect, NSwitch } from 'naive-ui'
+import DemoPage from './components/DemoPage'
+import DemoResult from './components/DemoResult'
+
+const samples = {
+  CODE128: 'RAY-024',
+  pharmacode: '1234',
+  codabar: 'A1234B',
+} as const
+const formats = Object.keys(samples).map((value) => ({ value, label: value }))
 
 export default defineComponent({
   name: 'BarcodeDemo',
   setup() {
-    const baseOptions = {
-      width: 4,
-    }
+    const { t } = useI18n('demoDetails')
+    const format = ref<keyof typeof samples>('CODE128')
+    const text = ref<string>(samples.CODE128)
     const loading = ref(false)
-    const text = ref('RayTemplate')
+    const colored = ref(false)
+    const responsive = ref(false)
+    const failed = ref(false)
+    const id = useId()
 
-    return {
-      baseOptions,
-      loading,
-      text,
-    }
-  },
-  render() {
-    const { baseOptions } = this
-
-    return (
-      <NGrid cols={2} xGap={12} yGap={12}>
-        <NGridItem span={2}>
-          <NCard title="详细配置项说明">
-            点击查看详细配置项：
-            <a href="https://github.com/lindell/JsBarcode/wiki/Options">
-              js-barcode options
-            </a>
-            。
+    return () => (
+      <DemoPage title={t('barcode.title')} description={t('barcode.intro')}>
+        <div class="r-demo-grid">
+          <NCard title={t('barcode.controls')}>
+            <div class="r-demo-card-stack">
+              <NFormItem label={t('barcode.format')} showFeedback={false}>
+                <NSelect
+                  value={format.value}
+                  options={formats}
+                  onUpdateValue={(value: keyof typeof samples) => {
+                    format.value = value
+                    text.value = samples[value]
+                    failed.value = false
+                  }}
+                />
+              </NFormItem>
+              <NFormItem
+                label={t('barcode.content')}
+                labelProps={{ for: id }}
+                showFeedback={false}
+              >
+                <NInput
+                  v-model:value={text.value}
+                  maxlength={24}
+                  inputProps={{ id }}
+                />
+              </NFormItem>
+              <NFlex>
+                <label>
+                  <NSwitch
+                    v-model:value={colored.value}
+                    aria-label={t('barcode.color')}
+                  />{' '}
+                  {t('barcode.color')}
+                </label>
+                <label>
+                  <NSwitch
+                    v-model:value={responsive.value}
+                    aria-label={t('barcode.responsive')}
+                  />{' '}
+                  {t('barcode.responsive')}
+                </label>
+                <label>
+                  <NSwitch
+                    v-model:value={loading.value}
+                    aria-label={t('loading')}
+                  />{' '}
+                  {t('loading')}
+                </label>
+              </NFlex>
+            </div>
           </NCard>
-        </NGridItem>
-        <NGridItem span={1}>
-          <NCard title="根据尺寸自动更新的条形码">
-            <RBarcode
-              text="RayTemplate"
-              options={{
-                ...baseOptions,
-              }}
-              responsive
-            />
+          <NCard title={t('barcode.preview')}>
+            <div class="r-demo-card-stack">
+              <div class="r-demo-artifact r-demo-artifact--barcode">
+                {text.value.trim() && (
+                  <RBarcode
+                    key={`${format.value}-${colored.value}-${responsive.value}`}
+                    text={text.value}
+                    format={format.value}
+                    responsive={responsive.value}
+                    width={responsive.value ? 'responsive' : 'auto'}
+                    barcodeRender="svg"
+                    loading={loading.value}
+                    watchText
+                    style={{ visibility: failed.value ? 'hidden' : 'visible' }}
+                    options={{
+                      width: 2,
+                      height: 58,
+                      lineColor: colored.value ? '#0b6b73' : '#182436',
+                    }}
+                    onSuccess={() => {
+                      failed.value = false
+                    }}
+                    onError={() => {
+                      failed.value = true
+                    }}
+                  />
+                )}
+              </div>
+              <DemoResult label={format.value} error={failed.value}>
+                {failed.value ? (
+                  t('barcode.invalid')
+                ) : text.value.trim() ? (
+                  <code>{text.value}</code>
+                ) : (
+                  t('empty')
+                )}
+              </DemoResult>
+            </div>
           </NCard>
-        </NGridItem>
-        <NGridItem span={1}>
-          <NCard title="自定义颜色条形码">
-            <RBarcode
-              text="RayTemplate"
-              options={{
-                ...baseOptions,
-                lineColor: 'red',
-              }}
-            />
-          </NCard>
-        </NGridItem>
-        <NGridItem span={1}>
-          <NCard title="pharmacode 模式">
-            <NFlex vertical>
-              <NAlert type="warning" title="注意">
-                该模式下，条形码只能渲染有效数值，否则将会渲染失败。可以查看官网说明：
-                <a href="https://github.com/lindell/JsBarcode/wiki/pharmacode">
-                  pharmacode
-                </a>
-                。
-              </NAlert>
-              <RBarcode
-                text="1234"
-                format="pharmacode"
-                options={{
-                  width: 4,
-                  height: 40,
-                  displayValue: false,
-                  background: '#eee',
-                }}
-              />
-            </NFlex>
-          </NCard>
-        </NGridItem>
-        <NGridItem span={1}>
-          <NCard title="codabar 模式">
-            <NFlex vertical>
-              <NAlert type="warning" title="注意">
-                该模式下，需要注意 text 中的特殊字符，可以查看官网说明：
-                <a href="https://github.com/lindell/JsBarcode/wiki/codabar">
-                  codabar
-                </a>
-                。
-              </NAlert>
-              <RBarcode
-                text="1234"
-                format="codabar"
-                options={{
-                  width: 4,
-                  height: 40,
-                  displayValue: false,
-                  background: '#eee',
-                }}
-              />
-            </NFlex>
-          </NCard>
-        </NGridItem>
-        <NGridItem span={1}>
-          <NCard title="有状态的条形码">
-            <NFlex vertical size="large" justify="flex-start" inline>
-              <NSwitch v-model:value={this.loading} style="width: fit-content">
-                {{
-                  checked: () => 'loading...',
-                  unchecked: () => 'success!',
-                }}
-              </NSwitch>
-              <RBarcode text="RayTemplate" loading={this.loading} />
-            </NFlex>
-          </NCard>
-        </NGridItem>
-        <NGridItem span={1}>
-          <NCard title="watchText 主动监听 text 变化">
-            <NFlex vertical>
-              <NInput v-model:value={this.text} />
-              <RBarcode text={this.text} watchText />
-            </NFlex>
-          </NCard>
-        </NGridItem>
-      </NGrid>
+        </div>
+      </DemoPage>
     )
   },
 })

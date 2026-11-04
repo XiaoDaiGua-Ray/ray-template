@@ -1,3 +1,5 @@
+import DemoPage from '../components/DemoPage'
+import DemoResult from '../components/DemoResult'
 import './index.scss'
 import { RChart, useChart } from '@/components'
 import type { RChartType } from '@/components'
@@ -23,6 +25,9 @@ const Echart = defineComponent({
     const state = reactive({
       loading: false,
       loading1: false,
+      lineVisible: true,
+      barVisible: true,
+      revision: 1,
     })
 
     const baseOptions: GlobalEChartsCoreOption = {
@@ -209,6 +214,7 @@ const Echart = defineComponent({
     const mountChart = () => {
       if (isDisposed()) {
         render()
+        state.lineVisible = true
       } else {
         window.$message.warning('图表已渲染~')
       }
@@ -216,6 +222,7 @@ const Echart = defineComponent({
 
     const unmountChart = () => {
       dispose()
+      state.lineVisible = false
     }
 
     const updateChartOptions = () => {
@@ -232,6 +239,7 @@ const Echart = defineComponent({
           .map(() => createData())
 
         state.loading1 = false
+        state.revision += 1
       }, 1000)
     }
 
@@ -259,97 +267,124 @@ const Echart = defineComponent({
       this
 
     return (
-      <div class="echart">
-        <NCard title="chart 组件">
-          <h3>该组件基于 ECharts, Vueuse 封装。默认做了最佳的优化封装实践。</h3>
-          <h3>
-            开箱即用的优化策略：节流更新图表、异步渲染、自动销毁、贴花、加载、主题、视窗区域渲染、自动更新尺寸等高级特性。
-          </h3>
-        </NCard>
-        <NCard title="预设 card 风格图表">
-          <NFlex style={['padding: 18px 0']}>
-            <NButton onClick={this.mountChart.bind(this)}>渲染</NButton>
-            <NButton onClick={this.unmountChart.bind(this)}>卸载</NButton>
-            <NButton onClick={this.updateChartOptions.bind(this)}>
-              更新配置项
-            </NButton>
-            <NButton
-              onClick={() => {
-                this.loading1 = !this.loading1
-              }}
-            >
-              {`${this.loading1 ? '关闭' : '开启'}`}加载动画
-            </NButton>
-          </NFlex>
-          <div class="chart--container">
-            <RChart
-              onRegister={register}
-              title="周销售量"
-              autoChangeTheme
-              options={this.baseLineOptions}
-              showAria={this.chartAria}
-              preset="card"
-              loading={loading1}
-            />
-          </div>
-        </NCard>
-        <NCard title="不跟随主题切换的暗色主题可视化图，并且手动指定原始主题色">
-          <NFlex vertical>
-            <NFlex>
+      <DemoPage
+        title={this.$t('menu.Echart')}
+        description={this.$t('showcase.chartDescription')}
+        eyebrow="RAY TEMPLATE / EXAMPLES"
+      >
+        <div class="echart">
+          <NCard title={this.$t('demoDetails.chart.sales')}>
+            <NFlex style={['padding: 18px 0']}>
+              <NButton disabled={this.lineVisible} onClick={this.mountChart}>
+                {this.$t('demoDetails.chart.mount')}
+              </NButton>
+              <NButton disabled={!this.lineVisible} onClick={this.unmountChart}>
+                {this.$t('demoDetails.chart.dispose')}
+              </NButton>
+              <NButton
+                disabled={!this.lineVisible || loading1}
+                onClick={this.updateChartOptions}
+              >
+                {this.$t('demoDetails.chart.update')}
+              </NButton>
               <NButton
                 onClick={() => {
-                  if (isDisposed2()) {
-                    render2()
-                  } else {
-                    window.$message.warning('不可以重复渲染图表~')
-                  }
+                  this.loading1 = !this.loading1
                 }}
               >
-                渲染
+                {this.$t(
+                  loading1
+                    ? 'demoDetails.chart.stopLoading'
+                    : 'demoDetails.chart.showLoading',
+                )}
               </NButton>
-              <NButton onClick={dispose2.bind(this)}>卸载</NButton>
             </NFlex>
             <div class="chart--container">
               <RChart
-                onRegister={register2}
-                autoChangeTheme={false}
-                theme="default"
-                options={this.baseOptions}
+                onRegister={register}
+                title={this.$t('demoDetails.chart.sales')}
+                autoChangeTheme
+                options={this.baseLineOptions}
+                showAria={this.chartAria}
+                preset="card"
+                loading={loading1}
               />
             </div>
-          </NFlex>
-        </NCard>
-        <NCard title="加载动画">
-          <NSwitch
-            v-model:value={this.chartLoading}
-            onUpdateValue={this.handleLoadingShow.bind(this)}
-            style={['padding: 18px 0']}
-          >
-            {{
-              checked: () => '隐藏加载动画',
-              unchecked: () => '显示加载动画',
-            }}
-          </NSwitch>
-          <div class="chart--container">
-            <RChart loading={this.loading} options={this.baseOptions} />
-          </div>
-        </NCard>
-        <NCard title="贴画可视化图">
-          <NSwitch
-            v-model:value={this.chartAria}
-            onUpdateValue={this.handleAriaShow.bind(this)}
-            style={['padding: 18px 0']}
-          >
-            {{
-              checked: () => '隐藏贴花',
-              unchecked: () => '显示贴花',
-            }}
-          </NSwitch>
-          <div class="chart--container">
-            <RChart options={this.baseOptions} showAria={this.chartAria} />
-          </div>
-        </NCard>
-      </div>
+            <DemoResult label={this.$t('demoDetails.chart.series')}>
+              {this.lineVisible
+                ? this.$t('demoDetails.chart.revision', {
+                    value: this.revision,
+                  })
+                : this.$t('demoDetails.chart.unmounted')}
+            </DemoResult>
+          </NCard>
+          <NCard title={this.$t('demoDetails.chart.fixedTheme')}>
+            <NFlex vertical>
+              <NFlex>
+                <NButton
+                  onClick={() => {
+                    if (isDisposed2()) {
+                      render2()
+                      this.barVisible = true
+                    } else {
+                      window.$message.warning('不可以重复渲染图表~')
+                    }
+                  }}
+                >
+                  {this.$t('demoDetails.chart.mount')}
+                </NButton>
+                <NButton
+                  disabled={!this.barVisible}
+                  onClick={() => {
+                    dispose2()
+                    this.barVisible = false
+                  }}
+                >
+                  {this.$t('demoDetails.chart.dispose')}
+                </NButton>
+              </NFlex>
+              <div class="chart--container">
+                <RChart
+                  onRegister={register2}
+                  autoChangeTheme={false}
+                  theme="default"
+                  options={this.baseOptions}
+                />
+              </div>
+            </NFlex>
+          </NCard>
+          <NCard title={this.$t('demoDetails.chart.showLoading')}>
+            <NSwitch
+              v-model:value={this.chartLoading}
+              onUpdateValue={this.handleLoadingShow.bind(this)}
+              style={['padding: 18px 0']}
+            >
+              {{
+                checked: () => this.$t('demoDetails.chart.stopLoading'),
+                unchecked: () => this.$t('demoDetails.chart.showLoading'),
+              }}
+            </NSwitch>
+            <div class="chart--container">
+              <RChart loading={this.loading} options={this.baseOptions} />
+            </div>
+          </NCard>
+          <NCard title={this.$t('demoDetails.chart.pattern')}>
+            <NSwitch
+              v-model:value={this.chartAria}
+              onUpdateValue={this.handleAriaShow.bind(this)}
+              style={['padding: 18px 0']}
+            >
+              {{
+                checked: () => this.$t('demoDetails.chart.hidePattern'),
+                unchecked: () => this.$t('demoDetails.chart.pattern'),
+              }}
+            </NSwitch>
+            <div class="chart--container">
+              <RChart options={this.baseOptions} showAria={this.chartAria} />
+            </div>
+          </NCard>
+        </div>
+      </DemoPage>
     )
   },
 })

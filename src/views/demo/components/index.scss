@@ -80,3 +80,143 @@
     grid-template-columns: minmax(300px, 0.9fr) minmax(0, 1.1fr);
   }
 }
+
+.r-demo-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: stretch;
+  gap: 20px;
+
+  > * {
+    min-inline-size: 0;
+  }
+
+  &__wide {
+    grid-column: 1 / -1;
+  }
+}
+
+@container (min-width: 760px) {
+  .r-demo-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.r-demo-stage {
+  display: grid;
+  min-block-size: 220px;
+  place-items: center;
+  padding: 20px;
+  border: 1px dashed var(--r-control-border);
+  border-radius: var(--r-radius);
+  background-color: var(--r-surface-muted);
+  background-image: radial-gradient(
+    var(--r-control-border) 0.6px,
+    transparent 0.6px
+  );
+  background-size: 16px 16px;
+  color: var(--r-text);
+  text-align: center;
+
+  &--drag {
+    min-block-size: 380px;
+    margin-block-end: 20px;
+  }
+}
+
+.r-demo-card-stack {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.r-demo-artifact {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 150px;
+  padding: 12px;
+  border: 1px solid var(--r-line);
+  border-radius: 10px;
+  background: #fff;
+  color: #182436;
+  overflow: auto;
+
+  > * {
+    max-inline-size: 100%;
+  }
+}
+
+.r-demo-result {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px;
+  border: 1px solid var(--r-line);
+  border-radius: 8px;
+  background: var(--r-surface-muted);
+  color: var(--r-text);
+
+  &--error {
+    border-inline-start: 3px solid #d05055;
+  }
+
+  &__label {
+    color: var(--r-text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  &__value {
+    overflow-wrap: anywhere;
+    font-variant-numeric: tabular-nums;
+
+    pre {
+      margin: 0;
+      white-space: pre-wrap;
+      font-family: var(--r-font-mono);
+    }
+  }
+}
+
+.r-demo-modal-sketch {
+  min-height: 112px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--r-canvas);
+
+  span {
+    inline-size: 60%;
+    block-size: 68px;
+    border: 1px solid var(--r-control-border);
+    border-block-start: 10px solid var(--r-theme-primary-color);
+    border-radius: 5px;
+    background: var(--r-surface);
+  }
+
+  &--dialog span {
+    inline-size: 40%;
+    block-size: 50px;
+  }
+
+  &--fullscreen span {
+    inline-size: calc(100% - 16px);
+    block-size: 96px;
+  }
+}
+
+.r-demo-artifact--barcode {
+  grid-template-columns: minmax(0, 1fr);
+
+  svg {
+    max-inline-size: 100%;
+  }
+}
+
+.r-demo-flow-canvas {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--r-line);
+  border-radius: 8px;
+}

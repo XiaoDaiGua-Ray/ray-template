@@ -1,22 +1,13 @@
-import { NInput } from 'naive-ui'
+import CacheRouteExample from '../../../../../components/CacheRouteExample'
 
-const SubMenuOther = defineComponent({
+export default defineComponent({
   name: 'SubMenuOther',
-  setup() {
-    const inputValue = ref(null)
-
-    return {
-      inputValue,
-    }
-  },
   render() {
     return (
-      <div>
-        多级菜单-2-1
-        <NInput v-model={this.inputValue} />
-      </div>
+      <CacheRouteExample
+        title={this.$t('showcase.multiOtherTitle')}
+        description={this.$t('showcase.multiOtherDescription')}
+      />
     )
   },
 })
-
-export default SubMenuOther

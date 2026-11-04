@@ -1,97 +1,92 @@
 import { RDraggableCard } from '@/components'
 import type { DefaultPosition } from '@/components'
-import { NButton, NCard, NFlex, NRadio, NRadioGroup, NSwitch } from 'naive-ui'
+import { useI18n } from '@/hooks'
+import { NButton, NCard, NFlex, NSelect, NSwitch, NTag } from 'naive-ui'
+import DemoPage from './components/DemoPage'
+
+const positions = [
+  'center',
+  'top-center',
+  'bottom-center',
+  'top-left',
+  'top-right',
+  'bottom-left',
+  'bottom-right',
+] as const
+const options = positions.map((value) => ({ label: value, value }))
 
 export default defineComponent({
   name: 'DraggableCardDemo',
   setup() {
-    const card3 = ref(false)
-    const domRef = useTemplateRef<HTMLElement>('domRef')
-    const positionRadioOptions = [
-      { label: 'center', value: 'center' },
-      { label: 'top-center', value: 'top-center' },
-      { label: 'bottom-center', value: 'bottom-center' },
-      { label: 'top-left', value: 'top-left' },
-      { label: 'top-right', value: 'top-right' },
-      { label: 'bottom-left', value: 'bottom-left' },
-      { label: 'bottom-right', value: 'bottom-right' },
-    ]
-    const positionRadioValue = ref('center')
-    const card3Dad = ref(true)
+    const { t } = useI18n('demoDetails')
+    const target = useTemplateRef<HTMLElement>('target')
+    const position = ref<DefaultPosition>('center')
+    const draggable = ref(true)
+    const scope = ref<'bounded' | 'body' | null>(null)
 
-    return {
-      card3,
-      card3Dad,
-      domRef,
-      positionRadioOptions,
-      positionRadioValue,
-    }
-  },
-  render() {
-    const { card3, domRef, positionRadioOptions } = this
-
-    return (
-      <div>
-        <div
-          ref="domRef"
-          style={{
-            width: '100%',
-            height: '400px',
-            backgroundColor: 'rgba(255, 10, 20, 1)',
-          }}
-        ></div>
-        <RDraggableCard animation title="Body">
-          我被限制在 body 中。
-        </RDraggableCard>
-        {card3 ? (
-          <RDraggableCard
-            animation
-            title="Custom Container"
-            restrictionElement={domRef}
-            closable
-            onClose={() => (this.card3 = false)}
-            defaultPosition={this.positionRadioValue as DefaultPosition}
-            dad={this.card3Dad}
-          >
-            {{
-              default: () =>
-                '我被限制在红色区域中。并且我支持 NCard 的所有配置与插槽。',
-              'header-extra': () => '其实我就是 NCard 封装的',
-              footer: () => '我支持 footer 插槽',
-              action: () => '我支持 action 插槽',
-            }}
-          </RDraggableCard>
-        ) : null}
-        <NCard title="显示与隐藏卡片">
-          <NFlex vertical>
-            <NFlex>
-              <NSwitch v-model:value={this.card3Dad}>
-                {{
-                  checked: () => '拖拽',
-                  unchecked: () => '禁用',
+    return () => (
+      <DemoPage title={t('drag.title')} description={t('drag.intro')}>
+        <NCard title={t('drag.stage')}>
+          <div class="r-demo-card-stack">
+            <NFlex align="center">
+              <NSelect
+                value={position.value as string}
+                options={options}
+                style={{ width: '150px' }}
+                aria-label={t('drag.position')}
+                onUpdateValue={(value: DefaultPosition) => {
+                  position.value = value
                 }}
-              </NSwitch>
-            </NFlex>
-            <NFlex>
-              <NRadioGroup v-model:value={this.positionRadioValue}>
-                {positionRadioOptions.map((curr) => (
-                  <NRadio key={curr.value} value={curr.value}>
-                    {curr.label}
-                  </NRadio>
-                ))}
-              </NRadioGroup>
-            </NFlex>
-            <NFlex>
+              />
+              <NSwitch
+                v-model:value={draggable.value}
+                aria-label={t('drag.enable')}
+              />
+              <NTag bordered={false}>
+                {draggable.value ? t('drag.enable') : t('drag.locked')}
+              </NTag>
               <NButton
                 type="primary"
-                onClick={() => (this.card3 = !this.card3)}
+                onClick={() => {
+                  scope.value = scope.value === 'bounded' ? null : 'bounded'
+                }}
               >
-                点一下试试
+                {t('drag.bounded')}
+              </NButton>
+              <NButton
+                onClick={() => {
+                  scope.value = scope.value === 'body' ? null : 'body'
+                }}
+              >
+                {t('drag.body')}
               </NButton>
             </NFlex>
-          </NFlex>
+            <div ref="target" class="r-demo-stage r-demo-stage--drag">
+              <span>{t('drag.bounds')}</span>
+            </div>
+          </div>
         </NCard>
-      </div>
+        {scope.value && target.value && (
+          <RDraggableCard
+            key={`${scope.value}-${String(position.value)}`}
+            restrictionElement={
+              scope.value === 'bounded' ? target.value : 'body'
+            }
+            width="min(220px, calc(100vw - 56px))"
+            defaultPosition={position.value}
+            title={t(`drag.${scope.value}`)}
+            closable
+            dad={draggable.value}
+            onClose={() => {
+              scope.value = null
+            }}
+          >
+            <NTag bordered={false}>
+              {draggable.value ? t('drag.enable') : t('drag.locked')}
+            </NTag>
+          </RDraggableCard>
+        )}
+      </DemoPage>
     )
   },
 })

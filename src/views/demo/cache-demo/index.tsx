@@ -1,101 +1,117 @@
+import { useI18n } from '@/hooks'
 import { getStorage, hasStorage, removeStorage, setStorage } from '@/utils'
 import {
   NButton,
   NCard,
   NFlex,
+  NFormItem,
   NInput,
-  NInputGroup,
-  NInputGroupLabel,
+  NRadioButton,
+  NRadioGroup,
 } from 'naive-ui'
+import DemoPage from '../components/DemoPage'
+import DemoResult from '../components/DemoResult'
 
 export default defineComponent({
   name: 'CacheDemo',
   setup() {
-    const nameValue = ref('Ray')
-    const currentPrefix = ref('ray:')
+    const { t } = useI18n('demoDetails')
+    const value = ref('Ray')
+    const scope = ref<'sessionStorage' | 'localStorage'>('sessionStorage')
+    const suffix = ref('name')
+    const selectedKey = computed(() => `ray:showcase:${suffix.value.trim()}`)
+    const current = ref<string | null>(null)
+    const operation = ref('cache.read')
+    const keyId = useId()
+    const valueId = useId()
 
-    return {
-      nameValue,
-      currentPrefix,
+    const read = () => {
+      current.value = hasStorage(selectedKey.value, scope.value)
+        ? getStorage<string>(selectedKey.value, scope.value)
+        : null
     }
-  },
-  render() {
-    return (
-      <NCard title="cache 工具包示例">
-        {{
-          default: () => (
-            <NFlex vertical>
-              <h3>点击 setStorage 按钮，设置缓存示例</h3>
-              <NInputGroup>
-                <NInputGroupLabel>设置缓存内容</NInputGroupLabel>
+
+    watch([selectedKey, scope], read, { immediate: true })
+
+    return () => (
+      <DemoPage title={t('cache.title')} description={t('cache.intro')}>
+        <div class="r-demo-grid">
+          <NCard title={t('cache.write')}>
+            <div class="r-demo-card-stack">
+              <NRadioGroup
+                v-model:value={scope.value}
+                aria-label={t('cache.scope')}
+              >
+                <NRadioButton value="sessionStorage">
+                  sessionStorage
+                </NRadioButton>
+                <NRadioButton value="localStorage">localStorage</NRadioButton>
+              </NRadioGroup>
+              <NFormItem
+                label={t('cache.key')}
+                labelProps={{ for: keyId }}
+                showFeedback={false}
+              >
                 <NInput
-                  v-model:value={this.nameValue}
-                  placeholder="请输入姓名"
+                  inputProps={{ id: keyId }}
+                  v-model:value={suffix.value}
+                  maxlength={32}
                 />
-              </NInputGroup>
-              <NInputGroup>
-                <NInputGroupLabel>设置前缀</NInputGroupLabel>
+              </NFormItem>
+              <NFormItem
+                label={t('cache.value')}
+                labelProps={{ for: valueId }}
+                showFeedback={false}
+              >
                 <NInput
-                  v-model:value={this.currentPrefix}
-                  placeholder="请输入前缀"
+                  inputProps={{ id: valueId }}
+                  v-model:value={value.value}
                 />
-              </NInputGroup>
-            </NFlex>
-          ),
-          action: () => (
-            <NFlex>
-              <NButton
-                onClick={() => {
-                  setStorage('name', this.nameValue, 'sessionStorage', {
-                    prefix: true,
-                    prefixKey: this.currentPrefix,
-                  })
-
-                  window.$message.success('设置成功')
-                }}
-              >
-                setStorage
-              </NButton>
-              <NButton
-                onClick={() => {
-                  const name = getStorage('name', 'sessionStorage', {
-                    prefix: true,
-                    prefixKey: this.currentPrefix,
-                  })
-
-                  window.$message.success(`获取到的姓名为：${name}`)
-                }}
-              >
-                getStorage
-              </NButton>
-              <NButton
-                onClick={() => {
-                  removeStorage('name', 'sessionStorage', {
-                    prefix: true,
-                    prefixKey: this.currentPrefix,
-                  })
-
-                  window.$message.success('删除成功')
-                }}
-              >
-                removeStorage
-              </NButton>
-              <NButton
-                onClick={() => {
-                  const cacheKey = hasStorage('name', 'sessionStorage', {
-                    prefix: true,
-                    prefixKey: this.currentPrefix,
-                  })
-
-                  window.$message.success(`是否存在：${cacheKey}`)
-                }}
-              >
-                hasStorage
-              </NButton>
-            </NFlex>
-          ),
-        }}
-      </NCard>
+              </NFormItem>
+              <NFlex>
+                <NButton
+                  type="primary"
+                  disabled={!suffix.value.trim()}
+                  onClick={() => {
+                    setStorage(selectedKey.value, value.value, scope.value)
+                    operation.value = 'cache.write'
+                    read()
+                  }}
+                >
+                  {t('cache.write')}
+                </NButton>
+                <NButton
+                  onClick={() => {
+                    operation.value = 'cache.read'
+                    read()
+                  }}
+                >
+                  {t('cache.read')}
+                </NButton>
+                <NButton
+                  onClick={() => {
+                    removeStorage(selectedKey.value, scope.value)
+                    operation.value = 'cache.remove'
+                    read()
+                  }}
+                >
+                  {t('cache.remove')}
+                </NButton>
+              </NFlex>
+            </div>
+          </NCard>
+          <NCard title={t('result')}>
+            <DemoResult label={t(operation.value)}>
+              <pre>{selectedKey.value}</pre>
+              <pre>
+                {current.value === null
+                  ? t('cache.missing')
+                  : JSON.stringify(current.value)}
+              </pre>
+            </DemoResult>
+          </NCard>
+        </div>
+      </DemoPage>
     )
   },
 })

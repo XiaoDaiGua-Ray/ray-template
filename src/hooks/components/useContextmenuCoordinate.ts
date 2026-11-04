@@ -5,12 +5,15 @@ import type {
   MaybeElement,
   MaybeElementRef,
   OnClickOutsideHandler,
+  OnClickOutsideOptions,
 } from '@vueuse/core'
 import type { MaybeRefOrGetter } from 'vue'
 
 export interface UseContextmenuCoordinateOptions {
   /** 关闭菜单后执行的外部点击回调。 */
   clickOutside?: OnClickOutsideHandler
+  /** 菜单挂载在目标之外时，可将弹层加入外部点击的忽略范围。 */
+  ignore?: OnClickOutsideOptions['ignore']
 }
 
 /**
@@ -91,6 +94,15 @@ export const useContextmenuCoordinate = (
       const current = toValue(options)
 
       if (typeof current === 'object') current.clickOutside?.(event)
+    },
+    {
+      ignore: () => {
+        const current = toValue(options)
+
+        return typeof current === 'object'
+          ? (toValue(current.ignore) ?? [])
+          : []
+      },
     },
   )
 

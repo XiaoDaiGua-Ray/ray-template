@@ -68,7 +68,13 @@ export default defineComponent({
                 allow={this.allow}
                 name={this.name}
                 title={this.title}
-                loading={typeof this.lazy === 'boolean' ? 'lazy' : this.lazy}
+                loading={
+                  this.lazy === true
+                    ? 'lazy'
+                    : this.lazy === false
+                      ? 'eager'
+                      : this.lazy
+                }
               />
             ),
           }}

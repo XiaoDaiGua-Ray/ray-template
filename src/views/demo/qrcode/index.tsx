@@ -1,95 +1,130 @@
 import LOGO from '@/assets/images/ray.svg'
-import { NButton, NCard, NFlex } from 'naive-ui'
+import { useI18n } from '@/hooks'
+import {
+  NButton,
+  NCard,
+  NFlex,
+  NFormItem,
+  NInput,
+  NRadioButton,
+  NRadioGroup,
+  NSwitch,
+} from 'naive-ui'
 import { Vue3NextQrcode } from 'vue3-next-qrcode'
 import type { QRCodeInst, QRCodeStatus } from 'vue3-next-qrcode'
+import DemoPage from '../components/DemoPage'
+import DemoResult from '../components/DemoResult'
+
+const initial = 'https://xiaodaigua-ray.github.io/ray-template/'
 
 export default defineComponent({
   name: 'RQRCodeDemo',
   setup() {
-    const qrcodeText = ref('ray template yes')
-    const qrcodeStatus = ref<QRCodeStatus | undefined>()
-    const rayQRCodeRef = ref<QRCodeInst>()
+    const { t } = useI18n('demoDetails')
+    const text = ref(initial)
+    const brand = ref(true)
+    const animated = ref(false)
+    const status = ref<'ready' | QRCodeStatus>('ready')
+    const rendered = ref(false)
+    const failed = ref(false)
+    const instance = useTemplateRef<QRCodeInst>('qrcode')
+    const id = useId()
 
-    return {
-      qrcodeText,
-      qrcodeStatus,
-      rayQRCodeRef,
-    }
-  },
-  render() {
-    return (
-      <NFlex>
-        <NCard>
-          <h2>
-            基于 awesome-qr 进行封装，支持 LOGO、gif、backgroundImage 等属性。
-          </h2>
-          <h2>该组件会自动监听文本内容变化，然后重新渲染（watchText）</h2>
-          <h2>具体使用请参考 props 配置项</h2>
-        </NCard>
-        <NCard title="基础二维码">
-          <NFlex>
-            <Vue3NextQrcode text="ray template yes" />
-            <Vue3NextQrcode text="ray template yes" logoImage={LOGO} />
-            <Vue3NextQrcode
-              text="ray template yes"
-              gifBackgroundURL="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80"
-              dotScale={0.5}
-              colorDark="#64d9d6"
-            />
-          </NFlex>
-        </NCard>
-        <NCard title="状态二维码">
-          <NFlex>
-            <Vue3NextQrcode
-              text="ray template yes"
-              logoImage={LOGO}
-              status="error"
-              onReload={() => {
-                window.$message.info('reload event')
-              }}
-            />
-            <Vue3NextQrcode
-              text="ray template yes"
-              logoImage={LOGO}
-              status="loading"
-            />
-          </NFlex>
-        </NCard>
-        <NCard title="监听内容变化">
-          <NFlex vertical>
-            <NFlex>
-              <NButton
-                onClick={() => {
-                  this.qrcodeStatus = 'loading'
+    watch([text, brand, animated], () => {
+      rendered.value = false
+      failed.value = false
+    })
 
-                  setTimeout(() => {
-                    this.qrcodeText = 'text updated: ' + new Date().getTime()
-                    this.qrcodeStatus = void 0
-                  }, 1000)
-                }}
+    return () => (
+      <DemoPage title={t('qr.title')} description={t('qr.intro')}>
+        <div class="r-demo-grid">
+          <NCard title={t('qr.controls')}>
+            <div class="r-demo-card-stack">
+              <NFormItem
+                label={t('qr.content')}
+                labelProps={{ for: id }}
+                showFeedback={false}
               >
-                更新二维码内容
-              </NButton>
+                <NInput
+                  v-model:value={text.value}
+                  maxlength={160}
+                  showCount
+                  inputProps={{ id }}
+                />
+              </NFormItem>
+              <NFlex align="center">
+                <NSwitch
+                  v-model:value={brand.value}
+                  aria-label={t('qr.brand')}
+                />
+                <span>{t('qr.brand')}</span>
+                <NSwitch
+                  v-model:value={animated.value}
+                  aria-label={t('qr.animated')}
+                />
+                <span>{t('qr.animated')}</span>
+              </NFlex>
+              <NRadioGroup
+                v-model:value={status.value}
+                aria-label={t('qr.status')}
+              >
+                {(['ready', 'loading', 'error'] as const).map((state) => (
+                  <NRadioButton key={state} value={state}>
+                    {t(`qr.${state}`)}
+                  </NRadioButton>
+                ))}
+              </NRadioGroup>
               <NButton
-                onClick={() => {
-                  this.rayQRCodeRef?.downloadQRCode()
-                }}
+                type="primary"
+                disabled={
+                  !rendered.value || failed.value || status.value !== 'ready'
+                }
+                onClick={() => instance.value?.downloadQRCode()}
               >
-                下载二维码
+                {t('qr.download')}
               </NButton>
-            </NFlex>
-            <NFlex>
-              <Vue3NextQrcode
-                text={this.qrcodeText}
-                status={this.qrcodeStatus}
-                logoImage={LOGO}
-                ref="rayQRCodeRef"
-              />
-              当前二维码内容：{this.qrcodeText}
-            </NFlex>
-          </NFlex>
-        </NCard>
-      </NFlex>
+            </div>
+          </NCard>
+          <NCard title={t('qr.preview')}>
+            <div class="r-demo-card-stack">
+              <div class="r-demo-artifact">
+                {text.value.trim() && !failed.value ? (
+                  <Vue3NextQrcode
+                    ref="qrcode"
+                    text={text.value}
+                    size={180}
+                    logoImage={brand.value ? LOGO : void 0}
+                    logoScale={0.22}
+                    gifBackgroundURL={
+                      animated.value
+                        ? `${import.meta.env.BASE_URL}examples/qr-background.gif`
+                        : void 0
+                    }
+                    dotScale={animated.value ? 0.9 : void 0}
+                    status={status.value === 'ready' ? void 0 : status.value}
+                    errorDescription={t('qr.expired')}
+                    errorActionDescription={t('qr.reload')}
+                    onReload={() => {
+                      status.value = 'ready'
+                    }}
+                    onSuccess={() => {
+                      rendered.value = true
+                    }}
+                    onError={() => {
+                      failed.value = true
+                    }}
+                  />
+                ) : (
+                  <span>{failed.value ? t('qr.failed') : t('qr.noText')}</span>
+                )}
+              </div>
+              <DemoResult label={t('qr.content')}>
+                <code>{text.value || t('empty')}</code>
+              </DemoResult>
+            </div>
+          </NCard>
+        </div>
+      </DemoPage>
     )
   },
 })

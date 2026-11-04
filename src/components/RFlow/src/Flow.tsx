@@ -4,7 +4,6 @@ import { call, completeSize } from '@/utils'
 import LogicFlow from '@logicflow/core'
 import { omit } from 'lodash-es'
 import { useTemplateRef } from 'vue'
-import type { WatchStopHandle } from 'vue'
 import props from './props'
 import type { FlowGraphData, G } from './types'
 
@@ -35,15 +34,10 @@ export default defineComponent({
       edgeTextEdit: false,
       textEdit: false,
     }
-    // watchData 回调
-    let watchDataStop: WatchStopHandle
     // 默认流程图数据
     const defaultGraphData = {
       nodes: [],
       edges: [],
-    }
-    const cacheProps = {
-      readonly: props.readonly,
     }
 
     // 注册流程图插件
@@ -73,6 +67,7 @@ export default defineComponent({
       // 单独处理 isSilentMode 配置项
       Object.assign(readonlyOptions, ops, {
         isSilentMode: bool,
+        adjustNodePosition: !bool,
       })
       logicFlowInstRef.value.updateEditConfig(readonlyOptions)
     }
@@ -107,31 +102,17 @@ export default defineComponent({
       updateFlowConfig(readonly)
     }
 
-    watchEffect(() => {
-      if (props.watchData) {
-        watchDataStop = watch(
-          () => props.data,
-          (ndata) => {
-            if (logicFlowInstRef.value) {
-              ndata && logicFlowInstRef.value.renderRawData(ndata as G)
-            } else {
-              setupFlowRender(ndata)
-            }
-          },
-        )
-      } else {
-        watchDataStop?.()
-      }
-
-      if (props.readonly !== cacheProps.readonly) {
-        updateFlowConfig(props.readonly)
-
-        cacheProps.readonly = props.readonly
-      }
-    })
+    watch(
+      () => props.data,
+      (data) => {
+        if (props.watchData && data)
+          logicFlowInstRef.value?.renderRawData(data as G)
+      },
+    )
+    watch(() => props.readonly, updateFlowConfig)
 
     onMounted(() => {
-      setupFlowRender()
+      setupFlowRender(props.data)
 
       const { onRegister } = props
 
@@ -139,6 +120,8 @@ export default defineComponent({
         call(onRegister, logicFlowInstRef.value)
       }
     })
+
+    onBeforeUnmount(() => logicFlowInstRef.value?.destroy())
 
     return {
       flowDomRef,

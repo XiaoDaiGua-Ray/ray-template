@@ -1,165 +1,146 @@
-import './index.scss'
-import { getTypicCode, getWeather } from '@/api/demo/test'
+import {
+  getRequestFixture,
+  getWeather,
+  requestFixtureUrl,
+} from '@/api/demo/test'
 import { useHookPlusRequest, useRequest } from '@/axios'
-import { NButton, NCard, NFlex, NInput, NLayout } from 'naive-ui'
+import { useI18n } from '@/hooks'
+import { NButton, NCard, NFormItem, NInput, NSelect, NTag } from 'naive-ui'
+import DemoPage from '../components/DemoPage'
+import DemoResult from '../components/DemoResult'
 
-const Axios = defineComponent({
+export default defineComponent({
   name: 'RAxios',
   setup() {
-    const state = reactive({
-      weatherData: [],
-      inputCityValue: null,
-      throttleDemoInputValue: null,
-      debounceDemoInputValue: null,
-      weatherDemoInputValue: null,
-    })
-
-    const {
-      data: throttleDemoValue,
-      loading: throttleDemoLoading,
-      run: throttleDemoRun,
-    } = useHookPlusRequest(getTypicCode, {
-      throttleWait: 1000,
-      manual: true,
-    })
-    const {
-      data: debounceDemoValue,
-      loading: debounceDemoLoading,
-      run: debounceDemoRun,
-    } = useHookPlusRequest(getTypicCode, {
-      debounceWait: 1000,
-      manual: true,
-    })
-    const {
-      data: weatherDemoValue,
-      loading: weatherDemoLoading,
-      run: weatherDemoRun,
-    } = useHookPlusRequest(getWeather, {
-      throttleWait: 1000,
-      manual: true,
-    })
-    const {
-      data: demoData,
-      loading: demoLoading,
-      run: demoRun,
-    } = useRequest<{
-      title: string
-    }>(
-      {
-        url: 'https://jsonplaceholder.typicode.com/todos/1',
-        method: 'get',
-        cancelConfig: {
-          cancel: true,
-        },
-      },
-      {
-        manual: true,
-        onError: () => {
-          window.$message.error('接口出现异常')
-        },
-      },
+    const { t } = useI18n('demoDetails')
+    const manual = useRequest<Awaited<ReturnType<typeof getRequestFixture>>>(
+      { url: requestFixtureUrl, method: 'get', cancelConfig: { cancel: true } },
+      { manual: true },
     )
+    const city = ref<string | null>(null)
+    const weather = useHookPlusRequest(getWeather, { manual: true })
+    const cities = ['Hangzhou', 'Shanghai', 'Chengdu'].map((value) => ({
+      value,
+      label: value,
+    }))
+    const rateDemos = (['throttle', 'debounce'] as const).map((kind) => {
+      const input = ref('')
+      const sent = ref(0)
+      const inputId = useId()
+      const query = useHookPlusRequest(
+        async (value: string) => {
+          sent.value += 1
+          const { ticket } = await getRequestFixture()
 
-    return {
-      ...toRefs(state),
-      throttleDemoValue,
-      throttleDemoLoading,
-      throttleDemoRun,
-      debounceDemoValue,
-      debounceDemoLoading,
-      debounceDemoRun,
-      weatherDemoValue,
-      weatherDemoLoading,
-      weatherDemoRun,
-      demoData,
-      demoLoading,
-      demoRun,
-    }
-  },
-  render() {
-    return (
-      <NLayout>
-        <NFlex vertical>
-          <h1>请求</h1>
-          <NCard>
-            <h2>useRequest</h2>
-            <p>支持配置化请求数据</p>
-            <h2>useHookPlusRequest</h2>
-            <p>
-              支持包裹一个拥有 promise 状态的异步函数，可以用来包裹一个 axios
-              请求返回值方法
-            </p>
+          return { value, ticket: ticket.id }
+        },
+        {
+          manual: true,
+          ...(kind === 'throttle'
+            ? { throttleWait: 1000 }
+            : { debounceWait: 1000 }),
+        },
+      )
+
+      return { kind, input, sent, inputId, query }
+    })
+
+    return () => (
+      <DemoPage
+        title={t('request.title')}
+        description={t('request.intro')}
+        meta={t('request.fixture')}
+      >
+        <div class="r-demo-grid">
+          <NCard title="useRequest">
+            <div class="r-demo-card-stack">
+              <NButton type="primary" onClick={() => manual.run()}>
+                {t('request.fetch')}
+              </NButton>
+              <DemoResult label={t('result')} error={!!manual.error.value}>
+                {manual.loading.value ? (
+                  t('loading')
+                ) : manual.error.value ? (
+                  t('request.failed')
+                ) : manual.data.value ? (
+                  <pre>{JSON.stringify(manual.data.value.ticket, null, 2)}</pre>
+                ) : (
+                  t('request.waiting')
+                )}
+              </DemoResult>
+            </div>
           </NCard>
-          <h1>使用 useRequest 获取</h1>
-          <NCard title="请求函数">
-            <h3>
-              1.基于 axios 封装，能够自动取消连续请求，避免重复渲染造成问题
-            </h3>
-            <h3>
-              2.打开控制台 =&gt; 网络 =&gt; 使用低速3g网络 =&gt;
-              查看控制台被取消的请求
-            </h3>
-            <h3>3.详情请查看文档</h3>
-          </NCard>
-          <NCard title="useRequest示例（手动触发）">
-            <NFlex vertical>
-              <NButton onClick={this.demoRun.bind(this)}>获取数据</NButton>
-              <h3>
-                结果:&nbsp;
-                {this.demoLoading ? '获取中...' : this.demoData?.title}
-              </h3>
-            </NFlex>
-          </NCard>
-          <h1>使用 useHookPlusRequest 获取</h1>
-          <NCard title="节流">
-            <NFlex vertical>
-              <NInput
-                v-model:value={this.throttleDemoInputValue}
-                onUpdateValue={() => {
-                  this.throttleDemoRun()
+          <NCard title={t('request.city')}>
+            <div class="r-demo-card-stack">
+              <NSelect
+                value={city.value}
+                options={cities}
+                placeholder={t('request.selectCity')}
+                onUpdateValue={(value) => {
+                  city.value = value
+                  weather.run(value)
                 }}
               />
-              <h3>不论触发多少次，一秒钟之内仅会触发一次</h3>
-              <h3>
-                当前状态:&nbsp;
-                {this.throttleDemoLoading ? '获取中...' : '获取成功!!!'}
-              </h3>
-            </NFlex>
+              <DemoResult label={t('result')} error={!!weather.error.value}>
+                {weather.loading.value
+                  ? t('loading')
+                  : weather.error.value
+                    ? t('request.failed')
+                    : weather.data.value
+                      ? `${weather.data.value.temperature} °C · ${weather.data.value.humidity}% RH`
+                      : t('request.waiting')}
+              </DemoResult>
+            </div>
           </NCard>
-          <NCard title="防抖">
-            <NFlex vertical>
-              <NInput
-                v-model:value={this.debounceDemoInputValue}
-                onUpdateValue={() => {
-                  this.debounceDemoRun()
-                }}
-              />
-              <h3>一秒后才会执行，如果中途重新请求，则会重新计时</h3>
-              <h3>
-                当前状态:&nbsp;
-                {this.debounceDemoLoading ? '获取中...' : '获取成功!!!'}
-              </h3>
-            </NFlex>
-          </NCard>
-          <NCard title="获取气候">
-            <NFlex vertical>
-              <NInput
-                v-model:value={this.weatherDemoInputValue}
-                onUpdateValue={(val) => {
-                  this.weatherDemoRun(val)
-                }}
-              />
-              <h3>该示例演示了如何根据动态值获取数据</h3>
-              <h3>
-                当前状态:&nbsp;
-                {this.weatherDemoLoading ? '获取中...' : '获取成功!!!'}
-              </h3>
-            </NFlex>
-          </NCard>
-        </NFlex>
-      </NLayout>
+          {rateDemos.map(({ kind, input, sent, inputId, query }) => (
+            <NCard key={kind} title={t(`request.${kind}`)}>
+              {{
+                'header-extra': () => (
+                  <NTag size="small" bordered={false}>
+                    {t('request.sent', { count: sent.value })}
+                  </NTag>
+                ),
+                default: () => (
+                  <div class="r-demo-card-stack">
+                    <NFormItem
+                      label={t('request.input')}
+                      labelProps={{ for: inputId }}
+                      showFeedback={false}
+                    >
+                      <NInput
+                        value={input.value}
+                        inputProps={{ id: inputId }}
+                        onUpdateValue={(value) => {
+                          input.value = value
+
+                          if (value.trim()) query.run(value)
+                          else query.cancel()
+                        }}
+                      />
+                    </NFormItem>
+                    <DemoResult
+                      label={t('request.last')}
+                      error={!!query.error.value}
+                    >
+                      {query.loading.value ? (
+                        t('loading')
+                      ) : query.error.value ? (
+                        t('request.failed')
+                      ) : query.data.value ? (
+                        <code>
+                          {query.data.value.value} · {query.data.value.ticket}
+                        </code>
+                      ) : (
+                        t('request.waiting')
+                      )}
+                    </DemoResult>
+                  </div>
+                ),
+              }}
+            </NCard>
+          ))}
+        </div>
+      </DemoPage>
     )
   },
 })
-
-export default Axios

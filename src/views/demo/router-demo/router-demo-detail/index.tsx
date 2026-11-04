@@ -1,33 +1,72 @@
-import { NCard, NFlex } from 'naive-ui'
+import { useI18n } from '@/hooks'
+import {
+  NButton,
+  NCard,
+  NDescriptions,
+  NDescriptionsItem,
+  NTag,
+} from 'naive-ui'
+import DemoPage from '../../components/DemoPage'
+import DemoResult from '../../components/DemoResult'
+import { routeDemoPeople } from '../people'
 
-const RouterDemoDetail = defineComponent({
+export default defineComponent({
   name: 'RouterDemoDetail',
   setup() {
+    const { t } = useI18n()
     const route = useRoute()
+    const router = useRouter()
+    const person = computed(() =>
+      routeDemoPeople.find(({ key, name }) =>
+        route.query.id == null
+          ? route.query.name === name
+          : route.query.id === String(key),
+      ),
+    )
 
-    return {
-      route,
-    }
-  },
-  render() {
-    const { route } = this
-
-    return (
-      <NFlex>
-        <NCard title={(route.query.name as string) || 'hello'}>
-          你好 {route.query.name}
-        </NCard>
-        <NCard title="平层路由详情页面">我是平层路由详情页面</NCard>
-        <NCard title="TIP">
-          <h2>1. 可以点击面包屑或者菜单返回到主页面</h2>
-          <h2>
-            2. 如果这个页面需要配置多个详情页面，只需将该路由所在的 children
-            中，将所需页面配置为 sameLevel 即可。
-          </h2>
-        </NCard>
-      </NFlex>
+    return () => (
+      <DemoPage
+        title={t('showcase.detailTitle')}
+        description={t('showcase.detailDescription')}
+      >
+        {{
+          actions: () => (
+            <NButton
+              onClick={() => router.push('/router-demo/router-demo-home')}
+            >
+              {t('demoDetails.detail.back')}
+            </NButton>
+          ),
+          default: () => (
+            <div class="r-demo-grid">
+              <NCard title={person.value?.name ?? t('showcase.detailTitle')}>
+                {person.value ? (
+                  <NDescriptions column={1} bordered>
+                    <NDescriptionsItem label={t('demoDetails.detail.address')}>
+                      {person.value.address}
+                    </NDescriptionsItem>
+                    <NDescriptionsItem label={t('demoDetails.detail.phone')}>
+                      {person.value.phone}
+                    </NDescriptionsItem>
+                  </NDescriptions>
+                ) : (
+                  t('demoDetails.detail.missing')
+                )}
+              </NCard>
+              <NCard title={t('demoDetails.nested.route')}>
+                <div class="r-demo-card-stack">
+                  <NTag type="info" bordered={false}>
+                    sameLevel
+                  </NTag>
+                  <DemoResult label={t('demoDetails.detail.params')}>
+                    <pre>{JSON.stringify(route.query, null, 2)}</pre>
+                  </DemoResult>
+                </div>
+              </NCard>
+            </div>
+          ),
+        }}
+      </DemoPage>
     )
   },
 })
-
-export default RouterDemoDetail

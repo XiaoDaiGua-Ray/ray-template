@@ -1,149 +1,107 @@
+import { useI18n } from '@/hooks'
 import { add, distribute, divide, format, multiply, subtract } from '@/utils'
-import { NCard, NDynamicTags, NFlex, NInputNumber, NLayout } from 'naive-ui'
+import {
+  NCard,
+  NDynamicTags,
+  NFormItem,
+  NGrid,
+  NGridItem,
+  NInputNumber,
+} from 'naive-ui'
+import DemoPage from '../components/DemoPage'
+import DemoResult from '../components/DemoResult'
 
-const CalculatePrecision = defineComponent({
+const operations = { add, subtract, multiply, divide }
+
+export default defineComponent({
   name: 'CalculatePrecision',
   setup() {
-    const state = reactive({
-      addOptions: ['1', '0.2', '0.1', '1.1'],
-      subtractOptions: ['1', '0.2', '0.1', '1.1'],
-      multiplyOptions: ['1', '0.2', '0.1', '1.1'],
-      divideOptions: ['1', '0.2', '0.1', '1.1'],
-      distributeValue: 12,
-      distributeOutputValue: [] as unknown[],
-      distributeLength: 3,
+    const { t } = useI18n('demoDetails')
+    const operands = reactive({
+      add: ['0.1', '0.2'],
+      subtract: ['1', '0.7'],
+      multiply: ['0.1', '0.2'],
+      divide: ['1', '3'],
     })
-    const actionMap = {
-      addOptions: add,
-      subtractOptions: subtract,
-      multiplyOptions: multiply,
-      divideOptions: divide,
-    }
+    const amount = ref<number | null>(10)
+    const parts = ref<number | null>(3)
+    const allocation = computed(() =>
+      amount.value === null || parts.value === null
+        ? []
+        : distribute(amount.value, parts.value),
+    )
 
-    const copilotFunc = (value: string[], path: keyof typeof actionMap) => {
-      const action = actionMap[path]
-      const result = action(...value)
+    return () => (
+      <DemoPage title={t('precision.title')} description={t('precision.intro')}>
+        <div class="r-demo-grid">
+          {(Object.keys(operations) as (keyof typeof operations)[]).map(
+            (operation) => {
+              const values = operands[operation]
+              const invalid =
+                !values.length ||
+                values.some(
+                  (value) => !/^-?(?:\d+(?:\.\d*)?|\.\d+)$/.test(value),
+                )
+              const zeroDivisor =
+                operation === 'divide' &&
+                values.slice(1).some((value) => Number(value) === 0)
+              let result = t('precision.invalid')
 
-      return '结果: ' + format(result)
-    }
+              if (!invalid && !zeroDivisor) {
+                try {
+                  result = String(format(operations[operation](...values)))
+                } catch {
+                  result = t('precision.invalid')
+                }
+              }
 
-    const updateDistributeValue = () => {
-      nextTick().then(() => {
-        state.distributeOutputValue = distribute(
-          state.distributeValue,
-          state.distributeLength,
-        )
-      })
-    }
-
-    updateDistributeValue()
-
-    return {
-      ...toRefs(state),
-      copilotFunc,
-      updateDistributeValue,
-    }
-  },
-  render() {
-    return (
-      <NLayout>
-        <h2 style="margin: 0 0 20px 0">
-          计算方法，默认都保留八位小数与四舍五入，可以根据 format 方法自行转换
-        </h2>
-        <h3 style="margin: 0 0 20px 0">
-          示例方法都基于 currency.js
-          封装，利用其精度处理能力封装了常用的一些计算方法，解决精度问题。如果需要其他的方法请阅读官方文档
-          https://currency.js.org/#subtract
-        </h3>
-
-        <NFlex vertical>
-          <NCard title="加法">
-            {{
-              default: () => (
-                <NDynamicTags
-                  v-model:value={this.addOptions}
-                  onUpdateValue={(value: string[]) => {
-                    this.copilotFunc(value, 'addOptions')
-                  }}
-                />
-              ),
-              footer: () => {
-                return this.copilotFunc(this.addOptions, 'addOptions')
-              },
-            }}
+              return (
+                <NCard key={operation} title={t(`precision.${operation}`)}>
+                  <div class="r-demo-card-stack">
+                    <NDynamicTags v-model:value={operands[operation]} />
+                    <DemoResult
+                      label={t('result')}
+                      error={invalid || zeroDivisor}
+                    >
+                      <strong>
+                        {zeroDivisor ? t('precision.zero') : result}
+                      </strong>
+                    </DemoResult>
+                  </div>
+                </NCard>
+              )
+            },
+          )}
+          <NCard class="r-demo-grid__wide" title={t('precision.allocation')}>
+            <div class="r-demo-card-stack">
+              <NGrid cols="1 480:2" responsive="self" xGap={16}>
+                <NGridItem>
+                  <NFormItem label={t('precision.amount')} showFeedback={false}>
+                    <NInputNumber v-model:value={amount.value} />
+                  </NFormItem>
+                </NGridItem>
+                <NGridItem>
+                  <NFormItem label={t('precision.parts')} showFeedback={false}>
+                    <NInputNumber
+                      v-model:value={parts.value}
+                      min={1}
+                      max={12}
+                      precision={0}
+                    />
+                  </NFormItem>
+                </NGridItem>
+              </NGrid>
+              <DemoResult label={t('result')}>
+                <code>
+                  {allocation.value.length
+                    ? allocation.value.join(' + ')
+                    : t('empty')}
+                </code>
+              </DemoResult>
+            </div>
           </NCard>
-          <NCard title="减法">
-            {{
-              default: () => (
-                <NDynamicTags
-                  v-model:value={this.subtractOptions}
-                  onUpdateValue={(value: string[]) => {
-                    this.copilotFunc(value, 'subtractOptions')
-                  }}
-                />
-              ),
-              footer: () => {
-                return this.copilotFunc(this.subtractOptions, 'subtractOptions')
-              },
-            }}
-          </NCard>
-          <NCard title="乘法">
-            {{
-              default: () => (
-                <NDynamicTags
-                  v-model:value={this.multiplyOptions}
-                  onUpdateValue={(value: string[]) => {
-                    this.copilotFunc(value, 'multiplyOptions')
-                  }}
-                />
-              ),
-              footer: () => {
-                return this.copilotFunc(this.multiplyOptions, 'multiplyOptions')
-              },
-            }}
-          </NCard>
-          <NCard title="除法（非取模）">
-            {{
-              default: () => (
-                <NDynamicTags
-                  v-model:value={this.divideOptions}
-                  onUpdateValue={(value: string[]) => {
-                    this.copilotFunc(value, 'divideOptions')
-                  }}
-                />
-              ),
-              footer: () => {
-                return this.copilotFunc(this.divideOptions, 'divideOptions')
-              },
-            }}
-          </NCard>
-          <NCard title="平分一个值">
-            {{
-              default: () => (
-                <NFlex>
-                  <NInputNumber
-                    v-model:value={this.distributeValue}
-                    onUpdateValue={() => {
-                      this.updateDistributeValue()
-                    }}
-                  />
-                  <NInputNumber
-                    v-model:value={this.distributeLength}
-                    onUpdateValue={() => {
-                      this.updateDistributeValue()
-                    }}
-                  />
-                </NFlex>
-              ),
-              footer: () => {
-                return '结果: ' + this.distributeOutputValue.join(', ')
-              },
-            }}
-          </NCard>
-        </NFlex>
-      </NLayout>
+        </div>
+      </DemoPage>
     )
   },
 })
-
-export default CalculatePrecision

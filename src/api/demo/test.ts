@@ -1,37 +1,20 @@
 import { request } from '@/axios'
-import type { BasicResponse } from '@/types'
 
-interface AxiosTestResponse extends GlobalRecordable {
-  data: GlobalRecordable[]
-  city?: string
+interface RequestFixture {
+  ticket: { id: string; title: string; status: string }
+  cities: Record<string, { temperature: number; humidity: number }>
 }
 
-interface JSONPlaceholder {
-  completed: boolean
-  id: number
-  title: string
-  userId: number
-}
+export const requestFixtureUrl = `${import.meta.env.BASE_URL}examples/request.json`
 
-/**
- *
- * @param city 天气查询接口所需的城市名称
- *
- * @description
- * 按城市名称请求演示天气接口。
- *
- * @returns 演示接口的响应 Promise
- */
-export const getWeather = (city: string) => {
-  return request<AxiosTestResponse>({
-    url: `https://www.tianqiapi.com/api?version=v9&appid=23035354&appsecret=8YvlPNrz&city=${city}`,
-    method: 'get',
-  })
-}
+export const getRequestFixture = () =>
+  request<RequestFixture>({ url: requestFixtureUrl, method: 'get' })
 
-export const getTypicCode = () => {
-  return request<JSONPlaceholder>({
-    url: 'https://jsonplaceholder.typicode.com/todos/1',
-    method: 'get',
-  })
+export const getWeather = async (city: string) => {
+  const { cities } = await getRequestFixture()
+  const weather = cities[city]
+
+  if (!weather) throw new Error('Missing sample city.')
+
+  return { city, ...weather }
 }

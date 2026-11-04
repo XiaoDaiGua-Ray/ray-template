@@ -1,34 +1,31 @@
 import { RTablePro } from '@/components'
+import { useI18n } from '@/hooks'
 import { NButton, NFlex } from 'naive-ui'
 import type { DataTableColumns } from 'naive-ui'
-
-export interface RowData {
-  key: string | number
-  name: string
-  phone: string
-  address: string
-}
+import { routeDemoPeople } from '../people'
+import type { RouteDemoPerson } from '../people'
 
 const RouterDemoHome = defineComponent({
   name: 'RouterDemoHome',
   setup() {
     const router = useRouter()
+    const { t } = useI18n('demoDetails')
 
-    const columns: Ref<DataTableColumns<RowData>> = ref([
+    const columns = computed<DataTableColumns<RouteDemoPerson>>(() => [
       {
-        title: '姓名',
+        title: t('detail.name'),
         key: 'name',
       },
       {
-        title: '地址',
+        title: t('detail.address'),
         key: 'address',
       },
       {
-        title: '联系方式',
+        title: t('detail.phone'),
         key: 'phone',
       },
       {
-        title: '操作',
+        title: t('detail.action'),
         key: '',
         render: (row) => {
           return (
@@ -41,31 +38,22 @@ const RouterDemoHome = defineComponent({
                   router.push({
                     path: '/router-demo/router-demo-detail',
                     query: {
+                      id: String(row.key),
                       name: row.name,
                     },
                   })
                 }}
               >
-                详情
+                {t('detail.open')}
               </NButton>
             </NFlex>
           )
         },
       },
     ])
-    const dataSource: RowData[] = []
-
-    for (let i = 0; i < 10; i++) {
-      dataSource.push({
-        name: '张三' + i,
-        address: 'New York No. 1 Lake Park',
-        phone: '010-121212',
-        key: i,
-      })
-    }
 
     return {
-      dataSource,
+      dataSource: routeDemoPeople,
       columns,
     }
   },

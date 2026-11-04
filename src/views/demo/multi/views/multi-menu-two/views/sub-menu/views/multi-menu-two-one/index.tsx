@@ -1,26 +1,13 @@
-import { NInput } from 'naive-ui'
+import CacheRouteExample from '../../../../../../../components/CacheRouteExample'
 
-const MultiMenuTwoOne = defineComponent({
+export default defineComponent({
   name: 'MultiMenuTwoOne',
-  setup() {
-    const inputValue = ref(null)
-
-    return {
-      inputValue,
-    }
-  },
   render() {
     return (
-      <div
-        style={{
-          height: 'var(--layout-content-height)',
-        }}
-      >
-        多级菜单2-2-1
-        <NInput v-model={this.inputValue} />
-      </div>
+      <CacheRouteExample
+        title={this.$t('showcase.multiNestedTitle')}
+        description={this.$t('showcase.multiNestedDescription')}
+      />
     )
   },
 })
-
-export default MultiMenuTwoOne
