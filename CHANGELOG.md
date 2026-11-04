@@ -1,4 +1,4 @@
-## 6.0.0（待发布）
+## 6.0.0
 
 - **破坏性版本变更**：Ray Admin、官网文档和共享包改为 Monorepo。v6 不提供 v5 的原地升级，旧版代码保留在 [legacy/v5](https://github.com/XiaoDaiGua-Ray/ray-template/tree/legacy/v5)。详见[版本分界](apps/docs/migration.md)。
 - 后台迁到 `apps/admin/`，共享组件、Hooks、指令、图标、路由、请求、布局和工具拆成八个 workspace 包。文档通过公共入口复用同一套能力。
