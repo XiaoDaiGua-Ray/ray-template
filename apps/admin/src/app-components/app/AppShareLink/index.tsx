@@ -1,4 +1,5 @@
 import './index.scss'
+import { RAY_TEMPLATE_DOCS_URL } from '@/app-config'
 import { RIcon } from '@/components'
 import { useI18n } from '@/hooks'
 import { NAvatar } from 'naive-ui'
@@ -36,7 +37,7 @@ export default defineComponent({
       },
       {
         key: 'ray-template-doc',
-        src: 'https://xiaodaigua-ray.github.io/ray-template-doc/',
+        src: RAY_TEMPLATE_DOCS_URL,
         tooltip: 'links.docs',
         icon: 'https://avatars.githubusercontent.com/u/51957438?v=4',
       },

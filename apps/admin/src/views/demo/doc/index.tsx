@@ -1,20 +1,22 @@
+import { RAY_TEMPLATE_DOCS_URL } from '@/app-config'
 import { RIframe } from '@/components'
+import { useI18n } from '@/hooks'
 
-const RTemplateDoc = defineComponent({
+export default defineComponent({
   name: 'RTemplateDoc',
   setup() {
-    return {}
-  },
-  render() {
-    return (
+    const { t } = useI18n('menu')
+
+    return () => (
       <RIframe
-        width="100%"
-        height="100%"
-        src="https://xiaodaigua-ray.github.io/ray-template-doc/"
-        lazy
-      ></RIframe>
+        src={RAY_TEMPLATE_DOCS_URL}
+        title={t('DocLocalInside')}
+        height="calc(var(--layout-content-height) - 2 * var(--layout-content-gutter))"
+        customSpinProps={{
+          contentStyle: { display: 'flex', height: 'var(--r-iframe-height)' },
+        }}
+        lazy={false}
+      />
     )
   },
 })
-
-export default RTemplateDoc

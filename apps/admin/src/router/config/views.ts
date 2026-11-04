@@ -20,6 +20,10 @@ const views = {
     load: () => import('@/views/demo/directive/index'),
     name: 'RDirective',
   },
+  'demo/doc': {
+    load: () => import('@/views/demo/doc'),
+    name: 'RTemplateDoc',
+  },
   'demo/draggable-card': {
     load: () => import('@/views/demo/draggable-card'),
     name: 'DraggableCardDemo',

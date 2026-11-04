@@ -2,6 +2,9 @@ import type { AppMenuConfig } from '@/types/modules/app-config'
 import type { PreloadingConfig } from '@/types/modules/vite-custom-config'
 import type { MessageProviderProps } from 'naive-ui'
 
+export const RAY_TEMPLATE_DOCS_URL =
+  'https://xiaodaigua-ray.github.io/ray-template/docs/'
+
 /**
  *
  * @description
