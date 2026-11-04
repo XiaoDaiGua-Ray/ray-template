@@ -11,12 +11,16 @@ import { routeConfigSchema } from './schema'
 import type { RouteConfig, RouteConfigRecord } from './schema'
 import { findRouteView, findRouteViewId } from './views'
 
-const reservedPaths = new Set(['/', ROUTE_MANAGEMENT_PATH])
+const isReservedPath = (path: string) =>
+  path === '/' ||
+  path === ROUTE_MANAGEMENT_PATH ||
+  path.startsWith(`${ROUTE_MANAGEMENT_PATH}/`)
 const reservedNames = new Set([
   'rlogin',
   'rlayout',
   'rnotfound',
   'routemanagement',
+  'routemanagementvisual',
   'errorpage',
   'raytemplatedoc',
 ])
@@ -75,7 +79,7 @@ export function parseRouteConfig(text: string): RouteConfig {
 
       const menuPath = path.toLowerCase()
 
-      if (menuPaths.has(menuPath) || reservedPaths.has(menuPath))
+      if (menuPaths.has(menuPath) || isReservedPath(menuPath))
         fail('Duplicate or reserved menu path.')
 
       menuPaths.add(menuPath)
@@ -137,7 +141,7 @@ export function parseRouteConfig(text: string): RouteConfig {
         )
           fail(`Invalid path "${address}".`)
 
-        if (reservedPaths.has(key) || paths.has(key))
+        if (isReservedPath(key) || paths.has(key))
           fail(`Duplicate or reserved path "${address}".`)
 
         if (

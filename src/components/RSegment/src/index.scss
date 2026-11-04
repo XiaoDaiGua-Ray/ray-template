@@ -9,6 +9,8 @@
   }
 
   .n-tabs-rail {
+    box-sizing: border-box;
+    flex: none;
     inline-size: max-content;
     min-inline-size: 100%;
   }
@@ -19,6 +21,7 @@
 
   // 选中前后字重相同，避免 intrinsic rail 触发 Naive UI 的无动画 resize 同步。
   .n-tabs-tab {
+    inline-size: auto;
     font-weight: var(--n-font-weight-strong);
   }
 }

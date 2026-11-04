@@ -1,7 +1,10 @@
 import './LayoutSettings.scss'
 import { useI18n } from '@/hooks'
 import { useSettingActions, useSettingGetters } from '@/store'
-import { getDefaultSettingConfig } from '@/store/modules/setting/constant'
+import {
+  getDefaultSettingConfig,
+  LAYOUT_MODES,
+} from '@/store/modules/setting/constant'
 import type { LayoutConfig } from '@/store/modules/setting/types'
 import {
   NButton,
@@ -21,7 +24,6 @@ export default defineComponent({
     const { getLayoutConfig } = useSettingGetters()
     const { updateSettingState } = useSettingActions()
     const text = (key: string) => t<string>(key)
-    const modes = ['side', 'top', 'mixed'] as const
     const update = (value: Partial<LayoutConfig>) =>
       updateSettingState('layoutConfig', value)
 
@@ -30,8 +32,8 @@ export default defineComponent({
         {props.showDescription ? (
           <p class="r-layout-settings__hint">{text('description')}</p>
         ) : null}
-        <div class="r-layout-presets">
-          {modes.map((mode) => (
+        <div class="r-layout-presets" role="group" aria-label={text('tab')}>
+          {LAYOUT_MODES.map((mode) => (
             <button
               type="button"
               class="r-layout-preset"
@@ -49,6 +51,7 @@ export default defineComponent({
                 <span class="r-layout-preview__aside" />
                 <span class="r-layout-preview__body" />
               </span>
+              <span class="r-layout-preset__label">{text(mode)}</span>
               {getLayoutConfig.value.mode === mode ? (
                 <span class="r-layout-preset__selected" aria-hidden="true">
                   ✓
@@ -56,12 +59,12 @@ export default defineComponent({
               ) : null}
             </button>
           ))}
-          {props.showDescription ? (
-            <p class="r-layout-settings__hint">
-              {text(`modeHint.${getLayoutConfig.value.mode}`)}
-            </p>
-          ) : null}
         </div>
+        {props.showDescription ? (
+          <p class="r-layout-settings__hint">
+            {text(`modeHint.${getLayoutConfig.value.mode}`)}
+          </p>
+        ) : null}
         <NForm labelPlacement="top" showFeedback={false}>
           <NFormItem label={text('contentWidth')}>
             <NSelect

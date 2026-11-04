@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="r-route-transition">
     <RouterView v-slot="{ Component, route }">
       <template v-if="Component">
         <Transition

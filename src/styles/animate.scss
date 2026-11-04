@@ -1,110 +1,73 @@
-// 模糊匹配内容区域切换过渡动画包含: transform-leave-active 的 class
-[class*='transform-leave-active'] {
-  position: absolute;
-}
+.r-route-transition {
+  .scale-transform-enter-active,
+  .fade-scale-transform-enter-active,
+  .fade-slide-transform-enter-active,
+  .fade-bottom-transform-enter-active,
+  .slide-up-transform-enter-active,
+  .slide-left-transform-enter-active {
+    transition:
+      opacity 180ms ease-out,
+      transform 180ms var(--r-bezier);
+  }
 
-/* fade-slide-transform */
-.fade-slide-transform-leave-active,
-.fade-slide-transform-enter-active {
-  transition:
-    transform 0.48s var(--r-bezier),
-    opacity 0.48s var(--r-bezier);
-}
+  .opacity-transform-enter-active {
+    transition: opacity 160ms ease-out;
+  }
 
-.fade-slide-transform-enter-from {
-  opacity: 0;
-  transform: translateX(-30px);
-}
+  .opacity-transform-leave-active,
+  .scale-transform-leave-active,
+  .fade-scale-transform-leave-active,
+  .fade-slide-transform-leave-active,
+  .fade-bottom-transform-leave-active {
+    transition: opacity 70ms ease-in;
+    pointer-events: none;
+  }
 
-.fade-slide-transform-leave-to {
-  opacity: 0;
-  transform: translateX(30px);
-}
+  .opacity-transform-enter-from,
+  .scale-transform-enter-from,
+  .fade-scale-transform-enter-from,
+  .fade-slide-transform-enter-from,
+  .fade-bottom-transform-enter-from,
+  .slide-up-transform-enter-from,
+  .slide-left-transform-enter-from,
+  .opacity-transform-leave-to,
+  .scale-transform-leave-to,
+  .fade-scale-transform-leave-to,
+  .fade-slide-transform-leave-to,
+  .fade-bottom-transform-leave-to {
+    opacity: 0;
+  }
 
-/* scale-transform */
-.scale-transform-enter-active {
-  transition:
-    transform 0.35s cubic-bezier(0.33, 1, 0.68, 1),
-    opacity 0.25s cubic-bezier(0.33, 1, 0.68, 1);
-  transition-delay: 0.25s;
-}
+  .scale-transform-enter-from {
+    transform: scale(0.985);
+  }
 
-.scale-transform-leave-active {
-  transition:
-    transform 0.35s cubic-bezier(0.32, 0, 0.67, 0),
-    opacity 0.25s ease-out;
-}
+  .fade-scale-transform-enter-from {
+    transform: scale(1.015);
+  }
 
-.scale-transform-enter-from {
-  opacity: 0;
-  transform: scale(0.95);
-}
+  .fade-slide-transform-enter-from {
+    transform: translateX(-12px);
+  }
 
-.scale-transform-leave-to {
-  opacity: 0;
-  transform: scale(1.03);
-}
+  .fade-bottom-transform-enter-from {
+    transform: translateY(-10px);
+  }
 
-/* opacity-transform */
-.opacity-transform-leave-active,
-.opacity-transform-enter-active {
-  transition: opacity 0.55s var(--r-bezier);
-}
+  .slide-up-transform-enter-from {
+    transform: translateY(10px);
+  }
 
-.opacity-transform-enter-from {
-  opacity: 0;
-}
+  .slide-left-transform-enter-from {
+    transform: translateX(12px);
+  }
 
-.opacity-transform-leave-to {
-  opacity: 0;
-}
-
-/* fade-bottom-transform */
-.fade-bottom-transform-enter-active {
-  transition:
-    transform 0.35s cubic-bezier(0.33, 1, 0.68, 1),
-    opacity 0.25s cubic-bezier(0.33, 1, 0.68, 1);
-  transition-delay: 0.25s;
-}
-
-.fade-bottom-transform-leave-active {
-  transition:
-    transform 0.35s cubic-bezier(0.32, 0, 0.67, 0),
-    opacity 0.25s ease-out;
-}
-
-.fade-bottom-transform-enter-from {
-  opacity: 0;
-  transform: translateY(-15px);
-}
-
-.fade-bottom-transform-leave-to {
-  opacity: 0;
-  transform: translateY(15px);
-}
-
-/* fade-scale-transform */
-.fade-scale-transform-enter-active {
-  transition:
-    transform 0.35s cubic-bezier(0.33, 1, 0.68, 1),
-    opacity 0.25s cubic-bezier(0.33, 1, 0.68, 1);
-  transition-delay: 0.25s;
-}
-
-.fade-scale-transform-leave-active {
-  transition:
-    transform 0.25s cubic-bezier(0.32, 0, 0.67, 0),
-    opacity 0.25s ease-out;
-}
-
-.fade-scale-transform-enter-from {
-  opacity: 0;
-  transform: scale(1.1);
-}
-
-.fade-scale-transform-leave-to {
-  opacity: 0;
-  transform: scale(0.85);
+  @media (prefers-reduced-motion: reduce) {
+    [class*='-transform-enter-active'],
+    [class*='-transform-leave-active'] {
+      transition: none;
+    }
+  }
 }
 
 @keyframes elementRotate {

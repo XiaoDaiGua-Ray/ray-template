@@ -1,8 +1,16 @@
 .r-layout-full {
   position: fixed;
   inset: 0;
+  display: flex;
+  flex-direction: column;
+
+  .r-layout-full__body {
+    flex: 1;
+    min-block-size: 0;
+  }
 
   .r-layout-full__viewer {
+    block-size: 100%;
     min-width: 0;
 
     > .n-layout-scroll-container {
@@ -19,11 +27,17 @@
     flex-shrink: 0;
   }
 
-  .r-layout-full__viewer-content {
+  .r-layout-content-viewport {
+    position: relative;
     flex: 1;
-    min-height: 0;
-    min-width: 0;
+    min-block-size: 0;
+    min-inline-size: 0;
     background: var(--r-canvas);
+  }
+
+  .r-layout-full__viewer-content {
+    block-size: 100%;
+    background: transparent;
 
     > .n-scrollbar > .n-scrollbar-container {
       height: 100%;
@@ -50,49 +64,40 @@
   }
 }
 
-.r-layout-content--maximized {
-  --layout-restore-height: 49px;
-  --layout-content-height: calc(100dvh - var(--layout-restore-height));
+.r-layout-full .r-layout-content--maximized {
+  --layout-content-height: 100dvh;
 
-  position: fixed !important;
+  position: fixed;
   inset: 0;
-  height: 100dvh !important;
 
   .r-layout-header-region,
   .r-layout-tabs-region,
   .r-layout-footer-region {
     display: none;
   }
+
+  .r-layout-content-scroll {
+    padding-inline-end: 52px;
+  }
 }
 
-.r-layout-content-restore {
-  position: sticky;
-  inset-block-start: 0;
+.r-layout-content-restore__button {
+  position: absolute;
+  inset-block-start: 10px;
+  inset-inline-end: 10px;
   z-index: 3;
-  display: flex;
-  justify-content: flex-end;
-  flex: none;
-  padding: 8px max(12px, var(--layout-content-padding));
-  border-block-end: 1px solid var(--r-line);
+  display: grid;
+  place-items: center;
+  inline-size: 36px;
+  block-size: 36px;
+  border: 1px solid var(--r-control-border);
+  border-radius: 8px;
+  color: var(--r-text);
   background: var(--r-surface);
+  cursor: pointer;
 
-  &__button {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    min-block-size: 32px;
-    padding-inline: 10px;
-    border: 1px solid var(--r-control-border);
-    border-radius: 8px;
-    color: var(--r-text);
-    background: var(--r-surface-muted);
-    font-size: 13px;
-    font-weight: 550;
-    cursor: pointer;
-
-    &:hover {
-      background: var(--r-surface-hover);
-    }
+  &:hover {
+    background: var(--r-surface-hover);
   }
 }
 

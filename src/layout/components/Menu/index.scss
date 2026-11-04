@@ -8,6 +8,11 @@
 
   border-inline-end: 1px solid var(--r-line);
 
+  &--end {
+    border-inline-end: 0;
+    border-inline-start: 1px solid var(--r-line);
+  }
+
   .app-menu__body {
     display: flex;
     flex-direction: column;

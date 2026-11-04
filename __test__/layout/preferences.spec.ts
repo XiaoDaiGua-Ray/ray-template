@@ -1,7 +1,7 @@
 import { createPinia, disposePinia, setActivePinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import { createApp, nextTick } from 'vue'
-import { APP_CATCH_KEY } from '../../src/app-config'
+import { APP_CATCH_KEY, GLOBAL_CLASS_NAMES } from '../../src/app-config'
 import { findMenuRoot, firstMenuLeaf } from '../../src/layout/navigation'
 import { piniaLockScreenStore } from '../../src/store/modules/lock-screen'
 import { piniaSettingStore } from '../../src/store/modules/setting'
@@ -25,6 +25,16 @@ const menu = (
   children,
   show,
 })
+
+const mountPersistedSettings = () => {
+  const pinia = createPinia().use(piniaPluginPersistedstate)
+  const app = createApp({ render: () => null }).use(pinia)
+
+  app.mount(document.createElement('div'))
+  setActivePinia(pinia)
+
+  return { pinia, app }
+}
 
 describe('layout preferences', () => {
   it('adds defaults and bounds persisted or programmatic invalid values', () => {
@@ -60,11 +70,7 @@ describe('layout preferences', () => {
         menuTagSwitch: false,
       }),
     )
-    const pinia = createPinia().use(piniaPluginPersistedstate)
-    const app = createApp({ render: () => null }).use(pinia)
-
-    app.mount(document.createElement('div'))
-    setActivePinia(pinia)
+    const { pinia, app } = mountPersistedSettings()
 
     try {
       const store = piniaSettingStore()
@@ -83,6 +89,80 @@ describe('layout preferences', () => {
       app.unmount()
       disposePinia(pinia)
       localStorage.removeItem(APP_CATCH_KEY.appPiniaSettingStore)
+    }
+  })
+
+  it('restores the exported preferences through the existing store and persistence', async () => {
+    const { pinia, app } = mountPersistedSettings()
+    const store = piniaSettingStore()
+    const property = GLOBAL_CLASS_NAMES.rayTemplateThemePrimaryColor
+    const fadeProperty = GLOBAL_CLASS_NAMES.rayTemplateThemePrimaryFadeColor
+    const { style } = document.documentElement
+
+    try {
+      store.updateSettingState('layoutConfig', { mode: 'right' })
+      store.updateSettingState('appTheme', 'dark')
+      store.updateSettingState('watermarkConfig', { content: 'Portable' })
+      store.updateSettingState('keepAliveConfig', {
+        keepAliveExclude: ['Page'],
+      })
+      store.changePrimaryColor('#3468db')
+      const file = store.exportPreferences()
+
+      store.updateSettingState('layoutConfig', { mode: 'top' })
+      store.updateSettingState('appTheme', 'light')
+      store.updateSettingState('appRootRoute', { path: '/custom-home' })
+      store.changePrimaryColor('#000000')
+      store.importPreferences(JSON.stringify(file))
+      await nextTick()
+
+      expect(store.exportPreferences()).toEqual(file)
+      expect(store._appTheme).toBe(true)
+      expect(style.getPropertyValue(property)).toBe('#3468db')
+      expect(store.appRootRoute.path).toBe('/custom-home')
+      expect(file.preferences).not.toHaveProperty('appRootRoute')
+      expect(file.preferences).not.toHaveProperty('lockScreenSwitch')
+      expect(
+        JSON.parse(
+          localStorage.getItem(APP_CATCH_KEY.appPiniaSettingStore) ?? 'null',
+        ),
+      ).toMatchObject({ layoutConfig: { mode: 'right' }, appTheme: 'dark' })
+    } finally {
+      app.unmount()
+      disposePinia(pinia)
+      localStorage.removeItem(APP_CATCH_KEY.appPiniaSettingStore)
+      style.removeProperty(property)
+      style.removeProperty(fadeProperty)
+    }
+  })
+
+  it('does not change any preference when the file contains invalid settings', () => {
+    const pinia = createPinia()
+
+    setActivePinia(pinia)
+    const store = piniaSettingStore()
+    const before = store.exportPreferences()
+
+    try {
+      expect(() => store.importPreferences('{"routes": []}')).toThrow()
+      expect(() =>
+        store.importPreferences(JSON.stringify({ ...before, version: 2 })),
+      ).toThrow()
+      expect(() =>
+        store.importPreferences(
+          JSON.stringify({
+            ...before,
+            preferences: {
+              ...before.preferences,
+              appTheme: 'dark',
+              menuConfig: { ...before.preferences.menuConfig, menuWidth: -1 },
+            },
+          }),
+        ),
+      ).toThrow()
+      expect(store.exportPreferences()).toEqual(before)
+    } finally {
+      disposePinia(pinia)
     }
   })
 

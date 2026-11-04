@@ -29,6 +29,7 @@
 - 组合式函数在 `setup` 或有效 effect scope 内创建，DOM 操作由用户事件或挂载后的回调触发。事件、订阅、动画帧随作用域清理。
 - 全局 UI 状态由 Pinia `runtime` 管理，通过 `useRuntimeGetters` / `useRuntimeActions` 访问，不写入持久化缓存。
 - `useSpinning().reload(wait)` 会卸载页面，恢复计时器由 runtime Store 持有；多个调用以最后一次刷新为准。
+- 默认布局中的加载提示始终位于可见内容区中央，支持长页面与内容最大化。`reload` 立即显示提示，`openSpin` 持续超过 120ms 时显示，`closeSpin` 立即关闭手动加载提示。
 - 两个滚动 Hook 可以在 setup 阶段创建，调用时才读取布局实例。无侧栏或未挂载时安全忽略。
 - `useMaximize` 操作布局内容，多个调用方共享状态；`useElementFullscreen` 操作任意单个元素，其状态属于当前实例。二者均不调用浏览器 Fullscreen API。
 - `navigationTo` 的索引从 0 开始；负数、小数、非有限数和越界索引不会导航。完整 URL 支持动态参数、query 和 hash；额外 query 参数可覆盖 URL 中的同名参数。成功调用返回 Router 导航 Promise。

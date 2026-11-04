@@ -26,7 +26,7 @@ export interface AppRootRoute {
 }
 
 export interface LayoutConfig {
-  mode: 'side' | 'top' | 'mixed'
+  mode: 'side' | 'top' | 'mixed' | 'right' | 'split'
   contentWidth: 'fluid' | 'fixed'
   contentMaxWidth: number
   contentPadding: number

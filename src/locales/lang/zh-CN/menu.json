@@ -39,5 +39,7 @@
   "TableColumns": "列设置与缓存",
   "TablePrinting": "打印与自定义区域",
   "TableCustom": "插槽与实例操作",
-  "RouteManagement": "路由管理"
+  "RouteManagement": "路由管理",
+  "RouteManagementVisual": "可视化配置",
+  "RouteManagementJson": "JSON 配置"
 }

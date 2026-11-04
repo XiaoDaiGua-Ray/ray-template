@@ -6,14 +6,26 @@ import { orderRoutes } from './utils/order-routes'
 
 const managementRoute: AppRouteRecordRaw = {
   path: ROUTE_MANAGEMENT_PATH,
-  name: 'RouteManagement',
-  component: () => import('@/views/route-management'),
   meta: {
     i18nKey: 'menu.RouteManagement',
     icon: 'action/setting',
     role: ['admin'],
     order: 100,
   },
+  children: [
+    {
+      path: 'visual',
+      name: 'RouteManagementVisual',
+      component: () => import('@/views/route-management/visual'),
+      meta: { i18nKey: 'menu.RouteManagementVisual' },
+    },
+    {
+      path: 'json',
+      name: 'RouteManagement',
+      component: () => import('@/views/route-management'),
+      meta: { i18nKey: 'menu.RouteManagementJson' },
+    },
+  ],
 }
 
 export const getStaticAppRoutes = () => orderRoutes(combineRawRouteModules())

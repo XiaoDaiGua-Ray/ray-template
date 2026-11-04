@@ -11,6 +11,7 @@ import { updateObjectValue } from '@/utils/update-object-value'
 import { usePreferredDark } from '@vueuse/core'
 import { cloneDeep, merge } from 'lodash-es'
 import { getDefaultSettingConfig, normalizeLayoutConfig } from './constant'
+import { createPreferenceFile, parsePreferenceFile } from './preference-file'
 
 export const piniaSettingStore = defineStore(
   'setting',
@@ -128,6 +129,20 @@ export const piniaSettingStore = defineStore(
       updateSettingState('colorWeakness', bool)
     }
 
+    const exportPreferences = () => createPreferenceFile(settingState)
+
+    const importPreferences = (text: string) => {
+      const { primaryColor, ...preferences } = parsePreferenceFile(text)
+
+      Object.assign(settingState, preferences, {
+        _appTheme:
+          preferences.appTheme === 'auto'
+            ? preferredDark.value
+            : preferences.appTheme === 'dark',
+      })
+      changePrimaryColor(primaryColor)
+    }
+
     watch(
       () => (settingState.appTheme === 'auto' ? preferredDark.value : void 0),
       (systemDark) => {
@@ -176,6 +191,8 @@ export const piniaSettingStore = defineStore(
       changePrimaryColor,
       updateSettingState,
       toggleColorWeakness,
+      exportPreferences,
+      importPreferences,
     }
   },
   {

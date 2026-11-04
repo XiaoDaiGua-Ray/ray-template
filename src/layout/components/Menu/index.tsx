@@ -20,6 +20,8 @@ export default defineComponent({
   props: {
     options: { type: Array as PropType<AppMenuOption[]>, default: void 0 },
     showLogo: { type: Boolean, default: true },
+    end: Boolean,
+    inert: Boolean,
   },
   setup(props) {
     const menuRef = shallowRef<MenuInst | null>(null)
@@ -59,7 +61,8 @@ export default defineComponent({
 
     const basicMenu = () => (
       <NLayoutSider
-        class="app-menu__sider"
+        class={['app-menu__sider', { 'app-menu__sider--end': props.end }]}
+        {...{ inert: props.inert }}
         showTrigger={!isTabletOrSmaller.value}
         collapseMode={getMenuConfig.value.collapsedMode}
         collapsedWidth={getMenuConfig.value.collapsedWidth}

@@ -1,7 +1,11 @@
 import Layout from '@/layout'
 import type { RouteRecordRaw } from 'vue-router'
 import { appExpandRoutes } from './app-route-modules'
-import { NOT_FOUND_ROUTE_PATH } from './constant'
+import {
+  NOT_FOUND_ROUTE_PATH,
+  ROUTE_MANAGEMENT_JSON_PATH,
+  ROUTE_MANAGEMENT_PATH,
+} from './constant'
 
 const legacyRedirects = [
   { path: '/tables', redirect: '/tables/basic' },
@@ -31,6 +35,7 @@ export function getLayoutRoutes(): RouteRecordRaw[] {
       ({ path, redirect }) =>
         !occupiedPaths.has(path) && occupiedPaths.has(redirect),
     ),
+    { path: ROUTE_MANAGEMENT_PATH, redirect: ROUTE_MANAGEMENT_JSON_PATH },
     {
       path: NOT_FOUND_ROUTE_PATH,
       name: 'RNotFound',

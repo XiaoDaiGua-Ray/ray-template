@@ -65,3 +65,21 @@ it('offers a restore button for custom content and also exits with Escape', asyn
     disposePinia(pinia)
   }
 })
+
+it('moves the full navigation to the right without adding a second menu', () => {
+  const pinia = createPinia()
+
+  setActivePinia(pinia)
+  piniaSettingStore().updateSettingState('layoutConfig', { mode: 'right' })
+  const wrapper = shallowMount(Layout, {
+    global: { renderStubDefaultSlot: true, plugins: [router, pinia] },
+  })
+
+  try {
+    expect(wrapper.get('app-menu-stub').attributes('end')).toBe('true')
+    expect(wrapper.find('top-navigation-stub').exists()).toBe(false)
+  } finally {
+    wrapper.unmount()
+    disposePinia(pinia)
+  }
+})

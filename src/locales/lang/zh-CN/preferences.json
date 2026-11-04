@@ -4,6 +4,14 @@
   "reset": "恢复默认设置",
   "resetDescription": "将布局、菜单和通用选项恢复为默认值。",
   "cancel": "取消",
+  "config": {
+    "export": "导出配置",
+    "import": "导入配置",
+    "imported": "配置已导入并保存",
+    "importError": "无法导入。请选择 Ray Template 导出的有效配置文件。",
+    "exportError": "无法导出当前配置，请检查设置后重试。",
+    "fileLimit": "配置文件不能超过 256 KiB。"
+  },
   "section": {
     "layout": "布局",
     "appearance": "外观",
@@ -28,6 +36,8 @@
     "colorWeakness": "色弱模式"
   },
   "transition": {
+    "slide-up": "向上浮入",
+    "slide-left": "向左滑入",
     "none": "无",
     "scale": "缩放出现",
     "fade-scale": "缩放淡出",

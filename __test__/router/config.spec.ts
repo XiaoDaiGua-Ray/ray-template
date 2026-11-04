@@ -1,4 +1,8 @@
-import { getStaticAppRoutes } from '@/router/app-route-modules'
+import {
+  appExpandRoutes,
+  getAppRawRoutes,
+  getStaticAppRoutes,
+} from '@/router/app-route-modules'
 import {
   exportRouteConfig,
   parseRouteConfig,
@@ -14,6 +18,26 @@ const parse = (routes: unknown[]) =>
   parseRouteConfig(JSON.stringify({ version: 1, routes }))
 
 describe('route configuration', () => {
+  it('keeps both management pages under the same admin-only menu', () => {
+    const root = getAppRawRoutes().find(
+      ({ path }) => path === '/route-management',
+    )
+    const leaves = appExpandRoutes().filter(({ path }) =>
+      path.startsWith('/route-management/'),
+    )
+
+    expect(root?.children?.map(({ path }) => path)).toEqual(['visual', 'json'])
+    expect(leaves.map(({ path }) => path)).toEqual([
+      '/route-management/visual',
+      '/route-management/json',
+    ])
+
+    for (const { meta } of leaves) {
+      expect(validRole(meta, 'admin')).toBe(true)
+      expect(validRole(meta, 'viewer')).toBe(false)
+    }
+  })
+
   it('round-trips all bundled routes with their view IDs and metadata', () => {
     const bundled = getStaticAppRoutes()
     const config = exportRouteConfig(bundled)
@@ -73,6 +97,11 @@ describe('route configuration', () => {
 
   it.each([
     [[{ ...page, path: '/route-management' }], /reserved/i],
+    [[{ ...page, path: '/ROUTE-MANAGEMENT/Visual' }], /reserved/i],
+    [
+      [{ ...page, path: '/reports', alias: '/route-management/json' }],
+      /reserved/i,
+    ],
     [[{ ...page, path: '/reports', name: 'RLogin' }], /reserved/i],
     [[{ ...page, path: '/reports', component: 'missing' }], /unknown view/i],
     [

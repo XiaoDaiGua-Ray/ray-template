@@ -10,6 +10,23 @@
     padding: 12px clamp(12px, 3vw, 20px) 20px;
     background: var(--r-canvas);
   }
+
+  .r-settings-drawer__actions,
+  .r-settings-drawer__file-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .r-settings-drawer__actions {
+    inline-size: 100%;
+    justify-content: space-between;
+  }
+
+  .r-settings-drawer__file-actions {
+    justify-content: flex-end;
+    margin-inline-start: auto;
+  }
 }
 
 .r-settings-heading {

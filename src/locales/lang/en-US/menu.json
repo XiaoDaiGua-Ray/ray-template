@@ -39,5 +39,7 @@
   "TableColumns": "Column preferences",
   "TablePrinting": "Printing and custom regions",
   "TableCustom": "Slots and instance methods",
-  "RouteManagement": "Route management"
+  "RouteManagement": "Route management",
+  "RouteManagementVisual": "Visual editor",
+  "RouteManagementJson": "JSON configuration"
 }

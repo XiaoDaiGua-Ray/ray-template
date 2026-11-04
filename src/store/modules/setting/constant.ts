@@ -16,6 +16,14 @@ type OmitKeys =
 
 interface Config extends Pick<SettingState, OmitKeys> {}
 
+export const LAYOUT_MODES = [
+  'side',
+  'top',
+  'mixed',
+  'right',
+  'split',
+] as const satisfies readonly LayoutConfig['mode'][]
+
 // SettingDrawer 默认配置系统配置项
 const defaultSettingConfig: Readonly<Config> = {
   layoutConfig: {
@@ -112,10 +120,7 @@ export function normalizeLayoutConfig(value: unknown): LayoutConfig {
       : fallback
 
   return {
-    mode:
-      source.mode === 'side' || source.mode === 'top' || source.mode === 'mixed'
-        ? source.mode
-        : defaults.mode,
+    mode: LAYOUT_MODES.find((mode) => mode === source.mode) ?? defaults.mode,
     contentWidth:
       source.contentWidth === 'fixed' || source.contentWidth === 'fluid'
         ? source.contentWidth

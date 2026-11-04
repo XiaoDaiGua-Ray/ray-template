@@ -22,7 +22,7 @@ export const scrollViewToTop = (route: RouteLocationNormalized) => {
     LAYOUT_CONTENT_REF.value?.scrollTo({
       top: 0,
       left: 0,
-      behavior: 'smooth',
+      behavior: 'instant',
     })
   }
 }

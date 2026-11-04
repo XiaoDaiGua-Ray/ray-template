@@ -22,6 +22,7 @@ import {
   FooterWrapper,
   HeaderWrapper,
 } from './default'
+import ContentLoading from './default/ContentWrapper/ContentLoading'
 import { findMenuRoot } from './navigation'
 
 export default defineComponent({
@@ -33,8 +34,12 @@ export default defineComponent({
     const { getMenuTagSwitch, getCopyrightSwitch, getLayoutConfig } =
       useSettingGetters()
     const { getMenuOptions, getMenuKey } = useMenuGetters()
-    const { layoutContentMaximize, layoutContentMaximizeStyle } =
-      useRuntimeGetters()
+    const {
+      globalMainLayoutLoad,
+      layoutContentSpinning,
+      layoutContentMaximize,
+      layoutContentMaximizeStyle,
+    } = useRuntimeGetters()
     const { setRuntimeState } = useRuntimeActions()
     const { maximize } = useMaximize()
     const { t } = useI18n('layout')
@@ -94,7 +99,11 @@ export default defineComponent({
         ) : (
           <>
             <HeaderWrapper />
-            {mode.value !== 'side' ? <TopNavigation /> : null}
+            {mode.value === 'top' ||
+            mode.value === 'mixed' ||
+            mode.value === 'split' ? (
+              <TopNavigation />
+            ) : null}
           </>
         )}
       </div>
@@ -124,12 +133,26 @@ export default defineComponent({
       if (getLockAppScreen()) return <UnlockScreen />
 
       const config = getLayoutConfig.value
+      const grouped = mode.value === 'mixed' || mode.value === 'split'
+      const wideHeader = mode.value === 'split' && config.fixedHeader
       const hasSider =
         mode.value === 'side' ||
-        (mode.value === 'mixed' && mixedChildren.value.length > 0)
+        mode.value === 'right' ||
+        (grouped && mixedChildren.value.length > 0)
+      const sidebar = () =>
+        hasSider
+          ? (slots.sidebar?.() ?? (
+              <Menu
+                options={grouped ? mixedChildren.value : void 0}
+                showLogo={!grouped}
+                end={mode.value === 'right'}
+                inert={layoutContentMaximize.value}
+              />
+            ))
+          : null
 
       return (
-        <NLayout
+        <div
           class="r-layout-full"
           style={[
             cssVars.value,
@@ -141,42 +164,61 @@ export default defineComponent({
                   : '100%',
             },
           ]}
-          hasSider
-          embedded
         >
-          {hasSider
-            ? (slots.sidebar?.() ?? (
-                <Menu
-                  options={
-                    mode.value === 'mixed' ? mixedChildren.value : void 0
-                  }
-                  showLogo={mode.value === 'side'}
-                />
-              ))
-            : null}
-          <NLayoutContent class="r-layout-full__viewer">
-            {config.fixedHeader ? (
-              <>
-                {header()}
-                {tabs()}
-              </>
-            ) : null}
-            <NLayoutContent
-              ref={LAYOUT_CONTENT_REF}
-              class={[
-                'r-layout-full__viewer-content',
-                { 'r-layout-content--maximized': layoutContentMaximize.value },
-              ]}
-              style={
-                layoutContentMaximize.value
-                  ? layoutContentMaximizeStyle.value
-                  : void 0
-              }
-              nativeScrollbar={false}
-              contentClass="r-layout-content-scroll"
-            >
-              {layoutContentMaximize.value ? (
-                <div class="r-layout-content-restore">
+          {wideHeader ? header() : null}
+          <NLayout
+            class="r-layout-full__body"
+            hasSider={hasSider}
+            siderPlacement={mode.value === 'right' ? 'right' : 'left'}
+            embedded
+          >
+            {mode.value !== 'right' ? sidebar() : null}
+            <NLayoutContent class="r-layout-full__viewer">
+              {config.fixedHeader ? (
+                <>
+                  {!wideHeader ? header() : null}
+                  {tabs()}
+                </>
+              ) : null}
+              <div
+                class={[
+                  'r-layout-content-viewport',
+                  {
+                    'r-layout-content--maximized': layoutContentMaximize.value,
+                  },
+                ]}
+                style={
+                  layoutContentMaximize.value
+                    ? layoutContentMaximizeStyle.value
+                    : void 0
+                }
+              >
+                <NLayoutContent
+                  ref={LAYOUT_CONTENT_REF}
+                  class="r-layout-full__viewer-content"
+                  nativeScrollbar={false}
+                  contentClass="r-layout-content-scroll"
+                >
+                  {!config.fixedHeader ? (
+                    <>
+                      {header()}
+                      {tabs()}
+                    </>
+                  ) : null}
+                  <main
+                    class="r-layout-content-inner"
+                    aria-busy={
+                      !slots.default &&
+                      (!globalMainLayoutLoad.value ||
+                        layoutContentSpinning.value)
+                    }
+                  >
+                    {slots.default?.() ?? <ContentWrapper />}
+                  </main>
+                  {!config.fixedFooter ? footer() : null}
+                </NLayoutContent>
+                {!slots.default ? <ContentLoading /> : null}
+                {layoutContentMaximize.value ? (
                   <button
                     type="button"
                     class="r-layout-content-restore__button"
@@ -190,25 +232,15 @@ export default defineComponent({
                     }}
                     onClick={() => maximize(false)}
                   >
-                    <RIcon name="action/out" size={16} />
-                    {t('restoreButton')}
+                    <RIcon name="action/fullscreen_fold" size={16} />
                   </button>
-                </div>
-              ) : null}
-              {!config.fixedHeader ? (
-                <>
-                  {header()}
-                  {tabs()}
-                </>
-              ) : null}
-              <main class="r-layout-content-inner">
-                {slots.default?.() ?? <ContentWrapper />}
-              </main>
-              {!config.fixedFooter ? footer() : null}
+                ) : null}
+              </div>
+              {config.fixedFooter ? footer() : null}
             </NLayoutContent>
-            {config.fixedFooter ? footer() : null}
-          </NLayoutContent>
-        </NLayout>
+            {mode.value === 'right' ? sidebar() : null}
+          </NLayout>
+        </div>
       )
     }
   },

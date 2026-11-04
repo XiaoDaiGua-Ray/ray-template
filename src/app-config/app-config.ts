@@ -113,8 +113,7 @@ export const APP_CATCH_KEY = {
  *
  * @description
  * 系统内容切换动画配置。
- * 但是在配置的时候，会自动拼接一个 transform 前缀。
- * 例如: transform-fade-bottom。
+ * 样式名在配置值后拼接 -transform，例如 fade-bottom-transform。
  */
 export const CONTENT_TRANSITION_OPTIONS = [
   {
@@ -141,4 +140,6 @@ export const CONTENT_TRANSITION_OPTIONS = [
     label: '底部消退',
     value: 'fade-bottom',
   },
+  { label: '向上浮入', value: 'slide-up' },
+  { label: '向左滑入', value: 'slide-left' },
 ]

@@ -4,7 +4,11 @@
   "side": "Sidebar",
   "top": "Top",
   "mixed": "Mixed",
+  "right": "Right sidebar",
+  "split": "Wide top",
   "modeHint": {
+    "right": "The full menu moves to the right of the content.",
+    "split": "The fixed header spans the full width. The sidebar shows the active section. Turn off Fixed header to scroll it with the content.",
     "side": "All menus live in the sidebar. Expand a section to see its submenus.",
     "top": "All menus are available from the top bar. Submenus open in dropdowns.",
     "mixed": "The top bar shows first-level menus. The sidebar appears when the current section has visible submenus."

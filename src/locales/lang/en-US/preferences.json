@@ -4,6 +4,14 @@
   "reset": "Restore defaults",
   "resetDescription": "Restore the default layout, menu and general options.",
   "cancel": "Cancel",
+  "config": {
+    "export": "Export settings",
+    "import": "Import settings",
+    "imported": "Settings imported and saved",
+    "importError": "Could not import settings. Choose a valid file exported by Ray Template.",
+    "exportError": "Could not export settings. Check your preferences and try again.",
+    "fileLimit": "The settings file must be 256 KiB or smaller."
+  },
   "section": {
     "layout": "Layout",
     "appearance": "Appearance",
@@ -28,6 +36,8 @@
     "colorWeakness": "Color vision mode"
   },
   "transition": {
+    "slide-up": "Rise in",
+    "slide-left": "Slide in from right",
     "none": "None",
     "scale": "Scale in",
     "fade-scale": "Scale and fade",

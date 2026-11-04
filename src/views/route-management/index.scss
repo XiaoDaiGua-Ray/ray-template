@@ -91,3 +91,33 @@
     grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr);
   }
 }
+
+.route-management__tree {
+  max-block-size: 540px;
+  margin-block-start: 16px;
+  overflow: auto;
+
+  .n-tree-node-content__text {
+    overflow-wrap: anywhere;
+  }
+}
+
+.route-management__node-actions + .route-management__hint {
+  overflow-wrap: anywhere;
+}
+
+.route-management__fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+  gap: 0 16px;
+
+  .n-form-item {
+    min-inline-size: 0;
+  }
+}
+
+@container (min-width: 850px) {
+  .route-management__workspace--visual {
+    grid-template-columns: minmax(240px, 1fr) minmax(0, 1.6fr);
+  }
+}

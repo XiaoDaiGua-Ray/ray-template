@@ -13,7 +13,11 @@ export default defineComponent({
     const { getMenuOptions, getMenuKey } = useMenuGetters()
     const { getLayoutConfig, getMenuConfig } = useSettingGetters()
     const { changeMenuModelValue } = useMenuActions()
-    const mixed = computed(() => getLayoutConfig.value.mode === 'mixed')
+    const mixed = computed(
+      () =>
+        getLayoutConfig.value.mode === 'mixed' ||
+        getLayoutConfig.value.mode === 'split',
+    )
     const options = computed(() =>
       mixed.value
         ? getMenuOptions.value

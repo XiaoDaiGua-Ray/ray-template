@@ -22,3 +22,7 @@
 ## 动态路由与示例页交接
 
 应用侧已准备好 [路由接入文档](../src/router/README.md)、[Schema](../src/router/config/schema.ts)、[Segment 说明](../src/components/RSegment/README.md) 和 [页面设计说明](ui-design.md)。应用提交可访问后，在站外的 `guide/routing.md` 补充来源切换、接口示例和版本校验，在组件参考中补充 `fitContent` 的选中态与过渡规则。站外截图使用更新后的登录页与管理页，并核对部署子路径。
+
+布局与路由编辑器交付后，站外 `guide/layout.md` 补充右侧导航、通栏分组、减少动态效果和浮动退出按钮；`guide/routing.md` 增加可视化与 JSON 两个入口，明确可视化应用仅保存在当前浏览器；`reference/hooks/layout.md` 说明加载提示以可见内容区为基准。引用对应的应用提交后再验证文档站构建和预览。
+
+站外 `guide/layout.md` 同步设置抽屉的偏好导入导出：JSON 只包含抽屉内偏好，校验通过后即时保存，独立于路由管理的 JSON 配置。

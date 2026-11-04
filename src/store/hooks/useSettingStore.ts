@@ -149,6 +149,8 @@ export const useSettingActions = () => {
     changePrimaryColor,
     updateSettingState,
     toggleColorWeakness,
+    exportPreferences,
+    importPreferences,
   } = piniaSettingStore()
 
   return {
@@ -156,5 +158,7 @@ export const useSettingActions = () => {
     changePrimaryColor,
     updateSettingState,
     toggleColorWeakness,
+    exportPreferences,
+    importPreferences,
   }
 }
