@@ -1,9 +1,9 @@
 import { RTablePro } from '@/components/RTablePro'
 import type { TableProInst } from '@/components/RTablePro'
-import { buildTableCsv } from '@/components/RTablePro/src/csv'
-import * as printing from '@/components/RTablePro/src/printing'
 import { mount } from '@vue/test-utils'
 import type { DataTableColumn } from 'naive-ui'
+import { buildTableCsv } from '../../packages/ui/src/RTablePro/src/csv'
+import * as printing from '../../packages/ui/src/RTablePro/src/printing'
 
 afterEach(() => vi.restoreAllMocks())
 

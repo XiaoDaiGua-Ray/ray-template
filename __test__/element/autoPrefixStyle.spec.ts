@@ -1,4 +1,4 @@
-import { autoPrefixStyle } from '../../src/utils/element'
+import { autoPrefixStyle } from '../../apps/admin/src/utils/element'
 
 describe('autoPrefixStyle', () => {
   it('should be defined', () => {

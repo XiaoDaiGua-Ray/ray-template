@@ -1,0 +1,30 @@
+{
+  "name": "@ray-template/docs",
+  "version": "6.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
+  },
+  "dependencies": {
+    "@ray-template/utils": "workspace:*",
+    "vue": "3.5.44",
+    "@ray-template/ui": "workspace:*",
+    "@ray-template/admin-shell": "workspace:*",
+    "@ray-template/composables": "workspace:*",
+    "@ray-template/directives": "workspace:*",
+    "@ray-template/icons": "workspace:*",
+    "@ray-template/routing": "workspace:*",
+    "@ray-template/http": "workspace:*",
+    "naive-ui": "2.45.3",
+    "vue-router": "5.4.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue-jsx": "5.1.6",
+    "sass": "1.107.1",
+    "vite": "6.4.5",
+    "vitepress": "1.6.4"
+  }
+}

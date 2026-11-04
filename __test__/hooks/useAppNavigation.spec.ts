@@ -1,16 +1,16 @@
 import { createMemoryHistory, createRouter } from 'vue-router'
-import { useAppNavigation } from '../../src/hooks/template/useAppNavigation'
-import type { AppMenuOption } from '../../src/types'
+import { useAppNavigation } from '../../apps/admin/src/hooks/template/useAppNavigation'
+import type { AppMenuOption } from '../../apps/admin/src/types'
 
 const { state, menus } = vi.hoisted(() => ({
   state: { router: void 0 as ReturnType<typeof createRouter> | undefined },
   menus: [{ fullPath: '/parent', children: [{ fullPath: '/target' }] }],
 }))
 
-vi.mock('../../src/hooks/template/useVueRouter', () => ({
+vi.mock('../../apps/admin/src/hooks/template/useVueRouter', () => ({
   useVueRouter: () => ({ router: state.router }),
 }))
-vi.mock('../../src/store', () => ({
+vi.mock('../../apps/admin/src/store', () => ({
   useMenuGetters: () => ({ getMenuOptions: { value: menus } }),
 }))
 

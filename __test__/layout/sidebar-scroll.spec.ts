@@ -1,12 +1,12 @@
 import { mount } from '@vue/test-utils'
 import { createPinia, disposePinia, setActivePinia } from 'pinia'
 import { nextTick } from 'vue'
-import { useSiderScroll } from '../../src/hooks/template/useSiderScroll'
-import Menu from '../../src/layout/components/Menu'
-import { router } from '../../src/router'
-import { piniaMenuStore } from '../../src/store/modules/menu'
-import { piniaSettingStore } from '../../src/store/modules/setting'
-import { positionSelectedMenuItem } from '../../src/utils'
+import { useSiderScroll } from '../../apps/admin/src/hooks/template/useSiderScroll'
+import Menu from '../../apps/admin/src/layout/components/Menu'
+import { router } from '../../apps/admin/src/router'
+import { piniaMenuStore } from '../../apps/admin/src/store/modules/menu'
+import { piniaSettingStore } from '../../apps/admin/src/store/modules/setting'
+import { positionSelectedMenuItem } from '../../apps/admin/src/utils'
 
 it.each([
   [true, '.n-layout-scroll-container'],

@@ -1,5 +1,5 @@
-import { useWatermark } from '../../src/hooks/template/useWatermark'
-import { useSettingGetters } from '../../src/store'
+import { useWatermark } from '../../apps/admin/src/hooks/template/useWatermark'
+import { useSettingGetters } from '../../apps/admin/src/store'
 import setupMiniApp from '../utils/setupMiniApp'
 
 describe('useWatermark', async () => {

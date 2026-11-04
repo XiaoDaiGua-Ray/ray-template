@@ -1,7 +1,7 @@
 import { createPinia, disposePinia, setActivePinia } from 'pinia'
 import { nextTick } from 'vue'
-import { useMaximize } from '../../src/hooks/template/useMaximize'
-import { piniaRuntimeStore } from '../../src/store/modules/runtime'
+import { useMaximize } from '../../apps/admin/src/hooks/template/useMaximize'
+import { piniaRuntimeStore } from '../../apps/admin/src/store/modules/runtime'
 
 it('shares maximize state across callers and cancels stale completion callbacks', async () => {
   const pinia = createPinia()

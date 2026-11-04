@@ -1,4 +1,4 @@
-import { usePagination } from '../../src/hooks/web/usePagination'
+import { usePagination } from '../../apps/admin/src/hooks/web/usePagination'
 
 describe('usePagination', () => {
   let count = 0

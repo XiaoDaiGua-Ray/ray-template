@@ -1,11 +1,14 @@
+import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
-import pkg from './package.json' with { type: 'json' }
+import pkg from './apps/admin/package.json' with { type: 'json' }
+import workspace from './package.json' with { type: 'json' }
 import config from './vite.custom.config.ts'
 import vitePlugins from './vite.plugin.config.ts'
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
-  const { dependencies, devDependencies, name, version } = pkg
+  const { dependencies, name, version } = pkg
+  const { devDependencies } = workspace
   const {
     server,
     buildOptions,
@@ -30,6 +33,7 @@ export default defineConfig(({ mode }) => {
   }
 
   return {
+    root: fileURLToPath(new URL('./apps/admin', import.meta.url)),
     base: base || '/',
     define: {
       __APP_CFG__: JSON.stringify(__APP_CFG__),
@@ -58,7 +62,6 @@ export default defineConfig(({ mode }) => {
         'vue-hooks-plus',
         'interactjs',
         'pinia-plugin-persistedstate',
-        'currency.js',
         '@faker-js/faker/locale/zh_CN',
       ],
     },

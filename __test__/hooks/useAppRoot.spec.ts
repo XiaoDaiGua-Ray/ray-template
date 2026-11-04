@@ -1,4 +1,4 @@
-import { useAppRoot } from '../../src/hooks/template/useAppRoot'
+import { useAppRoot } from '../../apps/admin/src/hooks/template/useAppRoot'
 import setupMiniApp from '../utils/setupMiniApp'
 
 describe('useAppRoot', async () => {

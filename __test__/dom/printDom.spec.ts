@@ -1,6 +1,6 @@
 import { toJpeg } from 'html-to-image'
 import print from 'print-js'
-import { printDom } from '../../src/utils/dom'
+import { printDom } from '../../apps/admin/src/utils/dom'
 
 vi.mock('html-to-image', () => ({
   toSvg: vi.fn(),

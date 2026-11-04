@@ -1,4 +1,4 @@
-import { getAppEnvironment } from '../../src/utils/basic'
+import { getAppEnvironment } from '../../apps/admin/src/utils/basic'
 
 describe('getAppEnvironment', () => {
   it('should return MODE is test', () => {

@@ -1,4 +1,4 @@
-import { useContextmenuCoordinate } from '../../src/hooks/components/useContextmenuCoordinate'
+import { useContextmenuCoordinate } from '../../apps/admin/src/hooks/components/useContextmenuCoordinate'
 import createRefElement from '../utils/createRefElement'
 import renderHook from '../utils/renderHook'
 

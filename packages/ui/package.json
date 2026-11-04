@@ -1,0 +1,40 @@
+{
+  "name": "@ray-template/ui",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./theme.css": "./src/theme.css",
+    "./barcode": "./src/RBarcode/index.ts",
+    "./chart": "./src/RChart/index.ts",
+    "./collapse-grid": "./src/RCollapseGrid/index.ts",
+    "./draggable-card": "./src/RDraggableCard/DraggableCard.tsx",
+    "./flow": "./src/RFlow/index.ts",
+    "./form": "./src/RForm/index.ts",
+    "./icon": "./src/RIcon/index.ts",
+    "./iframe": "./src/RIframe/index.ts",
+    "./modal": "./src/RModal/index.ts",
+    "./more-dropdown": "./src/RMoreDropdown/index.ts",
+    "./segment": "./src/RSegment/index.ts",
+    "./table-pro": "./src/RTablePro/index.ts",
+    "./services": "./src/services.ts",
+    "./table-pro/messages/*": "./src/RTablePro/src/*.json"
+  },
+  "dependencies": {
+    "@ray-template/utils": "workspace:*",
+    "@ray-template/composables": "workspace:*",
+    "@ray-template/icons": "workspace:*",
+    "@vueuse/core": "15.0.0",
+    "@logicflow/core": "2.2.5",
+    "@logicflow/extension": "2.3.1",
+    "echarts": "6.1.0",
+    "interactjs": "1.10.28",
+    "jsbarcode": "3.12.3",
+    "lodash-es": "4.18.1",
+    "vue-hooks-plus": "2.4.3"
+  },
+  "peerDependencies": {
+    "vue": "3.5.44",
+    "naive-ui": "2.45.3"
+  }
+}

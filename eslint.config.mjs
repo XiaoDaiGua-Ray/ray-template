@@ -10,16 +10,18 @@ export default defineConfig([
   globalIgnores([
     '**/node_modules/**',
     '**/dist/**',
+    '**/.vitepress/cache/**',
     '**/coverage/**',
     '**/.ai-local/**',
     '**/.harness-local/**',
     '**/public/**',
+    '**/playground-dist/**',
     'unplugin/**',
     '**/*.d.ts',
     '**/.husky/_/**',
   ]),
   {
-    files: ['**/*.{js,mjs,cjs,ts,tsx,vue}'],
+    files: ['**/*.{js,mjs,cjs,ts,mts,tsx,vue}'],
     extends: [
       js.configs.recommended,
       ...tseslint.configs.recommended,

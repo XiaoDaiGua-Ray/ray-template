@@ -1,4 +1,4 @@
-import { downloadBase64File } from '../../src/utils/basic'
+import { downloadBase64File } from '../../apps/admin/src/utils/basic'
 
 describe('downloadBase64File', () => {
   const base64 =

@@ -1,6 +1,6 @@
 import { createPinia, disposePinia, setActivePinia } from 'pinia'
-import { useSpinning } from '../../src/hooks/template/useSpinning'
-import { piniaRuntimeStore } from '../../src/store/modules/runtime'
+import { useSpinning } from '../../apps/admin/src/hooks/template/useSpinning'
+import { piniaRuntimeStore } from '../../apps/admin/src/store/modules/runtime'
 
 describe('useSpinning', () => {
   let pinia: ReturnType<typeof createPinia>

@@ -6,7 +6,7 @@ import {
   isCurrency,
   multiply,
   subtract,
-} from '../../src/utils/precision'
+} from '../../apps/admin/src/utils/precision'
 
 describe('precision', () => {
   it('check value is currency object', () => {

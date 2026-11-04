@@ -1,0 +1,62 @@
+# 接口、取消与 Mock
+
+业务代码调用 `apps/admin/src/api` 中的函数，后者使用 `@/axios` 的 `request`。成功时实例直接解析为响应体 `T`，失败会拒绝；接口还包了一层业务响应时，由业务层继续解析。需要原始响应头或状态码时，使用保留完整响应的 Axios 实例。
+
+## 接入请求和取消
+
+```ts
+import { request } from '@/axios'
+
+interface Order {
+  id: string
+  customer: string
+}
+
+export function loadOrders(
+  params: Record<string, unknown>,
+  signal: AbortSignal,
+) {
+  return request<{ data: Order[]; total: number }>({
+    method: 'get',
+    url: '/api/orders',
+    params,
+    signal,
+    cancelConfig: { cancel: false },
+  })
+}
+```
+
+默认取消器按 URL、方法、参数和请求体识别重复请求，默认布局在路由更新前取消受管理的请求。示例将信号交给 TablePro 管理，所以关闭模板的默认注入；否则默认取消器会替换调用方传入的 signal。后台任务禁用默认取消后，需要自行管理生命周期。
+
+## 配置与拦截器
+
+- `apps/admin/src/app-config/request-config.ts`：统一修改 `baseURL`、超时和默认 headers。
+- `apps/admin/src/axios/axios-interceptor/{request,response}/provider.ts`：登记插件；请求头、鉴权响应等放入对应的 `plugins`。
+- `useRequest` 包装同一请求实例，放在有效的 Vue effect 作用域内使用。
+
+## 从演示切到真实服务
+
+开发时人员列表请求 `GET /api/list`，Vite Mock 服务在站点根路径处理接口。静态演示改用 `apps/admin/src/demo-data/people.ts` 的本地数据，能在 GitHub Pages 上独立运行。业务项目应换成自己的 API 和会话，按环境配置开发代理或服务端反代；浏览器端 `VITE_*` 变量不能放密钥。
+
+[请求实例](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/axios/instance.ts) · [演示接口](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/api/demo/mock/person.ts)
+
+## useRequest 与手动执行
+
+`useRequest<Response>(fetchOptions, options?)` 从 `@/axios` 导入，使用模板 Axios 实例执行同一份配置。`options` 传给 vue-hooks-plus，例如 `manual`、成功和失败回调。返回的数据、错误、加载状态与运行方法来自上游 Hook。应用在 `setup` 或有效 effect scope 内创建它。
+
+```ts
+import { useRequest } from '@/axios'
+
+export function useOrderSummary() {
+  return useRequest<{ total: number }>(
+    { url: '/api/orders/summary', method: 'get' },
+    { manual: true },
+  )
+}
+```
+
+调用 `run()` 触发手动加载。这个包装的请求函数从 `fetchOptions` 读取配置，不会把 `run(...)` 参数自动映射成请求体或 query；需要动态 service 时用同入口导出的 `useHookPlusRequest(service, options?)`，在 service 中调用 `request`。错误提示由业务配置或响应拦截器负责，当前默认拦截器不消费 `responseSuccessMessage` / `responseErrorMessage` 两个类型字段。
+
+默认头注入包含演示 `X-TOKEN` 与示例头。对接真实接口时在请求插件中校验目标来源，并按后端约定设置认证头。模板 Axios 实例用来请求自己的业务接口；第三方地址使用明确配置的独立客户端。
+
+[请求 Hook](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/axios/index.ts) · [请求配置类型](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/packages/http/src/types.ts) · [头注入实现](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/axios/axios-interceptor/request/plugins/request-headers.ts)

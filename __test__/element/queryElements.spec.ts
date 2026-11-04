@@ -1,4 +1,4 @@
-import { queryElements } from '../../src/utils/element'
+import { queryElements } from '../../apps/admin/src/utils/element'
 
 describe('queryElements', () => {
   const div = document.createElement('div')

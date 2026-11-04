@@ -1,4 +1,4 @@
-import { colorToRgba } from '../../src/utils/element'
+import { colorToRgba } from '../../apps/admin/src/utils/element'
 
 describe('colorToRgba', () => {
   it('should be defined', () => {

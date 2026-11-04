@@ -1,4 +1,4 @@
-import { useElementFullscreen } from '../../src/hooks/web/useElementFullscreen'
+import { useElementFullscreen } from '../../apps/admin/src/hooks/web/useElementFullscreen'
 
 // Happy DOM 验证状态与样式恢复；实际布局和动画仍需在浏览器验收。
 describe('useElementFullscreen', () => {

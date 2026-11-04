@@ -2,13 +2,14 @@
   "routing": {
     "description": "路由、菜单、权限与持久化",
     "paths": [
-      "src/router",
-      "src/router/README.md",
-      "src/store",
-      "src/store/README.md",
-      "src/router/config/schema.ts",
-      "src/router/config/views.ts",
-      "src/views/route-management"
+      "apps/admin/src/router",
+      "apps/admin/src/router/README.md",
+      "apps/admin/src/store",
+      "apps/admin/src/store/README.md",
+      "apps/admin/src/router/config/schema.ts",
+      "apps/admin/src/router/config/views.ts",
+      "apps/admin/src/views/route-management",
+      "packages/routing"
     ],
     "tests": [
       "__test__/router/",
@@ -21,36 +22,53 @@
   "ui": {
     "description": "页面、组件、布局、主题与国际化",
     "paths": [
-      "src/views",
-      "src/components/README.md",
-      "src/app-components/README.md",
-      "src/layout/README.md",
-      "src/locales/README.md",
-      "src/hooks/README.md",
+      "apps/admin/src/views",
+      "apps/admin/src/components/README.md",
+      "apps/admin/src/app-components/README.md",
+      "apps/admin/src/layout/README.md",
+      "apps/admin/src/locales/README.md",
+      "apps/admin/src/hooks/README.md",
       "docs/ui-design.md",
-      "src/views/login",
-      "src/views/demo/components/DemoPage.tsx",
-      "src/components/RSegment/README.md",
-      "src/app-components/provider/AppAutocompleteDefaults"
+      "apps/docs/examples",
+      "apps/admin/src/views/login",
+      "apps/admin/src/views/demo/components/DemoPage.tsx",
+      "apps/admin/src/components/RSegment/README.md",
+      "apps/admin/src/app-components/provider/AppAutocompleteDefaults",
+      "packages/ui",
+      "packages/admin-shell",
+      "packages/composables",
+      "packages/directives"
     ],
     "tests": [
       "__test__/app/",
       "__test__/components/",
       "__test__/hooks/",
-      "__test__/layout/"
+      "__test__/layout/",
+      "__test__/workspace/consumer.spec.tsx"
     ]
   },
   "api": {
     "description": "API、Axios 拦截器与演示 Mock",
-    "paths": ["src/api", "src/axios/README.md", "mock/demo", "src/demo-data"],
-    "tests": ["__test__/axios/", "__test__/mock/"]
+    "paths": [
+      "apps/admin/src/api",
+      "apps/admin/src/axios/README.md",
+      "apps/admin/mock/demo",
+      "apps/admin/src/demo-data",
+      "packages/http"
+    ],
+    "tests": [
+      "__test__/axios/",
+      "__test__/mock/",
+      "__test__/workspace/http-client.spec.ts"
+    ]
   },
   "icons": {
     "description": "图标分包、类型清单与热更新",
     "paths": [
-      "src/icons/A_README.md",
+      "packages/icons/src/A_README.md",
       "scripts/icons.mjs",
-      "vite.plugin.config.ts"
+      "vite.plugin.config.ts",
+      "packages/icons/scripts/icons.mjs"
     ],
     "tests": ["__test__/icons/"]
   },
@@ -61,13 +79,19 @@
       "harness/run.mjs",
       "harness/scopes.json",
       "llms.txt",
-      ".github/workflows/ci.yaml"
+      ".github/workflows/ci.yaml",
+      "scripts/check-package-boundaries.mjs",
+      "scripts/assemble-pages.mjs"
     ],
     "tests": ["__test__/harness/"]
   },
   "utils": {
     "description": "公共工具、兼容入口与数据契约",
-    "paths": ["src/utils/README.md", "src/utils/index.ts"],
+    "paths": [
+      "apps/admin/src/utils/README.md",
+      "apps/admin/src/utils/index.ts",
+      "packages/utils"
+    ],
     "tests": [
       "__test__/basic/",
       "__test__/cache/",

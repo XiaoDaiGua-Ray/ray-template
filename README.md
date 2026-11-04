@@ -1,8 +1,12 @@
 # Ray Template · Vue 3 Admin Dashboard Template
 
-[简体中文](README.zh-CN.md) · **[Live demo](https://xiaodaigua-ray.github.io/ray-template/)** · **[Documentation](https://xiaodaigua-ray.github.io/ray-template-doc/)** · [Quick start](#quick-start)
+[简体中文](README.zh-CN.md) · **[Live demo](https://xiaodaigua-ray.github.io/ray-template/)** · **[Documentation](https://xiaodaigua-ray.github.io/ray-template/docs/)** · [Quick start](#quick-start)
 
 Ray Template is an **open-source, ready-to-run frontend template** for admin dashboards, back-office tools, and internal apps. Run the demo to try a workspace with role-based menus and page tabs, then reuse TablePro list pages, workspace layouts, and route modules in your own app.
+
+**Ray Template 6.0.0 starts a new major version.** It organizes Ray Admin, the documentation site, and reusable packages in one workspace. v6 does not offer an in-place upgrade from v5 or guarantee compatibility with v5 imports, APIs, deployment settings, or browser data. Existing projects can stay on [legacy/v5](https://github.com/XiaoDaiGua-Ray/ray-template/tree/legacy/v5), the final v5 main snapshot at `6f095b7` with manifest version `5.2.5`, or use the existing [v5.2.4 tag](https://github.com/XiaoDaiGua-Ray/ray-template/tree/v5.2.4).
+
+[v6 architecture and adoption guide](apps/docs/guide/architecture.md) · [Version boundaries](apps/docs/migration.md)
 
 **Stack**: Vue 3 · TypeScript / TSX · Naive UI · Vue Router · Pinia · Vue I18n · Vite / Rolldown · Axios · Vitest
 
@@ -20,7 +24,7 @@ Use `RTablePro` with `bare` for a plain table, or add search, pagination, and a 
 - **Long lists and column controls**: Fill the available workspace and use virtual scrolling for large lists. Users can show, hide, reorder, or pin columns. Set `columnStateKey` to remember hidden columns across reloads.
 - **CSV and printing**: Export or print the current page's visible data columns by default. Point printing at a custom region for documents that need their own layout.
 
-[TablePro API and data contract](src/components/RTablePro/README.md)
+[TablePro API and data contract](packages/ui/src/RTablePro/README.md)
 
 ### A configurable workspace
 
@@ -28,19 +32,19 @@ Switch between sidebar, top, and mixed navigation. Narrow screens use a menu dra
 
 Page tabs keep multiple tasks open, and breadcrumbs show where you are. Find menu items with `⌘/Ctrl + K`, and switch between light and dark themes or English and Simplified Chinese.
 
-[Layout playground source](src/views/demo/layout-demo.tsx) · [Layout configuration and slots](src/layout/README.md)
+[Layout playground source](apps/admin/src/views/demo/layout-demo.tsx) · [Layout configuration and slots](apps/admin/src/layout/README.md)
 
 ### Route modules connect pages, menus, and permissions
 
-Declare a page in `src/router/modules` to generate its navigation and breadcrumbs. Route metadata controls menu labels and icons, roles, visibility, and `keepAlive`. Detail pages can extend the breadcrumb while keeping the current menu and tab. Role checks cover both menu filtering and direct navigation. Connect your backend to validate sessions and authorize API requests.
+Declare a page in `apps/admin/src/router/modules` to generate its navigation and breadcrumbs. Route metadata controls menu labels and icons, roles, visibility, and `keepAlive`. Detail pages can extend the breadcrumb while keeping the current menu and tab. Role checks cover both menu filtering and direct navigation. Connect your backend to validate sessions and authorize API requests.
 
-[Routing guide](src/router/README.md) · [Nested navigation and caching example](src/router/modules/demo/multi-menu.ts)
+[Routing guide](apps/admin/src/router/README.md) · [Nested navigation and caching example](apps/admin/src/router/modules/demo/multi-menu.ts)
 
 ### Reusable components, composables, and SVG icons
 
-- **Components**: Start with `RForm` and `RModal` for forms and dialogs. `RChart` manages ECharts initialization, resizing, and theme changes. The demo also includes LogicFlow diagrams, barcodes, and draggable cards. [Component guide](src/components/README.md)
-- **Composables**: Template hooks cover page refresh, content maximization, menu badges, and watermarks. Web hooks demonstrate screenshots, printing, and element fullscreen. The examples include expandable usage code. [Composables and examples](src/hooks/README.md)
-- **SVG icons**: Add an SVG to a group under `src/icons` to generate typed names and sprites. Routes and `RIcon` share names such as `navigation/dashboard`. The icon gallery lets you browse by group and copy TSX usage. [SVG icon workflow](src/icons/A_README.md)
+- **Components**: Start with `RForm` and `RModal` for forms and dialogs. `RChart` manages ECharts initialization, resizing, and theme changes. The demo also includes LogicFlow diagrams, barcodes, and draggable cards. [Component guide](apps/admin/src/components/README.md)
+- **Composables**: Template hooks cover page refresh, content maximization, menu badges, and watermarks. Web hooks demonstrate screenshots, printing, and element fullscreen. The examples include expandable usage code. [Composables and examples](apps/admin/src/hooks/README.md)
+- **SVG icons**: Add an SVG to a group under `packages/icons/src` to generate typed names and sprites. Routes and `RIcon` share names such as `navigation/dashboard`. The icon gallery lets you browse by group and copy TSX usage. [SVG icon workflow](packages/icons/src/A_README.md)
 
 ## Quick start
 
@@ -58,45 +62,29 @@ pnpm dev
 
 Open [http://127.0.0.1:9527/ray-template/](http://127.0.0.1:9527/ray-template/) or use the URL printed by Vite. The prefilled demo sign-in and mock data let you run the template before connecting a backend.
 
+Run `pnpm docs:dev` to develop the [documentation and interactive examples](apps/docs/README.md) from the same checkout.
+
 ## Project structure
 
 ```text
-.
-├── src/
-│   ├── main.ts              # Bootstraps the app, router, state, and i18n
-│   ├── App.tsx              # Root component with global providers and layout
-│   ├── views/               # Sign-in, dashboard, business pages, and demos
-│   │   └── demo/            # TablePro, layout playground, and hook examples
-│   ├── router/
-│   │   └── modules/         # Page routes, menu metadata, and roles
-│   ├── layout/              # Navigation, page tabs, breadcrumbs, and content
-│   ├── components/          # Shared UI exported through @/components
-│   ├── app-components/      # App-specific UI and global providers
-│   ├── api/                 # API functions grouped by feature
-│   ├── axios/               # HTTP client, interceptors, and cancellation
-│   ├── store/               # Pinia modules and access methods
-│   ├── hooks/               # Template, component, and browser composables
-│   ├── app-config/          # App, routing, theme, and language settings
-│   ├── locales/             # English and Simplified Chinese messages
-│   ├── icons/               # Grouped SVG sources and generated manifest
-│   ├── styles/              # Global styles, design tokens, and theme overrides
-│   ├── directives/          # Global Vue directives
-│   ├── types/               # Shared types and declarations
-│   ├── utils/               # Shared utility functions
-│   └── demo-data/           # Sample data for mock APIs and the static demo
-├── mock/                    # Mock endpoints for local development
-├── public/                  # Static assets copied into the build as is
-├── vite-helper/             # Build helpers for icons, CDN, and SEO
-├── vite.config.ts           # Vite entry for development and builds
-├── vite.custom.config.ts    # Deployment base, dev proxy, and build options
-├── tsconfig.json            # References the app, Node, and test TS projects
-├── package.json             # Dependencies, runtime versions, and commands
-├── scripts/                 # Environment checks and icon generation
-├── __test__/                # Vitest suites and test utilities
-├── harness/                 # Task scopes, targeted checks, and report generation
-├── .github/workflows/       # CI checks and GitHub Pages deployment
-└── docs/                    # Architecture, design, and engineering conventions
+ray-template/
+├── apps/
+│   ├── admin/          # Ray Admin: pages, sessions, permissions, env and mocks
+│   └── docs/           # VitePress: guides, API reference and live examples
+├── packages/
+│   ├── admin-shell/    # Layout, navigation, tabs, settings and transitions
+│   ├── ui/             # TablePro, RBarcode, RChart and other shared components
+│   ├── composables/    # Reusable Vue composables and browser helpers
+│   ├── directives/     # Vue directives
+│   ├── icons/          # SVG assets, icon names and manifest
+│   ├── routing/        # Route schemas, validation and menu helpers
+│   ├── http/           # HTTP clients, interceptors and request cancellation
+│   └── utils/          # Precision, object and storage utilities
+├── harness/            # Regression checks and local reports
+└── pnpm-lock.yaml      # Shared workspace lockfile
 ```
+
+Ray Admin starts in `apps/admin/src/main.ts`. Its `App.tsx` supplies theme, translations, icons, and column preference storage. Shared packages expose public entry points through `exports`. The documentation runs the same packages. The [TablePro demo](apps/docs/reference/table-pro.md) uses simulated requests to show cancellation and retry, while the [layout playground](apps/docs/guide/layout.md) runs with its own in-memory router.
 
 See the [architecture map](docs/architecture.md) for how these modules work together.
 
@@ -106,7 +94,7 @@ This small people directory uses the template's mock query function. To adapt it
 
 ```tsx
 import { getPersonList } from '@/api/demo/mock/person'
-import { RTablePro } from '@/components'
+import { RTablePro } from '@ray-template/ui/table-pro'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -126,9 +114,9 @@ export default defineComponent({
 })
 ```
 
-1. **Build the view.** Add a page in `src/views`. The [remote table example](src/views/demo/tables/remote.tsx) shows sorting, row selection, and toolbar actions.
-2. **Connect navigation.** Add a route in `src/router/modules` and give its menu entry English and Simplified Chinese labels. Follow the [routing guide](src/router/README.md) when setting up page caching.
-3. **Connect your data.** Define your API in `src/api`, use `src/axios` for interceptors and request cancellation, and connect your real sign-in and session. The people directory uses a mock HTTP endpoint in development and sample data in the static preview. [Request layer guide](src/axios/README.md)
+1. **Build the view.** Add a page in `apps/admin/src/views`. The [remote table example](apps/admin/src/views/demo/tables/remote.tsx) shows sorting, row selection, and toolbar actions.
+2. **Connect navigation.** Add a route in `apps/admin/src/router/modules` and give its menu entry English and Simplified Chinese labels. Follow the [routing guide](apps/admin/src/router/README.md) when setting up page caching.
+3. **Connect your data.** Define your API in `apps/admin/src/api`, use `apps/admin/src/axios` for interceptors and request cancellation, and connect your real sign-in and session. The people directory uses a mock HTTP endpoint in development and sample data in the static preview. [Request layer guide](apps/admin/src/axios/README.md)
 
 ## Checks, builds, and deployment
 
@@ -139,6 +127,8 @@ export default defineComponent({
 | `pnpm harness context`        | Find entry points and checks for areas such as routing, UI, and APIs                        |
 | `pnpm harness verify`         | Run the full check and save a local report, or pass a scope to run targeted checks          |
 | `pnpm build` / `pnpm preview` | Build into `dist/production` or serve the build locally                                     |
+
+`pnpm docs:build` builds the documentation separately. `pnpm pages:build` assembles both builds under `dist/pages` for `/ray-template/` and `/ray-template/docs/`.
 
 Use the [architecture map](docs/architecture.md) to find module and configuration entry points. See the [deployment guide](docs/architecture.md#deployment-and-search-discovery) for root or subpath hosting and search metadata. Contributors and coding agents share the instructions in [AGENTS.md](AGENTS.md) and the [AI Harness](harness/README.md).
 

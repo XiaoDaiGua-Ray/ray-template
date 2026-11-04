@@ -1,4 +1,4 @@
-import { renderNode } from '../../src/utils/vue/render-node'
+import { renderNode } from '../../apps/admin/src/utils/vue/render-node'
 import createRefElement from '../utils/createRefElement'
 
 describe('renderNode', () => {

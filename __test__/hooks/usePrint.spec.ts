@@ -1,5 +1,5 @@
 import print from 'print-js'
-import { usePrint } from '../../src/hooks/web/usePrint'
+import { usePrint } from '../../apps/admin/src/hooks/web/usePrint'
 
 vi.mock('print-js', () => ({ default: vi.fn() }))
 

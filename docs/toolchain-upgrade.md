@@ -168,6 +168,22 @@ Pinia 设置沿用原持久化 key，旧裸 Logo 名称在读取时迁移；锁�
 - 干净的 `HEAD` 加本次修复复用本机已安装依赖执行 `pnpm harness verify`，66 个测试文件的 285 个用例与生产构建通过。原工作区的全量检查在 `__test__/router/config.spec.ts` 初始化时失败，独立执行 `pnpm build` 通过。
 - 构建产物包含 `.nojekyll`。生产预览首页引用的 12 个 JS 和 CSS 资源均返回 HTTP 200，内容与产物一致。Chrome 使用演示账号进入首页，控制台无错误。GitHub Pages 待部署后回查。
 
+## 2026-11-04 文档工作区与页内示例
+
+文档迁入 `apps/docs`，与后台和 `packages/utils` 共用根锁文件。VitePress `1.6.4` 使用 Vite `6.4.5`，覆盖只作用于 VitePress；后台保留 Vite `8.3.5`。`@/utils/precision` 转发共享包，RBarcode 仍由应用维护，文档按需加载原组件。
+
+- 本机 macOS（Node.js 26.13.0、pnpm 12.16.1）通过 `pnpm harness verify`，含 66 个测试文件、291 个用例，以及应用和文档生产构建。报告：`.harness-local/runs/all-ukYffY/report.json`。
+- 检查了 93 个旧路径的目标页和锚点。Chrome 在生产子路径验证了精度输入、条码重绘与非法输入恢复、示例代码、搜索、旧路径跳转、明暗切换和 390px 布局。
+- 当前只验证了本地构建。Docker 镜像、远端 CI 和 GitHub Pages 迁址未验证。
+
+## 2026-11-04 Ray Admin 与共享能力拆分
+
+Ray Admin 的应用入口迁到 `apps/admin`，文档和应用经公开入口使用八个共享包。根目录保留开发、构建和 Harness 命令，应用与文档的 Vite 版本分别锁定。`pnpm pages:build` 生成组合产物，配置站点源地址后另生成旧文档跳转产物。
+
+- Node.js 26.13.0、pnpm 12.16.1 下冻结锁文件安装及 `pnpm harness verify` 通过。含包边界检查、独立类型检查、68 个测试文件的 293 个用例，以及后台和文档生产构建。报告位于 `.harness-local/runs/all-GPS5No/report.json`。
+- 开发服务器的 `/api/list` 返回 HTTP 200。Chrome 生产预览验证了演示登录、导航偏好刷新恢复、图标和文档交互，覆盖 TablePro 取消及失败重试、外壳导航和主题、精度工具、条码、路由校验、防抖和全屏。检查了 93 个旧路径的目标和锚点，并生成 138 个旧站跳转页。
+- Docker、无界宿主和远端 CI 未运行。旧站迁址需在 GitHub Pages 发布时另行验收。
+
 ## 参考资料
 
 - [Node.js 26.13.0 LTS](https://nodejs.org/en/blog/release/v26.13.0)

@@ -1,8 +1,12 @@
 # Ray Template · Vue 3 中后台管理模板
 
-[English](README.md) · **[在线演示](https://xiaodaigua-ray.github.io/ray-template/)** · **[在线文档](https://xiaodaigua-ray.github.io/ray-template-doc/)** · [快速开始](#快速开始)
+[English](README.md) · **[在线演示](https://xiaodaigua-ray.github.io/ray-template/)** · **[在线文档](https://xiaodaigua-ray.github.io/ray-template/docs/)** · [快速开始](#快速开始)
 
 Ray Template 是一套**开箱即用的中后台前端模板**，适合搭建管理后台、运营工作台和内部工具。克隆后即可体验带权限菜单和多标签页的工作台，也可以直接把 TablePro 列表页、布局和路由模块用在业务里。
+
+**Ray Template 6.0.0 是新的主版本。** v6 以 Monorepo 组织 Ray Admin、官网文档和共享包。它不承诺兼容 v5 的内部导入、接口、部署配置或浏览器数据，也不提供原地升级。现有 v5 项目可以继续使用 [legacy/v5](https://github.com/XiaoDaiGua-Ray/ray-template/tree/legacy/v5)（最后的 v5 主线快照 `6f095b7`，清单版本 `5.2.5`），或使用已打标签的 [v5.2.4](https://github.com/XiaoDaiGua-Ray/ray-template/tree/v5.2.4)。
+
+[版本分界与接入说明](apps/docs/migration.md) · [v6 架构指南](apps/docs/guide/architecture.md)
 
 **技术栈**：Vue 3 · TypeScript / TSX · Naive UI · Vue Router · Pinia · Vue I18n · Vite / Rolldown · Axios · Vitest
 
@@ -20,7 +24,7 @@ Ray Template 是一套**开箱即用的中后台前端模板**，适合搭建管
 - **长列表和列设置**：表格可填充工作区，配合虚拟滚动；用户可调整列的显示、顺序和固定位置，通过 `columnStateKey` 跨刷新记住隐藏列。
 - **导出与打印**：默认导出和打印当前页的可见数据列。报表、单据等独立排版可指定自定义打印区域。
 
-[TablePro 用法与数据契约](src/components/RTablePro/README.md)
+[TablePro 用法与数据契约](packages/ui/src/RTablePro/README.md)
 
 ### 应用外壳：适配不同的后台工作方式
 
@@ -28,19 +32,19 @@ Ray Template 是一套**开箱即用的中后台前端模板**，适合搭建管
 
 标签页可在多个页面之间切换，面包屑标示当前位置，用 `⌘/Ctrl + K` 可以查找菜单。全局提供明暗主题和中英文切换。
 
-[布局实验室源码](src/views/demo/layout-demo.tsx) · [布局配置与插槽](src/layout/README.md)
+[布局实验室源码](apps/admin/src/views/demo/layout-demo.tsx) · [布局配置与插槽](apps/admin/src/layout/README.md)
 
 ### 路由模块：把页面、菜单与权限放在同一处配置
 
-在 `src/router/modules` 声明页面，模板按路由配置生成菜单和面包屑。路由 `meta` 可以配置菜单文案与图标、角色、显示条件和 `keepAlive`。从列表进入详情时，可以保留当前菜单和标签页，只在面包屑中补充详情层级。角色配置同时用于菜单过滤和直接导航时的守卫。接入业务时，由后端校验会话与接口权限。
+在 `apps/admin/src/router/modules` 声明页面，模板按路由配置生成菜单和面包屑。路由 `meta` 可以配置菜单文案与图标、角色、显示条件和 `keepAlive`。从列表进入详情时，可以保留当前菜单和标签页，只在面包屑中补充详情层级。角色配置同时用于菜单过滤和直接导航时的守卫。接入业务时，由后端校验会话与接口权限。
 
-[路由与菜单约定](src/router/README.md) · [多级菜单与缓存示例](src/router/modules/demo/multi-menu.ts)
+[路由与菜单约定](apps/admin/src/router/README.md) · [多级菜单与缓存示例](apps/admin/src/router/modules/demo/multi-menu.ts)
 
 ### 组件、Hooks 与图标：从可运行的示例里复用
 
-- **组件**：`RForm` 和 `RModal` 用于表单和弹窗场景，`RChart` 封装 ECharts 实例的初始化、尺寸与主题同步；另有 LogicFlow 流程图、条形码和拖拽卡片示例。[组件入口与约定](src/components/README.md)
-- **Hooks**：模板 Hooks 处理页面刷新、内容最大化、菜单标记和水印；Web Hooks 展示截图、打印和元素全屏。交互示例提供可展开的用法代码。[Hooks 示例](src/hooks/README.md)
-- **SVG**：把文件放入 `src/icons` 的对应分包即可生成类型提示和雪碧图。路由和 `RIcon` 使用同一套完整名称，例如 `navigation/dashboard`，图标库可按分包查找并复制 TSX 用法。[图标生成与使用](src/icons/A_README.md)
+- **组件**：`RForm` 和 `RModal` 用于表单和弹窗场景，`RChart` 封装 ECharts 实例的初始化、尺寸与主题同步；另有 LogicFlow 流程图、条形码和拖拽卡片示例。[组件入口与约定](apps/admin/src/components/README.md)
+- **Hooks**：模板 Hooks 处理页面刷新、内容最大化、菜单标记和水印；Web Hooks 展示截图、打印和元素全屏。交互示例提供可展开的用法代码。[Hooks 示例](apps/admin/src/hooks/README.md)
+- **SVG**：把文件放入 `packages/icons/src` 的对应分包即可生成类型提示和雪碧图。路由和 `RIcon` 使用同一套完整名称，例如 `navigation/dashboard`，图标库可按分包查找并复制 TSX 用法。[图标生成与使用](packages/icons/src/A_README.md)
 
 ## 快速开始
 
@@ -58,45 +62,29 @@ pnpm dev
 
 打开 [http://127.0.0.1:9527/ray-template/](http://127.0.0.1:9527/ray-template/)，或使用 Vite 输出的地址。预填的演示账号可直接登录，本地开发无需先搭建业务后端。
 
+在同一个仓库运行 `pnpm docs:dev`，可维护[读者文档和页内交互示例](apps/docs/README.md)。
+
 ## 工程结构
 
 ```text
-.
-├── src/
-│   ├── main.ts              # 初始化应用、路由、状态和国际化
-│   ├── App.tsx              # 根组件，挂载全局 Provider 与布局
-│   ├── views/               # 登录页、工作台、业务页面和交互示例
-│   │   └── demo/            # TablePro、布局实验室、Hooks 等示例
-│   ├── router/
-│   │   └── modules/         # 页面路由、菜单元数据与角色配置
-│   ├── layout/              # 导航、标签页、面包屑与内容区
-│   ├── components/          # 通用组件，统一从 @/components 导入
-│   ├── app-components/      # 与应用状态绑定的组件和全局 Provider
-│   ├── api/                 # 按业务组织的接口函数
-│   ├── axios/               # 请求实例、拦截器与取消机制
-│   ├── store/               # Pinia 状态模块与访问方法
-│   ├── hooks/               # 模板、组件和 Web 相关的组合式函数
-│   ├── app-config/          # 应用、路由、主题与语言配置
-│   ├── locales/             # 中英文语言包与加载逻辑
-│   ├── icons/               # 分包 SVG 源文件与生成清单
-│   ├── styles/              # 全局样式、设计变量与主题覆盖
-│   ├── directives/          # 全局指令
-│   ├── types/               # 共享类型与声明
-│   ├── utils/               # 通用工具函数
-│   └── demo-data/           # Mock 和静态演示共用的样例数据
-├── mock/                    # 开发环境 Mock 接口
-├── public/                  # 构建时原样复制的静态资源
-├── vite-helper/             # 图标、CDN 和 SEO 等构建辅助
-├── vite.config.ts           # Vite 开发与构建入口
-├── vite.custom.config.ts    # 部署路径、开发代理和构建选项
-├── tsconfig.json            # 引用应用、Node 与测试的 TS 配置
-├── package.json             # 依赖、运行时版本与项目命令
-├── scripts/                 # 环境检查与图标生成
-├── __test__/                # Vitest 测试与测试工具
-├── harness/                 # 任务域说明、定向验证与报告生成
-├── .github/workflows/       # CI 检查与 GitHub Pages 部署
-└── docs/                    # 架构、设计与工程约定
+ray-template/
+├── apps/
+│   ├── admin/          # Ray Admin：业务页面、会话、权限、环境文件和 Mock
+│   └── docs/           # VitePress：官网、API 参考和交互示例
+├── packages/
+│   ├── admin-shell/    # 布局、导航、标签、设置和路由过渡
+│   ├── ui/             # TablePro、RBarcode、RChart 等共享组件
+│   ├── composables/    # 独立的 Vue Hooks 和浏览器工具
+│   ├── directives/     # Vue 指令
+│   ├── icons/          # SVG 资源、名称类型和清单
+│   ├── routing/        # 路由配置契约、校验和菜单处理
+│   ├── http/           # 请求客户端、拦截器和请求取消
+│   └── utils/          # 精度运算、对象和存储工具
+├── harness/            # 回归检查与报告
+└── pnpm-lock.yaml      # 工作区共用锁文件
 ```
+
+Ray Admin 在 `apps/admin/src/main.ts` 初始化应用，在 `App.tsx` 注入主题、翻译、图标和列偏好存储。共享包通过 `exports` 提供入口。文档从相同入口运行真实示例；例如 [TablePro](apps/docs/reference/table-pro.md) 用模拟数据展示请求取消与失败重试，[布局实验](apps/docs/guide/layout.md) 使用独立的内存路由。
 
 模块之间的调用关系见[架构地图](docs/architecture.md)。
 
@@ -106,7 +94,7 @@ pnpm dev
 
 ```tsx
 import { getPersonList } from '@/api/demo/mock/person'
-import { RTablePro } from '@/components'
+import { RTablePro } from '@ray-template/ui/table-pro'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -126,9 +114,9 @@ export default defineComponent({
 })
 ```
 
-1. **写页面**。在 `src/views` 新建页面，参考[远端查询示例](src/views/demo/tables/remote.tsx)加入排序、行选择和工具栏。
-2. **接入导航**。在 `src/router/modules` 添加路由，给菜单配置中英文文案。页面需要缓存时，参考[路由约定](src/router/README.md)配置路由与组件名称。
-3. **替换演示数据**。从 `src/api` 接入业务接口，通过 `src/axios` 统一处理拦截与取消，再接入实际登录和会话。人员列表示例在开发时走 Mock HTTP，静态预览使用本地样例数据。[请求层说明](src/axios/README.md)
+1. **写页面**。在 `apps/admin/src/views` 新建页面，参考[远端查询示例](apps/admin/src/views/demo/tables/remote.tsx)加入排序、行选择和工具栏。
+2. **接入导航**。在 `apps/admin/src/router/modules` 添加路由，给菜单配置中英文文案。页面需要缓存时，参考[路由约定](apps/admin/src/router/README.md)配置路由与组件名称。
+3. **替换演示数据**。从 `apps/admin/src/api` 接入业务接口，通过 `apps/admin/src/axios` 统一处理拦截与取消，再接入实际登录和会话。人员列表示例在开发时走 Mock HTTP，静态预览使用本地样例数据。[请求层说明](apps/admin/src/axios/README.md)
 
 ## 检查、构建与部署
 
@@ -139,6 +127,8 @@ export default defineComponent({
 | `pnpm harness context`        | 按路由、UI、API 等任务域查找源码入口和验证命令           |
 | `pnpm harness verify`         | 执行全量检查并保存本地报告，也可以指定任务域进行定向验证 |
 | `pnpm build` / `pnpm preview` | 输出到 `dist/production`，或在本机预览构建               |
+
+`pnpm docs:build` 单独构建文档。`pnpm pages:build` 组装后台与文档到 `dist/pages`，分别服务于 `/ray-template/` 和 `/ray-template/docs/`。
 
 二次开发可从[架构地图](docs/architecture.md)定位配置与模块。部署到域名根目录或子路径、为公开站点启用搜索元数据时，参考[部署指南](docs/architecture.md#deployment-and-search-discovery)。人工和 AI 协作共用 [AGENTS.md](AGENTS.md) 与 [AI Harness](harness/README.md)。
 

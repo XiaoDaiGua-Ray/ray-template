@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { effectScope, h, nextTick, ref } from 'vue'
-import { unrefElement } from '../../src/utils/vue/unref-element'
-import { watchEffectWithTarget } from '../../src/utils/vue/watch-effect-with-target'
+import { unrefElement } from '../../apps/admin/src/utils/vue/unref-element'
+import { watchEffectWithTarget } from '../../apps/admin/src/utils/vue/watch-effect-with-target'
 
 it('unwraps elements and component roots consistently across refs and getters', () => {
   const div = document.createElement('div')

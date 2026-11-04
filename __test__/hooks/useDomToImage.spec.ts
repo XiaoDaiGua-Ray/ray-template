@@ -1,5 +1,5 @@
 import { toBlob, toPng } from 'html-to-image'
-import { useDomToImage } from '../../src/hooks/web/useDomToImage'
+import { useDomToImage } from '../../apps/admin/src/hooks/web/useDomToImage'
 
 vi.mock('html-to-image', () => ({
   toSvg: vi.fn(),

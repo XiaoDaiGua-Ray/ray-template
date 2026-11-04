@@ -1,4 +1,4 @@
-import { useDevice } from '../../src/hooks/web/useDevice'
+import { useDevice } from '../../apps/admin/src/hooks/web/useDevice'
 
 describe('useDevice', () => {
   const addEventListenerSpy = vi.spyOn(window, 'addEventListener')

@@ -1,15 +1,21 @@
 import { createPinia, disposePinia, setActivePinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import { createApp, nextTick } from 'vue'
-import { APP_CATCH_KEY, GLOBAL_CLASS_NAMES } from '../../src/app-config'
-import { findMenuRoot, firstMenuLeaf } from '../../src/layout/navigation'
-import { piniaLockScreenStore } from '../../src/store/modules/lock-screen'
-import { piniaSettingStore } from '../../src/store/modules/setting'
+import {
+  APP_CATCH_KEY,
+  GLOBAL_CLASS_NAMES,
+} from '../../apps/admin/src/app-config'
+import {
+  findMenuRoot,
+  firstMenuLeaf,
+} from '../../apps/admin/src/layout/navigation'
+import { piniaLockScreenStore } from '../../apps/admin/src/store/modules/lock-screen'
+import { piniaSettingStore } from '../../apps/admin/src/store/modules/setting'
 import {
   getDefaultSettingConfig,
   normalizeLayoutConfig,
-} from '../../src/store/modules/setting/constant'
-import type { AppMenuOption } from '../../src/types'
+} from '../../apps/admin/src/store/modules/setting/constant'
+import type { AppMenuOption } from '../../apps/admin/src/types'
 
 const menu = (
   fullPath: string,

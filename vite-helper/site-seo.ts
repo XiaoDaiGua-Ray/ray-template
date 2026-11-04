@@ -1,7 +1,7 @@
 import type { Plugin } from 'vite'
 
 export const siteInfo = {
-  title: 'Ray Template - Vue 3 中后台管理模板',
+  title: 'Ray Admin - Vue 3 中后台管理模板',
   description:
     'Ray Template 是基于 Vue 3、TypeScript（TSX）、Vite 和 Naive UI 的开源中后台管理模板，内置权限路由、响应式布局、数据表格和中英文切换。',
   repository: 'https://github.com/XiaoDaiGua-Ray/ray-template',

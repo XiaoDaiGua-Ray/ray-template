@@ -1,6 +1,6 @@
-import { getDateByNaiveDatePicker } from '../../src/utils/get-date-by-naive-date-picker'
-import { removeDuplicateKeys } from '../../src/utils/remove-duplicate-keys'
-import { updateObjectValue } from '../../src/utils/update-object-value'
+import { getDateByNaiveDatePicker } from '../../apps/admin/src/utils/get-date-by-naive-date-picker'
+import { removeDuplicateKeys } from '../../apps/admin/src/utils/remove-duplicate-keys'
+import { updateObjectValue } from '../../apps/admin/src/utils/update-object-value'
 
 it('copies only own enumerable keys and preserves Symbol and __proto__ data', () => {
   const symbol = Symbol('meta')

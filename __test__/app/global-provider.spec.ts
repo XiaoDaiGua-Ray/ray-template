@@ -1,8 +1,8 @@
 import { mount } from '@vue/test-utils'
 import { createPinia, disposePinia, setActivePinia } from 'pinia'
 import { nextTick } from 'vue'
-import GlobalProvider from '../../src/app-components/provider/AppNaiveGlobalProvider'
-import { piniaSettingStore } from '../../src/store/modules/setting'
+import GlobalProvider from '../../apps/admin/src/app-components/provider/AppNaiveGlobalProvider'
+import { piniaSettingStore } from '../../apps/admin/src/store/modules/setting'
 
 it('reuses the global message instance across themes and removes its host on unmount', async () => {
   const pinia = createPinia()

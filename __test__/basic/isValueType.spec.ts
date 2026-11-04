@@ -1,4 +1,4 @@
-import { isValueType } from '../../src/utils/basic'
+import { isValueType } from '../../apps/admin/src/utils/basic'
 
 describe('isValueType', () => {
   it('should return true for string', () => {

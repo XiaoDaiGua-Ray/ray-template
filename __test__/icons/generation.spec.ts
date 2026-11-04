@@ -16,7 +16,7 @@ import { pathToFileURL } from 'node:url'
 it('generates usable types and package imports after additions, moves and deletions', () => {
   const root = mkdtempSync(join(tmpdir(), 'ray-icon-generation-'))
   const script = join(root, 'scripts/icons.mjs')
-  const manifest = join(root, 'src/icons/manifest.ts')
+  const manifest = join(root, 'src/manifest.ts')
   const run = (...args: string[]) =>
     execFileSync(process.execPath, [script, ...args], {
       cwd: root,
@@ -38,12 +38,12 @@ it('generates usable types and package imports after additions, moves and deleti
 
   try {
     mkdirSync(join(root, 'scripts'), { recursive: true })
-    mkdirSync(join(root, 'src/icons/action'), { recursive: true })
+    mkdirSync(join(root, 'src/action'), { recursive: true })
     symlinkSync(resolve('node_modules'), join(root, 'node_modules'), 'junction')
-    copyFileSync('scripts/icons.mjs', script)
+    copyFileSync('packages/icons/scripts/icons.mjs', script)
     copyFileSync('.prettierrc.cjs', join(root, '.prettierrc.cjs'))
     writeFileSync(join(root, 'package.json'), '{"type":"module"}')
-    writeFileSync(join(root, 'src/icons/action/first.svg'), '<svg/>')
+    writeFileSync(join(root, 'src/action/first.svg'), '<svg/>')
     run()
     run('--check')
     expect(read()).toEqual({
@@ -51,18 +51,18 @@ it('generates usable types and package imports after additions, moves and deleti
       sprites: { action: '/__spritemap-action' },
     })
     renameSync(
-      join(root, 'src/icons/action/first.svg'),
-      join(root, 'src/icons/action/renamed.svg'),
+      join(root, 'src/action/first.svg'),
+      join(root, 'src/action/renamed.svg'),
     )
     run()
     expect(read().names).toEqual(['action/renamed'])
-    mkdirSync(join(root, 'src/icons/business-tools'), { recursive: true })
-    writeFileSync(join(root, 'src/icons/business-tools/new.svg'), '<svg/>')
+    mkdirSync(join(root, 'src/business-tools'), { recursive: true })
+    writeFileSync(join(root, 'src/business-tools/new.svg'), '<svg/>')
     expect(() => run('--check')).toThrow()
     run()
     expect(read().sprites['business-tools']).toBe('/__spritemap-business-tools')
     expect(read().names).toContain('business-tools/new')
-    rmSync(join(root, 'src/icons/action'), { recursive: true })
+    rmSync(join(root, 'src/action'), { recursive: true })
     run()
     expect(read()).toEqual({
       names: ['business-tools/new'],

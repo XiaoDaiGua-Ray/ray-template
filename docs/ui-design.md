@@ -27,4 +27,4 @@
 
 保留 `forced-colors` 系统颜色回退、可见键盘焦点与减少动态效果设置。截图、颜色数值与浏览器检查不能互相替代，也不代表已验证全部最低版本设备。
 
-登录页在宽屏并排显示品牌区和登录区，窄屏按文档顺序堆叠。Ray 标识用带两颗瓜籽的青瓜切面表现「呆瓜」，资源见 [SVG](../src/icons/logo/ray.svg)。示例应用默认关闭 HTML 自动填充，含延迟渲染和 Teleport 控件。需要允许时，在目标控件显式提供 `autocomplete`，Naive UI 的输入组件使用 `inputProps`。
+登录页在宽屏并排显示品牌区和登录区，窄屏按文档顺序堆叠。Ray 标识用带两颗瓜籽的青瓜切面表现「呆瓜」，资源见 [SVG](../packages/icons/src/logo/ray.svg)。示例应用默认关闭 HTML 自动填充，含延迟渲染和 Teleport 控件。需要允许时，在目标控件显式提供 `autocomplete`，Naive UI 的输入组件使用 `inputProps`。

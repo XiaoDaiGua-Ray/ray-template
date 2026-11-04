@@ -28,7 +28,7 @@ jobs:
       - uses: pnpm/action-setup@v6.1.0
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Validate harness, typecheck, lint, format, test and build
+      - name: Check the app and documentation workspace
         run: pnpm check
 
   deploy:
@@ -45,10 +45,11 @@ jobs:
           node-version-file: .nvmrc
       - uses: pnpm/action-setup@v6.1.0
       - run: pnpm install --frozen-lockfile
-      - run: pnpm build
+      - run: pnpm pages:build
         env:
           RAY_TEMPLATE_SITE_ORIGIN: ${{ github.repository == 'XiaoDaiGua-Ray/ray-template' && 'https://xiaodaigua-ray.github.io' || vars.RAY_TEMPLATE_SITE_ORIGIN }}
+          RAY_TEMPLATE_SOURCE_REF: ${{ github.sha }}
       - uses: JamesIves/github-pages-deploy-action@v4.9.0
         with:
           branch: dist
-          folder: dist/production
+          folder: dist/pages

@@ -1,6 +1,6 @@
 # Ray Template
 
-> Vue 3 + TypeScript/TSX + Vite + Pinia + Vue Router 中后台模板。业务入口在 src，工程验收由 AI Harness 管理。
+> Vue 3 + TypeScript/TSX + Vite + Pinia + Vue Router 中后台模板。应用入口在 apps/admin/src，工程验收由 AI Harness 管理。
 
 先读 AGENTS.md，再按任务执行 pnpm harness context <scope>。构建和检查以 package.json、pnpm-lock.yaml、.nvmrc 与 CI 为准。
 
@@ -9,16 +9,17 @@
 - [协作约定](AGENTS.md): 工作区保护、验证、交付范围
 - [AI Harness](harness/README.md): 定向上下文、测试、浏览器验收
 - [架构地图](docs/architecture.md): 应用启动、跨模块调用与部署
-- [路由与动态配置](src/router/README.md): 来源切换、后端 JSON、字段与权限
-- [路由 JSON Schema](src/router/config/schema.ts): 配置结构和 TypeScript 类型的唯一来源
-- [页面 ID 注册表](src/router/config/views.ts): 路由配置可引用的页面及 KeepAlive 名称
-- [路由管理页](src/views/route-management/index.tsx): 配置录入、校验、导入和导出
-- [Pinia](src/store/README.md): 菜单、会话、布局和持久化边界
-- [组件入口](src/components/index.ts): 公开组件与 hooks 导出
-- [TablePro](src/components/RTablePro/README.md): 列表、数据源、分页、缓存与打印
+- [读者文档](apps/docs/README.md): VitePress 本地开发、API 参考和页内示例
+- [路由与动态配置](apps/admin/src/router/README.md): 来源切换、后端 JSON、字段与权限
+- [路由 JSON Schema](apps/admin/src/router/config/schema.ts): 配置结构和 TypeScript 类型的唯一来源
+- [页面 ID 注册表](apps/admin/src/router/config/views.ts): 路由配置可引用的页面及 KeepAlive 名称
+- [路由管理页](apps/admin/src/views/route-management/index.tsx): 配置录入、校验、导入和导出
+- [Pinia](apps/admin/src/store/README.md): 菜单、会话、布局和持久化边界
+- [组件入口](apps/admin/src/components/index.ts): 公开组件与 hooks 导出
+- [TablePro](packages/ui/src/RTablePro/README.md): 列表、数据源、分页、缓存与打印
 - [页面样式](docs/ui-design.md): 主题变量、示例布局和 UI 验收
-- [请求与取消](src/axios/README.md): 请求实例、拦截器及接口契约
-- [图标](src/icons/A_README.md): 图标资源、生成和类型清单
+- [请求与取消](apps/admin/src/axios/README.md): 请求实例、拦截器及接口契约
+- [图标](packages/icons/src/A_README.md): 图标资源、生成和类型清单
 
 ## 按任务验证
 

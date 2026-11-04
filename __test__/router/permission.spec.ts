@@ -1,12 +1,12 @@
 import { createMemoryHistory, createRouter } from 'vue-router'
-import { APP_CATCH_KEY } from '../../src/app-config'
-import { permissionRouter } from '../../src/router/utils/permission'
-import { setStorage } from '../../src/utils/cache'
+import { APP_CATCH_KEY } from '../../apps/admin/src/app-config'
+import { permissionRouter } from '../../apps/admin/src/router/utils/permission'
+import { setStorage } from '../../apps/admin/src/utils/cache'
 
-vi.mock('../../src/hooks', () => ({
+vi.mock('../../apps/admin/src/hooks', () => ({
   useAppRoot: () => ({ getRootPath: { value: '/dashboard' } }),
 }))
-vi.mock('../../src/router/utils/valid-role', () => ({
+vi.mock('../../apps/admin/src/router/utils/valid-role', () => ({
   validRole: (meta: { role?: string[] }) =>
     !meta.role?.length || meta.role.includes('admin'),
 }))

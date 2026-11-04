@@ -1,4 +1,4 @@
-import { callWithAsyncErrorHandling } from '../../src/utils/basic'
+import { callWithAsyncErrorHandling } from '../../apps/admin/src/utils/basic'
 
 describe('callWithAsyncErrorHandling', () => {
   it('should call the function and return the result', async () => {

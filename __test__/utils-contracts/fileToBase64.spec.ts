@@ -1,4 +1,4 @@
-import { fileToBase64 } from '../../src/utils/files'
+import { fileToBase64 } from '../../apps/admin/src/utils/files'
 
 it('encodes a file with its MIME type and preserves raw byte values', async () => {
   const file = new File([new Uint8Array([0, 128, 255])], 'binary', {

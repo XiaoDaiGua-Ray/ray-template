@@ -1,5 +1,5 @@
-import { useVueRouter } from '../../src/hooks/web/useVueRouter'
-import { router } from '../../src/router'
+import { useVueRouter } from '../../apps/admin/src/hooks/web/useVueRouter'
+import { router } from '../../apps/admin/src/router'
 
 it('shares the live router outside setup and exposes the current route after navigation', async () => {
   const a = useVueRouter()

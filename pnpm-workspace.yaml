@@ -1,6 +1,11 @@
 # 检查命令保持只读；依赖安装由开发者或 CI 显式执行。
 verifyDepsBeforeRun: false
+packages:
+  - apps/*
+  - packages/*
 overrides:
+  # 文档继续使用已验证的 Vite 6，后台的 Vite 8 不受影响。
+  'vitepress>vite': 6.4.5
   # 上游仍限制旧大版本；这里只替换已核实使用的兼容 API，见升级记录。
   '@logicflow/core>uuid': 14.0.3
   'minimatch@>=10.0.0 <11.0.1': 11.0.4
@@ -12,6 +17,10 @@ allowBuilds:
   esbuild: true
   rs-module-lexer: true
   vue-demi: true
+peerDependencyRules:
+  ignoreMissing:
+    - '@algolia/client-search'
+    - search-insights
 minimumReleaseAgeExclude:
   - '@intlify/core-base@11.4.17'
   - '@intlify/devtools-types@11.4.17'

@@ -1,4 +1,6 @@
 dist/*
+apps/docs/.vitepress/cache/
+apps/docs/.vitepress/dist/
 node_modules/*
 auto-imports.d.ts
 components.d.ts
@@ -14,5 +16,5 @@ coverage/
 .ai-local/
 .harness-local/
 CHANGELOG.md
-src/icons/
-src/app-config/echart-themes/
+packages/icons/src/
+packages/ui/src/RChart/src/themes/

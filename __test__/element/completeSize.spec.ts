@@ -1,4 +1,4 @@
-import { completeSize } from '../../src/utils/element'
+import { completeSize } from '../../apps/admin/src/utils/element'
 
 describe('completeSize', () => {
   it('should be defined', () => {

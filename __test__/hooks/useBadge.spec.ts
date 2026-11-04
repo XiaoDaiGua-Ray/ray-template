@@ -1,7 +1,7 @@
-import { useBadge } from '../../src/hooks/template/useBadge'
-import type { AppMenuExtraOptions } from '../../src/router/types'
-import { depthSearchAppMenu, useMenuGetters } from '../../src/store'
-import type { AppMenuOption } from '../../src/types'
+import { useBadge } from '../../apps/admin/src/hooks/template/useBadge'
+import type { AppMenuExtraOptions } from '../../apps/admin/src/router/types'
+import { depthSearchAppMenu, useMenuGetters } from '../../apps/admin/src/store'
+import type { AppMenuOption } from '../../apps/admin/src/types'
 import setupMiniApp from '../utils/setupMiniApp'
 
 describe('useBadge', async () => {

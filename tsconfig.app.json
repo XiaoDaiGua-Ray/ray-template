@@ -7,5 +7,5 @@
     "types": ["vite/client", "naive-ui/volar"],
     "tsBuildInfoFile": "./node_modules/.cache/ray-template/tsconfig.app.tsbuildinfo"
   },
-  "include": ["src/**/*", "unplugin/*.d.ts"]
+  "include": ["apps/admin/src/**/*", "unplugin/*.d.ts"]
 }

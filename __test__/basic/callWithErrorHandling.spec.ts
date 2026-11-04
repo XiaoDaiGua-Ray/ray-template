@@ -1,4 +1,4 @@
-import { callWithErrorHandling } from '../../src/utils/basic'
+import { callWithErrorHandling } from '../../apps/admin/src/utils/basic'
 
 describe('callWithErrorHandling', () => {
   it('should call the function and return the result', () => {

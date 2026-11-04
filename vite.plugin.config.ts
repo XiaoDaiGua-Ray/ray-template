@@ -16,7 +16,7 @@ import { ViteEjsPlugin as viteEjsPlugin } from 'vite-plugin-ejs'
 import viteInspect from 'vite-plugin-inspect'
 import { mockDevServerPlugin } from 'vite-plugin-mock-dev-server'
 import viteSvgLoader from 'vite-svg-loader'
-import { iconNameFromPath, scanIcons } from './scripts/icons.mjs'
+import { iconNameFromPath, iconsRoot, scanIcons } from './scripts/icons.mjs'
 import { iconManifestPlugin } from './vite-helper/icons.ts'
 import { cdnResolve } from './vite-helper/index.ts'
 import { siteInfo, siteSeoPlugin } from './vite-helper/site-seo.ts'
@@ -126,7 +126,9 @@ function vueTransformPlugins(): PluginOption[] {
     viteAutoImport({
       eslintrc: {
         enabled: true,
-        filepath: './unplugin/.eslintrc-auto-import.json',
+        filepath: fileURLToPath(
+          new URL('./unplugin/.eslintrc-auto-import.json', import.meta.url),
+        ),
       },
       include: [
         /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
@@ -134,12 +136,16 @@ function vueTransformPlugins(): PluginOption[] {
         /\.vue\?vue/, // .vue
         /\.md$/, // .md
       ],
-      dts: './unplugin/auto-imports.d.ts',
+      dts: fileURLToPath(
+        new URL('./unplugin/auto-imports.d.ts', import.meta.url),
+      ),
       imports: ['vue', 'vue-router', 'pinia'],
       resolvers: [NaiveUiResolver()],
     }),
     unpluginViteComponents({
-      dts: './unplugin/components.d.ts',
+      dts: fileURLToPath(
+        new URL('./unplugin/components.d.ts', import.meta.url),
+      ),
       resolvers: [NaiveUiResolver()],
       types: [
         {
@@ -166,7 +172,7 @@ function baseOptions(mode: string): PluginOption[] {
       include: [
         resolve(
           dirname(fileURLToPath(import.meta.url)),
-          './src/locales/lang/**/*.json',
+          './apps/admin/src/locales/lang/**/*.json',
         ),
       ],
     }),
@@ -185,6 +191,7 @@ function baseOptions(mode: string): PluginOption[] {
       dev: false,
     }),
     mockDevServerPlugin({
+      cwd: fileURLToPath(new URL('./apps/admin', import.meta.url)),
       dir: 'mock',
       include: ['**/*.mock.ts'],
       prefix: '/api',
@@ -193,7 +200,7 @@ function baseOptions(mode: string): PluginOption[] {
       build: true,
     }),
     ...iconPackages.map((name) =>
-      svgSpritemap(`./src/icons/${name}/**/*.svg`, {
+      svgSpritemap(`${iconsRoot.replaceAll('\\', '/')}/${name}/**/*.svg`, {
         prefix: 'icon-',
         idify: (_name, svg) => iconNameFromPath(svg.filePath),
         route: { url: `/__spritemap-${name}` },
@@ -201,7 +208,9 @@ function baseOptions(mode: string): PluginOption[] {
         svgo: false,
       }),
     ),
-    unoCSS(),
+    unoCSS({
+      configFile: fileURLToPath(new URL('./uno.config.ts', import.meta.url)),
+    }),
   ]
 }
 

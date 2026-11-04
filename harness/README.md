@@ -20,18 +20,18 @@ pnpm harness verify
 - UI 沿用 Vue 3 Composition API、`defineComponent` + TSX 与现有 SFC 的 `<script setup lang="ts">`，优先复用 Naive UI 和项目组件。图表使用 ECharts。
 - Vue、Router 和 Pinia API 由 `unplugin-auto-import` 管理。类型使用 `import type`，生成声明通过生成器更新。
 - 路由维持名称唯一、权限 meta、缓存和翻译键。变更权限时同时验证菜单可见性和直接导航。
-- Store 对外复用 `src/store/hooks`。持久化 key 和序列化格式属于已有数据契约，变更前检查历史数据。
-- 请求从 `src/api` 进入 `src/axios`。Mock 只用于演示与本地验证。服务端密钥不能放入会打包到浏览器的 `VITE_*`。
+- Store 对外复用 `apps/admin/src/store/hooks`。持久化 key 和序列化格式属于已有数据契约，变更前检查历史数据。
+- 请求从 `apps/admin/src/api` 进入 `apps/admin/src/axios`。Mock 只用于演示与本地验证。服务端密钥不能放入会打包到浏览器的 `VITE_*`。
 - 维护公共 API 时检查调用方、导出与已有回归测试。涉及工程配置时更新对应文档和 [验证记录](../docs/toolchain-upgrade.md)。
 
 ## 验收与证据
 
-| 命令                          | 验证范围                                                  |
-| ----------------------------- | --------------------------------------------------------- |
-| `pnpm harness check`          | 上下文路径存在，回归路径至少指向一个测试文件              |
-| `pnpm harness verify <scope>` | 环境检查和该任务域的 Vitest 回归                          |
-| `pnpm harness verify`         | `pnpm check` 的全部检查                                   |
-| `pnpm check`                  | 环境、Harness、图标同步、类型、规范、格式、单测、生产构建 |
+| 命令                          | 验证范围                                                        |
+| ----------------------------- | --------------------------------------------------------------- |
+| `pnpm harness check`          | 上下文路径存在，回归路径至少指向一个测试文件                    |
+| `pnpm harness verify <scope>` | 环境检查和该任务域的 Vitest 回归                                |
+| `pnpm harness verify`         | `pnpm check` 的全部检查                                         |
+| `pnpm check`                  | 环境、Harness、图标同步、类型、规范、格式、单测、应用与文档构建 |
 
 `verify` 逐步执行，首个失败即停止并返回非零退出码。运行结束时打印 `.harness-local/runs/<run>/report.json` 的位置，其中记录命令、结果、耗时、运行时和信号。每次执行独立留档。全量报告以 `pnpm check` 作为一个步骤，阶段详情查看当次终端输出。参数或上下文校验失败，以及被强制中断的运行，可能没有报告。
 
@@ -51,6 +51,6 @@ GitHub Actions 在 Linux、Windows 和 macOS 运行同一份 `pnpm check`。单�
 
 ## 维护
 
-影响外部读者的功能或兼容性改动，按 [站外文档交接](../docs/docs-handoff.md) 同步到文档仓库。
+影响外部读者的功能或兼容性改动，按 [文档联动说明](../docs/docs-handoff.md) 在同一变更中更新 `apps/docs`。单独用 `pnpm docs:check` 检查示例类型、文档链接和构建；用 `pnpm docs:preview` 验收生产子路径下的交互。
 
 任务域的路径或测试位置变化时，更新 `scopes.json` 并运行 `pnpm harness check`。测试目录以 `/` 结尾，单个文件使用仓库相对路径。优先完善现有测试和上下文入口，把可稳定复现的失败纳入共同检查。

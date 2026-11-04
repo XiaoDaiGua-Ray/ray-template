@@ -1,4 +1,4 @@
-import { detectOperatingSystem } from '../../src/utils/basic'
+import { detectOperatingSystem } from '../../apps/admin/src/utils/basic'
 
 describe('detectOperatingSystem', () => {
   afterEach(() => vi.restoreAllMocks())

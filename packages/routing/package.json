@@ -1,0 +1,24 @@
+{
+  "name": "@ray-template/routing",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schema": "./src/schema.ts",
+    "./json-schema": "./src/json-schema.ts",
+    "./join-route-path": "./src/join-route-path.ts",
+    "./contract": "./src/contract.ts",
+    "./types": "./src/types.ts"
+  },
+  "dependencies": {
+    "@valibot/to-json-schema": "1.8.0",
+    "valibot": "1.5.0",
+    "@ray-template/icons": "workspace:*",
+    "@ray-template/utils": "workspace:*"
+  },
+  "peerDependencies": {
+    "vue": "3.5.44",
+    "vue-router": "5.4.0",
+    "naive-ui": "2.45.3"
+  }
+}

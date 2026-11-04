@@ -1,4 +1,4 @@
-import { isPromise } from '../../src/utils/basic'
+import { isPromise } from '../../apps/admin/src/utils/basic'
 
 describe('isPromise', () => {
   it('should return true if the value is a Promise', () => {

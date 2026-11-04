@@ -1,8 +1,11 @@
-import { useAppRoot } from '../../src/hooks/template/useAppRoot'
-import { useSiderBar } from '../../src/hooks/template/useSiderBar'
-import { useVueRouter } from '../../src/hooks/web/useVueRouter'
-import { useMenuActions, useMenuGetters } from '../../src/store'
-import type { AppMenuOption, MenuTagOptions } from '../../src/types/modules/app'
+import { useAppRoot } from '../../apps/admin/src/hooks/template/useAppRoot'
+import { useSiderBar } from '../../apps/admin/src/hooks/template/useSiderBar'
+import { useVueRouter } from '../../apps/admin/src/hooks/web/useVueRouter'
+import { useMenuActions, useMenuGetters } from '../../apps/admin/src/store'
+import type {
+  AppMenuOption,
+  MenuTagOptions,
+} from '../../apps/admin/src/types/modules/app'
 import setupMiniApp from '../utils/setupMiniApp'
 
 describe('useSiderBar', async () => {

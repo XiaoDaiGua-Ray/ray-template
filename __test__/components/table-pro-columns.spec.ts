@@ -1,11 +1,11 @@
 import { RTablePro } from '@/components/RTablePro'
-import { useColumnVisibility } from '@/components/RTablePro/src/columns'
-import ColumnSettings from '@/components/RTablePro/src/components/C'
 import { prefixCacheKey } from '@/utils/app/prefix-cache-key'
 import { mount } from '@vue/test-utils'
 import { NDataTable, NTree } from 'naive-ui'
 import type { DataTableColumn } from 'naive-ui'
 import { effectScope, nextTick, ref, shallowRef } from 'vue'
+import { useColumnVisibility } from '../../packages/ui/src/RTablePro/src/columns'
+import ColumnSettings from '../../packages/ui/src/RTablePro/src/components/C'
 
 const name = { key: 'name', title: 'Name' }
 const email = { key: 'email', title: 'Email' }

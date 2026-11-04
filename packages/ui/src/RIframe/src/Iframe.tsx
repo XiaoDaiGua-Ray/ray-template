@@ -1,0 +1,87 @@
+import { computed, defineComponent, ref } from 'vue'
+import './index.scss'
+import { completeSize } from '@ray-template/composables/element'
+import { call } from '@ray-template/composables/vue'
+import { useEventListener } from '@vueuse/core'
+import { NSpin } from 'naive-ui'
+import { useTemplateRef } from 'vue'
+import props from './props'
+
+export default defineComponent({
+  name: 'RIframe',
+  props,
+  setup(props, { expose }) {
+    const cssVars = computed(() => {
+      const cssVar = {
+        '--r-iframe-frameborder': completeSize(props.frameborder),
+        '--r-iframe-width': completeSize(props.width),
+        '--r-iframe-height': completeSize(props.height),
+      }
+
+      return cssVar
+    })
+    const iframeRef = useTemplateRef<HTMLIFrameElement>('iframeRef')
+    const spinShow = ref(true)
+
+    const iframeLoadSuccess = (e: Event) => {
+      spinShow.value = false
+
+      const { onSuccess } = props
+
+      if (onSuccess) {
+        call(onSuccess, iframeRef.value as HTMLIFrameElement, e)
+      }
+    }
+
+    const iframeLoadError = (e: Event) => {
+      spinShow.value = false
+
+      const { onError } = props
+
+      if (onError) {
+        call(onError, e)
+      }
+    }
+
+    useEventListener(iframeRef, 'load', iframeLoadSuccess)
+    useEventListener(iframeRef, 'error', iframeLoadError)
+
+    expose({
+      iframeInst: iframeRef,
+    })
+
+    return {
+      cssVars,
+      iframeRef,
+      spinShow,
+    }
+  },
+  render() {
+    return (
+      <div class={['r-iframe', this.iframeWrapperClass]} style={[this.cssVars]}>
+        <NSpin {...this.customSpinProps} show={this.spinShow}>
+          {{
+            ...this.$slots,
+            default: () => (
+              <iframe
+                class={['r-iframe__container', this.iframeClass]}
+                ref="iframeRef"
+                src={this.src}
+                allow={this.allow}
+                name={this.name}
+                title={this.title}
+                loading={
+                  this.lazy === true
+                    ? 'lazy'
+                    : this.lazy === false
+                      ? 'eager'
+                      : this.lazy
+                }
+              />
+            ),
+          }}
+        </NSpin>
+      </div>
+    )
+  },
+})

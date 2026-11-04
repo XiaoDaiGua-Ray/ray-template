@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
-import GlobalSearch from '../../src/layout/components/Search/GlobalSearch'
-import { router } from '../../src/router'
+import GlobalSearch from '../../apps/admin/src/layout/components/Search/GlobalSearch'
+import { router } from '../../apps/admin/src/router'
 import setupMiniApp from '../utils/setupMiniApp'
 
 it('mounts the header search on a narrow viewport and closes it immediately', async () => {

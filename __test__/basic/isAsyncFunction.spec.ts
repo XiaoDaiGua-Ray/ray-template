@@ -1,4 +1,4 @@
-import { isAsyncFunction } from '../../src/utils/basic'
+import { isAsyncFunction } from '../../apps/admin/src/utils/basic'
 
 describe('isAsyncFunction', () => {
   it('should return true if the function is async', () => {

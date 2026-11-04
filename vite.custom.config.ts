@@ -1,8 +1,8 @@
 import { fileURLToPath, URL } from 'node:url'
 import type { AppConfigExport } from '@/types/modules/vite-custom-config'
 import type { BuildOptions } from 'vite'
-import { PRE_LOADING_CONFIG } from './src/app-config/app-config.ts'
-import { APP_THEME } from './src/app-config/design-config.ts'
+import { PRE_LOADING_CONFIG } from './apps/admin/src/app-config/app-config.ts'
+import { APP_THEME } from './apps/admin/src/app-config/design-config.ts'
 import { mixinCss } from './vite-helper/index.ts'
 
 const config: AppConfigExport = {
@@ -54,7 +54,7 @@ const config: AppConfigExport = {
 
   // 打包相关配置
   buildOptions: (mode: string): BuildOptions => {
-    const outDir = `dist/${mode}`
+    const outDir = fileURLToPath(new URL(`./dist/${mode}`, import.meta.url))
 
     return mode === 'production'
       ? {
@@ -77,10 +77,12 @@ const config: AppConfigExport = {
    * - @mock: mock 根目录
    */
   alias: {
-    '@': fileURLToPath(new URL('./src', import.meta.url)),
-    '@api': fileURLToPath(new URL('./src/api', import.meta.url)),
-    '@images': fileURLToPath(new URL('./src/assets/images', import.meta.url)),
-    '@mock': fileURLToPath(new URL('./mock', import.meta.url)),
+    '@': fileURLToPath(new URL('./apps/admin/src', import.meta.url)),
+    '@api': fileURLToPath(new URL('./apps/admin/src/api', import.meta.url)),
+    '@images': fileURLToPath(
+      new URL('./apps/admin/src/assets/images', import.meta.url),
+    ),
+    '@mock': fileURLToPath(new URL('./apps/admin/mock', import.meta.url)),
   },
 }
 

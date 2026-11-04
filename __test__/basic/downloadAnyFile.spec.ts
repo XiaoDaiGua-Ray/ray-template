@@ -1,4 +1,4 @@
-import { downloadAnyFile } from '../../src/utils/basic'
+import { downloadAnyFile } from '../../apps/admin/src/utils/basic'
 
 describe('downloadAnyFile', () => {
   const url = 'blob:test'

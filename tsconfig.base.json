@@ -14,14 +14,14 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "paths": {
-      "@": ["./src"],
-      "@/*": ["./src/*"],
-      "@api": ["./src/api"],
-      "@api/*": ["./src/api/*"],
-      "@images": ["./src/assets/images"],
-      "@images/*": ["./src/assets/images/*"],
-      "@mock": ["./mock"],
-      "@mock/*": ["./mock/*"]
+      "@": ["./apps/admin/src"],
+      "@/*": ["./apps/admin/src/*"],
+      "@api": ["./apps/admin/src/api"],
+      "@api/*": ["./apps/admin/src/api/*"],
+      "@images": ["./apps/admin/src/assets/images"],
+      "@images/*": ["./apps/admin/src/assets/images/*"],
+      "@mock": ["./apps/admin/mock"],
+      "@mock/*": ["./apps/admin/mock/*"]
     }
   }
 }

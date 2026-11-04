@@ -1,4 +1,4 @@
-import { equalRouterPath } from '../../src/utils/basic'
+import { equalRouterPath } from '../../apps/admin/src/utils/basic'
 
 describe('equalRouterPath', () => {
   it('compare paths with parameters', () => {

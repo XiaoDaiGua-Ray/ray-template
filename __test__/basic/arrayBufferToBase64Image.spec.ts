@@ -1,4 +1,4 @@
-import { arrayBufferToBase64Image } from '../../src/utils/basic'
+import { arrayBufferToBase64Image } from '../../apps/admin/src/utils/basic'
 
 describe('arrayBufferToBase64Image', () => {
   const arrayBuffer = new ArrayBuffer(8)

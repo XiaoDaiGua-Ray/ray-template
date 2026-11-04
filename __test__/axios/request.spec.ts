@@ -1,6 +1,6 @@
 import { expectTypeOf } from 'vitest'
-import request from '../../src/axios/instance'
-import type { AppRawRequestConfig } from '../../src/axios/types'
+import request from '../../apps/admin/src/axios/instance'
+import type { AppRawRequestConfig } from '../../apps/admin/src/axios/types'
 
 const data = { id: 42, name: 'Ray' }
 const adapter: AppRawRequestConfig['adapter'] = async (config) => ({

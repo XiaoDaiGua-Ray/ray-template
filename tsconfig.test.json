@@ -4,5 +4,5 @@
     "types": ["vite/client", "naive-ui/volar", "node", "vitest/globals"],
     "tsBuildInfoFile": "./node_modules/.cache/ray-template/tsconfig.test.tsbuildinfo"
   },
-  "include": ["__test__/**/*", "src/**/*.d.ts", "unplugin/*.d.ts"]
+  "include": ["__test__/**/*", "apps/admin/src/**/*.d.ts", "unplugin/*.d.ts"]
 }

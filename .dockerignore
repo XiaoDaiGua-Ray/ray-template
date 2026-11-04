@@ -5,3 +5,7 @@ node_modules
 dist
 .ai-local
 .harness-local
+
+**/node_modules
+**/.vitepress/cache
+**/.vitepress/dist

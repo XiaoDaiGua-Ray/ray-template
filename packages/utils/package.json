@@ -1,0 +1,21 @@
+{
+  "name": "@ray-template/utils",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./precision": "./src/precision.ts",
+    "./types": "./src/types.ts",
+    "./storage": "./src/storage.ts",
+    "./core": "./src/core/index.ts",
+    "./files": "./src/files/index.ts",
+    "./equal-router-path": "./src/equal-router-path.ts",
+    "./remove-duplicate-keys": "./src/remove-duplicate-keys.ts",
+    "./update-object-value": "./src/update-object-value.ts",
+    "./app/detect-operating-system": "./src/app/detect-operating-system.ts"
+  },
+  "dependencies": {
+    "currency.js": "2.0.4",
+    "lodash-es": "4.18.1"
+  }
+}

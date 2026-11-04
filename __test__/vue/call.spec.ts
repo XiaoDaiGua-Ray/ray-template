@@ -1,4 +1,4 @@
-import { call } from '../../src/utils/vue/call'
+import { call } from '../../apps/admin/src/utils/vue/call'
 
 describe('call', () => {
   it('should be executed once', () => {

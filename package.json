@@ -1,7 +1,7 @@
 {
   "name": "ray-template",
-  "private": false,
-  "version": "5.2.5",
+  "private": true,
+  "version": "6.0.0",
   "type": "module",
   "engines": {
     "node": "^26.13.0",
@@ -14,6 +14,10 @@
     "typecheck": "pnpm icons:check && vue-tsc --build",
     "build": "pnpm icons:generate && pnpm typecheck && vite build",
     "preview": "vite preview",
+    "docs:dev": "pnpm --filter @ray-template/docs dev",
+    "docs:build": "pnpm --filter @ray-template/docs build",
+    "docs:preview": "pnpm --filter @ray-template/docs preview",
+    "docs:check": "vue-tsc --noEmit -p apps/docs/tsconfig.json && pnpm docs:build",
     "dev-build": "pnpm icons:generate && pnpm typecheck && vite build --mode development",
     "report": "pnpm icons:generate && vite build --mode report",
     "prepare": "husky",
@@ -25,8 +29,10 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "harness": "node harness/run.mjs",
-    "check": "pnpm env:check && pnpm harness check && pnpm icons:generate && pnpm typecheck && pnpm lint && pnpm format:check && pnpm test:run && vite build",
-    "env:check": "node scripts/doctor.mjs"
+    "check": "pnpm env:check && pnpm harness check && pnpm packages:check && pnpm icons:generate && pnpm typecheck && pnpm lint && pnpm format:check && pnpm test:run && vite build && pnpm docs:check",
+    "env:check": "node scripts/doctor.mjs",
+    "packages:check": "node scripts/check-package-boundaries.mjs",
+    "pages:build": "pnpm build && pnpm docs:build && node scripts/assemble-pages.mjs"
   },
   "lint-staged": {
     "*.{js,mjs,cjs,ts,tsx,vue}": [
@@ -41,12 +47,12 @@
     "@faker-js/faker": "10.6.0",
     "@logicflow/core": "2.2.5",
     "@logicflow/extension": "2.3.1",
+    "@ray-template/utils": "workspace:*",
     "@valibot/to-json-schema": "1.8.0",
     "@vueuse/core": "15.0.0",
     "axios": "1.21.0",
     "clipboard": "2.0.11",
     "crypto-js": "4.2.0",
-    "currency.js": "2.0.4",
     "dayjs": "1.11.23",
     "echarts": "6.1.0",
     "html-to-image": "1.11.13",
@@ -63,7 +69,14 @@
     "vue-hooks-plus": "2.4.3",
     "vue-i18n": "11.4.17",
     "vue-router": "5.4.0",
-    "vue3-next-qrcode": "4.1.1"
+    "vue3-next-qrcode": "4.1.1",
+    "@ray-template/ui": "workspace:*",
+    "@ray-template/composables": "workspace:*",
+    "@ray-template/directives": "workspace:*",
+    "@ray-template/icons": "workspace:*",
+    "@ray-template/routing": "workspace:*",
+    "@ray-template/http": "workspace:*",
+    "@ray-template/admin-shell": "workspace:*"
   },
   "devDependencies": {
     "@commitlint/cli": "21.2.4",
@@ -110,7 +123,6 @@
     "vue-tsc": "3.3.14"
   },
   "description": "Ray Template is an open-source Vue 3 admin dashboard template built with TypeScript (TSX), Vite and Naive UI. Includes role-based routing, responsive layouts and data tables.",
-  "main": "index.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/XiaoDaiGua-Ray/ray-template.git"
@@ -125,7 +137,7 @@
     "vite",
     "naive-ui",
     "pinia",
-    "中后台模板"
+    "\u4e2d\u540e\u53f0\u6a21\u677f"
   ],
   "license": "MIT",
   "author": {

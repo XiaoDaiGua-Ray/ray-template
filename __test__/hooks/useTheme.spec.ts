@@ -1,5 +1,5 @@
-import { useTheme } from '../../src/hooks/template/useTheme'
-import { useSettingGetters } from '../../src/store'
+import { useTheme } from '../../apps/admin/src/hooks/template/useTheme'
+import { useSettingGetters } from '../../apps/admin/src/store'
 import setupMiniApp from '../utils/setupMiniApp'
 
 describe('useTheme', async () => {

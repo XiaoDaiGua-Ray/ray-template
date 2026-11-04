@@ -3,7 +3,7 @@ import {
   hasStorage,
   removeStorage,
   setStorage,
-} from '../../src/utils/cache'
+} from '../../apps/admin/src/utils/cache'
 
 describe('cache utils', () => {
   const __DEMO__KEY = '__DEMO__KEY'

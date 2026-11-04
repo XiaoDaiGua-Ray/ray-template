@@ -1,10 +1,10 @@
 import { shallowMount } from '@vue/test-utils'
 import { createPinia, disposePinia, setActivePinia } from 'pinia'
 import { h, nextTick } from 'vue'
-import Layout from '../../src/layout'
-import { router } from '../../src/router'
-import { piniaRuntimeStore } from '../../src/store/modules/runtime'
-import { piniaSettingStore } from '../../src/store/modules/setting'
+import Layout from '../../apps/admin/src/layout'
+import { router } from '../../apps/admin/src/router'
+import { piniaRuntimeStore } from '../../apps/admin/src/store/modules/runtime'
+import { piniaSettingStore } from '../../apps/admin/src/store/modules/setting'
 
 it('lets a custom header replace the complete default header and top navigation', () => {
   const pinia = createPinia()
@@ -12,7 +12,11 @@ it('lets a custom header replace the complete default header and top navigation'
   setActivePinia(pinia)
   piniaSettingStore().updateSettingState('layoutConfig', { mode: 'top' })
   const options = {
-    global: { renderStubDefaultSlot: true, plugins: [router, pinia] },
+    global: {
+      renderStubDefaultSlot: true,
+      stubs: { RayAdminShell: false, NLayout: false, NLayoutContent: false },
+      plugins: [router, pinia],
+    },
   }
   const standard = shallowMount(Layout, options)
 
@@ -40,7 +44,11 @@ it('offers a restore button for custom content and also exits with Escape', asyn
   setActivePinia(pinia)
   const runtime = piniaRuntimeStore()
   const wrapper = shallowMount(Layout, {
-    global: { renderStubDefaultSlot: true, plugins: [router, pinia] },
+    global: {
+      renderStubDefaultSlot: true,
+      stubs: { RayAdminShell: false, NLayout: false, NLayoutContent: false },
+      plugins: [router, pinia],
+    },
     slots: {
       default: () => h('div', { 'data-test': 'custom-content' }, 'Custom'),
     },
@@ -72,7 +80,11 @@ it('moves the full navigation to the right without adding a second menu', () => 
   setActivePinia(pinia)
   piniaSettingStore().updateSettingState('layoutConfig', { mode: 'right' })
   const wrapper = shallowMount(Layout, {
-    global: { renderStubDefaultSlot: true, plugins: [router, pinia] },
+    global: {
+      renderStubDefaultSlot: true,
+      stubs: { RayAdminShell: false, NLayout: false, NLayoutContent: false },
+      plugins: [router, pinia],
+    },
   })
 
   try {

@@ -2,10 +2,14 @@
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import type { IconProps } from '../../apps/admin/src/components/RIcon'
+import {
+  iconNames,
+  isIconName,
+  resolveIconName,
+} from '../../apps/admin/src/icons'
+import type { IconName } from '../../apps/admin/src/icons'
 import { iconNameFromPath, scanIcons } from '../../scripts/icons.mjs'
-import type { IconProps } from '../../src/components/RIcon'
-import { iconNames, isIconName, resolveIconName } from '../../src/icons'
-import type { IconName } from '../../src/icons'
 
 describe('namespaced icons', () => {
   it('keeps the generated registry synchronized and exposes strict component props', () => {

@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
+    "types": ["node", "vite/client"],
+    "incremental": false,
+    "paths": {}
+  },
+  "include": [
+    ".vitepress/**/*.mts",
+    ".vitepress/**/*.ts",
+    ".vitepress/**/*.vue",
+    "examples/**/*.vue"
+  ]
+}

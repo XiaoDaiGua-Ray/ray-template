@@ -1,5 +1,5 @@
 import { AES, enc } from 'crypto-js'
-import { decrypt, encrypt } from '../../src/utils/legacy-crypto'
+import { decrypt, encrypt } from '../../apps/admin/src/utils/legacy-crypto'
 
 describe('legacy AES JSON format', () => {
   afterEach(() => vi.restoreAllMocks())

@@ -1,4 +1,4 @@
-import { uuid } from '../../src/utils/basic'
+import { uuid } from '../../apps/admin/src/utils/basic'
 
 describe('uuid', () => {
   it('should return String', () => {

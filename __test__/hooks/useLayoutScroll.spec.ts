@@ -1,8 +1,11 @@
 import type { LayoutInst } from 'naive-ui'
 import type { Ref } from 'vue'
-import { LAYOUT_CONTENT_REF, LAYOUT_SIDER_REF } from '../../src/app-config'
-import { useContentScroll } from '../../src/hooks/template/useContentScroll'
-import { useSiderScroll } from '../../src/hooks/template/useSiderScroll'
+import {
+  LAYOUT_CONTENT_REF,
+  LAYOUT_SIDER_REF,
+} from '../../apps/admin/src/app-config'
+import { useContentScroll } from '../../apps/admin/src/hooks/template/useContentScroll'
+import { useSiderScroll } from '../../apps/admin/src/hooks/template/useSiderScroll'
 
 describe.each([
   [useContentScroll, LAYOUT_CONTENT_REF],

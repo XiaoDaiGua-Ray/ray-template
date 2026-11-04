@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url'
 import { configDefaults, defineConfig, mergeConfig } from 'vitest/config'
 import viteConfig from './vite.config.ts'
 
@@ -6,6 +7,7 @@ export default defineConfig((configEnv) =>
     viteConfig(configEnv),
     defineConfig({
       test: {
+        root: fileURLToPath(new URL('.', import.meta.url)),
         include: ['__test__/**/*.spec.{ts,tsx}'],
         exclude: [
           ...configDefaults.exclude,

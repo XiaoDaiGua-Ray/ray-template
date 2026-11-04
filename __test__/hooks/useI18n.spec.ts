@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import type { Ref } from 'vue'
-import { useI18n } from '../../src/hooks/web/useI18n'
+import { useI18n } from '../../apps/admin/src/hooks/web/useI18n'
 
 const { state } = vi.hoisted(() => ({
   state: {
@@ -16,7 +16,7 @@ const { state } = vi.hoisted(() => ({
   },
 }))
 
-vi.mock('../../src/locales', () => ({
+vi.mock('../../apps/admin/src/locales', () => ({
   get i18n() {
     return state.instance
   },
@@ -62,7 +62,7 @@ it('forwards interpolation and leaves plain text and route keys untouched', asyn
 
   state.instance!.global.t = native
   const { t: translate } = useI18n()
-  const { t } = await import('../../src/hooks/template/useI18n')
+  const { t } = await import('../../apps/admin/src/hooks/template/useI18n')
 
   expect(translate('Already readable')).toBe('Already readable')
   expect(t('menu.Dashboard')).toBe('menu.Dashboard')

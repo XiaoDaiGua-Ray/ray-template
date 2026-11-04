@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
-import { DEFAULT_DAYJS_LOCAL } from '../../src/app-config'
-import { useDayjs } from '../../src/hooks/web/useDayjs'
+import { DEFAULT_DAYJS_LOCAL } from '../../apps/admin/src/app-config'
+import { useDayjs } from '../../apps/admin/src/hooks/web/useDayjs'
 
 describe('useDayjs', () => {
   const {
