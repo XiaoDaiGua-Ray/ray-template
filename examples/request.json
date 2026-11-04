@@ -1,0 +1,8 @@
+{
+  "ticket": { "id": "RAY-024", "title": "Review the workspace", "status": "ready" },
+  "cities": {
+    "Hangzhou": { "temperature": 19, "humidity": 66 },
+    "Shanghai": { "temperature": 17, "humidity": 73 },
+    "Chengdu": { "temperature": 21, "humidity": 58 }
+  }
+}

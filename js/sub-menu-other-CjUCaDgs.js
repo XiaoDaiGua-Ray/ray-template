@@ -1,1 +1,0 @@
-import{_n as e,gn as t,hn as n}from"./replaceable-DW6s2lkT.js";import{z as r}from"./toString-BWDzaUQG.js";import{t as i}from"./Input-CcCbIWFY.js";var a=e({name:`SubMenuOther`,setup(){return{inputValue:r(null)}},render(){return t(`div`,null,[n(`多级菜单-2-1`),t(i,{modelValue:this.inputValue,"onUpdate:modelValue":e=>this.inputValue=e},null)])}});export{a as default};

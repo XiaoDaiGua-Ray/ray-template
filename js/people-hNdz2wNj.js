@@ -1,0 +1,1 @@
+var e=Array.from({length:10},(e,t)=>({key:t,name:`张三${t}`,address:`New York No. 1 Lake Park`,phone:`010-121212`}));export{e as t};

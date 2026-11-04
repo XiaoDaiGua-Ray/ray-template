@@ -1,0 +1,1 @@
+import{Cn as e,wn as t}from"./Card-DevreQc-.js";import{t as n}from"./CacheRouteExample-CHK6ScMP.js";var r=t({name:`MultiMenuOne`,render(){return e(n,{title:this.$t(`showcase.multiOneTitle`),description:this.$t(`showcase.multiOneDescription`)},null)}});export{r as default};
