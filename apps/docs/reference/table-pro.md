@@ -3,6 +3,7 @@
 <script setup>
 import { useData } from 'vitepress'
 import { defineAsyncComponent } from 'vue'
+import AdminExample from '../examples/AdminExample.vue'
 
 const { isDark, lang } = useData()
 const TableProDemo = defineAsyncComponent(() => import('../examples/TableProDemo.vue'))
@@ -51,6 +52,54 @@ const renderRemote = () => (
 - 搜索提交回到第 1 页。外部筛选用 `params`，复杂表单可从 `filters` 插槽调用 `submit(values)`。服务端排序和过滤由调用方将事件值映射进 `params`。
 - 默认每页 10 条；用 `pageSize`、`pagination.pageSizes` 调整，或传 `pagination={false}` 关闭。关闭时不添加分页字段；`bare pagination` 可单独开启分页。
 - 初始页用 `pagination.defaultPage`。远端模式下组件管理当前页、每页条数和总数；调用方已有自己的远端控制时可传 `remote + data + pagination`。
+
+## 高级搜索
+
+从下面四个场景任选一个开始。在表格下方对照草稿、已应用条件和请求参数，看看哪一步真正改变了列表。
+
+- **组合筛选**填入状态多选与创建日期区间。切到模拟远端后点击「应用条件」，查看拆分后的 `createdFrom` 和 `createdTo`，再翻页确认条件仍然有效。
+- **快速切换组织**连续发起北区和南区的候选请求。负责人会清空，最近请求里会显示北区请求已取消。打开负责人下拉，搜索南区的「王雨」。
+- **交付与金额**填入商品级联、仓库树、最低金额、开票状态、自定义配送方式和交付时间。应用后展开匹配订单核对交付信息，留意请求中保留了 `minAmount: 0` 与 `invoiced: false`。
+- **试试校验**提交一个字符的关键词，查看校验提示及保留的列表。修正输入后，可以切换「输入后自动应用」，快速连续编辑并观察列表请求。
+
+在「最近请求」里还能让负责人或列表请求失败一次，再用对应的内置「重试」恢复。
+
+<AdminExample path="/tables/search" title="组合筛选、组织联动与失败重试" :height="960" />
+
+::: details 查看示例源码
+<<< ../../admin/src/views/demo/tables/search.tsx
+:::
+
+### 字段配置
+
+`search` 接受原有数组、`TableProSearchOptions` 对象或 `false`。数组中不传 `type` 时，有 `options` 渲染单选，无 `options` 渲染文本。对象模式可用 `fields` 独立声明搜索字段，也可以省略 `fields`，从标记了 `search: true` 或 `search: { type, ... }` 的数据列生成。列分组、选择列和展开列不会生成字段，显示列设置也不会移除搜索条件。显式提供的 `fields` 优先，包括空数组。每个字段用唯一的 `key` 标识。
+
+| `type`                             | 草稿和提交的值                          | 默认本地匹配                     |
+| ---------------------------------- | --------------------------------------- | -------------------------------- |
+| `text`                             | 字符串，提交时去掉首尾空白              | 忽略大小写，包含匹配             |
+| `number`、`boolean`                | 数字、布尔值。布尔字段可以清空为不限    | 精确匹配                         |
+| `select`、`treeSelect`、`cascader` | 字符串或数字，`multiple: true` 时为数组 | 单选精确匹配。多选任一值命中即可 |
+| `date`、`dateRange`                | `yyyy-MM-dd` 字符串或二元组             | 单日精确匹配，区间包含首尾两天   |
+| `datetime`、`datetimeRange`        | 毫秒时间戳或二元组                      | 单值精确匹配，区间包含两端       |
+| `time`                             | `HH:mm:ss` 字符串                       | 精确匹配                         |
+| `custom`                           | 字符串、数字、布尔值或字符串/数字数组   | 单值精确匹配，数组任一值命中即可 |
+
+字段之间用 AND。默认读取 `row[key]`，嵌套数据、时间戳转业务日期等情况可用 `getValue(row)`，特殊匹配用 `matches(cell, value, row)`。控件支持 `placeholder` 和类型化的 `fieldProps`。树选择和级联的节点、懒加载等原生配置从 `fieldProps` 传入。自定义控件用 `render({ value, setValue, values, inputId, labelId })`，并为可聚焦控件关联标签。
+
+### 提交和请求
+
+- `initialValues` 优先于字段的 `initialValue`。默认条件参与首查，重置恢复默认并重新查询。字段配置 `rules` 后，查询按钮和 `submitSearch()` 会校验，失败保留上次结果。重置会清理校验提示并应用默认值。空值、空白文本和空数组省略，`0` 和 `false` 保留。
+- `transform(value, values)` 返回请求参数片段。例如日期区间可返回 `{ createdFrom, createdTo }`，原字段不再进入参数。本地匹配仍使用字段值。列表请求按外部 `params`、转换后的搜索参数、表格的 `page` 和 `pageSize` 合并，提交回到第 1 页，分页和重试沿用已提交的条件。
+- `onSearch` 接收 `{ values, params, reason }`，`reason` 为 `submit` 或 `reset`。使用对象式 `search` 与 `remote + data + pagination` 时，可在事件中自行取数并控制页码和总数。转换函数抛错会触发 `onSearchError`，保留上次条件。
+- 实例和 `useTablePro()` 都提供 `getSearchValues('draft' | 'applied')`、`setSearchValues(patch)`、`submitSearch()`、`resetSearch()`。读取默认是草稿。提交和重置返回 `Promise<boolean>`，表示是否成功应用条件。设 `submitMode: 'change'` 可在编辑时防抖提交，`debounce` 默认 300 ms。
+
+### 远程选项、联动和布局
+
+`select.loadOptions({ keyword, values, signal })` 用于查询候选项。将 `signal` 传给请求客户端可取消旧请求，忽略取消的请求结果也不会覆盖新候选。关键词输入默认防抖 250 ms，可用 `optionDebounce` 调整。候选加载或失败重试独立于列表请求。
+
+`dependsOn: ['orgId']` 会在组织变化时清除负责人草稿，并以新组织加载负责人选项。一次 `setSearchValues` 可以同时传入组织和新的负责人。用 `visible: ({ orgId }) => orgId != null` 在组织为空时隐藏负责人并排除该条件。折叠只改变布局，仍会提交和校验折叠区域里的字段。
+
+用 `defaultCollapsed`、`collapsedRows`、`maxColumns` 和字段 `span` 控制容器内布局。标签位置和宽度用 `labelPlacement` / `labelWidth`，按钮文案用 `searchText` / `resetText`。用 `renderActions` 扩展默认按钮或自行调用 `submit`、`reset` 和 `setCollapsed`。如果页面已有完整自定义表单，仍可用优先渲染的 `filters` 插槽调用 `submit(values)`。
 
 ## 布局、工具与实例
 
@@ -140,7 +189,7 @@ Naive UI DataTable 的列定义、选择、展开、加载、空态和虚拟滚�
 | `pagination`                                | 普通模式缺省开，`false` 关闭；对象透传 Naive UI Pagination。容器小于 600px 时默认简洁模式，显式 `simple` 优先。                     |
 | `pageSize`                                  | 默认 10；`pagination.pageSize`、`pagination.defaultPageSize` 依次优先。远端初始页读 `pagination.defaultPage`。                      |
 | `request` / `params`                        | 配置 `request` 时组件管理远端数据。`params` 深层变化会从第 1 页重查。                                                               |
-| `search`                                    | `{ key, label, placeholder?, options? }[]`。输入只更新草稿，提交才生效。                                                            |
+| `search`                                    | 兼容原有字段数组，支持 `TableProSearchOptions` 和 `false`。见[高级搜索](#高级搜索)。                                                |
 | `rowKey`                                    | 默认 `row.id ?? row.key`，业务数据缺少两者时必须提供稳定键。                                                                        |
 | `columnStateKey`                            | 缺省不持久化。传稳定标识可记住隐藏列。                                                                                              |
 | `downloadCsvTableOptions`                   | 内置导出默认配置，模板实现使用 `fileName`、`keepOriginalData`。                                                                     |

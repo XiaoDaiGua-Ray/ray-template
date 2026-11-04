@@ -43,6 +43,7 @@
   "TablePrinting": "Printing and custom regions",
   "TableCustom": "Slots and instance methods",
   "TableHooksQuery": "Hooks · Queries and paging",
+  "TableSearch": "Advanced search",
   "TableHooksSelection": "Hooks · Selection and bulk actions",
   "TableHooksOutput": "Hooks · Export and print",
   "RouteManagement": "Route management",

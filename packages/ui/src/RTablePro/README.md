@@ -20,7 +20,7 @@ import { RTablePro } from '@/components'
 ```
 
 - `data` 用于本地数据；`request(params, signal)` 用于远端数据，返回 `Promise<{ data: Row[]; total: number }>`。`total` 是应用筛选后的总数；传递 `signal` 给 HTTP 客户端可以取消上一条请求。
-- 搜索字段有 `key`、`label` 和可选的 `placeholder`、`options`（下拉选项）。输入文字只更新草稿，提交后回到第 1 页。本地文字匹配忽略大小写，下拉按值匹配；远端模式把搜索值传给 `request`。外部筛选可用 `params`，复杂表单可用 `filters` 插槽及其 `submit(values)` 方法。
+- `search` 支持原有字段数组和 `TableProSearchOptions`。编辑只更新草稿，提交后回到第 1 页。外部筛选可用 `params`，自定义完整表单可用 `filters` 插槽及其 `submit(values)` 方法。
 - 完整模式默认使用 DataTable 底部自带的分页器，每页 10 条。空间不足时使用 Naive UI 的简洁分页，也可通过 `pagination.simple` 指定模式。用 `pageSize`、`pagination={{ pageSizes: [10, 20, 50] }}` 调整，或用 `pagination={false}` 关闭。关闭时请求不附加 `page`、`pageSize`；`bare pagination` 可以单独保留分页。
 - 搜索区在结果上方。表格左上方可用 `title` 传文字，或用同名插槽放筛选开关、快捷操作等；都不传时不占位。`toolbar` 插槽和默认工具集中在表格右上方。
 - 行标识默认取 `row.id` 或 `row.key`，其他字段使用 `rowKey`。宽表可设置 `scrollX` 和列宽，横向滚动留在表格内部。根列拖动或固定时保留分组的子列。
@@ -80,4 +80,4 @@ CSV 默认导出当前页可见数据列；`keepOriginalData` 使用传入的整
 
 普通列配置、选择、展开、排序、筛选、汇总、虚拟滚动、固定列、空状态和加载插槽沿用 [DataTable API](https://www.naiveui.com/zh-CN/components/data-table)。`pagination` 对象透传 [Pagination API](https://www.naiveui.com/zh-CN/components/pagination) 的配置，包括快速跳页、页码模板和回调。配置了 `request` 时页码、每页条数和总数由 TablePro 管理；初始页用 `pagination.defaultPage`，运行时跳页用实例 `setPage`。手动远端模式可以直接传 `remote + data + pagination`。服务端排序、过滤继续使用 Naive UI 的事件，在调用方将条件传给 `params`，组件不会推断接口字段。页数很大时可配置 `pagination.showQuickJumpDropdown: false`。
 
-在「表格」菜单下，除了纯表格、远端查询、自适应高度、列设置、打印和插槽示例，还可以查看三个独立的 Hooks 示例：查询与分页、选择与批量操作、导出与打印。旧示例路径会重定向到对应子页。
+在「表格 → 高级搜索」可以切换本地筛选和模拟远端查询，查看日期区间拆分和组织到负责人的联动。配置、值类型和实例方法见[高级搜索参考](../../../../apps/docs/reference/table-pro.md#高级搜索)。在「表格」菜单下也可以查看查询与分页、选择与批量操作、导出与打印三个 Hooks 示例。

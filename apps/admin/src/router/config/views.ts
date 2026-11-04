@@ -135,6 +135,10 @@ const views = {
     load: () => import('@/views/demo/tables/remote'),
     name: 'TableDemoRemote',
   },
+  'demo/tables/search': {
+    load: () => import('@/views/demo/tables/search'),
+    name: 'TableDemoSearch',
+  },
   'demo/template-hooks': {
     load: () => import('@/views/demo/template-hooks/index'),
     name: 'TemplateHooks',

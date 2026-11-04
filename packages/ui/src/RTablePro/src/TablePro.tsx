@@ -5,33 +5,55 @@ import {
   computed,
   defineComponent,
   onBeforeUnmount,
+  onBeforeUpdate,
   onMounted,
   ref,
   shallowRef,
+  useTemplateRef,
   watch,
 } from 'vue'
 import type { ExtractPublicPropTypes, PropType } from 'vue'
 import Search from './components/Search'
+import type { TableSearchFormInst } from './components/Search'
 import { useTableLocale } from './locale'
 import tableProps from './props'
+import {
+  copySearchValues,
+  createSearchPredicate,
+  isSearchArray,
+  normalizeSearchValues,
+  resolveSearchFields,
+  resolveSearchOptions,
+  sameSearchField,
+  toSearchParams,
+} from './search'
 import TablePanel from './TablePanel'
 import type {
   TablePanelInst,
+  TableProColumn,
   TableProParams,
   TableProQueryState,
   TableProRequest,
   TableProResult,
-  TableProSearchField,
-  TableSearchValues,
+  TableProSearchConfig,
+  TableProSearchFieldConfig,
+  TableProSearchSubmission,
+  TableProSearchValues,
 } from './types'
+import { useTableSearch } from './useTableSearch'
 
 const positiveInteger = (value: number) =>
   Number.isSafeInteger(value) && value > 0
 
 const emptyRemoteRows: TableProResult['data'] = []
+const emptySearchFields: readonly TableProSearchFieldConfig[] = []
 
 const props = {
   ...tableProps,
+  columns: {
+    ...tableProps.columns,
+    type: Array as PropType<TableProColumn[]>,
+  },
   pagination: {
     type: [Boolean, Object] as PropType<boolean | PaginationProps>,
     default: void 0,
@@ -40,7 +62,10 @@ const props = {
   request: Function as PropType<TableProRequest>,
   onRegister: Function as PropType<(instance: TableProInst) => void>,
   params: Object,
-  search: Array as PropType<TableProSearchField[]>,
+  search: {
+    type: [Array, Object, Boolean] as PropType<TableProSearchConfig>,
+    default: void 0,
+  },
   rowKey: {
     type: tableProps.rowKey,
     default: (row: { id?: string | number; key?: string | number }) =>
@@ -56,20 +81,79 @@ export interface TableProInst extends TablePanelInst {
   setPage: (page: number) => Promise<void>
   setPageSize: (pageSize: number) => Promise<void>
   getCurrentPageData: () => readonly Readonly<Record<string, unknown>>[]
+  getSearchValues: (source?: 'draft' | 'applied') => TableProSearchValues
+  setSearchValues: (values: TableProSearchValues) => void
+  submitSearch: () => Promise<boolean>
+  resetSearch: () => Promise<boolean>
+}
+
+function createSearchSnapshot(
+  values: TableProSearchValues,
+  fields: readonly TableProSearchFieldConfig[],
+) {
+  return {
+    values,
+    params: toSearchParams(fields, copySearchValues(values)),
+    matches: createSearchPredicate(fields, values),
+  }
 }
 
 export default defineComponent({
   name: 'RTablePro',
   inheritAttrs: false,
   props,
-  emits: { 'request-error': (_error: unknown) => true },
+  emits: {
+    'request-error': (_error: unknown) => true,
+    'search-error': (_error: unknown) => true,
+    search: (_submission: TableProSearchSubmission) => true,
+  },
   setup(props, { attrs, slots, expose, emit }) {
     const { t } = useTableLocale()
     const table = shallowRef<TablePanelInst>()
     const result = shallowRef<TableProResult>()
     const requestPhase = ref<'idle' | 'loading' | 'failed'>('idle')
-    const searchValues = shallowRef<TableSearchValues>({})
+    const searchForm = useTemplateRef<TableSearchFormInst>('searchForm')
+    const customFilters = ref(!!slots.filters)
+    const searchFailed = ref(false)
+    const searchOptions = computed(() => resolveSearchOptions(props.search))
+    const searchFields = computed(() => {
+      const options = searchOptions.value
+
+      if (customFilters.value || !options) return emptySearchFields
+
+      return resolveSearchFields(options, props.columns)
+    })
+    const searchModel = useTableSearch(
+      () => searchFields.value,
+      () => searchOptions.value,
+      (isCurrent) =>
+        searchFields.value.some((field) => field.type && field.rules)
+          ? (searchForm.value?.validate(isCurrent) ?? true)
+          : true,
+      () => searchForm.value?.restoreValidation(),
+      (values, reason) => applySearch(values, searchFields.value, reason),
+    )
+    const applied = shallowRef(createSearchSnapshot({}, emptySearchFields))
+
+    try {
+      applied.value = createSearchSnapshot(
+        normalizeSearchValues(searchFields.value, searchModel.draft.value),
+        searchFields.value,
+      )
+    } catch (error) {
+      searchFailed.value = true
+      emit('search-error', error)
+    }
+
+    const manualSearch = computed(
+      () =>
+        props.remote &&
+        !!searchOptions.value &&
+        !isSearchArray(props.search) &&
+        !customFilters.value,
+    )
     const pagination = computed(() => props.pagination ?? !props.bare)
+    const paginated = computed(() => pagination.value !== false)
     const pagerOptions = computed(() =>
       typeof props.pagination === 'object' ? props.pagination : void 0,
     )
@@ -87,36 +171,20 @@ export default defineComponent({
     const queryState = computed<TableProQueryState | null>(() => {
       if (!props.request) return null
 
-      const paginated = pagination.value !== false
-
       return Object.freeze({
         loading: requestPhase.value === 'loading',
         failed: requestPhase.value === 'failed',
-        page: paginated ? page.value : null,
-        pageSize: paginated ? pageSize.value : null,
+        page: paginated.value ? page.value : null,
+        pageSize: paginated.value ? pageSize.value : null,
         total: result.value?.total ?? null,
       })
     })
     const localRows = computed(() => {
-      const entries = Object.entries(searchValues.value)
+      const { matches } = applied.value
 
-      if (!entries.length) return props.data
-
-      const selects = new Set(
-        props.search?.filter(({ options }) => options).map(({ key }) => key),
-      )
-
-      return props.data.filter((row) =>
-        entries.every(([key, value]) => {
-          const cell = row[key]
-
-          return typeof value === 'number' || selects.has(key)
-            ? cell === value
-            : String(cell ?? '')
-                .toLowerCase()
-                .includes(value.toLowerCase())
-        }),
-      )
+      return matches && !manualSearch.value
+        ? props.data.filter(matches)
+        : props.data
     })
     let pending: AbortController | undefined
 
@@ -139,9 +207,12 @@ export default defineComponent({
       requestPhase.value = 'loading'
 
       // 分页字段由表格统一管理，筛选参数不能覆盖当前页码。
-      const query: TableProParams = { ...params, ...searchValues.value }
+      const query: TableProParams = {
+        ...params,
+        ...copySearchValues(applied.value.params),
+      }
 
-      if (pagination.value !== false) {
+      if (paginated.value) {
         query.page = page.value
         query.pageSize = pageSize.value
       } else {
@@ -167,7 +238,7 @@ export default defineComponent({
 
         const lastPage = Math.max(1, Math.ceil(response.total / pageSize.value))
 
-        if (pagination.value !== false && page.value > lastPage) {
+        if (paginated.value && page.value > lastPage) {
           page.value = lastPage
 
           if (response.total) {
@@ -206,20 +277,85 @@ export default defineComponent({
       await reload(true)
     }
 
-    const submitSearch = (values: TableSearchValues) => {
-      searchValues.value = values
+    async function applySearch(
+      values: TableProSearchValues,
+      fields: readonly TableProSearchFieldConfig[],
+      reason?: TableProSearchSubmission['reason'],
+    ) {
+      let snapshot: ReturnType<typeof createSearchSnapshot>
 
-      return reload(true)
+      try {
+        snapshot = createSearchSnapshot(copySearchValues(values), fields)
+      } catch (error) {
+        searchFailed.value = true
+        emit('search-error', error)
+
+        return false
+      }
+
+      searchFailed.value = false
+      applied.value = snapshot
+      page.value = 1
+
+      if (reason) {
+        emit('search', {
+          values: copySearchValues(snapshot.values),
+          params: copySearchValues(snapshot.params),
+          reason,
+        })
+      }
+
+      await reload()
+
+      return true
     }
 
+    const submitFilters = async (values: Record<string, string | number>) => {
+      const fields =
+        searchOptions.value?.fields?.filter(({ type }) => !type) ??
+        emptySearchFields
+
+      await applySearch(values, fields, 'submit')
+    }
+
+    onBeforeUpdate(() => {
+      customFilters.value = !!slots.filters
+    })
+    watch(searchFields, (fields, previous) => {
+      const previousByKey = new Map(previous.map((field) => [field.key, field]))
+      const retainedKeys = new Set(
+        fields
+          .filter((field) =>
+            sameSearchField(field, previousByKey.get(field.key)),
+          )
+          .map(({ key }) => key),
+      )
+
+      if (
+        retainedKeys.size === fields.length &&
+        fields.length === previous.length
+      )
+        return
+
+      searchModel.reconcile(retainedKeys)
+      const retained = Object.fromEntries(
+        Object.entries(applied.value.values).filter(([key]) =>
+          retainedKeys.has(key),
+        ),
+      )
+
+      if (
+        Object.keys(retained).length !==
+        Object.keys(applied.value.values).length
+      )
+        void applySearch(normalizeSearchValues(fields, retained), fields)
+    })
+
     watch(
-      [
-        () => props.request,
-        () => props.params,
-        () => pagination.value === false,
-        configuredPageSize,
-      ],
+      [() => props.request, () => props.params, paginated, configuredPageSize],
       (_values, previous) => {
+        if (!previous.length && searchFailed.value) return
+
         void reload(previous.length > 0)
       },
       { deep: true, immediate: true },
@@ -243,6 +379,21 @@ export default defineComponent({
       reload,
       setPage,
       setPageSize,
+      getSearchValues: (source = 'draft') =>
+        source === 'applied'
+          ? copySearchValues(applied.value.values)
+          : searchModel.getValues(),
+      setSearchValues: (values) => {
+        if (searchFields.value.length) searchModel.setValues(values)
+      },
+      submitSearch: () =>
+        searchFields.value.length
+          ? searchModel.submit()
+          : Promise.resolve(false),
+      resetSearch: () =>
+        searchFields.value.length
+          ? searchModel.reset()
+          : Promise.resolve(false),
       getTableInstance: () => table.value?.getTableInstance() ?? null,
       getCurrentPageData: () =>
         table.value?.getTableInstance()?.getCurrentPageData() ?? [],
@@ -311,9 +462,23 @@ export default defineComponent({
           {{
             ...panelSlots,
             filters: filters
-              ? () => filters({ submit: submitSearch })
-              : search?.length
-                ? () => <Search fields={search} onSearch={submitSearch} />
+              ? () => filters({ submit: submitFilters })
+              : searchFields.value.length
+                ? () => (
+                    <Search
+                      ref="searchForm"
+                      fields={searchFields.value}
+                      values={searchModel.draft.value}
+                      options={searchOptions.value}
+                      legacy={isSearchArray(search)}
+                      failed={searchFailed.value}
+                      submit={instance.submitSearch}
+                      reset={instance.resetSearch}
+                      setValue={(key, value) =>
+                        searchModel.setValues({ [key]: value })
+                      }
+                    />
+                  )
                 : void 0,
             notice: () =>
               requestPhase.value === 'failed'

@@ -13,6 +13,7 @@ import {
   getStaticAppRoutes,
   setAppRouteModules,
 } from '@/router/app-route-modules'
+import { routeView } from '@/router/config/views'
 import { expandRoutes } from '@/router/utils/expand-routes'
 import { useSettingActions, useSettingGetters } from '@/store'
 import { useMemoryCache } from '@/utils/cache-backend'
@@ -46,6 +47,12 @@ const params = new URLSearchParams(location.search)
 const withLayout = params.get('layout') === '1'
 const examples = [
   ...getStaticAppRoutes().filter(({ path }) => examplePaths.has(path)),
+  {
+    path: '/tables/search',
+    name: 'TableDemoSearch',
+    component: routeView('demo/tables/search'),
+    meta: { i18nKey: 'menu.TableSearch' },
+  },
   {
     path: '/docs-core-utils',
     name: 'DocsCoreUtils',

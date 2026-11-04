@@ -101,6 +101,53 @@
   }
 }
 
+.r-table-search-shell {
+  min-inline-size: 0;
+}
+
+.r-table-search--advanced {
+  display: grid;
+  min-inline-size: 0;
+  gap: 12px;
+
+  .r-table-search__actions {
+    justify-content: flex-end;
+  }
+}
+
+.r-table-search__item {
+  min-inline-size: 0;
+
+  .n-form-item-blank
+    > :is(
+      .n-input,
+      .n-input-number,
+      .n-base-selection,
+      .n-select,
+      .n-date-picker,
+      .n-time-picker,
+      .n-cascader,
+      .n-tree-select
+    ) {
+    inline-size: 100%;
+    min-inline-size: 0;
+  }
+}
+
+.r-table-search__select {
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+.r-table-search__option-error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  margin-block-start: 4px;
+  color: var(--r-text-secondary);
+}
+
 .r-template--dark .r-table-search__submit.n-button {
   &,
   &:hover,

@@ -23,6 +23,12 @@ const tables: AppRouteRecordRaw = {
       meta: { i18nKey: t('menu.TableRemote') },
     },
     {
+      path: 'search',
+      name: 'TableDemoSearch',
+      component: routeView('demo/tables/search'),
+      meta: { i18nKey: t('menu.TableSearch') },
+    },
+    {
       path: 'auto-height',
       name: 'TableDemoAutoHeight',
       component: routeView('demo/tables/auto-height'),
