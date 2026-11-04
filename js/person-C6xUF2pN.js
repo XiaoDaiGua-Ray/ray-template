@@ -1,0 +1,1 @@
+import"./axios-CZS2btNg.js";import{t as e}from"./preload-helper-B5zr4nmU.js";var t=async(t,n)=>{let{listPeople:r}=await e(async()=>{let{listPeople:e}=await import(`./people-BA0yvZ_x.js`);return{listPeople:e}},[]);return r(t)};export{t};
