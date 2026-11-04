@@ -1,0 +1,1 @@
+var e=Symbol(`exampleFocus`);export{e as t};

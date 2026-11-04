@@ -1,0 +1,1 @@
+import{D as e,P as t}from"./toString-BWDzaUQG.js";function n(n){return e()?(t(n),!0):!1}export{n as t};

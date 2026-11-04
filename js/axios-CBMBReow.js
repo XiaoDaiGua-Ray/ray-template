@@ -1,0 +1,1 @@
+import{S as e,W as t}from"./store-CPbeLaIA.js";function n(n,r){return t(()=>e(n),Object.assign({},r))}export{n as t};
