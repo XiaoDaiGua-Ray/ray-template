@@ -1,37 +1,18 @@
 <template>
-  <NConfigProvider :theme="dark ? darkTheme : undefined">
-    <div
-      class="ray-demo table-demo"
-      :class="{ 'r-template--dark': dark }"
-      :lang="locale"
-    >
-      <fieldset>
+  <DemoFrame :dark="dark" :locale="locale">
+    <div class="ray-demo table-demo">
+      <fieldset class="ray-demo-group">
         <legend>{{ copy.source }}</legend>
         <div class="ray-demo-options">
-          <label :for="`${id}-local`">
-            <input
-              :id="`${id}-local`"
-              v-model="source"
-              type="radio"
-              :name="id"
-              value="local"
-            />
-            {{ copy.local }}
-          </label>
-          <label :for="`${id}-remote`">
-            <input
-              :id="`${id}-remote`"
-              v-model="source"
-              type="radio"
-              :name="id"
-              value="remote"
-            />
-            {{ copy.remote }}
-          </label>
-          <label :for="`${id}-virtual`">
-            <input :id="`${id}-virtual`" v-model="virtual" type="checkbox" />
-            {{ copy.virtual }}
-          </label>
+          <NRadioGroup
+            v-model:value="source"
+            :name="id"
+            :aria-label="copy.source"
+          >
+            <NRadio value="local">{{ copy.local }}</NRadio>
+            <NRadio value="remote">{{ copy.remote }}</NRadio>
+          </NRadioGroup>
+          <NCheckbox v-model:checked="virtual">{{ copy.virtual }}</NCheckbox>
         </div>
       </fieldset>
       <NButton v-if="source === 'remote'" size="small" @click="failRequest">
@@ -47,22 +28,24 @@
         :data="source === 'local' ? rows : []"
         :request="source === 'remote' ? request : undefined"
         :virtualScroll="virtual"
-        :search="[{ key: 'name', label: copy.name }]"
+        :search="[
+          { key: 'name', label: copy.name, placeholder: copy.searchName },
+        ]"
         columnStateKey="docs-demo"
         autoHeight
       />
     </div>
-  </NConfigProvider>
+  </DemoFrame>
 </template>
 
 <script setup lang="ts">
-import '@ray-template/ui/theme.css'
 import { provideUiServices } from '@ray-template/ui/services'
 import { RTablePro } from '@ray-template/ui/table-pro'
 import type { TableProInst, TableProRequest } from '@ray-template/ui/table-pro'
 import { createStorage } from '@ray-template/utils/storage'
-import { darkTheme, NButton, NConfigProvider } from 'naive-ui'
+import { NButton, NCheckbox, NRadio, NRadioGroup } from 'naive-ui'
 import { computed, ref, shallowRef, useId } from 'vue'
+import DemoFrame from './DemoFrame.vue'
 
 const props = withDefaults(
   defineProps<{ dark?: boolean; locale?: 'zh-CN' | 'en' }>(),
@@ -78,6 +61,7 @@ const copy = computed(() =>
         fail: 'Simulate a request failure',
         cancelled: 'Cancelled requests:',
         name: 'Name',
+        searchName: 'Enter a name',
         score: 'Score',
         entry: 'Member',
       }
@@ -89,6 +73,7 @@ const copy = computed(() =>
         fail: '模拟请求失败',
         cancelled: '已取消请求：',
         name: '姓名',
+        searchName: '请输入姓名',
         score: '分数',
         entry: '成员',
       },
@@ -174,14 +159,9 @@ const failRequest = () => {
   --r-table-height: 460px;
 }
 
-.table-demo :deep(.n-data-table-table) {
-  display: table;
-  margin: 0;
-  overflow: visible;
-}
-
-.table-demo :deep(.n-data-table-tr) {
-  background: transparent;
-  border: 0;
+.table-demo :deep(.n-radio-group) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
 }
 </style>

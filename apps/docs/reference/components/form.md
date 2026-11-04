@@ -1,5 +1,9 @@
 # RForm 与 useForm
 
+<script setup>
+import AdminExample from '../../examples/AdminExample.vue'
+</script>
+
 `RForm` 包装 Naive UI Form，并用 Spin 显示提交或查询状态。用 `NFormItem.path` 匹配 `model` 的字段，在输入组件上更新值。
 
 ```tsx
@@ -46,6 +50,14 @@ export default defineComponent({
   },
 })
 ```
+
+## 交互示例
+
+<AdminExample path="/form" title="表单校验和重置" />
+
+::: details 查看示例源码
+<<< @/../admin/src/views/demo/form/index.tsx
+:::
 
 ## 属性与事件
 

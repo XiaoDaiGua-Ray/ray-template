@@ -6,6 +6,7 @@
         <input
           :id="firstId"
           v-model.trim="first"
+          class="ray-demo-input"
           inputmode="decimal"
           :aria-describedby="hintId"
           :aria-invalid="!isDecimal(first)"
@@ -16,6 +17,7 @@
         <input
           :id="secondId"
           v-model.trim="second"
+          class="ray-demo-input"
           inputmode="decimal"
           :aria-describedby="hintId"
           :aria-invalid="!isDecimal(second)"
@@ -28,6 +30,8 @@
         {{ copy.fixed }}：<code>{{ result.fixed }}</code>
         <br />
         {{ copy.native }}：<code>{{ result.native }}</code>
+        <br />
+        <code>isCurrency: {{ result.isFixed }} / {{ result.isNative }}</code>
       </span>
       <span v-else>{{ copy.invalid }}</span>
     </output>
@@ -35,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { add } from '@ray-template/utils/precision'
+import { add, isCurrency } from '@ray-template/utils/precision'
 import { computed, ref, useId } from 'vue'
 
 const props = defineProps<{ locale?: 'zh-CN' | 'en' }>()
@@ -68,9 +72,14 @@ const isDecimal = (value: string) =>
 const result = computed(() => {
   if (!isDecimal(first.value) || !isDecimal(second.value)) return
 
+  const fixed = add(first.value, second.value)
+  const native = Number(first.value) + Number(second.value)
+
   return {
-    fixed: add(first.value, second.value).toString(),
-    native: Number(first.value) + Number(second.value),
+    fixed: fixed.toString(),
+    native,
+    isFixed: isCurrency(fixed),
+    isNative: isCurrency(native),
   }
 })
 </script>

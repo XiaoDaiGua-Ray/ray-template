@@ -1,5 +1,19 @@
 # Vue 与浏览器工具
 
+<script setup>
+import AdminExample from '../../examples/AdminExample.vue'
+</script>
+
+## 交互示例
+
+更改示例元素的颜色和尺寸，查看类名、查询和样式的结果。还可以开始或停止 Vue 作用域，转换内置 PNG，下载样例文件或打开打印预览。
+
+<AdminExample path="/docs-browser-utils" title="Vue、DOM 与文件工具" layout :height="570" />
+
+::: details 查看示例源码
+<<< @/../admin/src/views/demo/docs-browser-utils.tsx
+:::
+
 ## Vue 目标解析
 
 `BasicTarget<T>` 可为元素、组件实例、ref、getter 或空值，`unrefElement(target, fallback?)` 在调用时解包；组件优先返回 `$el`。多根组件的 `$el` 未必是可操作的元素。截图、全屏、样式操作请优先绑定明确的原生 DOM ref。

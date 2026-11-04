@@ -4,7 +4,7 @@
 import { useData } from 'vitepress'
 import { defineAsyncComponent } from 'vue'
 
-const { isDark } = useData()
+const { isDark, lang } = useData()
 const TableProDemo = defineAsyncComponent(() => import('../examples/TableProDemo.vue'))
 </script>
 
@@ -17,7 +17,7 @@ const TableProDemo = defineAsyncComponent(() => import('../examples/TableProDemo
 试试切换数据来源、筛选和分页。远端模式下，快速切换页码或重复提交筛选可以中止前一次查询。触发模拟失败后，可以用表格内的按钮重试。
 
 <ClientOnly>
-  <TableProDemo :dark="isDark" />
+  <TableProDemo :dark="isDark" :locale="lang.startsWith('en') ? 'en' : 'zh-CN'" />
 </ClientOnly>
 
 ::: details 查看示例源码

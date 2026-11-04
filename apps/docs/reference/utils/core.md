@@ -3,8 +3,19 @@
 从 `@/utils` 导入以下函数。基础能力的实现位于 `@/utils/core`，精度工具也可从 `@/utils/precision` 单独导入。
 
 <script setup>
+import AdminExample from '../../examples/AdminExample.vue'
 import PrecisionDemo from '../../examples/PrecisionDemo.vue'
 </script>
+
+## 基础工具交互示例
+
+比较 PromiseLike 与 async 函数，试试同步和异步错误回调，或观察路径、日期范围和对象更新的结果。
+
+<AdminExample path="/docs-core-utils" title="类型判断、标识、错误、路径和日期工具" />
+
+::: details 查看基础工具示例源码
+<<< @/../admin/src/views/demo/docs-core-utils.tsx
+:::
 
 ## 类型、标识和错误处理
 
@@ -51,6 +62,14 @@ export function loadOrReport<T>(
 
 ::: details 查看示例源码
 <<< @/examples/PrecisionDemo.vue
+:::
+
+后台的精度实验还能切换减法、乘法、除法以及按份分摊。
+
+<AdminExample path="/precision" title="定点运算与金额分摊" />
+
+::: details 查看完整精度示例源码
+<<< @/../admin/src/views/demo/precision/index.tsx
 :::
 
 ### API

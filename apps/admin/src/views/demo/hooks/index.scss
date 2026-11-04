@@ -60,6 +60,11 @@
   }
 }
 
+.r-demo-section-heading:has(+ .r-hook-grid:empty),
+.r-hook-grid:empty {
+  display: none;
+}
+
 .r-hook-preview {
   display: flex;
   flex-direction: column;

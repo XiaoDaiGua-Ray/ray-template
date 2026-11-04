@@ -1,6 +1,20 @@
 # RCollapseGrid
 
+<script setup>
+import CollapseGridDemo from '../../examples/CollapseGridDemo.vue'
+</script>
+
 适合有多个条件的搜索表单。底层用 `NGrid` 渲染，子项必须是 `NGridItem`。使用 `cols`、`responsive`、`collapsedRows`、`xGap` 和 `yGap` 配置网格；未指定间距或传 `0` 时当前实现回退到 12。
+
+## 交互示例
+
+<ClientOnly>
+  <CollapseGridDemo />
+</ClientOnly>
+
+::: details 查看示例源码
+<<< @/examples/CollapseGridDemo.vue
+:::
 
 | 属性                 | 默认               | 说明                                                       |
 | -------------------- | ------------------ | ---------------------------------------------------------- |

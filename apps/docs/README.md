@@ -24,3 +24,7 @@ pnpm docs:preview
 - `.vitepress/`：主题、导航和旧路径映射。迁址保留的相对路径会在生产构建生成跳转页。
 
 应用变更影响公开 API 时，同步更新对应文档和示例。示例直接使用 workspace 包的公开入口。外壳预览使用文档自己的内存路由和示例菜单。预览生产构建，检查导航、搜索、主题、窄屏、旧路径和受影响示例。
+
+轻量示例直接在文档中运行。依赖后台上下文的示例嵌入同一版本的 `example.html`，只注册演示路由，缓存和 Store 状态留在该示例实例。Markdown 从实际运行的文件引用源码。开发时同时运行 `pnpm dev` 和 `pnpm docs:dev`；后台端口不是 9527 时，为文档开发服务器设置 `VITE_RAY_EXAMPLE_ORIGIN`（例如 `http://127.0.0.1:9528`）。
+
+验收全部示例请运行 `pnpm pages:build`，然后用 `pnpm preview --outDir ../../dist/pages` 在同一地址预览后台和文档，打开 `/ray-template/docs/`。只运行 `pnpm docs:preview` 时，可预览文档和直接运行的轻量示例。

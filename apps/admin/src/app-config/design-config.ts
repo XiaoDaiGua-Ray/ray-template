@@ -1,23 +1,8 @@
 import type { AppTheme } from '@/types/modules/vite-custom-config'
-
-/** 明暗主题共用的菜单尺寸与前景色配置。 */
-const menuThemeOverrides = {
-  itemHeight: '40px',
-  borderRadius: '8px',
-  itemTextColorActive: 'var(--r-selected-text)',
-  itemTextColorActiveHover: 'var(--r-selected-text)',
-  itemTextColorChildActive: 'var(--r-selected-text)',
-  itemTextColorChildActiveHover: 'var(--r-selected-text)',
-  itemTextColorActiveHorizontal: 'var(--r-selected-text)',
-  itemTextColorChildActiveHorizontal: 'var(--r-selected-text)',
-  itemTextColorHoverHorizontal: 'var(--r-selected-text)',
-  itemIconColorActive: 'var(--r-selected-text)',
-  itemIconColorActiveHover: 'var(--r-selected-text)',
-  itemIconColorChildActive: 'var(--r-selected-text)',
-  itemIconColorChildActiveHover: 'var(--r-selected-text)',
-  itemIconColorActiveHorizontal: 'var(--r-selected-text)',
-  itemIconColorChildActiveHorizontal: 'var(--r-selected-text)',
-}
+import {
+  rayPrimaryColor,
+  rayThemeOverrides,
+} from '@ray-template/ui/theme-presets'
 
 export const APP_THEME: AppTheme = {
   /**
@@ -35,12 +20,7 @@ export const APP_THEME: AppTheme = {
     '#18a058',
   ],
   // 系统主题色
-  appPrimaryColor: {
-    // 主题色
-    primaryColor: '#3b63d9',
-    // 主题辅助色(用于整体 hover、active 等之类颜色)
-    primaryFadeColor: 'rgba(59, 99, 217, 0.85)',
-  },
+  appPrimaryColor: rayPrimaryColor,
   /**
    *
    * @description
@@ -66,70 +46,7 @@ export const APP_THEME: AppTheme = {
    * }
    * ```
    */
-  appNaiveUIThemeOverrides: {
-    dark: {
-      common: {
-        borderRadius: '8px',
-        fontWeightStrong: '600',
-        lineHeight: '1.6',
-        heightMedium: '36px',
-        heightSmall: '30px',
-        baseColor: '#172131',
-        bodyColor: '#101722',
-        cardColor: '#172131',
-        modalColor: '#192638',
-        popoverColor: '#192638',
-        actionColor: '#1c293b',
-        textColor1: '#e9eef7',
-        textColor2: '#b3c0d3',
-        textColor3: '#a0b0c6',
-        placeholderColor: '#a0b0c6',
-        borderColor: '#687b96',
-        dividerColor: '#2c394d',
-        hoverColor: 'rgba(179, 192, 211, 0.08)',
-      },
-      Card: {
-        borderRadius: '12px',
-        titleFontSizeMedium: '16px',
-        paddingMedium: '20px 24px',
-      },
-      Menu: menuThemeOverrides,
-      Button: { fontWeight: '500' },
-      Tag: { borderRadius: '5px', textColorPrimary: 'var(--r-primary-text)' },
-      Layout: { siderColor: '#172131', headerColor: '#172131' },
-    },
-    light: {
-      common: {
-        borderRadius: '8px',
-        fontWeightStrong: '600',
-        lineHeight: '1.6',
-        heightMedium: '36px',
-        heightSmall: '30px',
-        baseColor: '#ffffff',
-        bodyColor: '#f5f7fb',
-        cardColor: '#ffffff',
-        modalColor: '#ffffff',
-        popoverColor: '#ffffff',
-        actionColor: '#f7f9fc',
-        textColor1: '#1d2a3e',
-        textColor2: '#52647c',
-        textColor3: '#617187',
-        placeholderColor: '#617187',
-        borderColor: '#8492a8',
-        dividerColor: '#e4e9f1',
-        hoverColor: 'rgba(82, 100, 124, 0.06)',
-      },
-      Card: {
-        borderRadius: '12px',
-        titleFontSizeMedium: '16px',
-        paddingMedium: '20px 24px',
-      },
-      Menu: menuThemeOverrides,
-      Button: { fontWeight: '500' },
-      Tag: { borderRadius: '5px', textColorPrimary: 'var(--r-primary-text)' },
-      Layout: { siderColor: '#ffffff', headerColor: '#ffffff' },
-    },
-  },
+  appNaiveUIThemeOverrides: rayThemeOverrides,
   /**
    *
    * @description

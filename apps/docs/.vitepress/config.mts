@@ -1,5 +1,5 @@
 import vueJsx from '@vitejs/plugin-vue-jsx'
-import { defineConfig } from 'vitepress'
+import { defineConfig, postcssIsolateStyles } from 'vitepress'
 import { writeLegacyRedirects } from './legacy.mts'
 import { sidebar } from './sidebar.mts'
 import { demo, repository, version } from './source.mts'
@@ -21,7 +21,13 @@ export default defineConfig({
       dedupe: ['vue'],
     },
     // 文档按容器尺寸排版，不沿用后台的设计稿单位转换。
-    css: { postcss: { plugins: [] } },
+    css: {
+      postcss: {
+        plugins: [
+          postcssIsolateStyles({ includeFiles: [/(?:base|vp-doc)\.css$/] }),
+        ],
+      },
+    },
   },
   head: [
     [

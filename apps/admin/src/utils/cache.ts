@@ -1,8 +1,6 @@
 import type { RemoveStorageFC, StorageLike, StorageOptions } from '@/types'
 import { prefixCacheKey } from './app/prefix-cache-key'
-
-const getStorageInstance = (type: StorageLike = 'sessionStorage'): Storage =>
-  type === 'localStorage' ? window.localStorage : window.sessionStorage
+import { getStorageInstance } from './cache-backend'
 
 const getKeyWithPrefix = (key: string, options?: StorageOptions): string =>
   options?.prefix

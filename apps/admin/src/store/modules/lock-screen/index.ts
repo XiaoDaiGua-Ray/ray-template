@@ -1,4 +1,5 @@
 import { APP_CATCH_KEY } from '@/app-config'
+import { getStorageInstance } from '@/utils/cache-backend'
 import { useStorage } from '@vueuse/core'
 
 export const piniaLockScreenStore = defineStore('lock-screen', () => {
@@ -6,7 +7,7 @@ export const piniaLockScreenStore = defineStore('lock-screen', () => {
   const locked = useStorage(
     APP_CATCH_KEY.isAppLockScreen,
     false,
-    window.localStorage,
+    getStorageInstance('localStorage'),
     { mergeDefaults: true },
   )
   const setLocked = (value: boolean) => {

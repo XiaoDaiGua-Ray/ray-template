@@ -1,5 +1,17 @@
 # 分页与右键菜单
 
+<script setup>
+import AdminExample from '../../examples/AdminExample.vue'
+</script>
+
+## 交互示例
+
+<AdminExample path="/web-hooks" title="分页和右键菜单" focus="usePagination,useContextmenuCoordinate" />
+
+::: details 查看示例源码
+<<< @/../admin/src/views/demo/hooks/web-hooks.tsx
+:::
+
 ## usePagination
 
 `usePagination(callback?, options?)` 返回只读元组 `[pagination, actions]`。`pagination` 是可传给 `NPagination` 或 `NDataTable` 的响应式配置。缺省页码 1、每页 10 条、开启页大小选择器，候选 `[10, 20, 50, 100]`。`options` 接受除主题和原更新回调之外的 Pagination props，另提供 `pageChange(page)`、`pageSizeChange(size)`。

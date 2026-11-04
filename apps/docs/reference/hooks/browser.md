@@ -1,8 +1,17 @@
 # 窗口、全屏和日期
 
 <script setup>
+import AdminExample from '../../examples/AdminExample.vue'
 import FullscreenDemo from '../../examples/FullscreenDemo.vue'
 </script>
+
+## 交互示例
+
+<AdminExample path="/web-hooks" title="窗口宽度和日期范围" focus="useDevice,useDayjs" />
+
+::: details 查看示例源码
+<<< @/../admin/src/views/demo/hooks/web-hooks.tsx
+:::
 
 ## useDevice
 

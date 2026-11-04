@@ -1,5 +1,17 @@
 # 主题、语言和水印 Hooks
 
+<script setup>
+import AdminExample from '../../examples/AdminExample.vue'
+</script>
+
+## 交互示例
+
+<AdminExample path="/template-hooks" title="主题和水印" focus="useTheme,useWatermark" layout />
+
+::: details 查看示例源码
+<<< @/../admin/src/views/demo/template-hooks/index.tsx
+:::
+
 ## useTheme
 
 `useTheme()` 返回下列方法。颜色覆盖由设置 Store 和全局 Provider 一起管理。
@@ -14,6 +26,12 @@
 `getAppTheme()` 返回一次读取的对象。界面要跟随语言或主题变化时，在 computed 或渲染中调用。自定义主色请使用 [Setting Store](../store/setting) 的 `changePrimaryColor`。
 
 ## useI18n
+
+<AdminExample path="/web-hooks" title="切换示例语言并查看翻译" focus="useI18n" />
+
+::: details 查看语言切换示例源码
+<<< @/../admin/src/views/demo/hooks/web-hooks.tsx
+:::
 
 `useI18n(namespace?)` 返回 `t(key, ...args)`、`locale(lang)` 和初始化时可用的 Vue I18n 全局能力。`useI18n('menu').t('Dashboard')` 与 `useI18n('menu').t('menu.Dashboard')` 指向同一翻译键。未指定命名空间时，裸字符串原样返回。初始化前，`t` 返回解析后的键；初始化后同一个翻译函数会读取最新实例。
 

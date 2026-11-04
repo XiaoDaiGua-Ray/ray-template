@@ -1,5 +1,9 @@
 # SVG 图标
 
+<script setup>
+import AdminExample from '../examples/AdminExample.vue'
+</script>
+
 ```tsx
 import type { IconName } from '@ray-template/icons'
 import { RIcon } from '@ray-template/ui/icon'
@@ -10,6 +14,14 @@ const renderIcon = () => <RIcon name={name} size={24} />
 ```
 
 `RIcon.name` 和路由 `meta.icon` 使用同一套完整分包名。将 SVG 加入 `packages/icons/src/<分包>`，例如 `packages/icons/src/business/orders/approved.svg` 对应 `business/orders/approved`。可在演示的 SVG 图标页面查找并复制用法。
+
+## 交互示例
+
+<AdminExample path="/svg-icons" title="搜索图标和复制名称" />
+
+::: details 查看示例源码
+<<< @/../admin/src/views/demo/svg-icons/index.tsx
+:::
 
 ## 添加和生成
 

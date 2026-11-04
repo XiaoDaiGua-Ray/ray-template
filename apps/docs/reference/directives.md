@@ -1,10 +1,21 @@
 # 指令
 
 <script setup>
+import AdminExample from '../examples/AdminExample.vue'
 import DebounceDemo from '../examples/DebounceDemo.vue'
 </script>
 
 应用在 `main.ts` 调用 `setupDirectives(app)`。注册器查找 `packages/directives/src/modules/<name>/index.ts`，调用默认导出的工厂，将返回的 Vue Directive 以目录名注册。SFC 中可直接用 `v-<name>`；从文件名和源码进入可查各指令的绑定类型。
+
+## 交互示例
+
+在同一示例操作复制、节流、防抖、文本省略、波纹与禁用。下方防抖小例可以快速对照计数。
+
+<AdminExample path="/directive" title="六种指令的交互示例" :height="550" />
+
+::: details 查看完整指令示例源码
+<<< @/../admin/src/views/demo/directive/index.tsx
+:::
 
 ## v-copy
 

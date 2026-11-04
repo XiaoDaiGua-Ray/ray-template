@@ -1,5 +1,9 @@
 # RModal 与弹窗
 
+<script setup>
+import AdminExample from '../../examples/AdminExample.vue'
+</script>
+
 `RModal` 继承 Naive UI Modal 的 `show`、`preset`、关闭事件和插槽，增加预设宽度和全屏卡片。声明式弹窗通过 `show` / `onUpdateShow` 或 `v-model:show` 控制。
 
 ```tsx
@@ -44,6 +48,14 @@ export default defineComponent({
 | `fullscreen`  | `false` | 仅 `card` 预设生效。       |
 
 宽度接受数字或 CSS 尺寸。`fullscreen` 让卡片占满窗口，正文在溢出时滚动；它不调用浏览器全屏。`default`、`header`、`footer` 等插槽依 Naive UI 预设处理，组件原样转发。
+
+## 交互示例
+
+<AdminExample path="/modal-demo" title="声明式与命令式弹窗" />
+
+::: details 查看示例源码
+<<< @/../admin/src/views/demo/modal-demo/index.tsx
+:::
 
 ## 命令式弹窗
 

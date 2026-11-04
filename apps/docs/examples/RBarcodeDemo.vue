@@ -6,6 +6,7 @@
         <input
           :id="textId"
           v-model="text"
+          class="ray-demo-input"
           maxlength="24"
           :inputmode="format === 'EAN13' ? 'numeric' : 'text'"
           :aria-describedby="hintId"
@@ -14,7 +15,7 @@
       </div>
       <fieldset>
         <legend>{{ copy.format }}</legend>
-        <div class="ray-demo-options">
+        <div class="ray-demo-options ray-demo-native-options">
           <label
             v-for="item in formats"
             :key="item"

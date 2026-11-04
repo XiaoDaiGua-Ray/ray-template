@@ -1,8 +1,26 @@
 # 导航与菜单
 
+<script setup>
+import AdminExample from '../../examples/AdminExample.vue'
+</script>
+
 从 `@/hooks` 导入本页 API。菜单来源、权限和路由记录见[路由指南](../../guide/routing)。
 
+## 交互示例
+
+<AdminExample path="/template-hooks" title="导航、首页、标签和标记" focus="useAppNavigation,useAppRoot,useSiderBar,useBadge" layout />
+
+::: details 查看示例源码
+<<< @/../admin/src/views/demo/template-hooks/index.tsx
+:::
+
 ## useVueRouter
+
+<AdminExample path="/web-hooks" title="读取路由和更新查询参数" focus="useVueRouter" />
+
+::: details 查看路由示例源码
+<<< @/../admin/src/views/demo/hooks/web-hooks.tsx
+:::
 
 `useVueRouter()` 返回 `{ router }`，指向模板的共享 Vue Router 实例。当前路由用 `router.currentRoute.value` 读取，`push`、`replace`、`back` 等行为由 Vue Router 提供。它可在 `setup` 外取得实例。初始化后再访问依赖实际路由匹配的状态。
 

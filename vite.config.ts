@@ -69,6 +69,14 @@ export default defineConfig(({ mode }) => {
       ...buildOptions(mode),
       target: 'baseline-widely-available',
       rolldownOptions: {
+        input: {
+          index: fileURLToPath(
+            new URL('./apps/admin/index.html', import.meta.url),
+          ),
+          example: fileURLToPath(
+            new URL('./apps/admin/example.html', import.meta.url),
+          ),
+        },
         output: {
           // 交由 Rolldown 按依赖图拆包，避免手动按 pnpm 目录分组造成循环依赖。
           minify: {

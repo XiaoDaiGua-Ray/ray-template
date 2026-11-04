@@ -1,5 +1,9 @@
 # RDraggableCard
 
+<script setup>
+import AdminExample from '../../examples/AdminExample.vue'
+</script>
+
 基于 Naive UI Card 和 Interact.js。卡片 Teleport 到应用创建的容器，不参加原父节点的普通布局流。设置标题后可拖动卡片头部，否则拖动内容区；组件没有开放改变尺寸的交互。
 
 | 属性                  | 默认                      | 说明                                                                |
@@ -13,6 +17,14 @@
 | `animation`           | `false`                   | 启用进场过渡。                                                      |
 
 位置可用 `top-left`、`top-right`、`bottom-left`、`bottom-right`、`center`、`top-center`、`bottom-center`。替换 `defaultPosition` 引用会触发重定位；没有公开拖拽事件或位置持久化。选择器需要在布局中真实存在，容器应有明确尺寸。组件初始化会访问 `document`，仅在浏览器侧渲染。继承 Card 属性和插槽。
+
+## 交互示例
+
+<AdminExample path="/draggable-card" title="拖拽卡片和移动边界" />
+
+::: details 查看示例源码
+<<< @/../admin/src/views/demo/draggable-card.tsx
+:::
 
 ```tsx
 import { RDraggableCard } from '@/components'

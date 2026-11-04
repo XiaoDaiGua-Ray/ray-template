@@ -1,6 +1,18 @@
 # 布局与滚动 Hooks
 
+<script setup>
+import AdminExample from '../../examples/AdminExample.vue'
+</script>
+
 本页 API 操作模板默认布局。替换布局内容或侧栏前，先确认[插槽和布局实例](../../guide/layout)仍在预期位置。
+
+## 交互示例
+
+<AdminExample path="/template-hooks" title="内容加载、最大化和滚动" focus="useMaximize,useSpinning,useContentScroll,useSiderScroll" layout />
+
+::: details 查看示例源码
+<<< @/../admin/src/views/demo/template-hooks/index.tsx
+:::
 
 ## useMaximize
 

@@ -5,6 +5,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./theme.css": "./src/theme.css",
+    "./theme-presets": "./src/theme-presets.ts",
     "./barcode": "./src/RBarcode/index.ts",
     "./chart": "./src/RChart/index.ts",
     "./collapse-grid": "./src/RCollapseGrid/index.ts",

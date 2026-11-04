@@ -1,6 +1,18 @@
 # 二维码
 
+<script setup>
+import AdminExample from '../../examples/AdminExample.vue'
+</script>
+
 Ray Template 直接使用 `vue3-next-qrcode` 的 `Vue3NextQrcode`，公开实例类型为 `QRCodeInst`。组件演示和登录扫码占位页分别使用它。
+
+## 交互示例
+
+<AdminExample path="/qrcode" title="二维码参数和预览" />
+
+::: details 查看示例源码
+<<< @/../admin/src/views/demo/qrcode/index.tsx
+:::
 
 ```tsx
 import { NButton } from 'naive-ui'

@@ -1,5 +1,9 @@
 # RChart 与 useChart
 
+<script setup>
+import AdminExample from '../../examples/AdminExample.vue'
+</script>
+
 `RChart` 接收 ECharts options，负责创建实例、更新主题、监听尺寸与清理。需要确定的容器高度；`height="100%"` 依赖父元素的高度。图表数据和 series 配置由页面管理。
 
 ```tsx
@@ -25,6 +29,14 @@ export default defineComponent({
   },
 })
 ```
+
+## 交互示例
+
+<AdminExample path="/echart" title="图表渲染和更新" />
+
+::: details 查看示例源码
+<<< @/../admin/src/views/demo/echart/index.tsx
+:::
 
 ## 渲染、主题与更新
 

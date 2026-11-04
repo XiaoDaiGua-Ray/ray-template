@@ -1,6 +1,18 @@
 # RIframe
 
+<script setup>
+import AdminExample from '../../examples/AdminExample.vue'
+</script>
+
 `RIframe` 封装原生 iframe 和 Naive UI Spin。它适合嵌入允许被加载的页面，页面自身的 CSP、嵌入授权和同源策略仍生效。`load` 事件并不能证明业务内容加载成功。
+
+## 交互示例
+
+<AdminExample path="/iframe" title="嵌入页面和加载状态" />
+
+::: details 查看示例源码
+<<< @/../admin/src/views/demo/iframe/index.tsx
+:::
 
 ```tsx
 import { RIframe } from '@/components'

@@ -1,6 +1,18 @@
 # 接口、取消与 Mock
 
+<script setup>
+import AdminExample from '../examples/AdminExample.vue'
+</script>
+
 业务代码调用 `apps/admin/src/api` 中的函数，后者使用 `@/axios` 的 `request`。成功时实例直接解析为响应体 `T`，失败会拒绝；接口还包了一层业务响应时，由业务层继续解析。需要原始响应头或状态码时，使用保留完整响应的 Axios 实例。
+
+## 交互示例
+
+<AdminExample path="/axios" title="执行、取消和节流请求" />
+
+::: details 查看示例源码
+<<< @/../admin/src/views/demo/axios/index.tsx
+:::
 
 ## 接入请求和取消
 

@@ -1,5 +1,5 @@
 <template>
-  <NConfigProvider :theme="dark ? darkTheme : undefined">
+  <DemoFrame :dark="dark" :locale="locale">
     <div
       class="shell-demo"
       :class="{ 'r-template--dark': dark }"
@@ -50,11 +50,10 @@
         </template>
       </AdminShell>
     </div>
-  </NConfigProvider>
+  </DemoFrame>
 </template>
 
 <script setup lang="ts">
-import '@ray-template/ui/theme.css'
 import {
   AdminShell,
   LayoutSettings,
@@ -62,15 +61,10 @@ import {
   ShellTopNavigation,
 } from '@ray-template/admin-shell'
 import type { LayoutConfig } from '@ray-template/admin-shell'
-import {
-  darkTheme,
-  NButton,
-  NConfigProvider,
-  NLayoutSider,
-  NMenu,
-} from 'naive-ui'
+import { NButton, NLayoutSider, NMenu } from 'naive-ui'
 import { computed, onMounted, ref } from 'vue'
 import { createMemoryHistory, createRouter } from 'vue-router'
+import DemoFrame from './DemoFrame.vue'
 
 const props = withDefaults(defineProps<{ locale?: 'zh-CN' | 'en' }>(), {
   locale: 'zh-CN',

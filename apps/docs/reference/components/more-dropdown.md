@@ -1,6 +1,20 @@
 # RMoreDropdown
 
+<script setup>
+import MoreDropdownDemo from '../../examples/MoreDropdownDemo.vue'
+</script>
+
 包装 `NDropdown`，为行操作提供默认的更多图标。`options`、`trigger`、`placement`、`onSelect(key, option)`、受控显隐等沿用 Naive UI Dropdown。
+
+## 交互示例
+
+<ClientOnly>
+  <MoreDropdownDemo />
+</ClientOnly>
+
+::: details 查看示例源码
+<<< @/examples/MoreDropdownDemo.vue
+:::
 
 | 属性       | 默认            | 说明                                  |
 | ---------- | --------------- | ------------------------------------- |

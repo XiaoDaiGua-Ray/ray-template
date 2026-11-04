@@ -1,6 +1,18 @@
 # RFlow 与 useFlow
 
+<script setup>
+import AdminExample from '../../examples/AdminExample.vue'
+</script>
+
 `RFlow` 在自己的 DOM 容器中建立 LogicFlow。图数据用 `FlowGraphData` 表示，`nodes` 和 `edges` 为可选数组；`NodeConfig`、`EdgeConfig` 都要求稳定的 `id`，边的源和目标需指向存在的节点。
+
+## 交互示例
+
+<AdminExample path="/flow" title="流程图和只读切换" />
+
+::: details 查看示例源码
+<<< @/../admin/src/views/demo/flow-demo.tsx
+:::
 
 ```tsx
 import { RFlow } from '@/components'

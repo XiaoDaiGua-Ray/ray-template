@@ -2,6 +2,21 @@
 
 这些组件按文件默认导入，例如 `import AppPageHeader from '@/app-components/app/AppPageHeader'`。它们依赖应用 Store、路由或 DOM，按默认 [App 挂载顺序](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/App.tsx)集成。
 
+<script setup>
+import AdminExample from '../../examples/AdminExample.vue'
+</script>
+
+## 后台上下文示例
+
+这个预览运行后台的工作台和布局。在侧栏进入「模板 Hooks」，可以切换主题、水印、布局加载和菜单状态。版本提示、请求取消等 Provider 属于应用初始化流程，接入顺序见下表。
+
+<AdminExample path="/dashboard" title="后台工作台、布局与 Provider" layout />
+
+::: details 查看预览入口与工作台源码
+<<< @/../admin/src/documentation-example.tsx
+<<< @/../admin/src/views/dashboard/index.tsx
+:::
+
 ## 页面组件
 
 | 组件            | 配置和注意事项                                                                                                                                                                 |

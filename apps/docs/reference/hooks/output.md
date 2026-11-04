@@ -1,5 +1,17 @@
 # DOM 截图与打印
 
+<script setup>
+import AdminExample from '../../examples/AdminExample.vue'
+</script>
+
+## 交互示例
+
+<AdminExample path="/web-hooks" title="截图与打印" focus="useDomToImage,usePrint" />
+
+::: details 查看示例源码
+<<< @/../admin/src/views/demo/hooks/web-hooks.tsx
+:::
+
 ## useDomToImage
 
 `useDomToImage(target, options?)` 返回 `create(format?)`。调用时从元素、ref 或 getter 解析目标，缺省格式为 `jpeg`，`options.imageType` 设置默认值，单次 `create(format)` 优先。Promise 按格式推断返回值：

@@ -6,6 +6,21 @@
   background: var(--vp-c-bg-soft);
 }
 
+.ray-admin-example-frame {
+  padding: 12px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 12px;
+  background: var(--vp-c-bg-soft);
+}
+
+.ray-admin-example {
+  display: block;
+  inline-size: 100%;
+  border: 0;
+  border-radius: 6px;
+  background: var(--vp-c-bg);
+}
+
 .ray-demo-fields {
   display: flex;
   flex-wrap: wrap;
@@ -26,7 +41,7 @@
   font-weight: 600;
 }
 
-.ray-demo input:not([type='radio']) {
+.ray-demo-input {
   inline-size: 100%;
   min-block-size: 40px;
   padding-inline: 10px;
@@ -35,11 +50,11 @@
   background: var(--vp-c-bg);
 }
 
-.ray-demo input[aria-invalid='true'] {
+.ray-demo-input[aria-invalid='true'] {
   border-color: var(--vp-c-danger-1);
 }
 
-.ray-demo input:focus-visible {
+.ray-demo-input:focus-visible {
   outline: 2px solid var(--vp-c-brand-1);
   outline-offset: 2px;
 }
@@ -47,10 +62,24 @@
 .ray-demo-options {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 4px 12px;
 }
 
-.ray-demo-options label {
+.ray-demo-group {
+  min-inline-size: 0;
+  margin: 0 0 12px;
+  padding: 0;
+  border: 0;
+}
+
+.ray-demo-group > legend {
+  margin-block-end: 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.ray-demo-native-options > label {
   display: inline-flex;
   min-block-size: 40px;
   align-items: center;
@@ -59,7 +88,7 @@
   font-size: 14px;
 }
 
-.ray-demo-options input {
+.ray-demo-native-options > label > input {
   appearance: auto;
   accent-color: var(--vp-c-brand-1);
 }
