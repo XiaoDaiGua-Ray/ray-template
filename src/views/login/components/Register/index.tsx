@@ -1,12 +1,12 @@
-import { NResult } from 'naive-ui'
+import { NAlert } from 'naive-ui'
 
-const Register = defineComponent({
+export default defineComponent({
   name: 'RRegister',
   render() {
     return (
-      <NResult status="info" title="提示" description="我实在是不想写了..." />
+      <NAlert type="info" title={this.$t('views.login.index.Register')}>
+        {this.$t('views.login.index.RegisterHint')}
+      </NAlert>
     )
   },
 })
-
-export default Register

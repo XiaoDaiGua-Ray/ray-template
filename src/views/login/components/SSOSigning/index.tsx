@@ -1,65 +1,43 @@
-import type { IconName } from '@/icons'
-import './index.scss'
 import { RIcon } from '@/components'
-import { NFlex, NPopover } from 'naive-ui'
+import type { IconName } from '@/icons'
+import { NButton, NFlex, NTooltip } from 'naive-ui'
 
-interface SSOSigningOptions {
-  icon: IconName
-  key: string
-  tooltipLabel: string
-}
+const providers = [
+  ['GitHub', 'logo/github'],
+  ['Google', 'logo/google'],
+  ['Twitter', 'logo/twitter'],
+] as const satisfies ReadonlyArray<readonly [string, IconName]>
 
-const SSOSigning = defineComponent({
+export default defineComponent({
   name: 'SSOSigning',
-  setup() {
-    const ssoSigningOptions: SSOSigningOptions[] = [
-      {
-        icon: 'logo/github',
-        key: 'github',
-        tooltipLabel: 'Github登陆',
-      },
-      {
-        icon: 'logo/google',
-        key: 'google',
-        tooltipLabel: 'Google登陆',
-      },
-      {
-        icon: 'logo/twitter',
-        key: 'twitter',
-        tooltipLabel: 'Twitter登陆',
-      },
-    ]
-
-    const handleSSOSigningClick = (option: SSOSigningOptions) => {
-      window.$message.info(`调用${option.tooltipLabel}`)
-    }
-
-    return {
-      ssoSigningOptions,
-      handleSSOSigningClick,
-    }
-  },
   render() {
+    const { $t } = this
+
     return (
-      <NFlex class="sso-signing" align="center">
-        {this.ssoSigningOptions.map((curr) => (
-          <NPopover key={curr.key}>
+      <NFlex align="center" size="small">
+        {providers.map(([provider, icon]) => (
+          <NTooltip key={provider}>
             {{
               trigger: () => (
-                <RIcon
-                  name={curr.icon}
-                  size="24"
-                  cursor="pointer"
-                  onClick={this.handleSSOSigningClick.bind(this, curr)}
-                />
+                <NButton
+                  circle
+                  secondary
+                  size="small"
+                  aria-label={$t('views.login.index.Provider', { provider })}
+                  onClick={() =>
+                    window.$message.info(
+                      $t('views.login.index.ProviderHint', { provider }),
+                    )
+                  }
+                >
+                  <RIcon name={icon} size={16} />
+                </NButton>
               ),
-              default: () => curr.tooltipLabel,
+              default: () => $t('views.login.index.Provider', { provider }),
             }}
-          </NPopover>
+          </NTooltip>
         ))}
       </NFlex>
     )
   },
 })
-
-export default SSOSigning

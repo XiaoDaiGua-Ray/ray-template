@@ -1,5 +1,9 @@
 .qrcode-signing {
-  width: 100%;
-  height: 240px;
-  @include flexCenter;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  margin: 0;
+  padding-block: 8px;
+  color: var(--r-text-secondary);
+  text-align: center;
 }

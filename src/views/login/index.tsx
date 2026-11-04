@@ -4,158 +4,93 @@ import { LOCAL_OPTIONS } from '@/app-config'
 import { RIcon } from '@/components'
 import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch'
 import { useSettingActions } from '@/store'
-import { useWindowSize } from '@vueuse/core'
-import {
-  NCard,
-  NDivider,
-  NDropdown,
-  NFlex,
-  NGradientText,
-  NTabPane,
-  NTabs,
-} from 'naive-ui'
+import { NButton, NDropdown, NFlex, NTabPane, NTabs } from 'naive-ui'
 import QRCodeSigning from './components/QRCodeSigning'
 import Register from './components/Register'
 import Signing from './components/Signing'
 import SSOSigning from './components/SSOSigning'
 
-const Login = defineComponent({
+export default defineComponent({
   name: 'RLogin',
   setup() {
-    const {
-      layout: { copyright },
-    } = __APP_CFG__
-
-    const state = reactive({
-      tabsValue: 'signing',
-    })
-
-    const { height: windowHeight, width: windowWidth } = useWindowSize()
     const { updateLocale } = useSettingActions()
+    const tabsValue = ref('signing')
 
-    return {
-      ...toRefs(state),
-      windowHeight,
-      updateLocale,
-      copyright,
-      windowWidth,
-    }
+    return { updateLocale, tabsValue, copyright: __APP_CFG__.layout.copyright }
   },
   render() {
     const { $t } = this
+    const copy = (key: string) => $t(`views.login.index.${key}`)
 
     return (
-      <main
-        class={['login']}
-        style={[
-          `height: ${this.windowHeight}px`,
-          `--login-height: ${this.windowHeight}px`,
-        ]}
-      >
-        <div
-          class={[
-            'login-wrapper',
-            this.windowWidth >= 1440 ? 'login-wrapper--divider' : '',
-          ]}
-        >
-          <div class={['login-wrapper__content']}>
-            <NFlex align="center" class="login-title__wrapper">
-              <RIcon name="logo/ray" size="48" />
-              <h1 class="login-heading">
-                <NGradientText class="login-title" type="info" size={28}>
-                  Ray Template
-                </NGradientText>
-              </h1>
-            </NFlex>
-            <NFlex align="center" class="login-action__wrapper">
-              <ThemeSwitch />
-              <NDropdown
-                options={LOCAL_OPTIONS}
-                onSelect={(key) => this.updateLocale(key)}
-                trigger="click"
-              >
-                <RIcon
-                  customClassName="login-icon"
-                  name="system/language"
-                  size="18"
-                  cursor="pointer"
-                />
-              </NDropdown>
-            </NFlex>
-            <div class="login-grid">
-              <div class="login__left-wrapper">
-                <NFlex align="center" vertical>
-                  <RIcon
-                    name="illustration/login_bg"
-                    width="368"
-                    height="368"
-                  />
-                  <NGradientText class="login-title" type="info" size={36}>
-                    {$t('views.login.index.RayTemplate')}
-                  </NGradientText>
-                </NFlex>
-              </div>
-              <div class="login__right-wrapper">
-                <NCard
-                  class="login__right-wrapper__content"
-                  embedded
-                  bordered={false}
-                >
-                  <p class="login-template-description">
-                    {$t('views.login.index.TemplateDescription')}
-                  </p>
-                  <NTabs
-                    v-model:value={this.tabsValue}
-                    type="line"
-                    animated
-                    size="large"
-                  >
-                    {{
-                      default: () => (
-                        <>
-                          <NTabPane
-                            tab={$t('views.login.index.Signing')}
-                            name="signing"
-                          >
-                            <Signing />
-                          </NTabPane>
-                          <NTabPane
-                            tab={$t('views.login.index.Register')}
-                            name="register"
-                          >
-                            <Register />
-                          </NTabPane>
-                          <NTabPane
-                            tab={$t('views.login.index.QRCodeSigning')}
-                            name="qrcodeSigning"
-                          >
-                            <QRCodeSigning />
-                          </NTabPane>
-                        </>
-                      ),
-                    }}
-                  </NTabs>
-                  <NDivider>
-                    {$t('views.login.index.OtherSignInOptions')}
-                  </NDivider>
-                  <SSOSigning />
-                  <NDivider>{$t('views.login.index.Resources')}</NDivider>
-                  <AppShareLink />
-                </NCard>
-              </div>
-            </div>
-            <NFlex
-              align="center"
-              justify="center"
-              class="login-copyright__wrapper"
-            >
-              {this.copyright}
-            </NFlex>
+      <main class="login">
+        <header class="login__header">
+          <div class="login__brand">
+            <RIcon name="logo/ray" size={36} />
+            <span>Ray Template</span>
           </div>
+          <NFlex align="center">
+            <ThemeSwitch />
+            <NDropdown
+              options={LOCAL_OPTIONS}
+              onSelect={this.updateLocale}
+              trigger="click"
+            >
+              <NButton quaternary circle aria-label={copy('Language')}>
+                <RIcon name="system/language" size={18} />
+              </NButton>
+            </NDropdown>
+          </NFlex>
+        </header>
+
+        <div class="login__grid">
+          <section class="login__story" aria-labelledby="login-intro">
+            <div class="login__story-copy">
+              <p class="login__eyebrow">RAY TEMPLATE / WORKSPACE</p>
+              <h1 id="login-intro">{copy('RayTemplate')}</h1>
+              <p>{copy('TemplateDescription')}</p>
+              <ul class="login__stack" aria-label={copy('Stack')}>
+                <li>Vue 3</li>
+                <li>TypeScript</li>
+                <li>Naive UI</li>
+              </ul>
+            </div>
+            <div class="login__mark" aria-hidden="true">
+              <RIcon name="logo/ray" size={128} />
+            </div>
+          </section>
+
+          <section class="login__panel" aria-labelledby="login-panel-heading">
+            <div class="login__panel-heading">
+              <p class="login__eyebrow">{copy('Access')}</p>
+              <h2 id="login-panel-heading">{copy('Welcome')}</h2>
+              <p>{copy('AccessDescription')}</p>
+            </div>
+            <NTabs v-model:value={this.tabsValue} type="line" size="medium">
+              <NTabPane tab={copy('Signing')} name="signing">
+                <Signing />
+              </NTabPane>
+              <NTabPane tab={copy('Register')} name="register">
+                <Register />
+              </NTabPane>
+              <NTabPane tab={copy('QRCodeSigning')} name="qrcodeSigning">
+                <QRCodeSigning />
+              </NTabPane>
+            </NTabs>
+            <div class="login__secondary">
+              <span>{copy('OtherSignInOptions')}</span>
+              <SSOSigning />
+            </div>
+          </section>
         </div>
+
+        <footer class="login__footer">
+          <span>{this.copyright}</span>
+          <div aria-label={copy('Resources')}>
+            <AppShareLink />
+          </div>
+        </footer>
       </main>
     )
   },
 })
-
-export default Login

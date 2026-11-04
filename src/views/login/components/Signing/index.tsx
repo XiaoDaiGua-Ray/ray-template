@@ -1,104 +1,125 @@
 import { APP_CATCH_KEY } from '@/app-config'
 import { RForm, useForm } from '@/components'
 import { useAppRoot, useI18n } from '@/hooks'
+import { resolveLandingPath } from '@/router/utils/resolve-landing-path'
 import { useSigningActions } from '@/store'
 import { setStorage } from '@/utils'
-import { NButton, NForm, NFormItem, NInput } from 'naive-ui'
-import type { FormInst } from 'naive-ui'
+import { NButton, NFlex, NFormItem, NInput } from 'naive-ui'
 
 export default defineComponent({
   name: 'RSigning',
   setup() {
     const [register, { validate }] = useForm()
-
-    const { t } = useI18n()
+    const { t } = useI18n('views.login.index')
     const { signing } = useSigningActions()
     const { getRootPath } = useAppRoot()
-    const loading = ref(false)
-
-    const useSigningForm = () => ({
-      name: 'Ray Admin',
-      pwd: '123456',
-    })
-
     const router = useRouter()
-    const signingForm = ref(useSigningForm())
+    const loading = ref(false)
+    const signingForm = reactive({ name: '', pwd: '' })
+    const nameId = useId()
+    const passwordId = useId()
 
-    const rules = {
+    const rules = computed(() => ({
       name: {
         required: true,
-        message: t('views.login.index.NamePlaceholder'),
+        message: t('NamePlaceholder'),
         trigger: ['blur', 'input'],
       },
       pwd: {
         required: true,
-        message: t('views.login.index.PasswordPlaceholder'),
+        message: t('PasswordPlaceholder'),
         trigger: ['blur', 'input'],
       },
+    }))
+
+    const handleLogin = async (event?: Event) => {
+      event?.preventDefault()
+
+      if (loading.value) return
+
+      try {
+        await validate()
+      } catch {
+        return
+      }
+
+      loading.value = true
+
+      try {
+        const res = await signing(signingForm)
+
+        if (res.code !== 0) throw new Error(res.message)
+
+        setStorage(APP_CATCH_KEY.token, 'tokenValue', 'localStorage')
+        setStorage(APP_CATCH_KEY.signing, res.data, 'localStorage')
+        await router.push(resolveLandingPath(router, getRootPath.value))
+      } catch {
+        window.$message.error(t('SignInError'))
+      } finally {
+        loading.value = false
+      }
     }
 
-    /** 普通登陆形式 */
-    const handleLogin = () => {
-      validate().then(() => {
-        loading.value = true
-
-        signing(signingForm.value)
-          .then((res) => {
-            if (res.code === 0) {
-              setTimeout(() => {
-                window.$message.success(`欢迎${signingForm.value.name}登陆~`)
-
-                setStorage(APP_CATCH_KEY.token, 'tokenValue', 'localStorage')
-                setStorage(APP_CATCH_KEY.signing, res.data, 'localStorage')
-
-                router.push(getRootPath.value)
-
-                loading.value = false
-              }, 2 * 1000)
-            }
-          })
-          .catch(() => {
-            window.$message.error('不可以这样哟, 不可以哟')
-          })
-      })
-    }
-
-    return {
-      signingForm,
-      register,
-      handleLogin,
-      rules,
-      loading,
-    }
-  },
-  render() {
-    const { $t, loading, register } = this
-
-    return (
-      <RForm model={this.signingForm} onRegister={register} rules={this.rules}>
-        <NFormItem label={$t('views.login.index.Name')} path="name">
+    return () => (
+      <RForm
+        model={signingForm}
+        onRegister={register}
+        rules={rules.value}
+        onSubmit={handleLogin}
+      >
+        <NFormItem label={t('Name')} labelProps={{ for: nameId }} path="name">
           <NInput
-            v-model:value={this.signingForm.name}
-            placeholder={$t('views.login.index.NamePlaceholder')}
+            v-model:value={signingForm.name}
+            inputProps={{
+              id: nameId,
+              name: 'ray-demo-user',
+              autocomplete: 'off',
+              enterkeyhint: 'next',
+            }}
+            placeholder={t('NamePlaceholder')}
           />
         </NFormItem>
-        <NFormItem label={$t('views.login.index.Password')} path="pwd">
+        <NFormItem
+          label={t('Password')}
+          labelProps={{ for: passwordId }}
+          path="pwd"
+        >
           <NInput
-            v-model:value={this.signingForm.pwd}
+            v-model:value={signingForm.pwd}
+            inputProps={{
+              id: passwordId,
+              name: 'ray-demo-password',
+              autocomplete: 'off',
+              enterkeyhint: 'go',
+            }}
             type="password"
             showPasswordOn="click"
-            placeholder={$t('views.login.index.PasswordPlaceholder')}
-            onKeydown={(e) => e.key === 'Enter' && this.handleLogin()}
+            placeholder={t('PasswordPlaceholder')}
           />
         </NFormItem>
-        <NButton
-          style={['width: 100%', 'margin-to: 18px']}
-          type="primary"
-          onClick={this.handleLogin.bind(this)}
-          loading={loading}
-        >
-          {$t('views.login.index.Login')}
-        </NButton>
+        <NFlex vertical>
+          <NButton
+            block
+            type="primary"
+            attrType="submit"
+            loading={loading.value}
+          >
+            {t('Login')}
+          </NButton>
+          <NButton
+            block
+            secondary
+            attrType="button"
+            disabled={loading.value}
+            onClick={() => {
+              signingForm.name = 'Ray Admin'
+              signingForm.pwd = '123456'
+              void handleLogin()
+            }}
+          >
+            {t('UseDemo')}
+          </NButton>
+        </NFlex>
       </RForm>
     )
   },
