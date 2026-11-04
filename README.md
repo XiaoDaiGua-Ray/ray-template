@@ -134,4 +134,4 @@ Use the [architecture map](docs/architecture.md) to find module and configuratio
 
 [MIT License](LICENSE) · [Changelog](CHANGELOG.md) · [Issues](https://github.com/XiaoDaiGua-Ray/ray-template/issues)
 
-Agents can start with the [LLM entry point](llms.txt) and open only the relevant task scope.
+Use the [task index](llms.txt) to find the owning implementation, its consumers, and verification steps without installing dependencies. `pnpm harness context <scope>` shows the same index entry alongside the commands it runs.

@@ -8,7 +8,7 @@ import {
   statSync,
   writeFileSync,
 } from 'node:fs'
-import { join, relative } from 'node:path'
+import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = fileURLToPath(new URL('../', import.meta.url))
@@ -17,23 +17,59 @@ const scopes = JSON.parse(
 )
 const [action = '--help', scope, ...extra] = process.argv.slice(2)
 const testPattern = /^__test__\/(?:[\w-]+\/)+(?:[\w.-]+\.spec\.tsx?)?$/
+const scopePattern = /^[a-z][a-z\d]*(?:-[a-z\d]+)*$/
+const allowedChecks = new Set(['docs:check', 'packages:check', 'typecheck'])
+const indexFiles = [
+  'AGENTS.md',
+  'llms.txt',
+  'docs/architecture.md',
+  'docs/docs-handoff.md',
+  'harness/README.md',
+  'harness/plan.md',
+]
+
+function contextPath(name) {
+  return `harness/context/${name}.md`
+}
 
 function checkScopes() {
   const problems = []
+  const { scripts } = JSON.parse(
+    readFileSync(join(root, 'package.json'), 'utf8'),
+  )
 
-  for (const [name, { paths, tests }] of Object.entries(scopes)) {
-    for (const path of paths) {
-      if (!existsSync(join(root, path))) {
-        problems.push(`${name} 的上下文路径不存在：${path}`)
+  for (const [name, { description, tests = [], checks = [] }] of Object.entries(
+    scopes,
+  )) {
+    if (!scopePattern.test(name) || name === 'all') {
+      problems.push(`无效任务域：${name}`)
+    }
+
+    if (typeof description !== 'string' || !description.trim()) {
+      problems.push(`${name} 需要任务描述`)
+    }
+
+    if (!Array.isArray(tests) || !Array.isArray(checks)) {
+      problems.push(`${name} 的 tests 和 checks 必须为数组`)
+      continue
+    }
+
+    if (tests.length === 0 && checks.length === 0) {
+      problems.push(`${name} 需要至少一个回归测试路径或检查命令`)
+    }
+
+    for (const script of checks) {
+      if (!allowedChecks.has(script) || typeof scripts?.[script] !== 'string') {
+        problems.push(`${name} 的检查命令未注册：${script}`)
       }
     }
 
-    if (tests.length === 0) {
-      problems.push(`${name} 需要至少一个回归测试路径`)
-    }
-
     for (const path of tests) {
-      if (!testPattern.test(path) || !existsSync(join(root, path))) {
+      if (
+        typeof path !== 'string' ||
+        !testPattern.test(path) ||
+        !existsSync(join(root, path))
+      ) {
         problems.push(`${name} 的回归测试路径无效：${path}`)
         continue
       }
@@ -55,6 +91,71 @@ function checkScopes() {
   }
 }
 
+function checkIndexes() {
+  const problems = []
+  const cards = Object.keys(scopes).map(contextPath)
+  const entryLinks = new Set()
+
+  for (const path of [...indexFiles, ...cards]) {
+    const file = join(root, path)
+
+    if (!existsSync(file) || !statSync(file).isFile()) {
+      problems.push(`索引文档不存在：${path}`)
+      continue
+    }
+
+    // 索引统一使用行内相对链接；只检查文件目标，不请求外链或解析标题。
+    const markdown = readFileSync(file, 'utf8')
+
+    for (const [, href] of markdown.matchAll(/\[[^\]\n]+\]\(([^)\s]+)\)/g)) {
+      const [target] = href.split('#', 1)
+
+      if (!target || /^(?:[\w+.-]+:|\/\/)/.test(target)) continue
+
+      const destination = resolve(dirname(file), target)
+      const fromRoot = relative(root, destination)
+
+      if (
+        isAbsolute(target) ||
+        isAbsolute(fromRoot) ||
+        fromRoot === '..' ||
+        fromRoot.startsWith(`..${sep}`) ||
+        !existsSync(destination)
+      ) {
+        problems.push(`${path} 的相对链接无效：${href}`)
+      } else if (path === 'llms.txt') {
+        entryLinks.add(destination)
+      }
+    }
+  }
+
+  for (const path of cards) {
+    if (!entryLinks.has(join(root, path))) {
+      problems.push(`llms.txt 缺少可用的主题链接：${path}`)
+    }
+  }
+
+  for (const file of globSync('harness/context/*.md', { cwd: root })) {
+    if (!cards.includes(file.split(sep).join('/'))) {
+      problems.push(`主题索引尚未注册：${file}`)
+    }
+  }
+
+  if (problems.length > 0) {
+    throw new Error(problems.join('\n'))
+  }
+}
+
+function scopeCommands(name) {
+  const { tests = [], checks = [] } = scopes[name]
+
+  return [
+    ['env:check'],
+    ...checks.map((script) => [script]),
+    ...(tests.length ? [['test:run', ...tests]] : []),
+  ]
+}
+
 function showContext(name) {
   if (!name) {
     for (const [id, { description }] of Object.entries(scopes)) {
@@ -64,12 +165,15 @@ function showContext(name) {
     return
   }
 
-  const { description, paths, tests } = scopes[name]
+  const path = contextPath(name)
 
-  console.log(`${name}  ${description}`)
-  console.log(paths.map((path) => `  ${path}`).join('\n'))
-  console.log(`定向验证：pnpm harness verify ${name}`)
-  console.log(`回归用例：pnpm test:run ${tests.join(' ')}`)
+  console.log(`阅读入口：${path}（正文链接相对此文件）\n`)
+  console.log(readFileSync(join(root, path), 'utf8').trimEnd())
+  console.log(`\npnpm harness verify ${name} 执行：`)
+
+  for (const args of scopeCommands(name)) {
+    console.log(`  pnpm ${args.join(' ')}`)
+  }
 }
 
 function verify(name) {
@@ -77,10 +181,7 @@ function verify(name) {
     checkScopes()
   }
 
-  const commands =
-    name === 'all'
-      ? [['check']]
-      : [['env:check'], ['test:run', ...scopes[name].tests]]
+  const commands = name === 'all' ? [['check']] : scopeCommands(name)
   const reports = join(root, '.harness-local', 'runs')
   const startedAt = new Date().toISOString()
   const steps = []
@@ -96,7 +197,7 @@ function verify(name) {
 
     console.log(`\n> ${command}`)
 
-    // Windows 需要 shell 启动 pnpm.cmd，参数来自固定命令与已校验的测试路径。
+    // Windows 需要 shell 启动 pnpm.cmd，只传入允许的脚本名与已校验的测试路径。
     const options = { cwd: root, stdio: 'inherit' }
     const result =
       process.platform === 'win32'
@@ -138,12 +239,16 @@ function verify(name) {
 }
 
 try {
-  const knownScope = scope && Object.hasOwn(scopes, scope)
+  const knownScope =
+    scope &&
+    scope !== 'all' &&
+    scopePattern.test(scope) &&
+    Object.hasOwn(scopes, scope)
 
   if (action === '--help' && !scope) {
     console.log(`pnpm harness context [scope]    查看任务上下文
 pnpm harness verify [scope]     定向验证，省略 scope 时执行全量检查
-pnpm harness check              检查上下文与回归路径`)
+pnpm harness check              检查主题索引、相对链接和验证目标`)
   } else if (
     action === 'context' &&
     extra.length === 0 &&
@@ -158,7 +263,8 @@ pnpm harness check              检查上下文与回归路径`)
     verify(scope ?? 'all')
   } else if (action === 'check' && !scope) {
     checkScopes()
-    console.log('✓ Harness 上下文与回归路径有效')
+    checkIndexes()
+    console.log('✓ Harness 索引、相对链接和验证目标有效')
   } else {
     throw new Error(
       '无效命令或任务域。使用 pnpm harness --help 或 pnpm harness context。',

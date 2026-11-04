@@ -1,16 +1,6 @@
 {
   "routing": {
-    "description": "路由、菜单、权限与持久化",
-    "paths": [
-      "apps/admin/src/router",
-      "apps/admin/src/router/README.md",
-      "apps/admin/src/store",
-      "apps/admin/src/store/README.md",
-      "apps/admin/src/router/config/schema.ts",
-      "apps/admin/src/router/config/views.ts",
-      "apps/admin/src/views/route-management",
-      "packages/routing"
-    ],
+    "description": "页面注册、菜单、动态路由 JSON、角色与守卫",
     "tests": [
       "__test__/router/",
       "__test__/hooks/useVueRouter.spec.ts",
@@ -19,26 +9,20 @@
       "__test__/cache/"
     ]
   },
+  "layout": {
+    "description": "启动、Provider、布局、KeepAlive、Pinia 与偏好文件",
+    "tests": [
+      "__test__/app/",
+      "__test__/layout/",
+      "__test__/hooks/useAppNavigation.spec.ts",
+      "__test__/hooks/useLayoutScroll.spec.ts",
+      "__test__/hooks/useSiderBar.spec.ts",
+      "__test__/hooks/useTheme.spec.ts",
+      "__test__/cache/"
+    ]
+  },
   "ui": {
-    "description": "页面、组件、布局、主题与国际化",
-    "paths": [
-      "apps/admin/src/views",
-      "apps/admin/src/components/README.md",
-      "apps/admin/src/app-components/README.md",
-      "apps/admin/src/layout/README.md",
-      "apps/admin/src/locales/README.md",
-      "apps/admin/src/hooks/README.md",
-      "docs/ui-design.md",
-      "apps/docs/examples",
-      "apps/admin/src/views/login",
-      "apps/admin/src/views/demo/components/DemoPage.tsx",
-      "apps/admin/src/components/RSegment/README.md",
-      "apps/admin/src/app-components/provider/AppAutocompleteDefaults",
-      "packages/ui",
-      "packages/admin-shell",
-      "packages/composables",
-      "packages/directives"
-    ],
+    "description": "页面、公共组件、主题、国际化、Hooks 与指令",
     "tests": [
       "__test__/app/",
       "__test__/components/",
@@ -47,51 +31,25 @@
       "__test__/workspace/consumer.spec.tsx"
     ]
   },
+  "table-pro": {
+    "description": "RTablePro、useTablePro、搜索、分页、选列、导出与打印",
+    "tests": [
+      "__test__/components/table-pro.spec.ts",
+      "__test__/components/table-pro-search.spec.ts",
+      "__test__/components/table-pro-columns.spec.ts",
+      "__test__/components/table-pro-exports.spec.ts"
+    ]
+  },
   "api": {
-    "description": "API、Axios 拦截器与演示 Mock",
-    "paths": [
-      "apps/admin/src/api",
-      "apps/admin/src/axios/README.md",
-      "apps/admin/mock/demo",
-      "apps/admin/src/demo-data",
-      "packages/http"
-    ],
+    "description": "业务 API、Axios、请求取消、拦截器与演示 Mock",
     "tests": [
       "__test__/axios/",
       "__test__/mock/",
       "__test__/workspace/http-client.spec.ts"
     ]
   },
-  "icons": {
-    "description": "图标分包、类型清单与热更新",
-    "paths": [
-      "packages/icons/src/A_README.md",
-      "scripts/icons.mjs",
-      "vite.plugin.config.ts",
-      "packages/icons/scripts/icons.mjs"
-    ],
-    "tests": ["__test__/icons/"]
-  },
-  "harness": {
-    "description": "工程协作入口、回归范围与验收报告",
-    "paths": [
-      "harness/README.md",
-      "harness/run.mjs",
-      "harness/scopes.json",
-      "llms.txt",
-      ".github/workflows/ci.yaml",
-      "scripts/check-package-boundaries.mjs",
-      "scripts/assemble-pages.mjs"
-    ],
-    "tests": ["__test__/harness/"]
-  },
   "utils": {
-    "description": "公共工具、兼容入口与数据契约",
-    "paths": [
-      "apps/admin/src/utils/README.md",
-      "apps/admin/src/utils/index.ts",
-      "packages/utils"
-    ],
+    "description": "公共工具、缓存、历史密文和兼容入口",
     "tests": [
       "__test__/basic/",
       "__test__/cache/",
@@ -101,5 +59,21 @@
       "__test__/utils-contracts/",
       "__test__/vue/"
     ]
+  },
+  "icons": {
+    "description": "SVG 分包、图标名、清单生成和热更新",
+    "tests": ["__test__/icons/"]
+  },
+  "docs": {
+    "description": "VitePress、API 参考、内嵌示例、侧栏与旧页跳转",
+    "checks": ["docs:check"]
+  },
+  "toolchain": {
+    "description": "工作区、公开导出、类型检查、Vite、构建与 CI",
+    "checks": ["packages:check", "typecheck"]
+  },
+  "harness": {
+    "description": "索引、回归范围、验证命令和本地报告",
+    "tests": ["__test__/harness/"]
   }
 }

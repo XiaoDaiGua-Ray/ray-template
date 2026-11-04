@@ -134,4 +134,4 @@ export default defineComponent({
 
 [MIT 许可证](LICENSE) · [更新日志](CHANGELOG.md) · [问题反馈](https://github.com/XiaoDaiGua-Ray/ray-template/issues)
 
-AI 助手可从 [LLM 入口](llms.txt) 按任务读取源码和验证命令。
+从[任务索引](llms.txt)查找实现归属、调用方和验证方式，无需安装依赖。`pnpm harness context <scope>` 显示同一份索引及验证命令。

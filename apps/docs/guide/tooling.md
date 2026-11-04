@@ -2,21 +2,21 @@
 
 ## 常用命令
 
-| 命令                             | 用途                                                       |
-| -------------------------------- | ---------------------------------------------------------- |
-| `pnpm env:check`                 | 校验 Node、pnpm 与依赖安装                                 |
-| `pnpm dev`                       | 同步图标清单并启动 Vite                                    |
-| `pnpm harness context`           | 查任务域；追加 `routing`、`ui`、`api` 等可看实现入口和回归 |
-| `pnpm harness verify ui`         | 按域运行定向测试                                           |
-| `pnpm harness verify`            | 运行全量检查并生成本地报告                                 |
-| `pnpm typecheck`                 | 验证图标清单，检查应用、Node 配置和测试类型                |
-| `pnpm dev-build` / `pnpm report` | 构建开发版，或输出静态打包报告                             |
-| `pnpm build` / `pnpm preview`    | 构建并在本机验收产物                                       |
-| `pnpm packages:check`            | 检查公开入口、依赖声明和循环依赖                           |
-| `pnpm pages:build`               | 将后台与文档组装到 `dist/pages`                            |
-| `pnpm docs:dev`                  | 启动文档开发站                                             |
-| `pnpm docs:check`                | 验证文档示例类型、站内链接与生产构建                       |
-| `pnpm docs:preview`              | 预览已构建的文档站                                         |
+| 命令                             | 用途                                                           |
+| -------------------------------- | -------------------------------------------------------------- |
+| `pnpm env:check`                 | 校验 Node、pnpm 与依赖安装                                     |
+| `pnpm dev`                       | 同步图标清单并启动 Vite                                        |
+| `pnpm harness context`           | 查任务域；追加 `routing`、`table-pro`、`docs` 等查看实现与验证 |
+| `pnpm harness verify table-pro`  | 按域运行定向测试或项目检查                                     |
+| `pnpm harness verify`            | 运行全量检查并生成本地报告                                     |
+| `pnpm typecheck`                 | 验证图标清单，检查应用、Node 配置和测试类型                    |
+| `pnpm dev-build` / `pnpm report` | 构建开发版，或输出静态打包报告                                 |
+| `pnpm build` / `pnpm preview`    | 构建并在本机验收产物                                           |
+| `pnpm packages:check`            | 检查公开入口、依赖声明和循环依赖                               |
+| `pnpm pages:build`               | 将后台与文档组装到 `dist/pages`                                |
+| `pnpm docs:dev`                  | 启动文档开发站                                                 |
+| `pnpm docs:check`                | 验证文档示例类型、站内链接与生产构建                           |
+| `pnpm docs:preview`              | 预览已构建的文档站                                             |
 
 全量检查包含环境、Harness、图标同步、类型、ESLint、Prettier、Vitest 和生产构建。Harness 在 `.harness-local/runs/` 写结果；Chrome 验收单独记录。改动交互或布局时，额外验收中英文、明暗主题和窄屏。
 

@@ -1,17 +1,17 @@
 # Ray Template AI Harness
 
-从 [AGENTS.md](../AGENTS.md) 进入。LLM 可先读取 [入口索引](../llms.txt) 定位相关文件。任务上下文来自 [scopes.json](scopes.json)，跨模块关系见 [架构地图](../docs/architecture.md)。CLI 使用项目锁定的 Node.js 和 pnpm，可在本机和 CI 运行。
+从 [AGENTS.md](../AGENTS.md) 进入。需要查实现时，从 [任务索引](../llms.txt) 打开相关主题；跨模块关系见 [架构地图](../docs/architecture.md)。只阅读索引无需安装依赖。
 
 ## 开始任务
 
-1. 根据 `.nvmrc` 和 `package.json#packageManager` 选择运行时，首次执行 `pnpm install --frozen-lockfile` 和 `pnpm env:check`。
-2. 查看 `git status`。用 `pnpm harness context` 查找任务域，再用 `pnpm harness context <scope>` 找到入口和回归测试。跨域变更分别查看受影响的任务域。
-3. 明确可观察的验收条件。涉及多步迁移或跨会话接续时，记录范围、分阶段验收、关键决策与剩余项。可参考 [建设计划](plan.md)。
-4. 追踪调用方和数据流后实施。先用定向测试缩短反馈周期，最后运行全量验收。
+1. 查看 `git status`。用静态入口或 `pnpm harness context` 选择任务域；`pnpm harness context <scope>` 显示对应索引及验证命令。跨域变更分别查看受影响的任务域。
+2. 需要运行验证时，根据 `.nvmrc` 和 `package.json#packageManager` 选择运行时，首次执行 `pnpm install --frozen-lockfile` 和 `pnpm env:check`。
+3. 明确可观察的验收条件，追踪调用方和数据流后实施。多步迁移或跨会话接续时，记录范围、分阶段验收、关键决策与剩余项。可参考 [建设计划](plan.md)。
+4. 先运行定向验证，最后运行全量验收。
 
 ```sh
-pnpm harness context routing
-pnpm harness verify routing
+pnpm harness context table-pro
+pnpm harness verify table-pro
 pnpm harness verify
 ```
 
@@ -28,8 +28,8 @@ pnpm harness verify
 
 | 命令                          | 验证范围                                                        |
 | ----------------------------- | --------------------------------------------------------------- |
-| `pnpm harness check`          | 上下文路径存在，回归路径至少指向一个测试文件                    |
-| `pnpm harness verify <scope>` | 环境检查和该任务域的 Vitest 回归                                |
+| `pnpm harness check`          | 主题已登记并可从入口到达；相对链接、回归路径和检查命令有效      |
+| `pnpm harness verify <scope>` | 环境检查和该任务域登记的 Vitest 回归或项目检查                  |
 | `pnpm harness verify`         | `pnpm check` 的全部检查                                         |
 | `pnpm check`                  | 环境、Harness、图标同步、类型、规范、格式、单测、应用与文档构建 |
 
@@ -47,10 +47,12 @@ GitHub Actions 在 Linux、Windows 和 macOS 运行同一份 `pnpm check`。单�
 | 路由、权限或缓存       | 从菜单进入、直接访问、刷新，核对守卫和恢复行为           |
 | 图标、部署 base 或构建 | 检查生产预览、资源 URL 和控制台                          |
 
-在交付或 PR 中记录复现步骤、实际结果及未验证项。临时报告、日志和截图放入 `.harness-local/`。浏览器结果单独记录，单元测试报告仅覆盖其中列出的命令。
+在交付或 PR 中记录复现步骤、实际结果及未验证项。临时报告、日志和截图放入 `.harness-local/`。浏览器结果单独记录，CLI 报告仅覆盖其中列出的命令。
 
 ## 维护
 
 影响外部读者的功能或兼容性改动，按 [文档联动说明](../docs/docs-handoff.md) 在同一变更中更新 `apps/docs`。单独用 `pnpm docs:check` 检查示例类型、文档链接和构建；用 `pnpm docs:preview` 验收生产子路径下的交互。
 
-任务域的路径或测试位置变化时，更新 `scopes.json` 并运行 `pnpm harness check`。测试目录以 `/` 结尾，单个文件使用仓库相对路径。优先完善现有测试和上下文入口，把可稳定复现的失败纳入共同检查。
+- 移动实现、适配层或示例时，更新 `harness/context/` 中受影响的索引。每个主题说明何时使用、先读哪些文件、谁拥有实现及如何验证。API 细节留在源码、模块 README 或读者文档。
+- 新增任务域时，在 [scopes.json](scopes.json) 注册简介和 `tests` 或 `checks`，添加同名 `harness/context/<scope>.md`，并从 [llms.txt](../llms.txt) 链入。测试目录以 `/` 结尾；项目检查复用 CLI 允许的根脚本。原有任务域可保留为较宽的验证入口。
+- 索引用普通行内相对链接指向仓库文件或目录。`pnpm harness check` 检查主题及其入口文档的文件目标，不请求外部链接或验证标题锚点。调整内容后再从一个真实任务出发走查实现和测试归属。

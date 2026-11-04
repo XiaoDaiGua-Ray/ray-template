@@ -1,0 +1,14 @@
+# 路由、菜单与权限
+
+用于新增页面或菜单、调试直达和刷新、变更动态路由来源或配置。先看[路由接入与配置契约](../../apps/admin/src/router/README.md)中与任务相关的段落。
+
+| 要查什么                             | 先读                                                                                                                                                                                  | 接着追踪                                                                                                                                                                                           |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 静态页面注册、菜单排序               | [应用路由模块](../../apps/admin/src/router/modules)、[路由模块装配](../../apps/admin/src/router/app-route-modules.ts)                                                                 | [视图](../../apps/admin/src/views)、[菜单 Store](../../apps/admin/src/store/modules/menu/index.ts)、[共享展开逻辑](../../packages/routing/src/expand-routes.ts)                                    |
+| 动态 JSON 字段、校验错误、允许的页面 | [共享 Schema](../../packages/routing/src/schema.ts)、[JSON Schema 导出](../../packages/routing/src/json-schema.ts)、[应用页面 ID 注册表](../../apps/admin/src/router/config/views.ts) | [应用绑定](../../apps/admin/src/router/config/contract.ts)、[管理页](../../apps/admin/src/views/route-management)、[读者指南](../../apps/docs/guide/routing.md)                                    |
+| 静态、本地、远端来源及降级           | [来源加载与保存](../../apps/admin/src/router/config/source.ts)                                                                                                                        | [路由初始化](../../apps/admin/src/router/index.ts)、[实际注册的路由](../../apps/admin/src/router/routes.ts)                                                                                        |
+| 菜单可见性、直达、登录后落地         | [导航守卫](../../apps/admin/src/router/utils/permission.ts)、[路由与白名单配置](../../apps/admin/src/app-config/router-config.ts)                                                     | [菜单显隐](../../apps/admin/src/router/utils/valid-menu-item-show.ts)、[会话 Store](../../apps/admin/src/store/modules/signing/index.ts)、[共享导航遍历](../../packages/routing/src/navigation.ts) |
+
+[应用 Schema](../../apps/admin/src/router/config/schema.ts) 是转导出；共享包负责通用校验，页面加载器、角色和登录状态由应用接入。保持路由名唯一；启用缓存的页面检查组件名与路由名。前端菜单和守卫都不能替代服务端授权。
+
+定向验证：`pnpm harness verify routing`，优先看[动态配置](../../__test__/router/config.spec.ts)和[权限回归](../../__test__/router/permission.spec.ts)。行为改动补测菜单进入、直接访问、刷新及切换来源；涉及缓存或设置再看[布局与状态](layout.md)。
