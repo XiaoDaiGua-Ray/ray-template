@@ -5,6 +5,7 @@ import {
   computed,
   defineComponent,
   onBeforeUnmount,
+  onMounted,
   ref,
   shallowRef,
   watch,
@@ -17,6 +18,7 @@ import TablePanel from './TablePanel'
 import type {
   TablePanelInst,
   TableProParams,
+  TableProQueryState,
   TableProRequest,
   TableProResult,
   TableProSearchField,
@@ -26,6 +28,8 @@ import type {
 const positiveInteger = (value: number) =>
   Number.isSafeInteger(value) && value > 0
 
+const emptyRemoteRows: TableProResult['data'] = []
+
 const props = {
   ...tableProps,
   pagination: {
@@ -34,6 +38,7 @@ const props = {
   },
   pageSize: { type: Number, default: 10 },
   request: Function as PropType<TableProRequest>,
+  onRegister: Function as PropType<(instance: TableProInst) => void>,
   params: Object,
   search: Array as PropType<TableProSearchField[]>,
   rowKey: {
@@ -46,9 +51,11 @@ const props = {
 export type TableProProps = ExtractPublicPropTypes<typeof props>
 
 export interface TableProInst extends TablePanelInst {
+  readonly queryState: TableProQueryState | null
   reload: (resetPage?: boolean) => Promise<void>
   setPage: (page: number) => Promise<void>
   setPageSize: (pageSize: number) => Promise<void>
+  getCurrentPageData: () => readonly Readonly<Record<string, unknown>>[]
 }
 
 export default defineComponent({
@@ -59,9 +66,8 @@ export default defineComponent({
   setup(props, { attrs, slots, expose, emit }) {
     const { t } = useTableLocale()
     const table = shallowRef<TablePanelInst>()
-    const result = shallowRef<TableProResult>({ data: [], total: 0 })
-    const loading = ref(false)
-    const failed = ref(false)
+    const result = shallowRef<TableProResult>()
+    const requestPhase = ref<'idle' | 'loading' | 'failed'>('idle')
     const searchValues = shallowRef<TableSearchValues>({})
     const pagination = computed(() => props.pagination ?? !props.bare)
     const pagerOptions = computed(() =>
@@ -78,6 +84,19 @@ export default defineComponent({
     const firstPage = pagerOptions.value?.defaultPage ?? 1
     const page = ref(positiveInteger(firstPage) ? firstPage : 1)
     const pageSize = ref(configuredPageSize.value)
+    const queryState = computed<TableProQueryState | null>(() => {
+      if (!props.request) return null
+
+      const paginated = pagination.value !== false
+
+      return Object.freeze({
+        loading: requestPhase.value === 'loading',
+        failed: requestPhase.value === 'failed',
+        page: paginated ? page.value : null,
+        pageSize: paginated ? pageSize.value : null,
+        total: result.value?.total ?? null,
+      })
+    })
     const localRows = computed(() => {
       const entries = Object.entries(searchValues.value)
 
@@ -105,12 +124,11 @@ export default defineComponent({
       if (resetPage) page.value = 1
 
       pending?.abort()
-      failed.value = false
       const { request, params } = props
 
       if (!request) {
         pending = void 0
-        loading.value = false
+        requestPhase.value = 'idle'
 
         return
       }
@@ -118,7 +136,7 @@ export default defineComponent({
       const current = new AbortController()
 
       pending = current
-      loading.value = true
+      requestPhase.value = 'loading'
 
       // 分页字段由表格统一管理，筛选参数不能覆盖当前页码。
       const query: TableProParams = { ...params, ...searchValues.value }
@@ -163,12 +181,13 @@ export default defineComponent({
       } catch (error) {
         if (current.signal.aborted) return
 
-        failed.value = true
+        requestPhase.value = 'failed'
         emit('request-error', error)
       } finally {
         if (pending === current) {
           pending = void 0
-          loading.value = false
+
+          if (requestPhase.value === 'loading') requestPhase.value = 'idle'
         }
       }
     }
@@ -218,19 +237,26 @@ export default defineComponent({
     })
 
     const instance: TableProInst = {
+      get queryState() {
+        return queryState.value
+      },
       reload,
       setPage,
       setPageSize,
       getTableInstance: () => table.value?.getTableInstance() ?? null,
+      getCurrentPageData: () =>
+        table.value?.getTableInstance()?.getCurrentPageData() ?? [],
       print: (options) => table.value?.print(options) ?? Promise.resolve(false),
       downloadCsv: (options) => table.value?.downloadCsv(options),
     }
 
     expose(instance)
+    onMounted(() => props.onRegister?.(instance))
 
     return () => {
       const {
         request,
+        onRegister: _onRegister,
         params,
         pagination: _pagination,
         pageSize: _pageSize,
@@ -256,7 +282,7 @@ export default defineComponent({
                 ? pageSize.value
                 : (options?.pageSize ?? pageSize.value),
               ...(request
-                ? { itemCount: result.value.total, pageCount: void 0 }
+                ? { itemCount: result.value?.total ?? 0, pageCount: void 0 }
                 : {}),
             }
 
@@ -266,8 +292,10 @@ export default defineComponent({
           {...rest}
           ref={table}
           remote={!!request || remote}
-          data={request ? result.value.data : localRows.value}
-          loading={loading.value || externalLoading}
+          data={
+            request ? (result.value?.data ?? emptyRemoteRows) : localRows.value
+          }
+          loading={requestPhase.value === 'loading' || externalLoading}
           pagination={paginationProps}
           onUpdatePage={(value) => {
             void setPage(value)
@@ -288,7 +316,7 @@ export default defineComponent({
                 ? () => <Search fields={search} onSearch={submitSearch} />
                 : void 0,
             notice: () =>
-              failed.value
+              requestPhase.value === 'failed'
                 ? (error?.({ reload }) ?? (
                     <NAlert type="error" title={t('requestError')}>
                       <NButton size="small" secondary onClick={() => reload()}>

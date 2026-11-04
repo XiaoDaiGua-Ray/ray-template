@@ -30,6 +30,14 @@ export interface TableProResult {
   total: number
 }
 
+export interface TableProQueryState {
+  readonly loading: boolean
+  readonly failed: boolean
+  readonly page: number | null
+  readonly pageSize: number | null
+  readonly total: number | null
+}
+
 export type TableProRequest = (
   params: TableProParams,
   signal: AbortSignal,

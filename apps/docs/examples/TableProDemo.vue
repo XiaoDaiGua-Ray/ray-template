@@ -23,7 +23,6 @@
       </p>
       <RTablePro
         :key="source"
-        ref="table"
         :columns="columns"
         :data="source === 'local' ? rows : []"
         :request="source === 'remote' ? request : undefined"
@@ -33,6 +32,7 @@
         ]"
         columnStateKey="docs-demo"
         autoHeight
+        @register="register"
       />
     </div>
   </DemoFrame>
@@ -40,11 +40,11 @@
 
 <script setup lang="ts">
 import { provideUiServices } from '@ray-template/ui/services'
-import { RTablePro } from '@ray-template/ui/table-pro'
-import type { TableProInst, TableProRequest } from '@ray-template/ui/table-pro'
+import { RTablePro, useTablePro } from '@ray-template/ui/table-pro'
+import type { TableProRequest } from '@ray-template/ui/table-pro'
 import { createStorage } from '@ray-template/utils/storage'
 import { NButton, NCheckbox, NRadio, NRadioGroup } from 'naive-ui'
-import { computed, ref, shallowRef, useId } from 'vue'
+import { computed, ref, useId } from 'vue'
 import DemoFrame from './DemoFrame.vue'
 
 const props = withDefaults(
@@ -82,7 +82,7 @@ const id = useId()
 const source = ref<'local' | 'remote'>('local')
 const virtual = ref(false)
 const cancelled = ref(0)
-const table = shallowRef<TableProInst>()
+const [register, { reload }] = useTablePro()
 const values = new Map<string, string>()
 
 provideUiServices({
@@ -150,7 +150,7 @@ const request: TableProRequest = (
 }
 const failRequest = () => {
   failNext = true
-  void table.value?.reload()
+  void reload()
 }
 </script>
 

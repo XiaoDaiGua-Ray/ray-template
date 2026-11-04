@@ -46,6 +46,24 @@ const tables: AppRouteRecordRaw = {
       component: routeView('demo/tables/custom'),
       meta: { i18nKey: t('menu.TableCustom') },
     },
+    {
+      path: 'hooks-query',
+      name: 'TableDemoHooksQuery',
+      component: routeView('demo/tables/hooks-query'),
+      meta: { i18nKey: t('menu.TableHooksQuery') },
+    },
+    {
+      path: 'hooks-selection',
+      name: 'TableDemoHooksSelection',
+      component: routeView('demo/tables/hooks-selection'),
+      meta: { i18nKey: t('menu.TableHooksSelection') },
+    },
+    {
+      path: 'hooks-output',
+      name: 'TableDemoHooksOutput',
+      component: routeView('demo/tables/hooks-output'),
+      meta: { i18nKey: t('menu.TableHooksOutput') },
+    },
   ],
 }
 

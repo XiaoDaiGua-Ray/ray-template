@@ -1,5 +1,4 @@
-import { RTablePro } from '@/components'
-import type { TableProInst } from '@/components'
+import { RTablePro, useTablePro } from '@/components'
 import { listPeople } from '@/demo-data/people'
 import { useI18n } from '@/hooks/template/useI18n'
 import { NButton, NFlex, NInput } from 'naive-ui'
@@ -10,7 +9,7 @@ export default defineComponent({
   setup() {
     const { t } = useI18n('table')
     const { data } = listPeople()
-    const table = shallowRef<TableProInst>()
+    const [register, { setPage, setPageSize }] = useTablePro()
     const email = ref('')
     const selected = ref<(string | number)[]>([])
     const columns = computed(() => [
@@ -20,7 +19,7 @@ export default defineComponent({
 
     return () => (
       <RTablePro
-        ref={table}
+        onRegister={register}
         columns={columns.value}
         data={data}
         v-model:checkedRowKeys={selected.value}
@@ -54,18 +53,10 @@ export default defineComponent({
           ),
           title: () => (
             <NFlex size={6}>
-              <NButton
-                size="small"
-                secondary
-                onClick={() => table.value?.setPage(1)}
-              >
+              <NButton size="small" secondary onClick={() => setPage(1)}>
                 {t('firstPage')}
               </NButton>
-              <NButton
-                size="small"
-                secondary
-                onClick={() => table.value?.setPageSize(20)}
-              >
+              <NButton size="small" secondary onClick={() => setPageSize(20)}>
                 {t('twentyRows')}
               </NButton>
             </NFlex>

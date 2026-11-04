@@ -68,7 +68,52 @@ const renderTable = () => (
 )
 ```
 
-实例还提供 `setPage`、`setPageSize`、`downloadCsv`、`print` 和 `getTableInstance`。扩展表格区域可用 `title`、`toolbar`、`tableFooter`、`tableAction`；错误区域用 `error` 插槽。
+实例还提供 `setPage`、`setPageSize`、`getCurrentPageData`、`downloadCsv`、`print` 和 `getTableInstance`。扩展表格区域可用 `title`、`toolbar`、`tableFooter`、`tableAction`；错误区域用 `error` 插槽。
+
+### `useTablePro`
+
+也可以用同一入口导出的 `useTablePro` 注册实例，保留 `[register, actions]` 的写法：
+
+```tsx
+import { RTablePro, useTablePro } from '@ray-template/ui/table-pro'
+
+const [register, { isReady, reload }] = useTablePro()
+
+const renderTable = () => (
+  <>
+    <button disabled={!isReady.value} onClick={() => reload(true)}>
+      回首页并刷新
+    </button>
+    <RTablePro
+      onRegister={register}
+      columns={[{ title: '姓名', key: 'name' }]}
+    />
+  </>
+)
+```
+
+SFC 使用 `<RTablePro @register="register" />`。每张表单独调用一次 Hook；表格挂载后注册，卸载时清除。`actions` 提供上述实例方法、`getTableProInstance()` 和只读 `isReady`；它表示实例已绑定，和请求是否完成无关。未绑定时调用实例方法会抛错。
+
+从 `actions` 解构 `queryState`，用 `queryState.value` 响应式读取 TablePro 管理的远端请求。通过组件 ref 使用时，读取 `table.value?.queryState`。
+
+| 字段                | 含义                                                                            |
+| ------------------- | ------------------------------------------------------------------------------- |
+| `loading`           | 当前请求是否正在执行。只反映 `request`，与外部 `loading` prop 无关。            |
+| `failed`            | 当前请求是否失败。重试开始时清除；错误详情可通过 `onRequestError` 接收。        |
+| `page` / `pageSize` | 当前页码和每页条数；关闭分页时两者为 `null`。                                   |
+| `total`             | 最近一次成功结果的筛选后总数。首次成功前为 `null`，刷新和失败期间保留上次的值。 |
+
+`queryState` 的值和字段均为只读。未挂载、已卸载、未传 `request`（包括手动远端模式）时，值为 `null`。被取消的旧请求不会覆盖当前查询状态。
+
+`getCurrentPageData()` 返回当前页的行：本地表格已应用筛选、排序和分页，远端表格返回当前已加载的数据。返回的行用于读取，业务变更通过页面数据完成；虚拟滚动不会缩小取数范围。旧版 `runTableRequest` / `runAsyncTableRequest` 迁移到 `reload`，请求条件通过 `params` 或请求函数传入。
+
+Ray Admin 的「表格」菜单下有三个可运行的完整示例：
+
+| 示例                                                                                                                                    | 可以试什么                                                                             |
+| --------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| [Hooks · 查询与分页](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/views/demo/tables/hooks-query.tsx)         | 通过 `params` 查询，观察加载、失败和分页数据。可模拟失败、重试，并查看实际发出的请求。 |
+| [Hooks · 选择与批量操作](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/views/demo/tables/hooks-selection.tsx) | 按当前页选择或取消，跨页保留选择，对所选行应用批量标记；通过底层实例清除排序。         |
+| [Hooks · 导出与打印](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/views/demo/tables/hooks-output.tsx)        | 对比当前页与全部已加载数据的 CSV，打印当前页，观察卸载和重新挂载时按钮的可用状态。     |
 
 ## 列设置与缓存
 
@@ -80,7 +125,7 @@ const renderTable = () => (
 
 CSV 的 `keepOriginalData` 使用当前传给表格的整批数据，远端模式不会自动抓取全部页。列级 `allowExport: false` 可排除数据；`getCsvCell` / `getCsvHeader` 返回原始文本，由组件做 CSV 转义。
 
-[TablePro 完整契约](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/packages/ui/src/RTablePro/README.md) · [六种可运行示例](https://github.com/XiaoDaiGua-Ray/ray-template/tree/main/apps/admin/src/views/demo/tables) · [v6 的变更](../migration#v6-的变更)
+[TablePro 完整契约](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/packages/ui/src/RTablePro/README.md) · [全部表格示例](https://github.com/XiaoDaiGua-Ray/ray-template/tree/main/apps/admin/src/views/demo/tables) · [v6 的变更](../migration#v6-的变更)
 
 ## Props、事件和插槽
 

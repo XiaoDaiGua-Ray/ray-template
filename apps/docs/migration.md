@@ -9,13 +9,13 @@
 
 ## v6 的变更
 
-| 领域             | v6 的入口与约定                                                                                                                                                                      |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 应用结构         | 原来根目录的 `src/`、`mock/`、`public/`、应用环境文件和 `index.html` 归入 `apps/admin/`。环境变量、容器配置和构建脚本应按 v6 入口重新核对。                                          |
-| 组件与工具       | 从各包的公开入口导入共享能力，例如 `@ray-template/ui/table-pro`、`@ray-template/composables/useDevice` 和 `@ray-template/utils/precision`。Ray Admin 内部的 `@/` 指向自己的 `src/`。 |
-| 组件接入         | v6 的 TablePro 统一使用 `RTablePro`，可传 `data` 或 `request(params, signal)`。按现行 API 接入搜索、分页、列设置、CSV 和打印。                                                       |
-| 路由、权限与请求 | 路由校验、请求客户端和布局由共享包提供。Ray Admin 在应用侧提供页面注册表、会话和鉴权、请求头、主题和语言。                                                                           |
-| 文档与演示       | VitePress 位于 `apps/docs/`，通过公共包运行示例。官方发布中后台位于 `/ray-template/`，v6 文档位于 `/ray-template/docs/`。                                                            |
+| 领域             | v6 的入口与约定                                                                                                                                                                                            |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 应用结构         | 原来根目录的 `src/`、`mock/`、`public/`、应用环境文件和 `index.html` 归入 `apps/admin/`。环境变量、容器配置和构建脚本应按 v6 入口重新核对。                                                                |
+| 组件与工具       | 从各包的公开入口导入共享能力，例如 `@ray-template/ui/table-pro`、`@ray-template/composables/useDevice` 和 `@ray-template/utils/precision`。Ray Admin 内部的 `@/` 指向自己的 `src/`。                       |
+| 组件接入         | v6 的 TablePro 统一使用 `RTablePro`，可传 `data` 或 `request(params, signal)`。`useTablePro` 保留 `[register, actions]` 和 `onRegister`，请求与实例方法使用[现行 API](./reference/table-pro#usetablepro)。 |
+| 路由、权限与请求 | 路由校验、请求客户端和布局由共享包提供。Ray Admin 在应用侧提供页面注册表、会话和鉴权、请求头、主题和语言。                                                                                                 |
+| 文档与演示       | VitePress 位于 `apps/docs/`，通过公共包运行示例。官方发布中后台位于 `/ray-template/`，v6 文档位于 `/ray-template/docs/`。                                                                                  |
 
 ## 现有项目采用 v6
 

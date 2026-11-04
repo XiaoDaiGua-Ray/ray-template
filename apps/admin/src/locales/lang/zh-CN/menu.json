@@ -42,6 +42,9 @@
   "TableColumns": "列设置与缓存",
   "TablePrinting": "打印与自定义区域",
   "TableCustom": "插槽与实例操作",
+  "TableHooksQuery": "Hooks · 查询与分页",
+  "TableHooksSelection": "Hooks · 选择与批量操作",
+  "TableHooksOutput": "Hooks · 导出与打印",
   "RouteManagement": "路由管理",
   "RouteManagementVisual": "可视化配置",
   "RouteManagementJson": "JSON 配置"

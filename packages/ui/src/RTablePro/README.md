@@ -26,9 +26,26 @@ import { RTablePro } from '@/components'
 - 行标识默认取 `row.id` 或 `row.key`，其他字段使用 `rowKey`。宽表可设置 `scrollX` 和列宽，横向滚动留在表格内部。根列拖动或固定时保留分组的子列。
 - `autoHeight` 默认使用当前布局的可用高度，宿主外部使用视口高度；嵌入特定区域时可以用 CSS 变量 `--r-table-height` 覆盖。较短的屏幕保留表格的最小操作高度。
 - 只接收最新的请求结果。失败时保留已加载的数据并显示重试；可以用 `onRequestError` 处理错误，或用 `error` 插槽定制提示。
-- 需要实例时使用 `shallowRef<TableProInst>()`。实例提供 `reload(resetPage?)`、`setPage`、`setPageSize`、`downloadCsv`、`print` 和 `getTableInstance`。额外区域可用 `toolbar`、`tableFooter`、`tableAction` 插槽。
+- 需要实例时使用 `shallowRef<TableProInst>()`。实例提供 `reload(resetPage?)`、`setPage`、`setPageSize`、`getCurrentPageData`、`downloadCsv`、`print` 和 `getTableInstance`。额外区域可用 `toolbar`、`tableFooter`、`tableAction` 插槽。
 
-迁移时，把旧 `RTable` 改为 `RTablePro bare`（需要完整工具栏时省略 `bare`），把 `useTable` / `useTablePro` 的注册改为可选的实例 ref。旧版 `requestConfig` 可改为 `params` 或请求函数内的字段映射；`takeoverAutoHeight`、`flexAutoHeight` 改为 `autoHeight`。
+## 注册 Hook
+
+也可以从 `@ray-template/ui/table-pro` 或 Ray Admin 的 `@/components` 导入 `useTablePro`。每张表调用一次，保持 `[register, actions]` 和 `onRegister` 的用法：
+
+```tsx
+const [register, { reload }] = useTablePro()
+
+const renderTable = () => <RTablePro onRegister={register} columns={columns} />
+const reloadFromFirstPage = () => reload(true)
+```
+
+在 SFC 中使用 `@register="register"`。注册发生在表格挂载后，卸载时清除绑定。`actions` 可解构，包含 `TableProInst` 的方法、`getTableProInstance()` 和只读 `isReady`。表格外的按钮可用 `disabled={!isReady.value}`；`isReady` 只表示实例已绑定，未绑定时调用实例方法会抛错。
+
+`actions.queryState.value` 是组件管理的远端查询状态，实例 ref 则用 `table.value?.queryState`。未挂载或未传 `request` 时为 `null`。只读快照包含 `loading`、`failed`、`page`、`pageSize` 和 `total`；关闭分页时页码和每页条数为 `null`。`total` 在首次成功前为 `null`，刷新和失败时保留上次成功结果。外部 `loading` 不计入查询状态，错误详情由 `onRequestError` 报告。
+
+`getCurrentPageData()` 适合本页批量操作。本地模式读取排序、筛选、分页后的行；远端模式读取当前已加载的数据，不会请求其他页。它返回对行的只读引用，不受虚拟滚动窗口影响；选择和批量变更仍由页面通过 `v-model:checkedRowKeys` 和业务数据管理。
+
+迁移时，把旧 `RTable` 改为 `RTablePro bare`（需要完整工具栏时省略 `bare`），用 `useTablePro` 或实例 ref 替代 `useTable`。旧版 `runTableRequest` / `runAsyncTableRequest` 改用 `reload`，需要回第一页时调用 `reload(true)`。`requestConfig` 改用 `params` 或在请求函数内映射字段；`takeoverAutoHeight`、`flexAutoHeight` 改为 `autoHeight`。
 
 ## 列显示与缓存
 
@@ -63,4 +80,4 @@ CSV 默认导出当前页可见数据列；`keepOriginalData` 使用传入的整
 
 普通列配置、选择、展开、排序、筛选、汇总、虚拟滚动、固定列、空状态和加载插槽沿用 [DataTable API](https://www.naiveui.com/zh-CN/components/data-table)。`pagination` 对象透传 [Pagination API](https://www.naiveui.com/zh-CN/components/pagination) 的配置，包括快速跳页、页码模板和回调。配置了 `request` 时页码、每页条数和总数由 TablePro 管理；初始页用 `pagination.defaultPage`，运行时跳页用实例 `setPage`。手动远端模式可以直接传 `remote + data + pagination`。服务端排序、过滤继续使用 Naive UI 的事件，在调用方将条件传给 `params`，组件不会推断接口字段。页数很大时可配置 `pagination.showQuickJumpDropdown: false`。
 
-在「表格」菜单下，可分别查看纯表格、远端查询与分页（含服务端排序和错误重试）、自适应高度（含虚拟滚动）、列设置与缓存、默认和自定义打印、插槽与实例操作。旧示例路径会重定向到对应子页。
+在「表格」菜单下，除了纯表格、远端查询、自适应高度、列设置、打印和插槽示例，还可以查看三个独立的 Hooks 示例：查询与分页、选择与批量操作、导出与打印。旧示例路径会重定向到对应子页。

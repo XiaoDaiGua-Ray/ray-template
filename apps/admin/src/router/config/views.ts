@@ -115,6 +115,18 @@ const views = {
     load: () => import('@/views/demo/tables/custom'),
     name: 'TableDemoCustom',
   },
+  'demo/tables/hooks-output': {
+    load: () => import('@/views/demo/tables/hooks-output'),
+    name: 'TableDemoHooksOutput',
+  },
+  'demo/tables/hooks-query': {
+    load: () => import('@/views/demo/tables/hooks-query'),
+    name: 'TableDemoHooksQuery',
+  },
+  'demo/tables/hooks-selection': {
+    load: () => import('@/views/demo/tables/hooks-selection'),
+    name: 'TableDemoHooksSelection',
+  },
   'demo/tables/printing': {
     load: () => import('@/views/demo/tables/printing'),
     name: 'TableDemoPrinting',

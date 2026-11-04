@@ -1,4 +1,4 @@
-import { RTablePro } from '@/components/RTablePro'
+import { RTablePro, useTablePro } from '@/components/RTablePro'
 import type {
   TableProInst,
   TableProParams,
@@ -11,6 +11,45 @@ const columns = [{ title: 'Name', key: 'name' }]
 const response = (name: string, total = 30): TableProResult => ({
   data: [{ id: name, name }],
   total,
+})
+
+it('binds table actions on mount and clears the instance until the table remounts', async () => {
+  const [
+    register,
+    { isReady, reload, setPage, getTableProInstance, getCurrentPageData },
+  ] = useTablePro()
+  const request = vi.fn(async (_params: TableProParams) => response('Alice'))
+  const mountTable = () =>
+    mount(RTablePro, { props: { columns, request, onRegister: register } })
+
+  expect(isReady.value).toBe(false)
+  expect(getTableProInstance).toThrow('Table is not mounted')
+  const first = mountTable()
+  const originalInstance = getTableProInstance()
+
+  try {
+    expect(isReady.value).toBe(true)
+    await setPage(2)
+    await flushPromises()
+    expect(request.mock.lastCall?.[0]).toEqual({ page: 2, pageSize: 10 })
+    expect(getCurrentPageData()).toEqual(response('Alice').data)
+  } finally {
+    first.unmount()
+  }
+
+  expect(isReady.value).toBe(false)
+  expect(getTableProInstance).toThrow('Table is not mounted')
+  const second = mountTable()
+
+  try {
+    expect(isReady.value).toBe(true)
+    expect(getTableProInstance()).not.toBe(originalInstance)
+    await setPage(2)
+    await reload(true)
+    expect(request.mock.lastCall?.[0]).toEqual({ page: 1, pageSize: 10 })
+  } finally {
+    second.unmount()
+  }
 })
 
 it('loads and paginates once per action, without rewriting the filter object', async () => {
@@ -69,7 +108,7 @@ it('ignores stale data even if the loader ignores cancellation', async () => {
     const next = instance.setPage(2)
 
     expect(request.mock.calls[0][1].aborted).toBe(true)
-    second.resolve(response('New page'))
+    second.resolve(response('New page', 40))
     await next
     first.resolve(response('Old page'))
     await flushPromises()
@@ -77,9 +116,82 @@ it('ignores stale data even if the loader ignores cancellation', async () => {
     expect(wrapper.text()).toContain('New page')
     expect(wrapper.text()).not.toContain('Old page')
     expect(wrapper.getComponent(NDataTable).props('loading')).toBe(false)
+    expect(instance.queryState).toMatchObject({
+      loading: false,
+      failed: false,
+      page: 2,
+      total: 40,
+    })
   } finally {
     wrapper.unmount()
   }
+})
+
+it('exposes read-only query state during load, failure and retry', async () => {
+  const initial = Promise.withResolvers<TableProResult>()
+  const failing = Promise.withResolvers<TableProResult>()
+  const retry = Promise.withResolvers<TableProResult>()
+  const request = vi
+    .fn(() => retry.promise)
+    .mockReturnValueOnce(initial.promise)
+    .mockReturnValueOnce(failing.promise)
+  const [register, { queryState, setPageSize }] = useTablePro()
+
+  expect(queryState.value).toBeNull()
+  const wrapper = mount(RTablePro, {
+    props: { columns, request, onRegister: register, tool: false },
+  })
+
+  try {
+    expect(queryState.value).toEqual({
+      loading: true,
+      failed: false,
+      page: 1,
+      pageSize: 10,
+      total: null,
+    })
+    expect(Reflect.set(queryState.value!, 'page', 99)).toBe(false)
+
+    initial.resolve(response('Last successful result', 42))
+    await flushPromises()
+    expect(queryState.value).toMatchObject({ loading: false, total: 42 })
+
+    const next = setPageSize(20)
+
+    expect(queryState.value).toMatchObject({
+      loading: true,
+      pageSize: 20,
+      total: 42,
+    })
+    failing.reject(new Error('offline'))
+    await next
+    expect(queryState.value).toEqual({
+      loading: false,
+      failed: true,
+      page: 1,
+      pageSize: 20,
+      total: 42,
+    })
+    expect(wrapper.text()).toContain('Last successful result')
+
+    await wrapper.get('.n-alert button').trigger('click')
+    expect(queryState.value).toMatchObject({
+      loading: true,
+      failed: false,
+      total: 42,
+    })
+    retry.resolve(response('Recovered', 7))
+    await flushPromises()
+    expect(queryState.value).toMatchObject({
+      loading: false,
+      failed: false,
+      total: 7,
+    })
+  } finally {
+    wrapper.unmount()
+  }
+
+  expect(queryState.value).toBeNull()
 })
 
 it('shows a retry for a failed request and omits paging fields when pagination is off', async () => {
@@ -100,28 +212,47 @@ it('shows a retry for a failed request and omits paging fields when pagination i
     expect(request.mock.calls.map(([params]) => params)).toEqual([{}, {}])
     expect(wrapper.find('.n-alert').exists()).toBe(false)
     expect(wrapper.text()).toContain('Recovered')
+    expect((wrapper.vm as unknown as TableProInst).queryState).toEqual({
+      loading: false,
+      failed: false,
+      page: null,
+      pageSize: null,
+      total: 1,
+    })
   } finally {
     wrapper.unmount()
   }
 })
 
-it('can paginate local data without requiring a request or a row key function', async () => {
+it('reads the sorted and filtered local page without a request or custom row key', async () => {
   const data = [
+    { id: 3, name: 'Third' },
     { id: 1, name: 'First' },
     { id: 2, name: 'Second' },
   ]
   const wrapper = mount(RTablePro, {
-    props: { columns, data, pageSize: 1, tool: false },
+    props: {
+      columns: [{ title: 'Name', key: 'name', sorter: 'default' }],
+      data,
+      pageSize: 1,
+      search: [{ key: 'name', label: 'Name' }],
+      tool: false,
+    },
   })
 
   try {
     expect(wrapper.getComponent(NDataTable).props('remote')).toBe(false)
-    expect(wrapper.text()).toContain('First')
-    expect(wrapper.text()).not.toContain('Second')
     const instance = wrapper.vm as unknown as TableProInst
 
+    expect(instance.getCurrentPageData()).toEqual([data[0]])
+    instance.getTableInstance()?.sort('name', 'ascend')
     await instance.setPage(2)
     expect(wrapper.text()).toContain('Second')
+    expect(instance.getCurrentPageData()).toEqual([data[2]])
+
+    await wrapper.get('input').setValue('ir')
+    await wrapper.get('form').trigger('submit')
+    expect(instance.getCurrentPageData()).toEqual([data[1]])
   } finally {
     wrapper.unmount()
   }
@@ -208,6 +339,7 @@ it('returns to the last available remote page when the total shrinks', async () 
 
     expect(request.mock.calls.map(([params]) => params.page)).toEqual([1, 3, 1])
     expect(wrapper.text()).toContain('First page')
+    expect(instance.queryState).toMatchObject({ page: 1, total: 5 })
   } finally {
     wrapper.unmount()
   }
@@ -234,6 +366,7 @@ it('passes native pagination settings and totals through for a manually controll
   try {
     const pager = wrapper.getComponent(NPagination)
 
+    expect((wrapper.vm as unknown as TableProInst).queryState).toBeNull()
     expect(pager.props()).toMatchObject({
       page: 3,
       pageSize: 20,
