@@ -1,4 +1,4 @@
-import { call, unrefElement } from '@/utils'
+import { call } from '@/utils'
 import { useEventListener } from '@vueuse/core'
 import { NForm, NSpin } from 'naive-ui'
 import { useTemplateRef } from 'vue'
@@ -42,16 +42,6 @@ export default defineComponent({
       if (onRegister && formRef.value) {
         call(onRegister, formRef.value)
       }
-
-      if (formRef.value) {
-        const formElement = unrefElement(
-          formRef.value as unknown as HTMLFormElement,
-        )
-
-        if (formElement) {
-          formElement.autocomplete = props.autocomplete
-        }
-      }
     })
 
     expose()
@@ -62,7 +52,7 @@ export default defineComponent({
   },
   render() {
     const { $attrs, $props, $slots } = this
-    const { loading, loadingDescription, ...restProps } = $props
+    const { loading, loadingDescription, autocomplete, ...restProps } = $props
 
     return (
       <NSpin
@@ -72,7 +62,7 @@ export default defineComponent({
           height: 'auto',
         }}
       >
-        <NForm {...$attrs} {...restProps} ref="formRef">
+        <NForm {...$attrs} {...restProps} {...{ autocomplete }} ref="formRef">
           {{
             ...$slots,
           }}

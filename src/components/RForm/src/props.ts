@@ -1,10 +1,9 @@
 import type { AnyFn, MaybeArray } from '@/types'
-import { omit } from 'lodash-es'
 import { formProps } from 'naive-ui'
 import type { RFormInst } from './types'
 
 const props = {
-  ...omit(formProps, ['onSubmit']),
+  ...formProps,
   /**
    *
    * @description

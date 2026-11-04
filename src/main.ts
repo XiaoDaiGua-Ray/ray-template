@@ -6,6 +6,7 @@ import 'vue3-next-qrcode/es/style.css' // vue3-next-qrcode 样式
 import 'virtual:uno.css'
 import type { App as AppType } from 'vue'
 import { setupRayTemplateCore } from './__ray-template'
+import { installAutocompleteDefaults } from './app-components/provider/AppAutocompleteDefaults'
 import { setupDayjs } from './dayjs'
 import { setupDirectives } from './directives'
 import { setupI18n } from './locales'
@@ -27,6 +28,7 @@ const setupPlugins = async (inst: AppType<Element>) => {
   await setupRouter(inst)
   setupDayjs()
   setupDirectives(inst)
+  inst.onUnmount(installAutocompleteDefaults(document.body))
 }
 
 /**
