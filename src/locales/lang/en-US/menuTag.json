@@ -1,0 +1,15 @@
+{
+  "pages": "Open pages",
+  "closeNamed": "Close {name}",
+  "closeCurrent": "Close current page",
+  "closeLeft": "Close tabs to the left",
+  "closeRight": "Close tabs to the right",
+  "closeOther": "Close other tabs",
+  "closeAll": "Close all tabs",
+  "maximize": "Maximize page",
+  "reload": "Reload page",
+  "newWindow": "Open in new window",
+  "scrollLeft": "Scroll tabs left",
+  "scrollRight": "Scroll tabs right",
+  "actions": "Tab actions"
+}

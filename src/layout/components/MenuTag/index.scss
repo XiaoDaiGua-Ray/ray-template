@@ -1,63 +1,144 @@
-$space: calc($layoutRouterViewContainer / 2);
-$menuTagWrapperWidth: 76px;
-
 .menu-tag {
-  display: flex;
-  align-items: center;
-  padding: 6px 0;
+  padding: 5px 0;
   border-bottom: 1px solid var(--r-line);
   background: var(--r-surface);
-
-  & .menu-tag-space {
-    width: calc(100% - $space * 2);
-    padding: 0px $layoutRouterViewContainer;
-
-    & .menu-tag-wrapper {
-      width: calc(100% - $space * 2 - $menuTagWrapperWidth);
-    }
-  }
-
-  & .n-tag {
-    cursor: pointer;
-  }
 }
 
-.menu-tag .menu-tag__btn {
+.menu-tag-space {
+  box-sizing: border-box;
+  width: 100%;
+  padding-inline: $layoutRouterViewContainer;
+}
+
+.menu-tag__scroll {
+  flex: 1;
+  min-width: 0;
+}
+
+.menu-tag-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: max-content;
+  padding-block: 2px;
+}
+
+.menu-tag__item {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  min-height: 28px;
+  overflow: hidden;
+  border: 1px solid transparent;
   border-radius: 7px;
-  font-weight: 500;
-
-  &.n-button--primary-type {
-    color: var(--r-selected-text);
-  }
-
-  .n-button__icon {
-    width: var(--n-icon-size);
-    height: var(--n-icon-size);
-    margin-left: 4px;
-    opacity: 0;
-    transition: opacity 0.18s ease;
-  }
-
-  &:hover .n-button__icon,
-  &:focus-visible .n-button__icon,
-  &.n-button--primary-type .n-button__icon {
-    opacity: 1;
-  }
-}
-
-.menu-tag__btn .menu-tag__btn-icon {
-  border-radius: 2px;
+  background: var(--r-surface-muted);
+  color: var(--r-text-secondary);
 
   &:hover {
-    background-color: var(--n-color-hover);
+    background: var(--r-surface-hover);
+  }
+
+  &--active {
+    border-color: color-mix(
+      in srgb,
+      var(--r-theme-primary-color) 28%,
+      var(--r-line)
+    );
+    background: color-mix(
+      in srgb,
+      var(--r-theme-primary-color) 11%,
+      var(--r-surface)
+    );
+    color: var(--r-selected-text);
   }
 }
 
-// 设置 dropdown animate svg 尺寸
-.menu-tag__dropdown {
-  & .menu-tag__icon {
-    width: 16px;
-    height: 16px;
+.menu-tag__tab,
+.menu-tag__close {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline-offset: -2px;
+  }
+}
+
+.menu-tag__tab {
+  max-inline-size: clamp(7rem, 24vw, 14rem);
+  min-height: 28px;
+  padding-inline: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.menu-tag__close {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: 0;
+  block-size: 26px;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 5px;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    inline-size 160ms var(--r-bezier),
+    opacity 120ms ease;
+
+  &::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 3px;
+    border-radius: 5px;
+    background: currentColor;
+    opacity: 0;
+    transition:
+      opacity 120ms ease,
+      transform 120ms var(--r-bezier);
+  }
+
+  &:is(:hover, :active) {
+    color: var(--r-text);
+  }
+
+  &:hover::before {
+    opacity: 0.14;
+  }
+
+  &:active::before {
+    opacity: 0.24;
+    transform: scale(0.88);
+  }
+}
+
+.menu-tag__item:focus-within .menu-tag__close {
+  inline-size: 26px;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (hover: hover) {
+  .menu-tag__item:hover .menu-tag__close {
+    inline-size: 26px;
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+@media (hover: none) {
+  .menu-tag__item--active .menu-tag__close {
+    inline-size: 32px;
+    opacity: 1;
+    pointer-events: auto;
   }
 }
 
@@ -70,8 +151,20 @@ $menuTagWrapperWidth: 76px;
 }
 
 @media (forced-colors: active) {
-  .menu-tag__btn.n-button--primary-type {
-    outline: 1px solid Highlight;
-    outline-offset: -2px;
+  .menu-tag__item--active {
+    border-color: Highlight;
+  }
+
+  .menu-tag__close:is(:hover, :active)::before {
+    border: 1px solid ButtonText;
+    background: transparent;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-tag__close,
+  .menu-tag__close::before {
+    transition: none;
   }
 }
