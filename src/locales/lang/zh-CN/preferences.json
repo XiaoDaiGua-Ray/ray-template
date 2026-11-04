@@ -1,0 +1,78 @@
+{
+  "title": "偏好设置",
+  "subtitle": "更改即时生效并保存在此浏览器",
+  "reset": "恢复默认设置",
+  "resetDescription": "将布局、菜单和通用选项恢复为默认值。",
+  "cancel": "取消",
+  "section": {
+    "layout": "布局",
+    "appearance": "外观",
+    "menu": "菜单",
+    "watermark": "水印",
+    "general": "通用"
+  },
+  "theme": {
+    "light": "浅色",
+    "dark": "深色",
+    "auto": "跟随系统"
+  },
+  "appearance": {
+    "theme": "主题与动效",
+    "primaryColor": "主题色",
+    "transition": "页面切换动画",
+    "placement": "设置抽屉位置",
+    "display": "界面显示",
+    "breadcrumbSwitch": "面包屑导航",
+    "menuTagSwitch": "页面标签",
+    "copyrightSwitch": "页脚信息",
+    "colorWeakness": "色弱模式"
+  },
+  "transition": {
+    "none": "无",
+    "scale": "缩放出现",
+    "fade-scale": "缩放淡出",
+    "fade-slide": "滑入出现",
+    "opacity": "淡入淡出",
+    "fade-bottom": "底部消退"
+  },
+  "placement": {
+    "right": "右侧",
+    "left": "左侧"
+  },
+  "menu": {
+    "size": "尺寸与间距",
+    "menuWidth": "菜单宽度",
+    "collapsedWidth": "折叠宽度",
+    "collapsedIndent": "层级缩进",
+    "iconSize": "图标尺寸",
+    "collapsedIconSize": "折叠图标尺寸",
+    "refresh": "刷新菜单",
+    "behavior": "菜单行为",
+    "inverted": "反色菜单",
+    "menuSiderBarLogo": "品牌标识",
+    "accordion": "手风琴展开",
+    "nativeScrollbar": "原生滚动条"
+  },
+  "watermark": {
+    "enabled": "全屏水印",
+    "cross": "交错显示",
+    "style": "内容与样式",
+    "content": "水印文本",
+    "fontSize": "字号",
+    "lineHeight": "行高",
+    "width": "单元宽度",
+    "height": "单元高度",
+    "xOffset": "水平偏移",
+    "yOffset": "垂直偏移",
+    "xGap": "水平间距",
+    "yGap": "垂直间距",
+    "rotate": "旋转角度"
+  },
+  "general": {
+    "title": "动态浏览器标题",
+    "cache": "页面缓存",
+    "enableCache": "启用缓存",
+    "cacheLimit": "最大缓存数",
+    "cacheExcluded": "排除的组件名称"
+  }
+}

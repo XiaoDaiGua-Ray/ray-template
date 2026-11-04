@@ -15,7 +15,7 @@ import {
 
 export default defineComponent({
   name: 'LayoutSettings',
-  props: { showDescription: { type: Boolean, default: true } },
+  props: { showDescription: { type: Boolean, default: false } },
   setup(props) {
     const { t } = useI18n('layout')
     const { getLayoutConfig } = useSettingGetters()
@@ -36,6 +36,8 @@ export default defineComponent({
               type="button"
               class="r-layout-preset"
               key={mode}
+              aria-label={text(mode)}
+              title={text(mode)}
               aria-pressed={getLayoutConfig.value.mode === mode}
               onClick={() => update({ mode })}
             >
@@ -47,7 +49,6 @@ export default defineComponent({
                 <span class="r-layout-preview__aside" />
                 <span class="r-layout-preview__body" />
               </span>
-              <span>{text(mode)}</span>
               {getLayoutConfig.value.mode === mode ? (
                 <span class="r-layout-preset__selected" aria-hidden="true">
                   ✓
@@ -55,9 +56,11 @@ export default defineComponent({
               ) : null}
             </button>
           ))}
-          <p class="r-layout-settings__hint">
-            {text(`modeHint.${getLayoutConfig.value.mode}`)}
-          </p>
+          {props.showDescription ? (
+            <p class="r-layout-settings__hint">
+              {text(`modeHint.${getLayoutConfig.value.mode}`)}
+            </p>
+          ) : null}
         </div>
         <NForm labelPlacement="top" showFeedback={false}>
           <NFormItem label={text('contentWidth')}>

@@ -1,116 +1,96 @@
 import { APP_THEME, CONTENT_TRANSITION_OPTIONS } from '@/app-config'
-import { useSettingActions } from '@/store'
-import {
-  NColorPicker,
-  NDivider,
-  NFlex,
-  NForm,
-  NFormItem,
-  NSelect,
-  NSwitch,
-} from 'naive-ui'
+import { useI18n } from '@/hooks'
+import { useSettingActions, useSettingGetters } from '@/store'
+import { NColorPicker, NForm, NFormItem, NSelect, NSwitch } from 'naive-ui'
+import SettingsSection from '../components/SettingsSection'
 import ThemeSegment from '../components/ThemeSegment'
-import { SETTING_DRAWER_INJECT_KEY } from '../constant'
 
 export default defineComponent({
   name: 'SegmentViewsAppearance',
   setup() {
-    const model = inject(SETTING_DRAWER_INJECT_KEY, {})
+    const { t } = useI18n('preferences')
     const { changePrimaryColor, updateSettingState, toggleColorWeakness } =
       useSettingActions()
-
-    return {
-      toggleColorWeakness,
-      model,
-      changePrimaryColor,
-      updateSettingState,
-    }
-  },
-  render() {
     const {
-      toggleColorWeakness,
-      model,
-      changePrimaryColor,
-      updateSettingState,
-    } = this
+      getPrimaryColorOverride,
+      getDrawerPlacement,
+      getContentTransition,
+      getMenuTagSwitch,
+      getBreadcrumbSwitch,
+      getCopyrightSwitch,
+      getColorWeakness,
+    } = useSettingGetters()
+    const switches = [
+      ['breadcrumbSwitch', getBreadcrumbSwitch],
+      ['menuTagSwitch', getMenuTagSwitch],
+      ['copyrightSwitch', getCopyrightSwitch],
+      ['colorWeakness', getColorWeakness],
+    ] as const
 
-    return (
-      <NFlex vertical style="width: 100%;" size={[0, 0]}>
-        <NDivider>系统主题</NDivider>
-        <ThemeSegment />
-        <NDivider>内置主题</NDivider>
-        <NColorPicker
-          showPreview
-          swatches={APP_THEME.appThemeColors}
-          v-model:value={model.primaryColorOverride!.common!.primaryColor}
-          onUpdateValue={changePrimaryColor.bind(this)}
-        />
-        <NDivider>切换动画</NDivider>
-        <NSelect
-          v-model:value={model.contentTransition}
-          options={CONTENT_TRANSITION_OPTIONS}
-          onUpdateValue={(value) => {
-            updateSettingState('contentTransition', value)
-          }}
-        />
-        <NDivider>配置入口出现位置</NDivider>
-        <NSelect
-          v-model:value={model.drawerPlacement}
-          options={[
-            {
-              label: '右边',
-              value: 'right',
-            },
-            {
-              label: '左边',
-              value: 'left',
-            },
-          ]}
-          onUpdateValue={(value) => {
-            updateSettingState('drawerPlacement', value)
-          }}
-        />
-        <NDivider>其他设置</NDivider>
-        <NForm
-          labelPlacement="left"
-          class="setting-drawer__overrides-form"
-          showFeedback={false}
-        >
-          <NFormItem label="面包屑">
-            <NSwitch
-              v-model:value={model.breadcrumbSwitch}
-              onUpdateValue={(bool) =>
-                updateSettingState('breadcrumbSwitch', bool)
-              }
-            />
-          </NFormItem>
-          <NFormItem label="标签页">
-            <NSwitch
-              v-model:value={model.menuTagSwitch}
-              onUpdateValue={(bool) =>
-                updateSettingState('menuTagSwitch', bool)
-              }
-            />
-          </NFormItem>
-          <NFormItem label="页底信息">
-            <NSwitch
-              v-model:value={model.copyrightSwitch}
-              onUpdateValue={(bool) =>
-                updateSettingState('copyrightSwitch', bool)
-              }
-            />
-          </NFormItem>
-          <NFormItem label="色弱模式">
-            <NSwitch
-              v-model:value={model.colorWeakness}
-              onUpdateValue={(bool) => {
-                updateSettingState('colorWeakness', bool)
-                toggleColorWeakness(bool)
-              }}
-            />
-          </NFormItem>
-        </NForm>
-      </NFlex>
+    return () => (
+      <div class="r-settings-stack">
+        <SettingsSection title={t('appearance.theme')}>
+          <ThemeSegment />
+          <NForm
+            labelPlacement="top"
+            showFeedback={false}
+            class="r-settings-fields"
+          >
+            <NFormItem label={t('appearance.primaryColor')}>
+              <NColorPicker
+                showPreview
+                swatches={APP_THEME.appThemeColors}
+                value={getPrimaryColorOverride.value.common?.primaryColor}
+                onUpdateValue={(value) => {
+                  if (value) changePrimaryColor(value)
+                }}
+              />
+            </NFormItem>
+            <NFormItem label={t('appearance.transition')}>
+              <NSelect
+                value={getContentTransition.value}
+                options={CONTENT_TRANSITION_OPTIONS.map(({ value }) => ({
+                  value,
+                  label: t(`transition.${value}`),
+                }))}
+                onUpdateValue={(value) =>
+                  updateSettingState('contentTransition', value)
+                }
+              />
+            </NFormItem>
+            <NFormItem label={t('appearance.placement')}>
+              <NSelect
+                value={getDrawerPlacement.value}
+                options={['right', 'left'].map((value) => ({
+                  value,
+                  label: t(`placement.${value}`),
+                }))}
+                onUpdateValue={(value: 'right' | 'left') =>
+                  updateSettingState('drawerPlacement', value)
+                }
+              />
+            </NFormItem>
+          </NForm>
+        </SettingsSection>
+        <SettingsSection title={t('appearance.display')}>
+          <div class="r-settings-switches">
+            {switches.map(([key, value]) => (
+              <label class="r-settings-switch" key={key}>
+                <span>{t(`appearance.${key}`)}</span>
+                <NSwitch
+                  value={value.value}
+                  aria-label={t(`appearance.${key}`)}
+                  onUpdateValue={(enabled) =>
+                    key === 'colorWeakness'
+                      ? toggleColorWeakness(enabled)
+                      : updateSettingState(key, enabled)
+                  }
+                />
+              </label>
+            ))}
+          </div>
+        </SettingsSection>
+      </div>
     )
   },
 })

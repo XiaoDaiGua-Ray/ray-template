@@ -1,4 +1,5 @@
 import { RIcon, RSegment } from '@/components'
+import { useI18n } from '@/hooks'
 import { useSettingActions, useSettingGetters } from '@/store'
 import type { SettingState } from '@/store/modules/setting/types'
 import { useColorMode } from '@vueuse/core'
@@ -7,25 +8,26 @@ export default defineComponent({
   name: 'ThemeSegment',
   setup() {
     const { system } = useColorMode()
+    const { t } = useI18n('preferences')
     const { getAppThemeStr, getAppTheme } = useSettingGetters()
     const { updateSettingState } = useSettingActions()
-    const options = [
+    const options = computed(() => [
       {
-        label: '深色',
+        label: t('theme.dark'),
         key: 'dark',
         icon: () => <RIcon name="system/dark" size="16" />,
       },
       {
-        label: '浅色',
+        label: t('theme.light'),
         key: 'light',
         icon: () => <RIcon name="system/light" size="16" />,
       },
       {
-        label: '自动',
+        label: t('theme.auto'),
         key: 'auto',
         icon: () => <RIcon name="system/system_os" size="16" />,
       },
-    ]
+    ])
     const modelAppTheme = computed({
       get: () => {
         if (getAppThemeStr.value === 'auto') {

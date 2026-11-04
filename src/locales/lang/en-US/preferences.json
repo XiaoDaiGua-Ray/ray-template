@@ -1,0 +1,78 @@
+{
+  "title": "Preferences",
+  "subtitle": "Changes apply immediately and are saved in this browser",
+  "reset": "Restore defaults",
+  "resetDescription": "Restore the default layout, menu and general options.",
+  "cancel": "Cancel",
+  "section": {
+    "layout": "Layout",
+    "appearance": "Appearance",
+    "menu": "Menu",
+    "watermark": "Watermark",
+    "general": "General"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "auto": "System"
+  },
+  "appearance": {
+    "theme": "Theme and motion",
+    "primaryColor": "Accent color",
+    "transition": "Page transition",
+    "placement": "Drawer position",
+    "display": "Interface display",
+    "breadcrumbSwitch": "Breadcrumbs",
+    "menuTagSwitch": "Page tabs",
+    "copyrightSwitch": "Footer",
+    "colorWeakness": "Color vision mode"
+  },
+  "transition": {
+    "none": "None",
+    "scale": "Scale in",
+    "fade-scale": "Scale and fade",
+    "fade-slide": "Slide in",
+    "opacity": "Fade",
+    "fade-bottom": "Fade downward"
+  },
+  "placement": {
+    "right": "Right",
+    "left": "Left"
+  },
+  "menu": {
+    "size": "Size and spacing",
+    "menuWidth": "Menu width",
+    "collapsedWidth": "Collapsed width",
+    "collapsedIndent": "Item indent",
+    "iconSize": "Icon size",
+    "collapsedIconSize": "Collapsed icon size",
+    "refresh": "Refresh menu",
+    "behavior": "Menu behavior",
+    "inverted": "Inverted menu",
+    "menuSiderBarLogo": "Brand mark",
+    "accordion": "Accordion groups",
+    "nativeScrollbar": "Native scrollbar"
+  },
+  "watermark": {
+    "enabled": "Full-page watermark",
+    "cross": "Staggered tiles",
+    "style": "Content and style",
+    "content": "Watermark text",
+    "fontSize": "Font size",
+    "lineHeight": "Line height",
+    "width": "Tile width",
+    "height": "Tile height",
+    "xOffset": "Horizontal offset",
+    "yOffset": "Vertical offset",
+    "xGap": "Horizontal gap",
+    "yGap": "Vertical gap",
+    "rotate": "Rotation"
+  },
+  "general": {
+    "title": "Dynamic browser title",
+    "cache": "Page cache",
+    "enableCache": "Enable caching",
+    "cacheLimit": "Cache limit",
+    "cacheExcluded": "Excluded component names"
+  }
+}

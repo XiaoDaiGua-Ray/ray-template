@@ -29,10 +29,8 @@
   position: relative;
   box-sizing: border-box;
   display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
   place-items: center;
   align-self: start;
-  gap: 3px;
   min-inline-size: 0;
   min-block-size: 0;
   inline-size: 100%;
@@ -75,7 +73,7 @@
   display: grid;
   grid-template: minmax(0, 1fr) minmax(0, 3fr) / minmax(0, 1fr) minmax(0, 3fr);
   gap: 3px;
-  block-size: min(100%, 42px);
+  block-size: min(68%, 60px);
   max-inline-size: 100%;
   aspect-ratio: 1;
   padding: 4px;

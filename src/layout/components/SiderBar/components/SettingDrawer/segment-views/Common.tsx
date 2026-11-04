@@ -1,97 +1,79 @@
-import { RIcon } from '@/components'
-import { useSettingActions } from '@/store'
-import {
-  NDivider,
-  NDynamicTags,
-  NFlex,
-  NForm,
-  NFormItem,
-  NInputNumber,
-  NSwitch,
-} from 'naive-ui'
-import { SETTING_DRAWER_INJECT_KEY } from '../constant'
+import { useI18n } from '@/hooks'
+import { useSettingActions, useSettingGetters } from '@/store'
+import { NDynamicTags, NForm, NFormItem, NInputNumber, NSwitch } from 'naive-ui'
+import SettingsSection from '../components/SettingsSection'
 
 export default defineComponent({
   name: 'SegmentViewsCommon',
   setup() {
-    const model = inject(SETTING_DRAWER_INJECT_KEY, {})
+    const { t } = useI18n('preferences')
+    const { getKeepAliveConfig, getDynamicDocumentTitle } = useSettingGetters()
     const { updateSettingState } = useSettingActions()
 
-    return {
-      model,
-      updateSettingState,
-    }
-  },
-  render() {
-    const { model, updateSettingState } = this
-
-    return (
-      <NFlex vertical style="width: 100%;" size={[0, 0]}>
-        <NDivider>基础设置</NDivider>
-        <NForm
-          labelPlacement="left"
-          class="setting-drawer__overrides-form"
-          showFeedback={false}
-        >
-          <NFormItem label="页面缓存">
-            <NSwitch
-              v-model:value={model.keepAliveConfig!.setupKeepAlive}
-              onUpdateValue={(bool) =>
-                updateSettingState('keepAliveConfig', {
-                  setupKeepAlive: bool,
-                })
-              }
-            />
-          </NFormItem>
-          <NFormItem label="动态浏览器标题">
-            <NSwitch
-              v-model:value={model.dynamicDocumentTitle}
-              onUpdateValue={(bool) =>
-                updateSettingState('dynamicDocumentTitle', bool)
-              }
-            />
-          </NFormItem>
-        </NForm>
-        <NDivider>缓存设置</NDivider>
-        <NForm
-          labelPlacement="top"
-          showFeedback={true}
-          showRequireMark={false}
-          model={model.keepAliveConfig}
-        >
-          <NFormItem
-            label="最大缓存数"
-            feedback={
-              computed(() => {
-                if (model.keepAliveConfig!.maxKeepAliveLength <= 0) {
-                  return '设置为【0】时，缓存将会失效'
+    return () => (
+      <div class="r-settings-stack">
+        <SettingsSection title={t('section.general')}>
+          <div class="r-settings-switches">
+            <label class="r-settings-switch">
+              <span>{t('general.title')}</span>
+              <NSwitch
+                value={getDynamicDocumentTitle.value}
+                aria-label={t('general.title')}
+                onUpdateValue={(value) =>
+                  updateSettingState('dynamicDocumentTitle', value)
                 }
-
-                return ''
-              }).value
-            }
+              />
+            </label>
+          </div>
+        </SettingsSection>
+        <SettingsSection title={t('general.cache')}>
+          <div class="r-settings-switches">
+            <label class="r-settings-switch">
+              <span>{t('general.enableCache')}</span>
+              <NSwitch
+                value={getKeepAliveConfig.value.setupKeepAlive}
+                aria-label={t('general.enableCache')}
+                onUpdateValue={(setupKeepAlive) =>
+                  updateSettingState('keepAliveConfig', { setupKeepAlive })
+                }
+              />
+            </label>
+          </div>
+          <NForm
+            labelPlacement="top"
+            showFeedback={false}
+            class="r-settings-fields"
           >
-            <NInputNumber
-              disabled={!model.keepAliveConfig!.setupKeepAlive}
-              v-model:value={model.keepAliveConfig!.maxKeepAliveLength}
-              min={0}
-              precision={0}
-              showButton={false}
-              onUpdateValue={(val) =>
-                updateSettingState('keepAliveConfig', {
-                  maxKeepAliveLength: val!,
-                })
-              }
-            />
-          </NFormItem>
-          <NFormItem label="排除缓存">
-            <NDynamicTags
-              type="success"
-              v-model:value={model.keepAliveConfig!.keepAliveExclude}
-            />
-          </NFormItem>
-        </NForm>
-      </NFlex>
+            <NFormItem label={t('general.cacheLimit')}>
+              <NInputNumber
+                value={getKeepAliveConfig.value.maxKeepAliveLength}
+                disabled={!getKeepAliveConfig.value.setupKeepAlive}
+                inputProps={{ 'aria-label': t('general.cacheLimit') }}
+                min={0}
+                precision={0}
+                showButton={false}
+                onUpdateValue={(value) => {
+                  if (value !== null)
+                    updateSettingState('keepAliveConfig', {
+                      maxKeepAliveLength: value,
+                    })
+                }}
+              />
+            </NFormItem>
+            <NFormItem
+              label={t('general.cacheExcluded')}
+              class="r-settings-fields__wide"
+            >
+              <NDynamicTags
+                value={getKeepAliveConfig.value.keepAliveExclude}
+                onUpdateValue={(keepAliveExclude: string[]) =>
+                  updateSettingState('keepAliveConfig', { keepAliveExclude })
+                }
+              />
+            </NFormItem>
+          </NForm>
+        </SettingsSection>
+      </div>
     )
   },
 })

@@ -15,7 +15,6 @@ export default defineComponent({
     return () => (
       <DemoPage
         title={t<string>('title')}
-        description={t<string>('description')}
         eyebrow={showcaseT<string>('layoutEyebrow')}
         meta={showcaseT<string>('livePreferences')}
       >
@@ -30,7 +29,6 @@ export default defineComponent({
               </pre>
             </NCard>
             <NCard title={t<string>('extension')}>
-              <p class="r-layout-extension-description">{t('slots')}</p>
               <pre class="r-demo-code">
                 <code>{`const { updateSettingState } = useSettingActions()\n\nupdateSettingState('layoutConfig', {\n  mode: 'mixed',\n  contentWidth: 'fixed',\n})\n\n<RLayout>\n  {{\n    header: () => <CustomHeader />,\n    footer: () => <CustomFooter />,\n  }}\n</RLayout>`}</code>
               </pre>

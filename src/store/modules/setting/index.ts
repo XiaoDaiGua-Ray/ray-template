@@ -125,42 +125,50 @@ export const piniaSettingStore = defineStore(
     }
 
     const toggleColorWeakness = (bool: boolean) => {
-      const html = document.documentElement
-
       updateSettingState('colorWeakness', bool)
-      setStyle(html, {
-        filter: bool ? 'invert(100%)' : '',
-      })
     }
 
-    /**
-     *
-     * @description
-     * 初始化合并自定义主题色。
-     * 该方法会在初始化时执行一次，之后会在切换主题色时执行。
-     */
-    watchEffect(() => {
-      if (settingState.appTheme === 'auto')
-        settingState._appTheme = preferredDark.value
+    watch(
+      () => (settingState.appTheme === 'auto' ? preferredDark.value : void 0),
+      (systemDark) => {
+        if (systemDark !== void 0) settingState._appTheme = systemDark
+      },
+      { immediate: true },
+    )
 
-      settingState._appTheme
-        ? (settingState.primaryColorOverride = merge(
-            {},
-            settingState.primaryColorOverride,
-            APP_THEME.appNaiveUIThemeOverrides.dark,
-          ))
-        : (settingState.primaryColorOverride = merge(
-            {},
-            settingState.primaryColorOverride,
-            APP_THEME.appNaiveUIThemeOverrides.light,
-          ))
+    watch(
+      () => settingState._appTheme,
+      (dark) => {
+        settingState.primaryColorOverride = merge(
+          {},
+          settingState.primaryColorOverride,
+          dark
+            ? APP_THEME.appNaiveUIThemeOverrides.dark
+            : APP_THEME.appNaiveUIThemeOverrides.light,
+        )
+      },
+      { immediate: true },
+    )
 
-      toggleColorWeakness(settingState.colorWeakness)
+    watch(
+      () => settingState.colorWeakness,
+      (enabled) =>
+        setStyle(document.documentElement, {
+          filter: enabled ? 'invert(100%)' : '',
+        }),
+      { immediate: true },
+    )
 
-      if (!settingState.dynamicDocumentTitle) {
-        document.title = settingState.sideBarLogo?.title || 'Ray Template'
-      }
-    })
+    watch(
+      () =>
+        settingState.dynamicDocumentTitle
+          ? void 0
+          : settingState.sideBarLogo?.title || 'Ray Template',
+      (title) => {
+        if (title) document.title = title
+      },
+      { immediate: true },
+    )
 
     return {
       ...toRefs(settingState),
