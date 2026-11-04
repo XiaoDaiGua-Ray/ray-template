@@ -150,23 +150,20 @@ export const createMenuIcon = (option: AppMenuOption) => {
     return () => icon
   }
 
-  const { menuConfig } = piniaSettingStore()
-  const { collapsed } = piniaMenuStore()
+  const settings = piniaSettingStore()
+  const menu = piniaMenuStore()
   const name = resolveIconName(icon)
 
   if (!name) return
 
-  const _icon = h(
-    RIcon,
-    {
+  return () =>
+    h(RIcon, {
       name,
-      size: collapsed ? menuConfig.collapsedIconSize : menuConfig.iconSize,
+      size: menu.collapsed
+        ? settings.menuConfig.collapsedIconSize
+        : settings.menuConfig.iconSize,
       cursor: 'pointer',
-    },
-    {},
-  )
-
-  return () => _icon
+    })
 }
 
 /**
@@ -204,46 +201,17 @@ export const createMenuExtra = (option: AppMenuOption) => {
     strong: true,
   }
 
-  // 渲染文案，优先级：i18nLabel > label
-  const renderLabel = () => {
-    if (i18nLabel) {
-      return t(i18nLabel)
-    }
-
-    if (label) {
-      return label
-    }
-
-    return null
-  }
-
-  // 如果没有文案，但是设置了 icon，则将 padding-right 设置为 0
-  const style = () => {
-    if ((icon && (i18nLabel || label)) || (!icon && (i18nLabel || label))) {
-      return null
-    }
-
-    return {
-      'padding-right': '0',
-    }
-  }
-
-  if (isValueType<object>(extra, 'Object')) {
-    return () => {
-      return h(
-        NTag,
-        {
-          ...tagProps,
-          type: type || 'primary',
-          style: style(),
-        },
-        {
-          default: () => renderLabel(),
-          icon: () => icon,
-        },
-      )
-    }
-  }
+  return () =>
+    h(
+      NTag,
+      { ...tagProps, type: type || 'primary' },
+      {
+        default: () => (i18nLabel ? t(i18nLabel) : label),
+        icon: icon
+          ? () => (typeof icon === 'string' ? h(RIcon, { name: icon }) : icon)
+          : void 0,
+      },
+    )
 }
 
 /**
@@ -274,10 +242,12 @@ export const getCatchMenuKey = () => {
  * @returns 获取缓存的菜单标签页
  */
 export const getCatchMenuTagOptions = () => {
-  return (
-    getStorage<AppMenuOption[]>(
-      APP_CATCH_KEY.appMenuTagOptions,
-      'sessionStorage',
-    ) ?? []
+  const cached = getStorage<AppMenuOption[]>(
+    APP_CATCH_KEY.appMenuTagOptions,
+    'sessionStorage',
   )
+
+  return Array.isArray(cached)
+    ? cached.filter((item) => typeof item?.fullPath === 'string')
+    : []
 }

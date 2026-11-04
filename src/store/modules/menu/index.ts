@@ -2,6 +2,7 @@ import { APP_CATCH_KEY } from '@/app-config'
 import { useI18n } from '@/hooks'
 import { getAppRawRoutes } from '@/router/app-route-modules'
 import { canSkipRoute, validMenuItemShow, validRole } from '@/router/utils'
+import { joinRoutePath } from '@/router/utils/join-route-path'
 import { useKeepAliveActions } from '@/store'
 import type { MenuState } from '@/store/modules/menu/types'
 import type { AnyFn, AppMenuOption, MenuTagOptions } from '@/types'
@@ -10,14 +11,14 @@ import { equalRouterPath } from '@/utils/equal-router-path'
 import { updateObjectValue } from '@/utils/update-object-value'
 import { pick } from 'lodash-es'
 import { NEllipsis } from 'naive-ui'
-import type { LocationQuery } from 'vue-router'
+import type { LocationQuery, RouteRecordNormalized } from 'vue-router'
+import { piniaSigningStore } from '../signing'
 import { pickRouteRecordNormalizedConstant } from './constant'
 import {
   createMenuExtra,
   createMenuIcon,
   getCatchMenuKey,
   getCatchMenuTagOptions,
-  parseAndFindMatchingNodes,
   updateDocumentTitle,
 } from './utils'
 
@@ -45,7 +46,7 @@ export const depthSearchAppMenu = (
 export const piniaMenuStore = defineStore(
   'menu',
   () => {
-    const { push, getRoutes } = useRouter()
+    const { push, resolve } = useRouter()
     const route = useRoute()
     const { t } = useI18n()
     const { setKeepAliveInclude } = useKeepAliveActions()
@@ -58,7 +59,36 @@ export const piniaMenuStore = defineStore(
       breadcrumbOptions: [], // 面包屑菜单
       currentMenuOption: null, // 当前激活菜单项
     })
-    const isSetupAppMenuLock = ref(true)
+    const signing = piniaSigningStore()
+    const menuIndex = new Map<
+      string,
+      { option: AppMenuOption; parentPath: string }
+    >()
+    const cacheTags = () =>
+      setStorage(
+        APP_CATCH_KEY.appMenuTagOptions,
+        menuState.menuTagOptions.map(
+          ({
+            name,
+            key,
+            path,
+            show,
+            meta,
+            breadcrumbLabel,
+            fullPath,
+            closeable,
+          }) => ({
+            name,
+            key,
+            path,
+            show,
+            meta,
+            breadcrumbLabel,
+            fullPath,
+            closeable,
+          }),
+        ),
+      )
 
     /**
      *
@@ -96,33 +126,20 @@ export const piniaMenuStore = defineStore(
       const { meta } = option
       const { i18nKey, noLocalTitle } = meta
 
-      // 设置 label, i18nKey 优先级最高
-      const label = computed(() => (i18nKey ? t(`${i18nKey}`) : noLocalTitle))
-      // 拼装菜单项，容错处理，兼容以前版本 key 选取为 path 的情况
-      const route = {
+      const getLabel = () =>
+        i18nKey ? t(i18nKey) : (noLocalTitle ?? option.name ?? option.path)
+      const resolved = {
         ...option,
         key: option.fullPath,
-        label: () =>
-          h(NEllipsis, null, {
-            default: () => label.value,
-          }),
-        breadcrumbLabel: label.value,
-      } as AppMenuOption
-      // 合并 icon, extra
-      const attr: AppMenuOption = Object.assign({}, route, {
+        label: () => h(NEllipsis, null, { default: getLabel }),
+        get breadcrumbLabel() {
+          return String(getLabel())
+        },
         icon: createMenuIcon(option),
         extra: createMenuExtra(option),
-      })
-
-      // 如果当前菜单项与缓存菜单项相同，则更新当前菜单项
-      if (option.fullPath === getCatchMenuKey()) {
-        menuState.currentMenuOption = attr
       }
 
-      // 验证菜单项是否显示
-      attr.show = validMenuItemShow(attr)
-
-      return attr
+      return Object.assign(resolved, { show: validMenuItemShow(resolved) })
     }
 
     /**
@@ -135,9 +152,15 @@ export const piniaMenuStore = defineStore(
      * 如果识别到为平级模式，则会自动追加一层面包屑。
      */
     const setBreadcrumbOptions = (key: string | number) => {
-      menuState.breadcrumbOptions = unref(
-        parseAndFindMatchingNodes(menuState.options, 'fullPath', key),
-      )
+      const trail: AppMenuOption[] = []
+      let entry = menuIndex.get(String(key))
+
+      while (entry) {
+        trail.unshift(entry.option)
+        entry = menuIndex.get(entry.parentPath)
+      }
+
+      menuState.breadcrumbOptions = trail
     }
 
     /**
@@ -161,215 +184,153 @@ export const piniaMenuStore = defineStore(
         ? menuState.menuTagOptions.push(...arr)
         : (menuState.menuTagOptions = arr)
 
-      setStorage(APP_CATCH_KEY.appMenuTagOptions, menuState.menuTagOptions)
+      cacheTags()
     }
 
-    /**
-     *
-     * @param key full path
-     * @param option menu tag option
-     *
-     * @description
-     * 设置当前标签项，如果不存在则追加。
-     */
-    const setMenuTagOptionsWhenMenuValueChange = (
-      key: string | number,
-      option: AppMenuOption,
-    ) => {
-      const tag = menuState.menuTagOptions.find((curr) => curr.fullPath === key)
+    const updateActiveMenu = (option: AppMenuOption) => {
+      setKeepAliveInclude(option)
+      updateDocumentTitle(option)
 
-      if (!tag) {
-        menuState.menuTagOptions.push(option as MenuTagOptions)
+      if (option.meta.sameLevel) {
+        if (
+          !menuState.breadcrumbOptions.some(({ key }) => key === option.key)
+        ) {
+          menuState.breadcrumbOptions.push(option)
+        }
+
+        return
       }
 
-      // 清理所有非根路径的标签页
-      menuState.menuTagOptions = menuState.menuTagOptions.filter((curr) =>
-        curr.fullPath?.startsWith('/'),
-      )
+      if (
+        !menuState.menuTagOptions.some(
+          ({ fullPath }) => fullPath === option.fullPath,
+        )
+      ) {
+        menuState.menuTagOptions.push(option)
+        cacheTags()
+      }
 
-      setStorage(APP_CATCH_KEY.appMenuTagOptions, menuState.menuTagOptions)
+      setBreadcrumbOptions(option.key)
+
+      if (!menuState.breadcrumbOptions.length)
+        menuState.breadcrumbOptions = [option]
+
+      menuState.currentMenuOption = option
+
+      if (menuState.menuKey !== option.key) {
+        menuState.menuKey = option.key
+        setStorage(APP_CATCH_KEY.appMenuKey, option.key)
+      }
     }
 
-    /**
-     *
-     * @param key 菜单更新后的 key
-     * @param option 菜单当前 option 项
-     * @param query 路由参数
-     *
-     * @description
-     * 修改 `menu key` 后的回调函数。
-     * 修改后，缓存当前选择 key 并且存储标签页与跳转页面(router push 操作)。
-     *
-     * 如果 windowOpen 存在, 则直接打开新窗口，不会更新当前菜单状态，也不会做其他的操作。
-     * 如果 sameLevel 存在，则会追加一层面包屑，并不会触发菜单更新与标签页更新。
-     *
-     * 在执行更新操作后会做一些缓存操作。
-     *
-     * 该方法是整个模板的核心驱动: 菜单、标签页、面包屑、浏览器标题等等的更新方法。
-     *
-     * @example
-     * changeMenuModelValue('/dashboard',{ dashboard option  }) // 跳转页面至 dashboard，并且更新菜单状态、标签页、面包屑、浏览器标题等等
-     * changeMenuModelValue('/dashboard', { dashboard option }, { id: 1 }) // 执行更新操作，并且传递参数
-     */
     const changeMenuModelValue = (
       key: string | number,
       option: AppMenuOption,
       query?: LocationQuery,
     ) => {
-      const { meta } = option
+      if (option.meta.windowOpen) {
+        window.open(option.meta.windowOpen, '_blank', 'noopener,noreferrer')
 
-      if (meta.windowOpen) {
-        window.open(meta.windowOpen)
-      } else {
-        push({
-          path: String(key),
-          query,
-        })
-
-        const { sameLevel } = meta
-
-        // 更新缓存队列
-        setKeepAliveInclude(option)
-        // 更新浏览器标题
-        updateDocumentTitle(option)
-
-        // 如果不为 sameLevel，则会执行更新：覆盖更新面包屑、添加标签菜单、更新缓存
-        if (!sameLevel) {
-          // 更新标签菜单
-          setMenuTagOptionsWhenMenuValueChange(key, option)
-          // 更新面包屑
-          setBreadcrumbOptions(key)
-
-          menuState.menuKey = key
-          menuState.currentMenuOption = option
-
-          // 缓存菜单 key(sessionStorage)
-          setStorage(APP_CATCH_KEY.appMenuKey, key)
-        } else {
-          // 使用 pick 提取仅需要的字段，避免 vue 抛错空引用，导致性能损耗
-          const breadcrumbOption = pick(
-            resolveOption(option),
-            pickRouteRecordNormalizedConstant,
-          ) as AppMenuOption
-          // 查看是否重复
-          const find = menuState.breadcrumbOptions.find(
-            (curr) => curr.key === breadcrumbOption.key,
-          )
-
-          // 如果未重复追加
-          if (!find) {
-            menuState.breadcrumbOptions.push({
-              ...breadcrumbOption,
-              fullPath: String(breadcrumbOption.key),
-            })
-          }
-        }
-      }
-    }
-
-    /**
-     *
-     * @param path 路由地址
-     *
-     * @description
-     * 监听路由地址变化更新菜单状态。
-     */
-    const updateMenuKeyWhenRouteUpdate = async (
-      path: string,
-      query: LocationQuery,
-    ) => {
-      const [routePath] = path.split('?')
-
-      // 直接使用完整 url，检查是否在 routes 中
-      const findMenuOption = getRoutes().find((curr) => curr.path === routePath)
-
-      // 避免匹配根页面路由
-      if (
-        findMenuOption?.path === '/' ||
-        !findMenuOption?.path ||
-        findMenuOption?.path === '/login'
-      ) {
         return
       }
 
-      if (findMenuOption) {
-        // 使用 pick 提取仅需要的字段，避免 vue 抛错空引用，导致性能损耗
-        const pickOption = pick(
-          findMenuOption,
-          pickRouteRecordNormalizedConstant,
-        ) as unknown as AppMenuOption
+      const path = String(key)
 
-        changeMenuModelValue(
-          routePath,
-          resolveOption({
-            ...pickOption,
-            fullPath: pickOption.path,
-          }),
-          query,
-        )
-      }
+      if (route.fullPath === path && !query) updateActiveMenu(option)
+      else return push({ path, query })
     }
 
-    /**
-     *
-     * @description
-     * 初始化系统菜单列表，该方法仅执行一次。
-     * 会在初始化时拼接完整的 url 地址为 fullPath。
-     *
-     * 如果你需要手动更新菜单，可以在需要的时候调用该方法，即可刷新整个系统菜单。
-     */
-    const setupAppMenu = () => {
-      return new Promise<void>((resolve) => {
-        const resolveRoutes = (routes: AppMenuOption[], parentPath: string) => {
-          const catchArr: AppMenuOption[] = []
-          const regex = /\/+/g
+    const optionForRoute = (path: string, matched: RouteRecordNormalized[]) => {
+      const record = matched.at(-1)
 
-          for (const curr of routes) {
-            let fullPath = `${
-              parentPath.endsWith('/') ? parentPath : parentPath + '/'
-            }${curr.path}`
+      if (!record || record.path === '/' || record.redirect) return
 
-            // 使用正则表达式替换重复的 '/'
-            fullPath = fullPath.replace(regex, '/')
+      const canonicalPath = record.aliasOf?.path ?? record.path
+      const menuOption = menuIndex.get(canonicalPath)?.option
 
-            if (curr.children?.length) {
-              curr.children = resolveRoutes(curr.children, fullPath)
-            } else if (!validRole(curr.meta)) {
-              continue
-            }
+      if (menuOption && !canonicalPath.includes(':')) return menuOption
 
-            catchArr.push(
-              resolveOption({
-                ...curr,
-                fullPath,
-              }),
-            )
-          }
-
-          return catchArr
-        }
-
-        menuState.options = resolveRoutes(
-          getAppRawRoutes() as AppMenuOption[],
-          '',
-        )
-
-        const r =
-          menuState.currentMenuOption ||
-          (canSkipRoute(menuState.options) as AppMenuOption)
-
-        if (r) {
-          // 惰性更新面包屑，避免 sameLevel 模式下的面包屑被覆盖
-          if (!menuState.breadcrumbOptions.length) {
-            setBreadcrumbOptions(r.key)
-          }
-
-          setMenuTagOptionsWhenMenuValueChange(r.fullPath, r)
-          updateDocumentTitle(r)
-        }
-
-        resolve()
+      return resolveOption({
+        ...(pick(
+          record,
+          pickRouteRecordNormalizedConstant,
+        ) as unknown as AppMenuOption),
+        fullPath: path,
       })
+    }
+
+    const setupAppMenu = async () => {
+      const currentRole = signing.signingCallback.role ?? ''
+
+      menuIndex.clear()
+
+      const resolveRoutes = (
+        routes: AppMenuOption[],
+        parentPath: string,
+      ): AppMenuOption[] => {
+        const options: AppMenuOption[] = []
+
+        for (const curr of routes) {
+          if (!validRole(curr.meta, currentRole)) continue
+
+          const fullPath = joinRoutePath(parentPath, curr.path)
+          const children = curr.children?.length
+            ? resolveRoutes(curr.children, fullPath)
+            : void 0
+
+          if (children && !children.length) continue
+
+          const option = resolveOption({ ...curr, fullPath, children })
+
+          menuIndex.set(fullPath, { option, parentPath })
+
+          options.push(option)
+        }
+
+        return options
+      }
+
+      menuState.options = resolveRoutes(
+        getAppRawRoutes() as AppMenuOption[],
+        '',
+      )
+      menuState.currentMenuOption = null
+      menuState.breadcrumbOptions = []
+
+      const restoredTags = menuState.menuTagOptions.flatMap(({ fullPath }) => {
+        if (typeof fullPath !== 'string' || !fullPath.startsWith('/')) return []
+
+        const restored = resolve(fullPath)
+        const record = restored.matched.at(-1)
+
+        if (!record || !validRole(record.meta, currentRole)) return []
+
+        const option = optionForRoute(restored.path, restored.matched)
+
+        return option && !option.meta.sameLevel && !option.meta.windowOpen
+          ? [option]
+          : []
+      })
+
+      menuState.menuTagOptions = restoredTags
+      cacheTags()
+
+      const active = optionForRoute(route.path, route.matched)
+
+      if (!active || active.meta.sameLevel) {
+        const cached = menuIndex.get(String(menuState.menuKey))?.option
+        const first =
+          cached &&
+          !cached.children &&
+          cached.show !== false &&
+          !cached.meta.windowOpen
+            ? cached
+            : canSkipRoute(menuState.options)
+
+        if (first) updateActiveMenu(first as AppMenuOption)
+      }
+
+      if (active) updateActiveMenu(active)
     }
 
     /**
@@ -395,39 +356,27 @@ export const piniaMenuStore = defineStore(
     const spliceMenTagOptions = (idx: number, length = 1) => {
       const r = menuState.menuTagOptions.splice(idx, length)
 
-      setStorage(APP_CATCH_KEY.appMenuTagOptions, menuState.menuTagOptions)
+      cacheTags()
 
       return r
     }
 
-    /**
-     *
-     * @description
-     * 初始化系统菜单列表。
-     * 该方法仅执行一次。
-     */
-    const setupPiniaMenuStore = async () => {
-      if (!isSetupAppMenuLock.value) {
-        return
-      }
+    watch(() => signing.signingCallback.role, setupAppMenu, { immediate: true })
 
-      await setupAppMenu()
-
-      isSetupAppMenuLock.value = false
-    }
-
-    // 监听路由变化并且更新路由菜单与菜单标签
     watch(
-      () => route.fullPath,
-      async (ndata, odata) => {
-        await setupPiniaMenuStore()
+      () => route.path,
+      (path) => {
+        const option = optionForRoute(path, route.matched)
 
-        if (ndata !== odata) {
-          await updateMenuKeyWhenRouteUpdate(ndata, route.query)
-        }
+        if (option) updateActiveMenu(option)
       },
-      {
-        immediate: true,
+    )
+
+    watch(
+      () => menuState.currentMenuOption?.breadcrumbLabel,
+      () => {
+        if (menuState.currentMenuOption)
+          updateDocumentTitle(menuState.currentMenuOption)
       },
     )
 

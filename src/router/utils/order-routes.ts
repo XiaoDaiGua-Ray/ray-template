@@ -12,19 +12,9 @@ import type { AppRouteRecordRaw } from '@/router/types'
  * 如果 order 属性值相同, 则会按照路由名称进行排序
  */
 export const orderRoutes = (routes: AppRouteRecordRaw[]) => {
-  return routes.sort((curr, next) => {
-    const currOrder = curr.meta?.order ?? 1
-    const nextOrder = next.meta?.order ?? 0
+  return routes.toSorted((curr, next) => {
+    const order = (curr.meta?.order ?? 0) - (next.meta?.order ?? 0)
 
-    if (currOrder === nextOrder) {
-      // 如果两个路由的 order 值相同，则按照路由名进行排序
-      return curr.name
-        ? next.name
-          ? curr.name.localeCompare(next.name)
-          : -1
-        : 1
-    }
-
-    return currOrder - nextOrder
+    return order || (curr.name ?? '').localeCompare(next.name ?? '', 'en')
   })
 }

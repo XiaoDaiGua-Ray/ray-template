@@ -1,10 +1,11 @@
 import { t } from '@/hooks/web/useI18n'
+import { routeView } from '@/router/config/views'
 import { LAYOUT } from '@/router/constant'
 import type { AppRouteRecordRaw } from '@/router/types'
 
 const form: AppRouteRecordRaw = {
   path: '/form',
-  component: () => import('@/views/demo/form'),
+  component: routeView('demo/form'),
   meta: {
     i18nKey: t('menu.Form'),
     icon: 'navigation/other',

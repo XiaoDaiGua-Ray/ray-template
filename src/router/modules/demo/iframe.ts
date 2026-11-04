@@ -1,9 +1,10 @@
 import { t } from '@/hooks/web/useI18n'
+import { routeView } from '@/router/config/views'
 import type { AppRouteRecordRaw } from '@/router/types'
 
 const iframe: AppRouteRecordRaw = {
   path: '/iframe',
-  component: () => import('@/views/demo/iframe/index'),
+  component: routeView('demo/iframe'),
   meta: {
     icon: 'navigation/other',
     order: 2,

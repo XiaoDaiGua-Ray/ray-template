@@ -1,10 +1,11 @@
 import { t } from '@/hooks/web/useI18n'
+import { routeView } from '@/router/config/views'
 import { LAYOUT } from '@/router/constant'
 import type { AppRouteRecordRaw } from '@/router/types'
 
 const segment: AppRouteRecordRaw = {
   path: '/segment',
-  component: () => import('@/views/demo/segment'),
+  component: routeView('demo/segment'),
   meta: {
     i18nKey: t('menu.Segment'),
     icon: 'navigation/other',

@@ -1,23 +1,42 @@
-import {
-  combineRawRouteModules,
-  expandRoutes,
-  orderRoutes,
-} from '@/router/utils'
+import { DEFAULT_HOME_PATH, ROUTE_MANAGEMENT_PATH } from './constant'
+import type { AppRouteRecordRaw } from './types'
+import { combineRawRouteModules } from './utils/combine-raw-route-modules'
+import { expandRoutes } from './utils/expand-routes'
+import { orderRoutes } from './utils/order-routes'
 
-/**
- *
- * @description
- * 收集并按 meta.order 排序路由模块。
- *
- * @returns 合并后的路由记录列表
- */
-export const getAppRawRoutes = () => orderRoutes(combineRawRouteModules())
+const managementRoute: AppRouteRecordRaw = {
+  path: ROUTE_MANAGEMENT_PATH,
+  name: 'RouteManagement',
+  component: () => import('@/views/route-management'),
+  meta: {
+    i18nKey: 'menu.RouteManagement',
+    icon: 'action/setting',
+    role: ['admin'],
+    order: 100,
+  },
+}
 
-/**
- *
- * @description
- * 将模块路由展开为平铺记录。
- *
- * @returns 平铺后的路由记录列表
- */
-export const appExpandRoutes = () => expandRoutes(getAppRawRoutes())
+export const getStaticAppRoutes = () => orderRoutes(combineRawRouteModules())
+
+let activeRoutes: AppRouteRecordRaw[] | undefined
+
+export function setAppRouteModules(routes: AppRouteRecordRaw[]) {
+  const fallback = getStaticAppRoutes().find(
+    ({ path }) => path === DEFAULT_HOME_PATH,
+  )
+  const hasHome = expandRoutes(routes).some(
+    ({ path }) => path === DEFAULT_HOME_PATH,
+  )
+
+  activeRoutes = orderRoutes(
+    hasHome || !fallback ? routes : [...routes, fallback],
+  )
+}
+
+export const getAppRawRoutes = () => [
+  ...(activeRoutes ?? getStaticAppRoutes()),
+  managementRoute,
+]
+
+export const appExpandRoutes = () =>
+  expandRoutes(getAppRawRoutes()).filter(({ meta }) => !meta.windowOpen)

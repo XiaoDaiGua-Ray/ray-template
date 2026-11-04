@@ -16,8 +16,8 @@ const setupMiniApp = async () => {
   const [_, app] = renderHook(() => {})
 
   setupStore(app)
-  setupRouter(app)
   await setupI18n(app)
+  await setupRouter(app)
 
   return {
     app,

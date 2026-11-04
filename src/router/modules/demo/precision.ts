@@ -1,10 +1,11 @@
 import { t } from '@/hooks/web/useI18n'
+import { routeView } from '@/router/config/views'
 import { LAYOUT } from '@/router/constant'
 import type { AppRouteRecordRaw } from '@/router/types'
 
 const precision: AppRouteRecordRaw = {
   path: '/precision',
-  component: () => import('@/views/demo/precision/index'),
+  component: routeView('demo/precision'),
   meta: {
     i18nKey: t('menu.CalculatePrecision'),
     icon: 'navigation/other',

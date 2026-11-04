@@ -23,7 +23,7 @@ export interface AppMenuExtraOptions {
    * @description
    * 标签图标。
    */
-  icon?: VNode
+  icon?: IconName | VNode
   /**
    *
    * @description
@@ -72,6 +72,8 @@ export interface AppRouteMeta {
    * 并且，该配置项优先级最高。
    */
   role?: (string | number)[]
+  /** 展开菜单树后用于直接导航校验的父级权限。 */
+  ancestorRoles?: (string | number)[][]
   /**
    *
    * @description
@@ -180,7 +182,7 @@ interface BaseAppRouteRecordRaw extends Omit<RouteRecordRaw, 'meta'> {
    * @description
    * 需要传递给组件的 props。
    */
-  props?: Recordable
+  props?: boolean | Recordable
   /**
    *
    * @description

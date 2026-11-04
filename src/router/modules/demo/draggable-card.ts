@@ -1,10 +1,11 @@
 import { t } from '@/hooks/web/useI18n'
+import { routeView } from '@/router/config/views'
 import { LAYOUT } from '@/router/constant'
 import type { AppRouteRecordRaw } from '@/router/types'
 
 const r: AppRouteRecordRaw = {
   path: '/draggable-card',
-  component: () => import('@/views/demo/draggable-card'),
+  component: routeView('demo/draggable-card'),
   meta: {
     i18nKey: t('menu.DraggableCard'),
     icon: 'navigation/other',

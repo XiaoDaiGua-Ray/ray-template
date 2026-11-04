@@ -10,8 +10,6 @@ export const piniaKeepAliveStore = defineStore(
       keepAliveInclude: [],
     })
 
-    const getCurrentKeepAliveLength = () => state.keepAliveInclude.length
-
     /**
      *
      * @param option current menu option
@@ -21,28 +19,23 @@ export const piniaKeepAliveStore = defineStore(
      * 如果当前可缓存项数量超过最大缓存数量，则移除第一个，添加最后一个。
      */
     const setKeepAliveInclude = (option: AppMenuOption) => {
-      const length = getCurrentKeepAliveLength()
       const {
         name,
         meta: { keepAlive },
       } = option
       const { maxKeepAliveLength } = piniaSettingStore().keepAliveConfig
 
-      if (keepAlive) {
-        if (
-          length < maxKeepAliveLength &&
-          !state.keepAliveInclude.includes(name)
-        ) {
-          state.keepAliveInclude.push(name)
+      if (!keepAlive || !name || maxKeepAliveLength <= 0) return
 
-          return
-        }
+      const include = state.keepAliveInclude
 
-        if (length >= maxKeepAliveLength) {
-          state.keepAliveInclude.splice(0, 1)
-          state.keepAliveInclude.push(name)
-        }
-      }
+      if (include.at(-1) === name && include.length <= maxKeepAliveLength)
+        return
+
+      state.keepAliveInclude = [
+        ...new Set(include.filter((key) => key !== name)),
+        name,
+      ].slice(-maxKeepAliveLength)
     }
 
     // 获取当前缓存队列

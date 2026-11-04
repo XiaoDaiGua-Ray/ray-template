@@ -3,12 +3,9 @@ import './index.scss'
 import { RIcon } from '@/components'
 import { useDevice } from '@/hooks'
 import type { AppRouteMeta } from '@/router/types'
-import { validMenuItemShow } from '@/router/utils'
-import { useMenuActions } from '@/store'
+import { useMenuActions, useMenuGetters } from '@/store'
 import type { AppMenuOption } from '@/types'
-import { queryElements, removeClass, setClass } from '@/utils'
 import { useEventListener } from '@vueuse/core'
-import { pick, throttle } from 'lodash-es'
 import {
   NCard,
   NFlex,
@@ -16,7 +13,6 @@ import {
   NModal,
   NResult,
   NScrollbar,
-  NSpin,
   NText,
 } from 'naive-ui'
 
@@ -30,8 +26,8 @@ export default defineComponent({
   },
   emits: ['update:show'],
   setup(props, { emit }) {
-    const { changeMenuModelValue, resolveOption } = useMenuActions()
-    const { getRoutes } = useRouter()
+    const { changeMenuModelValue } = useMenuActions()
+    const { getMenuOptions } = useMenuGetters()
 
     const modelShow = computed({
       get: () => props.show,
@@ -43,9 +39,35 @@ export default defineComponent({
         }
       },
     })
-    const state = reactive({
-      searchValue: null,
-      searchOptions: [] as AppMenuOption[],
+    const searchValue = ref('')
+    const searchElementIndex = ref(0)
+    const visibleLeaves = computed(() => {
+      const leaves: AppMenuOption[] = []
+      const visit = (items: AppMenuOption[]) => {
+        for (const item of items) {
+          if (item.show === false) continue
+
+          if (item.children?.length) visit(item.children)
+          else leaves.push(item)
+        }
+      }
+
+      visit(getMenuOptions.value)
+
+      return leaves
+    })
+    const searchOptions = computed(() => {
+      const term = searchValue.value.trim().toLocaleLowerCase()
+
+      return term
+        ? visibleLeaves.value.filter(({ breadcrumbLabel }) =>
+            breadcrumbLabel?.toLocaleLowerCase().includes(term),
+          )
+        : []
+    })
+
+    watch(searchOptions, () => {
+      searchElementIndex.value = 0
     })
     const helperTipOptions = [
       {
@@ -64,20 +86,9 @@ export default defineComponent({
         plain: true,
       },
     ]
-    // 初始化索引
-    let searchElementIndex = 0
-    // 缓存索引
-    let preSearchElementIndex = searchElementIndex
-    const loading = ref(false)
-    // 激活样式 class name
-    const ACTIVE_CLASS = 'content-item--active'
-
-    // 初始化一些值
     const resetSearchSomeValue = () => {
-      state.searchOptions = []
-      state.searchValue = null
-      searchElementIndex = 0
-      preSearchElementIndex = searchElementIndex
+      searchValue.value = ''
+      searchElementIndex.value = 0
     }
 
     // 断点 observer 会同步执行，先初始化其调用的重置函数。
@@ -105,106 +116,12 @@ export default defineComponent({
       }
     }
 
-    /**
-     *
-     * @param value 输入的搜索内容
-     *
-     * @description
-     * 根据输入值模糊检索菜单。
-     * 依赖 getRoutes() 获取的路由列表。
-     */
-    const fuzzySearchMenuOptions = (value: string) => {
-      if (value) {
-        loading.value = true
-      } else {
-        loading.value = false
-        state.searchOptions = []
+    const searchItemClick = async (option: AppMenuOption) => {
+      if (!option.meta.windowOpen) modelShow.value = false
 
-        return
-      }
+      await changeMenuModelValue(option.fullPath, option)
 
-      const arr = getRoutes().reduce((pre, curr) => {
-        const pickOption = pick(curr, [
-          'children',
-          'meta',
-          'path',
-          'name',
-        ]) as unknown as AppMenuOption
-
-        const res = resolveOption({
-          ...pickOption,
-          fullPath: curr.path,
-        })
-        const { breadcrumbLabel } = res
-
-        // 是否模糊匹配字符、满足展示条件
-        if (
-          breadcrumbLabel
-            ?.toLocaleLowerCase()
-            ?.includes(value.toLocaleLowerCase()) &&
-          validMenuItemShow(res)
-        ) {
-          pre.push(res)
-        }
-
-        return pre
-      }, [] as AppMenuOption[])
-
-      setTimeout(() => {
-        state.searchOptions = arr
-
-        nextTick().then(() => {
-          autoFocusingSearchItem()
-        })
-
-        loading.value = false
-      }, 300)
-    }
-
-    // 搜索结果项点击
-    const searchItemClick = (option: AppMenuOption) => {
-      if (option) {
-        const { meta } = option
-
-        // 如果配置站外跳转则不会关闭搜索框
-        if (meta.windowOpen) {
-          window.open(meta.windowOpen)
-        } else {
-          modelShow.value = false
-
-          changeMenuModelValue(option.fullPath, option)
-          setTimeout(positionSelectedMenuItem, 300)
-        }
-      }
-    }
-
-    // 自动聚焦检索项
-    const autoFocusingSearchItem = () => {
-      const currentOption = state.searchOptions[searchElementIndex] // 获取当前搜索项
-      const preOption = state.searchOptions[preSearchElementIndex] // 获取上一搜索项
-
-      if (currentOption) {
-        nextTick().then(() => {
-          const searchElementOptions = queryElements<HTMLElement>(
-            `attr:data_path="${currentOption.path}"`,
-          )
-          const preSearchElementOptions = preOption
-            ? queryElements<HTMLElement>(`attr:data_path="${preOption?.path}"`)
-            : null
-
-          if (preSearchElementOptions?.length) {
-            const [el] = preSearchElementOptions
-
-            removeClass(el, ACTIVE_CLASS)
-          }
-
-          if (searchElementOptions?.length) {
-            const [el] = searchElementOptions
-
-            setClass(el, ACTIVE_CLASS)
-          }
-        })
-      }
+      if (!option.meta.windowOpen) positionSelectedMenuItem()
     }
 
     // 渲染搜索菜单前缀图标，如果没有则用 icon table 代替
@@ -220,77 +137,43 @@ export default defineComponent({
       }
     }
 
-    // 更新索引
-    const updateIndex = (type: 'up' | 'down') => {
-      if (type === 'up') {
-        searchElementIndex -= 1
+    const registerChangeSearchElementIndex = (event: KeyboardEvent) => {
+      const { key } = event
 
-        if (searchElementIndex < 0) {
-          searchElementIndex = state.searchOptions.length - 1
-        }
+      if (!['ArrowUp', 'ArrowDown', 'Enter'].includes(key)) return
+
+      event.preventDefault()
+      event.stopPropagation()
+
+      const options = searchOptions.value
+
+      if (!options.length) return
+
+      if (key === 'Enter') {
+        const selected = options[searchElementIndex.value]
+
+        if (selected) void searchItemClick(selected)
+
+        return
       }
 
-      if (type === 'down') {
-        searchElementIndex += 1
+      const offset = key === 'ArrowUp' ? -1 : 1
 
-        if (searchElementIndex >= state.searchOptions.length) {
-          searchElementIndex = 0
-        }
-      }
+      searchElementIndex.value =
+        (searchElementIndex.value + offset + options.length) % options.length
     }
 
-    // 注册按键: 上、下、回车
-    const registerChangeSearchElementIndex = (e: KeyboardEvent) => {
-      const keyCode = e.key
-
-      if (
-        keyCode === 'ArrowUp' ||
-        keyCode === 'ArrowDown' ||
-        keyCode === 'Enter'
-      ) {
-        e.preventDefault()
-        e.stopPropagation()
-      }
-
-      // 当初始化索引小于等于 0 时，缓存重置缓存索引
-      preSearchElementIndex = searchElementIndex <= 0 ? 0 : searchElementIndex
-
-      switch (keyCode) {
-        case 'ArrowUp':
-          updateIndex('up')
-
-          break
-
-        case 'ArrowDown':
-          updateIndex('down')
-
-          break
-
-        case 'Enter':
-          // eslint-disable-next-line no-case-declarations
-          const option = state.searchOptions[searchElementIndex]
-
-          if (option) {
-            searchItemClick(option)
-          }
-
-          break
-
-        default:
-          break
-      }
-
-      autoFocusingSearchItem()
-    }
-
-    const SearchItem = ({ menuOption }: { menuOption: AppMenuOption }) => (
+    const SearchItem = ({
+      menuOption,
+      active,
+    }: {
+      menuOption: AppMenuOption
+      active: boolean
+    }) => (
       <NFlex
         align="center"
-        class="content-item"
-        {...{
-          onClick: searchItemClick.bind(this, menuOption),
-          data_path: menuOption.path,
-        }}
+        class={['content-item', { 'content-item--active': active }]}
+        {...{ onClick: () => searchItemClick(menuOption) }}
       >
         <div class="content-item-icon">{RenderPreIcon(menuOption.meta)}</div>
         <div class="content-item-label">{menuOption.breadcrumbLabel}</div>
@@ -305,23 +188,22 @@ export default defineComponent({
     useEventListener(window, 'keydown', registerArouseKeyboard)
 
     return {
-      ...toRefs(state),
+      searchValue,
+      searchOptions,
+      searchElementIndex,
       modelShow,
       helperTipOptions,
-      fuzzySearchMenuOptions: throttle(fuzzySearchMenuOptions, 300),
-      searchItemClick,
-      RenderPreIcon,
       isTabletOrSmaller,
       SearchItem,
-      loading,
       registerChangeSearchElementIndex,
     }
   },
   render() {
-    const { isTabletOrSmaller, searchOptions, loading } = this
     const {
+      isTabletOrSmaller,
+      searchOptions,
+      searchElementIndex,
       SearchItem,
-      fuzzySearchMenuOptions,
       registerChangeSearchElementIndex,
     } = this
 
@@ -357,7 +239,6 @@ export default defineComponent({
                     size="large"
                     v-model:value={this.searchValue}
                     clearable
-                    onInput={fuzzySearchMenuOptions.bind(this)}
                   >
                     {{
                       prefix: () => <RIcon name="action/search" size="24" />,
@@ -366,33 +247,35 @@ export default defineComponent({
                 ),
                 default: () => (
                   <NScrollbar>
-                    <NSpin show={loading}>
-                      {searchOptions.length ? (
-                        <NFlex
-                          vertical
-                          size={[0, 6]}
-                          class="global-search__card-content"
-                        >
-                          {searchOptions.map((curr, idx) => (
-                            <SearchItem menuOption={curr} key={curr.fullPath} />
-                          ))}
-                        </NFlex>
-                      ) : (
-                        <NResult size="large" class="global-search__empty">
-                          {{
-                            icon: () => null,
-                            default: () => (
-                              <NFlex
-                                justify="center"
-                                class="global-search__empty-content"
-                              >
-                                <NText>没有搜索结果</NText>
-                              </NFlex>
-                            ),
-                          }}
-                        </NResult>
-                      )}
-                    </NSpin>
+                    {searchOptions.length ? (
+                      <NFlex
+                        vertical
+                        size={[0, 6]}
+                        class="global-search__card-content"
+                      >
+                        {searchOptions.map((curr, idx) => (
+                          <SearchItem
+                            menuOption={curr}
+                            key={curr.fullPath}
+                            active={idx === searchElementIndex}
+                          />
+                        ))}
+                      </NFlex>
+                    ) : (
+                      <NResult size="large" class="global-search__empty">
+                        {{
+                          icon: () => null,
+                          default: () => (
+                            <NFlex
+                              justify="center"
+                              class="global-search__empty-content"
+                            >
+                              <NText>没有搜索结果</NText>
+                            </NFlex>
+                          ),
+                        }}
+                      </NResult>
+                    )}
                   </NScrollbar>
                 ),
                 action: () => (

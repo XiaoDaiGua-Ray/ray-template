@@ -1,6 +1,7 @@
 import { APP_CATCH_KEY } from '@/app-config'
 import { useAppRoot, useVueRouter } from '@/hooks'
 import { setStorage } from '@/utils/cache'
+import { resolveLandingPath } from './resolve-landing-path'
 
 /**
  *
@@ -15,7 +16,9 @@ export const redirectRouterToDashboard = (isReplace = true) => {
   const { push, replace } = router
   const { getRootPath } = useAppRoot()
 
-  setStorage(APP_CATCH_KEY.appMenuKey, getRootPath.value, 'localStorage')
+  const path = resolveLandingPath(router, getRootPath.value)
 
-  isReplace ? replace(getRootPath.value) : push(getRootPath.value)
+  setStorage(APP_CATCH_KEY.appMenuKey, path, 'localStorage')
+
+  return isReplace ? replace(path) : push(path)
 }

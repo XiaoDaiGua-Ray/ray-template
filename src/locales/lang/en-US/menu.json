@@ -38,5 +38,6 @@
   "TableRemote": "Remote search and pagination",
   "TableColumns": "Column preferences",
   "TablePrinting": "Printing and custom regions",
-  "TableCustom": "Slots and instance methods"
+  "TableCustom": "Slots and instance methods",
+  "RouteManagement": "Route management"
 }

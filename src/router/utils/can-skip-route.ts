@@ -27,6 +27,13 @@ export const canSkipRoute = (
   const skip = (skipOptions: LikeTemplateRouteOption[]): SkipReturnType => {
     for (const curr of skipOptions) {
       if (
+        curr.meta.hidden ||
+        curr.meta.sameLevel ||
+        ('show' in curr && curr.show === false)
+      )
+        continue
+
+      if (
         (!curr.children || curr.children.length === 0) &&
         !curr.meta.windowOpen
       ) {

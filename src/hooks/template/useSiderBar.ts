@@ -1,3 +1,5 @@
+import { NOT_FOUND_ROUTE_PATH } from '@/router/constant'
+import { validRole } from '@/router/utils/valid-role'
 import { useMenuActions, useMenuGetters } from '@/store'
 import { pickRouteRecordNormalizedConstant } from '@/store/modules/menu/constant'
 import type { AppMenuOption, Key, MenuTagOptions } from '@/types'
@@ -97,27 +99,29 @@ export function useSiderBar() {
   // 关闭所有标签并且导航至 root path
   const closeAll = () => {
     const { getRootPath } = useAppRoot()
-    const {
-      router: { getRoutes },
-    } = useVueRouter()
+    const { router } = useVueRouter()
+    const home = router.resolve(getRootPath.value)
+    const record = home.matched.at(-1)
 
-    const findMenuOption = getRoutes().find(
-      (curr) => curr.path === getRootPath.value,
+    if (
+      !record ||
+      record.path === NOT_FOUND_ROUTE_PATH ||
+      record.redirect ||
+      !validRole(home.meta)
     )
+      return
 
-    if (findMenuOption) {
-      spliceMenTagOptions(0, getMenuTagOptions.value.length)
-      const pickOption = pick(findMenuOption, pickRouteRecordNormalizedConstant)
-      const res = resolveOption(pickOption as unknown as AppMenuOption)
+    const option = resolveOption({
+      ...(pick(
+        record,
+        pickRouteRecordNormalizedConstant,
+      ) as unknown as AppMenuOption),
+      fullPath: home.path,
+    })
 
-      changeMenuModelValue(
-        res.path,
-        resolveOption({
-          ...res,
-          fullPath: res.path,
-        }),
-      )
-    }
+    setMenuTagOptions(option, false)
+
+    return changeMenuModelValue(home.path, option, home.query)
   }
 
   // 目标标签页右侧所有标签页

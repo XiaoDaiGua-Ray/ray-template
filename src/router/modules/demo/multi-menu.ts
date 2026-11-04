@@ -1,4 +1,5 @@
 import { t } from '@/hooks/web/useI18n'
+import { routeView } from '@/router/config/views'
 import { LAYOUT } from '@/router/constant'
 import type { AppRouteRecordRaw } from '@/router/types'
 
@@ -17,7 +18,7 @@ const multiMenu: AppRouteRecordRaw = {
     {
       path: 'multi-menu-one',
       name: 'MultiMenuOne',
-      component: () => import('@/views/demo/multi/views/multi-menu-one/index'),
+      component: routeView('demo/multi/views/multi-menu-one'),
       meta: {
         noLocalTitle: '多级菜单-1',
         keepAlive: true,
@@ -34,8 +35,9 @@ const multiMenu: AppRouteRecordRaw = {
         {
           path: 'sub-menu-other',
           name: 'SubMenuOther',
-          component: () =>
-            import('@/views/demo/multi/views/multi-menu-two/views/sub-menu-other/index'),
+          component: routeView(
+            'demo/multi/views/multi-menu-two/views/sub-menu-other',
+          ),
           meta: {
             noLocalTitle: '多级菜单-2-1',
             keepAlive: true,
@@ -53,8 +55,9 @@ const multiMenu: AppRouteRecordRaw = {
             {
               path: 'sub-menu-one',
               name: 'MultiMenuTwoOne',
-              component: () =>
-                import('@/views/demo/multi/views/multi-menu-two/views/sub-menu/views/multi-menu-two-one/index'),
+              component: routeView(
+                'demo/multi/views/multi-menu-two/views/sub-menu/views/multi-menu-two-one',
+              ),
               meta: {
                 noLocalTitle: '多级菜单-2-2-1',
                 keepAlive: true,

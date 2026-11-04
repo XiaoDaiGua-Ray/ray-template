@@ -24,7 +24,7 @@ import { setupStore } from './store'
 const setupPlugins = async (inst: AppType<Element>) => {
   setupStore(inst)
   await setupI18n(inst)
-  setupRouter(inst)
+  await setupRouter(inst)
   setupDayjs()
   setupDirectives(inst)
 }
@@ -76,9 +76,9 @@ const setupWujieTemplate = async () => {
  * 作为主应用
  * ----------------------------------------------------------------
  * # 示例
- * const setupTemplate = () => {
+ * const setupTemplate = async () => {
  *   const app = createApp(App)
- *   setupRouter(app)
+ *   await setupRouter(app)
  *   ...
  * }
  * setupTemplate()

@@ -38,5 +38,6 @@
   "TableRemote": "远端查询与分页",
   "TableColumns": "列设置与缓存",
   "TablePrinting": "打印与自定义区域",
-  "TableCustom": "插槽与实例操作"
+  "TableCustom": "插槽与实例操作",
+  "RouteManagement": "路由管理"
 }

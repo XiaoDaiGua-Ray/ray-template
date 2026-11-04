@@ -1,49 +1,46 @@
-import { t } from '@/hooks/web/useI18n'
 import Layout from '@/layout'
+import type { RouteRecordRaw } from 'vue-router'
 import { appExpandRoutes } from './app-route-modules'
 import { NOT_FOUND_ROUTE_PATH } from './constant'
 
-export default [
-  /**
-   *
-   * 首页（一般为 Login 页面）
-   * 整个模板默认导航地址
-   */
-  {
-    path: '/',
-    name: 'RLogin',
-    component: () => import('@/views/login'),
-  },
-  /**
-   *
-   * App Layout 核心页面（一般为登陆后展示的页面）
-   */
-  {
-    path: '/',
-    name: 'RLayout',
-    component: Layout,
-    children: [
-      ...appExpandRoutes(),
-      { path: '/tables', redirect: '/tables/basic' },
-      { path: '/table', redirect: '/tables/basic' },
-      { path: '/table-pro', redirect: '/tables/remote' },
-      { path: '/mock-demo', redirect: '/tables/remote' },
-      { path: '/table-auto-height', redirect: '/tables/auto-height' },
-      /**
-       *
-       * @description
-       * 404 页面一定要放在最后面，避免奇奇怪怪的问题。
-       */
-      {
-        path: NOT_FOUND_ROUTE_PATH,
-        component: () => import('@/views/error/views/Error404'),
-        meta: {
-          i18nKey: t('menu.Error'),
-          icon: 'status/error',
-          hidden: true,
-          sameLevel: true,
-        },
-      },
-    ],
-  },
+const legacyRedirects = [
+  { path: '/tables', redirect: '/tables/basic' },
+  { path: '/table', redirect: '/tables/basic' },
+  { path: '/table-pro', redirect: '/tables/remote' },
+  { path: '/mock-demo', redirect: '/tables/remote' },
+  { path: '/table-auto-height', redirect: '/tables/auto-height' },
 ]
+
+export const constantRoutes: RouteRecordRaw[] = [
+  { path: '/', name: 'RLogin', component: () => import('@/views/login') },
+  { path: '/', name: 'RLayout', component: Layout },
+]
+
+export function getLayoutRoutes(): RouteRecordRaw[] {
+  const routes = appExpandRoutes()
+  const occupiedPaths = new Set(
+    routes.flatMap(({ path, alias }) => [
+      path.toLowerCase(),
+      ...[alias ?? []].flat().map((entry) => entry.toLowerCase()),
+    ]),
+  )
+
+  return [
+    ...(routes as unknown as RouteRecordRaw[]),
+    ...legacyRedirects.filter(
+      ({ path, redirect }) =>
+        !occupiedPaths.has(path) && occupiedPaths.has(redirect),
+    ),
+    {
+      path: NOT_FOUND_ROUTE_PATH,
+      name: 'RNotFound',
+      component: () => import('@/views/error/views/Error404'),
+      meta: {
+        i18nKey: 'menu.Error',
+        icon: 'status/error',
+        hidden: true,
+        sameLevel: true,
+      },
+    },
+  ]
+}

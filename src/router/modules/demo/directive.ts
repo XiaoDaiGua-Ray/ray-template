@@ -1,10 +1,11 @@
 import { t } from '@/hooks/web/useI18n'
+import { routeView } from '@/router/config/views'
 import { LAYOUT } from '@/router/constant'
 import type { AppRouteRecordRaw } from '@/router/types'
 
 const directive: AppRouteRecordRaw = {
   path: '/directive',
-  component: () => import('@/views/demo/directive/index'),
+  component: routeView('demo/directive'),
   meta: {
     i18nKey: t('menu.Directive'),
     icon: 'navigation/other',

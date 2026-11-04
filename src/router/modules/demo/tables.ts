@@ -1,4 +1,5 @@
 import { t } from '@/hooks/web/useI18n'
+import { routeView } from '@/router/config/views'
 import type { AppRouteRecordRaw } from '@/router/types'
 
 const tables: AppRouteRecordRaw = {
@@ -12,37 +13,37 @@ const tables: AppRouteRecordRaw = {
     {
       path: 'basic',
       name: 'TableDemoBasic',
-      component: () => import('@/views/demo/tables/basic'),
+      component: routeView('demo/tables/basic'),
       meta: { i18nKey: t('menu.TableBasic') },
     },
     {
       path: 'remote',
       name: 'TableDemoRemote',
-      component: () => import('@/views/demo/tables/remote'),
+      component: routeView('demo/tables/remote'),
       meta: { i18nKey: t('menu.TableRemote') },
     },
     {
       path: 'auto-height',
       name: 'TableDemoAutoHeight',
-      component: () => import('@/views/demo/tables/auto-height'),
+      component: routeView('demo/tables/auto-height'),
       meta: { i18nKey: t('menu.TableAutoHeight') },
     },
     {
       path: 'columns',
       name: 'TableDemoColumns',
-      component: () => import('@/views/demo/tables/columns'),
+      component: routeView('demo/tables/columns'),
       meta: { i18nKey: t('menu.TableColumns') },
     },
     {
       path: 'printing',
       name: 'TableDemoPrinting',
-      component: () => import('@/views/demo/tables/printing'),
+      component: routeView('demo/tables/printing'),
       meta: { i18nKey: t('menu.TablePrinting') },
     },
     {
       path: 'custom',
       name: 'TableDemoCustom',
-      component: () => import('@/views/demo/tables/custom'),
+      component: routeView('demo/tables/custom'),
       meta: { i18nKey: t('menu.TableCustom') },
     },
   ],

@@ -2,6 +2,7 @@ import { APP_CATCH_KEY, WHITE_ROUTES } from '@/app-config'
 import { useAppRoot } from '@/hooks'
 import { getStorage, setStorage } from '@/utils/cache'
 import type { Router } from 'vue-router'
+import { resolveLandingPath } from './resolve-landing-path'
 import { validRole } from './valid-role'
 
 /**
@@ -13,8 +14,6 @@ import { validRole } from './valid-role'
  * 前端守卫不能替代后端鉴权。
  */
 export const permissionRouter = (router: Router) => {
-  const { getRootPath } = useAppRoot()
-
   router.beforeEach((to) => {
     const token = getStorage<string>(APP_CATCH_KEY.token, 'localStorage')
     const isLogin = to.path === '/'
@@ -27,12 +26,15 @@ export const permissionRouter = (router: Router) => {
       typeof to.name === 'string' && WHITE_ROUTES.includes(to.name)
 
     if (isLogin || (!isWhiteRoute && !validRole(to.meta))) {
-      const rootPath = getRootPath.value
+      const { getRootPath } = useAppRoot()
+      const rootPath = resolveLandingPath(router, getRootPath.value)
 
       // 保留既有重定向时的缓存行为；若首页本身无权限，取消导航以免循环。
       setStorage(APP_CATCH_KEY.appMenuKey, rootPath, 'localStorage')
 
-      return to.path === rootPath ? false : { path: rootPath, replace: true }
+      return to.fullPath === rootPath
+        ? false
+        : { path: rootPath, replace: true }
     }
 
     return true
