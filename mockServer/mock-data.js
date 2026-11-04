@@ -57,7 +57,7 @@ var person_mock_default = defineMock({
 		sortAge: query.sortAge === "ascend" || query.sortAge === "descend" ? query.sortAge : void 0
 	})
 });
-// mock-data-1793772796074.js
+// mock-data-1793773882101.js
 const mockList = [[person_mock_exports, "mock/demo/person.mock.ts"]].map(([mod, filepath]) => processRawData(mod.default || mod, filepath));
-var mock_data_1793772796074_default = processMockData(mockList);
-export { mock_data_1793772796074_default as default };
+var mock_data_1793773882101_default = processMockData(mockList);
+export { mock_data_1793773882101_default as default };

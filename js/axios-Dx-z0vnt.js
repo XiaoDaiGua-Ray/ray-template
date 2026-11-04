@@ -1,0 +1,1 @@
+import{L as e,b as t}from"./store-BDw2foIx.js";function n(n,r){return e(()=>t(n),Object.assign({},r))}export{n as t};

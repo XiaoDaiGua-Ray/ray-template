@@ -1,0 +1,1 @@
+import{Cn as e,wn as t}from"./Card-DpMmwG-0.js";import{t as n}from"./CacheRouteExample-B2ZXSr60.js";var r=t({name:`MultiMenuOne`,render(){return e(n,{title:this.$t(`showcase.multiOneTitle`),description:this.$t(`showcase.multiOneDescription`)},null)}});export{r as default};
