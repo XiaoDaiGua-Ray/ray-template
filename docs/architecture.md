@@ -57,6 +57,8 @@ Ray Template 是前端中后台模板，包含可运行的组件与路由示例�
 
 `pnpm build` 生成 `dist/production`；将该目录的内容部署到 `vite.custom.config.ts` 中 `base` 对应的路径。默认路径为 `/ray-template/`，部署在域名根目录时改用 `/`。
 
+从 `dist` 分支发布 GitHub Pages 时，Vite 会将 `public/.nojekyll` 复制到产物根目录。手动上传产物时也要保留此文件，让 Pages 跳过 Jekyll，避免过滤 `_toKey-*.js` 等以下划线开头的文件。[GitHub Pages 发布说明](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site)
+
 官方 GitHub Pages 部署会设置 `RAY_TEMPLATE_SITE_ORIGIN=https://xiaodaigua-ray.github.io`。如需让自己的公开部署被搜索引擎检索，在生产构建中设置该变量为实际站点源地址，例如 `https://example.com`，路径由 Vite 的 `base` 提供。在 fork 的 GitHub Actions 中可以使用同名的仓库变量。未设置时，构建输出 `noindex`，适合预览和内部部署。
 
 公开构建在 HTML 中输出页面描述、规范链接（canonical）和分享预览，并生成 `sitemap.xml`。站点地图只列出公开首页；登录后的 hash 路由仍用作交互演示。可在 [Google Search Console](https://search.google.com/search-console/about) 提交部署路径下的 sitemap。若管理整个域名，也可从域名根目录的 `/robots.txt` 指向 sitemap；子目录里的 `robots.txt` 不会被识别。

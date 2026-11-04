@@ -161,6 +161,13 @@ Pinia 设置沿用原持久化 key，旧裸 Logo 名称在读取时迁移；锁�
 - 检查了官方路径、自定义子路径与未设置站点源地址的构建。公开版本的首页、sitemap 和资源 URL 一致；普通构建输出 `noindex`。
 - Chrome 生产预览验证了桌面双列、390px 单列、中英文与明暗切换、预填演示登录，以及关闭 JavaScript 时的项目介绍和链接。GitHub About 描述、演示地址和主题已回读确认；未部署网站构建或验证搜索引擎收录。
 
+## 2026-11-04 GitHub Pages 静态发布
+
+线上首页与 `dist` 分支的 `index.html` 一致，引用的 `js/_toKey-BqfG5Sv9.js` 在分支中存在，Pages 却返回 404。发布根目录缺少 `.nojekyll`，Jekyll 默认过滤下划线开头的文件。Vite 现在将 `public/.nojekyll` 复制到发布根目录，部署约定见[架构地图](architecture.md#deployment-and-search-discovery)。
+
+- 干净的 `HEAD` 加本次修复复用本机已安装依赖执行 `pnpm harness verify`，66 个测试文件的 285 个用例与生产构建通过。原工作区的全量检查在 `__test__/router/config.spec.ts` 初始化时失败，独立执行 `pnpm build` 通过。
+- 构建产物包含 `.nojekyll`。生产预览首页引用的 12 个 JS 和 CSS 资源均返回 HTTP 200，内容与产物一致。Chrome 使用演示账号进入首页，控制台无错误。GitHub Pages 待部署后回查。
+
 ## 参考资料
 
 - [Node.js 26.13.0 LTS](https://nodejs.org/en/blog/release/v26.13.0)
