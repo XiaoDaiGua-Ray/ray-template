@@ -5,7 +5,10 @@
       "src/router",
       "src/router/README.md",
       "src/store",
-      "src/store/README.md"
+      "src/store/README.md",
+      "src/router/config/schema.ts",
+      "src/router/config/views.ts",
+      "src/views/route-management"
     ],
     "tests": [
       "__test__/router/",
@@ -24,7 +27,11 @@
       "src/layout/README.md",
       "src/locales/README.md",
       "src/hooks/README.md",
-      "docs/ui-design.md"
+      "docs/ui-design.md",
+      "src/views/login",
+      "src/views/demo/components/DemoPage.tsx",
+      "src/components/RSegment/README.md",
+      "src/app-components/provider/AppAutocompleteDefaults"
     ],
     "tests": [
       "__test__/app/",
@@ -49,7 +56,13 @@
   },
   "harness": {
     "description": "工程协作入口、回归范围与验收报告",
-    "paths": ["harness/README.md", "harness/run.mjs", "harness/scopes.json"],
+    "paths": [
+      "harness/README.md",
+      "harness/run.mjs",
+      "harness/scopes.json",
+      "llms.txt",
+      ".github/workflows/ci.yaml"
+    ],
     "tests": ["__test__/harness/"]
   },
   "utils": {

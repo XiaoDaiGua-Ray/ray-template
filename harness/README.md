@@ -1,6 +1,6 @@
 # Ray Template AI Harness
 
-从 [AGENTS.md](../AGENTS.md) 进入。任务上下文来自 [scopes.json](scopes.json)，跨模块关系见 [架构地图](../docs/architecture.md)。CLI 使用项目锁定的 Node.js 和 pnpm，可在本机和 CI 运行。
+从 [AGENTS.md](../AGENTS.md) 进入。LLM 可先读取 [入口索引](../llms.txt) 定位相关文件。任务上下文来自 [scopes.json](scopes.json)，跨模块关系见 [架构地图](../docs/architecture.md)。CLI 使用项目锁定的 Node.js 和 pnpm，可在本机和 CI 运行。
 
 ## 开始任务
 

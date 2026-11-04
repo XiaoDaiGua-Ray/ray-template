@@ -170,3 +170,7 @@ Pinia 设置沿用原持久化 key，旧裸 Logo 名称在读取时迁移；锁�
 - [Vue Language Tools 的 TypeScript 7 支持进度](https://github.com/vuejs/language-tools/issues/5381)
 - [SVG Spritemap 子路径部署](https://spiriitlabs.github.io/vite-plugin-svg-spritemap/guide/deployment.html)
 - [Faker 本地化](https://fakerjs.dev/guide/localization.html)
+
+### 远端 CI 回查
+
+[历史 Ubuntu 失败](https://github.com/XiaoDaiGua-Ray/ray-template/actions/runs/41588971650) 的失败项为 `detectOperatingSystem.spec.ts`。测试读取 Linux 运行器的真实 user agent，断言固定期待 `Unknown`。提交 `83bada95` 使用模拟 user agent 和触点数量覆盖各系统。当前基线 `80e80775` 的 [CI](https://github.com/XiaoDaiGua-Ray/ray-template/actions/runs/41612553267) 已通过 Ubuntu、macOS、Windows 和部署。现有矩阵继续运行同一条 `pnpm check`。

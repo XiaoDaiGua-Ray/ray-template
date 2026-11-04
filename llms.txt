@@ -1,0 +1,28 @@
+# Ray Template
+
+> Vue 3 + TypeScript/TSX + Vite + Pinia + Vue Router 中后台模板。业务入口在 src，工程验收由 AI Harness 管理。
+
+先读 AGENTS.md，再按任务执行 pnpm harness context <scope>。构建和检查以 package.json、pnpm-lock.yaml、.nvmrc 与 CI 为准。
+
+## 任务入口
+
+- [协作约定](AGENTS.md): 工作区保护、验证、交付范围
+- [AI Harness](harness/README.md): 定向上下文、测试、浏览器验收
+- [架构地图](docs/architecture.md): 应用启动、跨模块调用与部署
+- [路由与动态配置](src/router/README.md): 来源切换、后端 JSON、字段与权限
+- [路由 JSON Schema](src/router/config/schema.ts): 配置结构和 TypeScript 类型的唯一来源
+- [页面 ID 注册表](src/router/config/views.ts): 路由配置可引用的页面及 KeepAlive 名称
+- [路由管理页](src/views/route-management/index.tsx): 配置录入、校验、导入和导出
+- [Pinia](src/store/README.md): 菜单、会话、布局和持久化边界
+- [组件入口](src/components/index.ts): 公开组件与 hooks 导出
+- [TablePro](src/components/RTablePro/README.md): 列表、数据源、分页、缓存与打印
+- [页面样式](docs/ui-design.md): 主题变量、示例布局和 UI 验收
+- [请求与取消](src/axios/README.md): 请求实例、拦截器及接口契约
+- [图标](src/icons/A_README.md): 图标资源、生成和类型清单
+
+## 按任务验证
+
+- 路由、权限、菜单、持久化使用 pnpm harness verify routing
+- 组件、登录、示例页面使用 pnpm harness verify ui
+- 接口和 Mock 使用 pnpm harness verify api
+- 全量验收使用 pnpm harness verify

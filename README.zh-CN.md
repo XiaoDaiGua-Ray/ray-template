@@ -143,3 +143,5 @@ export default defineComponent({
 二次开发可从[架构地图](docs/architecture.md)定位配置与模块。部署到域名根目录或子路径、为公开站点启用搜索元数据时，参考[部署指南](docs/architecture.md#deployment-and-search-discovery)。人工和 AI 协作共用 [AGENTS.md](AGENTS.md) 与 [AI Harness](harness/README.md)。
 
 [MIT 许可证](LICENSE) · [更新日志](CHANGELOG.md) · [问题反馈](https://github.com/XiaoDaiGua-Ray/ray-template/issues)
+
+AI 助手可从 [LLM 入口](llms.txt) 按任务读取源码和验证命令。

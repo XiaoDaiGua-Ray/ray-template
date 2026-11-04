@@ -143,3 +143,5 @@ export default defineComponent({
 Use the [architecture map](docs/architecture.md) to find module and configuration entry points. See the [deployment guide](docs/architecture.md#deployment-and-search-discovery) for root or subpath hosting and search metadata. Contributors and coding agents share the instructions in [AGENTS.md](AGENTS.md) and the [AI Harness](harness/README.md).
 
 [MIT License](LICENSE) · [Changelog](CHANGELOG.md) · [Issues](https://github.com/XiaoDaiGua-Ray/ray-template/issues)
+
+Agents can start with the [LLM entry point](llms.txt) and open only the relevant task scope.
