@@ -25,8 +25,6 @@ export interface RootRoute {
 
 export interface PreloadingConfig {
   title?: string
-  tagColor?: string
-  titleColor?: string
 }
 
 export interface AppPrimaryColor {

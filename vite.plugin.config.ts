@@ -16,6 +16,7 @@ import { ViteEjsPlugin as viteEjsPlugin } from 'vite-plugin-ejs'
 import viteInspect from 'vite-plugin-inspect'
 import { mockDevServerPlugin } from 'vite-plugin-mock-dev-server'
 import viteSvgLoader from 'vite-svg-loader'
+import { APP_CATCH_KEY } from './apps/admin/src/app-config/app-config.ts'
 import { iconNameFromPath, iconsRoot, scanIcons } from './scripts/icons.mjs'
 import { iconManifestPlugin } from './vite-helper/icons.ts'
 import { cdnResolve } from './vite-helper/index.ts'
@@ -159,7 +160,7 @@ function vueTransformPlugins(): PluginOption[] {
 
 // 基础插件配置
 function baseOptions(mode: string): PluginOption[] {
-  const { appPrimaryColor, preloadingConfig } = config
+  const { preloadingConfig } = config
   const iconPackages = [
     ...new Set(scanIcons().map((name) => name.split('/')[0])),
   ]
@@ -183,7 +184,7 @@ function baseOptions(mode: string): PluginOption[] {
 
     viteEjsPlugin({
       preloadingConfig,
-      appPrimaryColor,
+      storageKeys: APP_CATCH_KEY,
       siteInfo,
     }),
     // 仅适用于开发模式(检查 `Vite` 插件的中间状态)

@@ -33,12 +33,6 @@ export default defineComponent({
       html.style.setProperty(htmlWidth, `${width.value}px`)
     })
 
-    const splash = document.getElementById(
-      GLOBAL_CLASS_NAMES.preLoadingAnimation,
-    )
-
-    if (splash) splash.style.display = 'none'
-
     return () => null
   },
 })

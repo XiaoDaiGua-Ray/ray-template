@@ -15,7 +15,7 @@ const config: AppConfigExport = {
   // 配置首屏加载信息
   preloadingConfig: PRE_LOADING_CONFIG,
 
-  // 默认主题色（不可省略，必填），也用于 ejs 注入
+  // 默认品牌色（用于构建配置）
   appPrimaryColor: APP_THEME.appPrimaryColor,
 
   /**

@@ -3,11 +3,20 @@ import './styles/entry'
 import type { App as AppType } from 'vue'
 import { setupRayTemplateCore } from './__ray-template'
 import { installAutocompleteDefaults } from './app-components/provider/AppAutocompleteDefaults'
+import { GLOBAL_CLASS_NAMES } from './app-config'
 import { setupDayjs } from './dayjs'
 import { setupDirectives } from './directives'
 import { setupI18n } from './locales'
 import { setupRouter } from './router'
 import { setupStore } from './store'
+
+const bootSplash = () =>
+  document.getElementById(GLOBAL_CLASS_NAMES.preLoadingAnimation)
+
+const showBootError = (error: unknown) => {
+  console.error('[Ray Admin] Startup failed.', error)
+  bootSplash()?.setAttribute('data-state', 'failed')
+}
 
 /**
  *
@@ -37,6 +46,7 @@ const setupTemplate = async () => {
 
   await setupPlugins(app)
   app.mount('#app')
+  bootSplash()?.remove()
   await setupRayTemplateCore()
 }
 
@@ -53,9 +63,15 @@ const setupWujieTemplate = async () => {
   window.__WUJIE_MOUNT = async () => {
     instance = createApp(App)
 
-    await setupPlugins(instance)
-    instance.mount('#app')
-    await setupRayTemplateCore()
+    try {
+      await setupPlugins(instance)
+      instance.mount('#app')
+      bootSplash()?.remove()
+      await setupRayTemplateCore()
+    } catch (error) {
+      showBootError(error)
+      throw error
+    }
   }
 
   window.__WUJIE_UNMOUNT = () => {
@@ -82,4 +98,6 @@ const setupWujieTemplate = async () => {
  * setupTemplate()
  * ----------------------------------------------------------------
  */
-window.__POWERED_BY_WUJIE__ ? setupWujieTemplate() : setupTemplate()
+void (
+  window.__POWERED_BY_WUJIE__ ? setupWujieTemplate() : setupTemplate()
+).catch(showBootError)

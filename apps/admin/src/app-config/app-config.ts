@@ -51,11 +51,9 @@ export const LAYOUT_CONTENT_SPIN_WHEN_ROUTE_CHANGE = false
  */
 export const APP_GLOBAL_LOADING = 'loading'
 
-/** 首屏加载动画显示的标题和颜色。 */
+/** 首屏加载界面的品牌标题。 */
 export const PRE_LOADING_CONFIG: PreloadingConfig = {
   title: 'Ray Admin',
-  tagColor: '#ff6700',
-  titleColor: '#2d8cf0',
 }
 
 /**
