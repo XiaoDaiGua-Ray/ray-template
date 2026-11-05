@@ -17,39 +17,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ray Admin - Vue 3 中后台管理模板</title>
     <meta name="description" content="Ray Template 是基于 Vue 3、TypeScript（TSX）、Vite 和 Naive UI 的开源中后台管理模板，内置权限路由、响应式布局、数据表格和中英文切换。" />
-    <style>:root{--preloading-tag-color:#ff6700;--preloading-title-color:#2d8cf0;--r-theme-primary-fade-color:#3b63d9d9;--r-theme-primary-color:#3b63d9;--global-loading-bg-color:#fff}@media (prefers-color-scheme:dark){#pre-loading-animation{background-color:var(--global-loading-bg-color)}}@media (prefers-color-scheme:light){#pre-loading-animation{background-color:var(--global-loading-bg-color)}}html.dark #pre-loading-animation,html.light #pre-loading-animation{background-color:var(--global-loading-bg-color)}#pre-loading-animation{color:var(--preloading-title-color);text-align:center;background-color:var(--global-loading-bg-color);position:fixed;inset:0}#pre-loading-animation .pre-loading-animation__wrapper{flex-direction:column;justify-content:center;align-items:center;width:100%;height:100%;display:flex}#pre-loading-animation .pre-loading-animation__wrapper .pre-loading-animation__wrapper-title{padding-bottom:48px;font-size:32px;font-weight:500}.pre-loading-animation__wrapper-loading{background-color:var(--preloading-tag-color);width:6px;height:10px;animation:1s ease-in-out -.2s infinite rectangle;display:block;position:relative}.pre-loading-animation__wrapper-loading:before,.pre-loading-animation__wrapper-loading:after{content:"";background-color:var(--preloading-tag-color);width:6px;height:10px;position:absolute}.pre-loading-animation__wrapper-loading:before{animation:1s ease-in-out -.4s infinite rectangle;left:-14px}.pre-loading-animation__wrapper-loading:after{animation:1s ease-in-out infinite rectangle;right:-14px}@keyframes rectangle{0%,80%,to{height:20px;box-shadow:0 0 var(--preloading-tag-color)}40%{height:30px;box-shadow:0 -20px var(--preloading-tag-color)}}</style>
+    <meta name="color-scheme" content="light dark" />
     <script>
-      ;(function () {
-        const html = document.documentElement
-        const store = window.localStorage.getItem('piniaSettingStore')
-        const { _appTheme = false } = store ? JSON.parse(store) : {}
-        const loadingBgColor = _appTheme ? '#1c1e23' : '#ffffff'
-
-        html.classList.add(_appTheme ? 'dark' : 'light')
-        html.style.setProperty('--global-loading-bg-color', loadingBgColor)
-        html.style.setProperty('background-color', loadingBgColor)
-      })()
+      try {
+        const settings = JSON.parse(
+          localStorage.getItem('piniaSettingStore') ||
+            'null',
+        )
+        const mode = settings?.appTheme
+        if (mode !== 'auto') {
+          const dark =
+            mode === 'dark' || (mode == null && settings?._appTheme === true)
+          document.documentElement.classList.add(
+            dark ? 'r-template--dark' : 'r-template--light',
+          )
+        }
+      } catch {}
+      try {
+        if (
+          localStorage.getItem('localeLanguage') ===
+          '"en-US"'
+        ) {
+          document.documentElement.lang = 'en-US'
+        }
+      } catch {}
     </script>
+    <style>html.r-template--dark{--lightningcss-light: ;--lightningcss-dark:initial;color-scheme:dark}html.r-template--light{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light}.ray-boot{z-index:1;color:canvastext;color:var(--lightningcss-light,#182436)var(--lightningcss-dark,#e9eef7);background:canvas;text-align:center;background:var(--lightningcss-light,#f8f9fc)var(--lightningcss-dark,#141b27);place-items:center;padding:24px;font:400 14px/1.5 system-ui,sans-serif;display:grid;position:fixed;inset:0}.ray-boot__mark{border-radius:16px;margin:0 auto 16px;display:block}.ray-boot__title{letter-spacing:-.025em;font-size:24px;font-weight:650;display:block}.ray-boot__label{color:inherit;color:var(--lightningcss-light,#52647c)var(--lightningcss-dark,#b3c0d3);margin:4px 0 0}.ray-boot__track{background:currentColor;background:var(--lightningcss-light,#dce4f2)var(--lightningcss-dark,#36435c);border-radius:4px;block-size:3px;inline-size:112px;margin:20px auto 0;display:block;position:relative;overflow:hidden}.ray-boot__track:after{border-radius:inherit;background:highlight;content:"";background:var(--lightningcss-light,#3b63d9)var(--lightningcss-dark,#aabaff);inline-size:40%;animation:1.45s ease-in-out infinite alternate ray-boot-sweep;position:absolute;inset-block:0;inset-inline-start:0}@keyframes ray-boot-sweep{0%{transform:translate(0)}to{transform:translate(150%)}}.ray-boot progress{clip-path:inset(50%);block-size:1px;inline-size:1px;position:absolute}.ray-boot__failure,.ray-boot [lang=en-US],html:lang(en) .ray-boot [lang=zh-CN]{display:none}html:lang(en) .ray-boot [lang=en-US]{display:inline}.ray-boot[data-state=failed] .ray-boot__pending{display:none}.ray-boot[data-state=failed] .ray-boot__failure{display:block}.ray-boot__retry{color:inherit;font:inherit;cursor:pointer;background:0 0;border:1px solid;border-radius:6px;margin-block-start:12px;padding:5px 12px}@media (prefers-reduced-motion:reduce){.ray-boot__track:after{animation:none;transform:translate(75%)}}</style>
     <noscript>
       <style>#pre-loading-animation{display:none}</style>
     </noscript>
-    <script type="module" crossorigin src="/ray-template/js/index-CTJUSgmt.js"></script>
+    <script type="module" crossorigin src="/ray-template/js/index-Cf8FukMz.js"></script>
     <link rel="modulepreload" crossorigin href="/ray-template/js/rolldown-runtime-COiEfhsA.js">
     <link rel="modulepreload" crossorigin href="/ray-template/js/toString-BWDzaUQG.js">
     <link rel="modulepreload" crossorigin href="/ray-template/js/Card-B_oozRxS.js">
     <link rel="modulepreload" crossorigin href="/ray-template/js/_toKey-BqfG5Sv9.js">
     <link rel="modulepreload" crossorigin href="/ray-template/js/preload-helper-B5zr4nmU.js">
-    <link rel="modulepreload" crossorigin href="/ray-template/js/utils-Lx-65B4g.js">
-    <link rel="modulepreload" crossorigin href="/ray-template/js/Switch-tIQIUmgT.js">
-    <link rel="modulepreload" crossorigin href="/ray-template/js/schema-D5qRqG1c.js">
-    <link rel="modulepreload" crossorigin href="/ray-template/js/contract-DiDuxyY7.js">
-    <link rel="modulepreload" crossorigin href="/ray-template/js/json-schema-BMDW9JRR.js">
-    <link rel="modulepreload" crossorigin href="/ray-template/js/en-US-DKusFojT.js">
-    <link rel="modulepreload" crossorigin href="/ray-template/js/zh-CN-BR9zfya4.js">
-    <link rel="modulepreload" crossorigin href="/ray-template/js/store-DP5ZqOPA.js">
-    <link rel="modulepreload" crossorigin href="/ray-template/js/directives-C6DZxtNX.js">
-    <link rel="stylesheet" crossorigin href="/ray-template/css/store-DHB6P7a7.css">
-    <link rel="stylesheet" crossorigin href="/ray-template/css/directives-DDjnWNDd.css">
+    <link rel="modulepreload" crossorigin href="/ray-template/js/utils-BpsPduiK.js">
+    <link rel="modulepreload" crossorigin href="/ray-template/js/Switch-B4B45bkJ.js">
+    <link rel="modulepreload" crossorigin href="/ray-template/js/schema-rQn3Oa0L.js">
+    <link rel="modulepreload" crossorigin href="/ray-template/js/contract-CUovj2c6.js">
+    <link rel="modulepreload" crossorigin href="/ray-template/js/json-schema-DCJ76DWL.js">
+    <link rel="modulepreload" crossorigin href="/ray-template/js/en-US-BhhY7Km7.js">
+    <link rel="modulepreload" crossorigin href="/ray-template/js/zh-CN-BKp8i0Gi.js">
+    <link rel="modulepreload" crossorigin href="/ray-template/js/store-BGk8Kj6h.js">
+    <link rel="modulepreload" crossorigin href="/ray-template/js/directives-BpDumRCc.js">
+    <link rel="stylesheet" crossorigin href="/ray-template/css/store-72BFCDPD.css">
+    <link rel="stylesheet" crossorigin href="/ray-template/css/directives-D4lHYtWW.css">
   </head>
   <body>
     <div id="app"></div>
@@ -67,12 +80,38 @@
         </p>
       </main>
     </noscript>
-    <div id="pre-loading-animation">
-      <div class="pre-loading-animation__wrapper">
-        <div class="pre-loading-animation__wrapper-title">
-          Ray Admin
+    <div id="pre-loading-animation" class="ray-boot">
+      <div>
+        <img
+          class="ray-boot__mark"
+          src="/ray-template/ray.svg"
+          width="56"
+          height="56"
+          alt=""
+        />
+        <strong class="ray-boot__title">Ray Admin</strong>
+        <div class="ray-boot__pending">
+          <p class="ray-boot__label" id="ray-boot-label">
+            <span lang="zh-CN">正在载入工作区</span>
+            <span lang="en-US">Loading your workspace</span>
+          </p>
+          <progress aria-labelledby="ray-boot-label"></progress>
+          <span class="ray-boot__track" aria-hidden="true"></span>
         </div>
-        <div class="pre-loading-animation__wrapper-loading"></div>
+        <div class="ray-boot__failure" role="alert">
+          <p class="ray-boot__label">
+            <span lang="zh-CN">工作区未能启动</span>
+            <span lang="en-US">The workspace could not start</span>
+          </p>
+          <button
+            class="ray-boot__retry"
+            type="button"
+            onclick="location.reload()"
+          >
+            <span lang="zh-CN">重新加载</span>
+            <span lang="en-US">Reload</span>
+          </button>
+        </div>
       </div>
     </div>
   </body>

@@ -1,1 +1,0 @@
-import{S as e,W as t}from"./store-DP5ZqOPA.js";function n(n,r){return t(()=>e(n),Object.assign({},r))}export{n as t};
