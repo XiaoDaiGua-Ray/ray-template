@@ -1,0 +1,1 @@
+import{K as e,T as t}from"./directives-Cup3lpxw.js";function n(n,r){return e(()=>t(n),Object.assign({},r))}export{n as t};
