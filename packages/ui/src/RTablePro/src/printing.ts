@@ -100,20 +100,128 @@ export const buildPrintableTable = (
   return table
 }
 
+const omittedElements = 'script, iframe, object, embed, link, base, meta'
+
 const cloneRegion = (target: HTMLElement) => {
+  if (target.matches(omittedElements)) return null
+
   const clone = target.cloneNode(true) as HTMLElement
+  const sources = [target, ...target.querySelectorAll('*')]
+  const copies = [clone, ...clone.querySelectorAll('*')]
 
-  clone
-    .querySelectorAll('script, iframe, object, embed, link, base, meta')
-    .forEach((node) => node.remove())
+  for (const [index, node] of copies.entries()) {
+    if (node.matches(omittedElements)) {
+      node.remove()
+      continue
+    }
 
-  for (const node of [clone, ...clone.querySelectorAll('*')]) {
     for (const name of node.getAttributeNames()) {
       if (name.startsWith('on')) node.removeAttribute(name)
+    }
+
+    const source = sources[index]
+
+    if (
+      source instanceof HTMLInputElement &&
+      node instanceof HTMLInputElement
+    ) {
+      node.value =
+        source.type === 'password' || source.type === 'file' ? '' : source.value
+      node.defaultValue = node.value
+      node.checked = source.checked
+      node.indeterminate = source.indeterminate
+    } else if (
+      source instanceof HTMLTextAreaElement &&
+      node instanceof HTMLTextAreaElement
+    ) {
+      node.value = source.value
+      node.defaultValue = source.value
+    } else if (
+      source instanceof HTMLOptionElement &&
+      node instanceof HTMLOptionElement
+    ) {
+      node.selected = source.selected
+      node.defaultSelected = source.selected
+    } else if (
+      source instanceof HTMLCanvasElement &&
+      node instanceof HTMLCanvasElement
+    ) {
+      try {
+        node.getContext('2d')?.drawImage(source, 0, 0)
+      } catch {
+        // 无法读取的画布仍保留尺寸和替代内容。
+      }
     }
   }
 
   return clone
+}
+
+const copyStyleContext = (source: HTMLElement, destination: HTMLElement) => {
+  destination.className = source.className
+  destination.dir = source.dir
+
+  for (const name of Array.from(source.style)) {
+    if (name.startsWith('--'))
+      destination.style.setProperty(name, source.style.getPropertyValue(name))
+  }
+}
+
+const copyPageStyles = (source: Document, destination: Document) => {
+  const base = destination.createElement('base')
+
+  base.href = source.baseURI
+  destination.head.append(base)
+  copyStyleContext(source.documentElement, destination.documentElement)
+  copyStyleContext(source.body, destination.body)
+
+  const links: Promise<void>[] = []
+
+  for (const stylesheet of source.querySelectorAll<
+    HTMLStyleElement | HTMLLinkElement
+  >('style, link[rel~="stylesheet"]')) {
+    if (stylesheet.sheet?.disabled) continue
+
+    if (stylesheet.tagName === 'LINK') {
+      const link = stylesheet as HTMLLinkElement
+
+      if (link.disabled) continue
+
+      const copy = destination.createElement('link')
+
+      copy.rel = 'stylesheet'
+      copy.href = link.href
+      copy.media = link.media
+
+      if (link.crossOrigin !== null) copy.crossOrigin = link.crossOrigin
+
+      if (link.integrity) copy.integrity = link.integrity
+
+      if (link.referrerPolicy) copy.referrerPolicy = link.referrerPolicy
+
+      links.push(
+        new Promise<void>((resolve) => {
+          copy.onload = () => resolve()
+          copy.onerror = () => resolve()
+        }),
+      )
+      destination.head.append(copy)
+    } else {
+      const style = stylesheet as HTMLStyleElement
+      const copy = destination.createElement('style')
+
+      copy.media = style.media
+
+      if (style.nonce) copy.nonce = style.nonce
+
+      copy.textContent = style.sheet
+        ? Array.from(style.sheet.cssRules, (rule) => rule.cssText).join('\n')
+        : style.textContent
+      destination.head.append(copy)
+    }
+  }
+
+  return links
 }
 
 export const resolvePrintContent = (
@@ -130,7 +238,11 @@ export const resolvePrintContent = (
 export const printTableContent = async (
   content: HTMLElement,
   options: TableProPrintOptions,
+  signal?: AbortSignal,
 ) => {
+  if (signal?.aborted) return false
+
+  const source = content.ownerDocument
   const frame = document.createElement('iframe')
 
   frame.tabIndex = -1
@@ -152,25 +264,50 @@ export const printTableContent = async (
 
     if (!doc || !view) throw new Error('Print document is unavailable.')
 
-    doc.documentElement.lang = document.documentElement.lang
+    doc.documentElement.lang = source.documentElement.lang
     doc.title = options.title ?? ''
+    const links =
+      options.target != null && options.includePageStyles !== false
+        ? copyPageStyles(source, doc)
+        : []
     const style = doc.createElement('style')
 
     style.textContent = printStyles + (options.style ?? '')
     doc.head.append(style)
     doc.body.append(content)
 
-    const images = [...doc.images]
+    let assetTimer: ReturnType<typeof setTimeout> | undefined
+    const cancelAssets = Promise.withResolvers<void>()
+    const stopWaiting = () => cancelAssets.resolve()
 
-    if (images.length) {
-      let imageTimer: ReturnType<typeof setTimeout> | undefined
+    signal?.addEventListener('abort', stopWaiting, { once: true })
+
+    try {
+      const images = Array.from(doc.querySelectorAll('img'), (img) => {
+        img.loading = 'eager'
+
+        return img.decode()
+      })
+      const stylesAndFonts = Promise.all(links).then(async () => {
+        await doc.fonts?.ready
+      })
 
       await Promise.race([
-        Promise.allSettled(images.map((img) => img.decode())),
+        Promise.allSettled([...images, stylesAndFonts]),
+        cancelAssets.promise,
         new Promise<void>((resolve) => {
-          imageTimer = setTimeout(resolve, 1500)
+          assetTimer = setTimeout(resolve, 2000)
         }),
-      ]).finally(() => clearTimeout(imageTimer))
+      ])
+    } finally {
+      clearTimeout(assetTimer)
+      signal?.removeEventListener('abort', stopWaiting)
+    }
+
+    if (signal?.aborted) {
+      cleanup()
+
+      return false
     }
 
     view.addEventListener('afterprint', cleanup, { once: true })

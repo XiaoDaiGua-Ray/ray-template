@@ -1,3 +1,4 @@
+import './printing.scss'
 import { RTablePro } from '@/components'
 import type { TableProInst } from '@/components'
 import { listPeople } from '@/demo-data/people'
@@ -33,8 +34,6 @@ export default defineComponent({
                 table.value?.print({
                   target: summary,
                   title: t('printSummary'),
-                  style:
-                    '.demo-print-summary { border: 1px solid #b7bec6; padding: 12pt; }',
                 })
               }
             >

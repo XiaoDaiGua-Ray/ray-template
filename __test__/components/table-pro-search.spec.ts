@@ -646,3 +646,172 @@ it('does not reload when rendering a new pagination object with the same paging 
     wrapper.unmount()
   }
 })
+
+it('notifies the owner when search, reset, and instance methods change controlled paging', async () => {
+  const [register, table] = useTablePro()
+  const pager = { page: 2, pageSize: 1 }
+  const pagination = () => ({
+    ...pager,
+    'onUpdate:page': updatePage,
+    'onUpdate:pageSize': updatePageSize,
+  })
+  const updatePage = vi.fn((page: number) => {
+    pager.page = page
+    void wrapper.setProps({ pagination: pagination() })
+  })
+  const updatePageSize = vi.fn((pageSize: number) => {
+    pager.pageSize = pageSize
+    void wrapper.setProps({ pagination: pagination() })
+  })
+  const search: TableProSearchOptions = {
+    fields: [{ type: 'text', key: 'name', label: 'Name' }],
+  }
+  const data = [
+    { id: 1, name: 'Ray' },
+    { id: 2, name: 'Ray 2' },
+    { id: 3, name: 'Other' },
+  ]
+  const wrapper = mount(RTablePro, {
+    props: {
+      columns,
+      data,
+      search,
+      tool: false,
+      onRegister: register,
+      pagination: pagination(),
+    },
+  })
+
+  try {
+    table.setSearchValues({ name: 'Ray' })
+    expect(await table.submitSearch()).toBe(true)
+    expect(table.getCurrentPageData()).toEqual([data[0]])
+    await table.setPage(2)
+    expect(table.getCurrentPageData()).toEqual([data[1]])
+    await table.setPageSize(2)
+    expect(table.getCurrentPageData()).toEqual(data.slice(0, 2))
+    await table.setPage(2)
+    await table.resetSearch()
+    expect(updatePage.mock.calls.flat()).toEqual([1, 2, 1, 2, 1])
+    expect(updatePageSize).toHaveBeenCalledExactlyOnceWith(2)
+  } finally {
+    wrapper.unmount()
+  }
+})
+
+it('rebuilds a local search when a compatible field changes its matcher', async () => {
+  const makeSearch = (matches: () => boolean): TableProSearchOptions => ({
+    fields: [{ type: 'text', key: 'name', label: 'Name', matches }],
+    initialValues: { name: 'Ray' },
+  })
+  const data = [{ id: 1, name: 'Ray' }]
+  const [register, table] = useTablePro()
+  const wrapper = mount(RTablePro, {
+    props: {
+      columns,
+      data,
+      search: makeSearch(() => true),
+      tool: false,
+      onRegister: register,
+    },
+  })
+
+  try {
+    expect(table.getCurrentPageData()).toEqual(data)
+    await wrapper.setProps({ search: makeSearch(() => false) })
+    expect(table.getSearchValues('applied')).toEqual({ name: 'Ray' })
+    expect(table.getCurrentPageData()).toEqual([])
+  } finally {
+    wrapper.unmount()
+  }
+})
+
+it('reports visibility and row callback errors while preserving the last applied local query', async () => {
+  const visibility = new Error('Visibility failed')
+  const matcher = new Error('Matcher failed')
+  const search: TableProSearchOptions = {
+    fields: [
+      {
+        type: 'text',
+        key: 'name',
+        label: 'Name',
+        visible: (values) => {
+          if (values.name === 'hidden') throw visibility
+
+          return true
+        },
+        matches: (cell, value) => {
+          if (value === 'error') throw matcher
+
+          return cell === value
+        },
+      },
+    ],
+    initialValues: { name: 'Ray' },
+  }
+  const data = [
+    { id: 1, name: 'Ray' },
+    { id: 2, name: 'Other' },
+  ]
+  const [register, table] = useTablePro()
+  const wrapper = mount(RTablePro, {
+    props: { columns, data, search, tool: false, onRegister: register },
+  })
+
+  try {
+    for (const value of ['hidden', 'error']) {
+      table.setSearchValues({ name: value })
+      expect(await table.submitSearch()).toBe(false)
+      await nextTick()
+      expect(table.getCurrentPageData()).toEqual([data[0]])
+      expect(table.getSearchValues('applied')).toEqual({ name: 'Ray' })
+      expect(wrapper.get('[role="alert"]').text()).toContain("Couldn't prepare")
+    }
+
+    expect(wrapper.emitted('search-error')).toEqual([[visibility], [matcher]])
+    table.setSearchValues({ name: 'Other' })
+    expect(await table.submitSearch()).toBe(true)
+    await nextTick()
+    expect(table.getCurrentPageData()).toEqual([data[1]])
+    expect(wrapper.find('[role="alert"]').exists()).toBe(false)
+  } finally {
+    wrapper.unmount()
+  }
+})
+
+it('reads nested column paths and preserves an explicit search value reader', async () => {
+  const data = [
+    { id: 1, customer: { name: 'Ray' }, nickname: 'Alias' },
+    { id: 2, customer: { name: 'Another' }, nickname: 'Ray' },
+  ]
+  const [register, table] = useTablePro()
+  const search: TableProSearchOptions = {
+    fields: [
+      { type: 'text', key: 'customer.name', label: 'Customer' },
+      {
+        type: 'text',
+        key: 'alias',
+        label: 'Alias',
+        getValue: (row) => row.nickname,
+      },
+    ],
+  }
+  const wrapper = mount(RTablePro, {
+    props: {
+      columns: [{ key: 'customer.name', title: 'Customer' }],
+      data,
+      search,
+      tool: false,
+      onRegister: register,
+    },
+  })
+
+  try {
+    table.setSearchValues({ 'customer.name': 'ray', alias: 'alias' })
+    expect(await table.submitSearch()).toBe(true)
+    await nextTick()
+    expect(table.getCurrentPageData()).toEqual([data[0]])
+  } finally {
+    wrapper.unmount()
+  }
+})

@@ -9,9 +9,10 @@ import props from '../props'
 import ToolButton from './ToolButton'
 
 export default defineComponent({
-  name: 'TableColumns',
+  name: 'TableColumnSettings',
   props: {
     columns: props.columns,
+    canResetLayout: Boolean,
     hiddenKeys: {
       type: Object as PropType<ReadonlySet<TableColumnKey>>,
       required: true,
@@ -22,6 +23,7 @@ export default defineComponent({
     patchColumn: (_key: TableColumnKey, _patch: ColumnLayoutPatch) => true,
     toggleColumn: (_key: TableColumnKey, _visible: boolean) => true,
     resetColumns: () => true,
+    resetLayout: () => true,
   },
   setup(props, { emit }) {
     const { t } = useTableLocale()
@@ -59,14 +61,51 @@ export default defineComponent({
       )
     }
 
-    const arrangeTools = (column: KeyedColumn) => {
+    const moveColumn = (index: number, offset: -1 | 1) => {
+      const keys = columns.value.map(({ key }) => key)
+      const target = index + offset
+
+      if (target < 0 || target >= keys.length) return
+
+      ;[keys[index], keys[target]] = [keys[target], keys[index]]
+      emit('reorderColumns', keys)
+    }
+
+    const arrangeTools = (column: KeyedColumn, index: number) => {
+      const label =
+        typeof column.title === 'string' ? column.title : String(column.key)
       const hasWidth =
         'children' in column
           ? column.children.every((child) => typeof child.width === 'number')
           : typeof column.width === 'number'
 
       return (
-        <NFlex align="center" size={4}>
+        <NFlex align="center" size={2} wrap={false}>
+          {([-1, 1] as const).map((offset) => {
+            const action = t(offset < 0 ? 'moveColumnUp' : 'moveColumnDown', {
+              column: label,
+            })
+
+            return (
+              <button
+                key={offset}
+                type="button"
+                class="r-table-columns__move"
+                aria-label={action}
+                title={action}
+                aria-disabled={
+                  index + offset < 0 || index + offset >= columns.value.length
+                }
+                onKeydown={(event) => event.stopPropagation()}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  moveColumn(index, offset)
+                }}
+              >
+                <span aria-hidden="true">{offset < 0 ? '↑' : '↓'}</span>
+              </button>
+            )
+          })}
           <ToolButton
             icon="directional/row_head"
             label={t(
@@ -112,13 +151,13 @@ export default defineComponent({
     }
 
     const toTree = (items: KeyedColumn[], root: boolean): TreeOption[] =>
-      items.map((column) => ({
+      items.map((column, index) => ({
         key: column.key,
         label:
           typeof column.title === 'string' ? column.title : String(column.key),
         children:
           'children' in column ? toTree(column.children, false) : void 0,
-        suffix: root ? () => arrangeTools(column) : void 0,
+        suffix: root ? () => arrangeTools(column, index) : void 0,
       }))
 
     const tree = computed(() => toTree(columns.value, true))
@@ -175,14 +214,25 @@ export default defineComponent({
                     )
                   }}
                 />
-                <NButton
-                  size="small"
-                  quaternary
-                  disabled={!props.hiddenKeys.size}
-                  onClick={() => emit('resetColumns')}
-                >
-                  {t('showAllColumns')}
-                </NButton>
+                <NFlex size={4}>
+                  <NButton
+                    size="small"
+                    quaternary
+                    disabled={!props.hiddenKeys.size}
+                    onClick={() => emit('resetColumns')}
+                  >
+                    {t('showAllColumns')}
+                  </NButton>
+                  {props.canResetLayout && (
+                    <NButton
+                      size="small"
+                      quaternary
+                      onClick={() => emit('resetLayout')}
+                    >
+                      {t('resetColumnLayout')}
+                    </NButton>
+                  )}
+                </NFlex>
               </fieldset>
             ),
           }}

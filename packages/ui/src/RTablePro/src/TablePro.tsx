@@ -1,10 +1,9 @@
 import { call } from '@ray-template/composables/vue/call'
-import { NAlert, NButton } from 'naive-ui'
+import { isEqual } from 'lodash-es'
 import type { PaginationProps } from 'naive-ui'
 import {
   computed,
   defineComponent,
-  onBeforeUnmount,
   onBeforeUpdate,
   onMounted,
   ref,
@@ -13,10 +12,12 @@ import {
   watch,
 } from 'vue'
 import type { ExtractPublicPropTypes, PropType } from 'vue'
+import { useUiServices } from '../../services'
 import Search from './components/Search'
 import type { TableSearchFormInst } from './components/Search'
 import { useTableLocale } from './locale'
-import tableProps from './props'
+import { splitPaginationOptions } from './pagination'
+import tableProps, { toPanelProps } from './props'
 import {
   copySearchValues,
   createSearchPredicate,
@@ -24,8 +25,10 @@ import {
   normalizeSearchValues,
   resolveSearchFields,
   resolveSearchOptions,
+  sameSearchBehavior,
   sameSearchField,
   toSearchParams,
+  visibleSearchFields,
 } from './search'
 import TablePanel from './TablePanel'
 import type {
@@ -40,6 +43,7 @@ import type {
   TableProSearchSubmission,
   TableProSearchValues,
 } from './types'
+import { useTableRequest } from './useTableRequest'
 import { useTableSearch } from './useTableSearch'
 
 const positiveInteger = (value: number) =>
@@ -109,19 +113,30 @@ export default defineComponent({
   },
   setup(props, { attrs, slots, expose, emit }) {
     const { t } = useTableLocale()
+    const { reportError } = useUiServices()
     const table = shallowRef<TablePanelInst>()
-    const result = shallowRef<TableProResult>()
-    const requestPhase = ref<'idle' | 'loading' | 'failed'>('idle')
     const searchForm = useTemplateRef<TableSearchFormInst>('searchForm')
     const customFilters = ref(!!slots.filters)
     const searchFailed = ref(false)
+    let lastSearchError: unknown
+    const reportSearchError = (error: unknown): false => {
+      if (!searchFailed.value || error !== lastSearchError) {
+        lastSearchError = error
+        searchFailed.value = true
+        emit('search-error', error)
+      }
+
+      return false
+    }
     const searchOptions = computed(() => resolveSearchOptions(props.search))
     const searchFields = computed(() => {
       const options = searchOptions.value
 
       if (customFilters.value || !options) return emptySearchFields
 
-      return resolveSearchFields(options, props.columns)
+      return resolveSearchFields(options, props.columns).map((field) => ({
+        ...field,
+      }))
     })
     const searchModel = useTableSearch(
       () => searchFields.value,
@@ -131,18 +146,45 @@ export default defineComponent({
           ? (searchForm.value?.validate(isCurrent) ?? true)
           : true,
       () => searchForm.value?.restoreValidation(),
+      reportSearchError,
       (values, reason) => applySearch(values, searchFields.value, reason),
     )
     const applied = shallowRef(createSearchSnapshot({}, emptySearchFields))
 
+    const draftFields = computed(
+      (
+        previous:
+          | { fields: typeof searchFields.value; error?: { cause: unknown } }
+          | undefined,
+      ) => {
+        try {
+          return {
+            fields: visibleSearchFields(
+              searchFields.value,
+              searchModel.draft.value,
+            ),
+          }
+        } catch (cause) {
+          return {
+            fields: previous?.fields ?? emptySearchFields,
+            error: { cause },
+          }
+        }
+      },
+    )
+
     try {
+      const values = searchModel.draft.value
+
       applied.value = createSearchSnapshot(
-        normalizeSearchValues(searchFields.value, searchModel.draft.value),
+        normalizeSearchValues(
+          visibleSearchFields(searchFields.value, values),
+          values,
+        ),
         searchFields.value,
       )
     } catch (error) {
-      searchFailed.value = true
-      emit('search-error', error)
+      reportSearchError(error)
     }
 
     const manualSearch = computed(
@@ -165,115 +207,120 @@ export default defineComponent({
 
       return positiveInteger(size) ? size : 10
     })
+    const pager = computed(() => splitPaginationOptions(pagerOptions.value))
     const firstPage = pagerOptions.value?.defaultPage ?? 1
     const page = ref(positiveInteger(firstPage) ? firstPage : 1)
     const pageSize = ref(configuredPageSize.value)
-    const queryState = computed<TableProQueryState | null>(() => {
-      if (!props.request) return null
+    const displayedPage = computed(() =>
+      props.request ? page.value : (pagerOptions.value?.page ?? page.value),
+    )
+    const displayedPageSize = computed(() =>
+      props.request
+        ? pageSize.value
+        : (pagerOptions.value?.pageSize ?? pageSize.value),
+    )
 
-      return Object.freeze({
-        loading: requestPhase.value === 'loading',
-        failed: requestPhase.value === 'failed',
-        page: paginated.value ? page.value : null,
-        pageSize: paginated.value ? pageSize.value : null,
-        total: result.value?.total ?? null,
-      })
-    })
-    const localRows = computed(() => {
-      const { matches } = applied.value
-
-      return matches && !manualSearch.value
-        ? props.data.filter(matches)
-        : props.data
-    })
-    let pending: AbortController | undefined
-
-    const reload = async (resetPage = false) => {
-      if (resetPage) page.value = 1
-
-      pending?.abort()
-      const { request, params } = props
-
-      if (!request) {
-        pending = void 0
-        requestPhase.value = 'idle'
-
-        return
-      }
-
-      const current = new AbortController()
-
-      pending = current
-      requestPhase.value = 'loading'
-
-      // 分页字段由表格统一管理，筛选参数不能覆盖当前页码。
-      const query: TableProParams = {
-        ...params,
-        ...copySearchValues(applied.value.params),
-      }
-
-      if (paginated.value) {
-        query.page = page.value
-        query.pageSize = pageSize.value
-      } else {
-        delete query.page
-        delete query.pageSize
-      }
-
-      try {
-        const response = await request(query, current.signal)
-
-        // 快速切页或筛选时，只接收最后一次请求的结果。
-        if (current.signal.aborted) return
-
-        if (
-          !Array.isArray(response.data) ||
-          !Number.isSafeInteger(response.total) ||
-          response.total < 0
-        ) {
-          throw new TypeError(
-            '[RTablePro] Expected { data: Row[], total: number }.',
-          )
-        }
-
-        const lastPage = Math.max(1, Math.ceil(response.total / pageSize.value))
-
-        if (paginated.value && page.value > lastPage) {
-          page.value = lastPage
-
-          if (response.total) {
-            await reload()
-
-            return
-          }
-        }
-
-        result.value = response
-      } catch (error) {
-        if (current.signal.aborted) return
-
-        requestPhase.value = 'failed'
-        emit('request-error', error)
-      } finally {
-        if (pending === current) {
-          pending = void 0
-
-          if (requestPhase.value === 'loading') requestPhase.value = 'idle'
-        }
-      }
-    }
-
-    const setPage = async (value: number) => {
-      if (!positiveInteger(value) || page.value === value) return
+    const updatePage = (value: number) => {
+      if (
+        !paginated.value ||
+        !positiveInteger(value) ||
+        displayedPage.value === value
+      )
+        return false
 
       page.value = value
-      await reload()
+      pager.value.notifyPage(value)
+
+      for (const handler of [
+        props.onUpdatePage,
+        props['onUpdate:page'],
+        props.onPageChange,
+      ])
+        if (handler) call(handler, value)
+
+      return true
+    }
+
+    const {
+      reload: load,
+      activeResult,
+      total,
+      phase: requestPhase,
+      state: queryState,
+    } = useTableRequest({
+      request: () => props.request,
+      filters: () => ({ ...props.params, ...applied.value.params }),
+      paging: () =>
+        paginated.value
+          ? { page: page.value, pageSize: pageSize.value }
+          : void 0,
+      updatePage,
+      reportError: (error) => {
+        emit('request-error', error)
+
+        if (!slots.error) reportError?.(t('requestError'))
+      },
+    })
+    const reload = (resetPage = false) => {
+      if (resetPage) updatePage(1)
+
+      return load()
+    }
+
+    type LocalRows = {
+      source: typeof props.data
+      rows: typeof props.data
+      error?: { cause: unknown }
+    }
+    const localRows = computed<LocalRows>((previous) => {
+      const source = props.data
+      const { matches } = applied.value
+
+      if (!matches || props.request || manualSearch.value)
+        return { source, rows: source }
+
+      try {
+        return { source, rows: source.filter(matches) }
+      } catch (cause) {
+        return {
+          source,
+          rows: previous?.source === source ? previous.rows : [],
+          error: { cause },
+        }
+      }
+    })
+
+    watch(
+      [() => draftFields.value.error, () => localRows.value.error],
+      (errors, previous) => {
+        errors.forEach((error, index) => {
+          if (error && error !== previous[index]) reportSearchError(error.cause)
+        })
+      },
+      { immediate: true },
+    )
+    const setPage = async (value: number) => {
+      if (updatePage(value)) await reload()
     }
 
     const setPageSize = async (value: number) => {
-      if (!positiveInteger(value) || pageSize.value === value) return
+      if (
+        !paginated.value ||
+        !positiveInteger(value) ||
+        displayedPageSize.value === value
+      )
+        return
 
       pageSize.value = value
+      pager.value.notifyPageSize(value)
+
+      for (const handler of [
+        props.onPageSizeChange,
+        props.onUpdatePageSize,
+        props['onUpdate:pageSize'],
+      ])
+        if (handler) call(handler, value)
+
       await reload(true)
     }
 
@@ -281,21 +328,36 @@ export default defineComponent({
       values: TableProSearchValues,
       fields: readonly TableProSearchFieldConfig[],
       reason?: TableProSearchSubmission['reason'],
+      normalize = true,
     ) {
-      let snapshot: ReturnType<typeof createSearchSnapshot>
+      const previous = applied.value
 
       try {
-        snapshot = createSearchSnapshot(copySearchValues(values), fields)
-      } catch (error) {
-        searchFailed.value = true
-        emit('search-error', error)
+        const normalized = normalize
+          ? normalizeSearchValues(visibleSearchFields(fields, values), values)
+          : values
 
-        return false
+        applied.value = createSearchSnapshot(
+          copySearchValues(normalized),
+          fields,
+        )
+
+        const error = localRows.value.error
+
+        if (error) throw error.cause
+      } catch (error) {
+        applied.value = previous
+
+        return reportSearchError(error)
       }
 
       searchFailed.value = false
-      applied.value = snapshot
-      page.value = 1
+      const snapshot = applied.value
+
+      if (!reason && props.request && isEqual(previous.params, snapshot.params))
+        return true
+
+      updatePage(1)
 
       if (reason) {
         emit('search', {
@@ -315,7 +377,7 @@ export default defineComponent({
         searchOptions.value?.fields?.filter(({ type }) => !type) ??
         emptySearchFields
 
-      await applySearch(values, fields, 'submit')
+      await applySearch(values, fields, 'submit', false)
     }
 
     onBeforeUpdate(() => {
@@ -333,7 +395,10 @@ export default defineComponent({
 
       if (
         retainedKeys.size === fields.length &&
-        fields.length === previous.length
+        fields.length === previous.length &&
+        fields.every((field) =>
+          sameSearchBehavior(field, previousByKey.get(field.key)),
+        )
       )
         return
 
@@ -344,33 +409,21 @@ export default defineComponent({
         ),
       )
 
-      if (
-        Object.keys(retained).length !==
-        Object.keys(applied.value.values).length
-      )
-        void applySearch(normalizeSearchValues(fields, retained), fields)
+      if (Object.keys(applied.value.values).length)
+        void applySearch(retained, fields)
     })
 
     watch(
       [() => props.request, () => props.params, paginated, configuredPageSize],
-      (_values, previous) => {
+      ([, , , configuredSize], previous) => {
+        if (configuredSize !== previous[3]) pageSize.value = configuredSize
+
         if (!previous.length && searchFailed.value) return
 
         void reload(previous.length > 0)
       },
       { deep: true, immediate: true },
     )
-    watch(
-      configuredPageSize,
-      (value) => {
-        pageSize.value = value
-      },
-      { flush: 'sync' },
-    )
-    onBeforeUnmount(() => {
-      pending?.abort()
-      pending = void 0
-    })
 
     const instance: TableProInst = {
       get queryState() {
@@ -394,31 +447,31 @@ export default defineComponent({
         searchFields.value.length
           ? searchModel.reset()
           : Promise.resolve(false),
-      getTableInstance: () => table.value?.getTableInstance() ?? null,
+      getTableInstance: () =>
+        props.request && !activeResult.value
+          ? null
+          : (table.value?.getTableInstance() ?? null),
       getCurrentPageData: () =>
-        table.value?.getTableInstance()?.getCurrentPageData() ?? [],
-      print: (options) => table.value?.print(options) ?? Promise.resolve(false),
-      downloadCsv: (options) => table.value?.downloadCsv(options),
+        props.request
+          ? (activeResult.value?.data ?? emptyRemoteRows)
+          : (table.value?.getTableInstance()?.getCurrentPageData() ?? []),
+      print: (options) =>
+        (!props.request || activeResult.value
+          ? table.value?.print(options)
+          : void 0) ?? Promise.resolve(false),
+      downloadCsv: (options) => {
+        if (!props.request || activeResult.value)
+          table.value?.downloadCsv(options)
+      },
     }
 
     expose(instance)
     onMounted(() => props.onRegister?.(instance))
 
+    const panelProps = computed(() => toPanelProps(props))
+
     return () => {
-      const {
-        request,
-        onRegister: _onRegister,
-        params,
-        pagination: _pagination,
-        pageSize: _pageSize,
-        search,
-        loading: externalLoading,
-        remote,
-        onUpdatePage,
-        onUpdatePageSize,
-        ...rest
-      } = props
-      const options = pagerOptions.value
+      const { request, search, loading: externalLoading, remote } = props
       const { filters, error, notice, ...panelSlots } = slots
       const paginationProps: false | PaginationProps =
         pagination.value === false
@@ -427,37 +480,30 @@ export default defineComponent({
               showSizePicker: true,
               pageSizes: [10, 20, 50, 100],
               prefix: ({ itemCount }) => t('total', { count: itemCount }),
-              ...options,
-              page: request ? page.value : (options?.page ?? page.value),
-              pageSize: request
-                ? pageSize.value
-                : (options?.pageSize ?? pageSize.value),
+              ...pager.value.view,
+              page: displayedPage.value,
+              pageSize: displayedPageSize.value,
               ...(request
-                ? { itemCount: result.value?.total ?? 0, pageCount: void 0 }
+                ? { itemCount: total.value ?? 0, pageCount: void 0 }
                 : {}),
             }
 
       return (
         <TablePanel
           {...attrs}
-          {...rest}
+          {...panelProps.value}
           ref={table}
           remote={!!request || remote}
           data={
-            request ? (result.value?.data ?? emptyRemoteRows) : localRows.value
+            request
+              ? (activeResult.value?.data ?? emptyRemoteRows)
+              : localRows.value.rows
           }
+          rowActionsDisabled={!!request && !activeResult.value}
           loading={requestPhase.value === 'loading' || externalLoading}
           pagination={paginationProps}
-          onUpdatePage={(value) => {
-            void setPage(value)
-
-            if (onUpdatePage) call(onUpdatePage, value)
-          }}
-          onUpdatePageSize={(value) => {
-            void setPageSize(value)
-
-            if (onUpdatePageSize) call(onUpdatePageSize, value)
-          }}
+          onUpdatePage={setPage}
+          onUpdatePageSize={setPageSize}
         >
           {{
             ...panelSlots,
@@ -467,7 +513,7 @@ export default defineComponent({
                 ? () => (
                     <Search
                       ref="searchForm"
-                      fields={searchFields.value}
+                      fields={draftFields.value.fields}
                       values={searchModel.draft.value}
                       options={searchOptions.value}
                       legacy={isSearchArray(search)}
@@ -480,16 +526,10 @@ export default defineComponent({
                     />
                   )
                 : void 0,
-            notice: () =>
-              requestPhase.value === 'failed'
-                ? (error?.({ reload }) ?? (
-                    <NAlert type="error" title={t('requestError')}>
-                      <NButton size="small" secondary onClick={() => reload()}>
-                        {t('retry')}
-                      </NButton>
-                    </NAlert>
-                  ))
-                : notice?.(),
+            notice:
+              requestPhase.value === 'failed' && error
+                ? () => error({ reload })
+                : notice,
           }}
         </TablePanel>
       )

@@ -44,6 +44,7 @@ const applyRootOrder = (
 export const useColumnLayout = (
   columns: Ref<DataTableColumn[]>,
   onUpdate: Ref<((columns: DataTableColumn[]) => void) | undefined>,
+  onReset: Ref<(() => void) | undefined>,
 ) => {
   const order = shallowRef<TableColumnKey[]>()
   const patches = shallowRef<Map<TableColumnKey, ColumnLayoutPatch>>()
@@ -90,7 +91,28 @@ export const useColumnLayout = (
     }
   }
 
-  return { layoutColumns, reorderColumns, patchColumn }
+  const layoutChanged = computed(() =>
+    onUpdate.value ? !!onReset.value : !!(order.value || patches.value?.size),
+  )
+
+  const resetLayout = () => {
+    if (onUpdate.value) {
+      onReset.value?.()
+
+      return
+    }
+
+    order.value = void 0
+    patches.value = void 0
+  }
+
+  return {
+    layoutColumns,
+    reorderColumns,
+    patchColumn,
+    resetLayout,
+    layoutChanged,
+  }
 }
 
 const filterColumns = (

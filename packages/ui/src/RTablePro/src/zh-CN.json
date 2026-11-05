@@ -52,6 +52,9 @@
   "contextAction": "触发行右键菜单操作",
   "firstPage": "回到第 1 页",
   "twentyRows": "每页 20 条",
-  "customFooter": "示例：右键表格行可打开自定义菜单。",
-  "pinNeedsWidth": "固定列需要数字列宽"
+  "customFooter": "右键点击表格行，或聚焦该行后按 Shift+F10 打开菜单。",
+  "pinNeedsWidth": "固定列需要数字列宽",
+  "moveColumnUp": "上移「{column}」",
+  "moveColumnDown": "下移「{column}」",
+  "resetColumnLayout": "恢复列布局"
 }

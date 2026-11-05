@@ -1,22 +1,23 @@
 import {
   computed,
   defineComponent,
+  onBeforeUnmount,
   provide,
-  reactive,
   ref,
+  shallowRef,
   toRef,
   watch,
 } from 'vue'
 import { useUiServices } from '../../services'
 import './index.scss'
 import { useElementSize } from '@vueuse/core'
-import { NDataTable, NDropdown } from 'naive-ui'
+import { NDataTable, NDropdown, useThemeVars } from 'naive-ui'
 import type { DataTableInst, DataTableProps } from 'naive-ui'
 import { useTemplateRef } from 'vue'
 import { useColumnLayout, useColumnVisibility } from './columns'
-import C from './components/C'
+import AppearanceSettings from './components/AppearanceSettings'
+import ColumnSettings from './components/ColumnSettings'
 import Fullscreen from './components/Fullscreen'
-import TablePropsSelect from './components/Props'
 import Size from './components/Size'
 import ToolButton from './components/ToolButton'
 import { buildTableCsv, downloadTableCsv } from './csv'
@@ -26,17 +27,44 @@ import {
   printTableContent,
   resolvePrintContent,
 } from './printing'
-import props from './props'
+import { tablePanelProps, toNativeTableProps } from './props'
 import { config } from './shared'
-import type { PropsComponentPopselectKeys, TablePanelInst } from './types'
+import type {
+  PropsComponentPopselectKeys,
+  TablePanelInst,
+  TableProRowContext,
+} from './types'
+
+const useLocalOverride = <Value,>(prop: () => Value) => {
+  const source = computed(() => ({ value: prop() }))
+  const local = shallowRef<{ source: typeof source.value; value: Value }>()
+
+  return computed({
+    get: () =>
+      local.value?.source === source.value
+        ? local.value.value
+        : source.value.value,
+    set: (value: Value) => {
+      local.value = { source: source.value, value }
+    },
+  })
+}
 
 export default defineComponent({
   name: 'TablePanel',
   inheritAttrs: false,
-  props,
+  props: tablePanelProps,
   setup(props, { attrs, slots, expose }) {
     const { t } = useTableLocale()
     const { columnStorage, reportError } = useUiServices()
+    const theme = useThemeVars()
+    const cardStyle = computed(() => ({
+      '--r-table-card-surface': theme.value.cardColor,
+      '--r-table-card-divider': theme.value.dividerColor,
+      '--r-table-card-radius': theme.value.borderRadius,
+      '--r-table-card-text': theme.value.textColor1,
+      '--r-table-card-muted': theme.value.textColor2,
+    }))
     const table = useTemplateRef<DataTableInst>('dataTable')
     const wrapper = useTemplateRef<HTMLElement>('wrapper')
     const responsivePager = computed(() =>
@@ -45,9 +73,24 @@ export default defineComponent({
         : null,
     )
     const { width } = useElementSize(responsivePager)
-    const { layoutColumns, reorderColumns, patchColumn } = useColumnLayout(
+    const narrowPager = computed(() => width.value > 0 && width.value < 600)
+    const mergedPagination = computed(() =>
+      typeof props.pagination === 'object' &&
+      props.pagination.simple == null &&
+      narrowPager.value
+        ? { ...props.pagination, simple: true }
+        : props.pagination,
+    )
+    const {
+      layoutColumns,
+      reorderColumns,
+      patchColumn,
+      resetLayout,
+      layoutChanged,
+    } = useColumnLayout(
       toRef(props, 'columns'),
       toRef(props, 'onUpdate:columns'),
+      toRef(props, 'onResetColumnLayout'),
     )
     const { hiddenKeys, visibleColumns, setColumnVisible, resetColumns } =
       useColumnVisibility(
@@ -56,37 +99,39 @@ export default defineComponent({
         columnStorage,
       )
     const printing = ref(false)
+    let pendingPrint: AbortController | undefined
+    const cancelPrint = () => pendingPrint?.abort()
+
+    onBeforeUnmount(cancelPrint)
 
     provide(config.wrapperKey, wrapper)
-    const size = ref(props.size)
-    const appearance = reactive({
-      striped: props.striped,
-      bordered: props.bordered,
-    })
-    const context = reactive({ x: 0, y: 0, show: false })
+    const size = useLocalOverride(() => props.size)
+    const striped = useLocalOverride(() => props.striped)
+    const bordered = useLocalOverride(() => props.bordered)
+    const context = shallowRef<TableProRowContext & { x: number; y: number }>()
+    const closeContext = () => {
+      context.value = void 0
+    }
 
     watch(
-      () => props.size,
-      (value) => {
-        size.value = value
-      },
-    )
-    watch(
-      () => props.striped,
-      (value) => {
-        appearance.striped = value
-      },
-    )
-    watch(
-      () => props.bordered,
-      (value) => {
-        appearance.bordered = value
+      [
+        () => props.data,
+        () => props.rowActionsDisabled,
+        () => props.contextMenuOptions,
+      ],
+      ([data, disabled], [previousData, previouslyDisabled]) => {
+        closeContext()
+
+        if (data !== previousData || disabled !== previouslyDisabled)
+          cancelPrint()
       },
     )
 
     const handle: TablePanelInst = {
       getTableInstance: () => table.value,
       downloadCsv: (options) => {
+        if (props.rowActionsDisabled) return
+
         const { fileName, keepOriginalData } = {
           ...props.downloadCsvTableOptions,
           ...options,
@@ -107,7 +152,8 @@ export default defineComponent({
           )
       },
       print: async (options) => {
-        if (printing.value || props.loading) return false
+        if (printing.value || props.loading || props.rowActionsDisabled)
+          return false
 
         const printOptions = {
           title: typeof props.title === 'string' ? props.title : '',
@@ -117,6 +163,9 @@ export default defineComponent({
           ...options,
         }
 
+        const current = new AbortController()
+
+        pendingPrint = current
         printing.value = true
 
         try {
@@ -133,12 +182,16 @@ export default defineComponent({
               : null
           })
 
-          return !!content && (await printTableContent(content, printOptions))
+          return (
+            !!content &&
+            (await printTableContent(content, printOptions, current.signal))
+          )
         } catch (error) {
           console.error('[TablePro]: Could not open print preview.', error)
 
           return false
         } finally {
+          pendingPrint = void 0
           printing.value = false
         }
       },
@@ -149,29 +202,49 @@ export default defineComponent({
     const rowProps: NonNullable<DataTableProps['rowProps']> = (row, index) => {
       const original = props.rowProps?.(row, index)
 
-      if (!props.contextMenuOptions?.length) return original ?? {}
+      if (!props.contextMenuOptions?.length || props.rowActionsDisabled)
+        return original ?? {}
 
       return {
         ...original,
-        onContextmenu: (event: PointerEvent) => {
+        class: [original?.class, 'r-table__context-row'],
+        tabindex: original?.tabindex ?? 0,
+        'aria-keyshortcuts': original?.['aria-keyshortcuts'] ?? 'Shift+F10',
+        onContextmenu: (event) => {
           original?.onContextmenu?.(event)
 
           if (event.defaultPrevented) return
 
           event.preventDefault()
-          Object.assign(context, {
-            x: event.clientX,
-            y: event.clientY,
-            show: true,
-          })
+          context.value = { row, index, x: event.clientX, y: event.clientY }
+        },
+        onKeydown: (event) => {
+          original?.onKeydown?.(event)
+
+          if (
+            event.defaultPrevented ||
+            event.target !== event.currentTarget ||
+            (event.key !== 'ContextMenu' &&
+              !(event.shiftKey && event.key === 'F10'))
+          )
+            return
+
+          const rect = (
+            event.currentTarget as HTMLElement
+          ).getBoundingClientRect()
+
+          event.preventDefault()
+          context.value = { row, index, x: rect.left, y: rect.bottom }
         },
       }
     }
 
     const changeAppearance = (values: PropsComponentPopselectKeys[]) => {
-      appearance.striped = values.includes('striped')
-      appearance.bordered = values.includes('bordered')
+      striped.value = values.includes('striped')
+      bordered.value = values.includes('bordered')
     }
+
+    const nativeProps = computed(() => toNativeTableProps(props))
 
     return () => {
       const {
@@ -181,12 +254,7 @@ export default defineComponent({
         tool,
         contextMenuOptions,
         onContextMenuClick,
-        'onUpdate:columns': updateColumns,
-        downloadCsvTableOptions,
-        printTableOptions,
-        columnStateKey,
-        pagination,
-        ...dataTableProps
+        rowActionsDisabled,
       } = props
       const {
         filters,
@@ -207,16 +275,17 @@ export default defineComponent({
       )
       const extras = tableFooter?.()
       const actions = tableAction?.()
-      const mergedPagination =
-        typeof pagination === 'object' && width.value > 0 && width.value < 600
-          ? { simple: true, ...pagination }
-          : pagination
 
       return (
         <section
           {...attrs}
           ref="wrapper"
-          class={['r-table', { 'r-table--fill': autoHeight }, attrs.class]}
+          class={[
+            'r-table',
+            { 'r-table--card': !bare, 'r-table--fill': autoHeight },
+            attrs.class,
+          ]}
+          style={[cardStyle.value, attrs.style]}
         >
           {filters?.()}
           {notice?.()}
@@ -234,7 +303,11 @@ export default defineComponent({
                         <ToolButton
                           icon="action/print"
                           label={t('print')}
-                          disabled={props.loading || printing.value}
+                          disabled={
+                            rowActionsDisabled ||
+                            props.loading ||
+                            printing.value
+                          }
                           onClick={async () => {
                             if (!(await handle.print()))
                               reportError?.(t('printError'))
@@ -248,17 +321,20 @@ export default defineComponent({
                         />
                         <Fullscreen />
                         {props.columns.length ? (
-                          <C
+                          <ColumnSettings
                             columns={layoutColumns.value}
                             hiddenKeys={hiddenKeys.value}
                             onReorderColumns={reorderColumns}
                             onPatchColumn={patchColumn}
                             onToggleColumn={setColumnVisible}
                             onResetColumns={resetColumns}
+                            canResetLayout={layoutChanged.value}
+                            onResetLayout={resetLayout}
                           />
                         ) : null}
-                        <TablePropsSelect
-                          {...appearance}
+                        <AppearanceSettings
+                          striped={striped.value}
+                          bordered={bordered.value}
                           onChange={changeAppearance}
                         />
                       </>
@@ -268,12 +344,13 @@ export default defineComponent({
               </header>
             ) : null}
             <NDataTable
-              {...dataTableProps}
-              {...appearance}
+              {...nativeProps.value}
+              striped={striped.value}
+              bordered={bordered.value}
               ref="dataTable"
               columns={visibleColumns.value}
-              pagination={mergedPagination}
-              flexHeight={autoHeight || dataTableProps.flexHeight}
+              pagination={mergedPagination.value}
+              flexHeight={autoHeight || props.flexHeight}
               rowProps={rowProps}
               size={size.value}
             >
@@ -284,18 +361,26 @@ export default defineComponent({
           {actions ? <div class="r-table__action">{actions}</div> : null}
           {contextMenuOptions?.length ? (
             <NDropdown
-              show={context.show}
+              show={!!context.value}
               placement="bottom-start"
               trigger="manual"
-              x={context.x}
-              y={context.y}
+              x={context.value?.x ?? 0}
+              y={context.value?.y ?? 0}
               options={contextMenuOptions}
-              onClickoutside={() => {
-                context.show = false
+              onClickoutside={closeContext}
+              onUpdateShow={(show) => {
+                if (!show) closeContext()
               }}
               onSelect={(key, option) => {
-                context.show = false
-                onContextMenuClick?.(key, option)
+                const current = context.value
+
+                closeContext()
+
+                if (current && !rowActionsDisabled) {
+                  const { row, index } = current
+
+                  onContextMenuClick?.(key, option, { row, index })
+                }
               }}
             />
           ) : null}

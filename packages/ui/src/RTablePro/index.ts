@@ -5,6 +5,7 @@ export type {
   TableProColumn,
   TableProParams,
   TableProQueryState,
+  TableProRowContext,
   TableProRequest,
   TableProResult,
   TableProSearchField,

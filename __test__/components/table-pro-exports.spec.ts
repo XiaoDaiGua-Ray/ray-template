@@ -1,6 +1,6 @@
 import { RTablePro } from '@/components/RTablePro'
 import type { TableProInst } from '@/components/RTablePro'
-import { mount } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
 import type { DataTableColumn } from 'naive-ui'
 import { buildTableCsv } from '../../packages/ui/src/RTablePro/src/csv'
 import * as printing from '../../packages/ui/src/RTablePro/src/printing'
@@ -96,4 +96,112 @@ it('exports group children with correct CSV escaping and neutralizes formula tex
   ).toBe(
     '"Name","Note","Score"\r\n"A, ""B""","\'=2+2","-2"\r\n"Array value","\'=2+2,text","-2"',
   )
+})
+
+it('copies current form values into custom print content without copying credentials', () => {
+  const target = document.createElement('section')
+
+  target.innerHTML =
+    '<input value="default"><input type="checkbox"><textarea>old</textarea><select><option>A</option><option>B</option></select><input type="password" value="placeholder">'
+  target.querySelector('input')!.value = 'edited'
+  target.querySelector<HTMLInputElement>('[type="checkbox"]')!.checked = true
+  target.querySelector('textarea')!.value = 'new'
+  target.querySelector('select')!.value = 'B'
+  target.querySelector<HTMLInputElement>('[type="password"]')!.value = 'private'
+
+  const clone = printing.resolvePrintContent({ target }, () => null)!
+
+  expect(clone.querySelector('input')?.value).toBe('edited')
+  expect(
+    clone.querySelector<HTMLInputElement>('[type="checkbox"]')?.checked,
+  ).toBe(true)
+  expect(clone.querySelector('textarea')?.value).toBe('new')
+  expect(clone.querySelector('select')?.value).toBe('B')
+  expect(
+    clone.querySelector<HTMLInputElement>('[type="password"]')?.value,
+  ).toBe('')
+  expect(
+    target.querySelector<HTMLInputElement>('[type="password"]')?.value,
+  ).toBe('private')
+})
+
+it('shares page styles with a custom print frame and removes it after printing', async () => {
+  const target = document.createElement('section')
+  const stylesheet = document.createElement('style')
+
+  target.className = 'print-fixture'
+  stylesheet.textContent = '.print-fixture { color: rebeccapurple; }'
+  document.head.append(stylesheet)
+  const append = document.body.append.bind(document.body)
+
+  vi.spyOn(document.body, 'append').mockImplementation((...nodes) => {
+    for (const node of nodes)
+      if (node instanceof HTMLIFrameElement) node.srcdoc = '<!doctype html>'
+
+    append(...nodes)
+  })
+
+  const printDocument = document.implementation.createHTMLDocument()
+  const printWindow = Object.assign(new EventTarget(), {
+    focus: vi.fn(),
+    print: vi.fn(() => {
+      expect(document.querySelector('iframe')).not.toBeNull()
+      expect(printDocument.head.textContent).toContain('rebeccapurple')
+      printWindow.dispatchEvent(new Event('afterprint'))
+    }),
+  })
+
+  vi.spyOn(HTMLIFrameElement.prototype, 'contentWindow', 'get').mockReturnValue(
+    printWindow as unknown as Window,
+  )
+  vi.spyOn(
+    HTMLIFrameElement.prototype,
+    'contentDocument',
+    'get',
+  ).mockReturnValue(printDocument)
+
+  try {
+    expect(
+      await printing.printTableContent(target.cloneNode(true) as HTMLElement, {
+        target,
+      }),
+    ).toBe(true)
+    expect(printWindow.print).toHaveBeenCalledOnce()
+    expect(document.querySelector('iframe')).toBeNull()
+  } finally {
+    stylesheet.remove()
+    document.querySelector('iframe')?.remove()
+  }
+})
+
+it('cancels a print still preparing when the request scope changes', async () => {
+  const print = vi.spyOn(printing, 'printTableContent').mockImplementation(
+    (_content, _options, signal) =>
+      new Promise((resolve) => {
+        signal?.addEventListener('abort', () => resolve(false), { once: true })
+      }),
+  )
+  const wrapper = mount(RTablePro, {
+    props: {
+      columns: [{ key: 'name', title: 'Name' }],
+      params: { account: 'a' },
+      request: async ({ account }) => ({
+        data: [{ id: 1, name: account }],
+        total: 1,
+      }),
+    },
+  })
+
+  try {
+    await flushPromises()
+    const table = wrapper.vm as unknown as TableProInst
+    const preview = table.print()
+
+    expect(print).toHaveBeenCalledOnce()
+    await wrapper.setProps({ params: { account: 'b' } })
+    expect(print.mock.calls[0][2]?.aborted).toBe(true)
+    expect(await preview).toBe(false)
+  } finally {
+    wrapper.unmount()
+  }
 })

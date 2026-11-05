@@ -5,7 +5,7 @@ import { NDataTable, NTree } from 'naive-ui'
 import type { DataTableColumn } from 'naive-ui'
 import { effectScope, nextTick, ref, shallowRef } from 'vue'
 import { useColumnVisibility } from '../../packages/ui/src/RTablePro/src/columns'
-import ColumnSettings from '../../packages/ui/src/RTablePro/src/components/C'
+import ColumnSettings from '../../packages/ui/src/RTablePro/src/components/ColumnSettings'
 
 const name = { key: 'name', title: 'Name' }
 const email = { key: 'email', title: 'Email' }
@@ -205,6 +205,52 @@ it('lets v-model own the full column definitions without removing hidden columns
     await nextTick()
     expect(table.props('columns')).toEqual([selection, email, name])
     expect(update).toHaveBeenCalledTimes(1)
+  } finally {
+    wrapper.unmount()
+  }
+})
+
+it('offers keyboard-operable column ordering and resets layout without revealing hidden columns', async () => {
+  const wrapper = mount(RTablePro, {
+    props: {
+      columns: [selection, { ...name, width: 100 }, email, region],
+      columnStateKey: 'keyboard',
+    },
+    global: { stubs: { teleport: true } },
+  })
+
+  try {
+    const settings = wrapper.getComponent(ColumnSettings)
+    const native = wrapper.getComponent(NDataTable)
+
+    await settings.get('button').trigger('click')
+    const move = wrapper.get('button[aria-label="Move Email up"]')
+
+    expect(move.attributes('type')).toBe('button')
+    await move.trigger('click')
+    settings.vm.$emit('patchColumn', 'name', { fixed: 'left', resizable: true })
+    settings.vm.$emit('toggleColumn', 'region', false)
+    await nextTick()
+    expect(native.props('columns')).toEqual([
+      selection,
+      email,
+      { ...name, width: 100, fixed: 'left', resizable: true },
+    ])
+
+    const reset = wrapper
+      .findAll('button')
+      .find((button) => button.text() === 'Reset column layout')
+
+    expect(reset).toBeDefined()
+    await reset!.trigger('click')
+    expect(native.props('columns')).toEqual([
+      selection,
+      { ...name, width: 100 },
+      email,
+    ])
+    expect(JSON.parse(localStorage.getItem(cacheKey('keyboard'))!)).toEqual([
+      'region',
+    ])
   } finally {
     wrapper.unmount()
   }

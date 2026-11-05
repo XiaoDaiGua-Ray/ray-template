@@ -1,3 +1,4 @@
+import { get } from 'lodash-es'
 import { getLeafColumns } from './columns'
 import type {
   TableProColumn,
@@ -181,10 +182,30 @@ const sameValue = (
     left.length === right.length &&
     left.every((value, index) => value === right[index]))
 
+export const createSearchDependencies = (
+  fields: readonly TableProSearchFieldConfig[],
+) => {
+  const dependents = new Map<string, string[]>()
+
+  for (const field of fields) {
+    if (!field.type) continue
+
+    for (const key of field.dependsOn ?? []) {
+      const group = dependents.get(key)
+
+      if (group) group.push(field.key)
+      else dependents.set(key, [field.key])
+    }
+  }
+
+  return dependents
+}
+
 export function patchSearchValues(
   fields: readonly TableProSearchFieldConfig[],
   previous: TableProSearchValues,
   patch: TableProSearchValues,
+  dependents: ReadonlyMap<string, readonly string[]>,
 ) {
   const next = pickSearchValues(fields, { ...previous, ...patch })
   const changed = new Set(
@@ -197,18 +218,11 @@ export function patchSearchValues(
 
   // 依赖可以跨多级，遍历时把本次被清除的字段也加入变更集合。
   for (const key of changed) {
-    for (const field of fields) {
-      if (
-        !field.type ||
-        changed.has(field.key) ||
-        Object.hasOwn(patch, field.key)
-      )
-        continue
+    for (const dependent of dependents.get(key) ?? []) {
+      if (changed.has(dependent) || Object.hasOwn(patch, dependent)) continue
 
-      if (!field.dependsOn?.includes(key)) continue
-
-      next[field.key] = null
-      changed.add(field.key)
+      next[dependent] = null
+      changed.add(dependent)
     }
   }
 
@@ -230,14 +244,33 @@ export function sameSearchField(
   )
 }
 
+export function sameSearchBehavior(
+  field: TableProSearchFieldConfig,
+  previous: TableProSearchFieldConfig | undefined,
+) {
+  if (!sameSearchField(field, previous)) return false
+
+  if (!field.type || !previous?.type) return true
+
+  return (
+    field.visible === previous.visible &&
+    field.getValue === previous.getValue &&
+    field.matches === previous.matches &&
+    field.transform === previous.transform
+  )
+}
+
+export const visibleSearchFields = (
+  fields: readonly TableProSearchFieldConfig[],
+  values: TableProSearchValues,
+) => fields.filter((field) => isSearchFieldVisible(field, values))
+
 export function normalizeSearchValues(
   fields: readonly TableProSearchFieldConfig[],
   values: TableProSearchValues,
 ): TableProSearchValues {
   return Object.fromEntries(
     fields.flatMap((field) => {
-      if (!isSearchFieldVisible(field, values)) return []
-
       const raw = sanitizeValue(field, values[field.key])
       const value =
         (!field.type || field.type === 'text') && typeof raw === 'string'
@@ -288,17 +321,20 @@ export function createSearchPredicate(
 
     const field = fieldsByKey.get(key)
     const read = (row: Row) =>
-      field?.type && field.getValue ? field.getValue(row) : row[key]
+      field?.type && field.getValue ? field.getValue(row) : get(row, key)
 
-    return [
-      (row: Row) => {
-        const cell = read(row)
+    if (field?.type && field.matches) {
+      const matches = field.matches
 
-        if (field?.type && field.matches)
-          return field.matches(cell, value as never, row)
+      return [(row: Row) => matches(read(row), value as never, row)]
+    }
 
-        if (field?.type === 'dateRange' || field?.type === 'datetimeRange') {
-          const [from, to] = value as readonly (string | number)[]
+    if (field?.type === 'dateRange' || field?.type === 'datetimeRange') {
+      const [from, to] = value as readonly (string | number)[]
+
+      return [
+        (row: Row) => {
+          const cell = read(row)
 
           return (
             (typeof cell === 'string' || typeof cell === 'number') &&
@@ -306,24 +342,39 @@ export function createSearchPredicate(
             cell >= from &&
             cell <= to
           )
-        }
+        },
+      ]
+    }
 
-        if (Array.isArray(value)) {
+    if (Array.isArray(value)) {
+      const selected = new Set<unknown>(value)
+
+      return [
+        (row: Row) => {
+          const cell = read(row)
+
           return Array.isArray(cell)
-            ? cell.some((item: unknown) => value.includes(item))
-            : value.includes(cell)
-        }
+            ? cell.some((item: unknown) => selected.has(item))
+            : selected.has(cell)
+        },
+      ]
+    }
 
-        return typeof value === 'string' &&
-          (!field
-            ? true
-            : field.type === 'text' || (!field.type && !field.options))
-          ? String(cell ?? '')
-              .toLowerCase()
-              .includes(value.toLowerCase())
-          : cell === value
-      },
-    ]
+    if (
+      typeof value === 'string' &&
+      (!field || field.type === 'text' || (!field.type && !field.options))
+    ) {
+      const needle = value.toLowerCase()
+
+      return [
+        (row: Row) =>
+          String(read(row) ?? '')
+            .toLowerCase()
+            .includes(needle),
+      ]
+    }
+
+    return [(row: Row) => read(row) === value]
   })
 
   return checks.length

@@ -11,7 +11,7 @@ import {
 } from 'vue'
 import type { PropType } from 'vue'
 import { useTableLocale } from '../locale'
-import { isSearchFieldVisible, normalizeSearchValues } from '../search'
+import { normalizeSearchValues } from '../search'
 import type {
   TableProSearchFieldConfig,
   TableProSearchOptions,
@@ -83,20 +83,14 @@ export default defineComponent({
       gridSize(props.options?.collapsedRows, 1),
     )
     const items = computed(() =>
-      props.fields.flatMap((field, index) =>
-        isSearchFieldVisible(field, props.values)
-          ? [
-              {
-                field,
-                path: `field-${index}`,
-                span: Math.min(
-                  columns.value,
-                  gridSize(field.type ? field.span : void 0, 1),
-                ),
-              },
-            ]
-          : [],
-      ),
+      props.fields.map((field, index) => ({
+        field,
+        path: `field-${index}`,
+        span: Math.min(
+          columns.value,
+          gridSize(field.type ? field.span : void 0, 1),
+        ),
+      })),
     )
     const canCollapse = computed(() => {
       if (props.legacy) return false

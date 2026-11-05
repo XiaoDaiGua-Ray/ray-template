@@ -52,6 +52,9 @@
   "contextAction": "Row context menu action",
   "firstPage": "Go to first page",
   "twentyRows": "20 per page",
-  "customFooter": "Right-click a row to open the example context menu.",
-  "pinNeedsWidth": "Set a numeric column width before pinning"
+  "customFooter": "Right-click a row or press Shift+F10 on it to open its menu.",
+  "pinNeedsWidth": "Set a numeric column width before pinning",
+  "moveColumnUp": "Move {column} up",
+  "moveColumnDown": "Move {column} down",
+  "resetColumnLayout": "Reset column layout"
 }

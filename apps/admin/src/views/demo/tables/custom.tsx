@@ -25,7 +25,9 @@ export default defineComponent({
         v-model:checkedRowKeys={selected.value}
         scrollX={944}
         contextMenuOptions={[{ label: t('contextAction'), key: 'example' }]}
-        onContextMenuClick={() => window.$message?.info(t('contextAction'))}
+        onContextMenuClick={(_key, _option, { row }) =>
+          window.$message?.info(`${t('contextAction')}: ${row.name}`)
+        }
       >
         {{
           filters: ({

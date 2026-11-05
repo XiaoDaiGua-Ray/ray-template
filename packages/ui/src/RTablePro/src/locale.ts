@@ -2,35 +2,30 @@ import { useUiServices } from '../../services'
 import en from './en-US.json'
 import zh from './zh-CN.json'
 
+const labelsByLocale = {
+  zh: { ...zh, fullscreen: '全屏', exitFullscreen: '退出全屏' },
+  en: { ...en, fullscreen: 'Full screen', exitFullscreen: 'Exit full screen' },
+}
+
 export function useTableLocale() {
   const { translate, locale } = useUiServices()
 
   return {
     t: (key: string, params: Record<string, unknown> = {}) => {
-      const chinese = locale?.() === 'zh-CN'
-      const labels = chinese
-        ? { ...zh, fullscreen: '全屏', exitFullscreen: '退出全屏' }
-        : {
-            ...en,
-            fullscreen: 'Full screen',
-            exitFullscreen: 'Exit full screen',
-          }
+      const translationKey =
+        key === 'fullscreen' || key === 'exitFullscreen'
+          ? `headerTooltip.${key === 'fullscreen' ? 'FullScreen' : 'CancelFullScreen'}`
+          : `table.${key}`
+      const translated = translate?.(translationKey, params)
 
-      if (key === 'fullscreen' || key === 'exitFullscreen') {
-        return (
-          translate?.(
-            `headerTooltip.${key === 'fullscreen' ? 'FullScreen' : 'CancelFullScreen'}`,
-          ) ?? labels[key]
-        )
-      }
+      if (translated != null && translated !== translationKey) return translated
 
+      const labels =
+        locale?.() === 'zh-CN' ? labelsByLocale.zh : labelsByLocale.en
       const label = labels[key as keyof typeof labels] ?? key
 
-      return (
-        translate?.(`table.${key}`, params) ??
-        label.replace(/\{(\w+)\}/g, (token, name: string) =>
-          String(params[name] ?? token),
-        )
+      return label.replace(/\{(\w+)\}/g, (token, name: string) =>
+        String(params[name] ?? token),
       )
     },
   }

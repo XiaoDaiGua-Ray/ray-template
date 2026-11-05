@@ -1,8 +1,8 @@
-import { onScopeDispose, shallowRef, watch } from 'vue'
+import { computed, onScopeDispose, shallowRef, watch } from 'vue'
 import {
   copySearchValues,
+  createSearchDependencies,
   initialSearchValues,
-  normalizeSearchValues,
   patchSearchValues,
   pickSearchValues,
 } from './search'
@@ -18,6 +18,7 @@ export function useTableSearch(
   options: () => TableProSearchOptions | undefined,
   validate: (isCurrent: () => boolean) => true | Promise<boolean>,
   restoreValidation: () => void,
+  reportError: (error: unknown) => false,
   commit: (
     values: TableProSearchValues,
     reason: TableProSearchSubmission['reason'],
@@ -26,6 +27,7 @@ export function useTableSearch(
   const draft = shallowRef<TableProSearchValues>(
     initialSearchValues(fields(), options()),
   )
+  const dependents = computed(() => createSearchDependencies(fields()))
   let revision = 0
   let timer: ReturnType<typeof setTimeout> | undefined
 
@@ -44,20 +46,27 @@ export function useTableSearch(
   const submit = async () => {
     cancelPending()
     const current = revision
-    const values = normalizeSearchValues(fields(), draft.value)
-
+    const values = draft.value
     const isCurrent = () => current === revision
-    const validation = validate(isCurrent)
 
-    if (validation !== true && !(await validation)) return false
+    try {
+      const validation = validate(isCurrent)
 
-    if (!isCurrent()) return false
+      if (validation !== true && !(await validation)) return false
 
-    return commit(values, 'submit')
+      return isCurrent() ? await commit(values, 'submit') : false
+    } catch (error) {
+      return isCurrent() ? reportError(error) : false
+    }
   }
 
   const setValues = (values: TableProSearchValues) => {
-    const next = patchSearchValues(fields(), draft.value, values)
+    const next = patchSearchValues(
+      fields(),
+      draft.value,
+      values,
+      dependents.value,
+    )
 
     if (next === draft.value) return
 
@@ -74,7 +83,7 @@ export function useTableSearch(
     draft.value = initialSearchValues(fields(), options())
     restoreValidation()
 
-    return commit(normalizeSearchValues(fields(), draft.value), 'reset')
+    return commit(draft.value, 'reset')
   }
 
   const reconcile = (retainedKeys: ReadonlySet<string>) => {

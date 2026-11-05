@@ -3,6 +3,7 @@ import type {
   CascaderProps,
   DataTableInst,
   DataTableProps,
+  DataTableRowData,
   DatePickerProps,
   FormItemRule,
   InputNumberProps,
@@ -19,12 +20,18 @@ export interface TableProPrintOptions {
   target?: BasicTarget<HTMLElement>
   title?: string
   style?: string
+  includePageStyles?: boolean
   formatHeader?: (column: LeafColumn) => string
   formatCell?: (
     value: unknown,
     row: Record<string, unknown>,
     column: LeafColumn,
   ) => string
+}
+
+export interface TableProRowContext {
+  row: Readonly<DataTableRowData>
+  index: number
 }
 
 export interface TablePanelInst {

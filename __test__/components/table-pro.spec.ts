@@ -4,8 +4,12 @@ import type {
   TableProParams,
   TableProResult,
 } from '@/components/RTablePro'
+import { provideUiServices } from '@ray-template/ui/services'
 import { flushPromises, mount } from '@vue/test-utils'
-import { NDataTable, NPagination } from 'naive-ui'
+import { NDataTable, NDropdown, NPagination } from 'naive-ui'
+import { defineComponent, h } from 'vue'
+import Size from '../../packages/ui/src/RTablePro/src/components/Size'
+import * as csv from '../../packages/ui/src/RTablePro/src/csv'
 
 const columns = [{ title: 'Name', key: 'name' }]
 const response = (name: string, total = 30): TableProResult => ({
@@ -135,7 +139,7 @@ it('exposes read-only query state during load, failure and retry', async () => {
     .fn(() => retry.promise)
     .mockReturnValueOnce(initial.promise)
     .mockReturnValueOnce(failing.promise)
-  const [register, { queryState, setPageSize }] = useTablePro()
+  const [register, { queryState, reload, setPageSize }] = useTablePro()
 
   expect(queryState.value).toBeNull()
   const wrapper = mount(RTablePro, {
@@ -170,18 +174,19 @@ it('exposes read-only query state during load, failure and retry', async () => {
       failed: true,
       page: 1,
       pageSize: 20,
-      total: 42,
+      total: null,
     })
-    expect(wrapper.text()).toContain('Last successful result')
+    expect(wrapper.text()).not.toContain('Last successful result')
 
-    await wrapper.get('.n-alert button').trigger('click')
+    const retrying = reload()
+
     expect(queryState.value).toMatchObject({
       loading: true,
       failed: false,
-      total: 42,
+      total: null,
     })
     retry.resolve(response('Recovered', 7))
-    await flushPromises()
+    await retrying
     expect(queryState.value).toMatchObject({
       loading: false,
       failed: false,
@@ -194,25 +199,119 @@ it('exposes read-only query state during load, failure and retry', async () => {
   expect(queryState.value).toBeNull()
 })
 
-it('shows a retry for a failed request and omits paging fields when pagination is off', async () => {
+it('clears rows and blocks output while a different query scope loads or fails', async () => {
+  const failed = Promise.withResolvers<TableProResult>()
   const request = vi
-    .fn(async (_params: TableProParams) => response('Recovered', 1))
-    .mockRejectedValueOnce(new Error('offline'))
+    .fn(async (_params: TableProParams) => response('Account B'))
+    .mockResolvedValueOnce(response('Account A'))
+    .mockImplementationOnce(() => failed.promise)
   const wrapper = mount(RTablePro, {
-    props: { columns, request, pagination: false, tool: false },
+    props: { columns, request, params: { account: { id: 'a' } } },
   })
+  const table = wrapper.vm as unknown as TableProInst
+  const download = vi
+    .spyOn(csv, 'downloadTableCsv')
+    .mockImplementation(() => {})
 
   try {
     await flushPromises()
-    expect(wrapper.emitted('request-error')).toHaveLength(1)
-    expect(wrapper.getComponent(NDataTable).props('pagination')).toBe(false)
-    await wrapper.get('.n-alert button').trigger('click')
+    expect(table.getCurrentPageData()).toEqual(response('Account A').data)
+    await wrapper.setProps({ params: { account: { id: 'b' } } })
+
+    expect(table.queryState).toMatchObject({ loading: true, total: null })
+    expect(table.getCurrentPageData()).toEqual([])
+    expect(table.getTableInstance()).toBeNull()
+    expect(wrapper.getComponent(NDataTable).props('data')).toEqual([])
+    failed.reject(new Error('offline'))
     await flushPromises()
 
+    expect(table.queryState).toMatchObject({ failed: true, total: null })
+    expect(wrapper.text()).not.toContain('Account A')
+    expect(await table.print()).toBe(false)
+    table.downloadCsv({ keepOriginalData: true })
+    expect(download).not.toHaveBeenCalled()
+
+    await table.reload()
+    expect(table.getCurrentPageData()).toEqual(response('Account B').data)
+    table.downloadCsv()
+    expect(download).toHaveBeenCalledExactlyOnceWith(
+      '"Name"\r\n"Account B"',
+      void 0,
+    )
+  } finally {
+    download.mockRestore()
+    wrapper.unmount()
+  }
+})
+
+it('clears even same-query rows on failure and when the request source changes', async () => {
+  const request = vi
+    .fn(async (_params: TableProParams) => response('Previous source'))
+    .mockResolvedValueOnce(response('Previous source'))
+    .mockRejectedValueOnce(new Error('offline'))
+  const replacement = vi.fn(async () => {
+    throw new Error('new source offline')
+  })
+  const wrapper = mount(RTablePro, { props: { columns, request } })
+  const table = wrapper.vm as unknown as TableProInst
+
+  try {
+    await flushPromises()
+    await table.reload()
+    expect(table.queryState).toMatchObject({ failed: true, total: null })
+    expect(table.getCurrentPageData()).toEqual([])
+
+    await table.reload()
+    expect(table.getCurrentPageData()).toEqual(response('Previous source').data)
+    await wrapper.setProps({ request: replacement })
+    await flushPromises()
+    expect(table.queryState).toMatchObject({ failed: true, total: null })
+    expect(table.getCurrentPageData()).toEqual([])
+  } finally {
+    wrapper.unmount()
+  }
+})
+
+it('shows a toast and the normal empty state without an inline alert, then allows retry', async () => {
+  const request = vi
+    .fn(async (_params: TableProParams) => response('Recovered', 1))
+    .mockRejectedValueOnce(new Error('offline'))
+  const reportError = vi.fn()
+  const wrapper = mount(
+    defineComponent({
+      setup() {
+        provideUiServices({ reportError })
+
+        return () =>
+          h(
+            RTablePro,
+            { columns, request, pagination: false, tool: false },
+            {
+              empty: () => 'Custom empty state',
+              notice: () => 'Always visible notice',
+            },
+          )
+      },
+    }),
+  )
+  const table = wrapper.getComponent(RTablePro)
+  const instance = table.vm as unknown as TableProInst
+
+  try {
+    await flushPromises()
+    expect(table.emitted('request-error')).toHaveLength(1)
+    expect(reportError).toHaveBeenCalledExactlyOnceWith(
+      "Couldn't load the data",
+    )
+    expect(table.getComponent(NDataTable).props('pagination')).toBe(false)
+    expect(table.text()).toContain('Custom empty state')
+    expect(table.text()).toContain('Always visible notice')
+    expect(table.find('.n-alert').exists()).toBe(false)
+    await instance.reload()
+
     expect(request.mock.calls.map(([params]) => params)).toEqual([{}, {}])
-    expect(wrapper.find('.n-alert').exists()).toBe(false)
-    expect(wrapper.text()).toContain('Recovered')
-    expect((wrapper.vm as unknown as TableProInst).queryState).toEqual({
+    expect(table.text()).toContain('Recovered')
+    expect(instance.queryState).toEqual({
       loading: false,
       failed: false,
       page: null,
@@ -267,6 +366,7 @@ it('renders bare data without a toolbar or pagination by default', () => {
     expect(wrapper.text()).toContain('Bare row')
     expect(wrapper.getComponent(NDataTable).props('pagination')).toBe(false)
     expect(wrapper.find('header').exists()).toBe(false)
+    expect(wrapper.classes()).not.toContain('r-table--card')
   } finally {
     wrapper.unmount()
   }
@@ -447,6 +547,100 @@ it('supports an optional title slot for actions without putting controls inside 
     expect(wrapper.get('header button').text()).toBe('Quick action')
     expect(wrapper.find('header h2').exists()).toBe(false)
     expect(wrapper.text()).not.toContain('Default title')
+  } finally {
+    wrapper.unmount()
+  }
+})
+
+it('provides the row that opened the context menu and discards it after data changes', async () => {
+  const row = { id: 7, name: 'Alice' }
+  const option = { key: 'edit', label: 'Edit' }
+  const select = vi.fn()
+  const onContextmenu = vi.fn((event: MouseEvent) => event.preventDefault())
+  const wrapper = mount(RTablePro, {
+    props: {
+      columns,
+      data: [row],
+      tool: false,
+      rowProps: () => ({ onContextmenu }),
+      contextMenuOptions: [option],
+      onContextMenuClick: select,
+    },
+    global: { stubs: { teleport: true } },
+  })
+  const menu = wrapper.getComponent(NDropdown)
+
+  try {
+    const entry = wrapper.get('tbody tr')
+
+    await entry.trigger('contextmenu')
+    expect(onContextmenu).toHaveBeenCalledOnce()
+    expect(menu.props('show')).toBe(false)
+
+    expect(entry.attributes('tabindex')).toBe('0')
+    await entry.trigger('keydown', { key: 'F10', shiftKey: true })
+    expect(menu.props('show')).toBe(true)
+    await wrapper.get('.n-dropdown-option-body').trigger('click')
+    expect(select).toHaveBeenCalledExactlyOnceWith('edit', option, {
+      row,
+      index: 0,
+    })
+
+    await entry.trigger('keydown', { key: 'ContextMenu' })
+    expect(menu.props('show')).toBe(true)
+    await wrapper.setProps({ data: [{ id: 8, name: 'Ray' }] })
+    expect(menu.props('show')).toBe(false)
+    const closingOption = wrapper.find('.n-dropdown-option-body')
+
+    if (closingOption.exists()) await closingOption.trigger('click')
+
+    expect(select).toHaveBeenCalledOnce()
+  } finally {
+    wrapper.unmount()
+  }
+})
+
+it('keeps panel props and slots out of the native table while forwarding its own API', () => {
+  const wrapper = mount(RTablePro, {
+    props: {
+      columns,
+      tool: false,
+      title: 'Panel title',
+      scrollX: 640,
+      columnStateKey: 'directory',
+    },
+    attrs: { id: 'directory' },
+    slots: { empty: 'Native empty slot', tableFooter: 'Panel footer' },
+  })
+
+  try {
+    const native = wrapper.getComponent(NDataTable)
+
+    expect(wrapper.attributes('id')).toBe('directory')
+    expect(wrapper.classes()).toContain('r-table--card')
+    expect(native.props('scrollX')).toBe(640)
+    expect(native.attributes('columnstatekey')).toBeUndefined()
+    expect(native.attributes('id')).toBeUndefined()
+    expect(native.text()).toContain('Native empty slot')
+    expect(native.text()).not.toContain('Panel footer')
+    expect(wrapper.get('.r-table__footer').text()).toBe('Panel footer')
+  } finally {
+    wrapper.unmount()
+  }
+})
+
+it('respects a changed density prop without reviving an earlier local choice', async () => {
+  const wrapper = mount(RTablePro, { props: { columns, size: 'medium' } })
+  const native = wrapper.getComponent(NDataTable)
+
+  try {
+    wrapper.getComponent(Size).vm.$emit('change', 'small')
+    await wrapper.vm.$nextTick()
+    expect(native.props('size')).toBe('small')
+    await wrapper.setProps({ size: 'large' })
+    expect(native.props('size')).toBe('large')
+    await wrapper.setProps({ size: 'medium' })
+    expect(native.props('size')).toBe('medium')
   } finally {
     wrapper.unmount()
   }
