@@ -15,6 +15,8 @@ const TableProDemo = defineAsyncComponent(() => import('../examples/TableProDemo
 
 ## 交互示例
 
+[打开完整在线示例](./table-pro-examples)，按任务体验 11 个可运行场景，每个场景附操作步骤、预期结果和同一份运行源码。
+
 试试切换数据来源、筛选和分页。远端模式下，快速切换页码或重复提交筛选可以中止前一次查询。触发模拟失败后，可以用表格内的按钮重试。
 
 <ClientOnly>
@@ -156,21 +158,15 @@ SFC 使用 `<RTablePro @register="register" />`。每张表单独调用一次 Ho
 
 `getCurrentPageData()` 返回当前页的行：本地表格已应用筛选、排序和分页，组件管理的远端表格只返回与当前查询和分页匹配的数据。返回的行用于读取，业务变更通过页面数据完成；虚拟滚动不会缩小取数范围。旧版 `runTableRequest` / `runAsyncTableRequest` 迁移到 `reload`，请求条件通过 `params` 或请求函数传入。
 
-Ray Admin 的「表格」菜单下有三个可运行的完整示例：
-
-| 示例                                                                                                                                    | 可以试什么                                                                             |
-| --------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| [Hooks · 查询与分页](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/views/demo/tables/hooks-query.tsx)         | 通过 `params` 查询，观察加载、失败和分页数据。可模拟失败、重试，并查看实际发出的请求。 |
-| [Hooks · 选择与批量操作](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/views/demo/tables/hooks-selection.tsx) | 按当前页选择或取消，跨页保留选择，对所选行应用批量标记；通过底层实例清除排序。         |
-| [Hooks · 导出与打印](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/views/demo/tables/hooks-output.tsx)        | 对比当前页与全部已加载数据的 CSV，打印当前页，观察卸载和重新挂载时按钮的可用状态。     |
+三个 Hook 场景均可在[在线示例](./table-pro-examples#实例与-hooks)中运行。
 
 ## 列设置与缓存
 
-每张表使用稳定且唯一的列 key。列设置可以勾选显示、拖动或用上移与下移按钮调整根列顺序、固定或启用列宽调整；分组子列跟随根列。使用 `columnStateKey` 跨刷新保留隐藏列，按账户或租户隔离时将标识纳入 key。缓存不存数据、列定义、顺序、固定位置或列宽。调用方接管列配置可用 `v-model:columns`，返回包含隐藏列的完整定义。「恢复列布局」保留显隐；受控列由调用方通过 `onResetColumnLayout` 恢复自己的列定义。
+试试[在线列设置示例](./table-pro-examples#列设置与缓存)。每张表使用稳定且唯一的列 key。列设置可以勾选显示、拖动或用上移与下移按钮调整根列顺序、固定或启用列宽调整；分组子列跟随根列。使用 `columnStateKey` 跨刷新保留隐藏列，按账户或租户隔离时将标识纳入 key。缓存不存数据、列定义、顺序、固定位置或列宽。调用方接管列配置可用 `v-model:columns`，返回包含隐藏列的完整定义。「恢复列布局」保留显隐；受控列由调用方通过 `onResetColumnLayout` 恢复自己的列定义。
 
 ## 打印与 CSV
 
-默认取当前页可见数据列。打印按当前筛选和排序输出独立表格，不复刻 Vue 单元格、操作区、展开区或合并布局。报表等专用版式通过 `printTableOptions.target` 指定元素、ref 或 getter；默认复制宿主样式表、根节点主题和普通表单的当前值，也可设置 `includePageStyles: false`。单次调用可传 `title` 和专用 `style`。依赖区域外祖先、脚本或嵌入内容的区域需要专用打印 CSS；密码和文件值不会复制。真实纸张输出由浏览器负责。
+试试[在线打印与 CSV 示例](./table-pro-examples#打印与-csv)。默认取当前页可见数据列。打印按当前筛选和排序输出独立表格，不复刻 Vue 单元格、操作区、展开区或合并布局。报表等专用版式通过 `printTableOptions.target` 指定元素、ref 或 getter；默认复制宿主样式表、根节点主题和普通表单的当前值，也可设置 `includePageStyles: false`。单次调用可传 `title` 和专用 `style`。依赖区域外祖先、脚本或嵌入内容的区域需要专用打印 CSS；密码和文件值不会复制。真实纸张输出由浏览器负责。
 
 CSV 的 `keepOriginalData` 使用当前传给表格的整批数据，远端模式不会自动抓取全部页。列级 `allowExport: false` 可排除数据；`getCsvCell` / `getCsvHeader` 返回原始文本，由组件做 CSV 转义。
 

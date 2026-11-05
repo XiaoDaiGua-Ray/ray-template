@@ -111,6 +111,10 @@ const views = {
     load: () => import('@/views/demo/tables/columns'),
     name: 'TableDemoColumns',
   },
+  'demo/tables/controlled': {
+    load: () => import('@/views/demo/tables/controlled'),
+    name: 'TableDemoControlled',
+  },
   'demo/tables/custom': {
     load: () => import('@/views/demo/tables/custom'),
     name: 'TableDemoCustom',

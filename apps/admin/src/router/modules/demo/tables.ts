@@ -23,6 +23,12 @@ const tables: AppRouteRecordRaw = {
       meta: { i18nKey: t('menu.TableRemote') },
     },
     {
+      path: 'controlled',
+      name: 'TableDemoControlled',
+      component: routeView('demo/tables/controlled'),
+      meta: { i18nKey: t('menu.TableControlled') },
+    },
+    {
       path: 'search',
       name: 'TableDemoSearch',
       component: routeView('demo/tables/search'),

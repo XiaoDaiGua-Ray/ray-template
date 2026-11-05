@@ -13,7 +13,6 @@ import {
   getStaticAppRoutes,
   setAppRouteModules,
 } from '@/router/app-route-modules'
-import { routeView } from '@/router/config/views'
 import { expandRoutes } from '@/router/utils/expand-routes'
 import { useSettingActions, useSettingGetters } from '@/store'
 import { useMemoryCache } from '@/utils/cache-backend'
@@ -21,11 +20,13 @@ import { exampleFocusKey } from '@/views/demo/hooks/example-focus'
 import type { IconPackage } from '@ray-template/icons'
 import { iconSprites } from '@ray-template/icons/manifest'
 import { provideUiServices } from '@ray-template/ui/services'
+import { createStorage } from '@ray-template/utils/storage'
 import { RouterView } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 
 const examplePaths = new Set([
   '/dashboard',
+  '/tables',
   '/form',
   '/modal-demo',
   '/echart',
@@ -43,16 +44,11 @@ const examplePaths = new Set([
   '/axios',
   '/qrcode',
 ])
+
 const params = new URLSearchParams(location.search)
 const withLayout = params.get('layout') === '1'
 const examples = [
   ...getStaticAppRoutes().filter(({ path }) => examplePaths.has(path)),
-  {
-    path: '/tables/search',
-    name: 'TableDemoSearch',
-    component: routeView('demo/tables/search'),
-    meta: { i18nKey: 'menu.TableSearch' },
-  },
   {
     path: '/docs-core-utils',
     name: 'DocsCoreUtils',
@@ -86,6 +82,7 @@ const DocumentationExample = defineComponent({
       translate: t,
       iconUrl: (name, prefix) =>
         `${iconSprites[name.split('/')[0] as IconPackage]}#${prefix}-${name}`,
+      columnStorage: createStorage(window.sessionStorage, 'ray-doc-examples'),
       reportError: (message) => window.$message?.error(message),
     })
 

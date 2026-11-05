@@ -35,6 +35,7 @@ const reference = [
     collapsed: true,
     items: [
       entry('TablePro', '/reference/table-pro'),
+      entry('TablePro 在线示例', '/reference/table-pro-examples'),
       entry('RForm 与 useForm', '/reference/components/form'),
       entry('RModal', '/reference/components/modal'),
       entry('RChart 与 useChart', '/reference/components/chart'),

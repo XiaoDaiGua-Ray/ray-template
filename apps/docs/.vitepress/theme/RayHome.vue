@@ -71,7 +71,14 @@
         <p>表格填满可用高度，数据在表内滚动。</p>
         <div class="ray-showcase-links">
           <a :href="withBase('/reference/table-pro.html')">TablePro 用法</a>
-          <a :href="demo + '#/tables/auto-height'">在线演示</a>
+          <a
+            :href="
+              withBase(
+                '/reference/table-pro-examples.html#自适应高度与虚拟滚动',
+              )
+            "
+            >在线示例</a
+          >
         </div>
       </div>
       <img
@@ -87,7 +94,7 @@
 
 <script setup lang="ts">
 import { withBase } from 'vitepress'
-import { demo, version } from '../source.mts'
+import { version } from '../source.mts'
 
 const modules = [
   { title: 'Ray Admin', name: 'apps/admin', href: '/guide/layout.html' },
