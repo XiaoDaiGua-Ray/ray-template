@@ -1,4 +1,5 @@
 import { LAYOUT_MODES } from '@ray-template/admin-shell'
+import { DEFAULT_THEME_STYLE } from '@ray-template/ui/theme-presets'
 import type { LayoutConfig, SettingState } from './types'
 
 type OmitKeys =
@@ -22,7 +23,7 @@ export { LAYOUT_MODES }
 
 // SettingDrawer 默认配置系统配置项
 const defaultSettingConfig: Readonly<Config> = {
-  themeStyle: 'naive',
+  themeStyle: DEFAULT_THEME_STYLE,
   layoutConfig: {
     mode: 'side',
     contentWidth: 'fluid',
@@ -45,11 +46,11 @@ const defaultSettingConfig: Readonly<Config> = {
   menuConfig: {
     collapsedWidth: 64,
     collapsedMode: 'width',
-    collapsedIconSize: 16,
+    collapsedIconSize: 22,
     collapsedIndent: 24,
     accordion: false,
     menuSiderBarLogo: true,
-    iconSize: 16,
+    iconSize: 20,
     menuWidth: 272,
     inverted: false,
     nativeScrollbar: false,

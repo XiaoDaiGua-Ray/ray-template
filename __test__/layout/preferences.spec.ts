@@ -1,7 +1,7 @@
 import { createPinia, disposePinia, setActivePinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import { createApp, nextTick } from 'vue'
-import { APP_CATCH_KEY } from '../../apps/admin/src/app-config'
+import { APP_CATCH_KEY, APP_THEME } from '../../apps/admin/src/app-config'
 import {
   findMenuRoot,
   firstMenuLeaf,
@@ -71,6 +71,7 @@ describe('layout preferences', () => {
         localeLanguage: 'en-US',
         sideBarLogo: { icon: 'ray', title: 'Saved title' },
         menuTagSwitch: false,
+        menuConfig: { iconSize: 16, collapsedIconSize: 16, menuWidth: 244 },
         primaryColorOverride: {
           common: { primaryColor: '#3468db', bodyColor: '#000000' },
           Card: { borderRadius: '99px' },
@@ -89,16 +90,48 @@ describe('layout preferences', () => {
       })
       expect(store.localeLanguage).toBe('en-US')
       expect(store.menuTagSwitch).toBe(false)
-      expect(store.themeStyle).toBe('naive')
+      expect(store.menuConfig).toMatchObject({
+        iconSize: 20,
+        collapsedIconSize: 22,
+        menuWidth: 244,
+      })
+      expect(store.themeStyle).toBe('modern')
       expect(store.themeOverrides.common?.primaryColor).toBe('#3468db')
-      expect(store.themeOverrides.common?.bodyColor).toBeUndefined()
-      expect(store.themeOverrides.Card).toBeUndefined()
+      expect(store.themeOverrides.common?.bodyColor).toBe(
+        APP_THEME.appNaiveUIThemeOverrides.light.common?.bodyColor,
+      )
+      expect(store.themeOverrides.Card?.borderRadius).toBe('12px')
       store.updateSettingState('layoutConfig', { mode: 'top' })
       expect(store.layoutConfig.fixedHeader).toBe(true)
       expect(store.layoutConfig.mode).toBe('top')
     } finally {
       app.unmount()
       disposePinia(pinia)
+      localStorage.removeItem(APP_CATCH_KEY.appPiniaSettingStore)
+    }
+  })
+
+  it.each([
+    { iconSize: 16, collapsedIconSize: 16 },
+    { iconSize: 24, collapsedIconSize: 18 },
+  ])('preserves menu icon sizes saved by the current app (%o)', (sizes) => {
+    const initial = mountPersistedSettings()
+    const store = piniaSettingStore()
+
+    store.updateSettingState('menuConfig', sizes)
+    store.$persist()
+    initial.app.unmount()
+    disposePinia(initial.pinia)
+    const restored = mountPersistedSettings()
+
+    try {
+      expect(piniaSettingStore().menuConfig).toMatchObject(sizes)
+      expect(
+        piniaSettingStore().exportPreferences().preferences,
+      ).not.toHaveProperty('menuIconSizesUpdated')
+    } finally {
+      restored.app.unmount()
+      disposePinia(restored.pinia)
       localStorage.removeItem(APP_CATCH_KEY.appPiniaSettingStore)
     }
   })
@@ -162,8 +195,8 @@ describe('layout preferences', () => {
       const { themeStyle: _style, ...legacy } = preferences
 
       store.importPreferences(JSON.stringify({ ...file, preferences: legacy }))
-      expect(store.themeStyle).toBe('naive')
-      expect(store.themeOverrides.Card).toBeUndefined()
+      expect(store.themeStyle).toBe('modern')
+      expect(store.themeOverrides.Card?.borderRadius).toBe('12px')
       expect(store.themeOverrides.common?.primaryColor).toBe('#3468db')
 
       store.changePrimaryColor()

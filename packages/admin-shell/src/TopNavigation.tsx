@@ -13,6 +13,7 @@ export const ShellTopNavigation = defineComponent({
     active: { type: [String, Number] as PropType<AppMenuKey>, default: null },
     label: { type: String, required: true },
     grouped: Boolean,
+    iconSize: { type: Number, default: 20 },
     select: {
       type: Function as PropType<(option: AppMenuOption) => void>,
       required: true,
@@ -47,6 +48,8 @@ export const ShellTopNavigation = defineComponent({
         <NMenu
           mode="horizontal"
           responsive
+          iconSize={props.iconSize}
+          collapsedIconSize={props.iconSize}
           keyField="fullPath"
           value={selected.value}
           options={options.value as unknown as MenuOption[]}

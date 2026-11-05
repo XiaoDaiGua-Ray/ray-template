@@ -96,11 +96,13 @@ const plainComponents = {
   Tag: { borderRadius: '2px' },
 } satisfies GlobalThemeOverrides
 
-export const themeStyles = ['naive', 'modern', 'material', 'plain'] as const
+export const themeStyles = ['modern', 'naive', 'material', 'plain'] as const
 export type ThemeStyle = (typeof themeStyles)[number]
 
+export const DEFAULT_THEME_STYLE: ThemeStyle = 'modern'
+
 export const normalizeThemeStyle = (value: unknown): ThemeStyle =>
-  themeStyles.find((style) => style === value) ?? 'naive'
+  themeStyles.find((style) => style === value) ?? DEFAULT_THEME_STYLE
 
 export const themeStyleOverrides: Record<ThemeStyle, ThemePalette> = {
   naive: { light: {}, dark: {} },

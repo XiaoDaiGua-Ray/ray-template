@@ -7,7 +7,6 @@ import { getStorage } from '@/utils/cache'
 import { isValueType } from '@/utils/core'
 import { NTag } from 'naive-ui'
 import type { TagProps } from 'naive-ui'
-import { piniaMenuStore } from '.'
 import { piniaSettingStore } from '../setting'
 
 /**
@@ -150,8 +149,6 @@ export const createMenuIcon = (option: AppMenuOption) => {
     return () => icon
   }
 
-  const settings = piniaSettingStore()
-  const menu = piniaMenuStore()
   const name = resolveIconName(icon)
 
   if (!name) return
@@ -159,10 +156,7 @@ export const createMenuIcon = (option: AppMenuOption) => {
   return () =>
     h(RIcon, {
       name,
-      size: menu.collapsed
-        ? settings.menuConfig.collapsedIconSize
-        : settings.menuConfig.iconSize,
-      cursor: 'pointer',
+      size: '1em',
     })
 }
 

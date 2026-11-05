@@ -23,10 +23,10 @@ import CustomMenu from './segment-views/CustomMenu'
 import Watermark from './segment-views/Watermark'
 
 const categories = [
-  { key: 'layout', icon: 'navigation/dashboard', view: LayoutSettings },
-  { key: 'appearance', icon: 'system/light', view: Appearance },
+  { key: 'layout', icon: 'navigation/layout', view: LayoutSettings },
+  { key: 'appearance', icon: 'navigation/appearance', view: Appearance },
   { key: 'menu', icon: 'navigation/menu', view: CustomMenu },
-  { key: 'watermark', icon: 'action/print', view: Watermark },
+  { key: 'watermark', icon: 'system/watermark', view: Watermark },
   { key: 'general', icon: 'action/setting', view: Common },
 ] as const
 
@@ -36,8 +36,12 @@ export default defineComponent({
   setup(props) {
     const { t } = useI18n('preferences')
     const { create } = useModal()
-    const { updateSettingState, exportPreferences, importPreferences } =
-      useSettingActions()
+    const {
+      updateSettingState,
+      changePrimaryColor,
+      exportPreferences,
+      importPreferences,
+    } = useSettingActions()
     const { setupAppMenu } = useMenuActions()
     const fileInput = useTemplateRef<HTMLInputElement>('preferenceFile')
     const importing = ref(false)
@@ -105,6 +109,7 @@ export default defineComponent({
           forIn(cloneDeep(getDefaultSettingConfig()), (value, key) => {
             updateSettingState(key as keyof SettingState, value)
           })
+          changePrimaryColor()
           void setupAppMenu()
         },
       })

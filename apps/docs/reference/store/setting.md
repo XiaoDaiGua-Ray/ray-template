@@ -9,7 +9,7 @@
 | `getLayoutConfig`                              | `layoutConfig`，布局模式和工作区尺寸，见下表。                                             |
 | `getDrawerPlacement`                           | `drawerPlacement`，设置抽屉方向，默认 `right`。                                            |
 | `getPrimaryColorOverride`                      | Naive UI 生效的 token 覆盖，由当前风格、明暗和用户主色计算。                               |
-| `getThemeStyle` / `getCustomPrimaryColor`      | 界面风格与手动主色。默认 `naive`，未指定手动主色时使用风格原色。                           |
+| `getThemeStyle` / `getCustomPrimaryColor`      | 界面风格与手动主色。默认 `modern`，未指定手动主色时使用风格原色。                          |
 | `getAppTheme` / `getAppThemeStr`               | `_appTheme` 为实际深色布尔值，`appTheme` 为 `light/dark/auto` 模式，初始 `light`。         |
 | `getLocaleLanguage`                            | `localeLanguage`，应用语言，默认读取历史值或系统默认配置。                                 |
 | `getMenuTagSwitch` / `getBreadcrumbSwitch`     | `menuTagSwitch` / `breadcrumbSwitch`，默认显示标签和面包屑。                               |
@@ -25,7 +25,7 @@
 
 `layoutConfig` 的 `mode` 为 `side`（默认）、`top`、`mixed`。`contentWidth` 默认 `fluid`，也可取 `fixed`。`contentMaxWidth` 默认 1200，限制在 640–2560；`contentPadding` 默认 16，限制在 0–48；`fixedHeader`、`fixedFooter` 默认开启。旧缓存水合时补齐字段并规范化范围。
 
-`menuConfig` 默认菜单宽 272、折叠宽 64、普通和折叠图标均为 16、缩进 24。`collapsedMode` 默认 `width`，`transform` 模式改变位置；`accordion`、`inverted`、`nativeScrollbar` 默认关，`menuSiderBarLogo` 默认开。`sideBarLogo.jumpType` 用 `station` 站内跳转或 `outsideStation` 打开外部地址，未传 `url` 时不跳转。缓存中的旧裸图标名会尝试映射成完整名称；需要持久化的 Logo 建议用图标名字符串，VNode 不适合作为缓存值。
+`menuConfig` 默认菜单宽 272、折叠宽 64、展开与顶部菜单图标 20 px、折叠侧栏图标 22 px、缩进 24。`collapsedMode` 默认 `width`，`transform` 模式改变位置；`accordion`、`inverted`、`nativeScrollbar` 默认关，`menuSiderBarLogo` 默认开。`sideBarLogo.jumpType` 用 `station` 站内跳转或 `outsideStation` 打开外部地址，未传 `url` 时不跳转。旧浏览器缓存中同时为 16 px 的尺寸组合会升级为新默认值；当前应用保存的尺寸和偏好文件中的尺寸会原样保留。缓存中的旧裸图标名会尝试映射成完整名称；需要持久化的 Logo 建议用图标名字符串，VNode 不适合作为缓存值。
 
 ## Actions
 

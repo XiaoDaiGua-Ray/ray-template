@@ -1,9 +1,14 @@
 import { APP_THEME, CONTENT_TRANSITION_OPTIONS } from '@/app-config'
 import { useI18n } from '@/hooks'
 import { useSettingActions, useSettingGetters } from '@/store'
-import { themeStyles } from '@ray-template/ui/theme-presets'
-import type { ThemeStyle } from '@ray-template/ui/theme-presets'
 import {
+  DEFAULT_THEME_STYLE,
+  themeStyleOverrides,
+  themeStyles,
+} from '@ray-template/ui/theme-presets'
+import {
+  darkTheme,
+  lightTheme,
   NButton,
   NColorPicker,
   NForm,
@@ -15,6 +20,10 @@ import {
 import SettingsSection from '../components/SettingsSection'
 import ThemeSegment from '../components/ThemeSegment'
 
+type ColorTriggerProps = Parameters<
+  NonNullable<InstanceType<typeof NColorPicker>['$slots']['trigger']>
+>[0]
+
 export default defineComponent({
   name: 'SegmentViewsAppearance',
   setup() {
@@ -22,6 +31,7 @@ export default defineComponent({
     const { changePrimaryColor, updateSettingState, toggleColorWeakness } =
       useSettingActions()
     const {
+      getAppTheme,
       getThemeStyle,
       getCustomPrimaryColor,
       getDrawerPlacement,
@@ -32,12 +42,29 @@ export default defineComponent({
       getColorWeakness,
     } = useSettingGetters()
     const themeVars = useThemeVars()
-    const styleOptions = computed(() =>
-      themeStyles.map((value) => ({
-        value,
-        label: t(`themeStyle.${value}`),
-      })),
-    )
+    const styleName = useId()
+    const colorOpen = ref(false)
+    const previews = computed(() => {
+      const mode = getAppTheme.value ? 'dark' : 'light'
+      const base = mode === 'dark' ? darkTheme : lightTheme
+
+      return themeStyles.map((value) => {
+        const { primaryColor, bodyColor, cardColor, borderRadius } = {
+          ...base.common,
+          ...themeStyleOverrides[value][mode].common,
+        }
+
+        return {
+          value,
+          style: {
+            '--preset-accent': primaryColor,
+            '--preset-background': bodyColor,
+            '--preset-surface': cardColor,
+            '--preset-radius': borderRadius,
+          },
+        }
+      })
+    })
     const switches = [
       ['breadcrumbSwitch', getBreadcrumbSwitch],
       ['menuTagSwitch', getMenuTagSwitch],
@@ -49,38 +76,93 @@ export default defineComponent({
       <div class="r-settings-stack">
         <SettingsSection title={t('appearance.theme')}>
           <ThemeSegment />
-          <NForm
-            labelPlacement="top"
-            showFeedback={false}
-            class="r-settings-fields"
-          >
-            <NFormItem label={t('appearance.themeStyle')}>
-              <NSelect
-                aria-label={t('appearance.themeStyle')}
-                value={getThemeStyle.value}
-                options={styleOptions.value}
-                onUpdateValue={(value: ThemeStyle) =>
-                  updateSettingState('themeStyle', value)
-                }
-              />
-            </NFormItem>
-            <NFormItem label={t('appearance.primaryColor')}>
+          <fieldset class="r-appearance-presets">
+            <legend>{t('appearance.themeStyle')}</legend>
+            <div class="r-appearance-presets__grid">
+              {previews.value.map(({ value, style }) => (
+                <label class="r-appearance-preset" key={value}>
+                  <input
+                    type="radio"
+                    name={styleName}
+                    value={value}
+                    checked={getThemeStyle.value === value}
+                    onChange={() => updateSettingState('themeStyle', value)}
+                  />
+                  <span
+                    class="r-appearance-preset__preview"
+                    style={style}
+                    aria-hidden="true"
+                  >
+                    <span />
+                  </span>
+                  <span class="r-appearance-preset__name">
+                    {t(`themeStyle.${value}`)}
+                  </span>
+                  {value === DEFAULT_THEME_STYLE && (
+                    <span class="r-appearance-preset__note">
+                      {t('appearance.defaultStyle')}
+                    </span>
+                  )}
+                </label>
+              ))}
+            </div>
+          </fieldset>
+          <div class="r-appearance-color">
+            <span>{t('appearance.primaryColor')}</span>
+            <div class="r-appearance-color__controls">
               <NColorPicker
                 showPreview
+                show={colorOpen.value}
+                onUpdateShow={(show) => (colorOpen.value = show)}
                 swatches={APP_THEME.appThemeColors}
                 value={themeVars.value.primaryColor}
                 onUpdateValue={(value) => {
                   if (value) changePrimaryColor(value)
                 }}
-              />
-            </NFormItem>
-            {getCustomPrimaryColor.value && (
-              <NButton text type="primary" onClick={() => changePrimaryColor()}>
+              >
+                {{
+                  trigger: ({
+                    value,
+                    onClick,
+                    ref: triggerRef,
+                  }: ColorTriggerProps) => (
+                    <button
+                      type="button"
+                      ref={triggerRef}
+                      class="r-appearance-color__trigger"
+                      aria-label={`${t('appearance.primaryColor')}: ${value}`}
+                      aria-expanded={colorOpen.value}
+                      onClick={onClick}
+                    >
+                      <span
+                        aria-hidden="true"
+                        style={{ background: value ?? void 0 }}
+                      />
+                      {value}
+                    </button>
+                  ),
+                }}
+              </NColorPicker>
+              <NButton
+                size="small"
+                quaternary
+                disabled={!getCustomPrimaryColor.value}
+                onClick={() => changePrimaryColor()}
+              >
                 {t('appearance.resetColor')}
               </NButton>
-            )}
+            </div>
+          </div>
+        </SettingsSection>
+        <SettingsSection title={t('appearance.workspace')}>
+          <NForm
+            labelPlacement="top"
+            showFeedback={false}
+            class="r-settings-fields"
+          >
             <NFormItem label={t('appearance.transition')}>
               <NSelect
+                aria-label={t('appearance.transition')}
                 value={getContentTransition.value}
                 options={CONTENT_TRANSITION_OPTIONS.map(({ value }) => ({
                   value,
@@ -93,6 +175,7 @@ export default defineComponent({
             </NFormItem>
             <NFormItem label={t('appearance.placement')}>
               <NSelect
+                aria-label={t('appearance.placement')}
                 value={getDrawerPlacement.value}
                 options={['right', 'left'].map((value) => ({
                   value,

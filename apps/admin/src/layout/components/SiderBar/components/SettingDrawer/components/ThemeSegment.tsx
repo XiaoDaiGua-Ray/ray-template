@@ -11,19 +11,21 @@ export default defineComponent({
     const { updateSettingState } = useSettingActions()
     const options = computed(() => [
       {
-        label: t('theme.dark'),
-        key: 'dark',
-        icon: () => <RIcon name="system/dark" size="16" />,
-      },
-      {
         label: t('theme.light'),
         key: 'light',
-        icon: () => <RIcon name="system/light" size="16" />,
+        icon: () => <RIcon name="system/light" size="16" aria-hidden="true" />,
+      },
+      {
+        label: t('theme.dark'),
+        key: 'dark',
+        icon: () => <RIcon name="system/dark" size="16" aria-hidden="true" />,
       },
       {
         label: t('theme.auto'),
         key: 'auto',
-        icon: () => <RIcon name="system/system_os" size="16" />,
+        icon: () => (
+          <RIcon name="system/system_os" size="16" aria-hidden="true" />
+        ),
       },
     ])
     const modelAppTheme = computed({

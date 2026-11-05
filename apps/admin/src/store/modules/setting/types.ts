@@ -74,7 +74,7 @@ export interface SettingState {
    * collapsedMode:
    *   - transform: 边栏将只会移动它的位置而不会改变宽度
    *   - width: Sider 的内容宽度将会被实际改变
-   * collapsedIconSize 配置菜单未折叠时图标的大小
+   * iconSize 配置展开和顶部菜单的图标尺寸；collapsedIconSize 配置折叠侧栏的图标尺寸
    * collapsedIndent 配置菜单每级的缩进
    * accordion 手风琴模式
    */

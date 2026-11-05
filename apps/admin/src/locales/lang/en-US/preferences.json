@@ -2,7 +2,7 @@
   "title": "Preferences",
   "subtitle": "Changes apply immediately and are saved in this browser",
   "reset": "Restore defaults",
-  "resetDescription": "Restore the default layout, menu and general options.",
+  "resetDescription": "Restore the default interface style, accent color, layout, menu and general options.",
   "cancel": "Cancel",
   "config": {
     "export": "Export settings",
@@ -33,7 +33,9 @@
   "appearance": {
     "themeStyle": "Interface style",
     "resetColor": "Use preset color",
-    "theme": "Theme and motion",
+    "theme": "Theme",
+    "workspace": "Window and motion",
+    "defaultStyle": "Default",
     "primaryColor": "Accent color",
     "transition": "Page transition",
     "placement": "Drawer position",

@@ -20,6 +20,7 @@ export default defineComponent({
           getLayoutConfig.value.mode === 'split'
         }
         label={t('layout.navigation')}
+        iconSize={getMenuConfig.value.iconSize}
         select={(option) => changeMenuModelValue(option.fullPath, option)}
       >
         {{

@@ -1,5 +1,8 @@
 import { CONTENT_TRANSITION_OPTIONS } from '@/app-config'
-import { themeStyles } from '@ray-template/ui/theme-presets'
+import {
+  DEFAULT_THEME_STYLE,
+  themeStyles,
+} from '@ray-template/ui/theme-presets'
 import { pick } from 'lodash-es'
 import * as v from 'valibot'
 import { LAYOUT_MODES } from './constant'
@@ -38,7 +41,7 @@ const preferences = v.strictObject({
     fixedFooter: flag,
   }),
   appTheme: v.picklist(['light', 'dark', 'auto']),
-  themeStyle: v.optional(v.picklist(themeStyles), 'naive'),
+  themeStyle: v.optional(v.picklist(themeStyles), DEFAULT_THEME_STYLE),
   primaryColor: v.optional(
     v.pipe(
       v.string(),

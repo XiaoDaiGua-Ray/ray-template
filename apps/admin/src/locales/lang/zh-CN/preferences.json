@@ -2,7 +2,7 @@
   "title": "偏好设置",
   "subtitle": "更改即时生效并保存在此浏览器",
   "reset": "恢复默认设置",
-  "resetDescription": "将布局、菜单和通用选项恢复为默认值。",
+  "resetDescription": "将界面风格、主题色、布局、菜单和通用选项恢复为默认值。",
   "cancel": "取消",
   "config": {
     "export": "导出配置",
@@ -33,7 +33,9 @@
   "appearance": {
     "themeStyle": "界面风格",
     "resetColor": "使用风格默认色",
-    "theme": "主题与动效",
+    "theme": "主题",
+    "workspace": "窗口与动效",
+    "defaultStyle": "默认",
     "primaryColor": "主题色",
     "transition": "页面切换动画",
     "placement": "设置抽屉位置",

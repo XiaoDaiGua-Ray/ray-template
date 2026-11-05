@@ -207,6 +207,32 @@ export const piniaSettingStore = defineStore(
       key: APP_CATCH_KEY.appPiniaSettingStore,
       omit: ['lockScreenSwitch'],
       storage: window.localStorage,
+      serializer: {
+        serialize: (state) =>
+          JSON.stringify({ ...state, menuIconSizesUpdated: true }),
+        deserialize: (json) => {
+          const { menuIconSizesUpdated, ...state } = JSON.parse(
+            json,
+          ) as Partial<SettingState> & {
+            menuIconSizesUpdated?: boolean
+          }
+          const { menuConfig } = state
+
+          // 旧缓存写入了整组默认值。仅升级旧的尺寸组合，保留此后保存的自定义值。
+          if (
+            !menuIconSizesUpdated &&
+            menuConfig?.iconSize === 16 &&
+            menuConfig.collapsedIconSize === 16
+          ) {
+            const defaults = getDefaultSettingConfig().menuConfig
+
+            menuConfig.iconSize = defaults.iconSize
+            menuConfig.collapsedIconSize = defaults.collapsedIconSize
+          }
+
+          return state
+        },
+      },
       afterHydrate: ({ store }) => {
         store.layoutConfig = normalizeLayoutConfig(store.layoutConfig)
         store.themeStyle = normalizeThemeStyle(store.themeStyle)
