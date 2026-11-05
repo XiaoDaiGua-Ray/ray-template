@@ -53,7 +53,7 @@ export default defineComponent({
         style="margin-right: 16px"
       >
         {{
-          icon: () => <RIcon name="action/search" size="16" />,
+          icon: () => <RIcon name="action/search" />,
           default: () => (
             <NFlex align="center">
               {$t('headerTooltip.Search')}

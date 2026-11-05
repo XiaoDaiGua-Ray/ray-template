@@ -185,7 +185,7 @@ export const AdminShell = defineComponent({
                     }}
                     onClick={() => props.restore?.()}
                   >
-                    <RIcon name="action/fullscreen_fold" size={16} />
+                    <RIcon name="action/fullscreen_fold" />
                   </button>
                 ) : null}
               </div>

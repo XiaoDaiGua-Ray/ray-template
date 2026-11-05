@@ -17,7 +17,7 @@ const props = {
   },
   size: {
     type: [Number, String],
-    default: 14,
+    default: 20,
   },
   width: {
     type: [Number, String],
@@ -40,7 +40,7 @@ const props = {
   cursor: {
     /** 鼠标指针样式 */
     type: String,
-    default: 'default',
+    default: 'inherit',
   },
   onClick: {
     type: [Function, Array] as PropType<MaybeArray<(e: MouseEvent) => void>>,

@@ -10,11 +10,10 @@ const props = {
   },
   iconSize: {
     type: Number,
-    default: 14,
   },
   cursor: {
     type: String,
-    default: 'default',
+    default: 'inherit',
   },
 } as const
 

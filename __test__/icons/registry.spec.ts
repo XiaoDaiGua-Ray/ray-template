@@ -47,6 +47,9 @@ describe('namespaced icons', () => {
   it('resolves existing persisted bare names without accepting unknown paths', () => {
     expect(resolveIconName('ray')).toBe('logo/ray')
     expect(resolveIconName('directional/resize_h')).toBe('directional/resize_h')
+    expect(isIconName('logo/office')).toBe(false)
+    expect(resolveIconName('office')).toBe('navigation/table')
+    expect(resolveIconName('illustration/login_bg')).toBe('navigation/other')
     expect(resolveIconName('unknown')).toBeUndefined()
     expect(resolveIconName('../ray')).toBeUndefined()
   })

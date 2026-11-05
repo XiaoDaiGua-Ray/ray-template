@@ -48,6 +48,24 @@ describe('route configuration', () => {
     expect(expandRoutes(restored)).toEqual(expandRoutes(bundled))
   })
 
+  it('migrates retired icon paths in both menu and external link metadata', () => {
+    const config = parse([
+      {
+        ...page,
+        path: '/reports',
+        meta: {
+          icon: 'action/export_excel',
+          extra: { icon: 'logo/office' },
+        },
+      },
+    ])
+
+    expect(config.routes[0].meta).toMatchObject({
+      icon: 'action/download',
+      extra: { icon: 'navigation/table' },
+    })
+  })
+
   it('exports a strict versioned schema with recursive menu definitions', () => {
     const schema = getRouteJsonSchema()
 

@@ -1,5 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-  viewBox="0 0 512 512" data-v-5de898af="">
-  <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-    stroke-width="48" d="M328 112L184 256l144 144"></path>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="178 193 668 668">
+  <!-- IconPark by ByteDance (Apache-2.0) via Iconfont #43963753; adapted for contrast and optical sizing. -->
+  <g stroke="currentColor" stroke-width="14" stroke-linejoin="round">
+    <path fill="currentColor" d="M704.180706 403.004235a26.352941 26.352941 0 0 1 39.634823 34.575059l-2.349176 2.710588-210.823529 210.82353a26.352941 26.352941 0 0 1-34.575059 2.349176l-2.710589-2.349176-210.823529-210.82353a26.352941 26.352941 0 0 1 34.575059-39.634823l2.710588 2.349176L512 595.215059l192.180706-192.210824z" />
+  </g>
 </svg>

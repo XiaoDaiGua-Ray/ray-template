@@ -3,7 +3,6 @@ import { NButton } from 'naive-ui'
 import { defineComponent } from 'vue'
 import type { PropType } from 'vue'
 import { RIcon } from '../../../RIcon'
-import { config } from '../shared'
 
 export default defineComponent({
   props: {
@@ -27,7 +26,7 @@ export default defineComponent({
         onClick={props.onClick}
       >
         {{
-          icon: () => <RIcon name={props.icon} size={config.tableIconSize} />,
+          icon: () => <RIcon name={props.icon} />,
         }}
       </NButton>
     )

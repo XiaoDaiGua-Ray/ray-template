@@ -81,7 +81,7 @@ export default defineComponent({
                     key={name}
                     title={name}
                     aria-label={name}
-                    v-copy={`<RIcon name="${name}" size={24} />`}
+                    v-copy={`<RIcon name="${name}" />`}
                   >
                     <RIcon name={name} size={28} cursor="pointer" />
                     <span>{name.split('/').slice(1).join('/')}</span>

@@ -1,4 +1,4 @@
-import { isIconName } from '@ray-template/icons'
+import { isIconName, replaceRetiredIconName } from '@ray-template/icons'
 import { getDotPath, safeParse } from 'valibot'
 import { joinRoutePath } from './join-route-path'
 import { routeConfigSchema } from './schema'
@@ -104,6 +104,11 @@ export function createRouteContract(catalog: RouteCatalog) {
 
           names.add(key)
         }
+
+        if (meta.icon) meta.icon = replaceRetiredIconName(meta.icon)
+
+        if (meta.extra?.icon)
+          meta.extra.icon = replaceRetiredIconName(meta.extra.icon)
 
         for (const icon of [meta.icon, meta.extra?.icon]) {
           if (icon && !isIconName(icon)) fail(`Unknown icon "${icon}".`)

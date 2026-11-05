@@ -19,8 +19,8 @@ import MoreDropdownDemo from '../../examples/MoreDropdownDemo.vue'
 | 属性       | 默认            | 说明                                  |
 | ---------- | --------------- | ------------------------------------- |
 | `icon`     | `'action/more'` | 类型为 `IconName`，使用完整分包路径。 |
-| `iconSize` | `14`            | 默认触发图标大小。                    |
-| `cursor`   | `'default'`     | 默认图标指针样式。                    |
+| `iconSize` | 跟随 RIcon      | 触发图标大小，省略时为 20 px。        |
+| `cursor`   | `'inherit'`     | 默认继承所在控件的指针样式。          |
 
 `default` 插槽替换图标触发器。只有图标时建议用具有可访问名称的原生按钮或 `NButton`，方便键盘进入。列表行中根据业务需要阻止触发器的点击冒泡，避免同时触发行导航。
 

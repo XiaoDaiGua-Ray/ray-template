@@ -35,9 +35,6 @@ export default defineComponent({
     } = useSiderBar()
     // 当前右键标签页索引位置
     const currentContextmenuIndex = ref(-1)
-    const iconConfig = {
-      size: 16,
-    }
     // 下拉菜单
     const moreOptions = computed(() => [
       {
@@ -46,24 +43,22 @@ export default defineComponent({
         disabled: !canClose(
           getMenuTagOptions.value[currentContextmenuIndex.value],
         ),
-        icon: () => <RIcon name="action/close" size={iconConfig.size} />,
+        icon: () => <RIcon name="action/close" size="1em" />,
       },
       {
         label: t('maximize'),
         key: 'maximizeLayoutContent',
-        icon: () => (
-          <RIcon name="action/fullscreen_fold" size={iconConfig.size} />
-        ),
+        icon: () => <RIcon name="action/fullscreen_fold" size="1em" />,
       },
       {
         label: t('reload'),
         key: 'reloadCurrentPage',
-        icon: () => <RIcon name="action/reload" size={iconConfig.size} />,
+        icon: () => <RIcon name="action/reload" size="1em" />,
       },
       {
         label: t('newWindow'),
         key: 'windowOpenTab',
-        icon: () => <RIcon name="action/shared" size={iconConfig.size} />,
+        icon: () => <RIcon name="action/shared" size="1em" />,
       },
       {
         type: 'divider',
@@ -75,7 +70,7 @@ export default defineComponent({
         disabled:
           !getMenuTagOptions.value[currentContextmenuIndex.value] ||
           !checkCloseLeft(currentContextmenuIndex.value),
-        icon: () => <RIcon name="action/close_left" size={iconConfig.size} />,
+        icon: () => <RIcon name="action/close_left" size="1em" />,
       },
       {
         label: t('closeRight'),
@@ -83,7 +78,7 @@ export default defineComponent({
         disabled:
           !getMenuTagOptions.value[currentContextmenuIndex.value] ||
           !checkCloseRight(currentContextmenuIndex.value),
-        icon: () => <RIcon name="action/close_right" size={iconConfig.size} />,
+        icon: () => <RIcon name="action/close_right" size="1em" />,
       },
       {
         type: 'divider',
@@ -93,14 +88,12 @@ export default defineComponent({
         label: t('closeOther'),
         key: 'closeOther',
         disabled: getMenuTagOptions.value.length < 2,
-        icon: () => <RIcon name="action/close_other" size={iconConfig.size} />,
+        icon: () => <RIcon name="action/close_other" size="1em" />,
       },
       {
         label: t('closeAll'),
         key: 'closeAll',
-        icon: () => (
-          <RIcon name="directional/resize_h" size={iconConfig.size} />
-        ),
+        icon: () => <RIcon name="directional/resize_h" size="1em" />,
         disabled: getMenuTagOptions.value.length < 2,
       },
     ])
@@ -274,14 +267,13 @@ export default defineComponent({
       actionState,
       menuTagContextMenu,
       setCurrentContextmenuIndex,
-      iconConfig,
       maximize,
       reload,
       globalMainLayoutLoad,
     }
   },
   render() {
-    const { iconConfig, getMenuTagOptions, globalMainLayoutLoad } = this
+    const { getMenuTagOptions, globalMainLayoutLoad } = this
     const {
       canClose,
       closeCurrentMenuTag,
@@ -327,9 +319,6 @@ export default defineComponent({
                 icon: () => (
                   <RIcon
                     name="directional/expanded"
-                    width={iconConfig.size}
-                    height={iconConfig.size}
-                    cursor="pointer"
                     customClassName="menu-tag__left-arrow"
                   />
                 ),
@@ -383,12 +372,9 @@ export default defineComponent({
                   icon: () => (
                     <RIcon
                       name="directional/expanded"
-                      width={iconConfig.size}
-                      height={iconConfig.size}
                       style={{
                         transform: 'rotate(180deg)',
                       }}
-                      cursor="pointer"
                     />
                   ),
                 }}
@@ -401,14 +387,7 @@ export default defineComponent({
                 onClick={() => this.maximize(true)}
               >
                 {{
-                  icon: () => (
-                    <RIcon
-                      name="action/fullscreen_fold"
-                      width={iconConfig.size}
-                      height={iconConfig.size}
-                      cursor="pointer"
-                    />
-                  ),
+                  icon: () => <RIcon name="action/fullscreen_fold" />,
                 }}
               </NButton>
               <NButton
@@ -423,14 +402,11 @@ export default defineComponent({
                   icon: () => (
                     <RIcon
                       name="action/reload"
-                      width={iconConfig.size}
-                      height={iconConfig.size}
                       customClassName={`${
                         !globalMainLayoutLoad
                           ? 'menu-tag__right-setting--spinning'
                           : ''
                       }`}
-                      cursor="pointer"
                     />
                   ),
                 }}
@@ -440,8 +416,6 @@ export default defineComponent({
                 options={this.moreOptions}
                 trigger="click"
                 onSelect={this.actionDropdownSelect.bind(this)}
-                iconSize={18}
-                cursor="pointer"
               >
                 <NButton
                   quaternary
@@ -450,14 +424,7 @@ export default defineComponent({
                   onClick={this.setCurrentContextmenuIndex}
                 >
                   {{
-                    icon: () => (
-                      <RIcon
-                        name="action/more"
-                        width={iconConfig.size}
-                        height={iconConfig.size}
-                        cursor="pointer"
-                      />
-                    ),
+                    icon: () => <RIcon name="action/more" />,
                   }}
                 </NButton>
               </RMoreDropdown>

@@ -31,9 +31,7 @@ export default defineComponent({
     const Icon = () => (
       <RIcon
         name={props.iconName}
-        size="18"
         customClassName={`tooltip-text__icon ${props.customClassName}`}
-        cursor="pointer"
         onClick={iconClick.bind(this)}
       />
     )

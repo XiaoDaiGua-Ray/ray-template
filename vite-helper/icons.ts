@@ -1,3 +1,4 @@
+import { readFile } from 'node:fs/promises'
 import { normalizePath } from 'vite'
 import type { Plugin } from 'vite'
 import { generateIcons, iconsRoot, scanIcons } from '../scripts/icons.mjs'
@@ -13,6 +14,16 @@ export function iconManifestPlugin(
     name: 'ray-icon-manifest',
     buildStart() {
       return generateIcons()
+    },
+    async generateBundle() {
+      this.emitFile({
+        type: 'asset',
+        fileName: 'licenses/iconpark.txt',
+        source: await readFile(
+          new URL('../packages/icons/LICENSE-ICONPARK', import.meta.url),
+          'utf8',
+        ),
+      })
     },
     configureServer(server) {
       const packages = new Set(registeredPackages)

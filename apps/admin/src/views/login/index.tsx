@@ -37,7 +37,7 @@ export default defineComponent({
               trigger="click"
             >
               <NButton quaternary circle aria-label={copy('Language')}>
-                <RIcon name="system/language" size={18} />
+                <RIcon name="system/language" />
               </NButton>
             </NDropdown>
           </NFlex>

@@ -185,7 +185,7 @@ export default defineComponent({
                 )}
                 onClick={toolIconClick.bind(this, curr.eventKey ?? curr.name)}
               >
-                <RIcon name={curr.name} size={16} cursor="pointer" />
+                <RIcon name={curr.name} />
               </NButton>
             ))}
             <NDropdown
@@ -197,14 +197,8 @@ export default defineComponent({
                 quaternary
                 aria-label={this.t<string>('layout.language')}
                 class="override-button__layout"
-                focusable={false}
               >
-                <RIcon
-                  customClassName="layout-header__method--icon"
-                  name="system/language"
-                  size="16"
-                  cursor="pointer"
-                />
+                <RIcon name="system/language" />
               </NButton>
             </NDropdown>
             <NDropdown
