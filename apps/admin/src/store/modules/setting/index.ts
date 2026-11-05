@@ -1,4 +1,4 @@
-import { APP_CATCH_KEY, APP_THEME, GLOBAL_CLASS_NAMES } from '@/app-config'
+import { APP_CATCH_KEY, APP_THEME } from '@/app-config'
 import { useDayjs, useI18n } from '@/hooks'
 import type { LocalKey } from '@/hooks'
 import { resolveIconName } from '@/icons'
@@ -8,31 +8,24 @@ import type { AnyFn } from '@/types'
 import { setStorage } from '@/utils/cache'
 import { colorToRgba, setStyle } from '@/utils/element'
 import { updateObjectValue } from '@/utils/update-object-value'
+import {
+  normalizeThemeStyle,
+  themeStyleOverrides,
+} from '@ray-template/ui/theme-presets'
 import { usePreferredDark } from '@vueuse/core'
-import { cloneDeep, merge } from 'lodash-es'
+import { cloneDeep } from 'lodash-es'
 import { getDefaultSettingConfig, normalizeLayoutConfig } from './constant'
 import { createPreferenceFile, parsePreferenceFile } from './preference-file'
 
 export const piniaSettingStore = defineStore(
   'setting',
   () => {
-    const {
-      appPrimaryColor: { primaryColor, primaryFadeColor },
-    } = APP_THEME
     const { locale } = useI18n()
     const { locale: dayjsLocal } = useDayjs()
     const preferredDark = usePreferredDark()
 
     const settingState = reactive<SettingState>({
-      // 默认主题色
-      primaryColorOverride: {
-        common: {
-          primaryColor: primaryColor,
-          primaryColorHover: primaryFadeColor,
-          primaryColorPressed: primaryColor,
-          primaryColorSuppl: primaryFadeColor,
-        },
-      },
+      primaryColorOverride: {},
       // 内部使用，用于判断是否为黑夜主题（为了兼容历史遗留版本）；true 为黑夜主题，false 为明亮主题
       _appTheme: false,
       // 当前主题样式
@@ -70,24 +63,47 @@ export const piniaSettingStore = defineStore(
      * @description
      * 切换主题色，传递对应颜色即可更新 naive-ui 的主题色。
      */
-    const changePrimaryColor = (value: string, alpha = 0.85) => {
-      const alphaColor1 = colorToRgba(value, alpha)
-      const themeOverrides = {
-        primaryColor: value,
-        primaryColorHover: alphaColor1,
-        primaryColorPressed: value,
-        primaryColorSuppl: alphaColor1,
+    const changePrimaryColor = (value?: string, alpha = 0.85) => {
+      if (!value) {
+        settingState.primaryColorOverride = {}
+
+        return
       }
-      const { rayTemplateThemePrimaryColor, rayTemplateThemePrimaryFadeColor } =
-        GLOBAL_CLASS_NAMES
-      const html = document.documentElement
 
-      settingState.primaryColorOverride.common = themeOverrides
+      const hover = colorToRgba(value, alpha) || value
 
-      // 设置主题色变量
-      html.style.setProperty(rayTemplateThemePrimaryColor, value)
-      // 设置主题色辅助色变量
-      html.style.setProperty(rayTemplateThemePrimaryFadeColor, alphaColor1)
+      settingState.primaryColorOverride = {
+        common: {
+          primaryColor: value,
+          primaryColorHover: hover,
+          primaryColorPressed: value,
+          primaryColorSuppl: hover,
+        },
+      }
+    }
+
+    const themeOverrides = computed(() => {
+      const mode = settingState._appTheme ? 'dark' : 'light'
+      const style = normalizeThemeStyle(settingState.themeStyle)
+      const preset =
+        style === 'modern'
+          ? APP_THEME.appNaiveUIThemeOverrides[mode]
+          : themeStyleOverrides[style][mode]
+
+      return {
+        ...preset,
+        common: {
+          ...preset.common,
+          ...settingState.primaryColorOverride.common,
+        },
+      }
+    })
+
+    const syncAppTheme = () => {
+      settingState._appTheme =
+        settingState.appTheme === 'auto'
+          ? preferredDark.value
+          : settingState.appTheme === 'dark'
     }
 
     /**
@@ -101,7 +117,7 @@ export const piniaSettingStore = defineStore(
      *
      * @example
      * updateSettingState('drawerPlacement', 'left')
-     * updateSettingState('appTheme', true)
+     * updateSettingState('appTheme', 'dark')
      */
     const updateSettingState = <
       T extends keyof SettingState,
@@ -122,6 +138,13 @@ export const piniaSettingStore = defineStore(
         return
       }
 
+      if (key === 'themeStyle') {
+        settingState.themeStyle = normalizeThemeStyle(value)
+        cb?.()
+
+        return
+      }
+
       updateObjectValue(settingState, key, value as V[T], cb)
     }
 
@@ -134,35 +157,17 @@ export const piniaSettingStore = defineStore(
     const importPreferences = (text: string) => {
       const { primaryColor, ...preferences } = parsePreferenceFile(text)
 
-      Object.assign(settingState, preferences, {
-        _appTheme:
-          preferences.appTheme === 'auto'
-            ? preferredDark.value
-            : preferences.appTheme === 'dark',
-      })
+      Object.assign(settingState, preferences)
       changePrimaryColor(primaryColor)
     }
 
     watch(
-      () => (settingState.appTheme === 'auto' ? preferredDark.value : void 0),
-      (systemDark) => {
-        if (systemDark !== void 0) settingState._appTheme = systemDark
-      },
-      { immediate: true },
-    )
-
-    watch(
-      () => settingState._appTheme,
-      (dark) => {
-        settingState.primaryColorOverride = merge(
-          {},
-          settingState.primaryColorOverride,
-          dark
-            ? APP_THEME.appNaiveUIThemeOverrides.dark
-            : APP_THEME.appNaiveUIThemeOverrides.light,
-        )
-      },
-      { immediate: true },
+      () =>
+        settingState.appTheme === 'auto'
+          ? preferredDark.value
+          : settingState.appTheme,
+      syncAppTheme,
+      { flush: 'sync' },
     )
 
     watch(
@@ -187,6 +192,8 @@ export const piniaSettingStore = defineStore(
 
     return {
       ...toRefs(settingState),
+      themeOverrides,
+      syncAppTheme,
       updateLocale,
       changePrimaryColor,
       updateSettingState,
@@ -202,6 +209,21 @@ export const piniaSettingStore = defineStore(
       storage: window.localStorage,
       afterHydrate: ({ store }) => {
         store.layoutConfig = normalizeLayoutConfig(store.layoutConfig)
+        store.themeStyle = normalizeThemeStyle(store.themeStyle)
+        store.syncAppTheme()
+
+        // 旧缓存混有整套主题 token；只保留用户设置的主色，避免污染其它风格。
+        const common = store.primaryColorOverride?.common
+        const { primaryColor, primaryFadeColor } = APP_THEME.appPrimaryColor
+        const wasDefault =
+          common?.bodyColor &&
+          common.primaryColor === primaryColor &&
+          common.primaryColorHover === primaryFadeColor
+        const accent = common?.primaryColor
+
+        store.changePrimaryColor(
+          !wasDefault && typeof accent === 'string' ? accent : void 0,
+        )
 
         if (typeof store.sideBarLogo?.icon === 'string') {
           store.sideBarLogo.icon = resolveIconName(store.sideBarLogo.icon)

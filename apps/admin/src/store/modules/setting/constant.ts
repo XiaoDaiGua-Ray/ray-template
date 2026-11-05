@@ -3,6 +3,7 @@ import type { LayoutConfig, SettingState } from './types'
 
 type OmitKeys =
   | 'layoutConfig'
+  | 'themeStyle'
   | 'contentTransition'
   | 'watermarkSwitch'
   | 'keepAliveConfig'
@@ -21,6 +22,7 @@ export { LAYOUT_MODES }
 
 // SettingDrawer 默认配置系统配置项
 const defaultSettingConfig: Readonly<Config> = {
+  themeStyle: 'naive',
   layoutConfig: {
     mode: 'side',
     contentWidth: 'fluid',

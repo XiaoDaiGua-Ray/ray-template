@@ -15,7 +15,11 @@ export const useSettingGetters = () => {
    * @description
    * 获取 Naive UI 覆盖配置。
    */
-  const getPrimaryColorOverride = computed(() => variable.primaryColorOverride)
+  const getPrimaryColorOverride = computed(() => variable.themeOverrides)
+  const getCustomPrimaryColor = computed(
+    () => variable.primaryColorOverride.common?.primaryColor,
+  )
+  const getThemeStyle = computed(() => variable.themeStyle)
   /**
    *
    * @description
@@ -124,6 +128,8 @@ export const useSettingGetters = () => {
     getLayoutConfig,
     getDrawerPlacement,
     getPrimaryColorOverride,
+    getCustomPrimaryColor,
+    getThemeStyle,
     getAppTheme,
     getMenuTagSwitch,
     getBreadcrumbSwitch,

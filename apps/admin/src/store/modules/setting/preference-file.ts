@@ -1,4 +1,5 @@
-import { APP_THEME, CONTENT_TRANSITION_OPTIONS } from '@/app-config'
+import { CONTENT_TRANSITION_OPTIONS } from '@/app-config'
+import { themeStyles } from '@ray-template/ui/theme-presets'
 import { pick } from 'lodash-es'
 import * as v from 'valibot'
 import { LAYOUT_MODES } from './constant'
@@ -37,17 +38,20 @@ const preferences = v.strictObject({
     fixedFooter: flag,
   }),
   appTheme: v.picklist(['light', 'dark', 'auto']),
-  primaryColor: v.pipe(
-    v.string(),
-    v.maxLength(64),
-    v.regex(/^(?:#[\da-f]+|(?:rgba?|hsla?)\([\d.,%+\s/-]+\))$/i),
-    v.check((value) => {
-      const { style } = document.createElement('span')
+  themeStyle: v.optional(v.picklist(themeStyles), 'naive'),
+  primaryColor: v.optional(
+    v.pipe(
+      v.string(),
+      v.maxLength(64),
+      v.regex(/^(?:#[\da-f]+|(?:rgba?|hsla?)\([\d.,%+\s/-]+\))$/i),
+      v.check((value) => {
+        const { style } = document.createElement('span')
 
-      style.color = value
+        style.color = value
 
-      return style.color !== ''
-    }),
+        return style.color !== ''
+      }),
+    ),
   ),
   contentTransition: v.picklist(
     CONTENT_TRANSITION_OPTIONS.map(({ value }) => value),
@@ -91,9 +95,7 @@ export function createPreferenceFile(state: SettingState) {
     version: 1,
     preferences: {
       ...pick(state, Object.keys(preferences.entries)),
-      primaryColor:
-        state.primaryColorOverride.common?.primaryColor ??
-        APP_THEME.appPrimaryColor.primaryColor,
+      primaryColor: state.primaryColorOverride.common?.primaryColor,
     },
   })
 }

@@ -24,7 +24,15 @@
     "dark": "深色",
     "auto": "跟随系统"
   },
+  "themeStyle": {
+    "naive": "Naive UI 默认",
+    "modern": "现代化",
+    "material": "Material",
+    "plain": "朴素"
+  },
   "appearance": {
+    "themeStyle": "界面风格",
+    "resetColor": "使用风格默认色",
     "theme": "主题与动效",
     "primaryColor": "主题色",
     "transition": "页面切换动画",

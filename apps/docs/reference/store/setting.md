@@ -8,7 +8,8 @@
 | ---------------------------------------------- | ------------------------------------------------------------------------------------------ |
 | `getLayoutConfig`                              | `layoutConfig`，布局模式和工作区尺寸，见下表。                                             |
 | `getDrawerPlacement`                           | `drawerPlacement`，设置抽屉方向，默认 `right`。                                            |
-| `getPrimaryColorOverride`                      | `primaryColorOverride`，Naive UI 主题覆盖；默认主色 `#3b63d9`。                            |
+| `getPrimaryColorOverride`                      | Naive UI 生效的 token 覆盖，由当前风格、明暗和用户主色计算。                               |
+| `getThemeStyle` / `getCustomPrimaryColor`      | 界面风格与手动主色。默认 `naive`，未指定手动主色时使用风格原色。                           |
 | `getAppTheme` / `getAppThemeStr`               | `_appTheme` 为实际深色布尔值，`appTheme` 为 `light/dark/auto` 模式，初始 `light`。         |
 | `getLocaleLanguage`                            | `localeLanguage`，应用语言，默认读取历史值或系统默认配置。                                 |
 | `getMenuTagSwitch` / `getBreadcrumbSwitch`     | `menuTagSwitch` / `breadcrumbSwitch`，默认显示标签和面包屑。                               |
@@ -32,7 +33,7 @@
 | ------------------------------------------- | --------------------------------------------------------------------------------------- |
 | `updateSettingState(key, value, callback?)` | 更新已有字段。普通对象浅合并；`layoutConfig` 额外做格式与范围校验。成功后调用可选回调。 |
 | `updateLocale(key)`                         | 更新 Vue I18n、Day.js、语言缓存和 Store，Naive UI 从 Store 同步语言。                   |
-| `changePrimaryColor(value, alpha = 0.85)`   | 更新 Naive UI 主色、hover/pressed/supplement 和 HTML CSS 变量。                         |
+| `changePrimaryColor(value?, alpha = 0.85)`  | 覆盖当前风格的主色；省略 value 恢复当前风格原色。                                       |
 | `toggleColorWeakness(bool)`                 | 更新设置并切换 HTML 反色滤镜。                                                          |
 
 切换主题使用 [useTheme](../hooks/appearance#usetheme)，切换首页使用 [useAppRoot](../hooks/navigation#useapproot)。修改嵌套配置时传入完整的下一级对象，浅合并不会递归保存更深层字段。

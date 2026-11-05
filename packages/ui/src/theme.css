@@ -1,42 +1,44 @@
 :root {
-  --r-theme-primary-color: #3b63d9;
+  color-scheme: light dark;
+}
+
+:root,
+.r-theme-scope {
+  --r-theme-primary-color: var(--r-token-primary, Highlight);
+  --r-theme-primary-fade-color: var(--r-token-primary-hover, Highlight);
   --r-bezier: cubic-bezier(0.4, 0, 0.2, 1);
   --r-primary-text: var(--r-theme-primary-color);
   --r-selected-text: var(--r-theme-primary-color);
-  --r-canvas: #f5f7fb;
-  --r-surface: #ffffff;
-  --r-surface-muted: #f7f9fc;
-  --r-surface-hover: #eef2f8;
-  --r-line: #e4e9f1;
-  --r-control-border: #8492a8;
-  --r-text: #1d2a3e;
-  --r-text-secondary: #52647c;
-  --r-text-muted: #617187;
-  --r-shadow-soft: 0 1px 2px rgb(25 43 74 / 3%), 0 6px 20px rgb(25 43 74 / 3%);
-  --r-radius: 12px;
+  --r-canvas: var(--r-token-canvas, Canvas);
+  --r-surface: var(--r-token-surface, Canvas);
+  --r-surface-muted: var(--r-token-surface-muted, Canvas);
+  --r-surface-hover: var(--r-token-surface-hover, Canvas);
+  --r-line: var(--r-token-divider, ButtonBorder);
+  --r-control-border: var(--r-token-border, ButtonBorder);
+  --r-text: var(--r-token-text, CanvasText);
+  --r-text-secondary: var(--r-token-text-secondary, CanvasText);
+  --r-text-muted: var(--r-token-text-muted, CanvasText);
+  --r-shadow-soft: var(--r-token-shadow, none);
+  --r-control-radius: var(--r-token-control-radius, 4px);
+  --r-radius: var(--r-token-radius, 4px);
   --r-font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+}
+
+.r-template--light {
   color-scheme: light;
 }
 
 .r-template--dark {
   --r-primary-text: var(--r-text-secondary);
   --r-selected-text: var(--r-text);
-  --r-canvas: #101722;
-  --r-surface: #172131;
-  --r-surface-muted: #1c293b;
-  --r-surface-hover: #243247;
-  --r-line: #2c394d;
-  --r-control-border: #687b96;
-  --r-text: #e9eef7;
-  --r-text-secondary: #b3c0d3;
-  --r-text-muted: #a0b0c6;
-  --r-shadow-soft: 0 1px 2px rgb(0 0 0 / 10%), 0 8px 24px rgb(0 0 0 / 10%);
   color-scheme: dark;
 }
 
 @media (forced-colors: active) {
   :root,
+  .r-theme-scope,
   .r-template--dark {
+    --r-theme-primary-color: Highlight;
     --r-primary-text: CanvasText;
     --r-selected-text: CanvasText;
     --r-canvas: Canvas;

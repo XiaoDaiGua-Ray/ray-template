@@ -3,9 +3,6 @@
 }
 
 .app-menu__sider {
-  --r-primary-text: var(--n-text-color);
-  --r-selected-text: var(--n-text-color);
-
   border-inline-end: 1px solid var(--r-line);
 
   &--end {

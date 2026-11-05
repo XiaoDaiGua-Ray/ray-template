@@ -47,17 +47,17 @@ describe('useTheme', async () => {
   })
 
   it('selects auto mode and applies the system color preference', () => {
-    const spy = vi
-      .spyOn(window, 'matchMedia')
-      .mockReturnValue({ matches: true } as MediaQueryList)
+    const dark = window.matchMedia('(prefers-color-scheme: dark)').matches
 
     try {
       syncSystemTheme()
-      expect(getAppTheme()).toMatchObject({ theme: true, themeLabel: 'Dark' })
+      expect(getAppTheme()).toMatchObject({
+        theme: dark,
+        themeLabel: dark ? 'Dark' : 'Light',
+      })
       expect(useSettingGetters().getAppThemeStr.value).toBe('auto')
     } finally {
       lightTheme()
-      spy.mockRestore()
     }
   })
 })

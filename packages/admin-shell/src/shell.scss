@@ -91,7 +91,7 @@
   inline-size: 36px;
   block-size: 36px;
   border: 1px solid var(--r-control-border);
-  border-radius: 8px;
+  border-radius: var(--r-control-radius);
   color: var(--r-text);
   background: var(--r-surface);
   cursor: pointer;

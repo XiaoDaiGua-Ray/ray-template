@@ -1,6 +1,4 @@
-import { APP_THEME } from '@/app-config'
 import { useSettingActions, useSettingGetters } from '@/store'
-import { merge } from 'lodash-es'
 import { useI18n } from './useI18n'
 
 export type ThemeLabel = 'Dark' | 'Light'
@@ -12,26 +10,6 @@ export interface AppThemeInfo {
   themeLabel: ThemeLabel
   /** 随语言切换的主题标签。 */
   themeI18nLabel: string
-}
-
-const setThemeOverrides = (theme: boolean) => {
-  const { getPrimaryColorOverride } = useSettingGetters()
-  const { updateSettingState } = useSettingActions()
-
-  updateSettingState(
-    'primaryColorOverride',
-    theme
-      ? merge(
-          {},
-          getPrimaryColorOverride.value,
-          APP_THEME.appNaiveUIThemeOverrides.dark,
-        )
-      : merge(
-          {},
-          getPrimaryColorOverride.value,
-          APP_THEME.appNaiveUIThemeOverrides.light,
-        ),
-  )
 }
 
 export const useTheme = () => {
@@ -60,9 +38,7 @@ export const useTheme = () => {
   const darkTheme = () => {
     const { updateSettingState } = useSettingActions()
 
-    updateSettingState('_appTheme', true)
     updateSettingState('appTheme', 'dark')
-    setThemeOverrides(true)
   }
 
   /**
@@ -73,9 +49,7 @@ export const useTheme = () => {
   const lightTheme = () => {
     const { updateSettingState } = useSettingActions()
 
-    updateSettingState('_appTheme', false)
     updateSettingState('appTheme', 'light')
-    setThemeOverrides(false)
   }
 
   /**
@@ -84,15 +58,9 @@ export const useTheme = () => {
    * 同步系统主题。
    */
   const syncSystemTheme = () => {
-    const { getAppTheme } = useSettingGetters()
     const { updateSettingState } = useSettingActions()
 
-    updateSettingState(
-      '_appTheme',
-      window.matchMedia('(prefers-color-scheme: dark)').matches,
-    )
     updateSettingState('appTheme', 'auto')
-    setThemeOverrides(getAppTheme.value)
   }
 
   /**
@@ -105,9 +73,7 @@ export const useTheme = () => {
     const theme = getAppTheme.value
     const { updateSettingState } = useSettingActions()
 
-    updateSettingState('_appTheme', !theme)
     updateSettingState('appTheme', !theme ? 'dark' : 'light')
-    setThemeOverrides(!theme)
   }
 
   return {

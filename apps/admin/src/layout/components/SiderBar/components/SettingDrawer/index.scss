@@ -41,7 +41,7 @@
     width: 40px;
     height: 40px;
     border: 1px solid var(--r-line);
-    border-radius: 10px;
+    border-radius: var(--r-control-radius);
     background: var(--r-surface-muted);
     color: var(--r-primary-text);
   }
@@ -72,7 +72,7 @@
   > .n-tabs-nav {
     padding-inline: 8px;
     border: 1px solid var(--r-line);
-    border-radius: 10px;
+    border-radius: var(--r-control-radius);
     background: var(--r-surface);
   }
 
@@ -91,7 +91,7 @@
 .r-settings-section {
   padding: 16px;
   border: 1px solid var(--r-line);
-  border-radius: 12px;
+  border-radius: var(--r-radius);
   background: var(--r-surface);
 
   h3 {
@@ -124,7 +124,7 @@
 .r-settings-switches {
   display: grid;
   border: 1px solid var(--r-line);
-  border-radius: 8px;
+  border-radius: var(--r-control-radius);
   background: var(--r-surface-muted);
 }
 

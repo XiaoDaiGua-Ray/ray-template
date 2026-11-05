@@ -24,7 +24,15 @@
     "dark": "Dark",
     "auto": "System"
   },
+  "themeStyle": {
+    "naive": "Naive UI default",
+    "modern": "Modern",
+    "material": "Material",
+    "plain": "Plain"
+  },
   "appearance": {
+    "themeStyle": "Interface style",
+    "resetColor": "Use preset color",
     "theme": "Theme and motion",
     "primaryColor": "Accent color",
     "transition": "Page transition",

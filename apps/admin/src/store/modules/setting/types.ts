@@ -5,6 +5,7 @@ import type {
   Placement,
 } from '@/types'
 import type { LayoutConfig } from '@ray-template/admin-shell'
+import type { ThemeStyle } from '@ray-template/ui/theme-presets'
 import type { GlobalThemeOverrides } from 'naive-ui'
 
 export interface WatermarkConfig {
@@ -32,6 +33,7 @@ export interface SettingState {
   layoutConfig: LayoutConfig
   drawerPlacement: Placement
   primaryColorOverride: GlobalThemeOverrides
+  themeStyle: ThemeStyle
   appTheme: 'dark' | 'light' | 'auto'
   _appTheme: boolean
   menuTagSwitch: boolean

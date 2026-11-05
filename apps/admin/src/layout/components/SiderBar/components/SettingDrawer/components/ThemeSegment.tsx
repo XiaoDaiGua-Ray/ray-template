@@ -2,14 +2,12 @@ import { RIcon, RSegment } from '@/components'
 import { useI18n } from '@/hooks'
 import { useSettingActions, useSettingGetters } from '@/store'
 import type { SettingState } from '@/store/modules/setting/types'
-import { useColorMode } from '@vueuse/core'
 
 export default defineComponent({
   name: 'ThemeSegment',
   setup() {
-    const { system } = useColorMode()
     const { t } = useI18n('preferences')
-    const { getAppThemeStr, getAppTheme } = useSettingGetters()
+    const { getAppThemeStr } = useSettingGetters()
     const { updateSettingState } = useSettingActions()
     const options = computed(() => [
       {
@@ -29,35 +27,9 @@ export default defineComponent({
       },
     ])
     const modelAppTheme = computed({
-      get: () => {
-        if (getAppThemeStr.value === 'auto') {
-          return 'auto'
-        }
-
-        return getAppTheme.value ? 'dark' : 'light'
-      },
-      set: (val) => {
-        updateThemeFn(val, system.value)
-      },
-    })
-
-    const updateThemeFn = (
-      themeModel: SettingState['appTheme'],
-      systemTheme: 'dark' | 'light',
-    ) => {
-      if (themeModel === 'auto') {
-        updateSettingState('_appTheme', systemTheme === 'dark')
-        updateSettingState('appTheme', 'auto')
-
-        return
-      }
-
-      updateSettingState('_appTheme', themeModel === 'dark')
-      updateSettingState('appTheme', themeModel)
-    }
-
-    watchEffect(() => {
-      updateThemeFn(modelAppTheme.value, system.value)
+      get: () => getAppThemeStr.value,
+      set: (value: SettingState['appTheme']) =>
+        updateSettingState('appTheme', value),
     })
 
     return {

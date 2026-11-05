@@ -30,7 +30,7 @@
   min-height: 28px;
   overflow: hidden;
   border: 1px solid transparent;
-  border-radius: 7px;
+  border-radius: var(--r-control-radius);
   background: var(--r-surface-muted);
   color: var(--r-text-secondary);
 
@@ -86,7 +86,7 @@
   block-size: 26px;
   padding: 0;
   overflow: hidden;
-  border-radius: 5px;
+  border-radius: var(--r-control-radius);
   opacity: 0;
   pointer-events: none;
   transition:
@@ -98,7 +98,7 @@
     position: absolute;
     z-index: -1;
     inset: 3px;
-    border-radius: 5px;
+    border-radius: var(--r-control-radius);
     background: currentColor;
     opacity: 0;
     transition:

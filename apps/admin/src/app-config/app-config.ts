@@ -16,8 +16,6 @@ export const RAY_TEMPLATE_DOCS_URL =
 export const GLOBAL_CLASS_NAMES = {
   darkClassName: 'r-template--dark',
   lightClassName: 'r-template--light',
-  rayTemplateThemePrimaryColor: '--r-theme-primary-color',
-  rayTemplateThemePrimaryFadeColor: '--r-theme-primary-fade-color',
   preLoadingAnimation: 'pre-loading-animation',
   htmlHeight: '--html-height',
   htmlWidth: '--html-width',

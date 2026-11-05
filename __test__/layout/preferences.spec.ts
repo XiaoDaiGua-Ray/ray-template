@@ -1,10 +1,7 @@
 import { createPinia, disposePinia, setActivePinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import { createApp, nextTick } from 'vue'
-import {
-  APP_CATCH_KEY,
-  GLOBAL_CLASS_NAMES,
-} from '../../apps/admin/src/app-config'
+import { APP_CATCH_KEY } from '../../apps/admin/src/app-config'
 import {
   findMenuRoot,
   firstMenuLeaf,
@@ -74,6 +71,10 @@ describe('layout preferences', () => {
         localeLanguage: 'en-US',
         sideBarLogo: { icon: 'ray', title: 'Saved title' },
         menuTagSwitch: false,
+        primaryColorOverride: {
+          common: { primaryColor: '#3468db', bodyColor: '#000000' },
+          Card: { borderRadius: '99px' },
+        },
       }),
     )
     const { pinia, app } = mountPersistedSettings()
@@ -88,6 +89,10 @@ describe('layout preferences', () => {
       })
       expect(store.localeLanguage).toBe('en-US')
       expect(store.menuTagSwitch).toBe(false)
+      expect(store.themeStyle).toBe('naive')
+      expect(store.themeOverrides.common?.primaryColor).toBe('#3468db')
+      expect(store.themeOverrides.common?.bodyColor).toBeUndefined()
+      expect(store.themeOverrides.Card).toBeUndefined()
       store.updateSettingState('layoutConfig', { mode: 'top' })
       expect(store.layoutConfig.fixedHeader).toBe(true)
       expect(store.layoutConfig.mode).toBe('top')
@@ -101,13 +106,11 @@ describe('layout preferences', () => {
   it('restores the exported preferences through the existing store and persistence', async () => {
     const { pinia, app } = mountPersistedSettings()
     const store = piniaSettingStore()
-    const property = GLOBAL_CLASS_NAMES.rayTemplateThemePrimaryColor
-    const fadeProperty = GLOBAL_CLASS_NAMES.rayTemplateThemePrimaryFadeColor
-    const { style } = document.documentElement
 
     try {
       store.updateSettingState('layoutConfig', { mode: 'right' })
       store.updateSettingState('appTheme', 'dark')
+      store.updateSettingState('themeStyle', 'material')
       store.updateSettingState('watermarkConfig', { content: 'Portable' })
       store.updateSettingState('keepAliveConfig', {
         keepAliveExclude: ['Page'],
@@ -119,12 +122,14 @@ describe('layout preferences', () => {
       store.updateSettingState('appTheme', 'light')
       store.updateSettingState('appRootRoute', { path: '/custom-home' })
       store.changePrimaryColor('#000000')
+      store.updateSettingState('themeStyle', 'plain')
       store.importPreferences(JSON.stringify(file))
       await nextTick()
 
       expect(store.exportPreferences()).toEqual(file)
       expect(store._appTheme).toBe(true)
-      expect(style.getPropertyValue(property)).toBe('#3468db')
+      expect(store.themeOverrides.common?.primaryColor).toBe('#3468db')
+      expect(store.themeOverrides.Card?.borderRadius).toBe('20px')
       expect(store.appRootRoute.path).toBe('/custom-home')
       expect(file.preferences).not.toHaveProperty('appRootRoute')
       expect(file.preferences).not.toHaveProperty('lockScreenSwitch')
@@ -132,13 +137,43 @@ describe('layout preferences', () => {
         JSON.parse(
           localStorage.getItem(APP_CATCH_KEY.appPiniaSettingStore) ?? 'null',
         ),
-      ).toMatchObject({ layoutConfig: { mode: 'right' }, appTheme: 'dark' })
+      ).toMatchObject({
+        layoutConfig: { mode: 'right' },
+        appTheme: 'dark',
+        themeStyle: 'material',
+      })
     } finally {
       app.unmount()
       disposePinia(pinia)
       localStorage.removeItem(APP_CATCH_KEY.appPiniaSettingStore)
-      style.removeProperty(property)
-      style.removeProperty(fadeProperty)
+    }
+  })
+
+  it('imports a legacy file and resets preset tokens independently of the accent', () => {
+    const pinia = createPinia()
+
+    setActivePinia(pinia)
+    const store = piniaSettingStore()
+
+    try {
+      store.updateSettingState('themeStyle', 'material')
+      store.changePrimaryColor('#3468db')
+      const { preferences, ...file } = store.exportPreferences()
+      const { themeStyle: _style, ...legacy } = preferences
+
+      store.importPreferences(JSON.stringify({ ...file, preferences: legacy }))
+      expect(store.themeStyle).toBe('naive')
+      expect(store.themeOverrides.Card).toBeUndefined()
+      expect(store.themeOverrides.common?.primaryColor).toBe('#3468db')
+
+      store.changePrimaryColor()
+      store.updateSettingState('themeStyle', 'plain')
+      expect(store.themeOverrides.common?.boxShadow1).toBe('none')
+      store.updateSettingState('themeStyle', 'modern')
+      expect(store.themeOverrides.common?.boxShadow1).not.toBe('none')
+      expect(store.themeOverrides.common?.primaryColor).toBe('#3b63d9')
+    } finally {
+      disposePinia(pinia)
     }
   })
 

@@ -19,21 +19,21 @@ export default defineComponent({
     const { getPrimaryColorOverride, getAppTheme, getLocaleLanguage } =
       useSettingGetters()
 
-    const localePackage = computed(() => {
-      const key = getLocaleLanguage.value
+    const configProviderProps = computed(() => {
+      const { locale, dateLocal } = getNaiveLocales(getLocaleLanguage.value)
 
-      return getNaiveLocales(key)
+      return {
+        theme: getAppTheme.value ? darkTheme : null,
+        themeOverrides: getPrimaryColorOverride.value,
+        locale,
+        dateLocale: dateLocal,
+      }
     })
 
-    // 离散 API 自行挂载 Vue 应用；配置响应式更新，切换主题时无需在 render 中重新挂载。
+    // 离散 API 有独立的 Vue 应用，复用同一份响应式配置。
     const { message, notification, dialog, loadingBar, unmount } =
       createDiscreteApi(['message', 'dialog', 'notification', 'loadingBar'], {
-        configProviderProps: computed(() => ({
-          theme: getAppTheme.value ? darkTheme : null,
-          themeOverrides: getPrimaryColorOverride.value,
-          locale: localePackage.value.locale,
-          dateLocale: localePackage.value.dateLocal,
-        })),
+        configProviderProps,
       })
 
     window.$dialog = dialog
@@ -44,32 +44,18 @@ export default defineComponent({
 
     expose()
 
-    return {
-      getPrimaryColorOverride,
-      localePackage,
-      getAppTheme,
-    }
+    return { configProviderProps }
   },
   render() {
-    const {
-      $slots: { default: slotDefault },
-    } = this
-    const { getPrimaryColorOverride, getAppTheme, localePackage } = this
-
     return (
-      <NConfigProvider
-        themeOverrides={getPrimaryColorOverride}
-        theme={getAppTheme ? darkTheme : null}
-        locale={localePackage.locale}
-        dateLocale={localePackage.dateLocal}
-      >
+      <NConfigProvider {...this.configProviderProps}>
         <NLoadingBarProvider>
           <NMessageProvider {...MESSAGE_PROVIDER}>
             <NDialogProvider>
               <NModalProvider>
                 <NNotificationProvider>
                   <NGlobalStyle />
-                  {slotDefault?.()}
+                  {this.$slots.default?.()}
                 </NNotificationProvider>
               </NModalProvider>
             </NDialogProvider>
