@@ -17,7 +17,9 @@ const renderIcon = () => <RIcon name={name} />
 
 ## 交互示例
 
-<AdminExample path="/svg-icons" title="搜索图标和复制名称" />
+图标库默认复制 TSX 用法（`<RIcon name="action/search" />`）。选择「Vue 模板」后，点击图标即可复制 `<r-icon name="action/search" />`，粘贴到已导入 `RIcon` 的 Vue 模板。
+
+<AdminExample path="/svg-icons" title="搜索图标和切换复制格式" />
 
 ::: details 查看示例源码
 <<< @/../admin/src/views/demo/svg-icons/index.tsx

@@ -37,6 +37,6 @@ const name: IconName = 'directional/resize_h'
 - `pnpm dev`、`build`、`dev-build`、`report` 和 `check` 都先自动生成清单；直接调用 Vite 时也由插件在启动/构建阶段同步。`typecheck` 与 `icons:check` 继续保持只读。也可单独运行 `pnpm icons:generate`。将更新后的清单与 SVG 一起维护。生成文件由项目 Prettier 配置格式化，模板同时遵守 ESLint 的声明空行规则。
 - `pnpm icons:check` 检查清单是否与目录一致，`pnpm typecheck` 和 `pnpm check` 会执行它。请修改生成脚本，不手工维护联合类型。
 - 每个顶层分包输出独立带 hash 的 SVG 雪碧图。生成的分包地址由 Spritemap 插件转换为随 Vite base 的开发/生产路径，`RIcon` 根据 name 的包名选择地址，再引用包含完整路径的 symbol ID。
-- `/svg-icons` 提供分包筛选、路径搜索和点击复制完整 TSX 用法。
+- `/svg-icons` 提供分包筛选和路径搜索。点击图标默认复制 TSX 用法，也可切换到 Vue 模板格式。
 
 旧版本缓存里的裸 Logo 或菜单图标名在读取边界通过 `resolveIconName` 迁移；仅当文件名唯一时转换。新代码必须使用完整路径，不为裸名放宽组件类型。

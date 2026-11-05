@@ -2,7 +2,14 @@ import './index.scss'
 import { RIcon } from '@/components'
 import { useI18n } from '@/hooks'
 import { iconNames, iconPackages } from '@/icons'
-import { NCard, NEmpty, NInput, NSelect } from 'naive-ui'
+import {
+  NCard,
+  NEmpty,
+  NInput,
+  NRadioButton,
+  NRadioGroup,
+  NSelect,
+} from 'naive-ui'
 import DemoPage from '../components/DemoPage'
 
 export default defineComponent({
@@ -12,6 +19,10 @@ export default defineComponent({
     const { t: showcaseT } = useI18n('showcase')
     const query = ref('')
     const selectedPackage = ref<string | null>(null)
+    const copyFormat = ref<'tsx' | 'vue'>('tsx')
+    const copyTag = computed(() =>
+      copyFormat.value === 'tsx' ? 'RIcon' : 'r-icon',
+    )
     const filtered = computed(() =>
       iconNames.filter(
         (name) =>
@@ -60,9 +71,20 @@ export default defineComponent({
               clearable
               placeholder={t<string>('allPackages')}
             />
+            <NRadioGroup
+              v-model:value={copyFormat.value}
+              aria-label={t<string>('copyFormat')}
+            >
+              <NRadioButton value="tsx">TSX</NRadioButton>
+              <NRadioButton value="vue">{t('vueTemplate')}</NRadioButton>
+            </NRadioGroup>
           </div>
           <div class="r-icon-library__hint">
-            <span>{t('copy')}</span>
+            <span>
+              {t('copy', {
+                format: copyFormat.value === 'tsx' ? 'TSX' : t('vueTemplate'),
+              })}
+            </span>
             <span>
               {filtered.value.length} / {iconNames.length}
             </span>
@@ -81,7 +103,7 @@ export default defineComponent({
                     key={name}
                     title={name}
                     aria-label={name}
-                    v-copy={`<RIcon name="${name}" />`}
+                    v-copy={`<${copyTag.value} name="${name}" />`}
                   >
                     <RIcon name={name} size={28} cursor="pointer" />
                     <span>{name.split('/').slice(1).join('/')}</span>

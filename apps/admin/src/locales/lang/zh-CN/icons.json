@@ -3,7 +3,9 @@
   "description": "按分包浏览图标，点击即可复制完整路径用法。图标变更会自动同步类型提示和资源引用。",
   "search": "搜索图标路径",
   "allPackages": "全部分包",
-  "copy": "点击图标复制 TSX 用法",
+  "copyFormat": "复制格式",
+  "vueTemplate": "Vue 模板",
+  "copy": "点击图标复制 {format} 用法",
   "empty": "没有匹配的图标",
   "packagesLabel": "分包"
 }
