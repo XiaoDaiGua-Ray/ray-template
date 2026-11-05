@@ -190,6 +190,10 @@ Ray Admin 的应用入口迁到 `apps/admin`，文档和应用经公开入口使
 
 `pnpm harness verify` 通过 69 个测试文件的 294 个用例。合并产物核对了 22 个文档页中的 26 处内嵌入口和源码。Chrome 生产预览验证了 TablePro 样式、明暗主题、中文分页及失败重试，抽测了组件、指令、Hooks、工具交互和正常后台登录入口。桌面和 390px 预览中的边框内边距均为 12px。
 
+## GitHub Pages 静态 Mock
+
+人员数据函数由开发接口与生产浏览器演示共用。`pnpm pages:build` 继续组装应用和文档，并从 Pages 产物排除需要 Node.js 运行的 `mockServer/`。本地独立服务构建和开发中间件保持原入口。部署子路径与静态验收方法见[请求指南](../apps/docs/guide/requests.md#从演示切到真实服务)。
+
 ## 参考资料
 
 - [Node.js 26.13.0 LTS](https://nodejs.org/en/blog/release/v26.13.0)

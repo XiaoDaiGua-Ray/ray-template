@@ -48,7 +48,11 @@ export function loadOrders(
 
 ## 从演示切到真实服务
 
-开发时人员列表请求 `GET /api/list`，Vite Mock 服务在站点根路径处理接口。静态演示改用 `apps/admin/src/demo-data/people.ts` 的本地数据，能在 GitHub Pages 上独立运行。业务项目应换成自己的 API 和会话，按环境配置开发代理或服务端反代；浏览器端 `VITE_*` 变量不能放密钥。
+开发时人员列表请求 `GET /api/list`，由 Vite Mock 中间件处理。GitHub Pages 只能提供静态文件；插件 `build: true` 生成的 [独立 Mock 服务](https://vite-plugin-mock-dev-server.netlify.app/guide/mock-service) 需要 Node.js 进程。Pages 打包会跳过 `mockServer/`。
+
+Pages 上「远端分页」与「查询与分页」直接按需加载 `apps/admin/src/demo-data/people.ts`，与开发接口复用筛选、排序和分页实现，访问不依赖 `/api/list`。用 `pnpm pages:build` 构建后，将 `dist/pages` 挂载在静态站点的 `/ray-template/` 路径，打开 `/ray-template/#/tables/remote` 验证。不要用 Vite 的接口响应判断 Pages 是否具备 API 能力。
+
+若后续有多个示例必须连同 Axios 拦截器一起演练，可以在演示构建显式启用 [MSW 浏览器拦截](https://mswjs.io/guides/integrations/browser)，将 worker 放在 `/ray-template/` 下并等待注册后再启动应用。需要真实认证、共享写入或 HTTP 服务端行为时，另部署 API。业务项目应换成自己的 API 和会话；浏览器端 `VITE_*` 变量不能放密钥。
 
 [请求实例](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/axios/instance.ts) · [演示接口](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/api/demo/mock/person.ts)
 

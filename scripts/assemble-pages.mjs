@@ -21,7 +21,12 @@ await Promise.all([
   access(new URL('index.html', docs)),
 ])
 await rm(output, { recursive: true, force: true })
-await cp(admin, output, { recursive: true })
+const mockServer = fileURLToPath(new URL('mockServer', admin))
+
+await cp(admin, output, {
+  recursive: true,
+  filter: (source) => source !== mockServer,
+})
 await cp(docs, new URL('docs/', output), { recursive: true })
 console.log(`Pages artifact: ${fileURLToPath(output)}`)
 
