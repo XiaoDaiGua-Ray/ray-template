@@ -29,10 +29,12 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "harness": "node harness/run.mjs",
-    "check": "pnpm env:check && pnpm harness check && pnpm packages:check && pnpm icons:generate && pnpm typecheck && pnpm lint && pnpm format:check && pnpm test:run && vite build && pnpm docs:check",
+    "check": "pnpm env:check && pnpm harness check && pnpm api:check && pnpm packages:check && pnpm icons:generate && pnpm typecheck && pnpm lint && pnpm format:check && pnpm test:run && vite build && pnpm docs:check",
     "env:check": "node scripts/doctor.mjs",
     "packages:check": "node scripts/check-package-boundaries.mjs",
-    "pages:build": "pnpm build && pnpm docs:build && node scripts/assemble-pages.mjs"
+    "pages:build": "pnpm build && pnpm docs:build && node scripts/assemble-pages.mjs",
+    "api:generate": "node scripts/admin-api.mjs",
+    "api:check": "node scripts/admin-api.mjs --check"
   },
   "lint-staged": {
     "*.{js,mjs,cjs,ts,tsx,vue}": [
@@ -47,6 +49,13 @@
     "@faker-js/faker": "10.6.0",
     "@logicflow/core": "2.2.5",
     "@logicflow/extension": "2.3.1",
+    "@ray-template/admin-shell": "workspace:*",
+    "@ray-template/composables": "workspace:*",
+    "@ray-template/directives": "workspace:*",
+    "@ray-template/http": "workspace:*",
+    "@ray-template/icons": "workspace:*",
+    "@ray-template/routing": "workspace:*",
+    "@ray-template/ui": "workspace:*",
     "@ray-template/utils": "workspace:*",
     "@valibot/to-json-schema": "1.8.0",
     "@vueuse/core": "15.0.0",
@@ -59,6 +68,7 @@
     "interactjs": "1.10.28",
     "jsbarcode": "3.12.3",
     "lodash-es": "4.18.1",
+    "msw": "2.11.6",
     "naive-ui": "2.45.3",
     "pinia": "4.1.0",
     "pinia-plugin-persistedstate": "4.7.1",
@@ -69,14 +79,7 @@
     "vue-hooks-plus": "2.4.3",
     "vue-i18n": "11.4.17",
     "vue-router": "5.4.0",
-    "vue3-next-qrcode": "4.1.1",
-    "@ray-template/ui": "workspace:*",
-    "@ray-template/composables": "workspace:*",
-    "@ray-template/directives": "workspace:*",
-    "@ray-template/icons": "workspace:*",
-    "@ray-template/routing": "workspace:*",
-    "@ray-template/http": "workspace:*",
-    "@ray-template/admin-shell": "workspace:*"
+    "vue3-next-qrcode": "4.1.1"
   },
   "devDependencies": {
     "@commitlint/cli": "21.2.4",
@@ -116,7 +119,6 @@
     "vite-plugin-cdn2": "1.1.0",
     "vite-plugin-ejs": "2.0.0",
     "vite-plugin-inspect": "12.1.0",
-    "vite-plugin-mock-dev-server": "2.7.1",
     "vite-svg-loader": "5.1.3",
     "vitest": "5.0.5",
     "vue-eslint-parser": "10.4.1",
@@ -137,7 +139,7 @@
     "vite",
     "naive-ui",
     "pinia",
-    "\u4e2d\u540e\u53f0\u6a21\u677f"
+    "中后台模板"
   ],
   "license": "MIT",
   "author": {
@@ -148,5 +150,10 @@
     "url": "https://github.com/XiaoDaiGua-Ray/ray-template/issues"
   },
   "homepage": "https://xiaodaigua-ray.github.io/ray-template/",
-  "packageManager": "pnpm@12.16.1"
+  "packageManager": "pnpm@12.16.1",
+  "msw": {
+    "workerDirectory": [
+      "apps/admin/public"
+    ]
+  }
 }

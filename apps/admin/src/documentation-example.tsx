@@ -1,4 +1,5 @@
 import './styles/entry'
+import { apiMockEnabled } from '@/api/admin/client'
 import AppNaiveGlobalProvider from '@/app-components/provider/AppNaiveGlobalProvider'
 import AppStyleProvider from '@/app-components/provider/AppStyleProvider'
 import AppWatermarkProvider from '@/app-components/provider/AppWatermarkProvider'
@@ -116,6 +117,13 @@ const DocumentationExample = defineComponent({
 
 async function mountExample() {
   useMemoryCache()
+
+  if (apiMockEnabled) {
+    const { enableApiMock } = await import('./mocks/browser')
+
+    await enableApiMock()
+  }
+
   const app = createApp(DocumentationExample)
 
   app.use(createPinia())

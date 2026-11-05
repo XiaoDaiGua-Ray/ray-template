@@ -54,3 +54,9 @@ updateSettingState('layoutConfig', {
 [布局说明与插槽](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/layout/README.md) · [状态实现与持久化](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/store/README.md)
 
 更细的状态字段与更新动作见 [Setting Store](../reference/store/setting)、[Runtime Store](../reference/store/runtime) 和 [布局 Hooks](../reference/hooks/layout)。
+
+## 最近访问和收藏
+
+桌面搜索支持 Ctrl/Command + K。输入页面名称查找，点击星标收藏；空关键词时显示收藏与最近访问，方向键、回车和 Tab 可操作。记录按会话用户 id 隔离，刷新后恢复；清空记录保留收藏。缓存只存菜单路径，展示时重新依据当前菜单和权限筛选，语言切换沿用当前翻译。窄屏继续使用导航抽屉。
+
+内容页需要撑满工作区时，先复用布局的 `--layout-content-height`、`RTablePro autoHeight` 和 `--r-table-height`，以及 Naive UI 的 `NCard contentScrollable` / `NScrollbar`。父容器提供确定高度，Flex/Grid 子项设置 `min-block-size: 0` 后再承载内部滚动；单纯填充与滚动无需新增通用组件。用户管理页展示了左右独立滚动与窄屏上下排布。

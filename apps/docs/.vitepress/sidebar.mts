@@ -21,6 +21,7 @@ const guide = [
       entry('路由、菜单与权限', '/guide/routing'),
       entry('应用布局与状态', '/guide/layout'),
       entry('接口、取消与 Mock', '/guide/requests'),
+      entry('服务端接入与标准契约', '/guide/backend'),
       entry('主题与国际化', '/guide/appearance'),
       entry('工程检查与部署', '/guide/tooling'),
     ],

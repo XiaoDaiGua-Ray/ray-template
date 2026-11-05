@@ -12,4 +12,6 @@
 
 应用的 `@/components` 和部分 Hook/指令路径保留兼容导出；修通用行为前沿导出进入所属共享包。宿主特有服务通过注入接入，避免共享包引用应用别名。界面新增文案应补齐中英文。
 
+新增组件前先按 [Harness 复用约定](../README.md#工程约定) 核对现有能力。内容撑满与独立滚动可先看 [TablePro 高度样式](../../packages/ui/src/RTablePro/src/index.scss)、[布局高度变量](../../packages/admin-shell/src/layout-css-vars.ts) 和 [用户管理页](../../apps/admin/src/views/user-management/index.tsx)：`RTablePro autoHeight` 配合 `--r-table-height` 填充宿主；Naive UI `NCard contentScrollable` 与 `NScrollbar` 负责滚动，父级通过 Flex/Grid 和 `min-block-size: 0` 提供可收缩的确定高度。
+
 定向验证：`pnpm harness verify ui`，先按实际行为选择[组件](../../__test__/components)、[Hooks](../../__test__/hooks)或[跨包消费](../../__test__/workspace/consumer.spec.tsx)用例。涉及页面效果，按 [Harness 浏览器验收](../README.md#浏览器验收) 检查。

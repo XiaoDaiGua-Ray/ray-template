@@ -1,27 +1,30 @@
 import { RTablePro } from '@/components'
-import { listPeople } from '@/demo-data/people'
 import { useI18n } from '@/hooks/template/useI18n'
 import { NCheckbox } from 'naive-ui'
 import { createPeopleColumns } from './people'
+import { usePeopleData } from './usePeopleData'
 
 export default defineComponent({
   name: 'TableDemoAutoHeight',
   setup() {
     const { t } = useI18n('table')
-    const { data } = listPeople()
+    const { data, loading } = usePeopleData()
     const virtual = ref(false)
     const footer = ref(false)
     const action = ref(false)
     const columns = computed(() => createPeopleColumns(t))
-    const ages = [...new Set(data.slice(0, 10).map(({ age }) => age))].sort(
-      (a, b) => a - b,
+    const ages = computed(() =>
+      [...new Set(data.value.slice(0, 10).map(({ age }) => age))].sort(
+        (a, b) => a - b,
+      ),
     )
 
     return () => (
       <RTablePro
         autoHeight
         virtualScroll={virtual.value}
-        data={data}
+        data={data.value}
+        loading={loading.value}
         columns={columns.value}
         scrollX={944}
         pageSize={20}
@@ -30,7 +33,10 @@ export default defineComponent({
           {
             key: 'age',
             label: t('age'),
-            options: ages.map((age) => ({ value: age, label: String(age) })),
+            options: ages.value.map((age) => ({
+              value: age,
+              label: String(age),
+            })),
           },
         ]}
       >

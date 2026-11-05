@@ -1,14 +1,15 @@
-import { request } from '@/axios'
+import { adminRequest, apiUrl } from '@/api/admin/client'
+import { requestFixtureSchema } from './data'
 
 interface RequestFixture {
   ticket: { id: string; title: string; status: string }
   cities: Record<string, { temperature: number; humidity: number }>
 }
 
-export const requestFixtureUrl = `${import.meta.env.BASE_URL}examples/request.json`
+export const requestFixtureUrl = apiUrl('admin/demo/request')
 
 export const getRequestFixture = () =>
-  request<RequestFixture>({ url: requestFixtureUrl, method: 'get' })
+  adminRequest('demo/request', requestFixtureSchema, { method: 'get' })
 
 export const getWeather = async (city: string) => {
   const { cities } = await getRequestFixture()

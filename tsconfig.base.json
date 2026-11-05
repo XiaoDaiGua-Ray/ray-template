@@ -20,8 +20,8 @@
       "@api/*": ["./apps/admin/src/api/*"],
       "@images": ["./apps/admin/src/assets/images"],
       "@images/*": ["./apps/admin/src/assets/images/*"],
-      "@mock": ["./apps/admin/mock"],
-      "@mock/*": ["./apps/admin/mock/*"]
+      "@mock": ["./apps/admin/src/mocks"],
+      "@mock/*": ["./apps/admin/src/mocks/*"]
     }
   }
 }

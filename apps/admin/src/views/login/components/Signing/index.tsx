@@ -50,7 +50,6 @@ export default defineComponent({
 
         if (res.code !== 0) throw new Error(res.message)
 
-        setStorage(APP_CATCH_KEY.token, 'tokenValue', 'localStorage')
         setStorage(APP_CATCH_KEY.signing, res.data, 'localStorage')
         await router.push(resolveLandingPath(router, getRootPath.value))
       } catch {
@@ -119,6 +118,21 @@ export default defineComponent({
           >
             {t('UseDemo')}
           </NButton>
+          <NFlex>
+            {(['manager', 'member'] as const).map((role) => (
+              <NButton
+                secondary
+                disabled={loading.value}
+                onClick={() => {
+                  signingForm.name = role
+                  signingForm.pwd = '123456'
+                  void handleLogin()
+                }}
+              >
+                {t(role === 'manager' ? 'UseManager' : 'UseMember')}
+              </NButton>
+            ))}
+          </NFlex>
         </NFlex>
       </RForm>
     )

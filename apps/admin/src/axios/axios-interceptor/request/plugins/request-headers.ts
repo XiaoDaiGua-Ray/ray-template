@@ -1,40 +1,43 @@
 import { APP_CATCH_KEY } from '@/app-config'
-import type {
-  AxiosRequestInterceptor,
-  RequestInterceptorConfig,
-} from '@/axios/types'
+import type { AxiosRequestInterceptor } from '@/axios/types'
 import { appendRequestHeaders } from '@/axios/utils/append-request-headers'
-import { getStorage } from '@/utils'
+import { getStorage } from '@/utils/cache'
 
-/**
- *
- * 这里只是示例如何获取到系统缓存的 token 并且返回请求头 token 的 key 和 value
- * 尽可能的拆分每个拦截器的功能函数
- * 这是这个包存在的意义
- *
- * 当然你也可以根据 request instance 来特殊处理, 这里暂时不做演示
- */
-const requestHeaderToken = (ins: RequestInterceptorConfig, mode: string) => {
-  const token = getStorage<string | null>(APP_CATCH_KEY.token, 'localStorage')
+const injectRequestHeaders: AxiosRequestInterceptor = (config) => {
+  const token = getStorage<string>(APP_CATCH_KEY.token, 'localStorage')
 
-  if (ins.url) {
-    // TODO: 根据 url 不同是否设置 token
-  }
+  if (
+    !token ||
+    !config.url ||
+    Object.keys(config.headers ?? {}).some(
+      (name) => name.toLowerCase() === 'authorization',
+    )
+  )
+    return
 
-  return {
-    key: 'X-TOKEN',
-    value: token,
-  }
-}
+  const configured =
+    import.meta.env.VITE_API_BASE_URL?.trim() ||
+    `${import.meta.env.BASE_URL}api/`
+  const base = new URL(
+    configured.endsWith('/') ? configured : `${configured}/`,
+    document.baseURI,
+  )
+  const target = new URL(
+    config.url,
+    config.baseURL
+      ? new URL(config.baseURL, document.baseURI)
+      : document.baseURI,
+  )
 
-/** 注入请求头信息 */
-const injectRequestHeaders: AxiosRequestInterceptor = (ins, mode) => {
-  appendRequestHeaders(ins, [
-    requestHeaderToken(ins, mode),
-    {
-      key: 'Demo-Header-Key',
-      value: 'Demo Header Value',
-    },
+  // 只向接入方明确配置的 API 来源和路径发送会话，不污染第三方或静态资源请求。
+  if (
+    target.origin !== base.origin ||
+    !target.pathname.startsWith(base.pathname)
+  )
+    return
+
+  appendRequestHeaders(config, [
+    { key: 'Authorization', value: `Bearer ${token}` },
   ])
 }
 

@@ -16,6 +16,7 @@ export * from './hooks/useSigningStore'
 export * from './hooks/useKeepAliveStore'
 export * from './hooks/useRuntimeStore'
 export * from './hooks/useLockScreenStore'
+export * from './hooks/useNavigationHistoryStore'
 
 // Store hooks 是业务访问入口；应用卸载时同时释放 Pinia 作用域及其订阅。
 export const setupStore = (app: App<Element>) => {

@@ -211,7 +211,8 @@
     "hidePattern": "隐藏贴花",
     "series": "数据状态",
     "revision": "数据版本 {value}",
-    "unmounted": "已卸载"
+    "unmounted": "已卸载",
+    "loadFailed": "图表数据加载失败，请重试。"
   },
   "about": {
     "title": "关于 Ray Template",

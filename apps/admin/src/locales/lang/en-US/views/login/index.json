@@ -21,5 +21,7 @@
   "RegisterHint": "This registration example is ready to connect to your account service.",
   "Provider": "Sign in with {provider}",
   "ProviderHint": "The {provider} sign-in option is a demo.",
-  "QRHint": "Scan to open the Ray Template source code."
+  "QRHint": "Scan to open the Ray Template source code.",
+  "UseManager": "Manager account",
+  "UseMember": "Read-only account"
 }

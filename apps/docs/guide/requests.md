@@ -48,13 +48,11 @@ export function loadOrders(
 
 ## 从演示切到真实服务
 
-开发时人员列表请求 `GET /api/list`，由 Vite Mock 中间件处理。GitHub Pages 只能提供静态文件；插件 `build: true` 生成的 [独立 Mock 服务](https://vite-plugin-mock-dev-server.netlify.app/guide/mock-service) 需要 Node.js 进程。Pages 打包会跳过 `mockServer/`。
+开发、生产预览和 GitHub Pages 共用 MSW HTTP Mock。登录、用户、路由、人员表格、图表与请求示例都通过 API 层发送请求，在线演示由应用 base 下的 Service Worker 响应；不再在生产环境直接调用本地数据函数。选择本地筛选的表格示例，也先通过接口取得数据，再由组件完成本地排序、分页与筛选。
 
-Pages 上「远端分页」与「查询与分页」直接按需加载 `apps/admin/src/demo-data/people.ts`，与开发接口复用筛选、排序和分页实现，访问不依赖 `/api/list`。用 `pnpm pages:build` 构建后，将 `dist/pages` 挂载在静态站点的 `/ray-template/` 路径，打开 `/ray-template/#/tables/remote` 验证。不要用 Vite 的接口响应判断 Pages 是否具备 API 能力。
+设置 `VITE_API_MOCK=false` 和 `VITE_API_BASE_URL` 后，请求直达自己的服务端。完整请求/响应结构、错误码、会话、权限码及可下载 OpenAPI 见[服务端接入指南](./backend)。Mock 持久化仅属于当前浏览器，多用户共享数据和正式会话由真实后端负责。
 
-若后续有多个示例必须连同 Axios 拦截器一起演练，可以在演示构建显式启用 [MSW 浏览器拦截](https://mswjs.io/guides/integrations/browser)，将 worker 放在 `/ray-template/` 下并等待注册后再启动应用。需要真实认证、共享写入或 HTTP 服务端行为时，另部署 API。业务项目应换成自己的 API 和会话；浏览器端 `VITE_*` 变量不能放密钥。
-
-[请求实例](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/axios/instance.ts) · [演示接口](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/api/demo/mock/person.ts)
+[请求实例](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/axios/instance.ts) · [业务 API](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/api/admin/index.ts)
 
 ## useRequest 与手动执行
 
@@ -73,6 +71,6 @@ export function useOrderSummary() {
 
 调用 `run()` 触发手动加载。这个包装的请求函数从 `fetchOptions` 读取配置，不会把 `run(...)` 参数自动映射成请求体或 query；需要动态 service 时用同入口导出的 `useHookPlusRequest(service, options?)`，在 service 中调用 `request`。错误提示由业务配置或响应拦截器负责，当前默认拦截器不消费 `responseSuccessMessage` / `responseErrorMessage` 两个类型字段。
 
-默认头注入包含演示 `X-TOKEN` 与示例头。对接真实接口时在请求插件中校验目标来源，并按后端约定设置认证头。模板 Axios 实例用来请求自己的业务接口；第三方地址使用明确配置的独立客户端。
+默认仅向已配置的 API 基址注入 `Authorization: Bearer <token>`，不覆盖调用方提供的认证头。模板 Axios 实例用来请求自己的业务接口；第三方地址使用明确配置的独立客户端。
 
 [请求 Hook](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/axios/index.ts) · [请求配置类型](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/packages/http/src/types.ts) · [头注入实现](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/axios/axios-interceptor/request/plugins/request-headers.ts)

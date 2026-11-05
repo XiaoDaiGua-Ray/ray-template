@@ -1,0 +1,488 @@
+{
+  "version": 1,
+  "routes": [
+    {
+      "path": "/dashboard",
+      "component": "dashboard",
+      "meta": {
+        "i18nKey": "menu.Dashboard",
+        "icon": "navigation/dashboard",
+        "order": 0
+      }
+    },
+    {
+      "path": "/system",
+      "meta": {
+        "i18nKey": "menu.SystemManagement",
+        "icon": "navigation/database",
+        "order": 10
+      },
+      "children": [
+        {
+          "path": "users",
+          "name": "UserManagement",
+          "component": "system/users",
+          "meta": {
+            "i18nKey": "menu.UserManagement",
+            "icon": "navigation/table"
+          }
+        }
+      ]
+    },
+    {
+      "path": "/tables",
+      "meta": {
+        "i18nKey": "menu.Table",
+        "icon": "navigation/table",
+        "order": 10,
+        "extra": {
+          "label": "TablePro"
+        }
+      },
+      "children": [
+        {
+          "path": "data",
+          "meta": {
+            "i18nKey": "menu.TableData"
+          },
+          "children": [
+            {
+              "path": "/tables/basic",
+              "name": "TableDemoBasic",
+              "component": "demo/tables/basic",
+              "meta": {
+                "i18nKey": "menu.TableBasic"
+              }
+            },
+            {
+              "path": "/tables/remote",
+              "name": "TableDemoRemote",
+              "component": "demo/tables/remote",
+              "meta": {
+                "i18nKey": "menu.TableRemote"
+              }
+            },
+            {
+              "path": "/tables/controlled",
+              "name": "TableDemoControlled",
+              "component": "demo/tables/controlled",
+              "meta": {
+                "i18nKey": "menu.TableControlled"
+              }
+            },
+            {
+              "path": "/tables/search",
+              "name": "TableDemoSearch",
+              "component": "demo/tables/search",
+              "meta": {
+                "i18nKey": "menu.TableSearch"
+              }
+            }
+          ]
+        },
+        {
+          "path": "tools",
+          "meta": {
+            "i18nKey": "menu.TableTools"
+          },
+          "children": [
+            {
+              "path": "/tables/auto-height",
+              "name": "TableDemoAutoHeight",
+              "component": "demo/tables/auto-height",
+              "meta": {
+                "i18nKey": "menu.TableAutoHeight"
+              }
+            },
+            {
+              "path": "/tables/columns",
+              "name": "TableDemoColumns",
+              "component": "demo/tables/columns",
+              "meta": {
+                "i18nKey": "menu.TableColumns"
+              }
+            },
+            {
+              "path": "/tables/custom",
+              "name": "TableDemoCustom",
+              "component": "demo/tables/custom",
+              "meta": {
+                "i18nKey": "menu.TableCustom"
+              }
+            },
+            {
+              "path": "/tables/printing",
+              "name": "TableDemoPrinting",
+              "component": "demo/tables/printing",
+              "meta": {
+                "i18nKey": "menu.TablePrinting"
+              }
+            }
+          ]
+        },
+        {
+          "path": "hooks",
+          "meta": {
+            "i18nKey": "menu.TableHooks"
+          },
+          "children": [
+            {
+              "path": "/tables/hooks-query",
+              "name": "TableDemoHooksQuery",
+              "component": "demo/tables/hooks-query",
+              "meta": {
+                "i18nKey": "menu.TableHooksQuery"
+              }
+            },
+            {
+              "path": "/tables/hooks-selection",
+              "name": "TableDemoHooksSelection",
+              "component": "demo/tables/hooks-selection",
+              "meta": {
+                "i18nKey": "menu.TableHooksSelection"
+              }
+            },
+            {
+              "path": "/tables/hooks-output",
+              "name": "TableDemoHooksOutput",
+              "component": "demo/tables/hooks-output",
+              "meta": {
+                "i18nKey": "menu.TableHooksOutput"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "/examples/components",
+      "meta": {
+        "i18nKey": "menu.DemoComponents",
+        "icon": "navigation/components",
+        "order": 20
+      },
+      "children": [
+        {
+          "path": "/form",
+          "component": "demo/form",
+          "meta": {
+            "i18nKey": "menu.Form",
+            "icon": "navigation/form",
+            "extra": {
+              "label": "useForm"
+            }
+          }
+        },
+        {
+          "path": "/modal-demo",
+          "component": "demo/modal-demo",
+          "meta": {
+            "i18nKey": "menu.Modal",
+            "icon": "navigation/window"
+          }
+        },
+        {
+          "path": "/segment",
+          "component": "demo/segment",
+          "meta": {
+            "i18nKey": "menu.Segment",
+            "icon": "navigation/components",
+            "extra": {
+              "label": "segment"
+            }
+          }
+        },
+        {
+          "path": "/draggable-card",
+          "component": "demo/draggable-card",
+          "meta": {
+            "i18nKey": "menu.DraggableCard",
+            "icon": "action/draggable",
+            "extra": {
+              "label": "drag"
+            }
+          }
+        },
+        {
+          "path": "/echart",
+          "component": "demo/echart",
+          "meta": {
+            "i18nKey": "menu.Echart",
+            "icon": "navigation/echart",
+            "extra": {
+              "label": "useChart"
+            }
+          }
+        },
+        {
+          "path": "/flow",
+          "component": "demo/flow-demo",
+          "meta": {
+            "i18nKey": "menu.Flow",
+            "icon": "navigation/flow"
+          }
+        },
+        {
+          "path": "/iframe",
+          "component": "demo/iframe",
+          "meta": {
+            "noLocalTitle": "iframe",
+            "icon": "navigation/window"
+          }
+        }
+      ]
+    },
+    {
+      "path": "/examples/assets",
+      "meta": {
+        "i18nKey": "menu.DemoAssets",
+        "icon": "navigation/icons",
+        "order": 30
+      },
+      "children": [
+        {
+          "path": "/svg-icons",
+          "component": "demo/svg-icons",
+          "meta": {
+            "i18nKey": "menu.SvgIcon",
+            "icon": "navigation/icons"
+          }
+        },
+        {
+          "path": "/qrcode",
+          "component": "demo/qrcode",
+          "meta": {
+            "i18nKey": "menu.QRCode",
+            "icon": "navigation/qr_code"
+          }
+        },
+        {
+          "path": "/barcode",
+          "component": "demo/barcode-demo",
+          "meta": {
+            "i18nKey": "menu.Barcode",
+            "icon": "navigation/barcode",
+            "extra": {
+              "label": "new"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "path": "/examples/interaction",
+      "meta": {
+        "i18nKey": "menu.DemoInteraction",
+        "icon": "action/mouse",
+        "order": 40
+      },
+      "children": [
+        {
+          "path": "/template-hooks",
+          "name": "TemplateHooks",
+          "component": "demo/template-hooks",
+          "meta": {
+            "i18nKey": "menu.TemplateHooks",
+            "icon": "navigation/components"
+          }
+        },
+        {
+          "path": "/web-hooks",
+          "name": "WebHooks",
+          "component": "demo/hooks/web-hooks",
+          "meta": {
+            "i18nKey": "menu.WebHooks",
+            "icon": "action/mouse"
+          }
+        },
+        {
+          "path": "/directive",
+          "component": "demo/directive",
+          "meta": {
+            "i18nKey": "menu.Directive",
+            "icon": "action/adjustment",
+            "extra": {
+              "label": "ellipsis"
+            }
+          }
+        },
+        {
+          "path": "/context-menu",
+          "component": "demo/context-menu",
+          "meta": {
+            "i18nKey": "menu.ContextMenu",
+            "icon": "action/more"
+          }
+        },
+        {
+          "path": "/scroll-reveal",
+          "component": "demo/scroll-reveal",
+          "meta": {
+            "i18nKey": "menu.scrollReveal",
+            "icon": "directional/expanded",
+            "hidden": true
+          }
+        }
+      ]
+    },
+    {
+      "path": "/examples/navigation",
+      "meta": {
+        "i18nKey": "menu.DemoNavigation",
+        "icon": "navigation/layout",
+        "order": 50
+      },
+      "children": [
+        {
+          "path": "/layout-demo",
+          "name": "LayoutDemo",
+          "component": "demo/layout-demo",
+          "meta": {
+            "i18nKey": "menu.LayoutDemo",
+            "icon": "navigation/layout"
+          }
+        },
+        {
+          "path": "/router-demo",
+          "component": "layout",
+          "meta": {
+            "i18nKey": "menu.RouterDemo",
+            "icon": "navigation/routing"
+          },
+          "children": [
+            {
+              "path": "router-demo-home",
+              "component": "demo/router-demo/router-demo-home",
+              "meta": {
+                "noLocalTitle": "人员信息(平级模式)"
+              }
+            },
+            {
+              "path": "router-demo-detail",
+              "component": "demo/router-demo/router-demo-detail",
+              "meta": {
+                "noLocalTitle": "信息详情",
+                "sameLevel": true
+              }
+            }
+          ]
+        },
+        {
+          "path": "/multi",
+          "component": "layout",
+          "meta": {
+            "i18nKey": "menu.MultiMenu",
+            "icon": "navigation/menu",
+            "extra": {
+              "label": "cache"
+            }
+          },
+          "children": [
+            {
+              "path": "multi-menu-one",
+              "name": "MultiMenuOne",
+              "component": "demo/multi/views/multi-menu-one",
+              "meta": {
+                "noLocalTitle": "多级菜单-1",
+                "keepAlive": true
+              }
+            },
+            {
+              "path": "multi-menu-two",
+              "name": "MultiMenuTwo",
+              "component": "layout",
+              "meta": {
+                "noLocalTitle": "多级菜单-2"
+              },
+              "children": [
+                {
+                  "path": "sub-menu-other",
+                  "name": "SubMenuOther",
+                  "component": "demo/multi/views/multi-menu-two/views/sub-menu-other",
+                  "meta": {
+                    "noLocalTitle": "多级菜单-2-1",
+                    "keepAlive": true
+                  }
+                },
+                {
+                  "path": "sub-menu",
+                  "name": "SubMenu",
+                  "component": "layout",
+                  "meta": {
+                    "noLocalTitle": "多级菜单-2-2",
+                    "keepAlive": true
+                  },
+                  "children": [
+                    {
+                      "path": "sub-menu-one",
+                      "name": "MultiMenuTwoOne",
+                      "component": "demo/multi/views/multi-menu-two/views/sub-menu/views/multi-menu-two-one",
+                      "meta": {
+                        "noLocalTitle": "多级菜单-2-2-1",
+                        "keepAlive": true
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "/examples/utilities",
+      "meta": {
+        "i18nKey": "menu.DemoUtilities",
+        "icon": "navigation/database",
+        "order": 60
+      },
+      "children": [
+        {
+          "path": "/axios",
+          "name": "RAxios",
+          "component": "demo/axios",
+          "meta": {
+            "i18nKey": "menu.Axios",
+            "icon": "logo/axios",
+            "keepAlive": true
+          }
+        },
+        {
+          "path": "/cache-demo",
+          "component": "demo/cache-demo",
+          "meta": {
+            "i18nKey": "menu.CacheDemo",
+            "icon": "navigation/database"
+          }
+        },
+        {
+          "path": "/precision",
+          "component": "demo/precision",
+          "meta": {
+            "i18nKey": "menu.CalculatePrecision",
+            "icon": "navigation/other"
+          }
+        },
+        {
+          "path": "/rely-about",
+          "component": "demo/rely/views/rely-about",
+          "meta": {
+            "i18nKey": "menu.RelyAbout",
+            "icon": "navigation/rely"
+          }
+        }
+      ]
+    },
+    {
+      "path": "/doc/doc-inside",
+      "name": "RTemplateDoc",
+      "component": "demo/doc",
+      "meta": {
+        "i18nKey": "menu.DocLocalInside",
+        "icon": "navigation/document",
+        "order": 70
+      }
+    }
+  ]
+}

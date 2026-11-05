@@ -211,7 +211,8 @@
     "hidePattern": "Hide decals",
     "series": "Data state",
     "revision": "Data revision {value}",
-    "unmounted": "Chart disposed"
+    "unmounted": "Chart disposed",
+    "loadFailed": "Could not load chart data. Please retry."
   },
   "about": {
     "title": "About Ray Template",

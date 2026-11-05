@@ -1,4 +1,6 @@
 import './search.scss'
+import { getSearchOrders, getSearchOwners } from '@/api/demo/data'
+import type { DemoOrder } from '@/api/demo/data'
 import { useSettingGetters } from '@/store'
 import { RTablePro, useTablePro } from '@ray-template/ui/table-pro'
 import type {
@@ -29,13 +31,9 @@ import {
 import DemoPage from '../components/DemoPage'
 import { searchCopy } from './search-copy'
 import {
-  orderMatchesQuery,
-  orders,
   organizations,
-  owners,
   products,
   statuses,
-  waitForDemo,
   warehouses,
 } from './search-fixtures'
 
@@ -85,12 +83,13 @@ export default defineComponent({
   name: 'TableDemoSearch',
   setup() {
     const { getLocaleLanguage } = useSettingGetters()
+    const queryParams = computed(() => ({ locale: getLocaleLanguage.value }))
     const copy = computed(() =>
       getLocaleLanguage.value === 'zh-CN' ? searchCopy.zh : searchCopy.en,
     )
     const id = useId()
     const [register, table] = useTablePro()
-    const source = ref<'local' | 'remote'>('local')
+    const source = ref<'local' | 'remote'>('remote')
     const submitMode = ref<'manual' | 'change'>('manual')
     const more = ref(false)
     const scenario = ref<Scenario>()
@@ -106,7 +105,7 @@ export default defineComponent({
       detail: Trace['detail'],
       delay: number,
       signal: AbortSignal,
-      result: () => T,
+      result: () => Promise<T>,
     ) => {
       const id = ++requestId
       const entry: Trace = { id, kind, detail, phase: 'pending' }
@@ -119,8 +118,10 @@ export default defineComponent({
       }
 
       try {
-        await waitForDemo(delay, signal)
-        const value = result()
+        signal.throwIfAborted()
+        const value = await result()
+
+        signal.throwIfAborted()
 
         finish('success')
 
@@ -131,14 +132,39 @@ export default defineComponent({
       }
     }
 
-    const rows = computed(() =>
-      orders.map((row) => ({
-        ...row,
-        product: copy.value.products[row.productIndex],
-        statusLabel: copy.value.statuses[row.statusIndex],
-        organization: copy.value.teams[row.orgId === 'north' ? 0 : 1],
-        owner: copy.value.people[row.ownerIndex],
-      })),
+    const rows = shallowRef<DemoOrder[]>([])
+    const rowsLoading = ref(false)
+
+    watch(
+      [source, getLocaleLanguage],
+      async ([mode, locale], _, cleanup) => {
+        if (mode !== 'local') return
+
+        const controller = new AbortController()
+
+        cleanup(() => controller.abort())
+        rowsLoading.value = true
+
+        try {
+          rows.value = (
+            await getSearchOrders(
+              { page: 1, pageSize: 100 },
+              locale,
+              controller.signal,
+            )
+          ).items
+        } catch {
+          if (!controller.signal.aborted)
+            window.$message.error(
+              locale === 'zh-CN'
+                ? '查询失败，请重试。'
+                : 'Query failed. Please retry.',
+            )
+        } finally {
+          if (!controller.signal.aborted) rowsLoading.value = false
+        }
+      },
+      { immediate: true },
     )
     const money = computed(
       () =>
@@ -157,7 +183,7 @@ export default defineComponent({
     )
     const deliveryDetails: TableProColumn = {
       type: 'expand',
-      renderExpand: (row: (typeof orders)[number]) => {
+      renderExpand: (row: DemoOrder) => {
         const labels = copy.value
         const details = [
           [labels.warehouse, labels.warehouseLabels[row.warehouseIndex]],
@@ -231,18 +257,9 @@ export default defineComponent({
 
       failOwnerOnce = false
 
-      return track('owner', org, org === 'north' ? 800 : 450, signal, () => {
-        if (fail) throw new Error('Simulated assignee request failure')
-
-        return owners.flatMap(({ id, orgId }, index) => {
-          const label = copy.value.people[index]
-
-          return orgId === org &&
-            label.toLowerCase().includes(keyword.trim().toLowerCase())
-            ? [{ label, value: id }]
-            : []
-        })
-      })
+      return track('owner', org, org === 'north' ? 800 : 450, signal, () =>
+        getSearchOwners(org, keyword, getLocaleLanguage.value, signal, fail),
+      )
     }
 
     const search = computed<TableProSearchOptions>(() => {
@@ -424,18 +441,15 @@ export default defineComponent({
       listPayload.value = query
       failListOnce = false
 
-      return track('list', page, 400, signal, () => {
-        if (fail) throw new Error('Simulated list request failure')
-
-        const matched = rows.value.filter((row) =>
-          orderMatchesQuery(row, query),
+      return track('list', page, 400, signal, async () => {
+        const result = await getSearchOrders(
+          query,
+          getLocaleLanguage.value,
+          signal,
+          fail,
         )
-        const start = (page - 1) * pageSize
 
-        return {
-          data: matched.slice(start, start + pageSize),
-          total: matched.length,
-        }
+        return { data: result.items, total: result.total }
       })
     }
 
@@ -582,6 +596,8 @@ export default defineComponent({
             search={search.value}
             data={source.value === 'local' ? rows.value : void 0}
             request={source.value === 'remote' ? request : void 0}
+            params={queryParams.value}
+            loading={source.value === 'local' && rowsLoading.value}
             pageSize={5}
             pagination={pagination}
             scrollX={more.value ? 700 : 645}

@@ -1,4 +1,5 @@
-import { request } from '@/axios'
+import { adminRequest } from '@/api/admin/client'
+import { peopleResultSchema } from '@/api/demo/data'
 import type { Person, PersonListParams } from '@/demo-data/people'
 import type { PaginationResponse } from '@/types'
 
@@ -8,17 +9,16 @@ export const getPersonList = async (
   params: PersonListParams,
   signal?: AbortSignal,
 ) => {
-  if (import.meta.env.DEV) {
-    return request<PaginationResponse<Person[]>>({
-      url: '/api/list',
-      method: 'get',
-      params,
-      signal,
-      cancelConfig: { cancel: !signal },
-    })
-  }
+  const result = await adminRequest('demo/people', peopleResultSchema, {
+    method: 'get',
+    params,
+    signal,
+  })
 
-  const { listPeople } = await import('@/demo-data/people')
-
-  return listPeople(params)
+  return {
+    code: 200,
+    msg: 'OK',
+    data: result.items,
+    total: result.total,
+  } satisfies PaginationResponse<Person[]>
 }

@@ -1,17 +1,17 @@
 import './printing.scss'
 import { RTablePro } from '@/components'
 import type { TableProInst } from '@/components'
-import { listPeople } from '@/demo-data/people'
 import { useI18n } from '@/hooks/template/useI18n'
 import { NButton } from 'naive-ui'
 import { useTemplateRef } from 'vue'
 import { createPeopleColumns } from './people'
+import { usePeopleData } from './usePeopleData'
 
 export default defineComponent({
   name: 'TableDemoPrinting',
   setup() {
     const { t } = useI18n('table')
-    const { data } = listPeople()
+    const { data, loading } = usePeopleData()
     const table = shallowRef<TableProInst>()
     const summary = useTemplateRef<HTMLElement>('summary')
 
@@ -20,7 +20,8 @@ export default defineComponent({
         ref={table}
         title={t('printDemoTitle')}
         columns={createPeopleColumns(t)}
-        data={data}
+        data={data.value}
+        loading={loading.value}
         pageSize={20}
         scrollX={920}
         search={[{ key: 'name', label: t('name'), placeholder: t('nameHint') }]}

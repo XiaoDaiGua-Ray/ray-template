@@ -1,5 +1,9 @@
 const views = {
   dashboard: { load: () => import('@/views/dashboard'), name: 'RDashboard' },
+  'system/users': {
+    load: () => import('@/views/user-management'),
+    name: 'UserManagement',
+  },
   'demo/axios': {
     load: () => import('@/views/demo/axios/index'),
     name: 'RAxios',

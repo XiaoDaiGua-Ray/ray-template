@@ -1,3 +1,5 @@
+import { getAdminRoutes, updateAdminRoutes } from '@/api/admin'
+import { apiUrl } from '@/api/admin/client'
 import { APP_CATCH_KEY } from '@/app-config'
 import type { RouteConfig } from './schema'
 
@@ -10,7 +12,8 @@ interface Preference {
 
 const storageKey = 'rayRouteConfig.v1'
 
-export const remoteRouteUrl = import.meta.env.VITE_ROUTE_CONFIG_URL?.trim()
+export const remoteRouteUrl =
+  import.meta.env.VITE_ROUTE_CONFIG_URL?.trim() || apiUrl('admin/route-config')
 
 function readPreference(): Preference {
   try {
@@ -45,6 +48,12 @@ export const routeSourceStatus: {
 } = { requested: preference.source, active: 'static' }
 
 export async function fetchRemoteRouteConfig(): Promise<RouteConfig> {
+  if (!import.meta.env.VITE_ROUTE_CONFIG_URL?.trim()) {
+    const { parseRouteConfig } = await import('./contract')
+
+    return parseRouteConfig(JSON.stringify(await getAdminRoutes()))
+  }
+
   if (!remoteRouteUrl) throw new Error('VITE_ROUTE_CONFIG_URL is missing.')
 
   const url = new URL(remoteRouteUrl, document.baseURI)
@@ -66,6 +75,16 @@ export async function fetchRemoteRouteConfig(): Promise<RouteConfig> {
     throw new Error(`Route endpoint returned HTTP ${response.status}.`)
 
   return parseRouteConfig(await response.text())
+}
+
+export async function saveRemoteRouteConfig(config: RouteConfig) {
+  if (import.meta.env.VITE_ROUTE_CONFIG_URL?.trim())
+    throw new Error(
+      'VITE_ROUTE_CONFIG_URL is a read-only legacy endpoint. Configure VITE_API_BASE_URL for route writes.',
+    )
+
+  await updateAdminRoutes(config)
+  saveRouteSource('remote')
 }
 
 export async function loadRouteConfig(): Promise<RouteConfig | undefined> {

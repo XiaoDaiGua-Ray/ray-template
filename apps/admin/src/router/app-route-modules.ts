@@ -1,6 +1,7 @@
+import initialRoutes from '@/mocks/data/routes.json'
+import { parseRouteConfig, toRuntimeRoutes } from './config/contract'
 import { DEFAULT_HOME_PATH, ROUTE_MANAGEMENT_PATH } from './constant'
 import type { AppRouteRecordRaw } from './types'
-import { combineRawRouteModules } from './utils/combine-raw-route-modules'
 import { expandRoutes } from './utils/expand-routes'
 import { orderRoutes } from './utils/order-routes'
 
@@ -28,7 +29,8 @@ const managementRoute: AppRouteRecordRaw = {
   ],
 }
 
-export const getStaticAppRoutes = () => orderRoutes(combineRawRouteModules())
+export const getStaticAppRoutes = () =>
+  orderRoutes(toRuntimeRoutes(parseRouteConfig(JSON.stringify(initialRoutes))))
 
 let activeRoutes: AppRouteRecordRaw[] | undefined
 

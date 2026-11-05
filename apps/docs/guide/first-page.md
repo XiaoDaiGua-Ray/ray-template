@@ -34,26 +34,26 @@ export default defineComponent({
 
 ## 接入菜单
 
-在 `apps/admin/src/router/modules/orders.ts` 添加：
+先在 `apps/admin/src/router/config/views.ts` 的 `views` 中登记组件白名单：
 
 ```ts
-import type { AppRouteRecordRaw } from '@/router/types'
-
-const orders: AppRouteRecordRaw = {
-  path: '/orders',
-  name: 'Orders',
-  component: () => import('@/views/orders'),
-  meta: {
-    i18nKey: 'menu.Orders',
-    icon: 'navigation/table',
-    order: 20,
-  },
-}
-
-export default orders
+orders: { load: () => import('@/views/orders'), name: 'Orders' },
 ```
 
-在 `apps/admin/src/locales/lang/zh-CN/menu.json` 和 `apps/admin/src/locales/lang/en-US/menu.json` 分别加入 `Orders` 的翻译。重新加载工作台，从菜单打开订单页，再刷新一次，确认路由可恢复。
+在 Mock 初始路由 JSON `apps/admin/src/mocks/data/routes.json` 中加入以下记录，或由自己的路由接口返回：
+
+```json
+{
+  "path": "/orders",
+  "name": "Orders",
+  "component": "orders",
+  "meta": { "i18nKey": "menu.Orders", "icon": "navigation/table", "order": 20 }
+}
+```
+
+在中英文 `menu.json` 中加入 `Orders` 翻译。已有浏览器修改过路由时，进入路由管理载入初始配置并保存到接口，或直接在管理页添加该记录；重新加载后，从菜单、直接地址和刷新三条路径检查页面。
+
+现成的「系统管理 → 用户管理」已演示组织筛选、远端查询、新增编辑、详情、批量操作和接口权限。可先对照这条完整流程，再接入自己的业务。其 API 与数据结构见[标准契约](./backend)。
 
 ## 接入 API
 

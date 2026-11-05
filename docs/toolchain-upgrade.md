@@ -190,9 +190,17 @@ Ray Admin 的应用入口迁到 `apps/admin`，文档和应用经公开入口使
 
 `pnpm harness verify` 通过 69 个测试文件的 294 个用例。合并产物核对了 22 个文档页中的 26 处内嵌入口和源码。Chrome 生产预览验证了 TablePro 样式、明暗主题、中文分页及失败重试，抽测了组件、指令、Hooks、工具交互和正常后台登录入口。桌面和 390px 预览中的边框内边距均为 12px。
 
-## GitHub Pages 静态 Mock
+## 2026-11-05 HTTP Mock 与服务端契约
 
-人员数据函数由开发接口与生产浏览器演示共用。`pnpm pages:build` 继续组装应用和文档，并从 Pages 产物排除需要 Node.js 运行的 `mockServer/`。本地独立服务构建和开发中间件保持原入口。部署子路径与静态验收方法见[请求指南](../apps/docs/guide/requests.md#从演示切到真实服务)。
+演示已统一为 MSW 2.11.6：启动时等待 Service Worker 就绪，开发、生产预览与 GitHub Pages 复用同一套处理器。移除了仅开发可用的旧 Vite Mock 插件和生产直接调用本地人员数据的分支。初始路由迁入 Mock JSON，在线读写使用标准 GET/PUT 接口；组件白名单和外壳路由仍由前端持有。
+
+浏览器验收复现了 MSW 3.x 约五分钟后失去拦截的[已知问题](https://github.com/mswjs/msw/issues/2801)，因此固定使用 2.11.6。业务请求前探测 Mock 标记，丢失时通过公开 stop/start API 恢复；恢复失败时阻止业务请求穿透。上游修复并通过长时运行与后台恢复验收后再评估升级。官方 worker 保持原样，不手工修改库的消息协议。
+
+`pnpm api:generate` 从运行时 Schema 生成可下载的 OpenAPI 3.1；`pnpm api:check` 校验契约和 MSW 官方 worker 同步，并纳入全量检查。递归路由 Schema 的引用定位到所属 OpenAPI 组件，回归测试检查全部引用可解析。Node/pnpm 版本保持清单要求。接入与部署边界见[服务端指南](../apps/docs/guide/backend.md)。
+
+- Node.js 26.13.0、pnpm 12.16.1 下，`pnpm harness verify` 通过类型、Lint、格式、包边界、79 个测试文件的 357 个用例，以及后台和文档生产构建。报告：`.harness-local/runs/all-z0kewW/report.json`。
+- 浏览器完成用户增删改查、重复输入与取消、批量操作、只读账号、收藏与历史隔离、键盘搜索、接口路由保存和刷新读回。1280px 桌面与 390px 窄屏验证两个区域独立滚动、中英文及明暗主题；文档契约入口返回最终 JSON。证据：`.harness-local/browser/admin-2026-11-05/report.json`。
+- Chrome 自动化连接中断后，完整生产验收使用独立的内置 Chromium 预览。长时间操作后 Mock 请求仍由 Service Worker 返回；当前浏览器工具不支持强制终止 worker，恢复并发与失败阻断由回归测试覆盖。未连接真实后端，未部署或运行远端 CI。
 
 ## 参考资料
 

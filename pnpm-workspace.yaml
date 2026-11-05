@@ -13,6 +13,8 @@ overrides:
 allowBuilds:
   # 发布包已包含构建产物，postinstall 仅输出 AI 提示，不参与应用构建。
   '@logicflow/core': false
+  # worker 由显式生成命令同步并校验，避免安装阶段自动改写公共资源。
+  msw: false
   '@parcel/watcher': true
   esbuild: true
   rs-module-lexer: true

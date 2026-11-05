@@ -12,6 +12,7 @@ import { updateObjectValue } from '@/utils/update-object-value'
 import { pick } from 'lodash-es'
 import { NEllipsis } from 'naive-ui'
 import type { LocationQuery, RouteRecordNormalized } from 'vue-router'
+import { piniaNavigationHistoryStore } from '../navigation-history'
 import { piniaSigningStore } from '../signing'
 import { pickRouteRecordNormalizedConstant } from './constant'
 import {
@@ -60,6 +61,7 @@ export const piniaMenuStore = defineStore(
       currentMenuOption: null, // 当前激活菜单项
     })
     const signing = piniaSigningStore()
+    const navigationHistory = piniaNavigationHistoryStore()
     const menuIndex = new Map<
       string,
       { option: AppMenuOption; parentPath: string }
@@ -216,6 +218,14 @@ export const piniaMenuStore = defineStore(
         menuState.breadcrumbOptions = [option]
 
       menuState.currentMenuOption = option
+
+      if (
+        option.show !== false &&
+        !option.children?.length &&
+        !option.fullPath.includes(':')
+      ) {
+        navigationHistory.recordVisit(option.fullPath)
+      }
 
       if (menuState.menuKey !== option.key) {
         menuState.menuKey = option.key

@@ -1,14 +1,15 @@
 # Signing Store
 
-`useSigningGetters().getSigningCallback` 返回账号信息引用。登录前可能为空对象，成功后主要字段为 `name`、`role`、`avatar?`。角色用于客户端路由判断，后端仍需对每次请求校验会话和权限。
+`useSigningGetters().getSigningCallback` 返回会话用户资料，主要字段为 `id`、`username`、`name`、`role`、`avatar?`。`getPermissions` 返回当前会话的权限码；前端菜单与操作分别消费角色和权限，后端独立检查业务请求。
 
-| 方法                              | 行为                                                                                                                                                               |
-| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `signing(form)`                   | 接收 `{ name, pwd }`。模板演示对非空表单返回固定的 `admin` 角色，不校验密码。成功解析为 `{ code: 0, data, message }`；空表单拒绝，包含 `code: 1` 和 `data: null`。 |
-| `clearSigningCallback(toSigning)` | 清理当前应用登录和菜单缓存、Session Storage，并尝试关闭标签。`true` 时还会清路由、回到登录页并安排刷新。                                                           |
-| `logout()`                        | 调用 `clearSigningCallback(true)`。                                                                                                                                |
+| 方法                              | 行为                                                                                                                                                                           |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `signing({ name, pwd })`          | 调用标准登录接口，保存返回的 token、资料与权限。为兼容组件调用，动作成功仍返回 `{ code: 0, data, message }`；错误拒绝。HTTP 接口本身使用标准 `{ code: 200, msg, data }` 包络。 |
+| `restoreSession()`                | 启动时重新读取用户资料与权限，401 清除失效会话；网络或协议错误拒绝，不沿用旧权限。                                                                                             |
+| `clearSigningCallback(toSigning)` | 清理当前应用登录、菜单与 Session Storage，关闭标签；`true` 时回登录页并刷新。                                                                                                  |
+| `logout()`                        | 先请求服务端注销，再清理本地会话。                                                                                                                                             |
 
-登录演示页面在 `signing` 成功后写入演示 token 和签入信息；Store 的 `signing` 动作自身不签发 token。请求插件从 Local Storage 读取 token，Pinia 另外持久化 `signingCallback`。对接实际身份系统时，把 token 写入、角色刷新与退出清理视为同一条流程。
+Pinia 仅持久化用户资料；权限由会话接口刷新。搜索收藏和最近访问按稳定用户 id 隔离，旧的演示资料没有 id 时才使用名称。接口输入、输出和真实后端接入见[服务端契约](../../guide/backend)。
 
 ```ts
 import { useSigningActions, useSigningGetters } from '@/store'

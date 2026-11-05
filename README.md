@@ -34,11 +34,11 @@ Page tabs keep multiple tasks open, and breadcrumbs show where you are. Find men
 
 [Layout playground source](apps/admin/src/views/demo/layout-demo.tsx) · [Layout configuration and slots](apps/admin/src/layout/README.md)
 
-### Route modules connect pages, menus, and permissions
+### HTTP route configuration connects pages, menus, and permissions
 
-Declare a page in `apps/admin/src/router/modules` to generate its navigation and breadcrumbs. Route metadata controls menu labels and icons, roles, visibility, and `keepAlive`. Detail pages can extend the breadcrumb while keeping the current menu and tab. Role checks cover both menu filtering and direct navigation. Connect your backend to validate sessions and authorize API requests.
+Register the page component ID in `apps/admin/src/router/config/views.ts`, then return its route record from the API to generate navigation and breadcrumbs. Initial demo records live in `apps/admin/src/mocks/data/routes.json`. Route metadata controls menu labels and icons, roles, visibility, and `keepAlive`. Detail pages can extend the breadcrumb while keeping the current menu and tab. Role checks cover both menu filtering and direct navigation. Connect your backend to validate sessions and authorize API requests.
 
-[Routing guide](apps/admin/src/router/README.md) · [Nested navigation and caching example](apps/admin/src/router/modules/demo/navigation.ts)
+[Routing guide](apps/admin/src/router/README.md) · [Nested navigation and caching example](apps/admin/src/mocks/data/routes.json)
 
 ### Reusable components, composables, and SVG icons
 
@@ -115,8 +115,8 @@ export default defineComponent({
 ```
 
 1. **Build the view.** Add a page in `apps/admin/src/views`. The [remote table example](apps/admin/src/views/demo/tables/remote.tsx) shows sorting, row selection, and toolbar actions.
-2. **Connect navigation.** Add a route in `apps/admin/src/router/modules` and give its menu entry English and Simplified Chinese labels. Follow the [routing guide](apps/admin/src/router/README.md) when setting up page caching.
-3. **Connect your data.** Define your API in `apps/admin/src/api`, use `apps/admin/src/axios` for interceptors and request cancellation, and connect your real sign-in and session. The people directory uses a mock HTTP endpoint in development and sample data in the static preview. [Request layer guide](apps/admin/src/axios/README.md)
+2. **Connect navigation.** Register the page component ID and add its route to the Mock JSON or your backend response, with English and Simplified Chinese menu labels. Follow the [routing guide](apps/admin/src/router/README.md) when setting up page caching.
+3. **Connect your data.** Define your API in `apps/admin/src/api`, use `apps/admin/src/axios` for interceptors and request cancellation, and connect your real sign-in and session. Development and static previews use the same HTTP Mock API. The [backend contract](apps/docs/guide/backend.md) includes authentication, permission codes, users, routes, and a generated OpenAPI specification. [Request layer guide](apps/admin/src/axios/README.md)
 
 ## Checks, builds, and deployment
 

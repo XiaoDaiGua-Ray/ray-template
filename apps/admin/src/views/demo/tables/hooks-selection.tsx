@@ -1,5 +1,4 @@
 import { RTablePro, useTablePro } from '@/components'
-import { listPeople } from '@/demo-data/people'
 import type { Person } from '@/demo-data/people'
 import { useI18n } from '@/hooks/template/useI18n'
 import { NButton, NFlex } from 'naive-ui'
@@ -7,6 +6,7 @@ import type { DataTableColumns } from 'naive-ui'
 import DemoPage from '../components/DemoPage'
 import DemoResult from '../components/DemoResult'
 import { createPeopleColumns } from './people'
+import { usePeopleData } from './usePeopleData'
 
 export default defineComponent({
   name: 'TableDemoHooksSelection',
@@ -14,7 +14,7 @@ export default defineComponent({
     const { t } = useI18n()
     const [register, { isReady, getCurrentPageData, getTableInstance }] =
       useTablePro()
-    const { data } = listPeople()
+    const { data, loading } = usePeopleData()
     const checked = ref<(string | number)[]>([])
     const marked = shallowRef(new Set<string | number>())
     const columns = computed<DataTableColumns<Person>>(() => [
@@ -103,7 +103,8 @@ export default defineComponent({
           onRegister={register}
           title={t('table.directory')}
           columns={columns.value}
-          data={data}
+          data={data.value}
+          loading={loading.value}
           v-model:checkedRowKeys={checked.value}
           search={[
             {

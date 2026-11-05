@@ -8,6 +8,7 @@ import {
   fetchRemoteRouteConfig,
   remoteRouteUrl,
   routeSourceStatus,
+  saveRemoteRouteConfig,
   saveRouteSource,
 } from '@/router/config/source'
 import type { RouteSource } from '@/router/config/source'
@@ -100,7 +101,8 @@ export default defineComponent({
         )
         newPage.path = ''
         newPage.title = ''
-        source.value = 'local'
+
+        if (source.value === 'static') source.value = 'remote'
       } catch (reason) {
         report(reason)
       }
@@ -116,7 +118,9 @@ export default defineComponent({
         if (selected.size > 256 * 1024) throw new Error(t('fileLimit'))
 
         draft.value = await selected.text()
-        source.value = 'local'
+
+        if (source.value === 'static') source.value = 'remote'
+
         validate()
       } catch (reason) {
         report(reason)
@@ -135,15 +139,23 @@ export default defineComponent({
         busy.value = false
       }
     }
-    const apply = () => {
-      const config = source.value === 'local' ? validate() : void 0
+    const apply = async () => {
+      if (busy.value) return
 
-      if (source.value === 'local' && !config) return
+      const config = source.value !== 'static' ? validate() : void 0
+
+      if (source.value !== 'static' && !config) return
 
       try {
-        saveRouteSource(source.value, config)
+        busy.value = true
+
+        if (source.value === 'remote' && config)
+          await saveRemoteRouteConfig(config)
+        else saveRouteSource(source.value, config)
       } catch (reason) {
         report(reason)
+      } finally {
+        busy.value = false
       }
     }
 

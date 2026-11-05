@@ -1,46 +1,52 @@
-import { positionSelectedMenuItem } from '@/layout/utils/position-selected-menu-item'
 import './index.scss'
 import { RIcon } from '@/components'
-import { useDevice } from '@/hooks'
-import type { AppRouteMeta } from '@/router/types'
-import { useMenuActions, useMenuGetters } from '@/store'
+import { useDevice, useI18n } from '@/hooks'
+import { positionSelectedMenuItem } from '@/layout/utils/position-selected-menu-item'
+import {
+  useMenuActions,
+  useMenuGetters,
+  useNavigationHistoryActions,
+  useNavigationHistoryGetters,
+} from '@/store'
 import type { AppMenuOption } from '@/types'
 import { useEventListener } from '@vueuse/core'
-import {
-  NCard,
-  NFlex,
-  NInput,
-  NModal,
-  NResult,
-  NScrollbar,
-  NText,
-} from 'naive-ui'
+import { NButton, NCard, NInput, NModal, NScrollbar } from 'naive-ui'
+import type { InputInst } from 'naive-ui'
 
 export default defineComponent({
   name: 'GlobalSearch',
-  props: {
-    show: {
-      type: Boolean,
-      default: false,
-    },
-  },
+  props: { show: { type: Boolean, default: false } },
   emits: ['update:show'],
   setup(props, { emit }) {
+    const { t } = useI18n('navigationSearch')
     const { changeMenuModelValue } = useMenuActions()
     const { getMenuOptions } = useMenuGetters()
-
+    const { recentPaths, favoritePaths, storageUnavailable } =
+      useNavigationHistoryGetters()
+    const { recordVisit, toggleFavorite, clearRecent } =
+      useNavigationHistoryActions()
+    const input = shallowRef<InputInst>()
+    const inputId = useId()
+    const searchValue = ref('')
+    const activeIndex = ref(0)
+    const rowButtons = new Map<string, HTMLButtonElement>()
+    const resetSearch = () => {
+      searchValue.value = ''
+      activeIndex.value = 0
+    }
     const modelShow = computed({
       get: () => props.show,
-      set: (val) => {
-        emit('update:show', val)
+      set: (value) => {
+        emit('update:show', value)
 
-        if (!val) {
-          resetSearchSomeValue()
-        }
+        if (!value) resetSearch()
       },
     })
-    const searchValue = ref('')
-    const searchElementIndex = ref(0)
+    const { isTabletOrSmaller } = useDevice({
+      observer: (small) => {
+        if (small) modelShow.value = false
+      },
+    })
     const visibleLeaves = computed(() => {
       const leaves: AppMenuOption[] = []
       const visit = (items: AppMenuOption[]) => {
@@ -56,253 +62,270 @@ export default defineComponent({
 
       return leaves
     })
-    const searchOptions = computed(() => {
+    const menuByPath = computed(
+      () => new Map(visibleLeaves.value.map((item) => [item.fullPath, item])),
+    )
+    const savedOptions = (paths: readonly string[]) =>
+      paths.flatMap((path) => {
+        const option = menuByPath.value.get(path)
+
+        return option ? [option] : []
+      })
+    const groups = computed(() => {
       const term = searchValue.value.trim().toLocaleLowerCase()
 
-      return term
-        ? visibleLeaves.value.filter(({ breadcrumbLabel }) =>
-            breadcrumbLabel?.toLocaleLowerCase().includes(term),
-          )
-        : []
-    })
+      if (term)
+        return [
+          {
+            key: 'results',
+            options: visibleLeaves.value.filter((item) =>
+              item.breadcrumbLabel?.toLocaleLowerCase().includes(term),
+            ),
+          },
+        ]
 
-    watch(searchOptions, () => {
-      searchElementIndex.value = 0
+      return [
+        { key: 'favorites', options: savedOptions(favoritePaths.value) },
+        {
+          key: 'recent',
+          options: savedOptions(
+            recentPaths.value.filter(
+              (path) => !favoritePaths.value.includes(path),
+            ),
+          ),
+        },
+      ].filter(({ options }) => options.length)
     })
-    const helperTipOptions = [
-      {
-        icon: ['↑', '↓'],
-        label: '切换',
-        plain: true,
+    const options = computed(() =>
+      groups.value.flatMap((group) => group.options),
+    )
+
+    watch(options, () => {
+      activeIndex.value = 0
+    })
+    watch(
+      () => props.show,
+      (show) => {
+        if (show) resetSearch()
       },
-      {
-        icon: ['↵'],
-        label: '选择',
-        plain: true,
-      },
-      {
-        icon: ['esc'],
-        label: '关闭',
-        plain: true,
-      },
-    ]
-    const resetSearchSomeValue = () => {
-      searchValue.value = ''
-      searchElementIndex.value = 0
+    )
+
+    const openPage = async (option: AppMenuOption) => {
+      // 从当前菜单重新解析，缓存里的旧路径不能绕过权限或路由来源变化。
+      const current = menuByPath.value.get(option.fullPath)
+
+      if (!current) return
+
+      await changeMenuModelValue(current.fullPath, current)
+
+      if (current.meta.windowOpen) recordVisit(current.fullPath)
+      else {
+        modelShow.value = false
+        positionSelectedMenuItem()
+      }
     }
+    const moveResult = (event: KeyboardEvent, fromInput = false) => {
+      if (event.isComposing || !options.value.length) return
 
-    // 断点 observer 会同步执行，先初始化其调用的重置函数。
-    const { isTabletOrSmaller } = useDevice({
-      observer: (val) => {
-        // 当处于小尺寸状态时，自动关闭搜索框
-        if (val) {
-          modelShow.value = false
-        }
-      },
-    })
+      if (fromInput && event.key === 'Enter') {
+        event.preventDefault()
+        void openPage(options.value[activeIndex.value]!)
 
-    // 按下 ctrl + k 或者 command + k 激活搜索栏
-    const registerArouseKeyboard = (e: KeyboardEvent) => {
-      if (modelShow.value) {
         return
       }
 
-      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-        e.preventDefault()
-        e.stopPropagation()
-        resetSearchSomeValue()
-
-        modelShow.value = true
-      }
-    }
-
-    const searchItemClick = async (option: AppMenuOption) => {
-      if (!option.meta.windowOpen) modelShow.value = false
-
-      await changeMenuModelValue(option.fullPath, option)
-
-      if (!option.meta.windowOpen) positionSelectedMenuItem()
-    }
-
-    // 渲染搜索菜单前缀图标，如果没有则用 icon table 代替
-    const RenderPreIcon = (meta: AppRouteMeta) => {
-      const { icon } = meta
-
-      if (typeof icon === 'string' && icon) {
-        return <RIcon name={icon} size="24" />
-      } else if (typeof icon === 'function') {
-        return <icon />
-      } else {
-        return <RIcon name="action/search" size="24" />
-      }
-    }
-
-    const registerChangeSearchElementIndex = (event: KeyboardEvent) => {
-      const { key } = event
-
-      if (!['ArrowUp', 'ArrowDown', 'Enter'].includes(key)) return
+      if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return
 
       event.preventDefault()
-      event.stopPropagation()
+      const count = options.value.length
 
-      const options = searchOptions.value
+      activeIndex.value = fromInput
+        ? event.key === 'ArrowDown'
+          ? 0
+          : count - 1
+        : (activeIndex.value + (event.key === 'ArrowDown' ? 1 : -1) + count) %
+          count
+      const button = rowButtons.get(options.value[activeIndex.value]!.fullPath)
 
-      if (!options.length) return
+      button?.focus({ preventScroll: true })
+      button?.scrollIntoView?.({ block: 'nearest' })
+    }
+    const toggle = (path: string) => {
+      toggleFavorite(path)
 
-      if (key === 'Enter') {
-        const selected = options[searchElementIndex.value]
+      if (!searchValue.value.trim()) void nextTick(() => input.value?.focus())
+    }
 
-        if (selected) void searchItemClick(selected)
-
+    useEventListener(window, 'keydown', (event: KeyboardEvent) => {
+      if (event.isComposing || isTabletOrSmaller.value || modelShow.value)
         return
+
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault()
+        resetSearch()
+        modelShow.value = true
       }
+    })
 
-      const offset = key === 'ArrowUp' ? -1 : 1
-
-      searchElementIndex.value =
-        (searchElementIndex.value + offset + options.length) % options.length
-    }
-
-    const SearchItem = ({
-      menuOption,
-      active,
-    }: {
-      menuOption: AppMenuOption
-      active: boolean
-    }) => (
-      <NFlex
-        align="center"
-        class={['content-item', { 'content-item--active': active }]}
-        {...{ onClick: () => searchItemClick(menuOption) }}
-      >
-        <div class="content-item-icon">{RenderPreIcon(menuOption.meta)}</div>
-        <div class="content-item-label">{menuOption.breadcrumbLabel}</div>
-        <RIcon
-          name="directional/enter"
-          size="18"
-          customClassName="content-item-icon__enter"
-        />
-      </NFlex>
-    )
-
-    useEventListener(window, 'keydown', registerArouseKeyboard)
-
-    return {
-      searchValue,
-      searchOptions,
-      searchElementIndex,
-      modelShow,
-      helperTipOptions,
-      isTabletOrSmaller,
-      SearchItem,
-      registerChangeSearchElementIndex,
-    }
-  },
-  render() {
-    const {
-      isTabletOrSmaller,
-      searchOptions,
-      searchElementIndex,
-      SearchItem,
-      registerChangeSearchElementIndex,
-    } = this
-
-    return isTabletOrSmaller ? (
-      <div style="display: none;"></div>
-    ) : (
-      <NModal
-        v-model:show={this.modelShow}
-        transformOrigin="center"
-        displayDirective="if"
-      >
-        <div
-          class="global-search global-search--dark global-search--light"
-          tabindex="-1"
-          onKeydown={registerChangeSearchElementIndex}
+    return () =>
+      isTabletOrSmaller.value ? null : (
+        <NModal
+          show={modelShow.value}
+          onUpdateShow={(value) => {
+            modelShow.value = value
+          }}
+          onAfterEnter={() => input.value?.focus()}
+          transformOrigin="center"
+          displayDirective="if"
         >
-          <div class="global-search__wrapper">
-            <NCard
-              class="global-search__card"
-              headerStyle={{
-                padding: '12px 12px 0 12px',
-              }}
-              contentStyle={{
-                padding: '12px',
-              }}
-              segmented={{
-                action: 'soft',
-              }}
-            >
-              {{
-                header: () => (
+          <NCard
+            class="global-search"
+            role="dialog"
+            aria-modal="true"
+            aria-label={t('title')}
+          >
+            {{
+              header: () => (
+                <div class="global-search__header">
+                  <label for={inputId}>{t('title')}</label>
+                  <NButton
+                    quaternary
+                    size="small"
+                    aria-label={t('close')}
+                    onClick={() => {
+                      modelShow.value = false
+                    }}
+                  >
+                    <RIcon name="action/close" />
+                  </NButton>
+                </div>
+              ),
+              default: () => (
+                <>
                   <NInput
+                    ref={input}
                     size="large"
-                    v-model:value={this.searchValue}
+                    value={searchValue.value}
+                    onUpdateValue={(value) => {
+                      searchValue.value = value
+                    }}
+                    placeholder={t('placeholder')}
+                    inputProps={{
+                      id: inputId,
+                      name: 'page-search',
+                      autocapitalize: 'off',
+                      spellcheck: false,
+                    }}
+                    onKeydown={(event) => moveResult(event, true)}
                     clearable
                   >
-                    {{
-                      prefix: () => <RIcon name="action/search" size="24" />,
-                    }}
+                    {{ prefix: () => <RIcon name="action/search" /> }}
                   </NInput>
-                ),
-                default: () => (
-                  <NScrollbar>
-                    {searchOptions.length ? (
-                      <NFlex
-                        vertical
-                        size={[0, 6]}
-                        class="global-search__card-content"
-                      >
-                        {searchOptions.map((curr, idx) => (
-                          <SearchItem
-                            menuOption={curr}
-                            key={curr.fullPath}
-                            active={idx === searchElementIndex}
-                          />
-                        ))}
-                      </NFlex>
+                  {storageUnavailable.value && (
+                    <p class="global-search__hint" role="status">
+                      {t('storageUnavailable')}
+                    </p>
+                  )}
+                  <NScrollbar style="max-height: min(440px, calc(100dvh - 260px))">
+                    {options.value.length ? (
+                      groups.value.map((group) => (
+                        <section class="global-search__group" key={group.key}>
+                          <div class="global-search__group-heading">
+                            <h2>{t(group.key)}</h2>
+                          </div>
+                          <ul role="list">
+                            {group.options.map((option) => {
+                              const favorite = favoritePaths.value.includes(
+                                option.fullPath,
+                              )
+
+                              return (
+                                <li
+                                  key={option.fullPath}
+                                  class="global-search__item"
+                                >
+                                  <button
+                                    type="button"
+                                    class="global-search__destination"
+                                    ref={(element) => {
+                                      if (element instanceof HTMLButtonElement)
+                                        rowButtons.set(option.fullPath, element)
+                                      else rowButtons.delete(option.fullPath)
+                                    }}
+                                    onFocus={() => {
+                                      activeIndex.value =
+                                        options.value.indexOf(option)
+                                    }}
+                                    onKeydown={(event) => moveResult(event)}
+                                    onClick={() => void openPage(option)}
+                                  >
+                                    {typeof option.meta.icon === 'string' &&
+                                    option.meta.icon ? (
+                                      <RIcon
+                                        name={option.meta.icon}
+                                        size={20}
+                                      />
+                                    ) : (
+                                      <RIcon name="navigation/menu" size={20} />
+                                    )}
+                                    <span>{option.breadcrumbLabel}</span>
+                                    {option.meta.windowOpen && (
+                                      <RIcon name="action/shared" size={14} />
+                                    )}
+                                  </button>
+                                  <NButton
+                                    quaternary
+                                    size="small"
+                                    class="global-search__favorite"
+                                    type={favorite ? 'primary' : 'default'}
+                                    aria-pressed={favorite}
+                                    aria-label={t(
+                                      favorite
+                                        ? 'removeFavorite'
+                                        : 'addFavorite',
+                                      { title: option.breadcrumbLabel },
+                                    )}
+                                    onClick={() => toggle(option.fullPath)}
+                                  >
+                                    <span aria-hidden="true">
+                                      {favorite ? '★' : '☆'}
+                                    </span>
+                                  </NButton>
+                                </li>
+                              )
+                            })}
+                          </ul>
+                        </section>
+                      ))
                     ) : (
-                      <NResult size="large" class="global-search__empty">
-                        {{
-                          icon: () => null,
-                          default: () => (
-                            <NFlex
-                              justify="center"
-                              class="global-search__empty-content"
-                            >
-                              <NText>没有搜索结果</NText>
-                            </NFlex>
-                          ),
-                        }}
-                      </NResult>
+                      <p class="global-search__empty">
+                        {t(searchValue.value.trim() ? 'noResults' : 'empty')}
+                      </p>
                     )}
                   </NScrollbar>
-                ),
-                action: () => (
-                  <NFlex justify="flex-start" align="center" size={[16, 0]}>
-                    {this.helperTipOptions.map((curr) => (
-                      <NFlex key={curr.label} size={[4, 0]}>
-                        {curr.icon.map((icon) => (
-                          <NFlex
-                            class="item-icon"
-                            align="center"
-                            justify="center"
-                          >
-                            {icon}
-                          </NFlex>
-                        ))}
-                        <NFlex class="item-label" align="center">
-                          {curr.label}
-                        </NFlex>
-                      </NFlex>
-                    ))}
-                  </NFlex>
-                ),
-              }}
-            </NCard>
-          </div>
-        </div>
-      </NModal>
-    )
+                </>
+              ),
+              action: () => (
+                <div class="global-search__help">
+                  <span>
+                    <kbd>↑</kbd> <kbd>↓</kbd> {t('move')}
+                  </span>
+                  <span>
+                    <kbd>↵</kbd> {t('open')}
+                  </span>
+                  <span>
+                    <kbd>Esc</kbd> {t('close')}
+                  </span>
+                  {recentPaths.value.length > 0 && (
+                    <NButton text size="tiny" onClick={clearRecent}>
+                      {t('clearRecent')}
+                    </NButton>
+                  )}
+                </div>
+              ),
+            }}
+          </NCard>
+        </NModal>
+      )
   },
 })

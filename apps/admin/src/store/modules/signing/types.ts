@@ -6,6 +6,8 @@ export interface SigningForm extends GlobalRecordable {
 }
 
 export interface SigningCallback extends Recordable {
+  id?: string
+  username?: string
   role: string
   name: string
   avatar?: string

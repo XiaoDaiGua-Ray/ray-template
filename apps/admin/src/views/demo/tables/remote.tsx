@@ -65,7 +65,7 @@ export default defineComponent({
           toolbar: () => (
             <>
               <NTag size="small" bordered={false} type="info">
-                {t(import.meta.env.DEV ? 'httpSource' : 'localSource')}
+                {t('httpSource')}
               </NTag>
               {checked.value.length ? (
                 <NButton

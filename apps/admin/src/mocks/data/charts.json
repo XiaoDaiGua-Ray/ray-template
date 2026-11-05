@@ -1,0 +1,45 @@
+{
+  "days": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+  "orders": [120, 200, 150, 80, 70, 110, 130],
+  "visits": [12, 220, 250, 180, 20, 10, 190],
+  "sources": [
+    {
+      "key": "search",
+      "value": 1048
+    },
+    {
+      "key": "direct",
+      "value": 735
+    },
+    {
+      "key": "email",
+      "value": 580
+    },
+    {
+      "key": "ads",
+      "value": 484
+    }
+  ],
+  "lines": [
+    {
+      "name": "Email",
+      "values": [120, 132, 101, 134, 90, 230, 210]
+    },
+    {
+      "name": "Union Ads",
+      "values": [220, 182, 191, 234, 290, 330, 310]
+    },
+    {
+      "name": "Video Ads",
+      "values": [150, 232, 201, 154, 190, 330, 410]
+    },
+    {
+      "name": "Direct",
+      "values": [320, 332, 301, 334, 390, 330, 320]
+    },
+    {
+      "name": "Search Engine",
+      "values": [820, 932, 901, 934, 1290, 1330, 1320]
+    }
+  ]
+}

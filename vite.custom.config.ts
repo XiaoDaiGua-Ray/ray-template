@@ -82,7 +82,7 @@ const config: AppConfigExport = {
     '@images': fileURLToPath(
       new URL('./apps/admin/src/assets/images', import.meta.url),
     ),
-    '@mock': fileURLToPath(new URL('./apps/admin/mock', import.meta.url)),
+    '@mock': fileURLToPath(new URL('./apps/admin/src/mocks', import.meta.url)),
   },
 }
 

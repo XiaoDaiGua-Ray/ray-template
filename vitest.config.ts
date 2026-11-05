@@ -16,6 +16,7 @@ export default defineConfig((configEnv) =>
         ],
         environment: 'happy-dom',
         globals: true,
+        setupFiles: ['__test__/setup-api.ts'],
       },
     }),
   ),

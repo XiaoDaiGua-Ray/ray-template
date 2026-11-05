@@ -1,14 +1,14 @@
 import { RTablePro, useTablePro } from '@/components'
-import { listPeople } from '@/demo-data/people'
 import { useI18n } from '@/hooks/template/useI18n'
 import { NButton, NFlex, NInput } from 'naive-ui'
 import { createPeopleColumns } from './people'
+import { usePeopleData } from './usePeopleData'
 
 export default defineComponent({
   name: 'TableDemoCustom',
   setup() {
     const { t } = useI18n('table')
-    const { data } = listPeople()
+    const { data, loading } = usePeopleData()
     const [register, { setPage, setPageSize }] = useTablePro()
     const email = ref('')
     const selected = ref<(string | number)[]>([])
@@ -21,7 +21,8 @@ export default defineComponent({
       <RTablePro
         onRegister={register}
         columns={columns.value}
-        data={data}
+        data={data.value}
+        loading={loading.value}
         v-model:checkedRowKeys={selected.value}
         scrollX={944}
         contextMenuOptions={[{ label: t('contextAction'), key: 'example' }]}

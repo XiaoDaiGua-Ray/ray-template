@@ -14,7 +14,6 @@ import { analyzer } from 'vite-bundle-analyzer'
 import { cdn as viteCDNPlugin } from 'vite-plugin-cdn2'
 import { ViteEjsPlugin as viteEjsPlugin } from 'vite-plugin-ejs'
 import viteInspect from 'vite-plugin-inspect'
-import { mockDevServerPlugin } from 'vite-plugin-mock-dev-server'
 import viteSvgLoader from 'vite-svg-loader'
 import { APP_CATCH_KEY } from './apps/admin/src/app-config/app-config.ts'
 import { iconNameFromPath, iconsRoot, scanIcons } from './scripts/icons.mjs'
@@ -190,15 +189,6 @@ function baseOptions(mode: string): PluginOption[] {
     // 仅适用于开发模式(检查 `Vite` 插件的中间状态)
     viteInspect({
       dev: false,
-    }),
-    mockDevServerPlugin({
-      cwd: fileURLToPath(new URL('./apps/admin', import.meta.url)),
-      dir: 'mock',
-      include: ['**/*.mock.ts'],
-      prefix: '/api',
-      awaitInitialLoad: true,
-      reload: true,
-      build: true,
     }),
     ...iconPackages.map((name) =>
       svgSpritemap(`${iconsRoot.replaceAll('\\', '/')}/${name}/**/*.svg`, {

@@ -1,6 +1,7 @@
 import { useAppRoot } from '../../apps/admin/src/hooks/template/useAppRoot'
 import { useSiderBar } from '../../apps/admin/src/hooks/template/useSiderBar'
 import { useVueRouter } from '../../apps/admin/src/hooks/web/useVueRouter'
+import { firstMenuLeaf } from '../../apps/admin/src/layout/navigation'
 import { useMenuActions, useMenuGetters } from '../../apps/admin/src/store'
 import type {
   AppMenuOption,
@@ -142,7 +143,8 @@ describe('useSiderBar', async () => {
     updateMenuTagOptions()
 
     const { getMenuOptions, getMenuTagOptions } = useMenuGetters()
-    const [f, s] = getMenuOptions.value
+    const [f, group] = getMenuOptions.value
+    const s = firstMenuLeaf(group)!
 
     closeRight(f.fullPath)
 

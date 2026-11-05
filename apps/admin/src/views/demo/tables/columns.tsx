@@ -1,16 +1,16 @@
 import { RTablePro } from '@/components'
-import { listPeople } from '@/demo-data/people'
 import type { Person } from '@/demo-data/people'
 import { useI18n } from '@/hooks/template/useI18n'
 import { NCheckbox } from 'naive-ui'
 import type { DataTableColumns } from 'naive-ui'
 import { createPeopleColumns } from './people'
+import { usePeopleData } from './usePeopleData'
 
 export default defineComponent({
   name: 'TableDemoColumns',
   setup() {
     const { t } = useI18n('table')
-    const { data } = listPeople()
+    const { data, loading } = usePeopleData()
     const showId = ref(true)
     const columns = computed<DataTableColumns<Person>>(() =>
       [
@@ -31,7 +31,8 @@ export default defineComponent({
 
     return () => (
       <RTablePro
-        data={data}
+        data={data.value}
+        loading={loading.value}
         columns={columns.value}
         columnStateKey="demo:columns"
         scrollX={960}

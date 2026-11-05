@@ -1,3 +1,4 @@
+import type { ApiResponse } from '@/api/admin/contracts'
 import {
   getRequestFixture,
   getWeather,
@@ -13,7 +14,9 @@ export default defineComponent({
   name: 'RAxios',
   setup() {
     const { t } = useI18n('demoDetails')
-    const manual = useRequest<Awaited<ReturnType<typeof getRequestFixture>>>(
+    const manual = useRequest<
+      ApiResponse<Awaited<ReturnType<typeof getRequestFixture>>>
+    >(
       { url: requestFixtureUrl, method: 'get', cancelConfig: { cancel: true } },
       { manual: true },
     )
@@ -63,7 +66,9 @@ export default defineComponent({
                 ) : manual.error.value ? (
                   t('request.failed')
                 ) : manual.data.value ? (
-                  <pre>{JSON.stringify(manual.data.value.ticket, null, 2)}</pre>
+                  <pre>
+                    {JSON.stringify(manual.data.value.data.ticket, null, 2)}
+                  </pre>
                 ) : (
                   t('request.waiting')
                 )}

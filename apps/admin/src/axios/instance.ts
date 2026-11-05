@@ -13,4 +13,12 @@ const client = createHttpClient({
 })
 
 export const axiosCanceler = client.canceler
+export const installMockRequestGuard = (
+  guard: (url: string) => Promise<void>,
+) =>
+  client.request.interceptors.request.use(async (config) => {
+    await guard(client.request.getUri(config))
+
+    return config
+  })
 export default client.request

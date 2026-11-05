@@ -21,5 +21,7 @@
   "RegisterHint": "此页面是注册流程的接入示例，可连接项目的账号服务。",
   "Provider": "通过 {provider} 登录",
   "ProviderHint": "{provider} 登录是演示入口。",
-  "QRHint": "扫码访问 Ray Template 源码。"
+  "QRHint": "扫码访问 Ray Template 源码。",
+  "UseManager": "管理者账号",
+  "UseMember": "只读账号"
 }

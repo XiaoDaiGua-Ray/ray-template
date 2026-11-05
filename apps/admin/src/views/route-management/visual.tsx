@@ -1,10 +1,14 @@
 import './index.scss'
 import AppPageHeader from '@/app-components/app/AppPageHeader'
-import { useI18n } from '@/hooks'
+import { useAccess, useI18n } from '@/hooks'
 import { getStaticAppRoutes } from '@/router/app-route-modules'
 import { exportRouteConfig, parseRouteConfig } from '@/router/config/contract'
 import type { RouteConfigRecord } from '@/router/config/schema'
-import { routeSourceStatus, saveRouteSource } from '@/router/config/source'
+import {
+  fetchRemoteRouteConfig,
+  routeSourceStatus,
+  saveRemoteRouteConfig,
+} from '@/router/config/source'
 import { findRouteView, routeViewCatalog } from '@/router/config/views'
 import { joinRoutePath } from '@/router/utils/join-route-path'
 import { orderRoutes } from '@/router/utils/order-routes'
@@ -42,6 +46,8 @@ export default defineComponent({
   name: 'RouteManagementVisual',
   setup() {
     const { t } = useI18n('routeManagement')
+    const { hasPermission } = useAccess()
+    const saving = ref(false)
     const text = (key: string) => t<string>(key)
     const { t: translate } = useI18n()
     const records = ref<RouteConfigRecord[]>([])
@@ -97,10 +103,13 @@ export default defineComponent({
       error.value = reason instanceof Error ? reason.message : String(reason)
       valid.value = false
     }
-    const load = () => {
+    const load = async () => {
       try {
         const config =
-          routeSourceStatus.config ?? exportRouteConfig(getStaticAppRoutes())
+          routeSourceStatus.active === 'remote'
+            ? await fetchRemoteRouteConfig()
+            : (routeSourceStatus.config ??
+              exportRouteConfig(getStaticAppRoutes()))
 
         records.value = orderRoutes(structuredClone(config.routes))
         selected.value = tree.value.options[0]?.key as number | undefined
@@ -112,7 +121,7 @@ export default defineComponent({
     }
 
     watch(records, clearResult, { deep: true })
-    load()
+    void load()
 
     const validate = () => {
       try {
@@ -128,15 +137,20 @@ export default defineComponent({
         report(reason)
       }
     }
-    const apply = () => {
+    const apply = async () => {
+      if (saving.value || !hasPermission('routes:write')) return
+
       const config = validate()
 
       if (!config) return
 
       try {
-        saveRouteSource('local', config)
+        saving.value = true
+        await saveRemoteRouteConfig(config)
       } catch (reason) {
         report(reason)
+      } finally {
+        saving.value = false
       }
     }
     const add = (kind: Kind, parent?: RouteConfigRecord) => {
@@ -334,7 +348,12 @@ export default defineComponent({
         <NCard title={text('visualDraft')}>
           <p class="route-management__hint">{text('visualHint')}</p>
           <NFlex align="center">
-            <NButton type="primary" onClick={apply}>
+            <NButton
+              type="primary"
+              onClick={apply}
+              loading={saving.value}
+              disabled={!hasPermission('routes:write')}
+            >
               {text('apply')}
             </NButton>
             <NButton secondary onClick={validate}>

@@ -1,6 +1,8 @@
 import DemoPage from '../components/DemoPage'
 import DemoResult from '../components/DemoResult'
 import './index.scss'
+import { getDemoCharts } from '@/api/demo/data'
+import type { DemoCharts } from '@/api/demo/data'
 import { RChart, useChart } from '@/components'
 import { useI18n } from '@/hooks'
 import { NButton, NCard, NFlex, NSwitch } from 'naive-ui'
@@ -11,6 +13,10 @@ const Echart = defineComponent({
     const [register, { dispose, render }] = useChart()
     const [register2, { dispose: dispose2, render: render2 }] = useChart()
     const { t } = useI18n('demoDetails.chart')
+    const chartData = shallowRef<DemoCharts>()
+    const requestController = new AbortController()
+
+    onScopeDispose(() => requestController.abort())
 
     const chartLoading = ref(false)
     const chartAria = ref(false)
@@ -30,19 +36,19 @@ const Echart = defineComponent({
       grid: { left: 44, right: 14, top: 42, bottom: 26 },
       xAxis: {
         type: 'category',
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        data: chartData.value?.days ?? [],
       },
       yAxis: { type: 'value' },
       series: [
         {
           name: t('orders'),
-          data: [120, 200, 150, 80, 70, 110, 130],
+          data: chartData.value?.orders ?? [],
           type: 'bar',
           barMaxWidth: 24,
         },
         {
           name: t('visits'),
-          data: [12, 220, 250, 180, 20, 10, 190],
+          data: chartData.value?.visits ?? [],
           type: 'bar',
           barMaxWidth: 24,
         },
@@ -57,97 +63,34 @@ const Echart = defineComponent({
           radius: ['40%', '68%'],
           center: ['50%', '46%'],
           label: { show: false },
-          data: [
-            { value: 1048, name: t('search') },
-            { value: 735, name: t('direct') },
-            { value: 580, name: t('email') },
-            { value: 484, name: t('ads') },
-          ],
+          data: (chartData.value?.sources ?? []).map(({ key, value }) => ({
+            value,
+            name: t(key),
+          })),
         },
       ],
     }))
-    const baseLineOptions = ref({
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          type: 'cross',
-        },
-      },
-      legend: {
-        type: 'scroll',
-        bottom: 0,
-      },
-      grid: {
-        left: 52,
-        right: 20,
-        top: 20,
-        bottom: 58,
-      },
+    const baseLineOptions = computed(() => ({
+      tooltip: { trigger: 'axis', axisPointer: { type: 'cross' } },
+      legend: { type: 'scroll', bottom: 0 },
+      grid: { left: 52, right: 20, top: 20, bottom: 58 },
       xAxis: [
         {
           type: 'category',
           boundaryGap: false,
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: chartData.value?.days ?? [],
         },
       ],
-      yAxis: [
-        {
-          type: 'value',
-        },
-      ],
-      series: [
-        {
-          name: 'Email',
-          type: 'line',
-          stack: 'Total',
-          areaStyle: {},
-          emphasis: {
-            focus: 'series',
-          },
-          data: [120, 132, 101, 134, 90, 230, 210],
-        },
-        {
-          name: 'Union Ads',
-          type: 'line',
-          stack: 'Total',
-          areaStyle: {},
-          emphasis: {
-            focus: 'series',
-          },
-          data: [220, 182, 191, 234, 290, 330, 310],
-        },
-        {
-          name: 'Video Ads',
-          type: 'line',
-          stack: 'Total',
-          areaStyle: {},
-          emphasis: {
-            focus: 'series',
-          },
-          data: [150, 232, 201, 154, 190, 330, 410],
-        },
-        {
-          name: 'Direct',
-          type: 'line',
-          stack: 'Total',
-          areaStyle: {},
-          emphasis: {
-            focus: 'series',
-          },
-          data: [320, 332, 301, 334, 390, 330, 320],
-        },
-        {
-          name: 'Search Engine',
-          type: 'line',
-          stack: 'Total',
-          areaStyle: {},
-          emphasis: {
-            focus: 'series',
-          },
-          data: [820, 932, 901, 934, 1290, 1330, 1320],
-        },
-      ],
-    })
+      yAxis: [{ type: 'value' }],
+      series: (chartData.value?.lines ?? []).map((line) => ({
+        name: line.name,
+        type: 'line',
+        stack: 'Total',
+        areaStyle: {},
+        emphasis: { focus: 'series' },
+        data: line.values,
+      })),
+    }))
 
     const handleLoadingShow = (bool: boolean) => {
       state.loading = bool
@@ -162,22 +105,24 @@ const Echart = defineComponent({
       state.lineVisible = false
     }
 
-    const updateChartOptions = () => {
+    const loadCharts = async (refresh = false) => {
       state.loading1 = true
 
-      const createData = () => Math.floor((Math.random() + 1) * 100)
+      try {
+        chartData.value = await getDemoCharts(refresh, requestController.signal)
 
-      setTimeout(() => {
-        baseLineOptions.value.series[0].data = new Array(7)
-          .fill(0)
-          .map(() => createData())
-        baseLineOptions.value.series[1].data = new Array(7)
-          .fill(0)
-          .map(() => createData())
-
+        if (refresh) state.revision += 1
+      } catch {
+        if (!requestController.signal.aborted)
+          window.$message.error(t('loadFailed'))
+      } finally {
         state.loading1 = false
-        state.revision += 1
-      }, 1000)
+      }
+    }
+
+    void loadCharts()
+    const updateChartOptions = () => {
+      void loadCharts(true)
     }
 
     return {

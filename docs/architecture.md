@@ -28,13 +28,13 @@ Ray Template 是一个 pnpm workspace：后台负责宿主集成，文档站解�
 
 ## 关键运行链路
 
-| 链路           | 调用顺序与边界                                                                                                                                                                                                               | 继续阅读                                                                    |
-| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| 后台启动       | [index.html](../apps/admin/index.html) → [main.ts](../apps/admin/src/main.ts) → Pinia → 国际化 → Router → Day.js → 指令与自动补全设置 → 挂载 [App.tsx](../apps/admin/src/App.tsx)。普通和无界模式共用插件注册顺序。          | [布局与启动](../harness/context/layout.md)                                  |
-| 导航与缓存     | [路由初始化](../apps/admin/src/router/index.ts)加载来源 → [应用模块](../apps/admin/src/router/app-route-modules.ts)展开配置 → 注册守卫和页面 → 应用菜单 Store 与布局消费路由。应用维护缓存名单，共享壳渲染过渡与 KeepAlive。 | [路由](../harness/context/routing.md)、[布局](../harness/context/layout.md) |
-| 请求与演示数据 | [API](../apps/admin/src/api) → [应用 Axios 实例](../apps/admin/src/axios/instance.ts) → [共享客户端](../packages/http/src/client.ts)。开发 Mock 走 HTTP；静态人员演示可用本地数据。生产会话和资源授权由接入方后端负责。      | [API](../harness/context/api.md)                                            |
-| 文档示例       | 文档可直接消费共享包；需要后台上下文时由 [AdminExample.vue](../apps/docs/examples/AdminExample.vue) 嵌入 [example.html](../apps/admin/example.html)，使用独立启动、限定路由和内存缓存。                                      | [文档与示例](../harness/context/docs.md)                                    |
-| 应用配置       | [Vite](../vite.config.ts) 注入 `__APP_CFG__` 和 `__DEV__`；[应用配置](../apps/admin/src/app-config)按设计、请求、路由和缓存分组。                                                                                            | [构建与工具链](../harness/context/toolchain.md)                             |
+| 链路           | 调用顺序与边界                                                                                                                                                                                                                           | 继续阅读                                                                    |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| 后台启动       | [index.html](../apps/admin/index.html) → [main.ts](../apps/admin/src/main.ts) → Pinia → 国际化 → Router → Day.js → 指令与自动补全设置 → 挂载 [App.tsx](../apps/admin/src/App.tsx)。普通和无界模式共用插件注册顺序。                      | [布局与启动](../harness/context/layout.md)                                  |
+| 导航与缓存     | [路由初始化](../apps/admin/src/router/index.ts)加载来源 → [应用模块](../apps/admin/src/router/app-route-modules.ts)展开配置 → 注册守卫和页面 → 应用菜单 Store 与布局消费路由。应用维护缓存名单，共享壳渲染过渡与 KeepAlive。             | [路由](../harness/context/routing.md)、[布局](../harness/context/layout.md) |
+| 请求与演示数据 | [API](../apps/admin/src/api) → [应用 Axios 实例](../apps/admin/src/axios/instance.ts) → [共享客户端](../packages/http/src/client.ts)。开发与静态在线演示共用 HTTP Mock，用户、会话与路由由接口读写；真实会话和资源授权由接入方后端负责。 | [API](../harness/context/api.md)                                            |
+| 文档示例       | 文档可直接消费共享包；需要后台上下文时由 [AdminExample.vue](../apps/docs/examples/AdminExample.vue) 嵌入 [example.html](../apps/admin/example.html)，使用独立启动、限定路由和内存缓存。                                                  | [文档与示例](../harness/context/docs.md)                                    |
+| 应用配置       | [Vite](../vite.config.ts) 注入 `__APP_CFG__` 和 `__DEV__`；[应用配置](../apps/admin/src/app-config)按设计、请求、路由和缓存分组。                                                                                                        | [构建与工具链](../harness/context/toolchain.md)                             |
 
 公开行为变更按[应用与文档联动](docs-handoff.md)维护指南和可运行示例。页面排版见[视觉与排版](ui-design.md)；代码注释见[注释规范](comment-style.md)。
 
@@ -45,7 +45,7 @@ Ray Template 是一个 pnpm workspace：后台负责宿主集成，文档站解�
 | 配置                                 | 检查范围                                                                                  |
 | ------------------------------------ | ----------------------------------------------------------------------------------------- |
 | [应用](../tsconfig.app.json)         | 后台 `apps/admin/src`、Vue JSX 和生成声明。                                               |
-| [Node](../tsconfig.node.json)        | 根构建与测试配置、`vite-helper`、后台 Mock。                                              |
+| [Node](../tsconfig.node.json)        | 根构建与测试配置、`vite-helper`、构建辅助。                                               |
 | [测试](../tsconfig.test.json)        | `__test__` 与引用源码，加载 Vitest 和 Node 类型。运行时环境由 Vitest 配置及测试文件决定。 |
 | [共享包](../tsconfig.packages.json)  | `packages/*/src`，不继承应用别名或自动导入声明。                                          |
 | [文档站](../apps/docs/tsconfig.json) | 独立检查文档示例，由 `pnpm docs:check` 执行。                                             |

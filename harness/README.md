@@ -23,6 +23,7 @@ pnpm harness verify
 
 ## 工程约定
 
+- 新增能力或组件前，先检索并查看项目现有组件、Hooks 与已安装组件库的 API 和调用示例，确认是否能通过既有 Props、插槽或布局 CSS 组合实现。已有能力足够时直接复用；只有确认存在能力缺口时才新增组件，并在现有任务记录或交付说明中交代缺口与选择。不要仅因需要撑满高度、滚动容器或一层样式包装就创建新组件。
 - UI 沿用 Vue 3 Composition API、`defineComponent` + TSX 与现有 SFC 的 `<script setup lang="ts">`，优先复用 Naive UI 和项目组件。图表使用 ECharts。
 - Vue、Router 和 Pinia API 由 `unplugin-auto-import` 管理。类型使用 `import type`，生成声明通过生成器更新。
 - 路由维持名称唯一、权限 meta、缓存和翻译键。变更权限时同时验证菜单可见性和直接导航。

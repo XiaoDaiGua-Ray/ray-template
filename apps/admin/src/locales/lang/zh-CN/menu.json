@@ -57,5 +57,7 @@
   "TableHooksOutput": "导出与打印",
   "RouteManagement": "路由管理",
   "RouteManagementVisual": "可视化配置",
-  "RouteManagementJson": "JSON 配置"
+  "RouteManagementJson": "JSON 配置",
+  "SystemManagement": "系统管理",
+  "UserManagement": "用户管理"
 }

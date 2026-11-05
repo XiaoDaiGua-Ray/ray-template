@@ -36,9 +36,9 @@ Ray Template 是一套**开箱即用的中后台前端模板**，适合搭建管
 
 ### 路由模块：把页面、菜单与权限放在同一处配置
 
-在 `apps/admin/src/router/modules` 声明页面，模板按路由配置生成菜单和面包屑。路由 `meta` 可以配置菜单文案与图标、角色、显示条件和 `keepAlive`。从列表进入详情时，可以保留当前菜单和标签页，只在面包屑中补充详情层级。角色配置同时用于菜单过滤和直接导航时的守卫。接入业务时，由后端校验会话与接口权限。
+先在 `apps/admin/src/router/config/views.ts` 登记页面组件 ID，再由接口返回路由记录，模板据此生成菜单和面包屑。Mock 初始记录位于 `apps/admin/src/mocks/data/routes.json`。路由 `meta` 可以配置菜单文案与图标、角色、显示条件和 `keepAlive`。从列表进入详情时，可以保留当前菜单和标签页，只在面包屑中补充详情层级。角色配置同时用于菜单过滤和直接导航时的守卫。接入业务时，由后端校验会话与接口权限。
 
-[路由与菜单约定](apps/admin/src/router/README.md) · [多级菜单与缓存示例](apps/admin/src/router/modules/demo/navigation.ts)
+[路由与菜单约定](apps/admin/src/router/README.md) · [多级菜单与缓存示例](apps/admin/src/mocks/data/routes.json)
 
 ### 组件、Hooks 与图标：从可运行的示例里复用
 
@@ -115,8 +115,8 @@ export default defineComponent({
 ```
 
 1. **写页面**。在 `apps/admin/src/views` 新建页面，参考[远端查询示例](apps/admin/src/views/demo/tables/remote.tsx)加入排序、行选择和工具栏。
-2. **接入导航**。在 `apps/admin/src/router/modules` 添加路由，给菜单配置中英文文案。页面需要缓存时，参考[路由约定](apps/admin/src/router/README.md)配置路由与组件名称。
-3. **替换演示数据**。从 `apps/admin/src/api` 接入业务接口，通过 `apps/admin/src/axios` 统一处理拦截与取消，再接入实际登录和会话。人员列表示例在开发时走 Mock HTTP，静态预览使用本地样例数据。[请求层说明](apps/admin/src/axios/README.md)
+2. **接入导航**。登记页面组件 ID，在 Mock JSON 或后端响应中添加路由，给菜单配置中英文文案。页面需要缓存时，参考[路由约定](apps/admin/src/router/README.md)配置路由与组件名称。
+3. **替换演示数据**。从 `apps/admin/src/api` 接入业务接口，通过 `apps/admin/src/axios` 统一处理拦截与取消，再接入实际登录和会话。开发和静态预览共用 HTTP Mock。[服务端契约](apps/docs/guide/backend.md) 提供会话、权限码、用户和路由接口及可下载的 OpenAPI。[请求层说明](apps/admin/src/axios/README.md)
 
 ## 检查、构建与部署
 

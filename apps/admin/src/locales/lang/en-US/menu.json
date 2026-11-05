@@ -57,5 +57,7 @@
   "TableHooksOutput": "Export and print",
   "RouteManagement": "Route management",
   "RouteManagementVisual": "Visual editor",
-  "RouteManagementJson": "JSON configuration"
+  "RouteManagementJson": "JSON configuration",
+  "SystemManagement": "System management",
+  "UserManagement": "Users"
 }

@@ -4,7 +4,7 @@
 import RouteConfigDemo from '../examples/RouteConfigDemo.vue'
 </script>
 
-在 `apps/admin/src/router/modules` 写默认导出的路由模块。模板递归收集文件，按 `meta.order` 排序；路由树用于菜单与面包屑，页面记录展开后注册到 Vue Router。默认使用 hash 路由，例如 `/ray-template/#/orders`。
+正常启动从 `GET /admin/route-config` 读取版本化路由 JSON，按 `meta.order` 排序；路由树用于菜单与面包屑，页面记录展开后注册到 Vue Router。Mock 的初始路由表位于 `apps/admin/src/mocks/data/routes.json`，前端只保留组件 ID 注册表和外壳必需路由。默认使用 hash 路由，例如 `/ray-template/#/orders`。
 
 ## 路由配置交互校验
 
@@ -15,6 +15,12 @@ import RouteConfigDemo from '../examples/RouteConfigDemo.vue'
 ::: details 查看示例源码
 <<< @/examples/RouteConfigDemo.vue
 :::
+
+## 在线编辑与接口接入
+
+路由管理的可视化和 JSON 页面从当前生效配置创建草稿。可视化保存及 JSON 的服务端模式通过 `PUT /admin/route-config` 提交，成功后重新加载并从接口读回；Mock 写入会在当前浏览器刷新后保留。JSON 页面仍可显式切换为本机配置或内置初始配置，用于离线恢复。
+
+接口请求体为 `{ version: 1, routes: [...] }`，读取和写入响应都放在统一 `{ code, msg, data }` 包络的 `data` 中。`component` 必须是 `router/config/views.ts` 的注册 ID；新增前端页面先注册 ID，再由接口返回其路由记录。详见[服务端标准契约](./backend)。
 
 ## 常用元数据
 
@@ -30,7 +36,7 @@ import RouteConfigDemo from '../examples/RouteConfigDemo.vue'
 | `ignoreAutoResetScroll`    | 允许页面保留内容区滚动位置，详见滚动工具实现。                                            |
 | `extra`                    | 菜单标记的文本、图标、类型和显隐，见 [useBadge](../reference/hooks/navigation#usebadge)。 |
 
-嵌套子路由使用相对路径时会继承父路径。内置示例按用途分组，并以绝对路径保留原有页面地址。查看 [布局与路由示例](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/router/modules/demo/navigation.ts) 里的分组及多级菜单。
+嵌套子路由使用相对路径时会继承父路径。内置示例按用途分组，并以绝对路径保留原有页面地址。查看 [布局与路由示例](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/mocks/data/routes.json) 里的分组及多级菜单。
 
 ## 登录和角色
 

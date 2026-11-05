@@ -4,7 +4,7 @@
 
 登录后，打开 **路由管理**。两个子页面均由应用外壳注册，使用相同的 `admin` 角色守卫。
 
-- **可视化配置**（`/#/route-management/visual`）：从当前生效的菜单树编辑页面、分组、重定向与外链，调整顺序、角色、显隐与缓存。可校验或导出草稿，也可应用并重新加载；应用仅在当前浏览器生效。已有别名、页面参数等高级字段会随草稿保留。
+- **可视化配置**（`/#/route-management/visual`）：从当前生效的菜单树编辑页面、分组、重定向与外链，调整顺序、角色、显隐与缓存。可校验或导出草稿，也可应用并重新加载；通过标准接口保存并重新加载；Mock 数据库的修改仅在当前浏览器生效。已有别名、页面参数等高级字段会随草稿保留。
 - **JSON 配置**（`/#/route-management/json`）：管理静态、本机或后端来源，编辑或导入完整 JSON、校验和预览配置树，并导出 JSON、标准 JSON Schema 和可用页面清单。旧地址 `/#/route-management` 会跳转到这里。
 
 | 来源      | 读取行为                                     | 应用方式                                   |
@@ -17,7 +17,7 @@
 
 ## 后端与 AI 契约
 
-部署时提供 `VITE_ROUTE_CONFIG_URL=/api/route-config`，或使用启用 CORS 的 HTTPS 地址。客户端请求 `GET`，接受 `application/json`，超时 5 秒。同源请求可用会话 Cookie。接口直接返回下方 JSON，导入、导出和接口响应使用同一结构。
+部署时提供 `VITE_ROUTE_CONFIG_URL=/api/route-config`，或使用启用 CORS 的 HTTPS 地址。客户端请求 `GET`，接受 `application/json`，超时 5 秒。同源请求可用会话 Cookie。标准接口把下方路由 JSON 放在 `{ code: 200, msg: "OK", data }` 的 `data` 中；导入和导出直接使用路由 JSON。旧的 `VITE_ROUTE_CONFIG_URL` 继续接受原始 JSON。完整读写接口见[服务端契约](../../../docs/guide/backend.md)。
 
 ```json
 {
@@ -64,6 +64,5 @@ node --input-type=module -e "import {getRouteJsonSchema} from './src/router/conf
 
 ## 扩展静态页面
 
-新增页面时先在 [页面注册表](config/views.ts) 注册稳定 ID 和组件名，再从 `src/router/modules` 的路由记录用 `routeView(id)` 引用。静态模块默认导出一条记录。分组可以使用 `LAYOUT` 和 `children`，叶子在同一个应用布局中渲染。简体中文和英文菜单文案分别写入两份 `menu.json`。
-
+新增页面时先在 [页面注册表](config/views.ts) 注册稳定 ID 和组件名，再在 [Mock 初始 JSON](../mocks/data/routes.json) 或路由接口返回的数据里使用该 `component` ID。`name` 与缓存页面组件名保持一致。前端不再递归读取 TypeScript 菜单模块；初始 JSON 同时作为显式离线恢复来源。正常启动与编辑保存分别请求标准 GET/PUT 接口，简体中文和英文菜单文案仍放在两份 `menu.json`。
 系统配置和白名单见 [router-config.ts](../app-config/router-config.ts)。在 Vue setup 之外读取路由器时使用 `useVueRouter()`。变更后运行 `pnpm harness verify routing`，并核对菜单跳转、直达、刷新、切换来源、角色和缓存。

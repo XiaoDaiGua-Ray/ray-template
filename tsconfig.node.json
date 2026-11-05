@@ -5,5 +5,5 @@
     "types": ["node"],
     "tsBuildInfoFile": "./node_modules/.cache/ray-template/tsconfig.node.tsbuildinfo"
   },
-  "include": ["*.config.ts", "vite-helper/**/*.ts", "apps/admin/mock/**/*.ts"]
+  "include": ["*.config.ts", "vite-helper/**/*.ts"]
 }

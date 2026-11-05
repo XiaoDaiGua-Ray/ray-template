@@ -1,0 +1,16 @@
+{
+  "title": "Search pages",
+  "placeholder": "Enter a page name",
+  "favorites": "Favorites",
+  "recent": "Recently visited",
+  "results": "Search results",
+  "clearRecent": "Clear history",
+  "addFavorite": "Favorite {title}",
+  "removeFavorite": "Unfavorite {title}",
+  "noResults": "No matching pages",
+  "empty": "Search for a page and use the star to save a favorite.",
+  "storageUnavailable": "Your browser cannot save history right now. It remains available for this visit.",
+  "move": "Move",
+  "open": "Open",
+  "close": "Close"
+}

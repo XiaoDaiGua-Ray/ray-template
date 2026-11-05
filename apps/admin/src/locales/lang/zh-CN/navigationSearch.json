@@ -1,0 +1,16 @@
+{
+  "title": "搜索页面",
+  "placeholder": "输入页面名称",
+  "favorites": "收藏",
+  "recent": "最近访问",
+  "results": "搜索结果",
+  "clearRecent": "清空记录",
+  "addFavorite": "收藏 {title}",
+  "removeFavorite": "取消收藏 {title}",
+  "noResults": "没有找到匹配的页面",
+  "empty": "搜索页面，并点击星标收藏常用入口。",
+  "storageUnavailable": "浏览器暂时无法保存记录，本次访问中仍可使用。",
+  "move": "切换",
+  "open": "打开",
+  "close": "关闭"
+}

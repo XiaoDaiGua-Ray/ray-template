@@ -2,6 +2,7 @@ import App from './App'
 import './styles/entry'
 import type { App as AppType } from 'vue'
 import { setupRayTemplateCore } from './__ray-template'
+import { apiMockEnabled } from './api/admin/client'
 import { installAutocompleteDefaults } from './app-components/provider/AppAutocompleteDefaults'
 import { GLOBAL_CLASS_NAMES } from './app-config'
 import { setupDayjs } from './dayjs'
@@ -9,6 +10,7 @@ import { setupDirectives } from './directives'
 import { setupI18n } from './locales'
 import { setupRouter } from './router'
 import { setupStore } from './store'
+import { piniaSigningStore } from './store/modules/signing'
 
 const bootSplash = () =>
   document.getElementById(GLOBAL_CLASS_NAMES.preLoadingAnimation)
@@ -28,8 +30,15 @@ const showBootError = (error: unknown) => {
  * 注册时应该注意每个插件的加载顺序。
  */
 const setupPlugins = async (inst: AppType<Element>) => {
+  if (apiMockEnabled) {
+    const { enableApiMock } = await import('./mocks/browser')
+
+    await enableApiMock()
+  }
+
   setupStore(inst)
   await setupI18n(inst)
+  await inst.runWithContext(() => piniaSigningStore().restoreSession())
   await setupRouter(inst)
   setupDayjs()
   setupDirectives(inst)

@@ -1,24 +1,22 @@
+import { getAdminSession, loginAdmin, logoutAdmin } from '@/api/admin'
+import { AdminApiError } from '@/api/admin/client'
 import { APP_CATCH_KEY } from '@/app-config'
-import { useSiderBar } from '@/hooks'
+import { useSiderBar, useVueRouter } from '@/hooks'
 import type {
   SigningCallback,
   SigningForm,
   SigningResponse,
 } from '@/store/modules/signing/types'
-import { removeStorage } from '@/utils/cache'
-import { isEmpty } from 'lodash-es'
+import { getStorage, removeStorage, setStorage } from '@/utils/cache'
 
 /** 登录状态仓库，使用 localStorage 持久化 signingCallback。 */
 export const piniaSigningStore = defineStore(
   'signing',
   () => {
-    const { clearRoutes, replace } = useRouter()
+    const { router } = useVueRouter()
+    const permissions = ref<string[]>([])
     const state = reactive({
-      /**
-       *
-       * 登陆返回信息(可以存放用户名、权限、头像等一些信息)
-       * 路由鉴权依赖该属性中的 role 属性, 如果需要更改请同步更改: router/basic.ts、router/permission.ts
-       */
+      /** 用户资料由会话接口刷新；role 用于现有路由和菜单守卫。 */
       signingCallback: {} as SigningCallback,
     })
 
@@ -27,32 +25,45 @@ export const piniaSigningStore = defineStore(
      * @param signingFormValue 用户登录信息
      *
      * @description
-     * 0: 登陆成功, 1: 登陆失败
+     * 请求标准登录接口，保存返回的会话 token、资料与权限码。
+     * 保留组件侧 code=0 的成功约定；接口错误通过 Promise 拒绝。
      */
-    const signing = (
+    const signing = async (
       signingFormValue: SigningForm,
     ): Promise<SigningResponse> => {
-      return new Promise((resolve, reject) => {
-        if (!isEmpty(signingFormValue)) {
-          state.signingCallback = {
-            role: 'admin',
-            name: signingFormValue.name,
-            avatar: 'https://avatars.githubusercontent.com/u/51957438?v=4',
-          }
+      const session = await loginAdmin(
+        signingFormValue.name,
+        signingFormValue.pwd,
+      )
 
-          resolve({
-            code: 0,
-            message: '登陆成功',
-            data: state.signingCallback,
-          })
-        } else {
-          reject({
-            code: 1,
-            message: '登陆失败',
-            data: null,
-          })
-        }
-      })
+      setStorage(APP_CATCH_KEY.token, session.accessToken, 'localStorage')
+      state.signingCallback = session.user
+      permissions.value = session.permissions
+
+      return { code: 0, message: 'OK', data: state.signingCallback }
+    }
+
+    const restoreSession = async () => {
+      permissions.value = []
+
+      if (!getStorage<string>(APP_CATCH_KEY.token, 'localStorage')) {
+        state.signingCallback = {} as SigningCallback
+
+        return
+      }
+
+      try {
+        const session = await getAdminSession()
+
+        state.signingCallback = session.user
+        permissions.value = session.permissions
+      } catch (error) {
+        if (!(error instanceof AdminApiError) || error.code !== 401) throw error
+
+        removeStorage(APP_CATCH_KEY.token, 'localStorage')
+        removeStorage(APP_CATCH_KEY.signing, 'localStorage')
+        state.signingCallback = {} as SigningCallback
+      }
     }
 
     /**
@@ -75,6 +86,8 @@ export const piniaSigningStore = defineStore(
 
       // 提示信息
       window.$message.info('账号退出中...')
+      state.signingCallback = {} as SigningCallback
+      permissions.value = []
       // 移除所有 sessionStorage 缓存
       removeStorage('__all_sessionStorage__', 'sessionStorage')
       // 移除指定 localStorage 缓存
@@ -88,8 +101,8 @@ export const piniaSigningStore = defineStore(
       closeAll()
 
       if (toSigning) {
-        clearRoutes()
-        replace('/')
+        router.clearRoutes()
+        void router.replace('/')
 
         setTimeout(() => {
           window.location.reload()
@@ -102,12 +115,20 @@ export const piniaSigningStore = defineStore(
      * 退出登陆并且清空缓存数据
      * 延迟 300ms 后强制刷新当前系统
      */
-    const logout = () => {
-      clearSigningCallback(true)
+    const logout = async () => {
+      try {
+        await logoutAdmin()
+      } catch {
+        // 服务端暂时不可达时，仍允许用户完成本地退出。
+      } finally {
+        clearSigningCallback(true)
+      }
     }
 
     return {
       ...toRefs(state),
+      permissions,
+      restoreSession,
       signing,
       logout,
       clearSigningCallback,
