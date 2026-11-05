@@ -1,17 +1,31 @@
 .echart {
-  width: 100%;
-  height: 100%;
+  display: grid;
+  gap: 20px;
+  min-width: 0;
 
-  & .n-card {
-    margin-top: 18px;
+  .chart--container {
+    width: 100%;
+    height: 280px;
+  }
 
-    &:first-child {
-      margin-top: 0;
+  &__lead {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    min-width: 0;
+
+    .chart--container {
+      height: clamp(320px, 52vh, 460px);
     }
   }
 
-  & .chart--container {
-    width: 100%;
-    height: clamp(300px, 55vh, 500px);
+  &__examples {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+    gap: 16px;
+
+    .n-card {
+      min-width: 0;
+    }
   }
 }

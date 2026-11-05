@@ -20,12 +20,12 @@ import { RouterView } from 'vue-router'
 export default defineComponent({
   name: 'App',
   setup() {
-    const { getAppTheme } = useSettingGetters()
+    const { getAppTheme, getThemeStyle } = useSettingGetters()
     const { t } = useI18n()
 
     provideUiServices({
       dark: () => getAppTheme.value,
-      chartTheme: APP_THEME.echartTheme,
+      chartTheme: () => APP_THEME.echartTheme ?? `ray-${getThemeStyle.value}`,
       translate: t,
       columnStorage: createStorage(window.localStorage, APP_CATCH_KEY_PREFIX),
       reportError: (message) => window.$message?.error(message),

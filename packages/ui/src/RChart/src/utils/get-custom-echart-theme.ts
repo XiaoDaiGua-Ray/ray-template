@@ -1,42 +1,19 @@
-import type { ChartThemeRawArray, ChartThemeRawModules } from '../types'
+import type { ChartThemeRawArray } from '../types'
 
-/**
- *
- * @see https://echarts.apache.org/zh/theme-builder.html
- *
- * @description
- * 自动注册所有主题。
- *
- * 默认以文件名当作主题名称。
- *
- * 主题编辑器使用方法:
- * 1. 配置、选择主题
- * 2. 点击下载主题
- * 3. 选择 json 类型，然后复制
- * 4. 在 echart-themes 包中创建对应的 json 文件，文件名为主题名称
- */
-export const getCustomEchartTheme = () => {
-  // 获取所有主题
-  const themeRawModules: Record<string, ChartThemeRawModules> =
-    import.meta.glob('../themes/**/*.json', {
-      eager: true,
-    })
-  const regex = /\/([^/]+)\.json$/
+export const getCustomEchartTheme = (): ChartThemeRawArray[] => {
+  const modules = import.meta.glob<ChartThemeRawArray['theme']>(
+    '../themes/**/*.json',
+    { eager: true, import: 'default' },
+  )
+  const names = new Set<string>()
 
-  const rawThemes = Object.keys(themeRawModules).reduce((pre, curr) => {
-    const name = curr.match(regex)?.[1]
+  return Object.entries(modules).map(([path, theme]) => {
+    const name = path.slice(path.lastIndexOf('/') + 1, -'.json'.length)
 
-    if (name) {
-      pre.push({
-        name,
-        theme: themeRawModules[curr].default,
-      })
+    if (names.has(name)) throw new Error(`[RChart] 重复的主题名：${name}`)
 
-      return pre
-    } else {
-      throw new Error(`[RChart Theme Error]: name ${curr} is invalid!`)
-    }
-  }, [] as ChartThemeRawArray[])
+    names.add(name)
 
-  return rawThemes
+    return { name, theme }
+  })
 }

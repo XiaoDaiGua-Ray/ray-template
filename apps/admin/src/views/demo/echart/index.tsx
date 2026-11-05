@@ -2,136 +2,86 @@ import DemoPage from '../components/DemoPage'
 import DemoResult from '../components/DemoResult'
 import './index.scss'
 import { RChart, useChart } from '@/components'
-import type { RChartType } from '@/components'
+import { useI18n } from '@/hooks'
 import { NButton, NCard, NFlex, NSwitch } from 'naive-ui'
 
 const Echart = defineComponent({
   name: 'REchart',
   setup() {
-    const [register, { getChartInstance, dispose, render, isDisposed }] =
-      useChart()
-    const [
-      register2,
-      {
-        getChartInstance: getChartInstance2,
-        dispose: dispose2,
-        render: render2,
-        isDisposed: isDisposed2,
-      },
-    ] = useChart()
+    const [register, { dispose, render }] = useChart()
+    const [register2, { dispose: dispose2, render: render2 }] = useChart()
+    const { t } = useI18n('demoDetails.chart')
 
     const chartLoading = ref(false)
     const chartAria = ref(false)
     const state = reactive({
       loading: false,
       loading1: false,
-      lineVisible: true,
-      barVisible: true,
+      lineReady: false,
+      lineVisible: false,
+      barReady: false,
+      barVisible: false,
       revision: 1,
     })
 
-    const baseOptions: GlobalEChartsCoreOption = {
-      legend: {},
-      tooltip: {},
+    const baseOptions = computed<GlobalEChartsCoreOption>(() => ({
+      legend: { type: 'scroll', top: 0 },
+      tooltip: { trigger: 'axis' },
+      grid: { left: 44, right: 14, top: 42, bottom: 26 },
       xAxis: {
         type: 'category',
         data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       },
-      yAxis: {
-        type: 'value',
-      },
+      yAxis: { type: 'value' },
       series: [
         {
-          name: '日期',
+          name: t('orders'),
           data: [120, 200, 150, 80, 70, 110, 130],
           type: 'bar',
-          showBackground: true,
-          backgroundStyle: {
-            color: 'rgba(180, 180, 180, 0.2)',
-          },
+          barMaxWidth: 24,
         },
         {
-          name: '数量',
+          name: t('visits'),
           data: [12, 220, 250, 180, 20, 10, 190],
           type: 'bar',
-          showBackground: true,
-          backgroundStyle: {
-            color: 'rgba(180, 180, 180, 0.2)',
-          },
+          barMaxWidth: 24,
         },
       ],
-    }
-    const basePieOptions: GlobalEChartsCoreOption = {
-      title: {
-        text: 'Referer of a Website',
-        subtext: 'Fake Data',
-        left: 'center',
-      },
-      tooltip: {
-        trigger: 'item',
-      },
-      legend: {
-        orient: 'vertical',
-        left: 'left',
-      },
+    }))
+    const pieOptions = computed<GlobalEChartsCoreOption>(() => ({
+      tooltip: { trigger: 'item' },
+      legend: { type: 'scroll', bottom: 0 },
       series: [
         {
-          name: 'Access From',
           type: 'pie',
-          radius: '50%',
+          radius: ['40%', '68%'],
+          center: ['50%', '46%'],
+          label: { show: false },
           data: [
-            {
-              value: 1048,
-              name: 'Search Engine',
-            },
-            {
-              value: 735,
-              name: 'Direct',
-            },
-            {
-              value: 580,
-              name: 'Email',
-            },
-            {
-              value: 484,
-              name: 'Union Ads',
-            },
-            {
-              value: 300,
-              name: 'Video Ads',
-            },
+            { value: 1048, name: t('search') },
+            { value: 735, name: t('direct') },
+            { value: 580, name: t('email') },
+            { value: 484, name: t('ads') },
           ],
-          emphasis: {
-            itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(0, 0, 0, 0.5)',
-            },
-          },
         },
       ],
-    }
+    }))
     const baseLineOptions = ref({
       tooltip: {
         trigger: 'axis',
         axisPointer: {
           type: 'cross',
-          label: {
-            backgroundColor: '#6a7985',
-          },
         },
       },
       legend: {
-        data: ['Email', 'Union Ads', 'Video Ads', 'Direct', 'Search Engine'],
+        type: 'scroll',
+        bottom: 0,
       },
       grid: {
-        left: '4%',
-        right: '4%',
-        top: '2%',
-        outerBounds: {
-          bottom: '10%',
-        },
-        outerBoundsMode: 'auto',
+        left: 52,
+        right: 20,
+        top: 20,
+        bottom: 58,
       },
       xAxis: [
         {
@@ -190,10 +140,6 @@ const Echart = defineComponent({
           name: 'Search Engine',
           type: 'line',
           stack: 'Total',
-          label: {
-            show: true,
-            position: 'top',
-          },
           areaStyle: {},
           emphasis: {
             focus: 'series',
@@ -209,15 +155,6 @@ const Echart = defineComponent({
 
     const handleAriaShow = (bool: boolean) => {
       chartAria.value = bool
-    }
-
-    const mountChart = () => {
-      if (isDisposed()) {
-        render()
-        state.lineVisible = true
-      } else {
-        window.$message.warning('图表已渲染~')
-      }
     }
 
     const unmountChart = () => {
@@ -249,22 +186,20 @@ const Echart = defineComponent({
       handleLoadingShow,
       chartAria,
       handleAriaShow,
-      basePieOptions,
+      pieOptions,
       baseLineOptions,
       ...toRefs(state),
-      mountChart,
+      mountChart: render,
       unmountChart,
       updateChartOptions,
       register,
       register2,
       dispose2,
       render2,
-      isDisposed2,
     }
   },
   render() {
-    const { register, register2, dispose2, render2, isDisposed2, loading1 } =
-      this
+    const { register, register2, dispose2, render2, loading1 } = this
 
     return (
       <DemoPage
@@ -273,9 +208,12 @@ const Echart = defineComponent({
         eyebrow="RAY TEMPLATE / EXAMPLES"
       >
         <div class="echart">
-          <NCard title={this.$t('demoDetails.chart.sales')}>
-            <NFlex style={['padding: 18px 0']}>
-              <NButton disabled={this.lineVisible} onClick={this.mountChart}>
+          <section class="echart__lead">
+            <NFlex align="center">
+              <NButton
+                disabled={!this.lineReady || this.lineVisible}
+                onClick={this.mountChart}
+              >
                 {this.$t('demoDetails.chart.mount')}
               </NButton>
               <NButton disabled={!this.lineVisible} onClick={this.unmountChart}>
@@ -302,6 +240,10 @@ const Echart = defineComponent({
             <div class="chart--container">
               <RChart
                 onRegister={register}
+                onSuccess={() => {
+                  this.lineReady = true
+                  this.lineVisible = true
+                }}
                 title={this.$t('demoDetails.chart.sales')}
                 autoChangeTheme
                 options={this.baseLineOptions}
@@ -317,72 +259,71 @@ const Echart = defineComponent({
                   })
                 : this.$t('demoDetails.chart.unmounted')}
             </DemoResult>
-          </NCard>
-          <NCard title={this.$t('demoDetails.chart.fixedTheme')}>
-            <NFlex vertical>
-              <NFlex>
-                <NButton
-                  onClick={() => {
-                    if (isDisposed2()) {
-                      render2()
+          </section>
+          <div class="echart__examples">
+            <NCard title={this.$t('demoDetails.chart.fixedTheme')}>
+              <NFlex vertical>
+                <NFlex>
+                  <NButton
+                    disabled={!this.barReady || this.barVisible}
+                    onClick={render2}
+                  >
+                    {this.$t('demoDetails.chart.mount')}
+                  </NButton>
+                  <NButton
+                    disabled={!this.barVisible}
+                    onClick={() => {
+                      dispose2()
+                      this.barVisible = false
+                    }}
+                  >
+                    {this.$t('demoDetails.chart.dispose')}
+                  </NButton>
+                </NFlex>
+                <div class="chart--container">
+                  <RChart
+                    onRegister={register2}
+                    onSuccess={() => {
+                      this.barReady = true
                       this.barVisible = true
-                    } else {
-                      window.$message.warning('不可以重复渲染图表~')
-                    }
-                  }}
-                >
-                  {this.$t('demoDetails.chart.mount')}
-                </NButton>
-                <NButton
-                  disabled={!this.barVisible}
-                  onClick={() => {
-                    dispose2()
-                    this.barVisible = false
-                  }}
-                >
-                  {this.$t('demoDetails.chart.dispose')}
-                </NButton>
+                    }}
+                    theme="ray-naive"
+                    options={this.baseOptions}
+                  />
+                </div>
               </NFlex>
+            </NCard>
+            <NCard title={this.$t('demoDetails.chart.showLoading')}>
+              <NSwitch
+                v-model:value={this.chartLoading}
+                onUpdateValue={this.handleLoadingShow.bind(this)}
+                style={['padding: 18px 0']}
+              >
+                {{
+                  checked: () => this.$t('demoDetails.chart.stopLoading'),
+                  unchecked: () => this.$t('demoDetails.chart.showLoading'),
+                }}
+              </NSwitch>
               <div class="chart--container">
-                <RChart
-                  onRegister={register2}
-                  autoChangeTheme={false}
-                  theme="default"
-                  options={this.baseOptions}
-                />
+                <RChart loading={this.loading} options={this.pieOptions} />
               </div>
-            </NFlex>
-          </NCard>
-          <NCard title={this.$t('demoDetails.chart.showLoading')}>
-            <NSwitch
-              v-model:value={this.chartLoading}
-              onUpdateValue={this.handleLoadingShow.bind(this)}
-              style={['padding: 18px 0']}
-            >
-              {{
-                checked: () => this.$t('demoDetails.chart.stopLoading'),
-                unchecked: () => this.$t('demoDetails.chart.showLoading'),
-              }}
-            </NSwitch>
-            <div class="chart--container">
-              <RChart loading={this.loading} options={this.baseOptions} />
-            </div>
-          </NCard>
-          <NCard title={this.$t('demoDetails.chart.pattern')}>
-            <NSwitch
-              v-model:value={this.chartAria}
-              onUpdateValue={this.handleAriaShow.bind(this)}
-              style={['padding: 18px 0']}
-            >
-              {{
-                checked: () => this.$t('demoDetails.chart.hidePattern'),
-                unchecked: () => this.$t('demoDetails.chart.pattern'),
-              }}
-            </NSwitch>
-            <div class="chart--container">
-              <RChart options={this.baseOptions} showAria={this.chartAria} />
-            </div>
-          </NCard>
+            </NCard>
+            <NCard title={this.$t('demoDetails.chart.pattern')}>
+              <NSwitch
+                v-model:value={this.chartAria}
+                onUpdateValue={this.handleAriaShow.bind(this)}
+                style={['padding: 18px 0']}
+              >
+                {{
+                  checked: () => this.$t('demoDetails.chart.hidePattern'),
+                  unchecked: () => this.$t('demoDetails.chart.pattern'),
+                }}
+              </NSwitch>
+              <div class="chart--container">
+                <RChart options={this.baseOptions} showAria={this.chartAria} />
+              </div>
+            </NCard>
+          </div>
         </div>
       </DemoPage>
     )

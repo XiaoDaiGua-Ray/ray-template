@@ -90,12 +90,13 @@ const DocumentationExample = defineComponent({
   name: 'DocumentationExample',
   setup() {
     const { t } = useI18n()
-    const { getAppTheme, getLocaleLanguage } = useSettingGetters()
+    const { getAppTheme, getLocaleLanguage, getThemeStyle } =
+      useSettingGetters()
 
     provideUiServices({
       dark: () => getAppTheme.value,
       locale: () => getLocaleLanguage.value,
-      chartTheme: APP_THEME.echartTheme,
+      chartTheme: () => APP_THEME.echartTheme ?? `ray-${getThemeStyle.value}`,
       translate: t,
       iconUrl: (name, prefix) =>
         `${iconSprites[name.split('/')[0] as IconPackage]}#${prefix}-${name}`,

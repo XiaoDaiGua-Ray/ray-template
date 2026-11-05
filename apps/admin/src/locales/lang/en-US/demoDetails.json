@@ -194,6 +194,12 @@
     "submit": "Submit"
   },
   "chart": {
+    "orders": "Orders",
+    "visits": "Visits",
+    "search": "Search",
+    "direct": "Direct",
+    "email": "Email",
+    "ads": "Ads",
     "sales": "Weekly sales trend",
     "mount": "Render chart",
     "dispose": "Dispose chart",

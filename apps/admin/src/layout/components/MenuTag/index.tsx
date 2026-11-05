@@ -9,9 +9,18 @@ import {
 import { useMenuActions, useMenuGetters, useRuntimeGetters } from '@/store'
 import type { AppMenuOption, MenuTagOptions } from '@/types'
 import { ShellTab } from '@ray-template/admin-shell'
-import { NButton, NDropdown, NFlex, NLayoutHeader, NScrollbar } from 'naive-ui'
+import { usePreferredReducedMotion, useResizeObserver } from '@vueuse/core'
+import { NDropdown, NFlex, NLayoutHeader, NScrollbar } from 'naive-ui'
 import type { ScrollbarInst } from 'naive-ui'
 import { useTemplateRef } from 'vue'
+
+const Chevron = ({ direction }: { direction: 'left' | 'right' }) => (
+  <RIcon
+    name="directional/expanded"
+    size={18}
+    customClassName={`menu-tag__chevron--${direction}`}
+  />
+)
 
 export default defineComponent({
   name: 'AppMenuTag',
@@ -48,7 +57,7 @@ export default defineComponent({
       {
         label: t('maximize'),
         key: 'maximizeLayoutContent',
-        icon: () => <RIcon name="action/fullscreen_fold" size="1em" />,
+        icon: () => <RIcon name="action/fullscreen" size="1em" />,
       },
       {
         label: t('reload'),
@@ -58,7 +67,7 @@ export default defineComponent({
       {
         label: t('newWindow'),
         key: 'windowOpenTab',
-        icon: () => <RIcon name="action/shared" size="1em" />,
+        icon: () => <RIcon name="navigation/window" size="1em" />,
       },
       {
         type: 'divider',
@@ -93,7 +102,7 @@ export default defineComponent({
       {
         label: t('closeAll'),
         key: 'closeAll',
-        icon: () => <RIcon name="directional/resize_h" size="1em" />,
+        icon: () => <RIcon name="action/close_all" size="1em" />,
         disabled: getMenuTagOptions.value.length < 2,
       },
     ])
@@ -176,20 +185,34 @@ export default defineComponent({
       changeMenuModelValue(option.fullPath, option)
     }
 
-    const getScrollElement = () =>
-      tagsRef.value?.closest<HTMLElement>('.n-scrollbar-container')
+    const scroller = computed(() =>
+      tagsRef.value?.closest<HTMLElement>('.n-scrollbar-container'),
+    )
+    const scrollState = reactive({ left: false, right: false })
+    const reducedMotion = usePreferredReducedMotion()
+    const syncScroll = () => {
+      const element = scroller.value
+
+      if (!element) return
+
+      scrollState.left = element.scrollLeft > 1
+      scrollState.right =
+        element.scrollWidth - element.clientWidth - element.scrollLeft > 1
+    }
+
+    useResizeObserver([scroller, tagsRef], syncScroll)
 
     const scrollX = (direction: 'left' | 'right') => {
-      const scroller = getScrollElement()
+      const element = scroller.value
 
-      if (!scroller) return
+      if (!element || !scrollState[direction]) return
+
+      const distance = Math.max(100, element.clientWidth * 0.75)
 
       scrollRef.value?.scrollTo({
-        left: Math.max(
-          0,
-          scroller.scrollLeft + (direction === 'left' ? -200 : 200),
-        ),
-        behavior: 'smooth',
+        left:
+          element.scrollLeft + (direction === 'left' ? -distance : distance),
+        behavior: reducedMotion.value === 'reduce' ? 'auto' : 'smooth',
       })
     }
 
@@ -224,13 +247,15 @@ export default defineComponent({
     }
 
     const positionMenuTag = () => {
-      const scroller = getScrollElement()
+      const element = scroller.value
       const active = tagsRef.value?.querySelector('.menu-tag__item--active')
 
-      if (!active || !scroller) return
+      syncScroll()
+
+      if (!active || !element) return
 
       const tab = active.getBoundingClientRect()
-      const viewport = scroller.getBoundingClientRect()
+      const viewport = element.getBoundingClientRect()
       const delta =
         tab.left < viewport.left
           ? tab.left - viewport.left
@@ -238,17 +263,15 @@ export default defineComponent({
 
       if (delta)
         scrollRef.value?.scrollTo({
-          left: scroller.scrollLeft + delta,
-          behavior: 'smooth',
+          left: element.scrollLeft + delta,
+          behavior: reducedMotion.value === 'reduce' ? 'auto' : 'smooth',
         })
     }
 
     watch(
       [getMenuKey, () => getMenuTagOptions.value.length, tagsRef],
       positionMenuTag,
-      {
-        flush: 'post',
-      },
+      { flush: 'post' },
     )
 
     expose()
@@ -261,6 +284,8 @@ export default defineComponent({
       menuTagClick,
       moreOptions,
       scrollX,
+      scrollState,
+      syncScroll,
       scrollRef,
       tagsRef,
       actionDropdownSelect,
@@ -309,18 +334,19 @@ export default defineComponent({
             justify="space-between"
             inline
           >
-            <NButton
-              quaternary
-              class="override-button__menu-tag"
+            <button
+              type="button"
+              class="menu-tag__control menu-tag__control--scroll"
               aria-label={$t('menuTag.scrollLeft')}
+              aria-disabled={!this.scrollState.left}
+              title={$t('menuTag.scrollLeft')}
               onClick={() => this.scrollX('left')}
             >
-              {{
-                icon: () => <RIcon name="directional/left_arrow" />,
-              }}
-            </NButton>
+              <Chevron direction="left" />
+            </button>
             <NScrollbar
               xScrollable
+              onScroll={this.syncScroll}
               ref="scrollRef"
               class="menu-tag__scroll"
               themeOverrides={{ width: '0px', height: '0px' }}
@@ -356,67 +382,60 @@ export default defineComponent({
                 })}
               </div>
             </NScrollbar>
-            <NFlex align="center" inline wrap={false} size={[0, 0]}>
-              <NButton
-                quaternary
-                class="override-button__menu-tag"
-                aria-label={$t('menuTag.scrollRight')}
-                onClick={() => this.scrollX('right')}
-              >
-                {{
-                  icon: () => <RIcon name="directional/right_arrow" />,
-                }}
-              </NButton>
-              <NButton
-                quaternary
-                class="override-button__menu-tag"
+            <button
+              type="button"
+              class="menu-tag__control menu-tag__control--scroll"
+              aria-label={$t('menuTag.scrollRight')}
+              aria-disabled={!this.scrollState.right}
+              title={$t('menuTag.scrollRight')}
+              onClick={() => this.scrollX('right')}
+            >
+              <Chevron direction="right" />
+            </button>
+            <div class="menu-tag__tools">
+              <button
+                type="button"
+                class="menu-tag__control"
                 aria-label={$t('layout.maximize')}
-                {...{ title: $t('layout.maximize') }}
+                title={$t('layout.maximize')}
                 onClick={() => this.maximize(true)}
               >
-                {{
-                  icon: () => <RIcon name="action/fullscreen_fold" />,
-                }}
-              </NButton>
-              <NButton
-                quaternary
-                class="override-button__menu-tag"
+                <RIcon name="action/fullscreen" size={16} />
+              </button>
+              <button
+                type="button"
+                class="menu-tag__control"
                 aria-label={$t('menuTag.reload')}
-                onClick={() => {
-                  reload()
-                }}
+                title={$t('menuTag.reload')}
+                onClick={() => reload()}
               >
-                {{
-                  icon: () => (
-                    <RIcon
-                      name="action/reload"
-                      customClassName={`${
-                        !globalMainLayoutLoad
-                          ? 'menu-tag__right-setting--spinning'
-                          : ''
-                      }`}
-                    />
-                  ),
-                }}
-              </NButton>
+                <RIcon
+                  name="action/reload"
+                  size={16}
+                  customClassName={
+                    globalMainLayoutLoad
+                      ? ''
+                      : 'menu-tag__right-setting--spinning'
+                  }
+                />
+              </button>
               <RMoreDropdown
                 class="menu-tag__dropdown"
                 options={this.moreOptions}
                 trigger="click"
-                onSelect={this.actionDropdownSelect.bind(this)}
+                onSelect={actionDropdownSelect}
               >
-                <NButton
-                  quaternary
-                  class="override-button__menu-tag"
+                <button
+                  type="button"
+                  class="menu-tag__control"
                   aria-label={$t('menuTag.actions')}
+                  title={$t('menuTag.actions')}
                   onClick={this.setCurrentContextmenuIndex}
                 >
-                  {{
-                    icon: () => <RIcon name="action/more" />,
-                  }}
-                </NButton>
+                  <RIcon name="action/more" size={16} />
+                </button>
               </RMoreDropdown>
-            </NFlex>
+            </div>
           </NFlex>
         </div>
       </NLayoutHeader>

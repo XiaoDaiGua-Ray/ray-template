@@ -74,5 +74,5 @@ export interface AppTheme {
     dark: GlobalThemeOverrides
     light: GlobalThemeOverrides
   }
-  echartTheme: string
+  echartTheme: string | null
 }

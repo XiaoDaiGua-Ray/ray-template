@@ -50,10 +50,7 @@ export const APP_THEME: AppTheme = {
   /**
    *
    * @description
-   * 配置 echart 主题颜色。
-   * 约定配置时以：主题名称为文件名，其文件夹下两个主题风格的 json 文件。并且暗色主题必须为 xxx-dark.json。
-   *
-   * [文档地址](https://xiaodaigua-ray.github.io/ray-template-doc/ray-template-docs/advanced/echart-themes.html)
+   * 默认跟随界面风格；可指定已注册的 ECharts 主题名覆盖，暗色变体使用 -dark 后缀。
    */
-  echartTheme: 'macarons',
+  echartTheme: null,
 }

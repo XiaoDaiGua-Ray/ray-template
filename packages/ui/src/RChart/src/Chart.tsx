@@ -1,32 +1,12 @@
-import {
-  computed,
-  defineComponent,
-  nextTick as flushView,
-  inject,
-  onBeforeMount,
-  onBeforeUnmount,
-  onMounted,
-  ref,
-  shallowRef,
-  unref,
-  watch,
-  watchEffect,
-} from 'vue'
 import './index.scss'
 import { completeSize } from '@ray-template/composables/element'
 import { call, renderNode } from '@ray-template/composables/vue'
 import { downloadBase64File } from '@ray-template/utils'
-import type { AnyFn } from '@ray-template/utils/types'
 import {
+  useEventListener,
   useIntersectionObserver,
   useResizeObserver,
-  watchThrottled,
 } from '@vueuse/core'
-import type {
-  UseIntersectionObserverReturn,
-  UseResizeObserverReturn,
-} from '@vueuse/core'
-// 提示框, 标题, 直角坐标系, 数据集, 内置数据转换器等组件(组件后缀都为 Component)
 import {
   BarChart,
   CandlestickChart,
@@ -45,517 +25,441 @@ import {
   TooltipComponent,
   TransformComponent,
 } from 'echarts/components'
-import { init, registerTheme, use } from 'echarts/core' // echarts 核心模块
-
-import type { ECharts, EChartsCoreOption } from 'echarts/core'
-// 系列类型(后缀都为 SeriesOption)
-import { LegacyGridContainLabel, UniversalTransition } from 'echarts/features' // 标签自动布局, 全局过渡动画等特性
-import { CanvasRenderer } from 'echarts/renderers' // echarts 渲染器
-
+import type { AriaComponentOption } from 'echarts/components'
+import { init, registerTheme, use } from 'echarts/core'
+import type { ECharts } from 'echarts/core'
+import { LegacyGridContainLabel, UniversalTransition } from 'echarts/features'
+import { CanvasRenderer } from 'echarts/renderers'
 import { throttle } from 'lodash-es'
-import type { DebouncedFunc } from 'lodash-es'
-import { NCard } from 'naive-ui'
-import type { DropdownOption, DropdownProps } from 'naive-ui'
-import { useTemplateRef } from 'vue'
-import type { WatchStopHandle } from 'vue'
-import { RMoreDropdown } from '../../RMoreDropdown'
+import { NButton, NCard, NDropdown } from 'naive-ui'
+import type { DropdownOption } from 'naive-ui'
+import {
+  computed,
+  defineComponent,
+  nextTick as flushView,
+  inject,
+  onActivated,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  shallowRef,
+  toValue,
+  useTemplateRef,
+  watch,
+} from 'vue'
+import { RIcon } from '../../RIcon'
 import { useUiServices } from '../../services'
 import { USE_CHART_PROVIDER_KEY } from './config'
 import props from './props'
 import { getCustomEchartTheme, loadingOptions, setEchartOptions } from './utils'
 
-// 获取 chart 主题
-const echartThemes = getCustomEchartTheme()
-// download 下载功能 key
-const __CHART_DOWN_LOAD_CHART__ = '__R_CHART_DOWN_LOAD_CHART__'
+use([
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  DatasetComponent,
+  TransformComponent,
+  LegendComponent,
+  ToolboxComponent,
+  AriaComponent,
+  BarChart,
+  LineChart,
+  PieChart,
+  CandlestickChart,
+  ScatterChart,
+  PictorialBarChart,
+  LegacyGridContainLabel,
+  UniversalTransition,
+  CanvasRenderer,
+])
 
-// 注册主题
-echartThemes.forEach((curr) => {
-  registerTheme(curr.name, curr.theme)
-})
+const themes = new Map(
+  getCustomEchartTheme().map(({ name, theme }) => [name, theme]),
+)
+
+for (const [name, theme] of themes) registerTheme(name, theme)
+
+const DOWNLOAD_KEY = '__R_CHART_DOWN_LOAD_CHART__'
 
 export default defineComponent({
   name: 'RChart',
   props,
   setup(props, { expose }) {
-    const { dark, chartTheme: echartTheme = 'macarons' } = useUiServices()
-    const getAppTheme = computed(() => dark?.() ?? false)
-    // echart 容器实例
+    const { dark, chartTheme, translate } = useUiServices()
+    const provider = inject(USE_CHART_PROVIDER_KEY, {})
     const chartRef = useTemplateRef<HTMLElement>('chartRef')
-    // echart 父容器实例
-    const rayChartWrapperRef = useTemplateRef<HTMLElement>('rayChartWrapperRef')
-    // echart 实例
-    const echartInstanceRef = shallowRef<ECharts>()
-    // resize 防抖方法实例
-    let resizeThrottleReturn: DebouncedFunc<AnyFn> | null
-    // resize observer 实例
-    let resizeObserverReturn: UseResizeObserverReturn | null
-    // 当前配置主题
-    // watch props 回调
-    let watchThrottledCallback: WatchStopHandle | null
-    // 下拉框配置项
-    const moreDropDownOptions = computed<DropdownProps['options']>(() => [
-      {
-        label: '下载图片',
-        key: __CHART_DOWN_LOAD_CHART__,
-        disabled: !(
-          echartInstanceRef.value && echartInstanceRef.value.getDom()
-        ),
-      },
+    const instance = shallowRef<ECharts>()
+    const renderRequest = ref<number | null>(null)
+    const ready = shallowRef<{ element: HTMLElement; request: number }>()
+    let requestId = 0
+    let mounted = false
+
+    const liveChart = () => {
+      const chart = instance.value
+
+      return chart && !chart.isDisposed() ? chart : void 0
+    }
+    const theme = computed(() => {
+      if (provider.theme) return provider.theme
+
+      const isDark = props.autoChangeTheme && dark?.()
+
+      if (props.theme === 'default') return isDark ? 'dark' : 'default'
+
+      if (props.theme) return props.theme
+
+      const base = toValue(chartTheme) ?? 'ray-modern'
+
+      const darkVariant = `${base}-dark`
+
+      return isDark && themes.has(darkVariant) ? darkVariant : base
+    })
+    const cssVars = computed(() => ({
+      '--r-chart-width': completeSize(props.width),
+      '--r-chart-height': completeSize(props.height),
+    }))
+    const loadingStyle = computed(() =>
+      loadingOptions(
+        themes.get(theme.value),
+        theme.value === 'dark' || theme.value.endsWith('-dark'),
+        translate?.('chart.loading') ?? 'Loading…',
+        props.loadingOptions,
+      ),
+    )
+    const downloadLabel = computed(
+      () => translate?.('chart.download') ?? 'Download image',
+    )
+    const moreLabel = computed(
+      () => translate?.('chart.actions') ?? 'Chart actions',
+    )
+    const moreOptions = computed<DropdownOption[]>(() => [
+      { label: downloadLabel.value, key: DOWNLOAD_KEY, disabled: !liveChart() },
     ])
-    const cssVarsRef = computed(() => {
+
+    const ariaOptions = computed(() => {
+      const aria = props.options.aria as AriaComponentOption | undefined
+
       return {
-        '--r-chart-width': completeSize(props.width),
-        '--r-chart-height': completeSize(props.height),
+        ...aria,
+        enabled: props.showAria,
+        decal: { ...aria?.decal, show: props.showAria },
       }
     })
-    // 目标是否可见
-    const targetIsVisible = ref(false)
-    // intersectionObserver 实例
-    let intersectionObserverReturn: UseIntersectionObserverReturn | null
-    // 缓存一些配置信息
-    const __catch = {
-      aria: props.showAria,
+    const syncAriaLabel = (chart: ECharts) => {
+      if (!props.showAria || ariaOptions.value.label?.enabled === false)
+        chart.getDom().removeAttribute('aria-label')
     }
-    const chartProvideOptions = inject(USE_CHART_PROVIDER_KEY, {})
-
-    /**
-     *
-     * @description
-     * 注册 echart 组件、图利、渲染器等。
-     *
-     * 会自动合并拓展 echart 组件。
-     * 该方法必须在注册图表之前调用。
-     */
-    const registerChartCore = async () => {
-      use([
-        TitleComponent,
-        TooltipComponent,
-        GridComponent,
-        DatasetComponent,
-        TransformComponent,
-        LegendComponent,
-        ToolboxComponent,
-        AriaComponent,
-      ]) // 注册组件
-      use([
-        BarChart,
-        LineChart,
-        PieChart,
-        CandlestickChart,
-        ScatterChart,
-        PictorialBarChart,
-      ]) // 注册 chart series type
-      use([LegacyGridContainLabel, UniversalTransition]) // 注册布局, 过度效果
-      use([CanvasRenderer]) // 注册渲染器
-
-      try {
-        use(props.use?.filter(Boolean))
-      } catch (e) {
-        console.error('[RChart register error]: ', e)
-      }
-    }
-
-    /**
-     *
-     * @description
-     * 更具当前主题渲染 chart。
-     *
-     * 如果手动配置了 theme 属性，autoChangeTheme 属性则会失效；
-     * 但是，如果配置 theme 属性为 default，则会根据当前主题色渲染 chart 默认主题。
-     *
-     * 当 Boolean(theme) 为 false，则会尝试获取 echartTheme 属性；
-     * 但是，如果未获取到 echartTheme 属性，则会使用默认样式。
-     */
-    const updateChartTheme = () => {
-      const { theme: providerTheme } = chartProvideOptions || {}
-
-      if (echartInstanceRef.value) {
-        destroyChart()
-      }
-
-      // 如果配置了全局配置主题，则忽略后面所有逻辑
-      if (providerTheme) {
-        renderChart(providerTheme)
-
-        return
-      }
-
-      if (props.theme === 'default') {
-        props.autoChangeTheme ? renderChart('dark') : renderChart('')
-
-        return
-      }
-
-      if (!props.theme) {
-        const theme = props.autoChangeTheme
-          ? getAppTheme.value
-            ? `${echartTheme}-dark`
-            : echartTheme
-          : echartTheme
-
-        renderChart(theme)
-      } else {
-        renderChart(props.theme)
-      }
-    }
-
-    /**
-     *
-     * @param ops 待合并 chart options
-     *
-     * @description
-     * 合并 chart options。
-     *
-     * 如果启用了 showAria 则会自动合并 aria 配置项。
-     */
-    const combineChartOptions = (ops: EChartsCoreOption) => {
-      let options = unref(ops)
-      const assign = (opts: object) => Object.assign({}, options, opts)
-
-      // 拦截 aria 配置项
-      options = assign({
-        aria: {
-          enabled: props.showAria,
-          decal: {
-            show: props.showAria,
-          },
+    const applyOptions = (chart: ECharts, initial = false) => {
+      chart.setOption(
+        { ...props.options, aria: ariaOptions.value },
+        {
+          ...setEchartOptions(),
+          ...props.setChartOptions,
+          // 初始化回调需要在图表可读取和导出后执行。
+          ...(initial && { lazyUpdate: false }),
         },
-      })
-
-      return options
+      )
+      syncAriaLabel(chart)
+    }
+    const updateLoading = (chart: ECharts) => {
+      if (props.loading) chart.showLoading('default', loadingStyle.value)
+      else chart.hideLoading()
     }
 
-    /**
-     *
-     * @description
-     * 渲染 echart。
-     */
-    const renderChart = (theme: string = echartTheme) => {
-      // 获取 dom 容器
-      const element = chartRef.value as HTMLElement
-      // 获取配置项
-      const options = combineChartOptions(props.options)
-      // 获取 dom 容器实际宽高
-      const { height, width } = element.getBoundingClientRect()
-      const { onSuccess, onError } = props
+    const destroyChart = () => {
+      const chart = liveChart()
+
+      instance.value = void 0
+      chart?.getDom().removeAttribute('aria-label')
+      chart?.dispose()
+    }
+
+    const render = () => {
+      if (mounted && !liveChart()) renderRequest.value = ++requestId
+    }
+    const dispose = () => {
+      renderRequest.value = null
+      ready.value = void 0
+      resizeChart.cancel()
+      destroyChart()
+    }
+    const initialize = (element: HTMLElement) => {
+      let chart: ECharts
 
       try {
-        // 注册 chart
-        echartInstanceRef.value = init(element, theme, {
-          // 如果款度为 0，则以 200px 填充
-          width: width === 0 ? 200 : void 0,
-          // 如果高度为 0，则以 200px 填充
-          height: height === 0 ? 200 : void 0,
+        use(props.use.filter(Boolean))
+        chart = init(element, theme.value, {
+          width: element.clientWidth || 200,
+          height: element.clientHeight || 200,
+        })
+        instance.value = chart
+        applyOptions(chart, true)
+        updateLoading(chart)
+      } catch (error) {
+        destroyChart()
+
+        try {
+          props.onError && call(props.onError)
+        } finally {
+          props.onFinally && call(props.onFinally)
+        }
+
+        throw new Error('[RChart] 图表初始化失败', { cause: error })
+      }
+
+      try {
+        props.onRegister && call(props.onRegister, chart, render, dispose)
+
+        if (chart === liveChart() && props.onSuccess)
+          call(props.onSuccess, chart)
+      } finally {
+        props.onFinally && call(props.onFinally)
+      }
+    }
+
+    watch(
+      [
+        chartRef,
+        renderRequest,
+        () => props.intersectionObserver,
+        () => props.intersectionObserverTarget,
+        () => props.intersectionOptions,
+      ],
+      ([element, request, observe, target, options], _, onCleanup) => {
+        ready.value = void 0
+
+        const chart = liveChart()
+
+        if (chart && chart.getDom() !== element) destroyChart()
+
+        if (!element || request === null || liveChart()) return
+
+        const markReady = () => {
+          ready.value = { element, request }
+        }
+
+        if (!observe) {
+          markReady()
+
+          return
+        }
+
+        let active = true
+        const observer = useIntersectionObserver(
+          target ?? element,
+          (entries) => {
+            if (
+              !active ||
+              request !== renderRequest.value ||
+              element !== chartRef.value
+            )
+              return
+
+            if (entries.at(-1)?.isIntersecting) {
+              observer.stop()
+              markReady()
+            }
+          },
+          { ...options, immediate: true },
+        )
+
+        onCleanup(() => {
+          active = false
+          observer.stop()
         })
 
-        // 渲染成功回调
-        if (onSuccess) {
-          call(onSuccess, echartInstanceRef.value)
-        }
-
-        // 是否强制下一队列渲染图表
-        const { nextTick: deferOptions } = props
-
-        if (deferOptions) {
-          flushView(() => {
-            options && echartInstanceRef.value?.setOption(options)
-          })
-        } else {
-          options && echartInstanceRef.value?.setOption(options)
-        }
-      } catch (e) {
-        // 渲染失败回调
-        if (onError) {
-          call(onError)
-        }
-
-        throw new Error(`[RChart render error]: ${e}`, { cause: e })
-      } finally {
-        const { onFinally } = props
-
-        if (onFinally) {
-          call(onFinally)
-        }
-      }
-    }
-
-    /**
-     *
-     * @description
-     * chart 是否已经销毁。
-     * 如果销毁则返回 true, 否则返回 false。
-     */
-    const isDisposed = () => {
-      return !!echartInstanceRef.value?.isDisposed()
-    }
-
-    /**
-     *
-     * @description
-     * 销毁 chart 实例，释放资源。
-     */
-    const destroyChart = () => {
-      if (!isDisposed()) {
-        echartInstanceRef.value?.dispose()
-      }
-    }
-
-    /**
-     *
-     * @description
-     * 重置 echarts 尺寸。
-     */
-    const resizeChart = () => {
-      if (echartInstanceRef.value) {
-        echartInstanceRef.value.resize()
-      }
-    }
-
-    /**
-     *
-     * @param key moreDropDownOptions key
-     * @param option moreDropDownOptions current click option
-     *
-     * @description
-     * 预设 card 风格下拉框点击。
-     * 当前仅实现下载图片功能。
-     */
-    const dropdownSelect = (key: string | number, option: DropdownOption) => {
-      if (key === __CHART_DOWN_LOAD_CHART__ && !isDisposed()) {
-        const { filename, ...args } = props.downloadOptions
-
-        downloadBase64File(
-          echartInstanceRef.value!.getDataURL(args),
-          filename ?? `${new Date().getTime()}`,
-        )
-      }
-
-      const { onDropdownSelect } = props
-
-      if (onDropdownSelect) {
-        call(onDropdownSelect, key, option)
-      }
-    }
-
-    /**
-     *
-     * @description
-     * 挂载 chart 方法。
-     */
-    const mount = () => {
-      // 注册事件
-      if (props.autoResize) {
-        if (!resizeThrottleReturn) {
-          resizeThrottleReturn = throttle(resizeChart, 500)
-        }
-
-        /**
-         *
-         * 监听内容区域尺寸变化更新 chart。
-         * 如果没有传入 autoResizeObserverTarget 属性，则默认监听容器尺寸变化。
-         */
-        if (!resizeObserverReturn) {
-          resizeObserverReturn = useResizeObserver(
-            props.autoResizeObserverTarget || rayChartWrapperRef,
-            resizeThrottleReturn as AnyFn,
-          )
-        }
-      }
-
-      // 避免重复渲染
-      if (echartInstanceRef.value?.getDom()) {
-        return
-      }
-
-      // 如果目标不可见并且启用了 intersectionObserver 则不渲染
-      if (!targetIsVisible.value && props.intersectionObserver) {
-        return
-      }
-
-      // 根据主题渲染 chart
-      updateChartTheme()
-
-      // 初始化完成后移除 intersectionObserver 监听
-      intersectionObserverReturn?.stop()
-
-      // 注册 register，用于 useChart hook
-      const { onRegister } = props
-
-      if (onRegister && echartInstanceRef.value) {
-        call(onRegister, echartInstanceRef.value, mount, unmount)
-      }
-    }
-
-    /**
-     *
-     * @description
-     * 卸载 chart 方法。
-     */
-    const unmount = () => {
-      // 卸载 echarts
-      destroyChart()
-      // 注销防抖
-      resizeThrottleReturn?.cancel()
-      // 注销 observer 监听
-      resizeObserverReturn?.stop()
-      intersectionObserverReturn?.stop()
-
-      intersectionObserverReturn = null
-      resizeThrottleReturn = null
-      resizeObserverReturn = null
-    }
-
-    // 监听全局主题变化，然后重新渲染对应主题 echarts
-    watch(
-      () => getAppTheme.value,
-      () => {
-        /**
-         *
-         * @description
-         * Q: 为什么需要重新卸载再渲染？
-         * A: 因为 echarts 官方文档并未提供动态渲染方法。
-         * 虽然原型上有 setTheme 方法，但是官方标记是仅限于在类 ECharts 中访问。
-         * 所以，只能先卸载后重新渲染。
-         */
-        if (props.autoChangeTheme) {
-          destroyChart()
-          updateChartTheme()
-        }
+        if (!observer.isSupported.value) markReady()
       },
+      { flush: 'post' },
     )
-    watchEffect(() => {
-      // 是否启用了可视区域监听
-      if (props.intersectionObserver) {
-        intersectionObserverReturn?.stop()
+    watch(
+      ready,
+      async (target) => {
+        if (!target) return
 
-        intersectionObserverReturn = useIntersectionObserver(
-          props.intersectionObserverTarget || rayChartWrapperRef,
-          ([entry]) => {
-            targetIsVisible.value = entry.isIntersecting
-          },
-          props.intersectionOptions,
+        const { nextTick: defer } = props
+
+        if (defer) await flushView()
+
+        if (
+          target === ready.value &&
+          target.request === renderRequest.value &&
+          target.element === chartRef.value &&
+          !liveChart()
         )
-      } else {
-        intersectionObserverReturn?.stop()
+          initialize(target.element)
+      },
+      { flush: 'post' },
+    )
+
+    const resizeChart = throttle(() => {
+      const chart = liveChart()
+      const element = chartRef.value
+
+      if (!props.autoResize || !chart || chart.getDom() !== element) return
+
+      if (element.clientWidth && element.clientHeight) {
+        chart.resize({
+          width: element.clientWidth,
+          height: element.clientHeight,
+        })
       }
+    }, 100)
+    const resizeObserver = useResizeObserver(
+      () =>
+        renderRequest.value !== null && props.autoResize
+          ? (toValue(props.autoResizeObserverTarget) ?? chartRef.value)
+          : null,
+      resizeChart,
+    )
 
-      // 监听 options 变化
-      if (props.watchOptions) {
-        watchThrottledCallback?.()
-
-        watchThrottledCallback = watchThrottled(
-          () => props.options,
-          (ndata) => {
-            // 重新组合 options
-            const options = combineChartOptions(ndata)
-            const setOpt = Object.assign(
-              {},
-              setEchartOptions(),
-              props.setChartOptions,
-            )
-
-            // 如果 options 发生变动更新 echarts
-            echartInstanceRef.value?.setOption(options, setOpt)
-          },
-          {
-            // 深度监听 options
-            deep: props.watchDeep,
-            throttle: props.watchOptionsThrottleWait,
-          },
-        )
-      } else {
-        watchThrottledCallback?.()
-      }
-
-      // 监听 loading 变化
-      props.loading
-        ? echartInstanceRef.value?.showLoading(
-            loadingOptions(props.loadingOptions, getAppTheme.value),
-          )
-        : echartInstanceRef.value?.hideLoading()
-
-      // 贴花是否启用
-      if (props.showAria !== __catch.aria && echartInstanceRef.value) {
-        echartInstanceRef.value.setOption(combineChartOptions(props.options))
-
-        __catch.aria = props.showAria
-      }
-
-      // 当前图表容器是否处于可见状态，如果可见则渲染图表
-      if (targetIsVisible.value && !isDisposed()) {
-        mount()
-      }
+    useEventListener('resize', () => {
+      if (!resizeObserver.isSupported.value) resizeChart()
     })
+    onActivated(resizeChart)
+
+    watch(
+      [
+        () => props.watchOptions && renderRequest.value !== null,
+        () => props.watchDeep,
+        () => props.watchOptionsThrottleWait,
+      ],
+      ([enabled, deep, wait], _, onCleanup) => {
+        if (!enabled) return
+
+        const update = throttle((chart: ECharts) => {
+          if (chart === liveChart()) applyOptions(chart)
+        }, wait)
+        const stop = watch(
+          () => props.options,
+          () => {
+            const chart = liveChart()
+
+            if (chart) update(chart)
+          },
+          { deep, flush: 'post' },
+        )
+
+        onCleanup(() => {
+          stop()
+          update.cancel()
+        })
+      },
+      { immediate: true },
+    )
+    watch(
+      theme,
+      (name) => {
+        const chart = liveChart()
+
+        if (!chart) return
+
+        chart.setTheme(name)
+
+        // ECharts 6 重建选项模型时可能丢掉之后合并的 ARIA 开关。
+        const aria = chart.getOption().aria as AriaComponentOption | undefined
+
+        if (aria?.enabled !== props.showAria)
+          chart.setOption({ aria: ariaOptions.value }, { silent: true })
+
+        syncAriaLabel(chart)
+      },
+      { flush: 'post' },
+    )
+    watch(
+      [() => props.loading, loadingStyle],
+      () => {
+        const chart = liveChart()
+
+        if (chart) updateLoading(chart)
+      },
+      { flush: 'post' },
+    )
+    watch(
+      () => props.showAria,
+      () => {
+        const chart = liveChart()
+
+        if (!chart) return
+
+        chart.setOption({ aria: ariaOptions.value })
+        syncAriaLabel(chart)
+      },
+      { flush: 'post' },
+    )
+
+    const dropdownSelect = (key: string | number, option: DropdownOption) => {
+      const chart = liveChart()
+
+      if (key === DOWNLOAD_KEY && chart) {
+        const { filename, ...args } = props.downloadOptions
+        const dataUrl = chart.getDataURL(args)
+
+        if (dataUrl) {
+          const extension = dataUrl.match(/^data:image\/([a-z]+)/)?.[1] ?? 'png'
+
+          downloadBase64File(
+            dataUrl,
+            filename ?? `chart-${Date.now()}.${extension}`,
+          )
+        }
+      }
+
+      if (props.onDropdownSelect) call(props.onDropdownSelect, key, option)
+    }
 
     expose()
-
-    onBeforeMount(async () => {
-      // 注册 echarts 组件与渲染器
-      await registerChartCore()
-    })
     onMounted(() => {
-      // 初始化渲染
-      mount()
+      mounted = true
+      render()
     })
     onBeforeUnmount(() => {
-      unmount()
-      watchThrottledCallback?.()
+      mounted = false
+      dispose()
     })
 
-    return {
-      chartRef,
-      cssVarsRef,
-      rayChartWrapperRef,
-      moreDropDownOptions,
-      dropdownSelect,
-    }
+    return { chartRef, cssVars, moreOptions, moreLabel, dropdownSelect }
   },
   render() {
-    const {
-      title,
-      contentStyle,
-      preset,
-      moreDropDownOptions,
-      dropdownSelect,
-      bordered,
-      dropdownOptions,
-    } = this
+    const { title, contentStyle, preset, bordered, dropdownOptions } = this
     const { cardExtra } = this.$slots
+    const container = <div class="r-chart__container" ref="chartRef" />
 
     return preset === 'card' ? (
       <NCard
-        class="r-chart"
-        ref="rayChartWrapperRef"
-        style={[this.cssVarsRef]}
+        class="r-chart r-chart--card"
+        style={this.cssVars}
+        contentClass="r-chart__body"
         contentStyle={contentStyle}
         bordered={bordered}
-        embedded
       >
         {{
-          default: renderNode(
-            <div class="r-chart__container" ref="chartRef"></div>,
-          ),
-          header: renderNode(title, {
-            defaultElement: <div style="display: none;"></div>,
-          }),
-          'header-extra': renderNode(cardExtra, {
-            defaultElement: (
-              <RMoreDropdown
-                iconSize={18}
-                cursor="pointer"
-                options={dropdownOptions || moreDropDownOptions}
+          default: () => container,
+          header: title ? renderNode(title) : void 0,
+          'header-extra':
+            cardExtra ??
+            (() => (
+              <NDropdown
+                options={dropdownOptions ?? this.moreOptions}
                 trigger="click"
-                onSelect={dropdownSelect.bind(this)}
+                onSelect={this.dropdownSelect}
                 placement="bottom-end"
-              />
-            ),
-          }),
+              >
+                <NButton
+                  quaternary
+                  size="small"
+                  aria-label={this.moreLabel}
+                  {...{ title: this.moreLabel }}
+                >
+                  {{ icon: () => <RIcon name="action/more" size={16} /> }}
+                </NButton>
+              </NDropdown>
+            )),
         }}
       </NCard>
     ) : (
-      <div class="r-chart" style={[this.cssVarsRef]} ref="rayChartWrapperRef">
-        <div class="r-chart__container" ref="chartRef"></div>
+      <div class="r-chart" style={this.cssVars}>
+        {container}
       </div>
     )
   },

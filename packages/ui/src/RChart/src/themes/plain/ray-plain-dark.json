@@ -1,0 +1,179 @@
+{
+  "color": [
+    "#e0e0e0",
+    "#88bbc1",
+    "#baa5ca",
+    "#d2ab8d",
+    "#aaa797",
+    "#a6bb93"
+  ],
+  "darkMode": true,
+  "backgroundColor": "#202020",
+  "textStyle": {
+    "color": "rgba(255, 255, 255, 0.9)",
+    "fontFamily": "v-sans, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\""
+  },
+  "title": {
+    "textStyle": {
+      "color": "rgba(255, 255, 255, 0.9)",
+      "fontFamily": "v-sans, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\"",
+      "fontWeight": 600,
+      "fontSize": 16
+    },
+    "subtextStyle": {
+      "color": "rgba(255, 255, 255, 0.82)",
+      "fontSize": 12
+    }
+  },
+  "legend": {
+    "itemWidth": 14,
+    "itemHeight": 8,
+    "itemGap": 16,
+    "textStyle": {
+      "color": "rgba(255, 255, 255, 0.82)",
+      "fontSize": 12
+    }
+  },
+  "tooltip": {
+    "confine": true,
+    "backgroundColor": "#252525",
+    "borderColor": "rgba(255, 255, 255, 0.24)",
+    "borderRadius": 2,
+    "borderWidth": 1,
+    "padding": [
+      9,
+      12
+    ],
+    "shadowBlur": 0,
+    "shadowColor": "rgba(0, 0, 0, 0.16)",
+    "textStyle": {
+      "color": "rgba(255, 255, 255, 0.9)",
+      "fontFamily": "v-sans, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\"",
+      "fontSize": 12
+    },
+    "axisPointer": {
+      "lineStyle": {
+        "color": "rgba(255, 255, 255, 0.24)",
+        "type": "dotted"
+      },
+      "crossStyle": {
+        "color": "rgba(255, 255, 255, 0.24)",
+        "type": "dotted"
+      },
+      "label": {
+        "backgroundColor": "rgba(255, 255, 255, 0.82)",
+        "color": "#202020"
+      }
+    }
+  },
+  "categoryAxis": {
+    "axisLine": {
+      "lineStyle": {
+        "color": "rgba(255, 255, 255, 0.24)"
+      }
+    },
+    "axisTick": {
+      "show": false
+    },
+    "axisLabel": {
+      "color": "rgba(255, 255, 255, 0.82)",
+      "margin": 10,
+      "fontSize": 12
+    },
+    "splitLine": {
+      "lineStyle": {
+        "color": "rgba(255, 255, 255, 0.09)",
+        "type": "dotted"
+      }
+    }
+  },
+  "valueAxis": {
+    "axisLine": {
+      "lineStyle": {
+        "color": "rgba(255, 255, 255, 0.24)"
+      }
+    },
+    "axisTick": {
+      "show": false
+    },
+    "axisLabel": {
+      "color": "rgba(255, 255, 255, 0.82)",
+      "margin": 10,
+      "fontSize": 12
+    },
+    "splitLine": {
+      "lineStyle": {
+        "color": "rgba(255, 255, 255, 0.09)",
+        "type": "dotted"
+      }
+    }
+  },
+  "timeAxis": {
+    "axisLine": {
+      "lineStyle": {
+        "color": "rgba(255, 255, 255, 0.24)"
+      }
+    },
+    "axisTick": {
+      "show": false
+    },
+    "axisLabel": {
+      "color": "rgba(255, 255, 255, 0.82)",
+      "margin": 10,
+      "fontSize": 12
+    },
+    "splitLine": {
+      "lineStyle": {
+        "color": "rgba(255, 255, 255, 0.09)",
+        "type": "dotted"
+      }
+    }
+  },
+  "logAxis": {
+    "axisLine": {
+      "lineStyle": {
+        "color": "rgba(255, 255, 255, 0.24)"
+      }
+    },
+    "axisTick": {
+      "show": false
+    },
+    "axisLabel": {
+      "color": "rgba(255, 255, 255, 0.82)",
+      "margin": 10,
+      "fontSize": 12
+    },
+    "splitLine": {
+      "lineStyle": {
+        "color": "rgba(255, 255, 255, 0.09)",
+        "type": "dotted"
+      }
+    }
+  },
+  "line": {
+    "symbol": "diamond",
+    "symbolSize": 5,
+    "lineStyle": {
+      "width": 2
+    },
+    "areaStyle": {
+      "opacity": 0.06
+    }
+  },
+  "bar": {
+    "itemStyle": {
+      "borderRadius": 0
+    },
+    "backgroundStyle": {
+      "color": "#2b2b2b",
+      "borderRadius": 0
+    }
+  },
+  "pie": {
+    "itemStyle": {
+      "borderRadius": 0,
+      "borderWidth": 1,
+      "borderColor": "#202020"
+    }
+  }
+}

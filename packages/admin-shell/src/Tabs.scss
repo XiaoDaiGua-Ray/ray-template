@@ -7,7 +7,7 @@
 .menu-tag-space {
   box-sizing: border-box;
   width: 100%;
-  padding-inline: var(--ray-shell-tab-gutter, 18px);
+  padding-inline: min(var(--ray-shell-tab-gutter, 18px), 3vw);
 }
 
 .menu-tag__scroll {
@@ -146,11 +146,65 @@
   animation: elementRotate 0.8s linear infinite;
 }
 
-.override-button__menu-tag {
-  padding: 0 6px;
+.menu-tag__tools {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 2px;
+  margin-inline-start: 4px;
+  padding-inline-start: 6px;
+  border-inline-start: 1px solid var(--r-line);
+}
+
+.menu-tag__control {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: 28px;
+  block-size: 28px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--r-control-radius);
+  background: transparent;
+  color: var(--r-text-secondary);
+  cursor: pointer;
+
+  &:not([aria-disabled='true']):is(:hover, :focus-visible) {
+    background: var(--r-surface-hover);
+    color: var(--r-text);
+  }
+
+  &:not([aria-disabled='true']):active {
+    background: var(--r-surface-muted);
+    color: var(--r-selected-text);
+  }
+
+  &[aria-disabled='true'] {
+    color: var(--r-text-muted);
+    opacity: 0.55;
+    cursor: default;
+  }
+
+  &--scroll:not([aria-disabled='true']) {
+    border-color: var(--r-line);
+    background: var(--r-surface-muted);
+  }
+}
+
+.menu-tag__chevron--left {
+  rotate: 90deg;
+}
+
+.menu-tag__chevron--right {
+  rotate: -90deg;
 }
 
 @media (forced-colors: active) {
+  .menu-tag__control[aria-disabled='true'] {
+    color: GrayText;
+    opacity: 1;
+  }
+
   .menu-tag__item--active {
     border-color: Highlight;
   }
@@ -163,6 +217,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .menu-tag__right-setting--spinning {
+    animation: none;
+  }
+
   .menu-tag__close,
   .menu-tag__close::before {
     transition: none;

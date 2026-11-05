@@ -16,7 +16,7 @@ import type {
   RChartDownloadOptions,
   RChartPresetType,
 } from './types'
-import { loadingOptions, setEchartOptions } from './utils'
+import { setEchartOptions } from './utils'
 
 const props = {
   /**
@@ -43,7 +43,7 @@ const props = {
    * @default null
    */
   intersectionObserverTarget: {
-    type: Object as PropType<MaybeComputedElementRef<MaybeElement>>,
+    type: [Object, Function] as PropType<MaybeComputedElementRef<MaybeElement>>,
     default: null,
   },
   /**
@@ -59,9 +59,7 @@ const props = {
    */
   intersectionOptions: {
     type: Object as PropType<UseIntersectionObserverOptions>,
-    default: {
-      threshold: 0.1,
-    },
+    default: () => ({ threshold: 0.1 }),
   },
   /**
    *
@@ -191,8 +189,7 @@ const props = {
    *
    * @description
    * 是否启用 chart 无障碍模式。
-   * 该组建默认拦截 aria 配置项的 enabled 属性与 decal.show 属性。
-   * 也就意味着，你不能通过配置 options 管理该组件的无障碍模式，只能通过该配置项统一管理。
+   * 统一控制 aria.enabled 和 aria.decal.show，其余 aria 设置由 options 提供。
    *
    * @default false
    */
@@ -257,7 +254,7 @@ const props = {
    *
    * @description
    * 是否自动跟随模板主题切换。
-   * 该配置项会覆盖 theme 配置项。
+   * 显式注册的主题名不受该配置项影响；default 跟随明暗切换。
    *
    * @default true
    */
@@ -309,8 +306,8 @@ const props = {
    * @default {}
    */
   loadingOptions: {
-    type: Object as PropType<LoadingOptions>,
-    default: () => loadingOptions(),
+    type: Object as PropType<Partial<LoadingOptions>>,
+    default: () => ({}),
   },
   /**
    *
@@ -323,7 +320,7 @@ const props = {
    * @default null
    */
   autoResizeObserverTarget: {
-    type: Object as PropType<MaybeComputedElementRef<MaybeElement>>,
+    type: [Object, Function] as PropType<MaybeComputedElementRef<MaybeElement>>,
     default: null,
   },
   /**

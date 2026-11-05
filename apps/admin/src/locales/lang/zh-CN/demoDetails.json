@@ -194,6 +194,12 @@
     "submit": "提交"
   },
   "chart": {
+    "orders": "订单",
+    "visits": "访问",
+    "search": "搜索",
+    "direct": "直接访问",
+    "email": "邮件",
+    "ads": "广告",
     "sales": "每周销售趋势",
     "mount": "渲染图表",
     "dispose": "卸载图表",

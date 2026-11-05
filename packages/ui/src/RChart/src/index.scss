@@ -1,14 +1,15 @@
 .r-chart {
   width: var(--r-chart-width);
   height: var(--r-chart-height);
-  border: none;
-  outline: none;
-  box-sizing: border-box;
-  transition: width 0.35s var(--r-bezier);
+  min-width: 0;
 
-  & .r-chart__container {
+  &__body {
+    min-height: 0;
+  }
+
+  &__container {
+    contain: inline-size;
     width: 100%;
     height: 100%;
-    box-sizing: border-box;
   }
 }

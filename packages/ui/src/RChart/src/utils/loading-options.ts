@@ -1,31 +1,27 @@
-import type { LoadingOptions } from '../types'
+import { color } from 'echarts/core'
+import type { ChartThemeRawArray, LoadingOptions } from '../types'
 
-/**
- *
- * @param options 加载自定义配置项
- * @param theme 是否使用暗色主题
- *
- * @description
- * chart 加载配置项。
- *
- * @see https://echarts.apache.org/zh/api.html#echartsInstance.showLoading
- *
- * @example
- * const options = loadingOptions({ ...LoadingOptions })
- */
-export const loadingOptions = (options?: LoadingOptions, theme = false) => {
-  return Object.assign({}, options, {
-    text: 'loading',
-    color: '#c23531',
-    textColor: theme ? '#fff' : '#000',
-    maskColor: theme ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.8)',
+export const loadingOptions = (
+  theme: ChartThemeRawArray['theme'] | undefined,
+  dark: boolean,
+  text: string,
+  overrides: Partial<LoadingOptions>,
+): LoadingOptions => {
+  return {
+    text,
+    color: theme?.color?.[0] ?? (dark ? '#aabaff' : '#3b63d9'),
+    textColor: theme?.textStyle?.color ?? (dark ? '#e9eef7' : '#1d2a3e'),
+    maskColor:
+      color.modifyAlpha(theme?.backgroundColor, 0.9) ??
+      (dark ? 'rgba(23, 33, 49, 0.9)' : 'rgba(255, 255, 255, 0.9)'),
     zlevel: 0,
     fontSize: 12,
     showSpinner: true,
-    spinnerRadius: 10,
-    lineWidth: 5,
+    spinnerRadius: 9,
+    lineWidth: 2,
     fontWeight: 'normal',
     fontStyle: 'normal',
-    fontFamily: 'sans-serif',
-  })
+    fontFamily: theme?.textStyle?.fontFamily ?? 'sans-serif',
+    ...overrides,
+  }
 }

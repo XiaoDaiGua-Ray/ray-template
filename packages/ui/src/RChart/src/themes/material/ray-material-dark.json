@@ -1,0 +1,179 @@
+{
+  "color": [
+    "#d6bbff",
+    "#82d3c6",
+    "#f4add5",
+    "#a1c2ff",
+    "#f7c185",
+    "#c3ca8d"
+  ],
+  "darkMode": true,
+  "backgroundColor": "#241e2c",
+  "textStyle": {
+    "color": "#f1e7fa",
+    "fontFamily": "v-sans, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\""
+  },
+  "title": {
+    "textStyle": {
+      "color": "#f1e7fa",
+      "fontFamily": "v-sans, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\"",
+      "fontWeight": 600,
+      "fontSize": 16
+    },
+    "subtextStyle": {
+      "color": "#ded0e8",
+      "fontSize": 12
+    }
+  },
+  "legend": {
+    "itemWidth": 14,
+    "itemHeight": 8,
+    "itemGap": 16,
+    "textStyle": {
+      "color": "#ded0e8",
+      "fontSize": 12
+    }
+  },
+  "tooltip": {
+    "confine": true,
+    "backgroundColor": "#2b2433",
+    "borderColor": "#867791",
+    "borderRadius": 16,
+    "borderWidth": 1,
+    "padding": [
+      9,
+      12
+    ],
+    "shadowBlur": 14,
+    "shadowColor": "rgba(0, 0, 0, 0.16)",
+    "textStyle": {
+      "color": "#f1e7fa",
+      "fontFamily": "v-sans, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\"",
+      "fontSize": 12
+    },
+    "axisPointer": {
+      "lineStyle": {
+        "color": "#867791",
+        "type": "solid"
+      },
+      "crossStyle": {
+        "color": "#867791",
+        "type": "solid"
+      },
+      "label": {
+        "backgroundColor": "#ded0e8",
+        "color": "#241e2c"
+      }
+    }
+  },
+  "categoryAxis": {
+    "axisLine": {
+      "lineStyle": {
+        "color": "#867791"
+      }
+    },
+    "axisTick": {
+      "show": false
+    },
+    "axisLabel": {
+      "color": "#ded0e8",
+      "margin": 10,
+      "fontSize": 12
+    },
+    "splitLine": {
+      "lineStyle": {
+        "color": "#473c52",
+        "type": "solid"
+      }
+    }
+  },
+  "valueAxis": {
+    "axisLine": {
+      "lineStyle": {
+        "color": "#867791"
+      }
+    },
+    "axisTick": {
+      "show": false
+    },
+    "axisLabel": {
+      "color": "#ded0e8",
+      "margin": 10,
+      "fontSize": 12
+    },
+    "splitLine": {
+      "lineStyle": {
+        "color": "#473c52",
+        "type": "solid"
+      }
+    }
+  },
+  "timeAxis": {
+    "axisLine": {
+      "lineStyle": {
+        "color": "#867791"
+      }
+    },
+    "axisTick": {
+      "show": false
+    },
+    "axisLabel": {
+      "color": "#ded0e8",
+      "margin": 10,
+      "fontSize": 12
+    },
+    "splitLine": {
+      "lineStyle": {
+        "color": "#473c52",
+        "type": "solid"
+      }
+    }
+  },
+  "logAxis": {
+    "axisLine": {
+      "lineStyle": {
+        "color": "#867791"
+      }
+    },
+    "axisTick": {
+      "show": false
+    },
+    "axisLabel": {
+      "color": "#ded0e8",
+      "margin": 10,
+      "fontSize": 12
+    },
+    "splitLine": {
+      "lineStyle": {
+        "color": "#473c52",
+        "type": "solid"
+      }
+    }
+  },
+  "line": {
+    "symbol": "circle",
+    "symbolSize": 7,
+    "lineStyle": {
+      "width": 3
+    },
+    "areaStyle": {
+      "opacity": 0.18
+    }
+  },
+  "bar": {
+    "itemStyle": {
+      "borderRadius": 7
+    },
+    "backgroundStyle": {
+      "color": "#302838",
+      "borderRadius": 7
+    }
+  },
+  "pie": {
+    "itemStyle": {
+      "borderRadius": 7,
+      "borderWidth": 2,
+      "borderColor": "#241e2c"
+    }
+  }
+}

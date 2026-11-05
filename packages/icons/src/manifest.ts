@@ -3,6 +3,7 @@ export const iconNames = [
   'action/add',
   'action/adjustment',
   'action/close',
+  'action/close_all',
   'action/close_left',
   'action/close_other',
   'action/close_right',

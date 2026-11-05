@@ -1,0 +1,179 @@
+{
+  "color": [
+    "#16824a",
+    "#2872b4",
+    "#ab6415",
+    "#9953a6",
+    "#bd4d59",
+    "#487775"
+  ],
+  "darkMode": false,
+  "backgroundColor": "#fff",
+  "textStyle": {
+    "color": "rgb(31, 34, 37)",
+    "fontFamily": "v-sans, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\""
+  },
+  "title": {
+    "textStyle": {
+      "color": "rgb(31, 34, 37)",
+      "fontFamily": "v-sans, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\"",
+      "fontWeight": 600,
+      "fontSize": 16
+    },
+    "subtextStyle": {
+      "color": "rgb(51, 54, 57)",
+      "fontSize": 12
+    }
+  },
+  "legend": {
+    "itemWidth": 14,
+    "itemHeight": 8,
+    "itemGap": 16,
+    "textStyle": {
+      "color": "rgb(51, 54, 57)",
+      "fontSize": 12
+    }
+  },
+  "tooltip": {
+    "confine": true,
+    "backgroundColor": "#fff",
+    "borderColor": "rgb(224, 224, 230)",
+    "borderRadius": 6,
+    "borderWidth": 1,
+    "padding": [
+      9,
+      12
+    ],
+    "shadowBlur": 14,
+    "shadowColor": "rgba(0, 0, 0, 0.16)",
+    "textStyle": {
+      "color": "rgb(31, 34, 37)",
+      "fontFamily": "v-sans, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\"",
+      "fontSize": 12
+    },
+    "axisPointer": {
+      "lineStyle": {
+        "color": "rgb(224, 224, 230)",
+        "type": "solid"
+      },
+      "crossStyle": {
+        "color": "rgb(224, 224, 230)",
+        "type": "solid"
+      },
+      "label": {
+        "backgroundColor": "rgb(51, 54, 57)",
+        "color": "#fff"
+      }
+    }
+  },
+  "categoryAxis": {
+    "axisLine": {
+      "lineStyle": {
+        "color": "rgb(224, 224, 230)"
+      }
+    },
+    "axisTick": {
+      "show": false
+    },
+    "axisLabel": {
+      "color": "rgb(51, 54, 57)",
+      "margin": 10,
+      "fontSize": 12
+    },
+    "splitLine": {
+      "lineStyle": {
+        "color": "rgb(239, 239, 245)",
+        "type": "solid"
+      }
+    }
+  },
+  "valueAxis": {
+    "axisLine": {
+      "lineStyle": {
+        "color": "rgb(224, 224, 230)"
+      }
+    },
+    "axisTick": {
+      "show": false
+    },
+    "axisLabel": {
+      "color": "rgb(51, 54, 57)",
+      "margin": 10,
+      "fontSize": 12
+    },
+    "splitLine": {
+      "lineStyle": {
+        "color": "rgb(239, 239, 245)",
+        "type": "solid"
+      }
+    }
+  },
+  "timeAxis": {
+    "axisLine": {
+      "lineStyle": {
+        "color": "rgb(224, 224, 230)"
+      }
+    },
+    "axisTick": {
+      "show": false
+    },
+    "axisLabel": {
+      "color": "rgb(51, 54, 57)",
+      "margin": 10,
+      "fontSize": 12
+    },
+    "splitLine": {
+      "lineStyle": {
+        "color": "rgb(239, 239, 245)",
+        "type": "solid"
+      }
+    }
+  },
+  "logAxis": {
+    "axisLine": {
+      "lineStyle": {
+        "color": "rgb(224, 224, 230)"
+      }
+    },
+    "axisTick": {
+      "show": false
+    },
+    "axisLabel": {
+      "color": "rgb(51, 54, 57)",
+      "margin": 10,
+      "fontSize": 12
+    },
+    "splitLine": {
+      "lineStyle": {
+        "color": "rgb(239, 239, 245)",
+        "type": "solid"
+      }
+    }
+  },
+  "line": {
+    "symbol": "circle",
+    "symbolSize": 5,
+    "lineStyle": {
+      "width": 2
+    },
+    "areaStyle": {
+      "opacity": 0.1
+    }
+  },
+  "bar": {
+    "itemStyle": {
+      "borderRadius": 2
+    },
+    "backgroundStyle": {
+      "color": "rgb(250, 250, 252)",
+      "borderRadius": 2
+    }
+  },
+  "pie": {
+    "itemStyle": {
+      "borderRadius": 2,
+      "borderWidth": 2,
+      "borderColor": "#fff"
+    }
+  }
+}

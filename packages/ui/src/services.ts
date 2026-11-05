@@ -6,7 +6,7 @@ import type { InjectionKey } from 'vue'
 export interface UiServices {
   locale?: () => string
   dark?: () => boolean
-  chartTheme?: string
+  chartTheme?: string | (() => string)
   translate?: (key: string, params?: Record<string, unknown>) => string
   columnStorage?: ReturnType<typeof createStorage>
   reportError?: (message: string) => void

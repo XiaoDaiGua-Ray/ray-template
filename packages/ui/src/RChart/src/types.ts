@@ -27,8 +27,7 @@ export interface LoadingOptions {
   fontFamily: string // 字体系列
 }
 
-export type ChartTheme =
-  'macarons-dark' | 'macarons' | 'default' | string | null
+export type ChartTheme = string | null
 
 export interface RChartInst {
   /**
