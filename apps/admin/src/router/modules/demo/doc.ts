@@ -8,7 +8,7 @@ export default {
   component: routeView('demo/doc'),
   meta: {
     i18nKey: t('menu.DocLocalInside'),
-    icon: 'navigation/menu',
-    order: 5,
+    icon: 'navigation/document',
+    order: 70,
   },
 } satisfies AppRouteRecordRaw

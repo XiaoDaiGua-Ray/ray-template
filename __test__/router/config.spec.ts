@@ -43,9 +43,32 @@ describe('route configuration', () => {
     const config = exportRouteConfig(bundled)
     const restored = toRuntimeRoutes(parseRouteConfig(JSON.stringify(config)))
 
-    expect(config.routes.length).toBeGreaterThan(10)
+    expect(expandRoutes(bundled).length).toBeGreaterThan(10)
     expect(exportRouteConfig(restored)).toEqual(config)
     expect(expandRoutes(restored)).toEqual(expandRoutes(bundled))
+  })
+
+  it('preserves demo page URLs when grouping the menus', () => {
+    const routes = getStaticAppRoutes()
+    const leaves = expandRoutes(routes).map(({ path }) => path)
+
+    expect(leaves).toEqual(
+      expect.arrayContaining([
+        '/form',
+        '/svg-icons',
+        '/barcode',
+        '/template-hooks',
+        '/router-demo/router-demo-home',
+        '/multi/multi-menu-two/sub-menu/sub-menu-one',
+        '/rely-about',
+        '/tables/basic',
+        '/tables/controlled',
+        '/tables/hooks-output',
+      ]),
+    )
+    expect(
+      routes.find(({ path }) => path === '/tables')?.meta.extra?.label,
+    ).toBe('TablePro')
   })
 
   it('migrates retired icon paths in both menu and external link metadata', () => {

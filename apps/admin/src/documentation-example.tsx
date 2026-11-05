@@ -13,7 +13,9 @@ import {
   getStaticAppRoutes,
   setAppRouteModules,
 } from '@/router/app-route-modules'
+import type { AppRouteRecordRaw } from '@/router/types'
 import { expandRoutes } from '@/router/utils/expand-routes'
+import { joinRoutePath } from '@/router/utils/join-route-path'
 import { useSettingActions, useSettingGetters } from '@/store'
 import { useMemoryCache } from '@/utils/cache-backend'
 import { exampleFocusKey } from '@/views/demo/hooks/example-focus'
@@ -45,10 +47,25 @@ const examplePaths = new Set([
   '/qrcode',
 ])
 
+function selectExampleRoutes(
+  routes: AppRouteRecordRaw[],
+  parentPath = '',
+): AppRouteRecordRaw[] {
+  return routes.flatMap((route) => {
+    const path = joinRoutePath(parentPath, route.path)
+
+    if (examplePaths.has(path)) return [route]
+
+    const children = selectExampleRoutes(route.children ?? [], path)
+
+    return children.length ? [{ ...route, children }] : []
+  })
+}
+
 const params = new URLSearchParams(location.search)
 const withLayout = params.get('layout') === '1'
 const examples = [
-  ...getStaticAppRoutes().filter(({ path }) => examplePaths.has(path)),
+  ...selectExampleRoutes(getStaticAppRoutes()),
   {
     path: '/docs-core-utils',
     name: 'DocsCoreUtils',

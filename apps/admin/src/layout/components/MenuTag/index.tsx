@@ -316,12 +316,7 @@ export default defineComponent({
               onClick={() => this.scrollX('left')}
             >
               {{
-                icon: () => (
-                  <RIcon
-                    name="directional/expanded"
-                    customClassName="menu-tag__left-arrow"
-                  />
-                ),
+                icon: () => <RIcon name="directional/left_arrow" />,
               }}
             </NButton>
             <NScrollbar
@@ -369,14 +364,7 @@ export default defineComponent({
                 onClick={() => this.scrollX('right')}
               >
                 {{
-                  icon: () => (
-                    <RIcon
-                      name="directional/expanded"
-                      style={{
-                        transform: 'rotate(180deg)',
-                      }}
-                    />
-                  ),
+                  icon: () => <RIcon name="directional/right_arrow" />,
                 }}
               </NButton>
               <NButton

@@ -38,7 +38,7 @@ Ray Template 是一套**开箱即用的中后台前端模板**，适合搭建管
 
 在 `apps/admin/src/router/modules` 声明页面，模板按路由配置生成菜单和面包屑。路由 `meta` 可以配置菜单文案与图标、角色、显示条件和 `keepAlive`。从列表进入详情时，可以保留当前菜单和标签页，只在面包屑中补充详情层级。角色配置同时用于菜单过滤和直接导航时的守卫。接入业务时，由后端校验会话与接口权限。
 
-[路由与菜单约定](apps/admin/src/router/README.md) · [多级菜单与缓存示例](apps/admin/src/router/modules/demo/multi-menu.ts)
+[路由与菜单约定](apps/admin/src/router/README.md) · [多级菜单与缓存示例](apps/admin/src/router/modules/demo/navigation.ts)
 
 ### 组件、Hooks 与图标：从可运行的示例里复用
 

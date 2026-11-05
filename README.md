@@ -38,7 +38,7 @@ Page tabs keep multiple tasks open, and breadcrumbs show where you are. Find men
 
 Declare a page in `apps/admin/src/router/modules` to generate its navigation and breadcrumbs. Route metadata controls menu labels and icons, roles, visibility, and `keepAlive`. Detail pages can extend the breadcrumb while keeping the current menu and tab. Role checks cover both menu filtering and direct navigation. Connect your backend to validate sessions and authorize API requests.
 
-[Routing guide](apps/admin/src/router/README.md) · [Nested navigation and caching example](apps/admin/src/router/modules/demo/multi-menu.ts)
+[Routing guide](apps/admin/src/router/README.md) · [Nested navigation and caching example](apps/admin/src/router/modules/demo/navigation.ts)
 
 ### Reusable components, composables, and SVG icons
 

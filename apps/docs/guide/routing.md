@@ -30,7 +30,7 @@ import RouteConfigDemo from '../examples/RouteConfigDemo.vue'
 | `ignoreAutoResetScroll`    | 允许页面保留内容区滚动位置，详见滚动工具实现。                                            |
 | `extra`                    | 菜单标记的文本、图标、类型和显隐，见 [useBadge](../reference/hooks/navigation#usebadge)。 |
 
-嵌套子路由使用相对路径；如果父路由需要承载子内容，参考 [多级菜单示例](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/router/modules/demo/multi-menu.ts) 与 `@/router/constant` 中的 `LAYOUT`。
+嵌套子路由使用相对路径时会继承父路径。内置示例按用途分组，并以绝对路径保留原有页面地址。查看 [布局与路由示例](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/router/modules/demo/navigation.ts) 里的分组及多级菜单。
 
 ## 登录和角色
 
