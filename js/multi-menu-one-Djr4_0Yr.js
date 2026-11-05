@@ -1,1 +1,0 @@
-import{Cn as e,wn as t}from"./Card-B_oozRxS.js";import{t as n}from"./CacheRouteExample-THpyTDFB.js";var r=t({name:`MultiMenuOne`,render(){return e(n,{title:this.$t(`showcase.multiOneTitle`),description:this.$t(`showcase.multiOneDescription`)},null)}});export{r as default};
