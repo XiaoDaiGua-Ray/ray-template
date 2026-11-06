@@ -1,7 +1,7 @@
 {
   "name": "ray-template",
   "private": true,
-  "version": "6.0.0",
+  "version": "6.0.1",
   "type": "module",
   "engines": {
     "node": "^26.13.0",

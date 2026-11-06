@@ -1,3 +1,28 @@
+## 6.0.1
+
+### Feats
+
+- 新增用户管理、账户维度的历史记录与收藏，补齐会话、权限、HTTP 契约和 MSW 演示接口。
+- 完善朴素、Naive UI、Material、现代化四种界面风格，统一页面圆角、阴影、图标和八套 RChart 明暗主题；优化首屏与内容区加载反馈。
+- 新增欢迎工作区与 403、404、500 页面。关闭最后一个或全部业务标签后进入工作区，不再要求或自动注入 dashboard。
+- TablePro 新增默认展示的 PNG 剪贴板操作，支持 `showCopyImage`、`copyImageOptions` 和 `copyImage()`；常用操作与更多操作分组，打印改为显式开启。
+- 将应用诊断入口整理为开发期 `doctor`，补齐自定义 CSS 的语义变量、主题作用域和运行时布局约定。
+
+### Fixes
+
+- 修复权限变化后的失效标签和缓存、查询参数恢复、过期导航错误抢占新页面，以及初始化失败后无法重试的问题。
+- 修复折叠状态反向、条码配置不重绘、拖拽资源清理、Flow 只读配置覆盖、表单重复或过期提交、iframe 加载状态和 Segment 标签渲染等问题。
+- 修复嵌套列显隐和分组固定列，截图保留当前滚动视口、固定列及静态 SVG 图标，并处理权限、取消和清理。
+- 优化权限查询、随机数批量采样、Base64 编码和截图依赖加载，补齐公开方法契约注释。
+
+### Compatibility
+
+- `useAppRoot` 与 `appRootRoute` 仅保留为废弃的兼容元数据，不再控制默认落点或保护标签；无有效目标时进入 `/welcome`。
+- 分页改用 `onUpdatePage` / `onUpdatePageSize` 或对应 `onUpdate:*` 事件；旧的 `onChange`、`onPageChange`、`onPageSizeChange` 不再转发。
+- `RCollapseGrid` 的更新事件现在返回真实展开状态，接入时应移除旧的取反处理。
+- TablePro 默认隐藏打印，使用 `showPrint` 开启；PNG 复制默认开启，可用 `showCopyImage={false}` 隐藏。复制范围是当前可见表格区域，需要浏览器剪贴板能力和安全上下文。
+- v6 与 v5 仍保持版本分界，不提供 v5 的原地升级。
+
 ## 6.0.0
 
 - **破坏性版本变更**：Ray Admin、官网文档和共享包改为 Monorepo。v6 不提供 v5 的原地升级，旧版代码保留在 [legacy/v5](https://github.com/XiaoDaiGua-Ray/ray-template/tree/legacy/v5)。详见[版本分界](apps/docs/migration.md)。

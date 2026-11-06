@@ -2,7 +2,7 @@
   "name": "@ray-template/admin",
   "private": true,
   "type": "module",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "dependencies": {
     "@faker-js/faker": "10.6.0",
     "@logicflow/core": "2.2.5",
