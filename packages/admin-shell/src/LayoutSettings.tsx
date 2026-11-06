@@ -73,6 +73,7 @@ export const LayoutSettings = defineComponent({
         <NForm labelPlacement="top" showFeedback={false}>
           <NFormItem label={text('contentWidth')}>
             <NSelect
+              aria-label={text('contentWidth')}
               value={props.layout.contentWidth}
               options={['fluid', 'fixed'].map((value) => ({
                 value,
@@ -85,6 +86,7 @@ export const LayoutSettings = defineComponent({
           </NFormItem>
           <NFormItem label={text('maxWidth')}>
             <NInputNumber
+              inputProps={{ 'aria-label': text('maxWidth') }}
               value={props.layout.contentMaxWidth}
               disabled={props.layout.contentWidth !== 'fixed'}
               min={640}
@@ -98,6 +100,7 @@ export const LayoutSettings = defineComponent({
           </NFormItem>
           <NFormItem label={text('padding')}>
             <NInputNumber
+              inputProps={{ 'aria-label': text('padding') }}
               value={props.layout.contentPadding}
               min={0}
               max={48}
@@ -110,12 +113,14 @@ export const LayoutSettings = defineComponent({
           </NFormItem>
           <NFormItem label={text('fixedHeader')}>
             <NSwitch
+              aria-label={text('fixedHeader')}
               value={props.layout.fixedHeader}
               onUpdateValue={(fixedHeader) => update({ fixedHeader })}
             />
           </NFormItem>
           <NFormItem label={text('fixedFooter')}>
             <NSwitch
+              aria-label={text('fixedFooter')}
               value={props.layout.fixedFooter}
               onUpdateValue={(fixedFooter) => update({ fixedFooter })}
             />

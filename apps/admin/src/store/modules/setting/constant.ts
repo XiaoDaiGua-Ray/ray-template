@@ -28,7 +28,7 @@ const defaultSettingConfig: Readonly<Config> = {
     mode: 'side',
     contentWidth: 'fluid',
     contentMaxWidth: 1200,
-    contentPadding: 16,
+    contentPadding: 24,
     fixedHeader: true,
     fixedFooter: true,
   },

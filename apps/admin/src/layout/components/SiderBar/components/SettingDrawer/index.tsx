@@ -1,7 +1,6 @@
 import './index.scss'
 import { RIcon, useModal } from '@/components'
 import { useI18n } from '@/hooks'
-import LayoutSettings from '@/layout/components/LayoutSettings'
 import { useMenuActions, useSettingActions } from '@/store'
 import { getDefaultSettingConfig } from '@/store/modules/setting/constant'
 import { PREFERENCE_FILE_LIMIT } from '@/store/modules/setting/preference-file'
@@ -16,24 +15,23 @@ import {
   NTabPane,
   NTabs,
 } from 'naive-ui'
-import SettingsSection from './components/SettingsSection'
 import Appearance from './segment-views/Appearance'
 import Common from './segment-views/Common'
 import CustomMenu from './segment-views/CustomMenu'
+import Layout from './segment-views/Layout'
 import Watermark from './segment-views/Watermark'
-
-const categories = [
-  { key: 'layout', icon: 'navigation/layout', view: LayoutSettings },
-  { key: 'appearance', icon: 'navigation/appearance', view: Appearance },
-  { key: 'menu', icon: 'navigation/menu', view: CustomMenu },
-  { key: 'watermark', icon: 'system/watermark', view: Watermark },
-  { key: 'general', icon: 'action/setting', view: Common },
-] as const
 
 export default defineComponent({
   name: 'SettingDrawer',
   props: drawerProps,
   setup(props) {
+    const categories = [
+      { key: 'layout', icon: 'navigation/layout', view: Layout },
+      { key: 'appearance', icon: 'navigation/appearance', view: Appearance },
+      { key: 'menu', icon: 'navigation/menu', view: CustomMenu },
+      { key: 'watermark', icon: 'system/watermark', view: Watermark },
+      { key: 'general', icon: 'action/setting', view: Common },
+    ] as const
     const { t } = useI18n('preferences')
     const { create } = useModal()
     const {
@@ -146,10 +144,9 @@ export default defineComponent({
             ),
             default: () => (
               <NTabs
-                type="line"
+                type="segment"
                 defaultValue="appearance"
                 class="r-settings-tabs"
-                justifyContent="space-between"
               >
                 {categories.map(({ key, icon, view: View }) => (
                   <NTabPane
@@ -157,18 +154,19 @@ export default defineComponent({
                     name={key}
                     tab={() => (
                       <span class="r-settings-tabs__label">
-                        <RIcon name={icon} size={16} aria-hidden="true" />
-                        {t(`section.${key}`)}
+                        <RIcon
+                          class="r-settings-tabs__icon"
+                          name={icon}
+                          size={16}
+                          aria-hidden="true"
+                        />
+                        <span class="r-settings-tabs__text">
+                          {t(`section.${key}`)}
+                        </span>
                       </span>
                     )}
                   >
-                    {key === 'layout' ? (
-                      <SettingsSection title={t('section.layout')}>
-                        <LayoutSettings />
-                      </SettingsSection>
-                    ) : (
-                      <View />
-                    )}
+                    <View />
                   </NTabPane>
                 ))}
               </NTabs>

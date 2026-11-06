@@ -6,7 +6,10 @@ export default defineComponent({
 
     return () => (
       <section class="r-settings-section" aria-labelledby={id}>
-        <h3 id={id}>{props.title}</h3>
+        <div class="r-settings-section__heading">
+          <h3 id={id}>{props.title}</h3>
+          {slots.action?.()}
+        </div>
         {slots.default?.()}
       </section>
     )

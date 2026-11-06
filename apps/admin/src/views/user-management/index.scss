@@ -22,7 +22,7 @@
   }
   &__layout {
     display: grid;
-    grid-template-columns: 220px minmax(0, 1fr);
+    grid-template-columns: clamp(240px, 22%, 360px) minmax(0, 1fr);
     grid-template-rows: minmax(0, 1fr);
     block-size: 100%;
     min-block-size: 0;

@@ -1,6 +1,7 @@
 import { APP_THEME, CONTENT_TRANSITION_OPTIONS } from '@/app-config'
 import { useI18n } from '@/hooks'
 import { useSettingActions, useSettingGetters } from '@/store'
+import { getDefaultSettingConfig } from '@/store/modules/setting/constant'
 import {
   DEFAULT_THEME_STYLE,
   themeStyleOverrides,
@@ -44,6 +45,16 @@ export default defineComponent({
     const themeVars = useThemeVars()
     const styleName = useId()
     const colorOpen = ref(false)
+    const defaults = getDefaultSettingConfig()
+    const resetAppearance = () => {
+      updateSettingState('themeStyle', defaults.themeStyle)
+      updateSettingState('contentTransition', defaults.contentTransition)
+      updateSettingState('drawerPlacement', defaults.drawerPlacement)
+
+      for (const [key] of switches) updateSettingState(key, defaults[key])
+
+      changePrimaryColor()
+    }
     const previews = computed(() => {
       const mode = getAppTheme.value ? 'dark' : 'light'
       const base = mode === 'dark' ? darkTheme : lightTheme
@@ -189,6 +200,27 @@ export default defineComponent({
           </NForm>
         </SettingsSection>
         <SettingsSection title={t('appearance.display')}>
+          <p class="r-settings-hint">{t('appearance.displayHint')}</p>
+          <div class="r-settings-actions">
+            {[true, false].map((visible) => (
+              <NButton
+                key={String(visible)}
+                secondary
+                aria-pressed={
+                  getBreadcrumbSwitch.value === visible &&
+                  getMenuTagSwitch.value === visible &&
+                  getCopyrightSwitch.value === visible
+                }
+                onClick={() => {
+                  updateSettingState('breadcrumbSwitch', visible)
+                  updateSettingState('menuTagSwitch', visible)
+                  updateSettingState('copyrightSwitch', visible)
+                }}
+              >
+                {t(visible ? 'appearance.showAll' : 'appearance.minimal')}
+              </NButton>
+            ))}
+          </div>
           <div class="r-settings-switches">
             {switches.map(([key, value]) => (
               <label class="r-settings-switch" key={key}>
@@ -205,6 +237,10 @@ export default defineComponent({
               </label>
             ))}
           </div>
+        </SettingsSection>
+        <SettingsSection title={t('appearance.reset')}>
+          <p class="r-settings-hint">{t('appearance.resetHint')}</p>
+          <NButton onClick={resetAppearance}>{t('appearance.reset')}</NButton>
         </SettingsSection>
       </div>
     )

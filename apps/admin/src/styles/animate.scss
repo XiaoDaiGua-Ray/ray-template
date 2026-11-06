@@ -1,4 +1,5 @@
 .r-route-transition {
+  .opacity-transform-enter-active,
   .scale-transform-enter-active,
   .fade-scale-transform-enter-active,
   .fade-slide-transform-enter-active,
@@ -6,20 +7,20 @@
   .slide-up-transform-enter-active,
   .slide-left-transform-enter-active {
     transition:
-      opacity 180ms ease-out,
-      transform 180ms var(--r-bezier);
-  }
-
-  .opacity-transform-enter-active {
-    transition: opacity 160ms ease-out;
+      opacity 240ms cubic-bezier(0.42, 0, 0.58, 1),
+      transform 240ms cubic-bezier(0.42, 0, 0.58, 1);
   }
 
   .opacity-transform-leave-active,
   .scale-transform-leave-active,
   .fade-scale-transform-leave-active,
   .fade-slide-transform-leave-active,
-  .fade-bottom-transform-leave-active {
-    transition: opacity 70ms ease-in;
+  .fade-bottom-transform-leave-active,
+  .slide-up-transform-leave-active,
+  .slide-left-transform-leave-active {
+    transition:
+      opacity 190ms cubic-bezier(0.42, 0, 0.58, 1),
+      transform 190ms cubic-bezier(0.42, 0, 0.58, 1);
     pointer-events: none;
   }
 
@@ -34,38 +35,66 @@
   .scale-transform-leave-to,
   .fade-scale-transform-leave-to,
   .fade-slide-transform-leave-to,
-  .fade-bottom-transform-leave-to {
+  .fade-bottom-transform-leave-to,
+  .slide-up-transform-leave-to,
+  .slide-left-transform-leave-to {
     opacity: 0;
   }
 
   .scale-transform-enter-from {
-    transform: scale(0.985);
+    transform: scale(0.99);
+  }
+
+  .scale-transform-leave-to {
+    transform: scale(1.005);
   }
 
   .fade-scale-transform-enter-from {
-    transform: scale(1.015);
+    transform: scale(1.01);
+  }
+
+  .fade-scale-transform-leave-to {
+    transform: scale(0.995);
   }
 
   .fade-slide-transform-enter-from {
-    transform: translateX(-12px);
+    transform: translateX(-8px);
+  }
+
+  .fade-slide-transform-leave-to {
+    transform: translateX(4px);
   }
 
   .fade-bottom-transform-enter-from {
-    transform: translateY(-10px);
+    transform: translateY(-8px);
+  }
+
+  .fade-bottom-transform-leave-to {
+    transform: translateY(4px);
   }
 
   .slide-up-transform-enter-from {
-    transform: translateY(10px);
+    transform: translateY(8px);
+  }
+
+  .slide-up-transform-leave-to {
+    transform: translateY(-4px);
   }
 
   .slide-left-transform-enter-from {
-    transform: translateX(12px);
+    transform: translateX(8px);
+  }
+
+  .slide-left-transform-leave-to {
+    transform: translateX(-4px);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    [class*='-transform-enter-active'],
-    [class*='-transform-leave-active'] {
+    [class*='-transform-enter-'],
+    [class*='-transform-leave-'] {
       transition: none;
+      opacity: 1;
+      transform: none;
     }
   }
 }

@@ -76,6 +76,10 @@
   font-size: 13px;
 }
 
+.menu-tag__item:has(> .menu-tag__close) > .menu-tag__tab {
+  padding-inline-end: 2px;
+}
+
 .menu-tag__close {
   position: relative;
   isolation: isolate;
