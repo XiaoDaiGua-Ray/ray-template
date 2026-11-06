@@ -13,7 +13,7 @@ RUN pnpm server:build
 RUN pnpm --filter @ray-template/server deploy --legacy /server
 
 FROM workspace AS admin-build
-RUN VITE_API_MOCK=false VITE_API_BASE_URL=/api/ pnpm build
+RUN VITE_API_MOCK=false VITE_API_BASE_URL=/api/ VITE_API_AUTH_TRANSPORT=cookie pnpm build
 
 FROM node-base AS server
 WORKDIR /app

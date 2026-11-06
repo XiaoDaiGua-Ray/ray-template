@@ -1,6 +1,12 @@
 import { spawn } from 'node:child_process'
 import { randomBytes } from 'node:crypto'
-import { existsSync, readFileSync, writeFileSync } from 'node:fs'
+import {
+  appendFileSync,
+  chmodSync,
+  existsSync,
+  readFileSync,
+  writeFileSync,
+} from 'node:fs'
 import { createServer } from 'node:net'
 import { setTimeout as delay } from 'node:timers/promises'
 import { fileURLToPath } from 'node:url'
@@ -12,11 +18,11 @@ const pnpm = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm'
 const [action, ...flags] = process.argv.slice(2)
 
 if (
-  !['setup', 'dev', 'stop'].includes(action) ||
+  !['setup', 'dev', 'up', 'stop'].includes(action) ||
   (flags.length > 0 && (action !== 'setup' || flags.join(' ') !== '--external'))
 ) {
   console.error(
-    'Use pnpm fullstack:setup [--external], pnpm dev:full, or pnpm fullstack:stop.',
+    'Use pnpm fullstack:setup [--external], pnpm dev:full, pnpm fullstack:up, or pnpm fullstack:stop.',
   )
   process.exit(1)
 }
@@ -54,15 +60,22 @@ function configuration() {
   return { ...parseEnv(readFileSync(envFile, 'utf8')), ...process.env }
 }
 
-const compose = [
-  'compose',
-  '--project-name',
-  'ray-template',
-  '--env-file',
-  fileURLToPath(envFile),
-  '-f',
-  'deploy/compose.yaml',
-]
+function compose(env) {
+  const project = env.RAY_COMPOSE_PROJECT ?? 'ray-template'
+
+  if (!/^[a-z0-9][a-z0-9_-]{0,63}$/u.test(project))
+    throw new Error('RAY_COMPOSE_PROJECT must be a valid Compose project name.')
+
+  return [
+    'compose',
+    '--project-name',
+    project,
+    '--env-file',
+    fileURLToPath(envFile),
+    '-f',
+    'deploy/compose.yaml',
+  ]
+}
 
 function portFrom(env, key, fallback) {
   const port = env[key] ?? fallback
@@ -220,7 +233,9 @@ async function dev(env) {
 
     if (!ready || signal.aborted) {
       if (!signal.aborted)
-        stop('Backend readiness timed out. Check PostgreSQL and Redis.')
+        stop(
+          'Backend readiness timed out. Verify PostgreSQL, Redis and database initialization with pnpm fullstack:setup.',
+        )
 
       await backend
 
@@ -236,6 +251,7 @@ async function dev(env) {
           ...process.env,
           VITE_API_MOCK: 'false',
           VITE_API_BASE_URL: '/api/',
+          VITE_API_AUTH_TRANSPORT: 'cookie',
           RAY_API_PROXY_TARGET: target,
         },
         true,
@@ -248,7 +264,7 @@ async function dev(env) {
 }
 
 try {
-  if (action === 'setup') {
+  if (action === 'setup' || action === 'up') {
     const external = flags.includes('--external')
 
     if (!existsSync(envFile)) {
@@ -262,6 +278,8 @@ try {
       const adminPort = portFrom(process.env, 'ADMIN_DEV_PORT', '9527')
       const values = {
         NODE_ENV: 'development',
+        RAY_FULLSTACK_SERVICES: external ? 'external' : 'compose',
+        RAY_COMPOSE_PROJECT: process.env.RAY_COMPOSE_PROJECT || 'ray-template',
         HOST: '127.0.0.1',
         PORT: portFrom(process.env, 'PORT', '3000'),
         ADMIN_DEV_PORT: adminPort,
@@ -271,6 +289,8 @@ try {
         POSTGRES_PORT: postgresPort,
         REDIS_PASSWORD: redisPassword,
         REDIS_PORT: redisPort,
+        APP_PORT: portFrom(process.env, 'APP_PORT', '8080'),
+        APP_PROXY_NETWORK: process.env.APP_PROXY_NETWORK || '172.30.67',
         DATABASE_URL: external
           ? process.env.DATABASE_URL
           : `postgresql://ray:${password}@127.0.0.1:${postgresPort}/ray_template`,
@@ -284,6 +304,7 @@ try {
         CORS_ORIGINS: devOrigins(adminPort).join(','),
         TRUST_PROXY: 'false',
         DEMO_ENABLED: 'true',
+        JWT_SECRET: randomBytes(32).toString('base64url'),
       }
 
       // 配置只创建一次，避免重复初始化覆盖用户配置和已修改的凭据。
@@ -297,28 +318,79 @@ try {
       console.log(
         'Created apps/server/.env.local. Initial administrator credentials are stored there; keep this file private.',
       )
+    } else {
+      const saved = parseEnv(readFileSync(envFile, 'utf8'))
+      const additions = []
+
+      // 升级时只补缺少的字段，保留已有连接和管理员配置。
+      if (!('JWT_SECRET' in saved))
+        additions.push(`JWT_SECRET=${randomBytes(32).toString('base64url')}`)
+
+      if (external && !('RAY_FULLSTACK_SERVICES' in saved))
+        additions.push('RAY_FULLSTACK_SERVICES=external')
+
+      if (additions.length) {
+        if (process.platform !== 'win32') chmodSync(envFile, 0o600)
+
+        appendFileSync(envFile, `\n${additions.join('\n')}\n`)
+        console.log('Updated apps/server/.env.local for this version.')
+      }
     }
 
     const env = configuration()
 
-    if (!external)
-      await run(
-        'docker',
-        [...compose, 'up', '-d', '--wait', 'postgres', 'redis'],
-        env,
+    if (!external && env.RAY_FULLSTACK_SERVICES === 'external')
+      throw new Error(
+        'This workspace uses external services. Run pnpm fullstack:setup --external or configure Compose in a separate checkout.',
       )
 
-    await run(pnpm, ['server:db:migrate'], env)
-    await run(pnpm, ['server:db:seed'], env)
-    console.log(
-      'Fullstack setup complete. Run pnpm dev:full; use the administrator account from apps/server/.env.local.',
-    )
+    if (action === 'up') {
+      const port = portFrom(env, 'APP_PORT', '8080')
+
+      await run(
+        'docker',
+        [
+          ...compose(env),
+          '--profile',
+          'app',
+          'up',
+          '--build',
+          '-d',
+          '--wait',
+          '--wait-timeout',
+          '180',
+        ],
+        { ...env, APP_PORT: port },
+      )
+      console.log(
+        `Fullstack services ready at http://127.0.0.1:${port}/ray-template/.`,
+      )
+    } else {
+      if (external && (!env.DATABASE_URL || !env.REDIS_URL))
+        throw new Error('External setup requires DATABASE_URL and REDIS_URL.')
+
+      if (!external)
+        await run(
+          'docker',
+          [...compose(env), 'up', '-d', '--wait', 'postgres', 'redis'],
+          env,
+        )
+
+      await run(pnpm, ['server:db:migrate'], env)
+      await run(pnpm, ['server:db:seed'], env)
+      console.log(
+        'Fullstack setup complete. Run pnpm dev:full; use the administrator account from apps/server/.env.local.',
+      )
+    }
   } else if (action === 'stop') {
-    await run(
-      'docker',
-      [...compose, '--profile', 'app', 'stop'],
-      configuration(),
-    )
+    const env = configuration()
+
+    if (env.RAY_FULLSTACK_SERVICES === 'external')
+      throw new Error(
+        'Stop external services through their own deployment environment.',
+      )
+
+    await run('docker', [...compose(env), '--profile', 'app', 'stop'], env)
   } else {
     await dev(configuration())
   }

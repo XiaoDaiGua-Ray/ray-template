@@ -6,6 +6,8 @@ export const WELCOME_ROUTE_PATH = '/welcome'
 export const FORBIDDEN_ROUTE_PATH = '/403'
 export const NOT_FOUND_PAGE_PATH = '/404'
 export const SERVER_ERROR_ROUTE_PATH = '/500'
+export const ACCOUNT_PROFILE_PATH = '/account/profile'
+export const ACCOUNT_PROFILE_NAME = 'AccountProfile'
 export const SYSTEM_ROUTE_PATHS = [
   WELCOME_ROUTE_PATH,
   FORBIDDEN_ROUTE_PATH,

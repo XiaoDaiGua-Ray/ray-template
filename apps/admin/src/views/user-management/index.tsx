@@ -5,10 +5,12 @@ import {
   getUserOptions,
   getUsers,
   resetDemoUsers,
+  setUserCredential,
   updateUserStatus,
 } from '@/api/admin'
 import { AdminApiError, apiMockEnabled } from '@/api/admin/client'
 import type { AdminUser, UserOptions, UserStatus } from '@/api/admin/contracts'
+import AccountPasswordForm from '@/app-components/app/AccountPasswordForm'
 import AppPageHeader from '@/app-components/app/AppPageHeader'
 import { RIcon, RTablePro } from '@/components'
 import type { TableProInst } from '@/components'
@@ -73,6 +75,7 @@ export default defineComponent({
     const editorOpen = ref(false)
     const editing = shallowRef<AdminUser>()
     const details = shallowRef<AdminUser>()
+    const credentialTarget = shallowRef<AdminUser>()
     const loadingUser = ref('')
     const busy = ref(false)
     const abort = new AbortController()
@@ -124,13 +127,28 @@ export default defineComponent({
       return [{ key: '', label: t('allUsers'), children: visit(null) }]
     })
     const roleEditable = (user: AdminUser) =>
-      !options.value?.roles.find((role) => role.value === user.role)?.disabled
+      !!options.value?.roles.some(
+        (role) => role.value === user.role && !role.disabled,
+      )
     const editable = (user: AdminUser) =>
       hasPermission('users:update') && roleEditable(user)
     const removable = (user: AdminUser) =>
       hasPermission('users:delete') &&
       roleEditable(user) &&
       user.id !== getSigningCallback.value.id
+    const canSetCredential = (user: AdminUser) =>
+      hasPermission('users:credentials') &&
+      roleEditable(user) &&
+      user.id !== getSigningCallback.value.id
+    const saveCredential = async (password: string) => {
+      const target = credentialTarget.value
+
+      if (!target) return
+
+      await setUserCredential(target.id, password)
+      credentialTarget.value = void 0
+      window.$message.success(translate('account.credentialSaved'))
+    }
     const reload = async () => {
       checked.value = []
       await table.value?.reload(true)
@@ -247,7 +265,7 @@ export default defineComponent({
           title: t('actions'),
           key: 'actions',
           fixed: stacked.value ? void 0 : 'right',
-          width: 240,
+          width: hasPermission('users:credentials') ? 300 : 240,
           allowExport: false,
           render: (row) => (
             <NFlex size="small" wrap={false}>
@@ -293,6 +311,18 @@ export default defineComponent({
                     {t(row.status === 'enabled' ? 'disable' : 'enable')}
                   </NButton>
                 )}
+              {canSetCredential(row) && (
+                <NButton
+                  text
+                  size="small"
+                  aria-label={translate('account.setPasswordFor', {
+                    name: row.name,
+                  })}
+                  onClick={() => (credentialTarget.value = row)}
+                >
+                  {translate('account.setPassword')}
+                </NButton>
+              )}
               {removable(row) && (
                 <NButton
                   text
@@ -319,8 +349,12 @@ export default defineComponent({
       editing.value = void 0
     }
     const saved = async (user: AdminUser) => {
+      const created = !editing.value
+
       closeEditor()
-      window.$message.success(t('saved'))
+      window.$message.success(
+        created ? translate('account.userCreated') : t('saved'),
+      )
 
       if (user.id === getSigningCallback.value.id) await restoreSession()
 
@@ -524,6 +558,35 @@ export default defineComponent({
             onSaved={(user) => void saved(user)}
           />
         )}
+        <NModal
+          show={!!credentialTarget.value}
+          onUpdateShow={(show) => {
+            if (!show) credentialTarget.value = void 0
+          }}
+          preset="card"
+          class="user-management__modal user-management__modal--details"
+          title={translate('account.setPasswordFor', {
+            name: credentialTarget.value?.name ?? '',
+          })}
+          aria-label={translate('account.setPassword')}
+          maskClosable={false}
+        >
+          {credentialTarget.value && (
+            <NFlex vertical>
+              <p>
+                {translate(
+                  apiMockEnabled
+                    ? 'account.demoPasswordNotice'
+                    : 'account.credentialNotice',
+                )}
+              </p>
+              <AccountPasswordForm
+                username={credentialTarget.value.username}
+                save={saveCredential}
+              />
+            </NFlex>
+          )}
+        </NModal>
         <NModal
           show={!!details.value}
           onUpdateShow={(show) => {

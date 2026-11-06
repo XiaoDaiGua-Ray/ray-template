@@ -2,7 +2,7 @@ import { createUser, updateUser } from '@/api/admin'
 import { AdminApiError } from '@/api/admin/client'
 import type { AdminUser, UserInput, UserOptions } from '@/api/admin/contracts'
 import { RForm, useForm } from '@/components'
-import { useI18n } from '@/hooks'
+import { useAccess, useI18n } from '@/hooks'
 import {
   NAlert,
   NButton,
@@ -29,6 +29,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const { t } = useI18n('userManagement')
     const { t: translate } = useI18n()
+    const { hasPermission } = useAccess()
     const initial: UserInput = {
       username: props.user?.username ?? '',
       name: props.user?.name ?? '',
@@ -275,7 +276,9 @@ export default defineComponent({
                 <NRadioGroup
                   v-model:value={model.value.status}
                   aria-labelledby={`${id}-status`}
-                  disabled={self}
+                  disabled={
+                    self || (!!props.user && !hasPermission('users:status'))
+                  }
                   name={`${id}-status`}
                 >
                   <NFlex>

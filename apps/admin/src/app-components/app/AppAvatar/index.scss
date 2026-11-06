@@ -1,7 +1,33 @@
-.app-avatar {
-  cursor: var(--app-avatar-cursor);
+.r-account-avatar {
+  flex: none;
+  align-items: center;
+  justify-content: center;
 
-  & .app-avatar__name {
-    font-weight: 500;
+  &.n-avatar {
+    background-color: color-mix(
+      in srgb,
+      var(--r-surface) 90%,
+      var(--r-theme-primary-color)
+    );
+  }
+
+  &__initial {
+    display: block;
+    inline-size: calc(var(--n-merged-size, 32px) * 0.86);
+    block-size: calc(var(--n-merged-size, 32px) * 0.86);
+    color: var(--r-text);
+  }
+}
+
+.r-app-avatar__name {
+  overflow: hidden;
+  max-inline-size: 12rem;
+  color: var(--r-text);
+  line-height: 1.5;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &:not(&--measured) {
+    text-box: trim-both cap alphabetic;
   }
 }

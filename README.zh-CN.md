@@ -138,7 +138,9 @@ pnpm fullstack:setup
 pnpm dev:full
 ```
 
-`setup` 创建私有的 `apps/server/.env.local`、启动数据库与 Redis、迁移并初始化管理员。管理员密码随机生成并保存在该文件中；真实后端不接受 Mock 演示密码。重复执行保留已有配置和账号。已经有 PostgreSQL、Redis 时，可提供 `DATABASE_URL`、`REDIS_URL` 并执行 `pnpm fullstack:setup --external`。`pnpm fullstack:stop` 停止 Compose 服务并保留数据卷。
+如需直接用 Docker 构建并启动整套服务，从完整源码根目录运行 `node scripts/fullstack.mjs up`。宿主机无需先安装前端依赖，默认打开 `http://127.0.0.1:8080/ray-template/`。
+
+`setup` 创建私有的 `apps/server/.env.local`、启动数据库与 Redis、迁移并初始化管理员。管理员密码随机生成并保存在该文件中；真实后端不接受 Mock 演示密码。已有 PostgreSQL 和 Redis 时，提供 `DATABASE_URL`、`REDIS_URL` 后执行 `pnpm fullstack:setup --external`。`pnpm fullstack:stop` 停止 Compose 服务并保留数据卷。
 
 [源码发行工作流](.github/workflows/distributions.yaml) 验证两个归档后，可以生成或更新 `frontend` 分支，也可以给已有 GitHub Release 附加源码归档。需要从 `main` 手动运行并选择对应操作。容器启动见[发行版本与快速启动](apps/docs/guide/distributions.md#容器启动)。
 

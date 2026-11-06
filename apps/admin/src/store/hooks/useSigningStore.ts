@@ -18,13 +18,21 @@ export const useSigningGetters = () => {
 }
 
 export const useSigningActions = () => {
-  const { signing, logout, clearSigningCallback, restoreSession } =
-    piniaSigningStore()
+  const {
+    signing,
+    logout,
+    clearSigningCallback,
+    restoreSession,
+    endSession,
+    updateDisplayName,
+  } = piniaSigningStore()
 
   return {
     signing,
     logout,
     clearSigningCallback,
     restoreSession,
+    endSession,
+    updateDisplayName,
   }
 }

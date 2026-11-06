@@ -14,6 +14,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { after, before, test } from 'node:test'
 import {
+  accountProfileSchema,
   loginResultSchema,
   sessionSchema,
   userListSchema,
@@ -21,6 +22,7 @@ import {
   userSchema,
 } from '@ray-template/api-contracts/admin'
 import type {
+  AccountProfile,
   AdminUser,
   ApiResponse,
   LoginResult,
@@ -43,7 +45,8 @@ import { createClient } from 'redis'
 import * as v from 'valibot'
 import { createApp } from '../src/app'
 import { createDatabase } from '../src/infrastructure/database'
-import { createToken, tokenHash } from '../src/modules/auth/password'
+import { signSession } from '../src/modules/auth/jwt'
+import { tokenHash } from '../src/modules/auth/password'
 import { loadServerConfig } from '../src/platform/index'
 import { seedDatabase, setPassword } from '../src/seed'
 
@@ -67,12 +70,15 @@ const pool = new Pool({
   max: 1,
 })
 const database = createDatabase(databaseUrl.toString())
-const password = `integration-${createToken()}`
+const password = `integration-${randomBytes(24).toString('base64url')}`
+const browserOrigin = 'http://localhost:9527'
 const config = loadServerConfig({
   NODE_ENV: 'test',
   DATABASE_URL: databaseUrl.toString(),
   REDIS_URL: process.env.TEST_REDIS_URL,
   REDIS_KEY_PREFIX: `ray:test:${suffix}`,
+  CORS_ORIGINS: browserOrigin,
+  JWT_SECRET: randomBytes(32).toString('base64url'),
   PORT: '0',
   SESSION_TTL_SECONDS: '3600',
   LOGIN_RATE_LIMIT_MAX: '100',
@@ -82,6 +88,7 @@ let app: Awaited<ReturnType<typeof createApp>> | null = null
 let base = ''
 let adminToken = ''
 let adminId = ''
+let beforeSeedStatus = 0
 
 async function request<T = unknown>(
   path: string,
@@ -90,6 +97,7 @@ async function request<T = unknown>(
     body?: unknown
     token?: string
     origin?: string
+    headers?: Record<string, string>
   } = {},
 ) {
   const response = await fetch(`${options.origin ?? base}/api/${path}`, {
@@ -97,6 +105,7 @@ async function request<T = unknown>(
     headers: {
       'Content-Type': 'application/json',
       ...(options.token ? { Authorization: `Bearer ${options.token}` } : {}),
+      ...options.headers,
     },
     body: options.body === void 0 ? void 0 : JSON.stringify(options.body),
   })
@@ -165,12 +174,16 @@ before(async () => {
     )
   }
 
-  const seeded = await seedDatabase(database, { username: 'admin', password })
-
-  adminId = seeded.userId
   app = await createApp(config, { logSink: () => {} })
   await app.listen(0, '127.0.0.1')
   base = await app.getUrl()
+  beforeSeedStatus = (await request('health/ready')).status
+  const seeded = await seedDatabase(database, { username: 'admin', password })
+
+  adminId = seeded.userId
+  await database.role.create({
+    data: { value: 'no-grants', label: 'No grants' },
+  })
   adminToken = (await login('admin')).accessToken
 })
 
@@ -196,11 +209,14 @@ after(async () => {
   }
 })
 
-test('public startup routes, authentication, envelope and current permissions match shared contracts', async () => {
-  const routes = await request('admin/route-config')
+test('route bootstrap requires authentication and JWTs match the shared session contract', async () => {
+  assert.equal(beforeSeedStatus, 503)
+  assert.equal((await request('health/ready')).status, 200)
+  const routes = await request('admin/route-config', { token: adminToken })
 
   assert.equal(routes.status, 200)
   parseApplicationRoutes(JSON.stringify(routes.body.data))
+  assert.equal((await request('admin/route-config')).status, 401)
   assert.equal((await request('admin/users')).status, 401)
   assert.equal((await request('admin/route-config?view=editor')).status, 401)
   assert.equal(
@@ -222,9 +238,323 @@ test('public startup routes, authentication, envelope and current permissions ma
 
   assert.ok(stored)
   assert.notEqual(stored.tokenHash, adminToken)
+  assert.equal(adminToken.split('.').length, 3)
+  const unissued = await signSession(config.jwtSecret, adminId, 3600)
+
+  assert.equal(
+    (await request('admin/auth/session', { token: unissued.token })).status,
+    401,
+  )
   const options = await request('admin/users/options', { token: adminToken })
 
   v.parse(userOptionsSchema, options.body.data)
+})
+
+test('browser sessions hide JWTs from scripts and deny cross-origin writes', async () => {
+  const browser = { 'X-Ray-Session': 'cookie', 'Sec-Fetch-Site': 'same-origin' }
+  const options = {
+    method: 'POST',
+    body: { username: 'admin', password },
+    headers: { ...browser, Origin: browserOrigin },
+  }
+
+  assert.equal(
+    (await request('admin/auth/login', { ...options, headers: browser }))
+      .status,
+    403,
+  )
+  const secureApp = await createApp(
+    { ...config, sessionCookieSecure: true },
+    { logSink: () => {} },
+  )
+
+  try {
+    await secureApp.listen(0, '127.0.0.1')
+    const origin = await secureApp.getUrl()
+    const result = await request('admin/auth/login', { ...options, origin })
+
+    assert.equal(result.status, 200)
+    assert.equal(
+      Object.hasOwn(result.body.data as object, 'accessToken'),
+      false,
+    )
+    assert.equal(result.headers.get('cache-control'), 'no-store')
+    const cookie = result.headers.get('set-cookie')!
+
+    assert.match(cookie, /^__Host-ray-session=/u)
+
+    for (const flag of ['Path=/', 'HttpOnly', 'Secure', 'SameSite=Strict'])
+      assert.ok(cookie.split('; ').includes(flag), flag)
+
+    const headers = { ...options.headers, Cookie: cookie.split(';')[0] }
+
+    assert.equal(
+      (await request('admin/auth/session', { origin, headers })).status,
+      200,
+    )
+    assert.equal(
+      (
+        await request('admin/auth/session', {
+          origin,
+          headers: { Cookie: headers.Cookie },
+        })
+      ).status,
+      401,
+    )
+    assert.equal(
+      (
+        await request('admin/auth/logout', {
+          method: 'POST',
+          origin,
+          headers: { ...headers, 'Sec-Fetch-Site': 'same-site' },
+        })
+      ).status,
+      403,
+    )
+    assert.equal(
+      (await request('admin/auth/session', { origin, headers })).status,
+      200,
+    )
+    const logout = await request('admin/auth/logout', {
+      method: 'POST',
+      origin,
+      headers,
+    })
+
+    assert.equal(logout.status, 200)
+    assert.match(logout.headers.get('set-cookie')!, /^__Host-ray-session=;/u)
+    assert.equal(
+      (await request('admin/auth/session', { origin, headers })).status,
+      401,
+    )
+  } finally {
+    await secureApp.close()
+  }
+})
+
+test('runtime routes respect grants, parent roles, aliases and empty groups', async () => {
+  const original = (
+    await request<RouteConfig>('admin/route-config?view=editor', {
+      token: adminToken,
+    })
+  ).body.data
+
+  await database.role.create({
+    data: {
+      value: 'navigation-only',
+      label: 'Navigation only',
+      permissions: { create: { permissionCode: 'routes:read' } },
+    },
+  })
+  const limited = await create('route-limited', { role: 'navigation-only' })
+  const noGrants = await create('route-no-grants', { role: 'no-grants' })
+
+  await setPassword(database, limited.username, password)
+  await setPassword(database, noGrants.username, password)
+  const limitedToken = (await login(limited.username)).accessToken
+  const noGrantsToken = (await login(noGrants.username)).accessToken
+  const config: RouteConfig = {
+    version: 1,
+    routes: [
+      {
+        path: '/parent-admin',
+        meta: { role: ['admin'] },
+        children: [
+          {
+            path: 'page',
+            alias: '/private-alias',
+            component: 'dashboard',
+            meta: {},
+          },
+        ],
+      },
+      {
+        path: '/all-hidden',
+        meta: {},
+        children: [
+          { path: 'page', component: 'dashboard', meta: { role: ['admin'] } },
+        ],
+      },
+      {
+        path: '/only-users',
+        meta: {},
+        children: [
+          { path: 'renamed-users', component: 'system/users', meta: {} },
+        ],
+      },
+      { path: '/redirect-private', redirect: '/private-alias', meta: {} },
+      { path: '/chained', redirect: '/redirect-private', meta: {} },
+    ],
+  }
+
+  try {
+    assert.equal(
+      (
+        await request('admin/route-config', {
+          method: 'PUT',
+          token: adminToken,
+          body: config,
+        })
+      ).status,
+      200,
+    )
+    assert.deepEqual(
+      (await request('admin/route-config', { token: adminToken })).body.data,
+      config,
+    )
+    assert.deepEqual(
+      (await request('admin/route-config', { token: limitedToken })).body.data,
+      { version: 1, routes: [] },
+    )
+    assert.deepEqual(
+      (await request('admin/route-config', { token: noGrantsToken })).body.data,
+      { version: 1, routes: [] },
+    )
+    assert.equal(
+      (await request('admin/route-config?view=editor', { token: limitedToken }))
+        .status,
+      403,
+    )
+    assert.equal(
+      (await request('admin/users', { token: limitedToken })).status,
+      403,
+    )
+
+    config.routes[1].children!.push({
+      path: 'allowed',
+      component: 'dashboard',
+      meta: { role: ['navigation-only'] },
+    })
+    assert.equal(
+      (
+        await request('admin/route-config', {
+          method: 'PUT',
+          token: adminToken,
+          body: config,
+        })
+      ).status,
+      200,
+    )
+    assert.deepEqual(
+      (await request('admin/route-config', { token: limitedToken })).body.data,
+      {
+        version: 1,
+        routes: [
+          { ...config.routes[1], children: [config.routes[1].children![1]] },
+        ],
+      },
+    )
+  } finally {
+    await request('admin/route-config', {
+      method: 'PUT',
+      token: adminToken,
+      body: original,
+    })
+  }
+})
+
+test('profiles are self-scoped and credential changes revoke every prior session', async () => {
+  const user = await create('profile-user', { role: 'no-grants' })
+  const setCredential = (token: string, id: string, newPassword: string) =>
+    request(`admin/users/${id}/credential`, {
+      method: 'PUT',
+      token,
+      body: { newPassword },
+    })
+  const loginRequest = (supplied: string) =>
+    request<LoginResult>('admin/auth/login', {
+      method: 'POST',
+      body: { username: user.username, password: supplied },
+    })
+
+  assert.equal((await loginRequest(password)).status, 401)
+  assert.equal((await setCredential(adminToken, adminId, password)).status, 409)
+  assert.equal((await setCredential(adminToken, user.id, 'weak')).status, 400)
+  assert.equal((await setCredential(adminToken, user.id, password)).status, 200)
+  const first = (await login(user.username)).accessToken
+  const second = (await login(user.username)).accessToken
+  const profile = await request<AccountProfile>('admin/auth/profile', {
+    token: first,
+  })
+
+  assert.equal(profile.status, 200)
+  assert.equal(v.parse(accountProfileSchema, profile.body.data).id, user.id)
+  assert.equal(Object.hasOwn(profile.body.data, 'credential'), false)
+  assert.equal((await setCredential(first, adminId, password)).status, 403)
+
+  const patch = (body: unknown) =>
+    request<AccountProfile>('admin/auth/profile', {
+      method: 'PATCH',
+      token: first,
+      body,
+    })
+
+  assert.equal(
+    (await patch({ id: adminId, name: 'Tampered', phone: '', role: 'admin' }))
+      .status,
+    400,
+  )
+  const updated = await patch({ name: 'Profile Display', phone: '+86 1234567' })
+
+  assert.equal(updated.status, 200)
+  assert.equal(updated.body.data.name, 'Profile Display')
+  assert.equal(updated.body.data.role, 'no-grants')
+  const change = (
+    token: string,
+    currentPassword: string,
+    newPassword: string,
+  ) =>
+    request('admin/auth/password', {
+      method: 'PATCH',
+      token,
+      body: { currentPassword, newPassword },
+    })
+
+  assert.equal(
+    (await change(first, 'incorrect', password + 'a')).body.error?.key,
+    'invalidCurrentPassword',
+  )
+  assert.equal(
+    (await change(first, password, password)).body.error?.key,
+    'passwordUnchanged',
+  )
+  const next = [password + 'a', password + 'b']
+  const changes = await Promise.all([
+    change(first, password, next[0]),
+    change(second, password, next[1]),
+  ])
+
+  assert.equal(changes.filter(({ status }) => status === 200).length, 1)
+  assert.ok(changes.every(({ status }) => [200, 401, 409].includes(status)))
+
+  for (const token of [first, second])
+    assert.equal((await request('admin/auth/session', { token })).status, 401)
+
+  assert.equal((await loginRequest(password)).status, 401)
+  const renewed = await login(
+    user.username,
+    next[changes.findIndex(({ status }) => status === 200)],
+  )
+
+  assert.equal(renewed.user.name, 'Profile Display')
+  assert.equal(
+    (await setCredential(adminToken, user.id, password + 'reset')).status,
+    200,
+  )
+  assert.equal(
+    (await request('admin/auth/session', { token: renewed.accessToken }))
+      .status,
+    401,
+  )
+  const audit = await database.auditLog.findMany({
+    where: { actorId: user.id },
+  })
+
+  assert.equal(
+    audit.filter(({ action }) => action === 'auth.password.change').length,
+    1,
+  )
+  assert.equal(JSON.stringify(audit).includes(password), false)
 })
 
 test('the development launcher refuses a port already serving backend readiness', async () => {
@@ -324,6 +654,39 @@ test('read-only and manager accounts cannot bypass endpoint or role authorizatio
   v.parse(userListSchema, list.body.data)
 })
 
+test('users:update cannot disable accounts without the separate status grant', async () => {
+  await database.role.create({
+    data: {
+      value: 'user-editor',
+      label: 'Editor',
+      permissions: {
+        create: ['users:read', 'users:update', 'routes:read'].map(
+          (permissionCode) => ({ permissionCode }),
+        ),
+      },
+    },
+  })
+  const editor = await create('user-editor', { role: 'user-editor' })
+  const target = await create('user-status-target')
+
+  await setPassword(database, editor.username, password)
+  const token = (await login(editor.username)).accessToken
+  const update = (status: UserInput['status']) =>
+    request<AdminUser>(`admin/users/${target.id}`, {
+      method: 'PUT',
+      token,
+      body: input(target.username, { name: 'Edited', status }),
+    })
+
+  assert.equal((await update('disabled')).status, 403)
+  assert.equal((await update('enabled')).body.data.name, 'Edited')
+  assert.equal(
+    (await request<AdminUser>(`admin/users/${target.id}`, { token })).body.data
+      .status,
+    'enabled',
+  )
+})
+
 test('creation, case-insensitive uniqueness, filtering and serialization protect credentials', async () => {
   const user = await create('CaseAccount', { departmentId: 'platform' })
   const duplicate = await request('admin/users', {
@@ -414,7 +777,7 @@ test('batch changes are all-or-none and current account remains protected', asyn
   assert.equal(deleted.body.data.affected, 1)
 })
 
-test('logout, expiry, password reset and disabling an account revoke effective access', async () => {
+test('logout, expiry, password reset, disabling and role changes revoke effective access', async () => {
   const user = await create('sessions-user')
 
   await setPassword(database, user.username, password)
@@ -486,11 +849,35 @@ test('logout, expiry, password reset and disabling an account revoke effective a
     (await request('admin/auth/session', { token: active.accessToken })).status,
     401,
   )
+  const beforeRoleChange = await login(user.username, nextPassword)
+  const changedRole = await request<AdminUser>(`admin/users/${user.id}`, {
+    method: 'PUT',
+    token: adminToken,
+    body: input(user.username, { role: 'no-grants' }),
+  })
+
+  assert.equal(changedRole.status, 200)
+  assert.equal(
+    (
+      await request('admin/auth/session', {
+        token: beforeRoleChange.accessToken,
+      })
+    ).status,
+    401,
+  )
+  const downgraded = await login(user.username, nextPassword)
+
+  assert.deepEqual(downgraded.permissions, [])
+  assert.equal(
+    (await request('admin/users', { token: downgraded.accessToken })).status,
+    403,
+  )
 })
 
 test('route validation prevents unusable startup data and valid changes survive application restart', async () => {
   const before = await request<{ version: number; routes: unknown[] }>(
     'admin/route-config',
+    { token: adminToken },
   )
   const bad = await request('admin/route-config', {
     method: 'PUT',
@@ -503,7 +890,7 @@ test('route validation prevents unusable startup data and valid changes survive 
 
   assert.equal(bad.status, 400)
   assert.deepEqual(
-    (await request('admin/route-config')).body.data,
+    (await request('admin/route-config', { token: adminToken })).body.data,
     before.body.data,
   )
   const valid = {
@@ -532,15 +919,38 @@ test('route validation prevents unusable startup data and valid changes survive 
   app = await createApp(config, { logSink: () => {} })
   await app.listen(0, '127.0.0.1')
   base = await app.getUrl()
-  assert.deepEqual((await request('admin/route-config')).body.data, valid)
+  assert.deepEqual(
+    (await request('admin/route-config', { token: adminToken })).body.data,
+    valid,
+  )
   assert.equal(
     (await request('admin/auth/session', { token: adminToken })).status,
     200,
   )
-  const seeded = await seedDatabase(database, { username: 'admin' })
+  await database.user.update({
+    where: { id: adminId },
+    data: { username: 'renamed-admin', usernameKey: 'renamed-admin' },
+  })
 
-  assert.equal(seeded.created, false)
-  assert.deepEqual((await request('admin/route-config')).body.data, valid)
+  try {
+    const seeded = await seedDatabase(database, { username: 'admin', password })
+
+    assert.deepEqual(seeded, { created: false, userId: adminId })
+    assert.equal(
+      await database.user.count({ where: { usernameKey: 'admin' } }),
+      0,
+    )
+  } finally {
+    await database.user.update({
+      where: { id: adminId },
+      data: { username: 'admin', usernameKey: 'admin' },
+    })
+  }
+
+  assert.deepEqual(
+    (await request('admin/route-config', { token: adminToken })).body.data,
+    valid,
+  )
   await request('admin/route-config', {
     method: 'PUT',
     token: adminToken,
@@ -656,7 +1066,9 @@ test('enabled demos implement the shared API, cache fixed reads and validate inp
 })
 
 test('disabling demos hides runtime routes and endpoints without dropping editable routes', async () => {
-  const original = (await request<RouteConfig>('admin/route-config')).body.data
+  const original = (
+    await request<RouteConfig>('admin/route-config', { token: adminToken })
+  ).body.data
   const full: RouteConfig = {
     ...original,
     routes: [
@@ -690,7 +1102,10 @@ test('disabling demos hides runtime routes and endpoints without dropping editab
   try {
     await disabled.listen(0, '127.0.0.1')
     const origin = await disabled.getUrl()
-    const runtime = await request<RouteConfig>('admin/route-config', { origin })
+    const runtime = await request<RouteConfig>('admin/route-config', {
+      origin,
+      token: adminToken,
+    })
 
     assert.equal(runtime.status, 200)
     const effective = parseApplicationRoutes(JSON.stringify(runtime.body.data))

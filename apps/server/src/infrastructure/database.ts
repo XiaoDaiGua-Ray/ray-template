@@ -64,8 +64,13 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
     await this.prisma.$disconnect()
   }
 
-  async ping() {
-    await this.prisma.$queryRaw`SELECT 1`
+  async assertInitialized() {
+    const routes = await this.prisma.routeConfig.findUnique({
+      where: { id: 'admin' },
+      select: { id: true },
+    })
+
+    if (!routes) throw new Error('Database is not initialized.')
   }
 
   async write<T>(

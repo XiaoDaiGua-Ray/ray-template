@@ -202,8 +202,8 @@ export default defineComponent({
               </NButton>
             </NDropdown>
             <NDropdown
-              options={createAvatarOptions()}
-              onSelect={avatarDropdownClick.bind(this)}
+              options={createAvatarOptions(this.t)}
+              onSelect={(key) => void avatarDropdownClick(key)}
               trigger="click"
             >
               <AppAvatar

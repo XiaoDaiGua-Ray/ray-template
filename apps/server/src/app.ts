@@ -46,7 +46,7 @@ export async function createApp(
   try {
     const database = app.get(DatabaseService)
     const runtime = await PlatformRuntime.create(config, {
-      checkDatabase: () => database.ping(),
+      checkDatabase: () => database.assertInitialized(),
       logSink: options.logSink,
     })
 

@@ -1,5 +1,6 @@
 {
   "Register": "Register",
+  "PageTitle": "Sign in - Ray Admin",
   "Signing": "Sign in",
   "QRCodeSigning": "QR code",
   "NamePlaceholder": "please enter user name",
@@ -18,7 +19,10 @@
   "AccessDescription": "Explore the workspace and component demos using the demo account.",
   "AccountDescription": "Sign in with your administrator or provisioned account.",
   "UseDemo": "Continue with demo account",
-  "SignInError": "Sign-in failed. Please try again.",
+  "SignInError": "The username or password is incorrect.",
+  "SignInUnavailable": "Could not sign in. Check the connection and try again.",
+  "RateLimit": "Too many sign-in attempts. Wait before trying again.",
+  "RouteLoadError": "Could not load your workspace. Try signing in again.",
   "RegisterHint": "This registration example is ready to connect to your account service.",
   "Provider": "Sign in with {provider}",
   "ProviderHint": "The {provider} sign-in option is a demo.",

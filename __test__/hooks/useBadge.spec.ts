@@ -5,7 +5,7 @@ import type { AppMenuOption } from '../../apps/admin/src/types'
 import setupMiniApp from '../utils/setupMiniApp'
 
 describe('useBadge', async () => {
-  await setupMiniApp()
+  await setupMiniApp(true)
 
   const { show, hidden, update } = useBadge()
   const { getMenuOptions } = useMenuGetters()

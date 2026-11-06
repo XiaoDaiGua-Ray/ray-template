@@ -40,15 +40,15 @@ Mock 在应用启动前完成 Service Worker 注册。每次 API 请求前检查
 
 用户、部门、角色授权、会话、路由配置和操作审计持久化到 PostgreSQL。账号与邮箱通过规范化唯一字段避免大小写冲突；批量写入、账号保护与审计在事务内执行。初始化只补齐初始数据，重复运行保留已有配置、路由与账号。
 
-认证保持 Bearer 协议，服务端用随机令牌建立可撤销会话，只保存令牌摘要；密码使用带随机盐的 scrypt 派生。每次请求重新校验用户状态、会话有效期和权限。退出、账号停用、角色变更或显式重设凭据会影响相应会话，前端权限显示不能替代接口授权。
+配套服务用签名 JWT 标识会话，PostgreSQL 只保存令牌摘要；密码使用带随机盐的 scrypt 派生。每次请求校验 JWT 签名、有效期、数据库会话和实时权限。配套的同源 Admin 使用 HttpOnly Cookie，接口客户端仍可用 Bearer。退出撤销当前会话，停用、角色变更和改密撤销该账号的所有会话。
 
-用户资料创建接口不接收密码，新建账号需由安全环境提供 `CREDENTIAL_USERNAME`、`CREDENTIAL_PASSWORD` 后执行 `pnpm server:credential:set`，才能登录。密码长度为 12–128 字符，修改凭据同时撤销已有会话。
+用户资料创建接口不接收密码。管理员可从用户管理设置凭据，运维也可使用 `pnpm server:credential:set` 进行恢复。配套的 `dev:full` 与 Compose 已配置 `VITE_API_AUTH_TRANSPORT=cookie`；手动构建时配合 `VITE_API_BASE_URL=/api/` 使用同源代理，外部 HTTPS 部署启用 Secure Cookie。Cookie 模式请求携带 `X-Ray-Session: cookie`，写请求还必须来自允许的同源页面。
 
-Redis 为 API 和登录提供跨进程限流，并缓存可重建的演示读取结果；会话与权限不经过该缓存。请求均带 `X-Request-Id`，JSON 日志记录路由模板、状态和耗时，排除请求体、查询串、凭据和原始连接错误。就绪接口为 `/api/health/ready`，同时检查数据库与 Redis；存活接口为 `/api/health/live`。
+Redis 为 API、登录和改密提供跨进程限流，并缓存可重建的演示读取结果；会话与权限不经过该缓存。请求均带 `X-Request-Id`，JSON 日志记录路由模板、状态和耗时，排除请求体、查询串、凭据和原始连接错误。就绪接口 `/api/health/ready` 检查数据库已初始化且 Redis 可用；存活接口为 `/api/health/live`。
 
 配置要求明确的 CORS 来源和可信代理，默认不信任转发头。非法 JSON、超大请求、限流和依赖故障分别返回标准错误包络。配套后端不提供 `POST /admin/users/reset`。Redis 故障时返回 503，不切回内存认证或 Mock 数据。
 
-`DEMO_ENABLED` 在开发环境默认开启，生产环境默认关闭。开启时，`/admin/demo/*` 提供与 Mock 一致的公开演示数据；关闭时接口返回 404，公开运行配置移除演示视图及指向它们的重定向。已保存的路由保持完整，管理员可继续编辑。若显式选择本地或静态路由来源，这些浏览器草稿由使用者管理，服务端仍禁用演示接口。
+`DEMO_ENABLED` 在开发环境默认开启，生产环境默认关闭。开启时，`/admin/demo/*` 提供与 Mock 一致的公开演示数据；关闭时接口返回 404，运行路由移除演示视图及指向它们的重定向。已保存的路由保持完整，有编辑权限的用户可继续维护。
 
 <!-- fullstack:end -->
 
@@ -81,11 +81,14 @@ Redis 为 API 和登录提供跨进程限流，并缓存可重建的演示读取
 
 ## 登录、会话与权限
 
-| 方法和路径                | 输入                     | 成功的 data                                     |
-| ------------------------- | ------------------------ | ----------------------------------------------- |
-| `POST /admin/auth/login`  | `{ username, password }` | `{ accessToken, expiresAt, user, permissions }` |
-| `GET /admin/auth/session` | Bearer token             | `{ user, permissions }`                         |
-| `POST /admin/auth/logout` | Bearer token             | `null`                                          |
+| 方法和路径                   | 输入                               | 成功的 data                                                                      |
+| ---------------------------- | ---------------------------------- | -------------------------------------------------------------------------------- |
+| `POST /admin/auth/login`     | `{ username, password }`           | `{ accessToken, expiresAt, user, permissions }`，Cookie 模式不返回 `accessToken` |
+| `GET /admin/auth/session`    | 会话                               | `{ user, permissions, expiresAt? }`                                              |
+| `POST /admin/auth/logout`    | 会话                               | `null`                                                                           |
+| `GET /admin/auth/profile`    | 会话                               | 当前账号资料与部门                                                               |
+| `PATCH /admin/auth/profile`  | `{ name, phone }`                  | 更新后的当前账号资料                                                             |
+| `PATCH /admin/auth/password` | `{ currentPassword, newPassword }` | `null`，需要重新登录                                                             |
 
 ```json
 {
@@ -100,7 +103,7 @@ Redis 为 API 和登录提供跨进程限流，并缓存可重建的演示读取
 }
 ```
 
-应用使用 `Authorization: Bearer <accessToken>`。每次启动重新请求会话资料与权限，401 清除失效会话；其他启动请求失败保留错误，避免用旧权限继续工作。当前模板的路由角色契约是单个 `user.role`，路由 `meta.role` 为允许访问的角色数组。权限码独立于角色名称，可由自有服务端自由组织。
+自有后端默认用 `Authorization: Bearer <accessToken>`。每次启动重新请求会话资料与权限，401 清除失效会话；其他错误保留为失败状态。当前模板的路由角色契约是单个 `user.role`，路由 `meta.role` 为允许访问的角色数组。权限码独立于角色名称，可由自有服务端自由组织。个人资料只允许用户自行编辑姓名和电话，用户名、邮箱、角色和部门由用户管理维护。
 
 ```tsx
 import { useAccess } from '@/hooks'
@@ -116,16 +119,17 @@ hasPermission(['users:update', 'users:delete'], 'any')
 
 ## 用户管理
 
-| 方法和路径                       | 输入                                                  | 需要的权限     |
-| -------------------------------- | ----------------------------------------------------- | -------------- |
-| `GET /admin/users/options`       | 无                                                    | `users:read`   |
-| `GET /admin/users`               | 分页及 `name/username/email/departmentId/role/status` | `users:read`   |
-| `GET /admin/users/{id}`          | 路径 id                                               | `users:read`   |
-| `POST /admin/users`              | `UserInput`                                           | `users:create` |
-| `PUT /admin/users/{id}`          | 完整 `UserInput`                                      | `users:update` |
-| `POST /admin/users/batch-delete` | `{ ids: string[] }`                                   | `users:delete` |
-| `PATCH /admin/users/status`      | `{ ids: string[], status: "enabled" 或 "disabled" }`  | `users:status` |
-| `POST /admin/users/reset`        | 无，仅演示恢复入口                                    | `users:reset`  |
+| 方法和路径                         | 输入                                                  | 需要的权限          |
+| ---------------------------------- | ----------------------------------------------------- | ------------------- |
+| `GET /admin/users/options`         | 无                                                    | `users:read`        |
+| `GET /admin/users`                 | 分页及 `name/username/email/departmentId/role/status` | `users:read`        |
+| `GET /admin/users/{id}`            | 路径 id                                               | `users:read`        |
+| `POST /admin/users`                | `UserInput`                                           | `users:create`      |
+| `PUT /admin/users/{id}`            | 完整 `UserInput`                                      | `users:update`      |
+| `POST /admin/users/batch-delete`   | `{ ids: string[] }`                                   | `users:delete`      |
+| `PATCH /admin/users/status`        | `{ ids: string[], status: "enabled" 或 "disabled" }`  | `users:status`      |
+| `PUT /admin/users/{id}/credential` | `{ newPassword }`，目标不能是当前账号                 | `users:credentials` |
+| `POST /admin/users/reset`          | 无，仅演示恢复入口                                    | `users:reset`       |
 
 ```json
 {
@@ -142,13 +146,13 @@ hasPermission(['users:update', 'users:delete'], 'any')
 
 响应用户增加稳定的 `id` 与 ISO 8601 `createdAt`。账号与邮箱不区分大小写检查唯一性，更新时保留 id 与创建时间。组织选项由接口返回 `{ departments: [{ id, parentId, name, labelKey? }], roles: [{ value, label, labelKey?, disabled? }] }`，部门过滤包含子组织。`labelKey` 可选，用于演示中的中英文翻译；自有后端直接提供名称即可。
 
-批量操作在接口层整体校验后提交，避免一部分成功一部分失败；当前账号不可被删除、停用或通过编辑更换角色。Mock 数据库将用户、路由与会话持久化在当前浏览器；写入失败时保留原数据并返回错误，编辑表单可重试。用户页的恢复按钮只在 Mock 模式显示。
+批量操作在接口层整体校验后提交，避免一部分成功一部分失败；当前账号不可被删除、停用或通过编辑更换角色。通过编辑修改状态也需要 `users:status`。只有账号管理权限的用户可以维护目标账号及其凭据，管理者不能操作管理员账号。Mock 数据库将用户、路由与会话持久化在当前浏览器；用户页的恢复按钮只在 Mock 模式显示。
 
 ## 路由管理
 
-`GET /admin/route-config` 是公开的前端启动配置接口，返回 `data: { version: 1, routes: [...] }`；路由元数据不包含业务秘密。维护路由时，携带 `routes:write` 权限的会话请求 `GET /admin/route-config?view=editor` 读取完整配置，再以同一结构提交 `PUT /admin/route-config`。若自有系统需要受保护的菜单读取，可在 API 适配层把读取移到登录后，并保留登录与错误页的启动路由。
+`GET /admin/route-config` 在登录后调用，返回当前会话可用的 `data: { version: 1, routes: [...] }`。服务端同时考虑父子角色约束、视图权限和演示开关；没有可用子项的分组和无法到达授权目标的重定向都会移除。没有 `routes:read` 或没有可用页面时返回 `routes: []`，外壳和个人信息仍可用。携带 `routes:write` 的会话可用 `GET /admin/route-config?view=editor` 读取完整配置，再通过 `PUT /admin/route-config` 保存。
 
-现有菜单表已迁到 `packages/demo-data/src/routes.json`，作为 Mock 初始数据库和显式离线恢复来源。正常在线启动走 GET，路由可视化与 JSON 的接口模式保存走 PUT，成功后重新加载并从接口读回。真实后端模式下，远端读取失败会中止启动，不会自动展示内置业务菜单；用户显式选定的本地或静态来源仍可用于离线恢复。导入、导出与接口中的路由内容使用同一结构，详情见[路由契约](./routing)。
+初始菜单表位于 `packages/demo-data/src/routes.json`。标准 API 模式以服务端为准，登录时注入运行路由，保存后重新加载。读取失败不会回退为内置菜单。已被裁剪的业务地址直接访问会进入 404；固定的路由管理入口没有编辑权限时进入 403；业务 API 独立授权。导入、导出与接口使用同一结构，详情见[路由契约](./routing)。
 
 前端 `router/config/views.ts` 保留组件 ID 白名单，接口只返回 ID；后端或 AI 不需要传递组件代码。登录、404 和受保护的路由管理入口由外壳保留。原 `VITE_ROUTE_CONFIG_URL` 仍兼容旧的原始 JSON 读取接口；完整读写接入使用上面的标准 API 基址。
 

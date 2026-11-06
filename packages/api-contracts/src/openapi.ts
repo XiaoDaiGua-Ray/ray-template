@@ -1,11 +1,16 @@
 import { toJsonSchema } from '@valibot/to-json-schema'
 import * as v from 'valibot'
 import {
+  accountProfileSchema,
+  browserLoginResultSchema,
   changedSchema,
+  changePasswordSchema,
+  credentialInputSchema,
   envelopeSchema,
   idsSchema,
   loginInputSchema,
   loginResultSchema,
+  profileInputSchema,
   sessionSchema,
   statusInputSchema,
   userInputSchema,
@@ -42,7 +47,12 @@ export function getAdminOpenApi() {
       UserOptions: userOptionsSchema,
       LoginInput: loginInputSchema,
       LoginResult: loginResultSchema,
+      BrowserLoginResult: browserLoginResultSchema,
       Session: sessionSchema,
+      AccountProfile: accountProfileSchema,
+      ProfileInput: profileInputSchema,
+      ChangePassword: changePasswordSchema,
+      CredentialInput: credentialInputSchema,
       Ids: idsSchema,
       StatusInput: statusInputSchema,
       Changed: changedSchema,
@@ -84,7 +94,7 @@ export function getAdminOpenApi() {
   const json = (schema: unknown) => ({ 'application/json': { schema } })
   const operation = (
     id: string,
-    result: string | null,
+    result: string | null | string[],
     permission?: string,
     input?: string,
     publicEndpoint = false,
@@ -93,8 +103,12 @@ export function getAdminOpenApi() {
     summary: id,
     description: permission
       ? `Required permission: ${permission}.`
-      : 'Session or public bootstrap endpoint.',
-    security: publicEndpoint ? [] : [{ bearerAuth: [] }],
+      : publicEndpoint
+        ? 'Public endpoint.'
+        : 'Requires an active session.',
+    security: publicEndpoint
+      ? []
+      : [{ bearerAuth: [] }, { browserSession: [] }],
     ...(input
       ? { requestBody: { required: true, content: json(ref(input)) } }
       : {}),
@@ -107,12 +121,16 @@ export function getAdminOpenApi() {
           properties: {
             code: { const: 200 },
             msg: { type: 'string' },
-            data: result ? ref(result) : { type: 'null' },
+            data: Array.isArray(result)
+              ? { anyOf: result.map(ref) }
+              : result
+                ? ref(result)
+                : { type: 'null' },
           },
         }),
       },
       ...Object.fromEntries(
-        [400, 401, 403, 404, 409, 503].map((status) => [
+        [400, 401, 403, 404, 409, 413, 429, 503].map((status) => [
           status,
           {
             description: 'See error.key for a stable machine-readable reason.',
@@ -133,7 +151,7 @@ export function getAdminOpenApi() {
     openapi: '3.1.0',
     info: {
       title: 'Ray Admin API',
-      version: '1.0.0',
+      version: '1.1.0',
       description:
         'Mock and real backends share this contract. Route component values are identifiers from the frontend view catalog, never executable code.',
     },
@@ -146,7 +164,16 @@ export function getAdminOpenApi() {
     ],
     components: {
       schemas,
-      securitySchemes: { bearerAuth: { type: 'http', scheme: 'bearer' } },
+      securitySchemes: {
+        bearerAuth: { type: 'http', scheme: 'bearer' },
+        browserSession: {
+          type: 'apiKey',
+          in: 'cookie',
+          name: '__Host-ray-session',
+          description:
+            'Bundled server only. Send X-Ray-Session: cookie on same-origin requests. Loopback HTTP uses ray-session.',
+        },
+      },
     },
     paths: {
       '/admin/demo/people': {
@@ -223,16 +250,44 @@ export function getAdminOpenApi() {
         ),
       },
       '/admin/auth/login': {
-        post: operation('login', 'LoginResult', void 0, 'LoginInput', true),
+        post: {
+          ...operation(
+            'login',
+            ['LoginResult', 'BrowserLoginResult'],
+            void 0,
+            'LoginInput',
+            true,
+          ),
+          description:
+            'Returns a Bearer token by default. The bundled server omits it and sets an HttpOnly cookie when X-Ray-Session is cookie.',
+          parameters: [
+            {
+              name: 'X-Ray-Session',
+              in: 'header',
+              schema: { const: 'cookie' },
+            },
+          ],
+        },
       },
       '/admin/auth/session': { get: operation('getSession', 'Session') },
       '/admin/auth/logout': { post: operation('logout', null) },
+      '/admin/auth/profile': {
+        get: operation('getProfile', 'AccountProfile'),
+        patch: operation(
+          'updateProfile',
+          'AccountProfile',
+          void 0,
+          'ProfileInput',
+        ),
+      },
+      '/admin/auth/password': {
+        patch: operation('changePassword', null, void 0, 'ChangePassword'),
+      },
       '/admin/route-config': {
         get: {
-          ...operation('getRouteConfig', 'RouteConfig', void 0, void 0, true),
+          ...operation('getRouteConfig', 'RouteConfig'),
           description:
-            'Public navigation snapshot. Request view=editor with routes:write to read the complete saved configuration, including disabled demo routes.',
-          security: [{}, { bearerAuth: [] }],
+            'Authorized navigation snapshot for the current session; returns an empty routes array without routes:read. Request view=editor with routes:write to read the complete saved configuration.',
           parameters: [
             {
               name: 'view',
@@ -251,6 +306,15 @@ export function getAdminOpenApi() {
       },
       '/admin/users/options': {
         get: operation('getUserOptions', 'UserOptions', 'users:read'),
+      },
+      '/admin/users/{id}/credential': {
+        parameters: [pathId],
+        put: operation(
+          'setUserCredential',
+          null,
+          'users:credentials',
+          'CredentialInput',
+        ),
       },
       '/admin/users': {
         get: {

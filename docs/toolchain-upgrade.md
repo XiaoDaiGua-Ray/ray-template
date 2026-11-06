@@ -246,5 +246,11 @@ Added explicit browser/server/universal workspace ownership, universal route con
 
 Full Harness verification passed with Node 26.13.0 and pnpm 12.16.1: 103 frontend test files / 535 tests, 13 backend unit/platform tests with real Redis, API and workspace checks, types, lint/format, and both application builds. Six backend HTTP integration tests separately passed on temporary PostgreSQL 18.6 and Redis 8.2.11. The real external-service setup command applied Prisma migrations and initialized a private local administrator. No fixed production passwords were introduced.
 
-An exported frontend archive extracted outside the repository passed frozen dependency installation, API/package/Harness checks and production build. Frontend/fullstack archive projection and nine distribution regressions passed. Fullstack standalone install, container images, browser integration and remote workflows remain pending. Follow the [pause checkpoint](../harness/plan.md) for remaining scope and local evidence. No Git commit, push, branch publication or release was performed.
+An exported frontend archive extracted outside the repository passed frozen dependency installation, API/package/Harness checks and production build. Frontend/fullstack archive projection and nine distribution regressions passed. At this checkpoint, standalone fullstack install, container images and browser integration were still pending.
+
+## 2026-11-06: Fullstack PC acceptance and upgrade
+
+The server pins JOSE 6.2.12 for JWT signing and verification. The browser defaults to same-origin cookie transport in the fullstack launcher and Compose image. A repeatable Compose command provisions the signing key, dependencies and migrations from clean source. The rollout adds the administrator credential grant without recreating a renamed administrator.
+
+The [PC acceptance record](../harness/fullstack-acceptance.md) contains the full Harness, real PostgreSQL/Redis, clean archive, Docker Compose and desktop Chrome results. It also records the external-service upgrade and the required sign-in after replacing legacy tokens. No remote workflow or public deployment was used.
 <!-- fullstack:end -->

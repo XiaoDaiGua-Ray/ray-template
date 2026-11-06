@@ -10,6 +10,8 @@ export interface ServerConfig {
   corsOrigins: string[]
   trustProxy: false | string[]
   demoEnabled: boolean
+  jwtSecret: Uint8Array
+  sessionCookieSecure: boolean
   sessionTtlSeconds: number
   bodyLimitBytes: number
   requestTimeoutMs: number
@@ -127,6 +129,12 @@ export function loadServerConfig(
     )
   }
 
+  const secret = env.JWT_SECRET ?? ''
+  const jwtSecret = Buffer.from(secret, 'base64url')
+
+  if (jwtSecret.length !== 32 || jwtSecret.toString('base64url') !== secret)
+    throw new Error('JWT_SECRET must be 32 random bytes encoded as base64url.')
+
   return {
     nodeEnv: nodeEnv as ServerConfig['nodeEnv'],
     host: env.HOST || '127.0.0.1',
@@ -137,6 +145,11 @@ export function loadServerConfig(
     corsOrigins,
     trustProxy,
     demoEnabled: boolean('DEMO_ENABLED', nodeEnv !== 'production'),
+    jwtSecret,
+    sessionCookieSecure: boolean(
+      'SESSION_COOKIE_SECURE',
+      nodeEnv === 'production',
+    ),
     sessionTtlSeconds: integer('SESSION_TTL_SECONDS', 28800, 60, 604800),
     bodyLimitBytes: integer('BODY_LIMIT_BYTES', 262144, 1024, 1048576),
     requestTimeoutMs: integer('REQUEST_TIMEOUT_MS', 15000, 1000, 120000),

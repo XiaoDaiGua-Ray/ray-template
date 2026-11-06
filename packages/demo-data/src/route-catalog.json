@@ -162,7 +162,8 @@
     "/welcome",
     "/403",
     "/404",
-    "/500"
+    "/500",
+    "/account/profile"
   ],
   "reservedNames": [
     "RWelcome",
@@ -170,6 +171,7 @@
     "ErrorPage404",
     "ErrorPage500",
     "RNotFound",
+    "AccountProfile",
     "RLogin",
     "RLayout",
     "RNotFound",

@@ -1,144 +1,185 @@
 import { getAdminSession, loginAdmin, logoutAdmin } from '@/api/admin'
-import { AdminApiError } from '@/api/admin/client'
+import {
+  AdminApiError,
+  advanceAdminSession,
+  apiMockEnabled,
+  browserSessionEnabled,
+} from '@/api/admin/client'
+import type { SessionInfo } from '@/api/admin/contracts'
 import { APP_CATCH_KEY } from '@/app-config'
-import { useVueRouter } from '@/hooks'
-import { useMenuActions } from '@/store/hooks/useMenuStore'
-import type {
-  SigningCallback,
-  SigningForm,
-  SigningResponse,
-} from '@/store/modules/signing/types'
+import { clearAccountRoutes, router } from '@/router'
+import { isSystemRoute } from '@/router/constant'
 import { getStorage, removeStorage, setStorage } from '@/utils/cache'
+import { piniaLockScreenStore } from '../lock-screen'
+import type { SigningCallback, SigningForm } from './types'
 
-/** 登录状态仓库，使用 localStorage 持久化 signingCallback。 */
-export const piniaSigningStore = defineStore(
-  'signing',
-  () => {
-    const { router } = useVueRouter()
-    const permissions = ref<string[]>([])
-    const state = reactive({
-      /** 用户资料由会话接口刷新；role 用于现有路由和菜单守卫。 */
-      signingCallback: {} as SigningCallback,
-    })
+export const adminSessionChangeKey = 'rayAdminSessionChanged'
 
-    /**
-     *
-     * @param signingFormValue 用户登录信息
-     *
-     * @description
-     * 请求标准登录接口，保存返回的会话 token、资料与权限码。
-     * 保留组件侧 code=0 的成功约定；接口错误通过 Promise 拒绝。
-     */
-    const signing = async (
-      signingFormValue: SigningForm,
-    ): Promise<SigningResponse> => {
-      const session = await loginAdmin(
-        signingFormValue.name,
-        signingFormValue.pwd,
+export const announceAdminSessionChange = () => {
+  setStorage(adminSessionChangeKey, crypto.randomUUID(), 'localStorage')
+}
+
+export const piniaSigningStore = defineStore('signing', () => {
+  const signingCallback = ref({} as SigningCallback)
+  const permissions = ref<string[]>([])
+  let revision = 0
+  let expiryTimer: ReturnType<typeof setTimeout> | undefined
+
+  const expireSession = () => {
+    if (!signingCallback.value.id) return
+
+    const route = router.currentRoute.value
+    const redirect =
+      route.path === '/' || isSystemRoute(route) ? void 0 : route.fullPath
+
+    clearSigningCallback()
+    void router.replace({ path: '/', query: { redirect } })
+  }
+
+  const setSession = (session: SessionInfo) => {
+    signingCallback.value = session.user
+    permissions.value = session.permissions
+    clearTimeout(expiryTimer)
+
+    const expiresAt = Date.parse(session.expiresAt ?? '')
+
+    if (Number.isFinite(expiresAt))
+      expiryTimer = setTimeout(
+        expireSession,
+        Math.min(2_147_483_647, Math.max(0, expiresAt - Date.now())),
       )
+  }
 
+  const clearSigningCallback = () => {
+    revision++
+    advanceAdminSession()
+    clearTimeout(expiryTimer)
+    signingCallback.value = {} as SigningCallback
+    permissions.value = []
+    clearAccountRoutes()
+
+    for (const key of [
+      APP_CATCH_KEY.token,
+      APP_CATCH_KEY.signing,
+      APP_CATCH_KEY.appLockScreenPasswordKey,
+    ])
+      removeStorage(key, 'localStorage')
+
+    localStorage.removeItem(APP_CATCH_KEY.appPiniaSigningStore)
+
+    for (const key of [
+      APP_CATCH_KEY.appMenuTagOptions,
+      APP_CATCH_KEY.appMenuKey,
+      APP_CATCH_KEY.appPiniaKeepAliveStore,
+    ])
+      removeStorage(key, 'sessionStorage')
+
+    piniaLockScreenStore().setLocked(false)
+  }
+
+  const signing = async ({ name, pwd }: SigningForm) => {
+    const session = await loginAdmin(name, pwd)
+
+    revision++
+    advanceAdminSession()
+
+    if ('accessToken' in session)
       setStorage(APP_CATCH_KEY.token, session.accessToken, 'localStorage')
-      state.signingCallback = session.user
-      permissions.value = session.permissions
 
-      return { code: 0, message: 'OK', data: state.signingCallback }
+    setSession(session)
+  }
+
+  const restoreSession = async () => {
+    localStorage.removeItem(APP_CATCH_KEY.appPiniaSigningStore)
+    removeStorage(APP_CATCH_KEY.signing, 'localStorage')
+
+    if (browserSessionEnabled)
+      removeStorage(APP_CATCH_KEY.token, 'localStorage')
+    else if (!getStorage<string>(APP_CATCH_KEY.token, 'localStorage')) return
+
+    const current = revision
+
+    try {
+      const session = await getAdminSession()
+
+      if (revision === current) setSession(session)
+    } catch (error) {
+      if (!(error instanceof AdminApiError) || error.code !== 401) throw error
+
+      if (revision === current) clearSigningCallback()
     }
+  }
 
-    const restoreSession = async () => {
-      permissions.value = []
+  const revalidateSession = async (): Promise<
+    'active' | 'signedOut' | 'changed'
+  > => {
+    if (apiMockEnabled) return 'active'
 
-      if (!getStorage<string>(APP_CATCH_KEY.token, 'localStorage')) {
-        state.signingCallback = {} as SigningCallback
+    const current = revision
 
-        return
+    try {
+      const session = await getAdminSession()
+
+      if (revision !== current)
+        return signingCallback.value.id ? 'changed' : 'signedOut'
+
+      if (
+        session.user.id !== signingCallback.value.id ||
+        session.user.role !== signingCallback.value.role ||
+        new Set(session.permissions).size !== new Set(permissions.value).size ||
+        session.permissions.some(
+          (permission) => !permissions.value.includes(permission),
+        )
+      ) {
+        location.reload()
+
+        return 'changed'
       }
 
-      try {
-        const session = await getAdminSession()
+      setSession(session)
 
-        state.signingCallback = session.user
-        permissions.value = session.permissions
-      } catch (error) {
-        if (!(error instanceof AdminApiError) || error.code !== 401) throw error
+      return 'active'
+    } catch (error) {
+      if (!(error instanceof AdminApiError) || error.code !== 401) throw error
 
-        removeStorage(APP_CATCH_KEY.token, 'localStorage')
-        removeStorage(APP_CATCH_KEY.signing, 'localStorage')
-        state.signingCallback = {} as SigningCallback
-      }
+      if (revision === current) clearSigningCallback()
+
+      return 'signedOut'
+    }
+  }
+
+  const endSession = async (redirect?: string) => {
+    clearSigningCallback()
+    announceAdminSessionChange()
+    await router.replace({ path: '/', query: { redirect } })
+  }
+
+  const logout = async (redirect?: string) => {
+    try {
+      await logoutAdmin()
+    } catch (error) {
+      if (!(error instanceof AdminApiError) || error.code !== 401) throw error
     }
 
-    /**
-     *
-     * @param toSigning 是否需要退出登录，并且重定向至登录页
-     *
-     * @description
-     * 清除所有登录缓存信息。
-     * 如果 toSigning 传递 true 则会重定向至登录页。
-     */
-    const clearSigningCallback = (toSigning: boolean) => {
-      const { setMenuTagOptions } = useMenuActions()
-      const {
-        appPiniaMenuStore,
-        appPiniaSigningStore,
-        token,
-        signing,
-        appMenuKey,
-      } = APP_CATCH_KEY
+    await endSession(redirect)
+  }
 
-      // 提示信息
-      window.$message.info('账号退出中...')
-      state.signingCallback = {} as SigningCallback
-      permissions.value = []
-      // 移除所有 sessionStorage 缓存
-      removeStorage('__all_sessionStorage__', 'sessionStorage')
-      // 移除指定 localStorage 缓存
-      removeStorage(appPiniaSigningStore, 'localStorage')
-      removeStorage(appPiniaMenuStore, 'localStorage')
-      removeStorage(token, 'localStorage')
-      removeStorage(signing, 'localStorage')
-      removeStorage(appMenuKey, 'localStorage')
-      removeStorage(APP_CATCH_KEY.isAppLockScreen, 'localStorage')
-      // 关闭所有侧边栏标签
-      setMenuTagOptions([], false)
+  const updateDisplayName = (name: string) => {
+    signingCallback.value.name = name
+  }
 
-      if (toSigning) {
-        void router.replace('/')
+  onScopeDispose(() => clearTimeout(expiryTimer))
 
-        setTimeout(() => {
-          window.location.reload()
-        }, 0)
-      }
-    }
-
-    /**
-     *
-     * 退出登陆并且清空缓存数据
-     * 延迟 300ms 后强制刷新当前系统
-     */
-    const logout = async () => {
-      try {
-        await logoutAdmin()
-      } catch {
-        // 服务端暂时不可达时，仍允许用户完成本地退出。
-      } finally {
-        clearSigningCallback(true)
-      }
-    }
-
-    return {
-      ...toRefs(state),
-      permissions,
-      restoreSession,
-      signing,
-      logout,
-      clearSigningCallback,
-    }
-  },
-  {
-    persist: {
-      key: APP_CATCH_KEY.appPiniaSigningStore,
-      pick: ['signingCallback'],
-      storage: window.localStorage,
-    },
-  },
-)
+  return {
+    signingCallback,
+    permissions,
+    restoreSession,
+    revalidateSession,
+    signing,
+    logout,
+    clearSigningCallback,
+    endSession,
+    expireSession,
+    updateDisplayName,
+  }
+})

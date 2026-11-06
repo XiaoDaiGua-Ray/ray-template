@@ -78,6 +78,7 @@ export const profileSchema = v.object({
 export const sessionSchema = v.object({
   user: profileSchema,
   permissions: v.array(v.string()),
+  expiresAt: v.optional(v.pipe(v.string(), v.isoTimestamp())),
 })
 export type SessionInfo = v.InferOutput<typeof sessionSchema>
 export const loginInputSchema = v.object({
@@ -85,12 +86,40 @@ export const loginInputSchema = v.object({
   password: v.pipe(v.string(), v.minLength(1), v.maxLength(128)),
 })
 export type LoginInput = v.InferInput<typeof loginInputSchema>
-export const loginResultSchema = v.object({
+export const browserLoginResultSchema = v.object({
   ...sessionSchema.entries,
-  accessToken: v.pipe(v.string(), v.minLength(1)),
   expiresAt: v.pipe(v.string(), v.isoTimestamp()),
 })
+export const loginResultSchema = v.object({
+  ...browserLoginResultSchema.entries,
+  accessToken: v.pipe(v.string(), v.minLength(1)),
+})
 export type LoginResult = v.InferOutput<typeof loginResultSchema>
+
+export const profileInputSchema = v.strictObject({
+  name: userInputSchema.entries.name,
+  phone: userInputSchema.entries.phone,
+})
+export const accountProfileSchema = v.object({
+  ...profileSchema.entries,
+  ...profileInputSchema.entries,
+  email: userInputSchema.entries.email,
+  department: departmentSchema,
+})
+export type ProfileInput = v.InferInput<typeof profileInputSchema>
+export type AccountProfile = v.InferOutput<typeof accountProfileSchema>
+
+const newPasswordSchema = v.pipe(v.string(), v.minLength(12), v.maxLength(128))
+
+export const credentialInputSchema = v.strictObject({
+  newPassword: newPasswordSchema,
+})
+export const changePasswordSchema = v.strictObject({
+  currentPassword: loginInputSchema.entries.password,
+  newPassword: newPasswordSchema,
+})
+export type CredentialInput = v.InferInput<typeof credentialInputSchema>
+export type ChangePasswordInput = v.InferInput<typeof changePasswordSchema>
 
 export interface ApiResponse<T> {
   code: number
@@ -151,6 +180,7 @@ export const permissionCodes = [
   'users:update',
   'users:delete',
   'users:status',
+  'users:credentials',
   'users:reset',
   'routes:read',
   'routes:write',

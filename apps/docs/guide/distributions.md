@@ -55,7 +55,7 @@ pnpm fullstack:setup
 pnpm dev:full
 ```
 
-`setup` 首次创建 `apps/server/.env.local`，生成数据库、Redis 和管理员随机密码，启动 PostgreSQL 与 Redis，执行迁移并初始化管理员。配置文件权限按私有文件创建，不应提交、上传或放进前端变量。管理员账号与密码从该文件读取；Mock 的 `123456` 只用于前端演示。
+`setup` 首次创建 `apps/server/.env.local`，生成数据库、Redis、管理员随机密码和 JWT 签名密钥，启动 PostgreSQL 与 Redis，执行迁移并初始化管理员。配置文件按私有文件创建；请在本机读取初始用户名和密码，勿提交、上传或放进前端变量。Mock 的 `123456` 只用于前端演示。
 
 再次执行 `setup` 会复用配置、保留已有账号和数据库内容。`dev:full` 等待后端就绪后再启动前端，通过 Vite 将同源 `/api/` 请求代理给后端，并关闭 Mock。默认地址为 `http://127.0.0.1:9527/ray-template/`；可用 `ADMIN_DEV_PORT` 和 `PORT` 分别指定前端和后端端口。按 `Ctrl+C` 关闭开发进程；`pnpm fullstack:stop` 停止 Compose 服务并保留数据卷。
 
@@ -72,9 +72,9 @@ pnpm dev:full
 
 ### 创建真实登录账号
 
-用户管理页创建的是用户资料，默认没有登录凭据。通过安全环境提供 `CREDENTIAL_USERNAME` 与 `CREDENTIAL_PASSWORD`，再执行 `pnpm server:credential:set`。密码要求 12–128 个字符；该命令设置凭据并撤销该账号已有会话。避免将密码直接写入 shell 历史。
+在用户管理新增资料后，有 `users:credentials` 权限的管理员可以为该账号点击 **设置密码**。已登录用户可在头像菜单的 **个人信息** 页面修改自己的密码，需要输入当前密码。改密或重设会撤销该账号的所有会话。密码要求 12–128 个字符。
 
-重复执行 `setup` 不会重置管理员密码。需要更换密码时，同样使用显式的凭据命令。服务端存储密码派生值和会话令牌摘要，认证继续使用已有 Bearer 契约。
+无法登录时，运维可通过安全环境提供 `CREDENTIAL_USERNAME` 与 `CREDENTIAL_PASSWORD`，再执行 `pnpm server:credential:set`。该命令适用于直接访问项目数据库的运维终端。重复执行 `setup` 不会创建改名前的账号，也不会重置密码。不要把密码写进命令行、终端记录或 AI 对话。
 
 ### 服务与运行检查
 
@@ -93,16 +93,25 @@ pnpm dev:full
 
 ### 容器启动
 
-执行 `pnpm fullstack:setup` 后，可以使用 Compose 的 `app` profile 启动静态前端、NestJS 和数据服务：
+准备仓库指定的 Node.js 26.13.0，以及已启动的 Docker 和 Compose v2 插件（`docker compose version`、`docker info` 均应成功）。从解压后的全栈源码或完整仓库根目录运行：
 
 ```sh
-docker compose -p ray-template --env-file apps/server/.env.local \
-  -f deploy/compose.yaml --profile app up --build -d --wait
+node scripts/fullstack.mjs up
+# 使用 pnpm 时，也可以运行 pnpm fullstack:up
 ```
 
-默认打开 `http://127.0.0.1:8080/ray-template/`。设置 `APP_PORT` 可改变本机入口端口；代理和自定义域名场景应把实际浏览器来源填入 `APP_ORIGINS`。容器用 `APP_DEMO_ENABLED=true` 开启演示。Nginx 覆盖转发头，后端仅信任 Nginx 的固定地址，且不映射宿主机端口。代理网段冲突时，设置 `APP_PROXY_NETWORK` 为其他私有 IPv4 前三段（例如 `172.30.68`）。默认连接串适用于初始化生成的 URL 安全密码；自定义密码需要在 `APP_DATABASE_URL`、`APP_REDIS_URL` 中正确编码。
+此命令创建私有配置、构建 Admin 和 API、启动 PostgreSQL 与 Redis、执行迁移和初始化，等服务就绪后打印本机入口。宿主机无需预先安装前端依赖。默认入口为 `http://127.0.0.1:8080/ray-template/`，可通过 `APP_PORT` 改端口。使用 `node scripts/fullstack.mjs stop` 停止服务，数据卷保留。多个隔离实例要为每份配置指定不同的 `RAY_COMPOSE_PROJECT`、宿主机端口和 `APP_PROXY_NETWORK`。
 
-`node deploy/smoke.mjs` 使用临时 Compose 项目检查迁移、前端构建、登录、CORS、演示开关和代理限流，并清理测试容器与数据卷。对外部署仍需要为目标环境验证 HTTPS、实际代理链、持久化存储和备份。
+Nginx 将同源 `/api/` 转发给后端。默认只在回环地址暴露宿主机端口，生产模式关闭演示（可用 `APP_DEMO_ENABLED=true` 显式开启）。外部 HTTPS 入口设置 `APP_ORIGINS` 为实际浏览器来源、`APP_SESSION_COOKIE_SECURE=true`，保留同源的 `/ray-template/` 和 `/api/`。示例 Nginx 会覆盖转发头；如再接外层反代，应在 Nginx 的 real IP 设置中只信任实际上一跳，并验证转发头无法伪造限流地址。代理网段冲突时，修改 `APP_PROXY_NETWORK`（例如 `172.30.68`）。容器连接外部数据库或 Redis 时，用正确编码的 `APP_DATABASE_URL`、`APP_REDIS_URL` 指定目标；已有服务的本机开发走 `setup --external`。
+
+### 给部署者和 AI 的验收清单
+
+1. 先确认发行物含 `apps/server`、`deploy/compose.yaml` 和 `scripts/fullstack.mjs`。默认选容器方式；需要热更新时走本地开发；已有 PostgreSQL、Redis 时用专用数据库和 Redis 前缀。端口占用就换 `APP_PORT`（容器）或 `PORT`、`ADMIN_DEV_PORT`（本机开发）；数据库和 Redis 映射分别用 `POSTGRES_PORT`、`REDIS_PORT`。
+2. 准备 PostgreSQL 迁移权限、Redis 连接以及服务端私有配置。部署副本共享同一个 `JWT_SECRET`（32 个随机字节的 base64url 编码），不同环境使用不同密钥。升级旧工作区可重跑 `setup` 或 `up` 补齐缺少的密钥；先备份 PostgreSQL，再应用迁移，旧令牌需重新登录。初始化配置中的密码只用于第一次建号。
+3. 验证 `GET /api/health/live`、`GET /api/health/ready` 均返回 200，匿名 `GET /api/admin/route-config` 返回 401。登录后检查用户管理、个人信息和路由管理；为测试账号设置密码，并确认只读账号不能调用写接口。空菜单账号仍应能打开个人信息。
+4. 如只有存活检查通过，用 Compose 的 `ps -a`、`logs initialize server` 检查迁移、初始化与连接。命令需使用 `--env-file apps/server/.env.local -f deploy/compose.yaml --profile app -p <项目名>`。只看脱敏日志，不回显环境文件。若浏览器登录后仍返回 401，检查实际访问源、同源代理和 Cookie 的 Secure 设置。对外部署还要验证目标环境的 HTTPS、备份恢复与代理限流。
+
+`node deploy/smoke.mjs` 使用独立的临时 Compose 项目检查迁移、构建、登录、路由、CORS、演示开关和代理限流，并只清理它创建的测试资源。
 
 ### 生成分支与 Release 资产
 

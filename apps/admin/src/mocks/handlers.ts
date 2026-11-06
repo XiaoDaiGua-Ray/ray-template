@@ -131,18 +131,27 @@ export function createAdminHandlers(database: AdminDatabase, apiBase: string) {
     http.post(url('admin/auth/logout'), ({ request }) =>
       respond(() => database.logout(token(request))),
     ),
+    http.get(url('admin/auth/profile'), ({ request }) =>
+      respond(() => database.getProfile(token(request))),
+    ),
+    http.patch(url('admin/auth/profile'), ({ request }) =>
+      respond(async () =>
+        database.updateProfile(await request.json(), token(request)),
+      ),
+    ),
+    http.patch(url('admin/auth/password'), ({ request }) =>
+      respond(async () =>
+        database.changePassword(await request.json(), token(request)),
+      ),
+    ),
     http.get(url('admin/route-config'), ({ request }) =>
       respond(() => {
         const view = new URL(request.url).searchParams.getAll('view')
 
-        if (view.length) {
-          if (view.length !== 1 || view[0] !== 'editor')
-            throw new MockApiError(400, 'invalid')
+        if (view.length && (view.length !== 1 || view[0] !== 'editor'))
+          throw new MockApiError(400, 'invalid')
 
-          database.authorize(token(request), 'routes:write')
-        }
-
-        return database.getRoutes()
+        return database.getRoutes(token(request), view[0] === 'editor')
       }),
     ),
     http.put(url('admin/route-config'), ({ request }) =>
@@ -188,6 +197,15 @@ export function createAdminHandlers(database: AdminDatabase, apiBase: string) {
           await request.json(),
           token(request),
           String(params.id),
+        ),
+      ),
+    ),
+    http.put(url('admin/users/:id/credential'), ({ request, params }) =>
+      respond(async () =>
+        database.setCredential(
+          String(params.id),
+          await request.json(),
+          token(request),
         ),
       ),
     ),

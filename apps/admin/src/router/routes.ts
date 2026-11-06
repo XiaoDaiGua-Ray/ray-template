@@ -2,6 +2,8 @@ import Layout from '@/layout'
 import type { RouteRecordRaw } from 'vue-router'
 import { appExpandRoutes } from './app-route-modules'
 import {
+  ACCOUNT_PROFILE_NAME,
+  ACCOUNT_PROFILE_PATH,
   FORBIDDEN_ROUTE_PATH,
   NOT_FOUND_PAGE_PATH,
   NOT_FOUND_ROUTE_PATH,
@@ -39,9 +41,21 @@ export function getLayoutRoutes(): RouteRecordRaw[] {
       ({ path, redirect }) =>
         !occupiedPaths.has(path) && occupiedPaths.has(redirect),
     ),
-    { path: ROUTE_MANAGEMENT_PATH, redirect: ROUTE_MANAGEMENT_JSON_PATH },
-    ...getSystemRoutes(),
+    {
+      path: ROUTE_MANAGEMENT_PATH,
+      redirect: ROUTE_MANAGEMENT_JSON_PATH,
+      meta: { requiredPermission: 'routes:write' },
+    },
   ]
+}
+
+export function getAccountProfileRoute(): RouteRecordRaw {
+  return {
+    path: ACCOUNT_PROFILE_PATH,
+    name: ACCOUNT_PROFILE_NAME,
+    component: () => import('@/views/account-profile'),
+    meta: { i18nKey: 'account.profile', hidden: true },
+  }
 }
 
 /**

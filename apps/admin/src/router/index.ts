@@ -1,8 +1,13 @@
 import type { App } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
-import { setAppRouteModules } from './app-route-modules'
-import { loadRouteConfig } from './config/source'
-import { constantRoutes, getLayoutRoutes } from './routes'
+import { getStaticAppRoutes, setAppRouteModules } from './app-route-modules'
+import { loadRouteConfig, resetRouteSource } from './config/source'
+import {
+  constantRoutes,
+  getAccountProfileRoute,
+  getLayoutRoutes,
+  getSystemRoutes,
+} from './routes'
 import { scrollViewToTop, vueRouterRegister } from './utils'
 
 export const router = createRouter({
@@ -13,26 +18,62 @@ export const router = createRouter({
   },
 })
 
-let initialize: Promise<void> | undefined
+let pending: Promise<void> | undefined
+let controller: AbortController | undefined
+let removeRoutes: (() => void)[] = []
 
-export async function setupRouter(app: App<Element>) {
-  initialize ??= (async () => {
-    const config = await loadRouteConfig()
+export function clearAccountRoutes() {
+  controller?.abort()
+  pending = void 0
 
-    if (config) {
-      const { toRuntimeRoutes } = await import('./config/contract')
+  for (const remove of removeRoutes.splice(0)) remove()
 
-      setAppRouteModules(toRuntimeRoutes(config))
-    }
+  setAppRouteModules([])
+  resetRouteSource()
+}
 
-    for (const route of getLayoutRoutes()) router.addRoute('RLayout', route)
+export function loadAccountRoutes() {
+  if (pending) return pending
+
+  const current = new AbortController()
+
+  controller = current
+  const load = (async () => {
+    const config = await loadRouteConfig(current.signal)
+    const routes = config
+      ? (await import('./config/contract')).toRuntimeRoutes(config)
+      : getStaticAppRoutes()
+
+    current.signal.throwIfAborted()
+
+    for (const remove of removeRoutes.splice(0)) remove()
+
+    setAppRouteModules(routes)
+    removeRoutes = getLayoutRoutes().map((route) =>
+      router.addRoute('RLayout', route),
+    )
+  })().finally(() => {
+    if (pending === load) pending = void 0
+  })
+
+  pending = load
+
+  return load
+}
+
+let registered = false
+
+export async function setupRouter(app: App<Element>, authenticated: boolean) {
+  if (authenticated) await loadAccountRoutes()
+  else clearAccountRoutes()
+
+  if (!registered) {
+    for (const route of [...getSystemRoutes(), getAccountProfileRoute()])
+      router.addRoute('RLayout', route)
 
     vueRouterRegister(router)
-  })().catch((error: unknown) => {
-    // 同页重挂载可以重试暂时失败的配置加载；成功初始化仍只注册一次守卫。
-    initialize = void 0
-    throw error
-  })
-  await initialize
+    registered = true
+  }
+
   app.use(router)
 }

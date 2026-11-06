@@ -1,5 +1,6 @@
 {
   "Register": "注册",
+  "PageTitle": "登录 - Ray Admin",
   "Signing": "登录",
   "QRCodeSigning": "二维码",
   "NamePlaceholder": "请输入用户名",
@@ -18,7 +19,10 @@
   "AccessDescription": "使用演示账号探索工作台与组件示例。",
   "AccountDescription": "使用管理员或已开通的账号登录工作台。",
   "UseDemo": "使用演示账号进入",
-  "SignInError": "登录失败，请重试。",
+  "SignInError": "用户名或密码不正确。",
+  "SignInUnavailable": "暂时无法登录，请检查连接后重试。",
+  "RateLimit": "登录尝试次数过多，请稍后再试。",
+  "RouteLoadError": "无法加载你的工作区，请重试登录。",
   "RegisterHint": "此页面是注册流程的接入示例，可连接项目的账号服务。",
   "Provider": "通过 {provider} 登录",
   "ProviderHint": "{provider} 登录是演示入口。",

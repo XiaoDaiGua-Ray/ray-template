@@ -4,6 +4,12 @@ import { appendRequestHeaders } from '@/axios/utils/append-request-headers'
 import { getStorage } from '@/utils/cache'
 
 const injectRequestHeaders: AxiosRequestInterceptor = (config) => {
+  if (
+    import.meta.env.VITE_API_MOCK !== 'true' &&
+    import.meta.env.VITE_API_AUTH_TRANSPORT === 'cookie'
+  )
+    return
+
   const token = getStorage<string>(APP_CATCH_KEY.token, 'localStorage')
 
   if (

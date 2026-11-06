@@ -138,7 +138,9 @@ pnpm fullstack:setup
 pnpm dev:full
 ```
 
-`setup` creates the private `apps/server/.env.local`, starts PostgreSQL and Redis, applies migrations, and initializes the administrator. The generated administrator password is stored in that file; Mock passwords do not authenticate against the server. Repeating setup preserves existing configuration and accounts. For existing PostgreSQL and Redis services, provide `DATABASE_URL` and `REDIS_URL` and run `pnpm fullstack:setup --external`. `pnpm fullstack:stop` stops Compose services while retaining their data volumes.
+To build and start the entire stack in Docker without installing host dependencies, run `node scripts/fullstack.mjs up` from the complete source. Open `http://127.0.0.1:8080/ray-template/`.
+
+`setup` creates the private `apps/server/.env.local`, starts PostgreSQL and Redis, applies migrations, and initializes the administrator. The generated administrator password is stored in that file; Mock passwords do not authenticate against the server. For existing PostgreSQL and Redis services, provide `DATABASE_URL` and `REDIS_URL` and run `pnpm fullstack:setup --external`. `pnpm fullstack:stop` retains data volumes.
 
 The [Source distributions workflow](.github/workflows/distributions.yaml) verifies both archives before it can update the generated `frontend` branch or attach assets to an existing GitHub Release. Those actions are explicitly selected when running the workflow from `main`. See the [Compose and release instructions](apps/docs/guide/distributions.md#容器启动).
 

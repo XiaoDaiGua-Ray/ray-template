@@ -1,6 +1,7 @@
 import { setupI18n } from '../../apps/admin/src/locales'
 import { setupRouter } from '../../apps/admin/src/router'
 import { setupStore } from '../../apps/admin/src/store'
+import { piniaSigningStore } from '../../apps/admin/src/store/modules/signing'
 import renderHook from '../utils/renderHook'
 
 /**
@@ -12,12 +13,18 @@ import renderHook from '../utils/renderHook'
  * @example
  * const { app } = await setupMiniApp()
  */
-const setupMiniApp = async () => {
+const setupMiniApp = async (authenticated = false) => {
   const [_, app] = renderHook(() => {})
 
   setupStore(app)
   await setupI18n(app)
-  await setupRouter(app)
+
+  if (authenticated)
+    await app.runWithContext(() =>
+      piniaSigningStore().signing({ name: 'admin', pwd: '123456' }),
+    )
+
+  await setupRouter(app, authenticated)
 
   return {
     app,

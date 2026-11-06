@@ -177,3 +177,73 @@ export const routeConfigSchema = v.pipe(
 )
 
 export type RouteConfig = v.InferOutput<typeof routeConfigSchema>
+
+export const routeViewPermission = (view?: string) =>
+  view === 'system/users' ? 'users:read' : void 0
+
+export function filterRuntimeRoutes(
+  config: RouteConfig,
+  options: {
+    role: string | number
+    permissions: readonly string[]
+    demoEnabled: boolean
+  },
+): RouteConfig {
+  const { role, permissions, demoEnabled } = options
+
+  if (!permissions.includes('routes:read')) return { ...config, routes: [] }
+
+  const accessible = new Map<string, RouteConfigRecord>()
+  const collect = (
+    routes: RouteConfigRecord[],
+    parent = '',
+  ): RouteConfigRecord[] =>
+    routes.flatMap((route) => {
+      const permission = routeViewPermission(route.component)
+
+      if (
+        (route.meta.role?.length && !route.meta.role.includes(role)) ||
+        (permission && !permissions.includes(permission)) ||
+        (!demoEnabled && route.component?.startsWith('demo/'))
+      )
+        return []
+
+      const path = route.path.startsWith('/')
+        ? route.path
+        : `${parent}/${route.path}`
+
+      if (route.children)
+        return [{ ...route, children: collect(route.children, path) }]
+
+      for (const address of [path, ...[route.alias ?? []].flat()])
+        accessible.set(address.toLowerCase(), route)
+
+      return [route]
+    })
+
+  // 重定向在角色、视图权限与演示开关裁剪之后再解析，避免保留空壳入口。
+  const canResolve = (route: RouteConfigRecord) => {
+    const visited = new Set<RouteConfigRecord>()
+    let current: RouteConfigRecord | undefined = route
+
+    while (current?.redirect) {
+      if (visited.has(current)) return false
+
+      visited.add(current)
+      current = accessible.get(current.redirect.toLowerCase())
+    }
+
+    return !!current && !current.meta.windowOpen
+  }
+  const prune = (routes: RouteConfigRecord[]): RouteConfigRecord[] =>
+    routes.flatMap((route) => {
+      if (!route.children)
+        return !route.redirect || canResolve(route) ? [route] : []
+
+      const children = prune(route.children)
+
+      return children.length ? [{ ...route, children }] : []
+    })
+
+  return { ...config, routes: prune(collect(config.routes)) }
+}

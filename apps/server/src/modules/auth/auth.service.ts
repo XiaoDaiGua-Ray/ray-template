@@ -1,12 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { loginInputSchema } from '@ray-template/api-contracts/admin'
+import {
+  changePasswordSchema,
+  loginInputSchema,
+  profileInputSchema,
+} from '@ray-template/api-contracts/admin'
 import type { SessionInfo } from '@ray-template/api-contracts/admin'
 import { SERVER_CONFIG } from '../../config'
 import { ApiError, parseInput } from '../../http'
 import { DatabaseService } from '../../infrastructure/database'
 import type { Database } from '../../infrastructure/database'
 import type { ServerConfig } from '../../platform/index'
-import { createToken, tokenHash, verifyPassword } from './password'
+import { signSession, verifySession } from './jwt'
+import { hashPassword, tokenHash, verifyPassword } from './password'
 
 export interface AuthContext extends SessionInfo {
   tokenHash: string
@@ -26,6 +31,10 @@ export class AuthService {
   ): Promise<AuthContext> {
     if (!token) throw new ApiError(401, 'unauthorized')
 
+    const subject = await verifySession(this.config.jwtSecret, token)
+
+    if (!subject) throw new ApiError(401, 'unauthorized')
+
     const hash = tokenHash(token)
     const session = await database.session.findUnique({
       where: { tokenHash: hash },
@@ -36,6 +45,7 @@ export class AuthService {
 
     if (
       !session ||
+      session.userId !== subject ||
       session.expiresAt.getTime() <= Date.now() ||
       session.user.status !== 'enabled'
     )
@@ -49,7 +59,12 @@ export class AuthService {
     if (permission && !permissions.includes(permission))
       throw new ApiError(403, 'forbidden')
 
-    return { user: { id, username, name, role }, permissions, tokenHash: hash }
+    return {
+      user: { id, username, name, role },
+      permissions,
+      expiresAt: session.expiresAt.toISOString(),
+      tokenHash: hash,
+    }
   }
 
   async login(input: unknown, requestId: string | null) {
@@ -70,11 +85,12 @@ export class AuthService {
       throw new ApiError(401, 'invalidCredentials')
     }
 
-    const accessToken = createToken()
-    const hash = tokenHash(accessToken)
-    const expiresAt = new Date(
-      Date.now() + this.config.sessionTtlSeconds * 1000,
+    const { token: accessToken, expiresAt } = await signSession(
+      this.config.jwtSecret,
+      user.id,
+      this.config.sessionTtlSeconds,
     )
+    const hash = tokenHash(accessToken)
 
     return this.database.write(async (transaction) => {
       const current = await transaction.user.findUnique({
@@ -119,10 +135,95 @@ export class AuthService {
     })
   }
 
-  async session(token: string | null): Promise<SessionInfo> {
-    const { user, permissions } = await this.authenticate(token)
+  async profile(id: string, database: Database = this.database.prisma) {
+    const user = await database.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        username: true,
+        name: true,
+        role: true,
+        email: true,
+        phone: true,
+        department: {
+          select: { id: true, parentId: true, name: true, labelKey: true },
+        },
+      },
+    })
 
-    return { user, permissions }
+    if (!user) throw new ApiError(401, 'unauthorized')
+
+    const { labelKey, ...department } = user.department
+
+    return {
+      ...user,
+      department: { ...department, ...(labelKey ? { labelKey } : {}) },
+    }
+  }
+
+  async updateProfile(
+    input: unknown,
+    token: string | null,
+    requestId: string | null,
+  ) {
+    const profile = parseInput(profileInputSchema, input)
+
+    return this.database.write(async (transaction) => {
+      const { user } = await this.authenticate(token, void 0, transaction)
+
+      await transaction.user.update({ where: { id: user.id }, data: profile })
+      await transaction.auditLog.create({
+        data: { actorId: user.id, action: 'auth.profile.update', requestId },
+      })
+
+      return this.profile(user.id, transaction)
+    })
+  }
+
+  async changePassword(
+    input: unknown,
+    token: string | null,
+    actorId: string,
+    requestId: string | null,
+  ) {
+    const { currentPassword, newPassword } = parseInput(
+      changePasswordSchema,
+      input,
+    )
+    const credential = await this.database.prisma.credential.findUnique({
+      where: { userId: actorId },
+    })
+
+    if (
+      !(await verifyPassword(
+        currentPassword,
+        credential?.passwordHash ?? null,
+      )) ||
+      !credential
+    )
+      throw new ApiError(400, 'invalidCurrentPassword')
+
+    if (currentPassword === newPassword)
+      throw new ApiError(400, 'passwordUnchanged')
+
+    const passwordHash = await hashPassword(newPassword)
+
+    await this.database.write(async (transaction) => {
+      const { user } = await this.authenticate(token, void 0, transaction)
+      const changed = await transaction.credential.updateMany({
+        where: { userId: user.id, passwordHash: credential.passwordHash },
+        data: { passwordHash },
+      })
+
+      if (!changed.count) throw new ApiError(409, 'credentialChanged')
+
+      await transaction.session.deleteMany({ where: { userId: user.id } })
+      await transaction.auditLog.create({
+        data: { actorId: user.id, action: 'auth.password.change', requestId },
+      })
+    })
+
+    return null
   }
 
   async logout(token: string | null, requestId: string | null) {

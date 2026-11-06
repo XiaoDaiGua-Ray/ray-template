@@ -6,7 +6,7 @@ An optional NestJS application implementing the shared admin HTTP contract. It o
 
 Use the repository's pinned Node.js and pnpm versions. PostgreSQL and Redis must be reachable before starting the server. Configuration is loaded from `apps/server/.env.local` by the development, start and credential scripts. The Prisma config loads the same file for migrations. The root fullstack setup command prepares local development configuration.
 
-Required connection fields are `DATABASE_URL` and `REDIS_URL`. Keep credentials in local environment files or a deployment secret store; never in `VITE_*` variables. See [platform configuration](src/platform/README.md) for exact origin allowlists, trusted proxies, rate limits, logging and readiness settings.
+Required fields are `DATABASE_URL`, `REDIS_URL`, and `JWT_SECRET` (32 random bytes encoded as base64url). The launcher generates the key once; replicas of the same environment must share it. Store secrets in private configuration. See [platform configuration](src/platform/README.md) for origins, limits and readiness, and the [deployment runbook](../docs/guide/distributions.md) for Compose and external services.
 
 ```sh
 pnpm --filter @ray-template/server db:migrate
@@ -14,21 +14,21 @@ pnpm --filter @ray-template/server db:seed
 pnpm --filter @ray-template/server dev
 ```
 
-Initialization requires `ADMIN_PASSWORD` (12–128 characters) when creating the first account. `ADMIN_USERNAME` defaults to `admin`; `ADMIN_EMAIL` is optional. There is no built-in login password and no HTTP database reset endpoint. Re-running the seed preserves existing users, credentials, role assignments, permission assignments and route configuration.
+Initialization requires `ADMIN_PASSWORD` (12–128 characters) when creating the first administrator. `ADMIN_USERNAME` defaults to `admin`; `ADMIN_EMAIL` is optional. Re-running the seed preserves existing users, credentials, grants and route configuration even after the administrator is renamed. There is no HTTP database reset endpoint.
 
 ## API and ownership
 
-The API prefix is `/api`. Controllers provide `/admin/auth/login`, `/admin/auth/session`, `/admin/auth/logout`, `/admin/users`, user options/status/batch deletion, and `/admin/route-config`. Success responses use `{ code: 200, msg: 'OK', data }`; failures return the corresponding HTTP status with `data: null` and a stable `error.key`.
+The API prefix is `/api`. It covers login, session, logout, self profile and password, user and credential management, and route configuration. Success uses `{ code: 200, msg: 'OK', data }`; errors return the matching HTTP status, `data: null`, and a stable `error.key`. See the [HTTP contract](../docs/guide/backend.md).
 
-The startup route configuration is public because the admin application needs it before login. `GET /admin/route-config?view=editor` and route writes require `routes:write`; writes use the same semantic validator and generated view/icon catalog as the frontend. Protected core endpoints require an active server session. The global guard enforces endpoint permissions; mutation services recheck the actor and targets inside serializable transactions.
+The runtime route configuration requires an active session and filters by `routes:read`, ancestor and leaf roles, view grants, and the demo flag. It removes empty groups and unusable redirects. No accessible routes yields `{ version: 1, routes: [] }`. The complete editor view and route writes require `routes:write`. The global guard enforces endpoint permissions and mutations recheck them in serializable transactions.
 
-When `DEMO_ENABLED=true`, the public `/admin/demo/*` endpoints use the same fixture queries as Mock. Redis caches only the fixed request and chart fixtures and the two search-option locales for five minutes. In production demos default to off: these endpoints are absent and the public route configuration omits demo views, empty groups and redirects that would point to hidden views. The authorized editor still receives the complete saved configuration.
+When `DEMO_ENABLED=true`, public `/admin/demo/*` endpoints use the same fixtures as Mock. Redis caches only fixed request and chart fixtures and the two search-option locales for five minutes. Demos default to off in production.
 
 Usernames and email addresses have normalized unique database keys. Department queries include descendants. Bulk updates and deletion are atomic, deduplicate IDs, and reject changes to missing/protected targets. A user cannot delete or disable their own account or change their own role. Non-admin actors cannot manage roles with permissions they do not hold.
 
-Authentication uses random opaque bearer tokens. Only SHA-256 token digests are stored; authorization reads current account status and role permissions from PostgreSQL on every request. Passwords use salted Node.js scrypt. Expired sessions are rejected; logout, credential reset, account disabling and role changes revoke effective access. Mutations and authentication changes write audit records without passwords, tokens or request bodies.
+Authentication verifies the JWT signature, issuer, audience and expiry, then checks the token digest and live account grants in PostgreSQL. Passwords use salted scrypt. Logout revokes the current session; password changes, credential reset, account disabling and role changes revoke all affected sessions. The upgrade requires existing opaque-token clients to sign in again. Audits omit passwords, tokens and request bodies.
 
-New users created through the profile API have no password. Set or reset one explicitly through the credential command using environment variables, not command-line password arguments:
+Users can edit their own name and phone and change their password by proving the current password. An authorized administrator can set another user's password from User Management. Operators can recover a credential from a trusted terminal using private environment variables:
 
 ```sh
 pnpm --filter @ray-template/server credential:set
@@ -36,7 +36,7 @@ pnpm --filter @ray-template/server credential:set
 
 This command reads `CREDENTIAL_USERNAME` and `CREDENTIAL_PASSWORD`, preserves account status/role, and revokes all sessions for that user. Remove temporary credential variables from local files after use. Expired sessions can be pruned with `node --env-file-if-exists=.env.local dist/cli.mjs cleanup-sessions` from this application directory.
 
-The initial browser integration preserves the existing Bearer contract. Moving browser credentials to HttpOnly cookies requires a coordinated login-contract, request-client and CSRF change; it is not implied by enabling the backend.
+The bundled same-origin Admin uses an HttpOnly, SameSite=Strict cookie with `X-Ray-Session: cookie`; login does not return the token in JSON in this mode. Use Secure host-only cookies over HTTPS. Explicit Bearer login remains available to API clients.
 
 ## Build and checks
 

@@ -1,10 +1,10 @@
-import { apiMockEnabled } from '@/api/admin/client'
-import { APP_CATCH_KEY } from '@/app-config'
+import { AdminApiError, apiMockEnabled } from '@/api/admin/client'
 import { RForm, useForm } from '@/components'
 import { useI18n } from '@/hooks'
+import { loadAccountRoutes } from '@/router'
 import { resolveLandingPath } from '@/router/utils/resolve-landing-path'
 import { useSigningActions } from '@/store'
-import { setStorage } from '@/utils'
+import { announceAdminSessionChange } from '@/store/modules/signing'
 import { NButton, NFlex, NFormItem, NInput } from 'naive-ui'
 
 export default defineComponent({
@@ -12,7 +12,7 @@ export default defineComponent({
   setup() {
     const [register, { validate }] = useForm()
     const { t } = useI18n('views.login.index')
-    const { signing } = useSigningActions()
+    const { signing, clearSigningCallback } = useSigningActions()
     const router = useRouter()
     const route = useRoute()
     const loading = ref(false)
@@ -45,16 +45,30 @@ export default defineComponent({
       }
 
       loading.value = true
+      let signedIn = false
 
       try {
-        const res = await signing(signingForm)
+        await signing(signingForm)
+        signedIn = true
+        await loadAccountRoutes()
 
-        if (res.code !== 0) throw new Error(res.message)
-
-        setStorage(APP_CATCH_KEY.signing, res.data, 'localStorage')
+        announceAdminSessionChange()
         await router.replace(resolveLandingPath(router, route.query.redirect))
-      } catch {
-        window.$message.error(t('SignInError'))
+      } catch (error) {
+        if (signedIn) clearSigningCallback()
+
+        window.$message.error(
+          t(
+            signedIn
+              ? 'RouteLoadError'
+              : error instanceof AdminApiError && error.code === 429
+                ? 'RateLimit'
+                : error instanceof AdminApiError &&
+                    error.key === 'invalidCredentials'
+                  ? 'SignInError'
+                  : 'SignInUnavailable',
+          ),
+        )
       } finally {
         loading.value = false
       }

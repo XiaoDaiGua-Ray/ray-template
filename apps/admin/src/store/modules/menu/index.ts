@@ -4,7 +4,10 @@ import { getAppRawRoutes } from '@/router/app-route-modules'
 import { FORBIDDEN_ROUTE_PATH, isSystemRoute } from '@/router/constant'
 import { validMenuItemShow, validRole } from '@/router/utils'
 import { joinRoutePath } from '@/router/utils/join-route-path'
-import { getRouteAccess } from '@/router/utils/route-access'
+import {
+  getRouteAccess,
+  validRoutePermission,
+} from '@/router/utils/route-access'
 import type { RouteAccessLocation } from '@/router/utils/route-access'
 import { useKeepAliveActions } from '@/store'
 import type { MenuState } from '@/store/modules/menu/types'
@@ -331,7 +334,11 @@ export const piniaMenuStore = defineStore(
         const options: AppMenuOption[] = []
 
         for (const curr of routes) {
-          if (!validRole(curr.meta, currentRole)) continue
+          if (
+            !validRole(curr.meta, currentRole) ||
+            !validRoutePermission(curr.meta.requiredPermission)
+          )
+            continue
 
           const fullPath = joinRoutePath(parentPath, curr.path)
 
@@ -436,6 +443,8 @@ export const piniaMenuStore = defineStore(
           menuState.menuTagOptions = []
 
           if (!current[1]) {
+            menuState.options = []
+            menuIndex.clear()
             cacheTags()
             clearActiveMenu()
 

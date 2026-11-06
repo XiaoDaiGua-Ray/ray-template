@@ -2,12 +2,19 @@ import { createMemoryHistory, createRouter } from 'vue-router'
 import { APP_CATCH_KEY } from '../../apps/admin/src/app-config'
 import { permissionRouter } from '../../apps/admin/src/router/utils/permission'
 import { resolveLandingPath } from '../../apps/admin/src/router/utils/resolve-landing-path'
-import { setStorage } from '../../apps/admin/src/utils/cache'
 
 vi.mock('../../apps/admin/src/router/utils/valid-role', () => ({
   validRole: (meta: { role?: string[] }) =>
     !meta.role?.length || meta.role.includes('admin'),
 }))
+
+const session: {
+  signingCallback: { id?: string }
+  revalidateSession: () => Promise<'active'>
+} = {
+  signingCallback: {},
+  revalidateSession: async () => 'active',
+}
 
 function setupRouter(rootRole?: string[]) {
   const component = { render: () => null }
@@ -50,13 +57,14 @@ function setupRouter(rootRole?: string[]) {
     ],
   })
 
-  permissionRouter(router)
+  permissionRouter(router, () => session)
 
   return router
 }
 
 describe('Router 5 permission guard', () => {
   beforeEach(() => {
+    session.signingCallback = {}
     localStorage.clear()
     sessionStorage.clear()
   })
@@ -64,13 +72,15 @@ describe('Router 5 permission guard', () => {
   it('redirects unauthenticated protected navigation to login', async () => {
     const router = setupRouter()
 
+    localStorage.setItem(APP_CATCH_KEY.token, 'unverified-token')
+
     await router.push('/allowed')
 
     expect(router.currentRoute.value.path).toBe('/')
   })
 
   it('opens the neutral workspace after login without choosing a business home', async () => {
-    setStorage(APP_CATCH_KEY.token, 'demo-token', 'localStorage')
+    session.signingCallback = { id: 'verified-test-user' }
     const router = setupRouter()
 
     await router.push('/')
@@ -79,7 +89,7 @@ describe('Router 5 permission guard', () => {
   })
 
   it('allows permitted roles and authenticated whitelist routes', async () => {
-    setStorage(APP_CATCH_KEY.token, 'demo-token', 'localStorage')
+    session.signingCallback = { id: 'verified-test-user' }
     const router = setupRouter()
 
     await router.push('/allowed')
@@ -92,7 +102,7 @@ describe('Router 5 permission guard', () => {
   })
 
   it('shows forbidden state for a denied direct link', async () => {
-    setStorage(APP_CATCH_KEY.token, 'demo-token', 'localStorage')
+    session.signingCallback = { id: 'verified-test-user' }
     const router = setupRouter()
 
     await router.push('/denied')
@@ -107,7 +117,7 @@ describe('Router 5 permission guard', () => {
     '/via-private',
     '/restricted-group/page',
   ])('blocks %s and keeps the attempted URL', async (path) => {
-    setStorage(APP_CATCH_KEY.token, 'demo-token', 'localStorage')
+    session.signingCallback = { id: 'verified-test-user' }
     const router = setupRouter()
     const attempted = `${path}?filter=open#row`
 
@@ -123,7 +133,7 @@ describe('Router 5 permission guard', () => {
 
     await router.push(attempted)
     expect(router.currentRoute.value.query.redirect).toBe(attempted)
-    setStorage(APP_CATCH_KEY.token, 'demo-token', 'localStorage')
+    session.signingCallback = { id: 'verified-test-user' }
     expect(
       resolveLandingPath(router, router.currentRoute.value.query.redirect),
     ).toBe('/welcome')
@@ -133,7 +143,7 @@ describe('Router 5 permission guard', () => {
     const router = setupRouter(['editor'])
 
     await router.push('/')
-    setStorage(APP_CATCH_KEY.token, 'demo-token', 'localStorage')
+    session.signingCallback = { id: 'verified-test-user' }
     await router.push('/denied')
 
     expect(router.currentRoute.value.path).toBe('/403')
@@ -146,7 +156,7 @@ describe('Router 5 permission guard', () => {
     expect(router.currentRoute.value.query.redirect).toBe(
       '/allowed?filter=open#row-2',
     )
-    setStorage(APP_CATCH_KEY.token, 'demo-token', 'localStorage')
+    session.signingCallback = { id: 'verified-test-user' }
     await router.replace(
       resolveLandingPath(router, router.currentRoute.value.query.redirect),
     )
@@ -156,7 +166,7 @@ describe('Router 5 permission guard', () => {
   })
 
   it('preserves query and hash when an authenticated login URL supplies a valid redirect', async () => {
-    setStorage(APP_CATCH_KEY.token, 'demo-token', 'localStorage')
+    session.signingCallback = { id: 'verified-test-user' }
     const router = setupRouter()
 
     await router.push({
@@ -178,7 +188,7 @@ describe('Router 5 permission guard', () => {
   ])(
     'does not restore unsafe, inaccessible or status target %s',
     async (redirect) => {
-      setStorage(APP_CATCH_KEY.token, 'demo-token', 'localStorage')
+      session.signingCallback = { id: 'verified-test-user' }
       const router = setupRouter()
 
       await router.push({ path: '/', query: { redirect } })
@@ -193,7 +203,7 @@ describe('Router 5 permission guard', () => {
   })
 
   it('shows not found for an unknown authenticated route', async () => {
-    setStorage(APP_CATCH_KEY.token, 'demo-token', 'localStorage')
+    session.signingCallback = { id: 'verified-test-user' }
     const router = setupRouter()
 
     await router.push('/missing?from=test')

@@ -34,7 +34,7 @@ it('retains the Mock recovery path after a failed route request', async () => {
   expect(routeSourceStatus.active).toBe('static')
 })
 
-it('allows explicit offline static routes with a real backend configured', async () => {
+it('ignores previously saved static routes when the backend owns runtime routes', async () => {
   vi.stubEnv('VITE_API_MOCK', 'false')
   localStorage.setItem(
     'rayRouteConfig.v1',
@@ -42,6 +42,6 @@ it('allows explicit offline static routes with a real backend configured', async
   )
   const { loadRouteConfig } = await import('@/router/config/source')
 
-  await expect(loadRouteConfig()).resolves.toBeUndefined()
-  expect(getRoutes).not.toHaveBeenCalled()
+  await expect(loadRouteConfig()).rejects.toThrow('Route backend unavailable')
+  expect(getRoutes).toHaveBeenCalled()
 })

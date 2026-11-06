@@ -1,5 +1,10 @@
 import type { App } from 'vue'
-import { router, setupRouter } from '../../apps/admin/src/router'
+import {
+  clearAccountRoutes,
+  loadAccountRoutes,
+  router,
+  setupRouter,
+} from '../../apps/admin/src/router'
 
 const { load, register } = vi.hoisted(() => ({
   load: vi.fn(),
@@ -8,20 +13,29 @@ const { load, register } = vi.hoisted(() => ({
 
 vi.mock('../../apps/admin/src/router/config/source', () => ({
   loadRouteConfig: load,
+  resetRouteSource: vi.fn(),
 }))
 vi.mock('../../apps/admin/src/router/routes', () => ({
-  constantRoutes: [{ path: '/', component: { render: () => null } }],
+  constantRoutes: [
+    { path: '/', name: 'RLayout', component: { render: () => null } },
+  ],
   getLayoutRoutes: () => [],
+  getSystemRoutes: () => [],
+  getAccountProfileRoute: () => ({
+    path: '/account/profile',
+    component: { render: () => null },
+  }),
 }))
 vi.mock('../../apps/admin/src/router/app-route-modules', () => ({
   setAppRouteModules: vi.fn(),
+  getStaticAppRoutes: () => [],
 }))
 vi.mock('../../apps/admin/src/router/utils', () => ({
   scrollViewToTop: vi.fn(),
   vueRouterRegister: register,
 }))
 
-it('retries failed initialization on remount and shares the successful retry', async () => {
+it('loads no business routes before login, then shares a retry and registers guards once', async () => {
   const app = { use: vi.fn() } as unknown as App<Element>
 
   load
@@ -29,15 +43,16 @@ it('retries failed initialization on remount and shares the successful retry', a
     .mockResolvedValue(void 0)
 
   try {
-    await expect(setupRouter(app)).rejects.toThrow('route endpoint unavailable')
-    expect(register).not.toHaveBeenCalled()
-    await Promise.all([setupRouter(app), setupRouter(app)])
-    expect(load).toHaveBeenCalledTimes(2)
-    expect(register).toHaveBeenCalledOnce()
-    await setupRouter(app)
+    await setupRouter(app, false)
+    expect(load).not.toHaveBeenCalled()
+    await expect(loadAccountRoutes()).rejects.toThrow(
+      'route endpoint unavailable',
+    )
+    await Promise.all([loadAccountRoutes(), loadAccountRoutes()])
     expect(load).toHaveBeenCalledTimes(2)
     expect(register).toHaveBeenCalledOnce()
   } finally {
+    clearAccountRoutes()
     router.options.history.destroy()
   }
 })

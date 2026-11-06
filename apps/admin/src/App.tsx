@@ -1,3 +1,4 @@
+import { apiMockEnabled } from '@/api/admin/client'
 import AppGlobalSpin from '@/app-components/app/AppGlobalSpin'
 import AppLockScreen from '@/app-components/app/AppLockScreen'
 import AppNaiveGlobalProvider from '@/app-components/provider/AppNaiveGlobalProvider'
@@ -38,7 +39,7 @@ export default defineComponent({
     return (
       <AppNaiveGlobalProvider>
         <AppVersionProvider />
-        <AppLockScreen />
+        {apiMockEnabled && <AppLockScreen />}
         <AppStyleProvider />
         <AppWatermarkProvider />
         <AppGlobalSpin>

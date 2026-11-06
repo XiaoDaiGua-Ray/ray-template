@@ -73,6 +73,7 @@ const fullstackPaths = [
   'scripts/sync-frontend.sh',
   'deploy',
   'harness/context/server.md',
+  'harness/fullstack-acceptance.md',
   '.github/workflows/distributions.yaml',
 ]
 const excludedDirectories = new Set([

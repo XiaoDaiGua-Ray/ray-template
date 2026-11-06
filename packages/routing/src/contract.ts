@@ -11,6 +11,7 @@ export interface RouteCatalog {
     | { name: string; load: NonNullable<AppRouteRecordRaw['component']> }
     | undefined
   findRouteViewId(loader: unknown): string | undefined
+  viewPermission?(id: string): string | undefined
   /**
    *
    * @deprecated 首页不再具有路由校验或默认导航特权，保留字段仅兼容旧调用方。
@@ -35,10 +36,16 @@ export function createRouteContract(catalog: RouteCatalog) {
       children,
       meta,
       ...record
-    }: RouteConfigRecord): AppRouteRecordRaw =>
-      ({
+    }: RouteConfigRecord): AppRouteRecordRaw => {
+      const requiredPermission =
+        component && catalog.viewPermission?.(component)
+
+      return {
         ...record,
-        meta: meta as AppRouteRecordRaw['meta'],
+        meta: {
+          ...meta,
+          ...(requiredPermission ? { requiredPermission } : {}),
+        } as AppRouteRecordRaw['meta'],
         component:
           component === 'layout'
             ? LAYOUT
@@ -46,7 +53,8 @@ export function createRouteContract(catalog: RouteCatalog) {
               ? findRouteView(component)?.load
               : void 0,
         children: children?.map(toRoute),
-      }) as AppRouteRecordRaw
+      } as AppRouteRecordRaw
+    }
 
     return config.routes.map(toRoute)
   }
@@ -55,7 +63,7 @@ export function createRouteContract(catalog: RouteCatalog) {
     const toRecord = ({
       path,
       name,
-      meta,
+      meta: { requiredPermission: _permission, ...meta },
       component,
       children,
       props,

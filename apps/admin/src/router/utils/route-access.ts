@@ -1,5 +1,6 @@
 import { WHITE_ROUTES } from '@/app-config'
 import { isSystemRoute } from '@/router/constant'
+import { piniaSigningStore } from '@/store/modules/signing'
 import type { RouteLocationResolved, Router } from 'vue-router'
 import { validRole } from './valid-role'
 
@@ -7,6 +8,10 @@ export type RouteAccessLocation = Pick<
   RouteLocationResolved,
   'fullPath' | 'hash' | 'matched' | 'name' | 'path' | 'query'
 >
+
+export const validRoutePermission = (permission: unknown) =>
+  typeof permission !== 'string' ||
+  piniaSigningStore().permissions.includes(permission)
 
 /**
  *
@@ -33,8 +38,11 @@ export function getRouteAccess(
       typeof current.name === 'string' && WHITE_ROUTES.includes(current.name)
 
     if (
-      !white &&
-      !current.matched.every(({ meta }) => validRole(meta, currentRole))
+      !current.matched.every(
+        ({ meta }) =>
+          validRoutePermission(meta.requiredPermission) &&
+          (white || validRole(meta, currentRole)),
+      )
     )
       return 'forbidden'
 

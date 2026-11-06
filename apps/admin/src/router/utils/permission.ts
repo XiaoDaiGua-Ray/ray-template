@@ -1,10 +1,10 @@
-import { APP_CATCH_KEY } from '@/app-config'
 import {
   FORBIDDEN_ROUTE_PATH,
   isSystemRoute,
   NOT_FOUND_PAGE_PATH,
+  SERVER_ERROR_ROUTE_PATH,
 } from '@/router/constant'
-import { getStorage } from '@/utils/cache'
+import { piniaSigningStore } from '@/store/modules/signing'
 import type { Router } from 'vue-router'
 import { resolveLandingPath } from './resolve-landing-path'
 import { getRouteAccess } from './route-access'
@@ -14,16 +14,34 @@ import { getRouteAccess } from './route-access'
  * @param router 应用的 Router 实例
  *
  * @description
- * 注册 token、白名单与 meta.role 权限守卫，重定向返回值交给 Router 处理。
+ * 使用已核验的会话和路由权限，重定向返回值交给 Router 处理。
  * 前端守卫不能替代后端鉴权。
  */
-export const permissionRouter = (router: Router) => {
-  router.beforeEach((to) => {
-    const token = getStorage<string>(APP_CATCH_KEY.token, 'localStorage')
+export const permissionRouter = (
+  router: Router,
+  getSession: () => {
+    signingCallback: { id?: string }
+    revalidateSession: () => Promise<'active' | 'signedOut' | 'changed'>
+  } = piniaSigningStore,
+) => {
+  router.beforeEach(async (to) => {
+    const session = getSession()
     const isLogin = to.path === '/'
     const attempted = to.redirectedFrom ?? to
 
-    if (typeof token !== 'string' || !token) {
+    if (session.signingCallback.id && !isLogin && !isSystemRoute(to)) {
+      try {
+        if ((await session.revalidateSession()) === 'changed') return false
+      } catch {
+        return {
+          path: SERVER_ERROR_ROUTE_PATH,
+          query: { from: attempted.fullPath },
+          replace: true,
+        }
+      }
+    }
+
+    if (!session.signingCallback.id) {
       return isLogin
         ? true
         : { path: '/', query: { redirect: attempted.fullPath }, replace: true }

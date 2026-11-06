@@ -1,7 +1,7 @@
 import App from './App'
 import './styles/entry'
 import type { App as AppType } from 'vue'
-import { apiMockEnabled } from './api/admin/client'
+import { apiMockEnabled, bindAdminUnauthorized } from './api/admin/client'
 import { installAutocompleteDefaults } from './app-components/provider/AppAutocompleteDefaults'
 import { GLOBAL_CLASS_NAMES } from './app-config'
 import { setupDayjs } from './dayjs'
@@ -10,7 +10,10 @@ import { runAppDoctor } from './doctor'
 import { setupI18n } from './locales'
 import { setupRouter } from './router'
 import { setupStore } from './store'
-import { piniaSigningStore } from './store/modules/signing'
+import {
+  adminSessionChangeKey,
+  piniaSigningStore,
+} from './store/modules/signing'
 
 const bootSplash = () =>
   document.getElementById(GLOBAL_CLASS_NAMES.preLoadingAnimation)
@@ -38,8 +41,20 @@ const setupPlugins = async (inst: AppType<Element>) => {
 
   setupStore(inst)
   await setupI18n(inst)
-  await inst.runWithContext(() => piniaSigningStore().restoreSession())
-  await setupRouter(inst)
+  const signing = inst.runWithContext(() => piniaSigningStore())
+
+  await signing.restoreSession()
+  await setupRouter(inst, !!signing.signingCallback.id)
+  const unbindUnauthorized = bindAdminUnauthorized(signing.expireSession)
+  const syncSession = (event: StorageEvent) => {
+    if (event.key === adminSessionChangeKey) location.reload()
+  }
+
+  window.addEventListener('storage', syncSession)
+  inst.onUnmount(() => {
+    unbindUnauthorized()
+    window.removeEventListener('storage', syncSession)
+  })
   setupDayjs()
   setupDirectives(inst)
   inst.onUnmount(installAutocompleteDefaults(document.body))

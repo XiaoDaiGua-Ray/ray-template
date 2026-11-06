@@ -1,6 +1,8 @@
 import {
+  changeAccountPassword,
   createUser,
   deleteUsers,
+  getAccountProfile,
   getAdminRoutes,
   getAdminSession,
   getUser,
@@ -9,6 +11,8 @@ import {
   loginAdmin,
   logoutAdmin,
   resetDemoUsers,
+  setUserCredential,
+  updateAccountProfile,
   updateAdminRoutes,
   updateUser,
   updateUserStatus,
@@ -31,6 +35,9 @@ const input: UserInput = {
 }
 const signIn = async (username = 'admin') => {
   const result = await loginAdmin(username, '123456')
+
+  if (!('accessToken' in result))
+    throw new Error('Mock login must return a token.')
 
   setStorage(APP_CATCH_KEY.token, result.accessToken, 'localStorage')
 
@@ -173,10 +180,10 @@ it('invalidates the server-side Mock session on logout', async () => {
   await expect(getUsers({})).rejects.toMatchObject({ code: 401 })
 })
 
-it('restores Mock writes and active sessions after recreating the database', () => {
+it('restores Mock writes and active sessions after recreating the database', async () => {
   localStorage.clear()
   const first = createAdminDatabase(localStorage)
-  const session = first.login({ username: 'admin', password: '123456' })
+  const session = await first.login({ username: 'admin', password: '123456' })
   const user = first.saveUser(input, session.accessToken)
   const second = createAdminDatabase(localStorage)
 
@@ -184,7 +191,7 @@ it('restores Mock writes and active sessions after recreating the database', () 
   expect(second.authorize(session.accessToken).user.id).toBe(session.user.id)
 })
 
-it('keeps writes atomic when persistence fails', () => {
+it('keeps writes atomic when persistence fails', async () => {
   const storage: Storage = {
     length: 0,
     key: () => null,
@@ -194,11 +201,52 @@ it('keeps writes atomic when persistence fails', () => {
     setItem: vi.fn(),
   }
   const database = createAdminDatabase(storage)
-  const session = database.login({ username: 'admin', password: '123456' })
+  const session = await database.login({
+    username: 'admin',
+    password: '123456',
+  })
 
   vi.mocked(storage.setItem).mockImplementation(() => {
     throw new Error('Quota exceeded')
   })
   expect(() => database.saveUser(input, session.accessToken)).toThrow('storage')
   expect(database.listUsers({}, session.accessToken).total).toBe(24)
+})
+
+it('provisions a Mock login and updates only the signed-in profile', async () => {
+  const user = await createUser(input)
+  const original = 'mock-initial-password'
+  const changed = 'mock-changed-password'
+
+  await expect(loginAdmin(user.username, '123456')).rejects.toMatchObject({
+    code: 401,
+  })
+  await setUserCredential(user.id, original)
+  const session = await loginAdmin(user.username, original)
+
+  if (!('accessToken' in session))
+    throw new Error('Mock login must return a token.')
+
+  setStorage(APP_CATCH_KEY.token, session.accessToken, 'localStorage')
+  await expect(getAccountProfile()).resolves.toMatchObject({
+    id: user.id,
+    username: user.username,
+  })
+  await expect(
+    updateAccountProfile({ name: 'Updated profile', phone: '' }),
+  ).resolves.toMatchObject({ name: 'Updated profile' })
+  await expect(setUserCredential(user.id, changed)).rejects.toMatchObject({
+    code: 403,
+  })
+  await changeAccountPassword({
+    currentPassword: original,
+    newPassword: changed,
+  })
+  await expect(getAccountProfile()).rejects.toMatchObject({ code: 401 })
+  await expect(loginAdmin(user.username, original)).rejects.toMatchObject({
+    code: 401,
+  })
+  await expect(loginAdmin(user.username, changed)).resolves.toMatchObject({
+    user: { name: 'Updated profile' },
+  })
 })

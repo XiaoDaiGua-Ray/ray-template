@@ -4,6 +4,8 @@ x-server-environment: &server-environment
   PORT: '3000'
   DATABASE_URL: ${APP_DATABASE_URL:-postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-ray_template}}
   REDIS_URL: ${APP_REDIS_URL:-redis://:${REDIS_PASSWORD}@redis:6379}
+  JWT_SECRET: ${JWT_SECRET:-}
+  SESSION_COOKIE_SECURE: ${APP_SESSION_COOKIE_SECURE:-false}
   DEMO_ENABLED: ${APP_DEMO_ENABLED:-false}
   CORS_ORIGINS: ${APP_ORIGINS:-http://127.0.0.1:${APP_PORT:-8080},http://localhost:${APP_PORT:-8080}}
 

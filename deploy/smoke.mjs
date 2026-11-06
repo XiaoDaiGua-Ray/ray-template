@@ -43,10 +43,12 @@ const env = {
   ADMIN_USERNAME: 'smoke_admin',
   ADMIN_EMAIL: 'smoke-admin@example.test',
   ADMIN_PASSWORD: password,
+  JWT_SECRET: randomBytes(32).toString('base64url'),
   APP_PORT: String(appPort),
   APP_ORIGINS: '',
   APP_PROXY_NETWORK: subnet,
   APP_DEMO_ENABLED: 'false',
+  APP_SESSION_COOKIE_SECURE: 'false',
   APP_DATABASE_URL: '',
   APP_REDIS_URL: '',
   APP_LOGIN_RATE_LIMIT_MAX: '1',
@@ -81,11 +83,16 @@ const api = (path, options) =>
     signal: AbortSignal.timeout(5000),
     ...options,
   })
+const browser = {
+  Origin: origin,
+  'X-Ray-Session': 'cookie',
+  'Sec-Fetch-Site': 'same-origin',
+}
 const login = (username, forwarded) =>
   api('admin/auth/login', {
     method: 'POST',
     headers: {
-      Origin: origin,
+      ...browser,
       'Content-Type': 'application/json',
       'X-Forwarded-For': forwarded,
     },
@@ -111,6 +118,7 @@ try {
   assert.match(await page.text(), /<script[^>]*src="\/ray-template\//u)
   assert.equal((await api('health/ready')).status, 200)
   assert.equal((await api('admin/demo/charts')).status, 404)
+  assert.equal((await api('admin/route-config')).status, 401)
   const denied = await api('admin/route-config', {
     headers: { Origin: 'https://untrusted.example.test' },
   })
@@ -121,15 +129,33 @@ try {
   assert.equal(response.status, 200)
   assert.equal(response.headers.get('access-control-allow-origin'), origin)
   const { data } = await response.json()
+  const cookie = response.headers.get('set-cookie')
+
+  assert.equal(Object.hasOwn(data, 'accessToken'), false)
+  assert.match(cookie, /HttpOnly; SameSite=Strict/u)
+  const headers = { ...browser, Cookie: cookie.split(';')[0] }
 
   assert.equal(
     (
       await api('admin/users', {
-        headers: { Authorization: `Bearer ${data.accessToken}` },
+        headers,
       })
     ).status,
     200,
   )
+  const routes = await api('admin/route-config', { headers })
+
+  assert.equal(routes.status, 200)
+  assert.deepEqual(
+    (await routes.json()).data.routes.map(({ path }) => path),
+    ['/dashboard', '/system'],
+  )
+  assert.equal((await api('admin/auth/profile', { headers })).status, 200)
+  assert.equal(
+    (await api('admin/auth/logout', { method: 'POST', headers })).status,
+    200,
+  )
+  assert.equal((await api('admin/auth/session', { headers })).status, 401)
 
   for (let attempt = 1; attempt <= 5; attempt++) {
     assert.equal(
@@ -160,7 +186,7 @@ try {
 
   assert.equal(count.trim(), '6')
   console.log(
-    'Compose smoke passed: initialized data, built admin, readiness, login, CORS, demo gating and forwarded client rate limits.',
+    'Compose smoke passed: initialization, built admin, readiness, browser session, protected routes, profile, CORS, demo gating and forwarded client rate limits.',
   )
 } catch (error) {
   try {

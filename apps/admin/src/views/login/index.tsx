@@ -3,6 +3,7 @@ import { apiMockEnabled } from '@/api/admin/client'
 import AppShareLink from '@/app-components/app/AppShareLink'
 import { LOCAL_OPTIONS } from '@/app-config'
 import { RIcon } from '@/components'
+import { useI18n } from '@/hooks'
 import ThemeSwitch from '@/layout/components/SiderBar/components/SettingDrawer/components/ThemeSwitch'
 import { useSettingActions } from '@/store'
 import { NButton, NDropdown, NFlex, NTabPane, NTabs } from 'naive-ui'
@@ -15,7 +16,12 @@ export default defineComponent({
   name: 'RLogin',
   setup() {
     const { updateLocale } = useSettingActions()
+    const { t } = useI18n('views.login.index')
     const tabsValue = ref('signing')
+
+    watchEffect(() => {
+      document.title = t('PageTitle')
+    })
 
     return { updateLocale, tabsValue, copyright: __APP_CFG__.layout.copyright }
   },

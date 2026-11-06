@@ -10,6 +10,7 @@ import {
   routeSourceStatus,
   saveRemoteRouteConfig,
   saveRouteSource,
+  serverRoutesRequired,
 } from '@/router/config/source'
 import type { RouteSource } from '@/router/config/source'
 import { routeViewCatalog } from '@/router/config/views'
@@ -218,8 +219,12 @@ export default defineComponent({
         <NCard title={t('source')}>
           <NFlex align="center" justify="space-between">
             <NRadioGroup v-model:value={source.value} aria-label={t('source')}>
-              <NRadioButton value="static">{t('static')}</NRadioButton>
-              <NRadioButton value="local">{t('local')}</NRadioButton>
+              {!serverRoutesRequired && (
+                <>
+                  <NRadioButton value="static">{t('static')}</NRadioButton>
+                  <NRadioButton value="local">{t('local')}</NRadioButton>
+                </>
+              )}
               <NRadioButton value="remote" disabled={!remoteRouteUrl}>
                 {t('remote')}
               </NRadioButton>

@@ -1,18 +1,18 @@
+import { apiMockEnabled } from '@/api/admin/client'
+import { useI18n } from '@/hooks'
+import { router } from '@/router'
+import { ACCOUNT_PROFILE_PATH } from '@/router/constant'
 import { useSettingActions, useSigningActions } from '@/store'
 import type { IconOptions, IconOptionsFC } from './type'
 
-/**
- *
- * 创建头像点击下拉菜单
- */
-export const createAvatarOptions = () => [
+export const createAvatarOptions = (t: ReturnType<typeof useI18n>['t']) => [
   {
     key: 'person',
-    label: '个人信息',
+    label: t('account.profile'),
   },
   {
     key: 'lockScreen',
-    label: '锁定屏幕',
+    label: t(apiMockEnabled ? 'account.lockScreen' : 'account.lockSession'),
   },
   {
     type: 'divider',
@@ -20,50 +20,46 @@ export const createAvatarOptions = () => [
   },
   {
     key: 'logout',
-    label: '退出登陆',
+    label: t('account.signOut'),
   },
 ]
 
-/**
- *
- * 头像 Dropdown 下拉点击事件 map
- */
-const avatarDropdownActionMap = {
-  /**
-   *
-   * 退出登陆
-   * 清除所有 session 缓存并且重定向至登录页
-   */
-  logout: () => {
-    const { logout } = useSigningActions()
+export const avatarDropdownClick = async (key: string | number) => {
+  const { t } = useI18n('account')
+  const { logout } = useSigningActions()
+  const signOut = async (redirect?: string) => {
+    try {
+      await logout(redirect)
 
+      return true
+    } catch {
+      window.$message.error(t('signOutFailed'))
+
+      return false
+    }
+  }
+
+  if (key === 'person') {
+    await router.push(ACCOUNT_PROFILE_PATH)
+
+    return
+  }
+
+  if (key === 'logout') {
     window.$dialog.warning({
-      title: '提示',
-      content: '您确定要退出登录吗',
-      positiveText: '确定',
-      negativeText: '不确定',
-      onPositiveClick: () => {
-        logout()
-      },
+      title: t('signOut'),
+      content: t('signOutPrompt'),
+      positiveText: t('signOut'),
+      negativeText: t('cancel'),
+      onPositiveClick: () => signOut(),
     })
-  },
-  /**
-   *
-   * 锁定屏幕
-   */
-  lockScreen: () => {
-    const { updateSettingState } = useSettingActions()
+  }
 
-    updateSettingState('lockScreenSwitch', true)
-  },
-}
-
-export const avatarDropdownClick = (
-  key: keyof typeof avatarDropdownActionMap,
-) => {
-  const action = avatarDropdownActionMap[key]
-
-  action ? action() : window.$message.info('这个人很懒, 没做这个功能~')
+  if (key === 'lockScreen') {
+    if (apiMockEnabled)
+      useSettingActions().updateSettingState('lockScreenSwitch', true)
+    else await signOut(router.currentRoute.value.fullPath)
+  }
 }
 
 /**

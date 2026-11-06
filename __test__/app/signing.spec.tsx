@@ -2,9 +2,17 @@ import Signing from '@/views/login/components/Signing'
 import { flushPromises, mount } from '@vue/test-utils'
 import { createMemoryHistory, createRouter } from 'vue-router'
 
-const signing = vi.fn()
+const { signing, loadRoutes, announceSession } = vi.hoisted(() => ({
+  signing: vi.fn(),
+  loadRoutes: vi.fn(),
+  announceSession: vi.fn(),
+}))
 
 vi.mock('@/api/admin/client', () => ({ apiMockEnabled: false }))
+vi.mock('@/router', () => ({ loadAccountRoutes: loadRoutes }))
+vi.mock('@/store/modules/signing', () => ({
+  announceAdminSessionChange: announceSession,
+}))
 vi.mock('@/hooks', () => ({
   useI18n: () => ({ t: (key: string) => key }),
 }))
@@ -13,10 +21,8 @@ vi.mock('@/store', () => ({
 }))
 
 it('submits the real login form with native credential fields and no demo shortcuts', async () => {
-  signing.mockResolvedValue({
-    code: 0,
-    data: { id: 'test-account', username: 'qa-account' },
-  })
+  signing.mockResolvedValue(void 0)
+  loadRoutes.mockResolvedValue(void 0)
   const router = createRouter({
     history: createMemoryHistory(),
     routes: ['/', '/welcome'].map((path) => ({
@@ -44,6 +50,13 @@ it('submits the real login form with native credential fields and no demo shortc
       name: 'qa-account',
       pwd: 'qa-fixture-password',
     })
+    expect(loadRoutes).toHaveBeenCalledExactlyOnceWith()
+    expect(signing.mock.invocationCallOrder[0]).toBeLessThan(
+      loadRoutes.mock.invocationCallOrder[0]!,
+    )
+    expect(loadRoutes.mock.invocationCallOrder[0]).toBeLessThan(
+      announceSession.mock.invocationCallOrder[0]!,
+    )
     expect(router.currentRoute.value.path).toBe('/welcome')
   } finally {
     wrapper.unmount()

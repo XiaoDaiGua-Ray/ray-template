@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
 import {
+  credentialInputSchema,
   idsSchema,
   statusInputSchema,
   userInputSchema,
@@ -12,6 +13,8 @@ import { DatabaseService } from '../../infrastructure/database'
 import type { Database } from '../../infrastructure/database'
 import { AuthService } from '../auth/auth.service'
 import type { AuthContext } from '../auth/auth.service'
+import { replaceCredential } from '../auth/credentials'
+import { hashPassword } from '../auth/password'
 
 export function userView(user: User): AdminUser {
   return {
@@ -35,8 +38,7 @@ export class UsersService {
     @Inject(AuthService) private readonly auth: AuthService,
   ) {}
 
-  async options(token: string | null) {
-    const session = await this.auth.authenticate(token, 'users:read')
+  async options(session: AuthContext) {
     const [departments, roles] = await Promise.all([
       this.database.prisma.department.findMany({ orderBy: { id: 'asc' } }),
       this.database.prisma.role.findMany({
@@ -56,10 +58,11 @@ export class UsersService {
         ...(labelKey ? { labelKey } : {}),
         disabled:
           session.user.role !== 'admin' &&
-          permissions.some(
-            ({ permissionCode }) =>
-              !session.permissions.includes(permissionCode),
-          ),
+          (value === 'admin' ||
+            permissions.some(
+              ({ permissionCode }) =>
+                !session.permissions.includes(permissionCode),
+            )),
       })),
     }
   }
@@ -150,9 +153,10 @@ export class UsersService {
 
     if (
       session.user.role !== 'admin' &&
-      target.permissions.some(
-        ({ permissionCode }) => !session.permissions.includes(permissionCode),
-      )
+      (role === 'admin' ||
+        target.permissions.some(
+          ({ permissionCode }) => !session.permissions.includes(permissionCode),
+        ))
     )
       throw new ApiError(403, 'forbidden')
   }
@@ -214,6 +218,13 @@ export class UsersService {
         (value.status !== 'enabled' || value.role !== session.user.role)
       )
         throw new ApiError(409, 'selfProtected')
+
+      if (
+        existing &&
+        existing.status !== value.status &&
+        !session.permissions.includes('users:status')
+      )
+        throw new ApiError(403, 'forbidden')
 
       await this.validateUnique(transaction, value, id)
 
@@ -279,6 +290,39 @@ export class UsersService {
 
       return { affected: result.count }
     })
+  }
+
+  async setCredential(
+    id: string,
+    input: unknown,
+    token: string | null,
+    requestId: string | null,
+  ) {
+    const { newPassword } = parseInput(credentialInputSchema, input)
+    const passwordHash = await hashPassword(newPassword)
+
+    await this.database.write(async (transaction) => {
+      const session = await this.auth.authenticate(
+        token,
+        'users:credentials',
+        transaction,
+      )
+
+      if (id === session.user.id) throw new ApiError(409, 'selfProtected')
+
+      const user = await this.findUser(transaction, id)
+
+      await this.assertManageRole(transaction, session, user.role)
+      await replaceCredential(
+        transaction,
+        user.id,
+        passwordHash,
+        session.user.id,
+        requestId,
+      )
+    })
+
+    return null
   }
 
   async changeStatus(

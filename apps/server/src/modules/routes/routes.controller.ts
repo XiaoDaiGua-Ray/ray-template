@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Inject, Put, Query, Req } from '@nestjs/common'
+import { filterRuntimeRoutes } from '@ray-template/api-contracts/routes'
 import { parseApplicationRoutes } from '@ray-template/demo-data'
 import type { Request } from 'express'
 import { SERVER_CONFIG } from '../../config'
@@ -6,9 +7,9 @@ import type { Prisma } from '../../generated/prisma/client'
 import { ApiError, requestIdFrom, tokenFrom } from '../../http'
 import { DatabaseService } from '../../infrastructure/database'
 import type { ServerConfig } from '../../platform/index'
-import { Public, RequirePermission } from '../auth/auth.guard'
+import { authFrom, RequirePermission } from '../auth/auth.guard'
+import type { AuthenticatedRequest } from '../auth/auth.guard'
 import { AuthService } from '../auth/auth.service'
-import { withoutDemoRoutes } from './runtime-routes'
 
 @Controller('admin/route-config')
 export class RoutesController {
@@ -18,13 +19,17 @@ export class RoutesController {
     @Inject(SERVER_CONFIG) private readonly config: ServerConfig,
   ) {}
 
-  @Public()
   @Get()
-  async get(@Req() request: Request, @Query('view') view: unknown) {
+  async get(
+    @Req() request: AuthenticatedRequest,
+    @Query('view') view: unknown,
+  ) {
     if (view !== void 0 && view !== 'editor') throw new ApiError(400, 'invalid')
 
-    if (view === 'editor')
-      await this.auth.authenticate(tokenFrom(request), 'routes:write')
+    const session = authFrom(request)
+
+    if (view === 'editor' && !session.permissions.includes('routes:write'))
+      throw new ApiError(403, 'forbidden')
 
     const record = await this.database.prisma.routeConfig.findUnique({
       where: { id: 'admin' },
@@ -35,9 +40,13 @@ export class RoutesController {
     try {
       const routes = parseApplicationRoutes(JSON.stringify(record.config))
 
-      return this.config.demoEnabled || view === 'editor'
+      return view === 'editor'
         ? routes
-        : withoutDemoRoutes(routes)
+        : filterRuntimeRoutes(routes, {
+            role: session.user.role,
+            permissions: session.permissions,
+            demoEnabled: this.config.demoEnabled,
+          })
     } catch {
       throw new ApiError(503, 'invalidRoutes')
     }

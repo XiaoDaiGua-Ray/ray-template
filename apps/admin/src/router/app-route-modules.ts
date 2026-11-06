@@ -10,7 +10,7 @@ const managementRoute: AppRouteRecordRaw = {
   meta: {
     i18nKey: 'menu.RouteManagement',
     icon: 'action/setting',
-    role: ['admin'],
+    requiredPermission: 'routes:write',
     order: 100,
   },
   children: [
@@ -18,13 +18,19 @@ const managementRoute: AppRouteRecordRaw = {
       path: 'visual',
       name: 'RouteManagementVisual',
       component: () => import('@/views/route-management/visual'),
-      meta: { i18nKey: 'menu.RouteManagementVisual' },
+      meta: {
+        i18nKey: 'menu.RouteManagementVisual',
+        requiredPermission: 'routes:write',
+      },
     },
     {
       path: 'json',
       name: 'RouteManagement',
       component: () => import('@/views/route-management'),
-      meta: { i18nKey: 'menu.RouteManagementJson' },
+      meta: {
+        i18nKey: 'menu.RouteManagementJson',
+        requiredPermission: 'routes:write',
+      },
     },
   ],
 }

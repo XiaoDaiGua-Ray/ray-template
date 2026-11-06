@@ -12,6 +12,8 @@ import { map } from 'rxjs'
 import * as v from 'valibot'
 import { standardLogSink, writeLog } from './platform/index'
 
+export { tokenFrom } from './platform/session'
+
 export class ApiError extends Error {
   constructor(
     readonly status: number,
@@ -30,14 +32,6 @@ export function parseInput<S extends v.GenericSchema>(
   if (!parsed.success) throw new ApiError(400, 'invalid')
 
   return parsed.output
-}
-
-export function tokenFrom(request: Request) {
-  const header = request.headers.authorization
-
-  return /^Bearer [A-Za-z0-9_-]{32,128}$/u.test(header ?? '')
-    ? header!.slice(7)
-    : null
 }
 
 export function requestIdFrom(request: Request) {

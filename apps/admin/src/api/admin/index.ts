@@ -1,8 +1,10 @@
 import type { RouteConfig } from '@/router/config/schema'
 import { routeConfigSchema } from '@ray-template/routing/schema'
 import * as v from 'valibot'
-import { adminRequest } from './client'
+import { adminRequest, browserSessionEnabled } from './client'
 import {
+  accountProfileSchema,
+  browserLoginResultSchema,
   changedSchema,
   loginResultSchema,
   sessionSchema,
@@ -10,21 +12,44 @@ import {
   userOptionsSchema,
   userSchema,
 } from './contracts'
-import type { UserInput, UserListParams, UserStatus } from './contracts'
+import type {
+  ChangePasswordInput,
+  ProfileInput,
+  UserInput,
+  UserListParams,
+  UserStatus,
+} from './contracts'
 
-export const loginAdmin = (username: string, password: string) =>
-  adminRequest('auth/login', loginResultSchema, {
+export const loginAdmin = (username: string, password: string) => {
+  const options = {
     method: 'post',
     data: { username, password },
-  })
+  }
+
+  return browserSessionEnabled
+    ? adminRequest('auth/login', browserLoginResultSchema, options)
+    : adminRequest('auth/login', loginResultSchema, options)
+}
 export const getAdminSession = () =>
   adminRequest('auth/session', sessionSchema, { method: 'get' })
 export const logoutAdmin = () =>
   adminRequest('auth/logout', v.null(), { method: 'post' })
-export const getAdminRoutes = (view?: 'editor') =>
+export const getAccountProfile = (signal?: AbortSignal) =>
+  adminRequest('auth/profile', accountProfileSchema, { method: 'get', signal })
+export const updateAccountProfile = (data: ProfileInput) =>
+  adminRequest('auth/profile', accountProfileSchema, { method: 'patch', data })
+export const changeAccountPassword = (data: ChangePasswordInput) =>
+  adminRequest('auth/password', v.null(), { method: 'patch', data })
+export const setUserCredential = (id: string, newPassword: string) =>
+  adminRequest(`users/${encodeURIComponent(id)}/credential`, v.null(), {
+    method: 'put',
+    data: { newPassword },
+  })
+export const getAdminRoutes = (view?: 'editor', signal?: AbortSignal) =>
   adminRequest('route-config', routeConfigSchema, {
     method: 'get',
     params: view ? { view } : void 0,
+    signal,
   })
 export const updateAdminRoutes = (config: RouteConfig) =>
   adminRequest('route-config', routeConfigSchema, {

@@ -19,7 +19,7 @@ const parse = (routes: unknown[]) =>
   parseRouteConfig(JSON.stringify({ version: 1, routes }))
 
 describe('route configuration', () => {
-  it('keeps both management pages under the same admin-only menu', () => {
+  it('requires the editor grant for the management menu and both direct links', () => {
     const root = getAppRawRoutes().find(
       ({ path }) => path === '/route-management',
     )
@@ -28,15 +28,14 @@ describe('route configuration', () => {
     )
 
     expect(root?.children?.map(({ path }) => path)).toEqual(['visual', 'json'])
+    expect(root?.meta.requiredPermission).toBe('routes:write')
     expect(leaves.map(({ path }) => path)).toEqual([
       '/route-management/visual',
       '/route-management/json',
     ])
 
-    for (const { meta } of leaves) {
-      expect(validRole(meta, 'admin')).toBe(true)
-      expect(validRole(meta, 'viewer')).toBe(false)
-    }
+    for (const { meta } of leaves)
+      expect(meta.requiredPermission).toBe('routes:write')
   })
 
   it('round-trips all bundled routes with their view IDs and metadata', () => {

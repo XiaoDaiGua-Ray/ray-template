@@ -41,6 +41,7 @@
     "dist:check": "node scripts/distributions.mjs --check",
     "dev:full": "node scripts/fullstack.mjs dev",
     "fullstack:stop": "node scripts/fullstack.mjs stop",
+    "fullstack:up": "node scripts/fullstack.mjs up",
     "server:dev": "pnpm --filter @ray-template/server dev",
     "server:build": "pnpm --filter @ray-template/server build",
     "server:start": "pnpm --filter @ray-template/server start",

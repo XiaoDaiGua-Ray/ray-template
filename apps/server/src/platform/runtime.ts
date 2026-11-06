@@ -17,6 +17,11 @@ import {
 import type { LogSink } from './logging.js'
 import { RedisJsonCache, RedisRateLimiter, RedisStore } from './redis.js'
 import type { RedisCommands } from './redis.js'
+import {
+  browserSessionRequested,
+  setSessionCookieMode,
+  tokenFrom,
+} from './session.js'
 
 interface RuntimeOptions {
   checkDatabase: () => Promise<unknown>
@@ -117,6 +122,20 @@ export class PlatformRuntime {
         failure(response, 403, 'forbidden')
 
         return
+      }
+
+      if (browserSessionRequested(request)) {
+        const site = request.get('Sec-Fetch-Site')
+        const safe = ['GET', 'HEAD', 'OPTIONS'].includes(request.method)
+
+        // 浏览器会话仅供同源前端使用；Cookie 本身不能授权写请求。
+        if ((site && site !== 'same-origin') || (!safe && !origin)) {
+          failure(response, 403, 'forbidden')
+
+          return
+        }
+
+        setSessionCookieMode(response, this.config.sessionCookieSecure)
       }
 
       if (origin) {
@@ -259,20 +278,32 @@ export class PlatformRuntime {
         limit: this.config.loginRateLimitMax * 5,
         windowMs: 900000,
       })
-      const username: unknown = request.body?.username
+      const rawUsername: unknown = request.body?.username
+      const username = typeof rawUsername === 'string' ? rawUsername.trim() : ''
 
-      if (
-        typeof username === 'string' &&
-        username.length <= 80 &&
-        username.trim()
-      ) {
+      if (username.length > 0 && username.length <= 80) {
         limits.push({
           bucket: 'login-account',
-          identity: username.trim().toLowerCase(),
+          identity: username.toLowerCase(),
           limit: this.config.loginRateLimitMax,
           windowMs: 900000,
         })
       }
+    }
+
+    if (
+      request.method === 'PATCH' &&
+      /^\/api\/admin\/auth\/password\/?$/iu.test(request.path)
+    ) {
+      const token = tokenFrom(request)
+
+      if (token)
+        limits.push({
+          bucket: 'password-session',
+          identity: token,
+          limit: this.config.loginRateLimitMax,
+          windowMs: 900000,
+        })
     }
 
     for (const limit of limits) {

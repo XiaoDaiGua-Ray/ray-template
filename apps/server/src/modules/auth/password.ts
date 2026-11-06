@@ -45,5 +45,3 @@ export async function verifyPassword(password: string, stored: string | null) {
 
 export const tokenHash = (token: string) =>
   createHash('sha256').update(token).digest('hex')
-
-export const createToken = () => randomBytes(32).toString('base64url')

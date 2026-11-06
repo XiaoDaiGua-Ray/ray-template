@@ -12,7 +12,8 @@ import {
 } from '@nestjs/common'
 import type { Request } from 'express'
 import { queryInput, requestIdFrom, tokenFrom } from '../../http'
-import { RequirePermission } from '../auth/auth.guard'
+import { authFrom, RequirePermission } from '../auth/auth.guard'
+import type { AuthenticatedRequest } from '../auth/auth.guard'
 import { UsersService } from './users.service'
 
 @Controller('admin/users')
@@ -21,8 +22,8 @@ export class UsersController {
 
   @Get('options')
   @RequirePermission('users:read')
-  options(@Req() request: Request) {
-    return this.users.options(tokenFrom(request))
+  options(@Req() request: AuthenticatedRequest) {
+    return this.users.options(authFrom(request))
   }
 
   @Get()
@@ -68,6 +69,21 @@ export class UsersController {
   @RequirePermission('users:status')
   status(@Body() input: unknown, @Req() request: Request) {
     return this.users.changeStatus(
+      input,
+      tokenFrom(request),
+      requestIdFrom(request),
+    )
+  }
+
+  @Put(':id/credential')
+  @RequirePermission('users:credentials')
+  setCredential(
+    @Param('id') id: string,
+    @Body() input: unknown,
+    @Req() request: Request,
+  ) {
+    return this.users.setCredential(
+      id,
       input,
       tokenFrom(request),
       requestIdFrom(request),

@@ -1,3 +1,4 @@
+import { apiMockEnabled } from '@/api/admin/client'
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
 import UnlockScreen from '@/app-components/app/AppLockScreen/components/UnlockScreen'
 import { LAYOUT_CONTENT_REF } from '@/app-config'
@@ -43,7 +44,7 @@ export default defineComponent({
     )
 
     return () => {
-      if (getLockAppScreen()) return <UnlockScreen />
+      if (apiMockEnabled && getLockAppScreen()) return <UnlockScreen />
 
       const grouped = mode.value === 'mixed' || mode.value === 'split'
 

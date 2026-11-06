@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { randomUUID } from 'node:crypto'
+import { randomBytes, randomUUID } from 'node:crypto'
 import type { AddressInfo } from 'node:net'
 import { test } from 'node:test'
 import { Module } from '@nestjs/common'
@@ -26,6 +26,7 @@ const config = (extra: NodeJS.ProcessEnv = {}) =>
     DATABASE_URL: 'postgresql://test:test@127.0.0.1:5432/test',
     REDIS_URL: process.env.TEST_REDIS_URL || 'redis://127.0.0.1:6379',
     CORS_ORIGINS: 'http://localhost:9527',
+    JWT_SECRET: randomBytes(32).toString('base64url'),
     REDIS_KEY_PREFIX: `ray:test:${randomUUID()}`,
     ...extra,
   })
@@ -234,7 +235,7 @@ test('login limit normalizes usernames, covers case-insensitive routes and ignor
         })
       const first = await request('Admin', '1.1.1.1', '/api/admin/auth/login')
       const second = await request(
-        ' ADMIN ',
+        ' '.repeat(100) + 'ADMIN ',
         '2.2.2.2',
         '/API/ADMIN/AUTH/LOGIN/',
       )

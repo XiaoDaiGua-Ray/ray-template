@@ -11,6 +11,9 @@ export const apiMockEnabled =
   (import.meta.env.VITE_API_MOCK !== 'false' &&
     !import.meta.env.VITE_API_BASE_URL?.trim())
 
+export const browserSessionEnabled =
+  !apiMockEnabled && import.meta.env.VITE_API_AUTH_TRANSPORT === 'cookie'
+
 export const apiUrl = (path: string) => {
   const base =
     import.meta.env.VITE_API_BASE_URL?.trim() ||
@@ -33,21 +36,54 @@ export class AdminApiError extends Error {
   }
 }
 
+let sessionVersion = 0
+let onUnauthorized: (() => void) | undefined
+
+export const advanceAdminSession = () => ++sessionVersion
+
+export function bindAdminUnauthorized(handler: () => void) {
+  onUnauthorized = handler
+
+  return () => {
+    if (onUnauthorized === handler) onUnauthorized = void 0
+  }
+}
+
 export async function adminRequest<Schema extends v.GenericSchema>(
   path: string,
   schema: Schema,
   options: AppRawRequestConfig<unknown> = {},
 ): Promise<v.InferOutput<Schema>> {
   let body: unknown
+  const version = sessionVersion
+  const url = apiUrl(`admin/${path}`)
+
+  if (browserSessionEnabled && new URL(url).origin !== location.origin)
+    throw new Error('Cookie sessions require a same-origin API base.')
+
+  const reportError = (error: AdminApiError): never => {
+    if (
+      error.code === 401 &&
+      path !== 'auth/login' &&
+      path !== 'auth/session' &&
+      sessionVersion === version
+    )
+      onUnauthorized?.()
+
+    throw error
+  }
 
   try {
-    const token = getStorage<string>(APP_CATCH_KEY.token, 'localStorage')
+    const token = browserSessionEnabled
+      ? null
+      : getStorage<string>(APP_CATCH_KEY.token, 'localStorage')
 
     body = await request<unknown>({
       ...options,
-      url: apiUrl(`admin/${path}`),
+      url,
       headers: {
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(browserSessionEnabled ? { 'X-Ray-Session': 'cookie' } : {}),
         ...options.headers,
       },
       cancelConfig: { cancel: false },
@@ -58,12 +94,17 @@ export async function adminRequest<Schema extends v.GenericSchema>(
     const result = v.safeParse(envelopeSchema, error.response.data)
 
     if (result.success)
-      throw new AdminApiError(
-        result.output.code,
-        result.output.error?.key ?? 'requestFailed',
-        result.output.msg,
-        result.output.error?.fields,
+      return reportError(
+        new AdminApiError(
+          result.output.code,
+          result.output.error?.key ?? 'requestFailed',
+          result.output.msg,
+          result.output.error?.fields,
+        ),
       )
+
+    if (error.response.status === 401)
+      return reportError(new AdminApiError(401, 'unauthorized', error.message))
 
     throw error
   }
@@ -71,11 +112,13 @@ export async function adminRequest<Schema extends v.GenericSchema>(
   const envelope = v.parse(envelopeSchema, body)
 
   if (envelope.code !== 200)
-    throw new AdminApiError(
-      envelope.code,
-      envelope.error?.key ?? 'requestFailed',
-      envelope.msg,
-      envelope.error?.fields,
+    return reportError(
+      new AdminApiError(
+        envelope.code,
+        envelope.error?.key ?? 'requestFailed',
+        envelope.msg,
+        envelope.error?.fields,
+      ),
     )
 
   return v.parse(schema, envelope.data)

@@ -4,7 +4,7 @@
 import RouteConfigDemo from '../examples/RouteConfigDemo.vue'
 </script>
 
-正常启动从 `GET /admin/route-config` 读取版本化路由 JSON，按 `meta.order` 排序；路由树用于菜单与面包屑，页面记录展开后注册到 Vue Router。Mock 的初始路由表位于 `packages/demo-data/src/routes.json`，前端只保留组件 ID 注册表和外壳必需路由。默认使用 hash 路由，例如 `/ray-template/#/orders`。
+登录后从 `GET /admin/route-config` 读取会话可用的路由 JSON，按 `meta.order` 排序；路由树用于菜单和面包屑，展开后的页面记录注册到 Vue Router。Mock 的初始路由表位于 `packages/demo-data/src/routes.json`。外壳保留登录、个人信息和状态页。默认使用 hash 路由，例如 `/ray-template/#/orders`。
 
 ## 路由配置交互校验
 
@@ -18,7 +18,7 @@ import RouteConfigDemo from '../examples/RouteConfigDemo.vue'
 
 ## 在线编辑与接口接入
 
-路由管理的可视化和 JSON 页面从当前生效配置创建草稿。可视化保存及 JSON 的服务端模式通过 `PUT /admin/route-config` 提交，成功后重新加载并从接口读回；Mock 写入会在当前浏览器刷新后保留。JSON 页面仍可显式切换为本机配置或内置初始配置，用于离线恢复。真实后端模式下，选定的远端来源读取失败会中止启动并显示启动错误，不自动回退为演示菜单。
+有 `routes:write` 权限时，可视化和 JSON 页面从编辑接口加载完整草稿，通过 `PUT /admin/route-config` 保存，随后刷新运行路由。Mock 写入会保存在当前浏览器，也可以切换本机或内置配置。标准后端模式以远端为准，读取失败时显示错误。
 
 接口请求体为 `{ version: 1, routes: [...] }`，读取和写入响应都放在统一 `{ code, msg, data }` 包络的 `data` 中。`component` 必须是 `router/config/views.ts` 的注册 ID；新增前端页面先注册 ID，再由接口返回其路由记录。详见[服务端标准契约](./backend)。
 

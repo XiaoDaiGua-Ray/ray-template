@@ -4,9 +4,14 @@ import { Reflector } from '@nestjs/core'
 import type { Request } from 'express'
 import { tokenFrom } from '../../http'
 import { AuthService } from './auth.service'
+import type { AuthContext } from './auth.service'
 
 const PUBLIC = Symbol('public')
 const PERMISSION = Symbol('permission')
+const AUTH = Symbol('auth')
+
+export type AuthenticatedRequest = Request & { [AUTH]: AuthContext }
+export const authFrom = (request: AuthenticatedRequest) => request[AUTH]
 
 export const Public = () => SetMetadata(PUBLIC, true)
 export const RequirePermission = (permission: string) =>
@@ -28,9 +33,9 @@ export class AuthGuard implements CanActivate {
       PERMISSION,
       targets,
     )
-    const request = context.switchToHttp().getRequest<Request>()
+    const request = context.switchToHttp().getRequest<AuthenticatedRequest>()
 
-    await this.auth.authenticate(tokenFrom(request), permission)
+    request[AUTH] = await this.auth.authenticate(tokenFrom(request), permission)
 
     return true
   }

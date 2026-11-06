@@ -72,6 +72,8 @@ export interface AppRouteMeta {
   role?: (string | number)[]
   /** 展开菜单树后用于直接导航校验的父级权限。 */
   ancestorRoles?: (string | number)[][]
+  /** 由视图目录绑定的运行时权限；不会写入动态路由 JSON。 */
+  requiredPermission?: string
   /**
    *
    * @description

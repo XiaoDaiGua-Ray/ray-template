@@ -14,8 +14,12 @@ const storageKey = 'rayRouteConfig.v1'
 
 export const remoteRouteUrl =
   import.meta.env.VITE_ROUTE_CONFIG_URL?.trim() || apiUrl('admin/route-config')
+export const serverRoutesRequired =
+  !apiMockEnabled && !import.meta.env.VITE_ROUTE_CONFIG_URL?.trim()
 
 function readPreference(): Preference {
+  if (serverRoutesRequired) return { source: 'remote' }
+
   try {
     const stored: unknown = JSON.parse(
       localStorage.getItem(storageKey) ?? 'null',
@@ -49,11 +53,12 @@ export const routeSourceStatus: {
 
 export async function fetchRemoteRouteConfig(
   view?: 'editor',
+  signal?: AbortSignal,
 ): Promise<RouteConfig> {
   if (!import.meta.env.VITE_ROUTE_CONFIG_URL?.trim()) {
     const { parseRouteConfig } = await import('./contract')
 
-    return parseRouteConfig(JSON.stringify(await getAdminRoutes(view)))
+    return parseRouteConfig(JSON.stringify(await getAdminRoutes(view, signal)))
   }
 
   if (!remoteRouteUrl) throw new Error('VITE_ROUTE_CONFIG_URL is missing.')
@@ -67,7 +72,9 @@ export async function fetchRemoteRouteConfig(
   const { parseRouteConfig } = await import('./contract')
   const response = await fetch(url, {
     headers: { Accept: 'application/json' },
-    signal: AbortSignal.timeout(5000),
+    signal: signal
+      ? AbortSignal.any([signal, AbortSignal.timeout(5000)])
+      : AbortSignal.timeout(5000),
     cache: 'no-cache',
     redirect: 'error',
     credentials: 'same-origin',
@@ -89,22 +96,28 @@ export async function saveRemoteRouteConfig(config: RouteConfig) {
   saveRouteSource('remote')
 }
 
-export async function loadRouteConfig(): Promise<RouteConfig | undefined> {
+export async function loadRouteConfig(
+  signal?: AbortSignal,
+): Promise<RouteConfig | undefined> {
   if (preference.source === 'static') return
 
   try {
     const config =
       preference.source === 'remote'
-        ? await fetchRemoteRouteConfig()
+        ? await fetchRemoteRouteConfig(void 0, signal)
         : (await import('./contract')).parseRouteConfig(
             JSON.stringify(preference.local ?? null),
           )
 
+    signal?.throwIfAborted()
     routeSourceStatus.active = preference.source
     routeSourceStatus.config = config
+    routeSourceStatus.error = void 0
 
     return config
   } catch (error) {
+    if (signal?.aborted) throw error
+
     routeSourceStatus.error =
       error instanceof Error ? error.message : String(error)
 
@@ -113,9 +126,18 @@ export async function loadRouteConfig(): Promise<RouteConfig | undefined> {
 }
 
 export function saveRouteSource(source: RouteSource, local = preference.local) {
+  if (serverRoutesRequired && source !== 'remote')
+    throw new Error('The configured backend owns runtime routes.')
+
   localStorage.setItem(storageKey, JSON.stringify({ source, local }))
   sessionStorage.removeItem(APP_CATCH_KEY.appMenuTagOptions)
   sessionStorage.removeItem(APP_CATCH_KEY.appMenuKey)
   sessionStorage.removeItem(APP_CATCH_KEY.appPiniaKeepAliveStore)
   location.reload()
+}
+
+export function resetRouteSource() {
+  routeSourceStatus.active = 'static'
+  routeSourceStatus.config = void 0
+  routeSourceStatus.error = void 0
 }
