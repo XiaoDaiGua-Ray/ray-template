@@ -1,1 +1,0 @@
-import{v as e,y as t}from"./runtime-core.esm-bundler-CcpTTixp.js";import{t as n}from"./CacheRouteExample-ClbEyQhn.js";var r=t({name:`MultiMenuOne`,render(){return e(n,{title:this.$t(`showcase.multiOneTitle`),description:this.$t(`showcase.multiOneDescription`)},null)}});export{r as default};

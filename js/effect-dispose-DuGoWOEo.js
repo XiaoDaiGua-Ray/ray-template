@@ -1,0 +1,1 @@
+import{b as e,p as t}from"./isSymbol-DERoyzaf.js";function n(n){return t()?(e(n),!0):!1}export{n as t};
