@@ -184,6 +184,9 @@ importers:
       '@ray-template/admin-shell':
         specifier: workspace:*
         version: link:packages/admin-shell
+      '@ray-template/api-contracts':
+        specifier: workspace:*
+        version: link:packages/api-contracts
       '@ray-template/composables':
         specifier: workspace:*
         version: link:packages/composables
@@ -413,6 +416,9 @@ importers:
       '@ray-template/admin-shell':
         specifier: workspace:*
         version: link:../../packages/admin-shell
+      '@ray-template/api-contracts':
+        specifier: workspace:*
+        version: link:../../packages/api-contracts
       '@ray-template/composables':
         specifier: workspace:*
         version: link:../../packages/composables
@@ -582,6 +588,18 @@ importers:
       vue-router:
         specifier: 5.4.0
         version: 5.4.0(@vue/compiler-sfc@3.5.44)(esbuild@0.25.12)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@6.0.3)(vue@3.5.44(typescript@6.0.3)))(rolldown@1.2.16)(rollup@4.67.4)(vite@8.3.5(@types/node@26.6.6)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.107.1)(yaml@2.9.1))(vue@3.5.44(typescript@6.0.3))
+
+  packages/api-contracts:
+    dependencies:
+      '@ray-template/routing':
+        specifier: workspace:*
+        version: link:../routing
+      '@valibot/to-json-schema':
+        specifier: 1.8.0
+        version: 1.8.0(valibot@1.5.0(typescript@6.0.3))
+      valibot:
+        specifier: 1.5.0
+        version: 1.5.0(typescript@6.0.3)
 
   packages/composables:
     dependencies:

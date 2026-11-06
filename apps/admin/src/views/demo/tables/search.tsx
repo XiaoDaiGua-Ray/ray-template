@@ -1,6 +1,11 @@
 import './search.scss'
-import { getSearchOrders, getSearchOwners } from '@/api/demo/data'
-import type { DemoOrder } from '@/api/demo/data'
+import { apiMockEnabled } from '@/api/admin/client'
+import {
+  getSearchOptions,
+  getSearchOrders,
+  getSearchOwners,
+} from '@/api/demo/data'
+import type { DemoOrder, SearchOptions } from '@/api/demo/data'
 import { useSettingGetters } from '@/store'
 import { RTablePro, useTablePro } from '@ray-template/ui/table-pro'
 import type {
@@ -12,6 +17,7 @@ import type {
   TableProSearchValues,
 } from '@ray-template/ui/table-pro'
 import {
+  NAlert,
   NButton,
   NCard,
   NCheckbox,
@@ -30,14 +36,8 @@ import {
 } from 'vue'
 import DemoPage from '../components/DemoPage'
 import { searchCopy } from './search-copy'
-import {
-  organizations,
-  products,
-  statuses,
-  warehouses,
-} from './search-fixtures'
 
-const initialValues: TableProSearchValues = { status: ['pending'] }
+const initialValues: TableProSearchValues = {}
 const pagination = { pageSizes: [5, 10, 20] }
 const instantDelay = 350
 const extraKeys = [
@@ -87,6 +87,33 @@ export default defineComponent({
     const copy = computed(() =>
       getLocaleLanguage.value === 'zh-CN' ? searchCopy.zh : searchCopy.en,
     )
+    const options = shallowRef<SearchOptions>()
+    const optionsLoading = ref(false)
+    const optionsFailed = ref(false)
+    const optionsAttempt = ref(0)
+
+    watch(
+      [getLocaleLanguage, optionsAttempt],
+      async ([locale], _, cleanup) => {
+        const controller = new AbortController()
+
+        cleanup(() => controller.abort())
+        options.value = void 0
+        optionsFailed.value = false
+        optionsLoading.value = true
+
+        try {
+          const result = await getSearchOptions(locale, controller.signal)
+
+          if (!controller.signal.aborted) options.value = result
+        } catch {
+          if (!controller.signal.aborted) optionsFailed.value = true
+        } finally {
+          if (!controller.signal.aborted) optionsLoading.value = false
+        }
+      },
+      { immediate: true },
+    )
     const id = useId()
     const [register, table] = useTablePro()
     const source = ref<'local' | 'remote'>('remote')
@@ -103,7 +130,6 @@ export default defineComponent({
     const track = async <T,>(
       kind: Trace['kind'],
       detail: Trace['detail'],
-      delay: number,
       signal: AbortSignal,
       result: () => Promise<T>,
     ) => {
@@ -186,12 +212,9 @@ export default defineComponent({
       renderExpand: (row: DemoOrder) => {
         const labels = copy.value
         const details = [
-          [labels.warehouse, labels.warehouseLabels[row.warehouseIndex]],
+          [labels.warehouse, row.warehouse],
           [labels.invoiced, row.invoiced ? labels.yes : labels.no],
-          [
-            labels.delivery,
-            row.delivery === 'express' ? labels.express : labels.standard,
-          ],
+          [labels.delivery, row.deliveryLabel],
           [labels.deliveryAt, dateTime.value.format(row.deliveryAt)],
         ]
 
@@ -252,12 +275,12 @@ export default defineComponent({
       values,
       signal,
     }: TableProSearchOptionContext) => {
-      const org = values.orgId === 'north' ? 'north' : 'south'
+      const org = String(values.orgId ?? '')
       const fail = failOwnerOnce
 
       failOwnerOnce = false
 
-      return track('owner', org, org === 'north' ? 800 : 450, signal, () =>
+      return track('owner', org, signal, () =>
         getSearchOwners(org, keyword, getLocaleLanguage.value, signal, fail),
       )
     }
@@ -307,10 +330,7 @@ export default defineComponent({
             label: labels.status,
             type: 'select',
             multiple: true,
-            options: statuses.map((value, index) => ({
-              value,
-              label: labels.statuses[index],
-            })),
+            options: options.value?.statuses ?? [],
           },
           {
             key: 'createdAt',
@@ -326,10 +346,7 @@ export default defineComponent({
             key: 'orgId',
             label: labels.organization,
             type: 'select',
-            options: organizations.map((value, index) => ({
-              value,
-              label: labels.teams[index],
-            })),
+            options: options.value?.organizations ?? [],
           },
           {
             key: 'ownerId',
@@ -345,16 +362,7 @@ export default defineComponent({
             type: 'cascader',
             visible: showExtra,
             fieldProps: {
-              options: labels.groups.map((label, group) => ({
-                label,
-                value: `category-${group}`,
-                children: products
-                  .slice(group * 2, group * 2 + 2)
-                  .map((value, index) => ({
-                    value,
-                    label: labels.products[group * 2 + index],
-                  })),
-              })),
+              options: options.value?.productCategories ?? [],
             },
           },
           {
@@ -364,17 +372,13 @@ export default defineComponent({
             visible: showExtra,
             fieldProps: {
               defaultExpandAll: true,
-              options: labels.teams.map((label, region) => ({
-                label,
-                key: `region-${region}`,
-                disabled: true,
-                children: warehouses
-                  .slice(region * 2, region * 2 + 2)
-                  .map((key, index) => ({
-                    key,
-                    label: labels.warehouseLabels[region * 2 + index],
-                  })),
-              })),
+              keyField: 'value',
+              options: (options.value?.warehouseRegions ?? []).map(
+                (region) => ({
+                  ...region,
+                  disabled: true,
+                }),
+              ),
             },
           },
           {
@@ -407,8 +411,11 @@ export default defineComponent({
               >
                 <NFlex size="small">
                   <NRadio value="any">{labels.any}</NRadio>
-                  <NRadio value="standard">{labels.standard}</NRadio>
-                  <NRadio value="express">{labels.express}</NRadio>
+                  {options.value?.deliveries.map((option) => (
+                    <NRadio key={option.value} value={option.value}>
+                      {option.label}
+                    </NRadio>
+                  ))}
                 </NFlex>
               </NRadioGroup>
             ),
@@ -441,7 +448,7 @@ export default defineComponent({
       listPayload.value = query
       failListOnce = false
 
-      return track('list', page, 400, signal, async () => {
+      return track('list', page, signal, async () => {
         const result = await getSearchOrders(
           query,
           getLocaleLanguage.value,
@@ -499,7 +506,9 @@ export default defineComponent({
     const failOwner = () => {
       failOwnerOnce = true
       table.setSearchValues({
-        orgId: draft.value.orgId === 'north' ? 'south' : 'north',
+        orgId: options.value?.organizations.find(
+          ({ value }) => value !== draft.value.orgId,
+        )?.value,
       })
     }
 
@@ -525,21 +534,34 @@ export default defineComponent({
         <DemoPage title={labels.title} description={labels.description}>
           <NCard size="small">
             <div class="r-search-demo__guide">
-              <strong>{labels.tryScenario}</strong>
-              <NFlex size="small">
-                {scenarios.map((key) => (
-                  <NButton
-                    key={key}
-                    size="small"
-                    secondary
-                    type={scenario.value === key ? 'primary' : 'default'}
-                    disabled={!table.isReady.value}
-                    onClick={() => void startScenario(key)}
-                  >
-                    {labels[key]}
+              {optionsFailed.value && (
+                <NAlert type="error" title={labels.optionsFailed}>
+                  <NButton size="small" onClick={() => optionsAttempt.value++}>
+                    {labels.retryOptions}
                   </NButton>
-                ))}
-              </NFlex>
+                </NAlert>
+              )}
+              {apiMockEnabled && <strong>{labels.tryScenario}</strong>}
+              {apiMockEnabled && (
+                <NFlex size="small">
+                  {scenarios.map((key) => (
+                    <NButton
+                      key={key}
+                      size="small"
+                      secondary
+                      type={scenario.value === key ? 'primary' : 'default'}
+                      disabled={
+                        !table.isReady.value ||
+                        optionsLoading.value ||
+                        optionsFailed.value
+                      }
+                      onClick={() => void startScenario(key)}
+                    >
+                      {labels[key]}
+                    </NButton>
+                  ))}
+                </NFlex>
+              )}
               {scenario.value && <p role="status">{scenarioHint.value}</p>}
               <div class="r-search-demo__settings">
                 <NRadioGroup
@@ -597,7 +619,10 @@ export default defineComponent({
             data={source.value === 'local' ? rows.value : void 0}
             request={source.value === 'remote' ? request : void 0}
             params={queryParams.value}
-            loading={source.value === 'local' && rowsLoading.value}
+            loading={
+              optionsLoading.value ||
+              (source.value === 'local' && rowsLoading.value)
+            }
             pageSize={5}
             pagination={pagination}
             scrollX={more.value ? 700 : 645}
@@ -639,54 +664,58 @@ export default defineComponent({
             </div>
           </details>
 
-          <NCard size="small">
-            <div class="r-search-demo__trace-head">
-              <strong>{labels.trace}</strong>
-              <NFlex size="small">
-                <NButton
-                  size="small"
-                  secondary
-                  disabled={!table.isReady.value}
-                  onClick={failOwner}
-                >
-                  {labels.failOwner}
-                </NButton>
-                {source.value === 'remote' && (
+          {apiMockEnabled && (
+            <NCard size="small">
+              <div class="r-search-demo__trace-head">
+                <strong>{labels.trace}</strong>
+                <NFlex size="small">
                   <NButton
                     size="small"
                     secondary
-                    disabled={!table.isReady.value || query?.loading}
-                    onClick={failList}
+                    disabled={!table.isReady.value}
+                    onClick={failOwner}
                   >
-                    {labels.failList}
+                    {labels.failOwner}
                   </NButton>
-                )}
-              </NFlex>
-            </div>
-            {trace.value.length ? (
-              <ol class="r-search-demo__trace" aria-label={labels.trace}>
-                {trace.value.map(({ id, kind, detail, phase }) => (
-                  <li key={id}>
-                    <span>
-                      {kind === 'list'
-                        ? labels.listRequest
-                        : labels.ownerRequest}
-                    </span>
-                    <span>
-                      {typeof detail === 'number'
-                        ? labels.page(detail)
-                        : labels.teams[detail === 'north' ? 0 : 1]}
-                    </span>
-                    <NTag size="small" type={traceTypes[phase]}>
-                      {labels.phases[phase]}
-                    </NTag>
-                  </li>
-                ))}
-              </ol>
-            ) : (
-              <p class="r-search-demo__empty">{labels.emptyTrace}</p>
-            )}
-          </NCard>
+                  {source.value === 'remote' && (
+                    <NButton
+                      size="small"
+                      secondary
+                      disabled={!table.isReady.value || query?.loading}
+                      onClick={failList}
+                    >
+                      {labels.failList}
+                    </NButton>
+                  )}
+                </NFlex>
+              </div>
+              {trace.value.length ? (
+                <ol class="r-search-demo__trace" aria-label={labels.trace}>
+                  {trace.value.map(({ id, kind, detail, phase }) => (
+                    <li key={id}>
+                      <span>
+                        {kind === 'list'
+                          ? labels.listRequest
+                          : labels.ownerRequest}
+                      </span>
+                      <span>
+                        {typeof detail === 'number'
+                          ? labels.page(detail)
+                          : (options.value?.organizations.find(
+                              ({ value }) => value === detail,
+                            )?.label ?? detail)}
+                      </span>
+                      <NTag size="small" type={traceTypes[phase]}>
+                        {labels.phases[phase]}
+                      </NTag>
+                    </li>
+                  ))}
+                </ol>
+              ) : (
+                <p class="r-search-demo__empty">{labels.emptyTrace}</p>
+              )}
+            </NCard>
+          )}
         </DemoPage>
       )
     }

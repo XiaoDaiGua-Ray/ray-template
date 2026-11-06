@@ -48,7 +48,7 @@ export function loadOrders(
 
 ## 从演示切到真实服务
 
-开发、生产预览和 GitHub Pages 共用 MSW HTTP Mock。登录、用户、路由、人员表格、图表与请求示例都通过 API 层发送请求，在线演示由应用 base 下的 Service Worker 响应；不再在生产环境直接调用本地数据函数。选择本地筛选的表格示例，也先通过接口取得数据，再由组件完成本地排序、分页与筛选。
+开发、生产预览和 GitHub Pages 共用 MSW HTTP Mock。登录、用户、路由、人员表格、路由示例详情、搜索业务选项、图表与请求示例都通过 API 层发送请求，在线演示由应用 base 下的 Service Worker 响应；不再在生产环境直接调用本地数据函数。选择本地筛选的表格示例，也先通过接口取得数据，再由组件完成本地排序、分页与筛选。请求/响应类型与运行时 Schema 统一放在 `@ray-template/api-contracts`，HTTP 传输能力由 `@ray-template/http` 提供。
 
 设置 `VITE_API_MOCK=false` 和 `VITE_API_BASE_URL` 后，请求直达自己的服务端。完整请求/响应结构、错误码、会话、权限码及可下载 OpenAPI 见[服务端接入指南](./backend)。Mock 持久化仅属于当前浏览器，多用户共享数据和正式会话由真实后端负责。
 

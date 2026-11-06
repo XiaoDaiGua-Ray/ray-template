@@ -1,5 +1,5 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
-import { getAdminOpenApi } from '../apps/admin/src/api/admin/openapi.ts'
+import { getAdminOpenApi } from '@ray-template/api-contracts/openapi'
 
 const file = new URL(
   '../apps/admin/public/contracts/admin-api.json',

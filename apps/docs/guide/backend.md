@@ -8,7 +8,16 @@ import { withBase } from 'vitepress'
 
 <a :href="withBase('/contracts/admin-api.json')" target="_blank" rel="noreferrer">下载 OpenAPI 3.1 契约</a>
 
-契约从 `apps/admin/src/api/admin/contracts.ts` 和路由 Schema 生成，含请求体、响应、查询参数、Bearer 认证与权限码。修改后运行 `pnpm api:generate`；全量验证中的 `pnpm api:check` 检查文件与运行时 Schema 一致。
+契约从 workspace 包 `@ray-template/api-contracts` 和路由 Schema 生成，含请求体、响应、查询参数、Bearer 认证与权限码。登录与用户契约通过 `/admin` 子路径导入，演示接口通过 `/demo` 导入，`/openapi` 导出 OpenAPI 生成函数。包不读取浏览器状态，前端、Mock 和自有服务端可共享类型与运行时校验；包当前随仓库使用，尚未发布到 npm。应用原有 `api/admin/contracts.ts`、`api/demo/contracts.ts` 路径仍为兼容入口。修改后运行 `pnpm api:generate`；全量验证中的 `pnpm api:check` 检查文件与运行时 Schema 一致。
+
+```ts
+import type { ApiResponse, UserInput } from '@ray-template/api-contracts/admin'
+import { userInputSchema } from '@ray-template/api-contracts/admin'
+import type {
+  DemoOrderQuery,
+  SearchOptions,
+} from '@ray-template/api-contracts/demo'
+```
 
 ## 接入步骤
 
@@ -119,11 +128,28 @@ hasPermission(['users:update', 'users:delete'], 'any')
 
 `GET /admin/route-config` 是公开的前端启动配置接口，返回 `data: { version: 1, routes: [...] }`；路由元数据不包含业务秘密。`PUT /admin/route-config` 以同一结构提交，需要 `routes:write`。若自有系统需要受保护的菜单读取，可在 API 适配层把读取移到登录后，并保留登录与错误页的启动路由。
 
-现有菜单表已迁到 `apps/admin/src/mocks/data/routes.json`，作为 Mock 初始数据库和显式离线恢复来源。正常在线启动走 GET，路由可视化与 JSON 的接口模式保存走 PUT，成功后重新加载并从接口读回。导入、导出与接口中的路由内容使用同一结构，详情见[路由契约](./routing)。
+现有菜单表已迁到 `apps/admin/src/mocks/data/routes.json`，作为 Mock 初始数据库和显式离线恢复来源。正常在线启动走 GET，路由可视化与 JSON 的接口模式保存走 PUT，成功后重新加载并从接口读回。真实后端模式下，远端读取失败会中止启动，不会自动展示内置业务菜单；用户显式选定的本地或静态来源仍可用于离线恢复。导入、导出与接口中的路由内容使用同一结构，详情见[路由契约](./routing)。
 
 前端 `router/config/views.ts` 保留组件 ID 白名单，接口只返回 ID；后端或 AI 不需要传递组件代码。登录、404 和受保护的路由管理入口由外壳保留。原 `VITE_ROUTE_CONFIG_URL` 仍兼容旧的原始 JSON 读取接口；完整读写接入使用上面的标准 API 基址。
 
 ## 在线验证
+
+演示接口同样属于标准 HTTP 契约：
+
+| 方法和路径                          | 输入                                            | 成功的 data                           |
+| ----------------------------------- | ----------------------------------------------- | ------------------------------------- |
+| `GET /admin/demo/people`            | `page/pageSize/name/email/sortAge/fail`         | `{ items: Person[], total }`          |
+| `GET /admin/demo/route-people`      | `page/pageSize/name`，name 精确匹配以兼容旧链接 | `{ items: RouteDemoPerson[], total }` |
+| `GET /admin/demo/route-people/{id}` | 从 0 开始的非负整数 id                          | `RouteDemoPerson`，不存在返回 404     |
+| `GET /admin/demo/search-options`    | `locale`                                        | 状态、组织、产品类目、仓库与配送选项  |
+| `POST /admin/demo/orders/search`    | `{ query: DemoOrderQuery, locale, fail? }`      | `{ items: DemoOrder[], total }`       |
+| `POST /admin/demo/owners/search`    | `{ orgId, keyword, locale, fail? }`             | `{ value, label }[]`                  |
+| `GET /admin/demo/charts`            | `refresh`                                       | `DemoCharts`                          |
+| `GET /admin/demo/request`           | 无                                              | 工单与城市数据                        |
+
+分页上限为 100。`sortAge` 为 `ascend` 或 `descend`，`refresh` 与演示用 `fail` 为布尔值；非法输入返回 HTTP 400。订单的筛选字段、类型、日期格式和金额下限均在共享 Schema 和 OpenAPI 中定义。`fail=true` 的模拟错误通过 HTTP 503 返回，页面不再直接抛出伪造请求错误。
+
+搜索页从接口获取业务选项，订单响应直接提供仓库与配送名称，不依赖前端样例数组下标。选项加载失败显示可重试状态，切换语言或离开页面会取消旧请求。路由示例的列表和详情也从接口读取；旧的姓名查询链接继续可用。预设演示场景和故障按钮只在 Mock 模式显示。
 
 打开浏览器 Network，依次登录、进入用户管理、查询、新增编辑、打开详情与保存路由，能够看到对应的 HTTP 请求。在线演示响应标记为来自 Service Worker；它模拟服务端协议，静态站点无需另外部署服务进程。接入真实后端后，同样的页面请求直接发往配置的基址。
 

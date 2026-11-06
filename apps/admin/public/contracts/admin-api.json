@@ -225,6 +225,49 @@
         ],
         "$schema": "https://json-schema.org/draft/2020-12/schema"
       },
+      "UserListQuery": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "pageSize": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "username": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "departmentId": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "status": {
+            "enum": [
+              "enabled",
+              "disabled"
+            ],
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "maxLength": 80
+          }
+        },
+        "required": [],
+        "$schema": "https://json-schema.org/draft/2020-12/schema"
+      },
       "UserOptions": {
         "type": "object",
         "properties": {
@@ -1040,7 +1083,8 @@
             }
           },
           "total": {
-            "type": "number"
+            "type": "integer",
+            "minimum": 0
           }
         },
         "required": [
@@ -1113,14 +1157,8 @@
                 "orderNo": {
                   "type": "string"
                 },
-                "productIndex": {
-                  "type": "number"
-                },
                 "productId": {
                   "type": "string"
-                },
-                "statusIndex": {
-                  "type": "number"
                 },
                 "status": {
                   "type": "string"
@@ -1133,12 +1171,6 @@
                 },
                 "ownerId": {
                   "type": "string"
-                },
-                "ownerIndex": {
-                  "type": "number"
-                },
-                "warehouseIndex": {
-                  "type": "number"
                 },
                 "warehouseId": {
                   "type": "string"
@@ -1169,20 +1201,22 @@
                 },
                 "owner": {
                   "type": "string"
+                },
+                "warehouse": {
+                  "type": "string"
+                },
+                "deliveryLabel": {
+                  "type": "string"
                 }
               },
               "required": [
                 "id",
                 "orderNo",
-                "productIndex",
                 "productId",
-                "statusIndex",
                 "status",
                 "createdAt",
                 "orgId",
                 "ownerId",
-                "ownerIndex",
-                "warehouseIndex",
                 "warehouseId",
                 "amount",
                 "invoiced",
@@ -1192,12 +1226,15 @@
                 "product",
                 "statusLabel",
                 "organization",
-                "owner"
+                "owner",
+                "warehouse",
+                "deliveryLabel"
               ]
             }
           },
           "total": {
-            "type": "number"
+            "type": "integer",
+            "minimum": 0
           }
         },
         "required": [
@@ -1212,7 +1249,9 @@
           "type": "object",
           "properties": {
             "value": {
-              "type": "string"
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
             },
             "label": {
               "type": "string"
@@ -1230,10 +1269,171 @@
         "properties": {
           "query": {
             "type": "object",
-            "propertyNames": {
-              "type": "string"
+            "properties": {
+              "page": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "pageSize": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100
+              },
+              "keyword": {
+                "type": "string",
+                "maxLength": 120
+              },
+              "status": {
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 80
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdFrom": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdTo": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "orgId": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "ownerId": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "productId": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "warehouseId": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "minAmount": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "invoiced": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "delivery": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "deliveryFrom": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "deliveryTo": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "deliveryTime": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
             },
-            "additionalProperties": {}
+            "required": []
           },
           "locale": {
             "type": "string"
@@ -1252,10 +1452,13 @@
         "type": "object",
         "properties": {
           "orgId": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
           },
           "keyword": {
-            "type": "string"
+            "type": "string",
+            "maxLength": 120
           },
           "locale": {
             "type": "string"
@@ -1268,6 +1471,301 @@
           "orgId",
           "keyword",
           "locale"
+        ],
+        "$schema": "https://json-schema.org/draft/2020-12/schema"
+      },
+      "DemoPeopleQuery": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "pageSize": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "sortAge": {
+            "enum": [
+              "ascend",
+              "descend"
+            ],
+            "type": "string"
+          },
+          "fail": {
+            "type": "boolean"
+          }
+        },
+        "required": [],
+        "$schema": "https://json-schema.org/draft/2020-12/schema"
+      },
+      "DemoChartsQuery": {
+        "type": "object",
+        "properties": {
+          "refresh": {
+            "type": "boolean"
+          }
+        },
+        "required": [],
+        "$schema": "https://json-schema.org/draft/2020-12/schema"
+      },
+      "DemoSearchOptionsQuery": {
+        "type": "object",
+        "properties": {
+          "locale": {
+            "type": "string"
+          }
+        },
+        "required": [],
+        "$schema": "https://json-schema.org/draft/2020-12/schema"
+      },
+      "DemoSearchOptions": {
+        "type": "object",
+        "properties": {
+          "statuses": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "label": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value",
+                "label"
+              ]
+            }
+          },
+          "organizations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "label": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value",
+                "label"
+              ]
+            }
+          },
+          "productCategories": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "label": {
+                  "type": "string"
+                },
+                "children": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 80
+                      },
+                      "label": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value",
+                      "label"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "value",
+                "label",
+                "children"
+              ]
+            }
+          },
+          "warehouseRegions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "label": {
+                  "type": "string"
+                },
+                "children": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 80
+                      },
+                      "label": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value",
+                      "label"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "value",
+                "label",
+                "children"
+              ]
+            }
+          },
+          "deliveries": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "label": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value",
+                "label"
+              ]
+            }
+          }
+        },
+        "required": [
+          "statuses",
+          "organizations",
+          "productCategories",
+          "warehouseRegions",
+          "deliveries"
+        ],
+        "$schema": "https://json-schema.org/draft/2020-12/schema"
+      },
+      "DemoRoutePerson": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "name": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "name",
+          "address",
+          "phone"
+        ],
+        "$schema": "https://json-schema.org/draft/2020-12/schema"
+      },
+      "DemoRoutePeopleQuery": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "pageSize": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 80
+          }
+        },
+        "required": [],
+        "$schema": "https://json-schema.org/draft/2020-12/schema"
+      },
+      "DemoRoutePeople": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "name": {
+                  "type": "string"
+                },
+                "address": {
+                  "type": "string"
+                },
+                "phone": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "key",
+                "name",
+                "address",
+                "phone"
+              ]
+            }
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "items",
+          "total"
         ],
         "$schema": "https://json-schema.org/draft/2020-12/schema"
       },
@@ -1413,7 +1911,405 @@
               }
             }
           }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 80
+            }
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 120
+            }
+          },
+          {
+            "name": "sortAge",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "ascend",
+                "descend"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "fail",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ]
+      }
+    },
+    "/admin/demo/route-people": {
+      "get": {
+        "operationId": "getRouteDemoPeople",
+        "summary": "getRouteDemoPeople",
+        "description": "Session or public bootstrap endpoint.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "properties": {
+                    "code": {
+                      "const": 200
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/DemoRoutePeople"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "See error.key for a stable machine-readable reason.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "See error.key for a stable machine-readable reason.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "See error.key for a stable machine-readable reason.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "See error.key for a stable machine-readable reason.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "See error.key for a stable machine-readable reason.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "See error.key for a stable machine-readable reason.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 80
+            }
+          }
+        ]
+      }
+    },
+    "/admin/demo/route-people/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "minimum": 0
+          }
         }
+      ],
+      "get": {
+        "operationId": "getRouteDemoPerson",
+        "summary": "getRouteDemoPerson",
+        "description": "Session or public bootstrap endpoint.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "properties": {
+                    "code": {
+                      "const": 200
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/DemoRoutePerson"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "See error.key for a stable machine-readable reason.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "See error.key for a stable machine-readable reason.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "See error.key for a stable machine-readable reason.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "See error.key for a stable machine-readable reason.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "See error.key for a stable machine-readable reason.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "See error.key for a stable machine-readable reason.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/demo/search-options": {
+      "get": {
+        "operationId": "getSearchOptions",
+        "summary": "getSearchOptions",
+        "description": "Session or public bootstrap endpoint.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "properties": {
+                    "code": {
+                      "const": 200
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/DemoSearchOptions"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "See error.key for a stable machine-readable reason.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "See error.key for a stable machine-readable reason.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "See error.key for a stable machine-readable reason.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "See error.key for a stable machine-readable reason.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "See error.key for a stable machine-readable reason.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "See error.key for a stable machine-readable reason.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
       }
     },
     "/admin/demo/request": {
@@ -1605,7 +2501,17 @@
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "refresh",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ]
       }
     },
     "/admin/demo/orders/search": {
@@ -2532,66 +3438,77 @@
           {
             "name": "page",
             "in": "query",
+            "required": false,
             "schema": {
               "type": "integer",
-              "minimum": 1,
-              "default": 1
+              "minimum": 1
             }
           },
           {
             "name": "pageSize",
             "in": "query",
+            "required": false,
             "schema": {
               "type": "integer",
               "minimum": 1,
-              "maximum": 100,
-              "default": 10
+              "maximum": 100
             }
           },
           {
             "name": "name",
             "in": "query",
+            "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "maxLength": 60
             }
           },
           {
             "name": "username",
             "in": "query",
+            "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "maxLength": 32
             }
           },
           {
             "name": "email",
             "in": "query",
+            "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "maxLength": 120
             }
           },
           {
             "name": "departmentId",
             "in": "query",
+            "required": false,
             "schema": {
+              "type": "string",
+              "maxLength": 80
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "enabled",
+                "disabled"
+              ],
               "type": "string"
             }
           },
           {
             "name": "role",
             "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "status",
-            "in": "query",
+            "required": false,
             "schema": {
               "type": "string",
-              "enum": [
-                "enabled",
-                "disabled"
-              ]
+              "maxLength": 80
             }
           }
         ]

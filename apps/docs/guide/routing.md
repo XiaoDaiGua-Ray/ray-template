@@ -18,7 +18,7 @@ import RouteConfigDemo from '../examples/RouteConfigDemo.vue'
 
 ## 在线编辑与接口接入
 
-路由管理的可视化和 JSON 页面从当前生效配置创建草稿。可视化保存及 JSON 的服务端模式通过 `PUT /admin/route-config` 提交，成功后重新加载并从接口读回；Mock 写入会在当前浏览器刷新后保留。JSON 页面仍可显式切换为本机配置或内置初始配置，用于离线恢复。
+路由管理的可视化和 JSON 页面从当前生效配置创建草稿。可视化保存及 JSON 的服务端模式通过 `PUT /admin/route-config` 提交，成功后重新加载并从接口读回；Mock 写入会在当前浏览器刷新后保留。JSON 页面仍可显式切换为本机配置或内置初始配置，用于离线恢复。真实后端模式下，选定的远端来源读取失败会中止启动并显示启动错误，不自动回退为演示菜单。
 
 接口请求体为 `{ version: 1, routes: [...] }`，读取和写入响应都放在统一 `{ code, msg, data }` 包络的 `data` 中。`component` 必须是 `router/config/views.ts` 的注册 ID；新增前端页面先注册 ID，再由接口返回其路由记录。详见[服务端标准契约](./backend)。
 

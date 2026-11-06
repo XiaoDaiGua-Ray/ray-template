@@ -1,4 +1,4 @@
-import { getAdminOpenApi } from '@/api/admin/openapi'
+import { getAdminOpenApi } from '@ray-template/api-contracts/openapi'
 
 it('keeps every generated schema reference resolvable from the OpenAPI document', () => {
   const document = getAdminOpenApi()
@@ -35,4 +35,43 @@ it('keeps every generated schema reference resolvable from the OpenAPI document'
   expect(document.components.schemas.RouteConfig.$schema).toBe(
     'https://json-schema.org/draft/2020-12/schema',
   )
+})
+
+it('documents the actual demo inputs and backend-independent response fields', () => {
+  const document = getAdminOpenApi()
+  const people = document.paths['/admin/demo/people'].get.parameters
+  const charts = document.paths['/admin/demo/charts'].get.parameters
+
+  expect(people.map(({ name }) => name)).toEqual(
+    expect.arrayContaining([
+      'page',
+      'pageSize',
+      'name',
+      'email',
+      'sortAge',
+      'fail',
+    ]),
+  )
+  expect(people.find(({ name }) => name === 'pageSize')?.schema).toMatchObject({
+    type: 'integer',
+    maximum: 100,
+  })
+  expect(charts.find(({ name }) => name === 'refresh')?.schema).toMatchObject({
+    type: 'boolean',
+  })
+  expect(
+    document.paths['/admin/demo/search-options'].get.parameters[0].name,
+  ).toBe('locale')
+  expect(
+    document.paths['/admin/demo/route-people/{id}'].parameters[0].schema,
+  ).toEqual({ type: 'integer', minimum: 0 })
+  expect(
+    document.components.schemas.DemoOrderQuery.properties?.query,
+  ).toMatchObject({
+    properties: {
+      minAmount: {
+        anyOf: expect.arrayContaining([{ type: 'number', minimum: 0 }]),
+      },
+    },
+  })
 })

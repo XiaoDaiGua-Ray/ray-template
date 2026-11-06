@@ -13,16 +13,17 @@ Ray Template 是一个 pnpm workspace：后台负责宿主集成，文档站解�
 | [docs](./)、[harness](../harness/README.md)                                   | 维护者约定与跨模块说明；Harness 管理任务导航、定向验证与证据。对外文档属于 `apps/docs`。              |
 | [scripts](../scripts)、[vite-helper](../vite-helper)、[unplugin](../unplugin) | 仓库级检查、Vite 插件辅助和自动导入的生成声明。根目录保留构建、类型和 CI 配置。                       |
 
-| 共享包                                                            | 实现归属                                       | 宿主边界                                                        |
-| ----------------------------------------------------------------- | ---------------------------------------------- | --------------------------------------------------------------- |
-| [@ray-template/utils](../packages/utils/package.json)             | 精度、类型判断、数据与文件工具、通用 JSON 存储 | 调用方提供 Storage；应用的 key、缓存后端和旧 AES 格式留在应用。 |
-| [@ray-template/composables](../packages/composables/package.json) | Vue 组合式函数、DOM、元素与作用域工具          | 应用专用导航、主题和内容区 Hooks 留在应用。                     |
-| [@ray-template/directives](../packages/directives/package.json)   | Vue 指令与注册器                               | 宿主提供复制提示，并选择何时注册。                              |
-| [@ray-template/icons](../packages/icons/package.json)             | SVG、清单、图标名类型与查询                    | 构建将资源生成雪碧图，宿主提供图标解析服务。                    |
-| [@ray-template/ui](../packages/ui/package.json)                   | 通用组件、共享主题及 UI 服务接口               | 后台注入翻译、主题、存储等；应用组件入口转导出通用组件。        |
-| [@ray-template/http](../packages/http/package.json)               | 独立 HTTP 客户端、拦截器和取消机制             | 应用传入请求配置和拦截器，封装实际业务 API。                    |
-| [@ray-template/routing](../packages/routing/package.json)         | 路由配置校验、路由展开和菜单遍历               | 应用持有页面注册表、配置来源、角色、会话和守卫。                |
-| [@ray-template/admin-shell](../packages/admin-shell/package.json) | 布局外壳、布局设置、过渡与页面缓存渲染         | 宿主提供路由状态、偏好、导航和内容插槽。                        |
+| 共享包                                                                | 实现归属                                       | 宿主边界                                                        |
+| --------------------------------------------------------------------- | ---------------------------------------------- | --------------------------------------------------------------- |
+| [@ray-template/utils](../packages/utils/package.json)                 | 精度、类型判断、数据与文件工具、通用 JSON 存储 | 调用方提供 Storage；应用的 key、缓存后端和旧 AES 格式留在应用。 |
+| [@ray-template/composables](../packages/composables/package.json)     | Vue 组合式函数、DOM、元素与作用域工具          | 应用专用导航、主题和内容区 Hooks 留在应用。                     |
+| [@ray-template/directives](../packages/directives/package.json)       | Vue 指令与注册器                               | 宿主提供复制提示，并选择何时注册。                              |
+| [@ray-template/icons](../packages/icons/package.json)                 | SVG、清单、图标名类型与查询                    | 构建将资源生成雪碧图，宿主提供图标解析服务。                    |
+| [@ray-template/ui](../packages/ui/package.json)                       | 通用组件、共享主题及 UI 服务接口               | 后台注入翻译、主题、存储等；应用组件入口转导出通用组件。        |
+| [@ray-template/http](../packages/http/package.json)                   | 独立 HTTP 客户端、拦截器和取消机制             | 应用传入请求配置和拦截器，封装实际业务 API。                    |
+| [@ray-template/api-contracts](../packages/api-contracts/package.json) | 业务与演示接口的类型、运行时 Schema、OpenAPI   | 不依赖浏览器或 Mock；应用、Mock 与接入方服务端共享协议。        |
+| [@ray-template/routing](../packages/routing/package.json)             | 路由配置校验、路由展开和菜单遍历               | 应用持有页面注册表、配置来源、角色、会话和守卫。                |
+| [@ray-template/admin-shell](../packages/admin-shell/package.json)     | 布局外壳、布局设置、过渡与页面缓存渲染         | 宿主提供路由状态、偏好、导航和内容插槽。                        |
 
 应用侧 `@/components`、`@/hooks`、`@/utils` 有兼容入口。跟随实际导出判断实现归属。共享包不可依赖后台别名或跨 workspace 相对导入；[包边界检查](../scripts/check-package-boundaries.mjs)校验依赖声明、公开入口和循环依赖。
 

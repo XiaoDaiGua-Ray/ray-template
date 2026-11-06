@@ -1,4 +1,4 @@
-import type { Person } from '@/demo-data/people'
+import type { Person } from '@ray-template/api-contracts/demo'
 import type { DataTableColumns } from 'naive-ui'
 
 export const createPeopleColumns = (

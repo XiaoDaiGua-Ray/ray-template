@@ -18,7 +18,10 @@ const origin = process.env.RAY_TEMPLATE_SITE_ORIGIN
 
 await Promise.all([
   access(new URL('index.html', admin)),
+  access(new URL('mockServiceWorker.js', admin)),
+  access(new URL('contracts/admin-api.json', admin)),
   access(new URL('index.html', docs)),
+  access(new URL('contracts/admin-api.json', docs)),
 ])
 await rm(output, { recursive: true, force: true })
 const mockServer = fileURLToPath(new URL('mockServer', admin))

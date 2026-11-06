@@ -1,22 +1,8 @@
 import type { PaginationResponse } from '@/types/modules/axios'
 import { faker } from '@faker-js/faker/locale/zh_CN'
+import type { Person, PersonListParams } from '@ray-template/api-contracts/demo'
 
-export interface Person {
-  id: string
-  name: string
-  age: number
-  address: string
-  createDate: string
-  email: string
-}
-
-export interface PersonListParams {
-  page?: number
-  pageSize?: number
-  email?: string
-  name?: string
-  sortAge?: 'ascend' | 'descend'
-}
+export type { Person, PersonListParams } from '@ray-template/api-contracts/demo'
 
 let people: Person[] | undefined
 

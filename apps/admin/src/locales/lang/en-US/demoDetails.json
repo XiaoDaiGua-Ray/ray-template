@@ -170,7 +170,8 @@
     "open": "Open details",
     "back": "Back to people",
     "missing": "Select a record from the list.",
-    "params": "Route parameters"
+    "params": "Route parameters",
+    "retry": "Could not load. Retry"
   },
   "directive": {
     "ripple": "Click ripple",

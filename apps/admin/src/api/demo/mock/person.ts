@@ -1,9 +1,9 @@
 import { adminRequest } from '@/api/admin/client'
 import { peopleResultSchema } from '@/api/demo/data'
-import type { Person, PersonListParams } from '@/demo-data/people'
 import type { PaginationResponse } from '@/types'
+import type { Person, PersonListParams } from '@ray-template/api-contracts/demo'
 
-export type { Person, PersonListParams } from '@/demo-data/people'
+export type { Person, PersonListParams } from '@ray-template/api-contracts/demo'
 
 export const getPersonList = async (
   params: PersonListParams,

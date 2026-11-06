@@ -1,6 +1,6 @@
 import { RTablePro } from '@/components'
-import type { Person } from '@/demo-data/people'
 import { useI18n } from '@/hooks/template/useI18n'
+import type { Person } from '@ray-template/api-contracts/demo'
 import { NCheckbox } from 'naive-ui'
 import type { DataTableColumns } from 'naive-ui'
 import { createPeopleColumns } from './people'

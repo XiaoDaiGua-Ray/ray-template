@@ -1,5 +1,5 @@
 import { getAdminRoutes, updateAdminRoutes } from '@/api/admin'
-import { apiUrl } from '@/api/admin/client'
+import { apiMockEnabled, apiUrl } from '@/api/admin/client'
 import { APP_CATCH_KEY } from '@/app-config'
 import type { RouteConfig } from './schema'
 
@@ -105,6 +105,8 @@ export async function loadRouteConfig(): Promise<RouteConfig | undefined> {
   } catch (error) {
     routeSourceStatus.error =
       error instanceof Error ? error.message : String(error)
+
+    if (!apiMockEnabled && preference.source === 'remote') throw error
   }
 }
 

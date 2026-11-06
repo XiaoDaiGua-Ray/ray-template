@@ -1,3 +1,4 @@
+import { apiMockEnabled } from '@/api/admin/client'
 import { getPersonList } from '@/api/demo/mock/person'
 import type { PersonListParams } from '@/api/demo/mock/person'
 import { RTablePro, useTablePro } from '@/components'
@@ -52,24 +53,7 @@ export default defineComponent({
       attempts.value += 1
       lastRequest.value = query
 
-      // 给演示请求留出可见的加载时间，切页时连同延时一起取消。
-      await new Promise<void>((resolve, reject) => {
-        signal.throwIfAborted()
-        const onAbort = () => {
-          clearTimeout(timer)
-          reject(signal.reason)
-        }
-        const timer = setTimeout(() => {
-          signal.removeEventListener('abort', onAbort)
-          resolve()
-        }, 650)
-
-        signal.addEventListener('abort', onAbort, { once: true })
-      })
-
-      if (shouldFail) throw new Error(t('table.demoFailure'))
-
-      return getPersonList(query, signal)
+      return getPersonList({ ...query, fail: shouldFail }, signal)
     }
 
     const applyName = (value: string) => {
@@ -142,15 +126,17 @@ export default defineComponent({
               >
                 {t('table.twentyRows')}
               </NButton>
-              <NButton
-                disabled={!isReady.value || queryState.value?.loading}
-                onClick={() => {
-                  failNext = true
-                  void reload()
-                }}
-              >
-                {t('table.demoFailure')}
-              </NButton>
+              {apiMockEnabled && (
+                <NButton
+                  disabled={!isReady.value || queryState.value?.loading}
+                  onClick={() => {
+                    failNext = true
+                    void reload()
+                  }}
+                >
+                  {t('table.demoFailure')}
+                </NButton>
+              )}
             </NFlex>
           </NFlex>
         </NCard>

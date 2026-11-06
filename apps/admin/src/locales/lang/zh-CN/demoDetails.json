@@ -170,7 +170,8 @@
     "open": "查看详情",
     "back": "返回人员列表",
     "missing": "请从列表选择一条记录。",
-    "params": "路由参数"
+    "params": "路由参数",
+    "retry": "加载失败，点击重试"
   },
   "directive": {
     "ripple": "点击涟漪",

@@ -13,4 +13,4 @@
 
 定向验证：`pnpm harness verify api`，包括[应用请求](../../__test__/axios/request.spec.ts)、[客户端隔离](../../__test__/workspace/http-client.spec.ts)和 [Mock](../../__test__/mock/database.spec.ts)。生产后端接入、浏览器下载和真实链路需另验。
 
-标准服务端接入从 [运行时契约](../../apps/admin/src/api/admin/contracts.ts)、[OpenAPI 生成](../../apps/admin/src/api/admin/openapi.ts) 和 [接入指南](../../apps/docs/guide/backend.md) 进入。页面只调用 API；Mock 数据库拥有演示写入和权限校验，生产后端模式不返回本地业务兜底数据。
+标准服务端接入从 [共享契约包](../../packages/api-contracts/README.md)、[业务 Schema](../../packages/api-contracts/src/admin.ts)、[演示 Schema](../../packages/api-contracts/src/demo.ts)、[OpenAPI 生成](../../packages/api-contracts/src/openapi.ts) 和 [接入指南](../../apps/docs/guide/backend.md) 进入。页面只调用 API，包括搜索选项和路由示例列表/详情；Mock 数据库拥有演示写入和权限校验，生产后端模式的远端路由加载失败会中止启动。应用旧契约路径保留为兼容转导出。

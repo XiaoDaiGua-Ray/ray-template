@@ -1,4 +1,8 @@
-import type { TableProParams } from '@ray-template/ui/table-pro'
+import type {
+  DemoOrder,
+  DemoOrderQuery,
+  SearchOptions,
+} from '@ray-template/api-contracts/demo'
 
 export const statuses = ['pending', 'paid', 'closed'] as const
 export const organizations = ['north', 'south'] as const
@@ -15,6 +19,69 @@ export const owners = [
   { id: 's1', orgId: 'south' },
   { id: 's2', orgId: 'south' },
 ] as const
+
+const labels = {
+  'zh-CN': {
+    teams: ['北区', '南区'],
+    people: ['陈晨', '林岚', '周宁', '王雨'],
+    statuses: ['待处理', '已支付', '已关闭'],
+    products: ['便签', '键盘', '笔记本', '显示器'],
+    groups: ['办公用品', '电子设备'],
+    warehouses: ['北区主仓', '北区备仓', '南区主仓', '南区备仓'],
+    deliveries: ['普通', '加急'],
+  },
+  'en-US': {
+    teams: ['North', 'South'],
+    people: ['Chen', 'Lin', 'Zhou', 'Wang'],
+    statuses: ['Pending', 'Paid', 'Closed'],
+    products: ['Notes', 'Keyboard', 'Notebook', 'Monitor'],
+    groups: ['Office supplies', 'Electronics'],
+    warehouses: ['North main', 'North backup', 'South main', 'South backup'],
+    deliveries: ['Standard', 'Express'],
+  },
+}
+
+export const getOrderLabels = (locale: string) =>
+  labels[locale === 'zh-CN' ? 'zh-CN' : 'en-US']
+
+export function getOrderOptions(locale: string): SearchOptions {
+  const copy = getOrderLabels(locale)
+
+  return {
+    statuses: statuses.map((value, index) => ({
+      value,
+      label: copy.statuses[index],
+    })),
+    organizations: organizations.map((value, index) => ({
+      value,
+      label: copy.teams[index],
+    })),
+    productCategories: copy.groups.map((label, group) => ({
+      value: `category-${group}`,
+      label,
+      children: products
+        .slice(group * 2, group * 2 + 2)
+        .map((value, index) => ({
+          value,
+          label: copy.products[group * 2 + index],
+        })),
+    })),
+    warehouseRegions: organizations.map((value, region) => ({
+      value,
+      label: copy.teams[region],
+      children: warehouses
+        .slice(region * 2, region * 2 + 2)
+        .map((value, index) => ({
+          value,
+          label: copy.warehouses[region * 2 + index],
+        })),
+    })),
+    deliveries: ['standard', 'express'].map((value, index) => ({
+      value,
+      label: copy.deliveries[index],
+    })),
+  }
+}
 
 export const orders = Array.from({ length: 96 }, (_, index) => {
   const ownerIndex = index % owners.length
@@ -46,10 +113,7 @@ export const orders = Array.from({ length: 96 }, (_, index) => {
   }
 })
 
-export function orderMatchesQuery(
-  row: (typeof orders)[number] & { product: string },
-  query: TableProParams,
-) {
+export function orderMatchesQuery(row: DemoOrder, query: DemoOrderQuery) {
   const {
     keyword,
     status,
@@ -71,7 +135,7 @@ export function orderMatchesQuery(
     `${row.orderNo} ${row.product}`
       .toLowerCase()
       .includes(String(keyword ?? '').toLowerCase()) &&
-    (!Array.isArray(status) || status.includes(row.status)) &&
+    (!status?.length || status.includes(row.status)) &&
     (typeof createdFrom !== 'string' || row.createdAt >= createdFrom) &&
     (typeof createdTo !== 'string' || row.createdAt <= createdTo) &&
     (orgId == null || row.orgId === orgId) &&
@@ -85,20 +149,4 @@ export function orderMatchesQuery(
     (typeof deliveryTo !== 'number' || row.deliveryAt <= deliveryTo) &&
     (deliveryTime == null || row.deliveryTime === deliveryTime)
   )
-}
-
-export function waitForDemo(delay: number, signal: AbortSignal) {
-  return new Promise<void>((resolve, reject) => {
-    signal.throwIfAborted()
-    const abort = () => {
-      clearTimeout(timer)
-      reject(signal.reason)
-    }
-    const timer = setTimeout(() => {
-      signal.removeEventListener('abort', abort)
-      resolve()
-    }, delay)
-
-    signal.addEventListener('abort', abort, { once: true })
-  })
 }

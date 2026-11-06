@@ -1,9 +1,12 @@
+import { getRouteDemoPeople } from '@/api/demo/data'
 import { RTablePro } from '@/components'
 import { useI18n } from '@/hooks'
+import type {
+  RouteDemoPerson,
+  RoutePeopleQuery,
+} from '@ray-template/api-contracts/demo'
 import { NButton, NFlex } from 'naive-ui'
 import type { DataTableColumns } from 'naive-ui'
-import { routeDemoPeople } from '../people'
-import type { RouteDemoPerson } from '../people'
 
 const RouterDemoHome = defineComponent({
   name: 'RouterDemoHome',
@@ -53,14 +56,18 @@ const RouterDemoHome = defineComponent({
     ])
 
     return {
-      dataSource: routeDemoPeople,
+      request: async (params: RoutePeopleQuery, signal: AbortSignal) => {
+        const { items, total } = await getRouteDemoPeople(params, signal)
+
+        return { data: items, total }
+      },
       columns,
     }
   },
   render() {
     return (
       <NFlex>
-        <RTablePro bare columns={this.columns} data={this.dataSource} />
+        <RTablePro bare columns={this.columns} request={this.request} />
       </NFlex>
     )
   },

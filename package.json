@@ -79,7 +79,8 @@
     "vue-hooks-plus": "2.4.3",
     "vue-i18n": "11.4.17",
     "vue-router": "5.4.0",
-    "vue3-next-qrcode": "4.1.1"
+    "vue3-next-qrcode": "4.1.1",
+    "@ray-template/api-contracts": "workspace:*"
   },
   "devDependencies": {
     "@commitlint/cli": "21.2.4",

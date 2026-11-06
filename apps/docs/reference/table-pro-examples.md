@@ -63,10 +63,12 @@ import AdminExample from '../examples/AdminExample.vue'
 
 <AdminExample path="/tables/search" title="组合条件、远程选项和高级搜索" :height="960" deferred />
 
-::: details 查看高级搜索及演示数据源码
+::: details 查看高级搜索、业务 API 及演示数据源码
 <<< ../../admin/src/views/demo/tables/search.tsx
 
-<<< ../../admin/src/views/demo/tables/search-fixtures.ts
+<<< ../../admin/src/api/demo/data.ts
+
+<<< ../../admin/src/mocks/data/orders.ts
 :::
 
 ## 自适应高度与虚拟滚动
