@@ -120,13 +120,13 @@ export default defineComponent({
 
 ## 检查、构建与部署
 
-| 命令                          | 用途                                                     |
-| ----------------------------- | -------------------------------------------------------- |
-| `pnpm test:run`               | 运行 Vitest 测试                                         |
-| `pnpm check`                  | 执行 CI 同款检查，包含类型、Lint、格式、测试和生产构建   |
-| `pnpm harness context`        | 按路由、UI、API 等任务域查找源码入口和验证命令           |
-| `pnpm harness verify`         | 执行全量检查并保存本地报告，也可以指定任务域进行定向验证 |
-| `pnpm build` / `pnpm preview` | 输出到 `dist/production`，或在本机预览构建               |
+| 命令                          | 用途                                                          |
+| ----------------------------- | ------------------------------------------------------------- |
+| `pnpm test:run`               | 运行 Vitest 测试                                              |
+| `pnpm check`                  | 执行 CI 同款检查，包含类型、Lint、格式、测试和生产构建        |
+| `pnpm harness context`        | 按路由、UI、API 等任务域查找源码入口和验证命令                |
+| `pnpm harness verify <scope>` | 执行定向检查并保存本地报告；集成风险或发布使用 `all` 全量检查 |
+| `pnpm build` / `pnpm preview` | 输出到 `dist/production`，或在本机预览构建                    |
 
 `pnpm docs:build` 单独构建文档。`pnpm pages:build` 组装后台与文档到 `dist/pages`，分别服务于 `/ray-template/` 和 `/ray-template/docs/`。
 

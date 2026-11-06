@@ -1,30 +1,30 @@
-# 页面视觉与排版
+# Visual design and page layout
 
-模板采用克制的蓝色与中性色。精致感来自一致的层级、间距与密度，而非给每个区域增加阴影或装饰。
+The template uses restrained blues and neutral colors. Refinement comes from consistent hierarchy, spacing, and density rather than adding shadows or decoration to every region.
 
-## 主题与尺度
+## Themes and dimensions
 
-- 页面背景、卡片、分割线与文字优先使用 `src/styles/design-system.scss` 中的语义变量。Naive UI 的主题覆盖集中在 `src/app-config/design-config.ts`，保持同一色阶，避免页面单独拼出另一套主题。
-- `src/styles/base.scss` 是全局样式入口，`design-system.scss` 管理主题变量与基础焦点样式，`setting.scss` 管理布局尺度。`naive.scss` 仅维护模板通用的控件默认值；布局与组件内部规则放在对应组件目录，避免影响嵌套的 Naive UI 实例。
-- 控件通常为 8px 圆角、卡片为 12px；页面区块间距使用 20–28px。强调色用于选择与主要操作，正文、说明、眉题使用不同文字层级。
-- 顶栏、标签栏和侧栏使用轻分割线，不叠加区域阴影；少量内容卡片使用两层轻阴影。
-- 页面标签平时只显示名称。可关闭的标签在悬停或聚焦时展开关闭按钮，触屏设备可在当前标签直接关闭。
-- 偏好抽屉按可用宽度使用双列或单列字段。分类导航和恢复默认操作放在统一位置。
-- 内容最大化时，布局提供置顶的退出操作，使用按钮或 Esc 恢复。
-- 页面标题复用 `AppPageHeader`：眉题、一个主标题、简短说明与可选操作区。不要以大段说明或同等权重的卡片标题代替页面层级。
+- Prefer semantic variables in `apps/admin/src/styles/design-system.scss` for page backgrounds, cards, dividers, and text. Naive UI theme overrides live in `apps/admin/src/app-config/design-config.ts`. Keep a consistent color scale instead of inventing a separate theme for each page.
+- `apps/admin/src/styles/base.scss` is the global style entry point. `design-system.scss` owns theme variables and basic focus styles; `setting.scss` owns layout dimensions. Keep `naive.scss` limited to shared control defaults. Put layout/component-specific rules in the owning directory to avoid affecting nested Naive UI instances.
+- Controls generally use 8px radii, cards 12px, and page sections 20–28px spacing. Use accent colors for selection and primary actions; distinguish body text, descriptions, and eyebrow labels by color hierarchy.
+- Use subtle dividers between top bars, tab bars, and sidebars rather than layered shadows. A small number of content cards may use two-layer shadows.
+- Page tabs normally show only their names. Reveal the close button on hover or focus; touch users can close the active tab directly.
+- The preference drawer uses one or two field columns according to available width. Keep section navigation and reset actions in consistent positions.
+- When content is maximized, provide an exit control above the content, accessible by button or Esc.
+- Reuse `AppPageHeader` for page headings: an eyebrow, one main title, a short description, and optional actions. Do not replace page hierarchy with long descriptions or equally prominent card headings.
 
-## 页面组织
+## Page composition
 
-- 工作台与说明型示例限制到 1360px 并居中；业务表格仍遵循用户的流式/定宽布局设置，不全局强行收窄。
-- 示例使用 `DemoPage` 和 `HookExample`，按功能分组；将交互区域和可展开的代码区域分开。代码展开使用原生 details，支持键盘操作，并保留复制入口。
-- Hooks 在内容容器达到 900px 后显示双列；布局实验室在 760px 后使用设置/预览双栏。容器不足时按默认单列堆叠，判断可用内容宽度，不只看整个浏览器窗口。
-- 先复用现有 Naive UI 与模板组件，再补少量排版结构。不为展示效果编造统计数据；工作台版本号读取实际 package 配置，快捷入口跟随可见菜单。
-- 共用组件的不同调用场景分别保留：例如资源链接在登录页保持 compact，在工作台使用 cards，不以统一排版破坏原有页面约束。
+- Limit dashboard and explanatory demo content to 1360px and center it. Business tables continue to honor fluid/fixed-width layout preferences; do not narrow them globally.
+- Use `DemoPage` and `HookExample`, grouped by function. Separate interactive content from expandable code. Use native details elements for code, retain keyboard operation, and provide copying.
+- Hook examples use two columns when the content container reaches 900px. The layout lab uses settings/preview columns at 760px. Default to a single stacked column below those thresholds. Base decisions on available content width, not only browser-window width.
+- Reuse Naive UI and template components before adding small layout structures. Do not invent statistics for visual effect. Read the dashboard version from the actual package configuration and derive shortcuts from visible menus.
+- Preserve distinct uses of shared components. For example, resource links remain compact on login pages and cards on the dashboard; visual consistency must not break existing page constraints.
 
-## 验证
+## Verification
 
-检查桌面与 390px 窄屏、明暗主题、中英文、长代码和操作按钮换行。默认正文用色按至少 4.5:1、输入框等控件边界按至少 3:1 选取；用户自定义主色仍需按实际组合确认。
+Choose affected pages and dimensions using [Harness browser verification](../harness/README.md#browser-verification): desktop and 390px widths for layout changes, light/dark themes for color changes, Chinese/English for copy changes, and wrapping for changes to long code or button layouts. Local changes do not trigger a site-wide or all-dimensions matrix. Choose default body-text colors for at least 4.5:1 contrast and control boundaries such as inputs for at least 3:1. User-selected primary colors still need checking in their actual combinations.
 
-保留 `forced-colors` 系统颜色回退、可见键盘焦点与减少动态效果设置。截图、颜色数值与浏览器检查不能互相替代，也不代表已验证全部最低版本设备。
+Preserve system-color fallbacks for `forced-colors`, visible keyboard focus, and reduced-motion settings. Screenshots, color measurements, and browser checks do not substitute for one another and do not establish coverage of all minimum-version devices.
 
-登录页在宽屏并排显示品牌区和登录区，窄屏按文档顺序堆叠。Ray 标识用带两颗瓜籽的青瓜切面表现「呆瓜」，资源见 [SVG](../packages/icons/src/logo/ray.svg)。示例应用默认关闭 HTML 自动填充，含延迟渲染和 Teleport 控件。需要允许时，在目标控件显式提供 `autocomplete`，Naive UI 的输入组件使用 `inputProps`。
+On wide screens, the login page places branding and login content side by side; narrow screens stack them in document order. The Ray mark is a cucumber cross-section with two seeds representing “呆瓜”; see the [SVG](../packages/icons/src/logo/ray.svg). The example application disables HTML autofill by default, including delayed and Teleport controls. To allow it, supply `autocomplete` explicitly on the target control; use `inputProps` for Naive UI inputs.

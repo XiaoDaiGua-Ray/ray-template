@@ -1,12 +1,12 @@
-# Ray Template 文档
+# Ray Template documentation
 
-[旧站](https://xiaodaigua-ray.github.io/ray-template-doc/) · [模板源码](https://github.com/XiaoDaiGua-Ray/ray-template) · [在线演示](https://xiaodaigua-ray.github.io/ray-template/)
+[Legacy site](https://xiaodaigua-ray.github.io/ray-template-doc/) · [Template source](https://github.com/XiaoDaiGua-Ray/ray-template) · [Live demo](https://xiaodaigua-ray.github.io/ray-template/)
 
-从同级文档仓库的本地提交 `e01751223cc91f9288484f6e7f50481b9482261d` 导入站点。旧正文可在[历史版本](https://github.com/XiaoDaiGua-Ray/ray-template-doc/tree/0cae0e4334b16df22d491401c190360af4819025)查阅。
+Imported from local commit `e01751223cc91f9288484f6e7f50481b9482261d` in the sibling documentation repository. The previous content remains available in the [historical version](https://github.com/XiaoDaiGua-Ray/ray-template-doc/tree/0cae0e4334b16df22d491401c190360af4819025).
 
-## 本地开发
+## Local development
 
-在 Ray Template 仓库根目录执行。Node 和 pnpm 以 `.nvmrc` 和根 `package.json` 为准。
+Run these commands from the Ray Template repository root. Use the Node and pnpm versions specified in `.nvmrc` and the root `package.json`.
 
 ```sh
 pnpm install --frozen-lockfile
@@ -15,16 +15,16 @@ pnpm docs:check
 pnpm docs:preview
 ```
 
-按终端地址访问 `/ray-template/docs/`。`pnpm docs:check` 验证示例类型、站内链接和生产构建，产物位于 `apps/docs/.vitepress/dist`。`pnpm check` 包含此检查。生产部署使用根目录的 `pnpm pages:build`，在 `dist/pages/docs` 生成文档。指定 `RAY_TEMPLATE_SITE_ORIGIN` 后还会生成 `dist/legacy-docs`，作为原文档站的跳转产物。
+Open `/ray-template/docs/` at the address printed in the terminal. `pnpm docs:check` checks example types, internal links, and the production build. Output goes to `apps/docs/.vitepress/dist`. `pnpm check` includes this check. For production deployment, run `pnpm pages:build` from the root; it generates documentation under `dist/pages/docs`. Setting `RAY_TEMPLATE_SITE_ORIGIN` also generates `dist/legacy-docs` for redirects from the previous documentation site.
 
-- `guide/`：上手、开发和部署任务。
-- `migration.md`：旧写法、新写法、兼容边界和验证方法。
-- `reference/`：组件、Hooks、Store、指令、工具和配置的 API 参考。
-- `examples/`：页内交互使用的 Vue 源文件，Markdown 直接引用同一文件展示代码。
-- `.vitepress/`：主题、导航和旧路径映射。迁址保留的相对路径会在生产构建生成跳转页。
+- `guide/`: Getting started, development, and deployment tasks.
+- `migration.md`: Previous and current usage, compatibility boundaries, and verification methods.
+- `reference/`: API references for components, hooks, stores, directives, utilities, and configuration.
+- `examples/`: Vue source for interactive examples; Markdown displays code from those same files.
+- `.vitepress/`: Theme, navigation, and legacy path mappings. Production builds generate redirect pages for preserved legacy relative paths.
 
-应用变更影响公开 API 时，同步更新对应文档和示例。示例直接使用 workspace 包的公开入口。外壳预览使用文档自己的内存路由和示例菜单。预览生产构建，检查导航、搜索、主题、窄屏、旧路径和受影响示例。
+When application changes affect public APIs, update the corresponding documentation and examples. Examples use public workspace package entry points. Shell previews have their own in-memory router and example menus. Follow the [documentation workflow](../../docs/docs-handoff.md#update-workflow) to check affected content. Verify navigation, search, themes, narrow layouts, legacy paths, and interactions only when they change; use production previews for production paths and release verification.
 
-轻量示例直接在文档中运行。依赖后台上下文的示例嵌入同一版本的 `example.html`，只注册演示路由，普通缓存和 Store 状态留在该示例实例；TablePro 列显隐缓存使用独立的会话命名空间，允许在同一标签页刷新验证。Markdown 从实际运行的文件引用源码。开发时同时运行 `pnpm dev` 和 `pnpm docs:dev`；后台端口不是 9527 时，为文档开发服务器设置 `VITE_RAY_EXAMPLE_ORIGIN`（例如 `http://127.0.0.1:9528`）。
+Lightweight examples run directly in the documentation. Examples that need the admin application context embed `example.html` from the same version, register only demo routes, and keep ordinary cache and store state within the example instance. TablePro column visibility uses a separate session namespace so it can be checked across reloads in the same tab. Markdown includes source from the file actually running. During development, run both `pnpm dev` and `pnpm docs:dev`. If the admin server uses a port other than 9527, set `VITE_RAY_EXAMPLE_ORIGIN` for the documentation server, for example `http://127.0.0.1:9528`.
 
-验收全部示例请运行 `pnpm pages:build`，然后用 `pnpm preview --outDir ../../dist/pages` 在同一地址预览后台和文档，打开 `/ray-template/docs/`。只运行 `pnpm docs:preview` 时，可预览文档和直接运行的轻量示例。
+To verify embedded admin examples or the combined deployment, run `pnpm pages:build`, then `pnpm preview --outDir ../../dist/pages`. Open `/ray-template/docs/` at that shared address and exercise only affected examples. Expand to all examples for a release or an explicit request. `pnpm docs:preview` alone previews the documentation and its directly hosted lightweight examples.

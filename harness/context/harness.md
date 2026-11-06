@@ -1,14 +1,14 @@
-# Harness、索引和验证证据
+# Harness, indexes, and verification evidence
 
-用于调整任务协作、索引、回归范围、命令和本地报告。执行方式见 [Harness README](../README.md)。
+Use this topic for collaboration rules, indexes, regression scope, commands, and local reports. Execution guidance is in the [Harness README](../README.md).
 
-| 要查什么                   | 先读                                                                         | 接着追踪                                                                         |
-| -------------------------- | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| 助手从哪里进入、怎么选主题 | [根约定](../../AGENTS.md)、[静态任务入口](../../llms.txt)                    | [主题索引](./)、[跨模块地图](../../docs/architecture.md)                         |
-| 复杂任务怎么分工           | [按需使用 subagent](../README.md#按需使用-subagent)                          | [根约定](../../AGENTS.md)                                                        |
-| CLI、上下文与定向目标      | [任务注册表](../scopes.json)、[CLI 实现](../run.mjs)                         | [CLI 回归](../../__test__/harness/cli.spec.ts)、[根检查命令](../../package.json) |
-| 全量验证、报告和历史决策   | [验证与证据](../README.md#验收与证据)、[CI](../../.github/workflows/ci.yaml) | [建设计划与设计自审](../plan.md)、[工具链记录](../../docs/toolchain-upgrade.md)  |
+| Question                                       | Read first                                                                                                 | Follow through                                                                                        |
+| ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Agent entry points and topic selection         | [Root guidance](../../AGENTS.md), [static task index](../../llms.txt)                                      | [Topic indexes](./), [cross-module map](../../docs/architecture.md)                                   |
+| Delegation for complex tasks                   | [Using subagents when useful](../README.md#using-subagents-when-useful)                                    | [Root guidance](../../AGENTS.md)                                                                      |
+| CLI, context, and targeted checks              | [Scope registry](../scopes.json), [CLI implementation](../run.mjs)                                         | [CLI regressions](../../__test__/harness/cli.spec.ts), [root check commands](../../package.json)      |
+| Full checks, reports, and historical decisions | [Verification and evidence](../README.md#verification-and-evidence), [CI](../../.github/workflows/ci.yaml) | [Development plan and design review](../plan.md), [toolchain record](../../docs/toolchain-upgrade.md) |
 
-移动源码时更新受影响的索引链接。新增主题时同步任务注册表、同名 Markdown 和静态入口；长篇契约保留在所属模块。报告由现有 CLI 写入被忽略的 `.harness-local/runs/`；截图和其他临时证据不放进索引。
+Update affected index links when moving source. For new topics, update the scope registry, matching Markdown file, and static entry point together. Keep lengthy contracts in their owning modules. The existing CLI writes reports to ignored `.harness-local/runs/`; do not put screenshots or other temporary evidence in the indexes.
 
-定向验证：先运行 `pnpm harness check` 检查索引，变更 CLI 后运行 `pnpm harness verify harness`。涉及全量流程时，用真实 `pnpm harness verify` 验证报告。
+Targeted verification: run `pnpm harness check` for index validity. After CLI or scope-registration changes, run `pnpm harness verify harness`. For full-workflow changes, use a real `pnpm harness verify all` run to verify reporting. Collaboration rules, indexes, and the CLI do not themselves change pages, so they do not need UI/UX verification.

@@ -1,23 +1,23 @@
-# 注释规范
+# Comment style
 
-本规范适用于本仓库的 TypeScript、JavaScript、TSX/JSX、脚本与配置。新增或修改注释时必须遵循；不为自解释代码机械补注释。参考用户指定的统一注释风格，按 Ray Template 的组件与模块边界调整。
+These conventions apply to TypeScript, JavaScript, TSX/JSX, scripts, and configuration in this repository. Follow them when adding or editing comments; do not mechanically annotate self-explanatory code. They adapt the user's requested common style to Ray Template's component and module boundaries.
 
-## 组件与文件说明
+## Component and file descriptions
 
-- 不在文件顶部、`defineComponent` 前或函数组件声明前添加多行介绍性注释。组件职责、继承关系、用法与示例放在相应 README；非显然约束放在实际受影响的位置。
-- 不把文件介绍移动到第一个函数、常量或导出对象前。注释必须描述紧邻声明的真实契约，不能借换位置保留整段文件说明。
-- 同一个声明只保留一份契约说明，禁止连续堆叠多个 JSDoc 块。
+- Do not add multi-line introductory comments at the top of a file, before `defineComponent`, or before a function-component declaration. Put component responsibilities, inheritance, usage, and examples in the corresponding README. Place non-obvious constraints next to the affected code.
+- Do not move a file introduction in front of the first function, constant, or exported object. A comment must describe the actual contract of the adjacent declaration; changing its location does not justify keeping an unrelated file overview.
+- Keep one contract description per declaration. Do not stack consecutive JSDoc blocks for the same declaration.
 
-## 函数与方法契约
+## Function and method contracts
 
-确有需要说明参数、资源所有权、副作用、异步归属或失败语义时，使用多行 JSDoc。参数、返回值以实际签名与实现为准。
+Use multi-line JSDoc when parameters, resource ownership, side effects, asynchronous ownership, or failure semantics need explanation. Parameters and return values must match the actual signature and implementation.
 
-1. 使用独立的 `/**` 和 ` */`，内部每行以 ` *` 开头，并与被说明的声明对齐。
-2. 开头先放一行仅含 ` *` 的空白注释行；区段之间也使用这样的空白行，不保留行尾空格。
-3. 标签按 `@param` → `@description` → `@returns` → `@throws` 排列，仅保留需要的区段。
-4. 有参数时按签名顺序列出真实参数名与含义；多个 `@param` 连续排列。无参数时省略参数区。
-5. `@description` 独占一行，正文从下一行开始，不在标签前重复写一段函数介绍。
-6. `void`、`Promise<void>` 和构造函数不写 `@returns`；副作用放在描述区。`@throws` 只描述调用方可观察的抛出或 Promise 拒绝。
+1. Put `/**` and ` */` on separate lines. Begin each interior line with ` *` and align the block with its declaration.
+2. Start with a blank comment line containing only ` *`. Use the same blank line between sections; do not leave trailing spaces.
+3. Order tags as `@param` → `@description` → `@returns` → `@throws`. Include only necessary sections.
+4. List actual parameter names and meanings in signature order. Keep consecutive `@param` entries together; omit the section when there are no parameters.
+5. Put `@description` on its own line and start its text on the next line. Do not repeat a summary before the tags.
+6. Do not add `@returns` for `void`, `Promise<void>`, or constructors. Describe side effects in the description. `@throws` covers only exceptions or Promise rejections observable by callers.
 
 ```ts
 /**
@@ -32,14 +32,14 @@ const reload = (wait = 800) => {
 }
 ```
 
-公开 Hook 的完整示例优先放在 README 与可运行示例页，不在函数前堆放长篇教程。历史 `@example` 不应在无关任务中机械删除；本次修改契约时应同步核对它是否仍准确。
+Put complete public-hook examples in READMEs and runnable demo pages rather than lengthy tutorials before functions. Do not mechanically remove historical `@example` blocks during unrelated work. When changing a contract, check that its existing examples remain accurate.
 
-## 声明与逻辑说明
+## Declaration and implementation notes
 
-- 模块级常量、变量、类字段和类型属性的简短说明使用单行 JSDoc `/** 说明 */`，不加标签。
-- 类、接口或类型确需说明整体职责时，使用带开头空白行的多行 JSDoc，正文放在独占一行的 `@description` 后，不虚构参数或返回值。
-- 函数内部的分支、局部变量、执行顺序和原因说明使用 `//`；多行逻辑说明逐行写 `//`，不套用函数契约格式。
-- 注释用中文解释非显然的原因与约束，技术标识符保留原名。避免逐行复述、作者闲谈、过时行为和没有实现依据的保证。
+- Use single-line JSDoc, such as `/** 说明 */`, for short descriptions of module constants, variables, class fields, and type properties. Do not add tags.
+- When a class, interface, or type needs an overall description, use multi-line JSDoc with an initial blank comment line. Put the description after a standalone `@description` tag. Do not invent parameters or return values.
+- Use `//` inside functions for branches, local variables, ordering, and rationale. Prefix each line of a multi-line implementation note with `//`; do not use a function-contract block.
+- Write code comments in Chinese to explain non-obvious reasons and constraints, retaining technical identifiers. Avoid line-by-line narration, author chatter, obsolete claims, and guarantees unsupported by the implementation.
 
 ```ts
 /** 内容区恢复前的默认等待时间，单位为毫秒 */
@@ -51,6 +51,6 @@ const update = () => {
 }
 ```
 
-许可证、来源归属、生成标记和工具指令保留其必要语法，例如 `// @ts-expect-error`、`/// <reference ... />`、`/* @__PURE__ */`。JSX 子节点使用 `{/* 说明 */}`；HTML、CSS 使用各自合法的定界符。
+Preserve required syntax for licenses, attribution, generated markers, and tool directives, such as `// @ts-expect-error`, `/// <reference ... />`, and `/* @__PURE__ */`. Use `{/* 说明 */}` in JSX children and valid comment delimiters for HTML and CSS.
 
-交付前检查注释位置、是否堆叠、参数名、标签顺序和内容真实性。注释规范不替代 ESLint、Prettier、类型检查或浏览器验收。
+Before delivery, check placement, duplicate blocks, parameter names, tag order, and factual accuracy. These conventions do not replace applicable ESLint, Prettier, type, or browser checks.

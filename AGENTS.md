@@ -1,10 +1,11 @@
 # Ray Template
 
-Vue 3 + TSX 中后台模板，包含后台应用、文档站与共享包。
+A Vue 3 + TSX admin template with an admin application, a documentation site, and shared packages.
 
-- 需要定位实现时，从 [任务索引](llms.txt) 或 `pnpm harness context <scope>` 选相关主题。跨模块变更再查 [架构地图](docs/architecture.md)。
-- 先看 `git status`，保留已有改动。变更路由、持久化、请求或公共组件时，追踪调用方和现有数据契约。
-- 复杂任务中，宿主支持且当前权限允许时，主模型可按[分工约定](harness/README.md#按需使用-subagent)自行决定是否启用 subagent，无需为分工单独请示。主模型负责整合与最终验收。
-- 新增或修改注释时遵循 [注释规范](docs/comment-style.md)。页面文案同时维护中英文，页面改动按 [Harness 指南](harness/README.md#浏览器验收) 验收。
-- 完成实现后运行 `pnpm harness verify`，执行全量检查并留存报告。交付说明实际验证及未验证项。
-- 使用当前源码、清单和锁文件核对工程事实。敏感数据不进入源码、提示词或证据。提交、推送与部署遵循用户授权。
+- To locate an implementation, choose a topic from the [task index](llms.txt) or `pnpm harness context <scope>`. Consult the [architecture map](docs/architecture.md) for changes that cross module boundaries.
+- Check `git status` first and preserve existing changes. Trace callers and existing data contracts before changing routing, persistence, requests, or shared components.
+- For complex tasks, the lead agent may choose to use subagents under the [delegation guidelines](harness/README.md#using-subagents-when-useful), when the host supports them and current permissions allow it. Delegation needs no separate approval. The lead agent owns integration and final verification.
+- Write agent guidance and internal engineering documentation in English. Preserve the intended languages of product copy and reader-facing documentation.
+- Follow the [comment style](docs/comment-style.md) when adding or editing comments. Maintain both Chinese and English product copy. For visible behavior changes, use [browser verification](harness/README.md#browser-verification) only for affected pages, actions, and dimensions.
+- Select relevant tests or `pnpm harness verify <scope>` using the [verification scope](harness/README.md#choosing-the-verification-scope). Small changes do not default to full checks or a UI/UX sweep. Use full checks for integration risk, releases, or an explicit request; CI keeps `pnpm check`. Within one task, rerun only checks affected by subsequent changes. Report what was and was not verified.
+- Establish engineering facts from current source, manifests, and the lockfile. Keep sensitive data out of source, prompts, and evidence. Commits, pushes, and deployments require user authorization.

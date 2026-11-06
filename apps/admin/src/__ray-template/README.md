@@ -1,14 +1,12 @@
 # \_\_ray-template
 
-该包用于管理一些模板的管理，例如：
+This module owns template management checks, including:
 
-- validAppRootPath: 检查模板 `appRootPath` 是否配置正确
-- validLocal: 检查模板 `localConfig` 是否配置正确
+- validAppRootPath: Validate the template's `appRootPath` configuration.
+- validLocal: Validate the template's `localConfig` configuration.
 
-## 拓展
+## Extension
 
-当你需要在做一些定制化操作的时候，可以尝试在这个包里做一些事情。
+Add custom template-management operations here when appropriate, then import and call them in `main.ts`.
 
-最后在 `main.ts` 中导入并且调用即可。
-
-> 出于一些考虑，并没有做自动化导入调用，所以需要自己手动来。（好吧，其实就是我懒-，-）
+Imports and invocation are explicit; this module does not provide automatic discovery or execution.

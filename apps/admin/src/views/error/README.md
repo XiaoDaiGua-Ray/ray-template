@@ -1,10 +1,10 @@
-## 异常
+## Error pages
 
-### 说明
+### Purpose
 
-- 当前系统使用 Error404 作为系统的默认异常页重定向页面（可自行替换或者更改）
-- 提供公共的入口组件，虽然没啥大用，强迫症患者典型
+- The application uses Error404 as its default error redirect page. It can be replaced or changed.
+- A shared entry component is provided.
 
-### 更改与替换
+### Changing or replacing pages
 
-> 如果需要自己更改，或者补充更多的异常页面，可以在当前文件的 views 下补充（建议这么做哈）。也可以直接摒弃现有的东西，全部重新折腾一次，因为这个东西，一般不会太复杂。
+Add custom or additional error pages under this directory's views. The existing implementation may also be replaced if the application needs a different error-page design.

@@ -1,23 +1,23 @@
 # Ray Template
 
-> Vue 3 + TypeScript/TSX 中后台模板。pnpm workspace 包含后台应用、VitePress 文档站和共享包。
+> A Vue 3 + TypeScript/TSX admin template. The pnpm workspace contains the admin application, the VitePress documentation site, and shared packages.
 
-遵循 [AGENTS.md](AGENTS.md)，按任务选择下列入口。索引可直接阅读，也可用 `pnpm harness context <scope>` 查看同一份内容和定向验证命令。
+Follow [AGENTS.md](AGENTS.md) and select the entry point for the task. Read this index directly, or use `pnpm harness context <scope>` to display the same content and targeted verification commands.
 
-## 任务索引
+## Task index
 
-- [routing](harness/context/routing.md)：新增页面和菜单、动态路由 JSON、页面 ID、角色与守卫。
-- [layout](harness/context/layout.md)：启动、Provider、导航栏、KeepAlive、Pinia、偏好导入导出。
-- [ui](harness/context/ui.md)：公共组件、页面与登录、主题和双语文案、Hooks、指令。
-- [table-pro](harness/context/table-pro.md)：RTablePro、useTablePro、搜索、请求、选列、导出与打印。
-- [api](harness/context/api.md)：业务 API、Axios、AbortSignal、拦截器、Mock 与静态数据。
-- [utils](harness/context/utils.md)：精度、文件、存储、历史 AES 格式和应用兼容入口。
-- [icons](harness/context/icons.md)：SVG 分包、图标名、清单生成和热更新。
-- [docs](harness/context/docs.md)：VitePress、API 参考、内嵌示例、侧栏与旧页跳转。
-- [toolchain](harness/context/toolchain.md)：工作区依赖、公开导出、TypeScript、Vite、产物与 CI。
-- [harness](harness/context/harness.md)：索引维护、回归目标、验证命令与报告。
+- [routing](harness/context/routing.md): Pages and menus, dynamic route JSON, view IDs, roles, and guards.
+- [layout](harness/context/layout.md): Bootstrap, providers, navigation, KeepAlive, Pinia, and preference import/export.
+- [ui](harness/context/ui.md): Shared components, pages and login, themes and bilingual copy, hooks, and directives.
+- [table-pro](harness/context/table-pro.md): RTablePro, useTablePro, search, requests, column selection, export, and printing.
+- [api](harness/context/api.md): Business APIs, Axios, AbortSignal, interceptors, mocks, and static data.
+- [utils](harness/context/utils.md): Precision, files, storage, legacy AES formats, and application compatibility entry points.
+- [icons](harness/context/icons.md): SVG groups, icon names, manifest generation, and hot updates.
+- [docs](harness/context/docs.md): VitePress, API references, embedded examples, sidebars, and legacy redirects.
+- [toolchain](harness/context/toolchain.md): Workspace dependencies, public exports, TypeScript, Vite, build artifacts, and CI.
+- [harness](harness/context/harness.md): Index maintenance, regression targets, verification commands, and reports.
 
-## 按需背景
+## Background when needed
 
-- [架构地图](docs/architecture.md)：工作区边界、运行链路、类型检查和部署。
-- [AI Harness](harness/README.md)：验证流程、浏览器验收和本地证据。
+- [Architecture map](docs/architecture.md): Workspace boundaries, runtime flows, type checking, and deployment.
+- [AI Harness](harness/README.md): Verification workflow, browser verification, and local evidence.

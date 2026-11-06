@@ -1,34 +1,34 @@
-## 国际化入口
+## Internationalization entry point
 
-### 说明
+### Purpose
 
-- 该文件入口为整个项目的入口文件
-- 二次封装 useI18n 方法、国际化文件入口、辅助方法等
-- 国际化配置文件格式都应该按照当前已约定格式进行拓展与使用
+- This entry point owns internationalization for the project.
+- It includes the wrapped useI18n API, locale-resource entry points, and helpers.
+- Extend and use locale configuration according to the established format.
 
-### lang 文件入口说明
+### lang resource entry points
 
-> 项目默认包含英文包与中文包，如果需要拓展应该按照当前格式进行拓展。每个文件识别为一个国际包语言包（会自动导入所有 json 文件作为语言包）。
+The project includes English and Chinese resources. Add languages using the same format. Each resource file identifies a locale; JSON resources are imported automatically.
 
-#### 注意
+#### Format
 
-> 该项目语言包使用 json 格式作为语言包管理格式，为了配合 `@intlify/unplugin-vue-i18n/vite` 插件，故而采用 json。
+Locale resources use JSON to work with `@intlify/unplugin-vue-i18n/vite`.
 
-#### 拓展方法
+#### Adding a locale
 
-- 配置语言包文件（文件名为语言包名称）
-- 配置文件入口（使用 `combineI18nMessages` 方法进行自动合并处理）
-- 语言包名称应该全局唯一
+- Add the resource file, named after the locale.
+- Configure its entry point using `combineI18nMessages` for automatic merging.
+- Keep locale names globally unique.
 
-### helper 文件说明
+### Helpers
 
-- `getAppLocalMessages` 获取系统所有语言包（该方法强制依赖 LOCAL_OPTIONS key 配置，意味着你在配置语言包的时候，key 必须与 `src/locales/lang/xxx.ts` 一一对应匹配）
-- `naiveLocales` 获取 `naive-ui` 组件库对应语言包文件
-- `getAppDefaultLanguage` 获取系统当前默认语言包
+- `getAppLocalMessages` returns all application locales. It depends on LOCAL_OPTIONS keys, which must correspond one-to-one with `src/locales/lang/xxx.ts` entries.
+- `naiveLocales` returns matching `naive-ui` locale resources.
+- `getAppDefaultLanguage` returns the application's current default locale.
 
-### useI18n 文件说明
+### useI18n
 
-> 二次封装 `i18n`，应该避免使用自带 `useI18n` 方法，使用系统提供方法。
+The application wraps `i18n`. Use that wrapper rather than the library's unwrapped `useI18n`.
 
-- 支持 setup 环境外使用 `t`、`value` 方法
-- 其行为与官方方法一致
+- It supports `t` and `value` outside setup.
+- Its behavior otherwise follows the official API.

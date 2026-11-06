@@ -1,6 +1,6 @@
 {
   "routing": {
-    "description": "页面注册、菜单、动态路由 JSON、角色与守卫",
+    "description": "Page registration, menus, dynamic route JSON, roles, and guards",
     "tests": [
       "__test__/router/",
       "__test__/hooks/useVueRouter.spec.ts",
@@ -10,7 +10,7 @@
     ]
   },
   "layout": {
-    "description": "启动、Provider、布局、KeepAlive、Pinia 与偏好文件",
+    "description": "Bootstrap, providers, layout, KeepAlive, Pinia, and preference files",
     "tests": [
       "__test__/app/",
       "__test__/layout/",
@@ -22,7 +22,7 @@
     ]
   },
   "ui": {
-    "description": "页面、公共组件、主题、国际化、Hooks 与指令",
+    "description": "Pages, shared components, themes, internationalization, hooks, and directives",
     "tests": [
       "__test__/app/",
       "__test__/components/",
@@ -32,7 +32,7 @@
     ]
   },
   "table-pro": {
-    "description": "RTablePro、useTablePro、搜索、分页、选列、导出与打印",
+    "description": "RTablePro, useTablePro, search, pagination, column selection, export, and printing",
     "tests": [
       "__test__/components/table-pro.spec.ts",
       "__test__/components/table-pro-search.spec.ts",
@@ -41,7 +41,8 @@
     ]
   },
   "api": {
-    "description": "业务 API、Axios、请求取消、拦截器与演示 Mock",
+    "description": "Business APIs, Axios, request cancellation, interceptors, and demo mocks",
+    "checks": ["api:check"],
     "tests": [
       "__test__/axios/",
       "__test__/mock/",
@@ -49,7 +50,7 @@
     ]
   },
   "utils": {
-    "description": "公共工具、缓存、历史密文和兼容入口",
+    "description": "Shared utilities, caches, legacy ciphertext, and compatibility entry points",
     "tests": [
       "__test__/basic/",
       "__test__/cache/",
@@ -61,19 +62,20 @@
     ]
   },
   "icons": {
-    "description": "SVG 分包、图标名、清单生成和热更新",
+    "description": "SVG groups, icon names, manifest generation, and hot updates",
+    "checks": ["icons:check"],
     "tests": ["__test__/icons/"]
   },
   "docs": {
-    "description": "VitePress、API 参考、内嵌示例、侧栏与旧页跳转",
+    "description": "VitePress, API references, embedded examples, sidebars, and legacy redirects",
     "checks": ["docs:check"]
   },
   "toolchain": {
-    "description": "工作区、公开导出、类型检查、Vite、构建与 CI",
+    "description": "Workspaces, public exports, type checking, Vite, builds, and CI",
     "checks": ["packages:check", "typecheck"]
   },
   "harness": {
-    "description": "索引、回归范围、验证命令和本地报告",
+    "description": "Indexes, regression scope, verification commands, and local reports",
     "tests": ["__test__/harness/"]
   }
 }

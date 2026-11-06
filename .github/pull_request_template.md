@@ -1,11 +1,11 @@
-## 变化与原因
+## Changes and rationale
 
-<!-- 描述用户能观察到的变化，以及需要这次改动的原因。 -->
+<!-- Describe the observable change and the problem it addresses. -->
 
-## 验证
+## Verification
 
-- [ ] `pnpm harness verify` 或 CI 的 `pnpm check`
-- [ ] 涉及页面时，验证对应路由、中文/英文与明暗主题
-- [ ] 涉及持久化、权限或公共组件时，检查已有数据与调用方兼容性
+- [ ] Run relevant tests or `pnpm harness verify <scope>` for the affected area. Use `pnpm harness verify all` for integration risk or releases; CI runs `pnpm check`.
+- [ ] For visible behavior changes, verify only affected pages, actions, and language/theme/viewport dimensions. Explain when this does not apply.
+- [ ] For persistence, permissions, or shared components, check compatibility with existing data and callers.
 
-<!-- 写明实际命令、结果、回归用例和未验证部分。浏览器验收附上操作与观察结果。 -->
+<!-- Select the verification scope using harness/README.md. Record actual commands, results, regression cases, and unverified areas. For browser verification, include actions and observations; mark it as not applicable when there is no UI impact. -->

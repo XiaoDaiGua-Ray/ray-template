@@ -38,7 +38,7 @@ beforeEach(() => {
   writeFileSync(join(fixture, 'llms.txt'), '[Demo](harness/context/demo.md)\n')
   writeFileSync(
     join(fixture, 'harness/context/demo.md'),
-    '# Demo\n\n先读 [架构](../../docs/architecture.md#fixture)。\n',
+    '# Demo\n\nRead [architecture](../../docs/architecture.md#fixture)。\n',
   )
   writeScope({ tests: ['__test__/demo/'] })
   writeScripts({ 'env:check': 'node -e "process.exit(23)"' })
@@ -75,14 +75,16 @@ function readReport() {
   )
 }
 
-it('拒绝没有回归用例的目录', () => {
+it('rejects directories without regression tests', () => {
   const result = run('check')
 
   expect(result.status).toBe(1)
-  expect(result.stderr).toContain('回归测试路径没有用例：__test__/demo/')
+  expect(result.stderr).toContain(
+    'regression test path contains no tests: __test__/demo/',
+  )
 })
 
-it('移动索引引用的实现后，检查会报告来源与断链', () => {
+it('reports the source and broken link when an indexed implementation moves', () => {
   writeFileSync(join(fixture, '__test__/demo/example.spec.ts'), '')
   expect(run('check').status).toBe(0)
 
@@ -91,20 +93,20 @@ it('移动索引引用的实现后，检查会报告来源与断链', () => {
 
   expect(result.status).toBe(1)
   expect(result.stderr).toContain(
-    'harness/context/demo.md 的相对链接无效：../../docs/architecture.md#fixture',
+    'harness/context/demo.md: invalid relative link: ../../docs/architecture.md#fixture',
   )
 })
 
-it('拒绝未从静态入口链接的已注册主题', () => {
+it('rejects registered topics missing from the static entry point', () => {
   writeFileSync(join(fixture, '__test__/demo/example.spec.ts'), '')
-  writeFileSync(join(fixture, 'llms.txt'), '# 空入口\n')
+  writeFileSync(join(fixture, 'llms.txt'), '# Empty index\n')
   const result = run('check')
 
   expect(result.status).toBe(1)
-  expect(result.stderr).toContain('llms.txt 缺少可用的主题链接')
+  expect(result.stderr).toContain('llms.txt is missing a valid topic link')
 })
 
-it('无 Vitest 的任务域能展示索引并执行现有项目检查', () => {
+it('shows context and runs project checks for scopes without Vitest', () => {
   writeScope({ checks: ['docs:check'] })
   writeScripts({
     'env:check': 'node --version',
@@ -116,7 +118,7 @@ it('无 Vitest 的任务域能展示索引并执行现有项目检查', () => {
 
   expect(context.status).toBe(0)
   expect(context.stdout).toContain(
-    '先读 [架构](../../docs/architecture.md#fixture)',
+    'Read [architecture](../../docs/architecture.md#fixture)',
   )
   expect(context.stdout).toContain('pnpm docs:check')
 
@@ -131,17 +133,17 @@ it('无 Vitest 的任务域能展示索引并执行现有项目检查', () => {
   })
 })
 
-it('拒绝把全量检查登记为定向检查，避免递归调用', () => {
+it('rejects registering full checks as targeted checks to prevent recursion', () => {
   writeScope({ checks: ['check'] })
   writeScripts({ check: 'node harness/run.mjs check' })
 
   const result = run('verify', 'demo')
 
   expect(result.status).toBe(1)
-  expect(result.stderr).toContain('demo 的检查命令未注册：check')
+  expect(result.stderr).toContain('demo: unregistered check command: check')
 })
 
-it('子命令失败时停止后续验证，并记录失败状态', () => {
+it('stops subsequent checks and records failure when a child command fails', () => {
   writeFileSync(join(fixture, '__test__/demo/example.spec.ts'), '')
 
   const result = run('verify', 'demo')
@@ -153,3 +155,59 @@ it('子命令失败时停止后续验证，并记录失败状态', () => {
     steps: [{ command: 'pnpm env:check', exitCode: 23 }],
   })
 })
+
+it('runs only registered tests without appending full checks', () => {
+  writeFileSync(join(fixture, '__test__/demo/example.spec.ts'), '')
+  writeScripts({
+    'env:check': 'node --version',
+    'test:run': 'node -e "process.exit(0)"',
+    check: 'node -e "process.exit(97)"',
+  })
+
+  expect(run('verify', 'demo').status).toBe(0)
+  expect(readReport()).toMatchObject({
+    scope: 'demo',
+    status: 'passed',
+    steps: [
+      { command: 'pnpm env:check', exitCode: 0 },
+      { command: 'pnpm test:run __test__/demo/', exitCode: 0 },
+    ],
+  })
+})
+
+it.each(['api:check', 'icons:check'])(
+  'stops regressions and records failure when targeted %s finds stale artifacts',
+  (script) => {
+    writeFileSync(join(fixture, '__test__/demo/example.spec.ts'), '')
+    writeScope({ checks: [script], tests: ['__test__/demo/'] })
+    writeScripts({
+      'env:check': 'node --version',
+      [script]: 'node -e "process.exit(23)"',
+      'test:run': 'node -e "process.exit(97)"',
+    })
+
+    expect(run('verify', 'demo').status).toBe(23)
+    expect(readReport()).toMatchObject({
+      scope: 'demo',
+      status: 'failed',
+      steps: [
+        { command: 'pnpm env:check', exitCode: 0 },
+        { command: `pnpm ${script}`, exitCode: 23 },
+      ],
+    })
+  },
+)
+
+it.each([{ args: [] }, { args: ['all'] }])(
+  'preserves pnpm check compatibility for the full-check entry point $args',
+  ({ args }) => {
+    writeScripts({ check: 'node --version' })
+
+    expect(run('verify', ...args).status).toBe(0)
+    expect(readReport()).toMatchObject({
+      scope: 'all',
+      status: 'passed',
+      steps: [{ command: 'pnpm check', exitCode: 0 }],
+    })
+  },
+)

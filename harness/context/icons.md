@@ -1,13 +1,13 @@
-# SVG 图标与生成
+# SVG icons and generation
 
-用于新增或移动图标、排查图标类型、symbol ID、雪碧图 URL 或热更新。
+Use this topic when adding or moving icons, or investigating icon types, symbol IDs, spritemap URLs, or hot updates.
 
-| 要查什么                 | 先读                                                                                           | 接着追踪                                                                                              |
-| ------------------------ | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| 资源、分包及命名         | [图标维护说明](../../packages/icons/src/A_README.md)、[SVG 资源目录](../../packages/icons/src) | [包公开入口](../../packages/icons/package.json)、[应用适配](../../apps/admin/src/icons)               |
-| 清单、类型、生成及 HMR   | [生成器](../../packages/icons/scripts/icons.mjs)、[根脚本入口](../../scripts/icons.mjs)        | [Vite 图标适配](../../vite-helper/icons.ts)、[插件配置](../../vite.plugin.config.ts)                  |
-| 渲染、应用注入和读者用法 | [RIcon](../../packages/ui/src/RIcon/index.ts)、[应用图标服务](../../apps/admin/src/App.tsx)    | [图标示例](../../apps/admin/src/views/demo/svg-icons)、[读者参考](../../apps/docs/reference/icons.md) |
+| Question                                           | Read first                                                                                              | Follow through                                                                                                      |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Assets, groups, and naming                         | [Maintenance guide](../../packages/icons/src/A_README.md), [SVG assets](../../packages/icons/src)       | [Public package entry points](../../packages/icons/package.json), [application adapter](../../apps/admin/src/icons) |
+| Manifest, types, generation, and HMR               | [Generator](../../packages/icons/scripts/icons.mjs), [root script](../../scripts/icons.mjs)             | [Vite adapter](../../vite-helper/icons.ts), [plugin configuration](../../vite.plugin.config.ts)                     |
+| Rendering, application injection, and reader usage | [RIcon](../../packages/ui/src/RIcon/index.ts), [application icon service](../../apps/admin/src/App.tsx) | [Icon demo](../../apps/admin/src/views/demo/svg-icons), [reader reference](../../apps/docs/reference/icons.md)      |
 
-SVG 与生成器是来源；[manifest.ts](../../packages/icons/src/manifest.ts) 由 `pnpm icons:generate` 更新。移动分包可能改变完整名称；检查菜单、路由配置、缓存中的引用及生产资源 URL。
+The SVG files and generator are authoritative; `pnpm icons:generate` updates [manifest.ts](../../packages/icons/src/manifest.ts). Moving a group can change full icon names. Check references in menus, route configuration, and caches, as well as production asset URLs.
 
-定向验证：`pnpm icons:check` 与 `pnpm harness verify icons`，包括[生成](../../__test__/icons/generation.spec.ts)和[热更新](../../__test__/icons/hmr.spec.ts)回归。资源路径变更按[浏览器验收](../README.md#浏览器验收)核对生产预览。
+Targeted verification: `pnpm harness verify icons` includes `icons:check` and the [generation](../../__test__/icons/generation.spec.ts) and [HMR](../../__test__/icons/hmr.spec.ts) regressions. Do not repeat the manifest check separately. For asset path changes, check production previews using the [browser verification rules](../README.md#browser-verification).

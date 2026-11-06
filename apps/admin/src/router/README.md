@@ -1,23 +1,23 @@
-# 路由、菜单与权限
+# Routing, menus, and permissions
 
-## 切换路由来源
+## Switching route sources
 
-登录后，打开 **路由管理**。两个子页面均由应用外壳注册，使用相同的 `admin` 角色守卫。
+After login, open **路由管理** (Route management). Both child pages are registered by the application shell and use the same `admin` role guard.
 
-- **可视化配置**（`/#/route-management/visual`）：从当前生效的菜单树编辑页面、分组、重定向与外链，调整顺序、角色、显隐与缓存。可校验或导出草稿，也可应用并重新加载；通过标准接口保存并重新加载；Mock 数据库的修改仅在当前浏览器生效。已有别名、页面参数等高级字段会随草稿保留。
-- **JSON 配置**（`/#/route-management/json`）：管理静态、本机或后端来源，编辑或导入完整 JSON、校验和预览配置树，并导出 JSON、标准 JSON Schema 和可用页面清单。旧地址 `/#/route-management` 会跳转到这里。
+- **可视化配置** (Visual configuration, `/#/route-management/visual`): Edit pages, groups, redirects, and external links from the active menu tree. Adjust order, roles, visibility, and caching. Validate/export drafts or apply and reload. Saving and reloading use the standard API; mock-database changes apply only to the current browser. Drafts preserve advanced fields such as existing aliases and page props.
+- **JSON 配置** (JSON configuration, `/#/route-management/json`): Manage static, browser-local, or backend sources. Edit/import full JSON, validate and preview the tree, and export JSON, standard JSON Schema, and available view IDs. The old `/#/route-management` URL redirects here.
 
-| 来源      | 读取行为                                     | 应用方式                                   |
-| --------- | -------------------------------------------- | ------------------------------------------ |
-| 静态路由  | 读取 [modules](modules) 下的 TypeScript 模块 | 选择静态路由并应用                         |
-| 本机 JSON | 读取当前浏览器保存的配置                     | 导入文件或编辑 JSON，校验后应用            |
-| 后端接口  | 启动时请求部署配置 `VITE_ROUTE_CONFIG_URL`   | 选择后端接口并应用。接口地址随前端部署配置 |
+| Source        | Read behavior                                                    | Applying changes                                                                           |
+| ------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Static routes | Read TypeScript files under [modules](modules)                   | Select static routes and apply                                                             |
+| Local JSON    | Read configuration saved in the current browser                  | Import a file or edit JSON, validate, then apply                                           |
+| Backend API   | Request deployment-configured `VITE_ROUTE_CONFIG_URL` at startup | Select the backend source and apply. The URL comes from frontend deployment configuration. |
 
-应用时重新加载页面，重新生成路由匹配、菜单和标签页。设置接口地址时，新浏览器默认选择后端接口。显式选择的来源保存在当前浏览器。接口异常、超时或配置校验失败时恢复静态路由，管理页显示失败原因。登录、管理页、404 由外壳保留。未配置 `/dashboard` 时补充内置首页。
+Applying reloads the page and rebuilds route matching, menus, and tabs. With an API URL configured, a new browser defaults to the backend source. Explicit source choices are stored in the current browser. API errors, timeouts, or validation failures fall back to static routes and display the reason on the management page. The shell retains login, management, and 404 pages. An internal home page is added when `/dashboard` is absent.
 
-## 后端与 AI 契约
+## Backend and AI contract
 
-部署时提供 `VITE_ROUTE_CONFIG_URL=/api/route-config`，或使用启用 CORS 的 HTTPS 地址。客户端请求 `GET`，接受 `application/json`，超时 5 秒。同源请求可用会话 Cookie。标准接口把下方路由 JSON 放在 `{ code: 200, msg: "OK", data }` 的 `data` 中；导入和导出直接使用路由 JSON。旧的 `VITE_ROUTE_CONFIG_URL` 继续接受原始 JSON。完整读写接口见[服务端契约](../../../docs/guide/backend.md)。
+Set `VITE_ROUTE_CONFIG_URL=/api/route-config` at deployment, or use an HTTPS URL with CORS enabled. The client sends `GET`, accepts `application/json`, and times out after 5 seconds. Same-origin requests can use session cookies. Standard APIs place the route JSON below in `data` within `{ code: 200, msg: "OK", data }`; import/export uses route JSON directly. Legacy `VITE_ROUTE_CONFIG_URL` also accepts raw JSON. See the [backend contract](../../../docs/guide/backend.md) for the complete read/write API.
 
 ```json
 {
@@ -44,25 +44,26 @@
 }
 ```
 
-| 字段                                                                            | 规则                                                                                                                           |
-| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `path`、`children`                                                              | 相对路径拼接到父组，绝对路径从根匹配。支持普通命名参数及可选参数，参数路由需设置 `hidden` 或 `sameLevel`。分组只参与菜单与权限 |
-| `name`、`component`                                                             | 名称唯一。页面只能引用 [注册表](config/views.ts) 中的 ID。开启 `keepAlive` 时名称与该页面组件名一致                            |
-| `alias`、`redirect`                                                             | 支持叶子页的绝对别名和指向已配置页面的站内重定向。重定向的直接访问使用目标页权限                                               |
-| `props`                                                                         | `true` 将路由参数传给页面，也可传入 JSON 对象                                                                                  |
-| `meta.i18nKey`、`meta.noLocalTitle`、`meta.icon`、`meta.extra`                  | 翻译键优先于字面标题。图标使用 [IconName](../icons/manifest.ts)。标签可配置文案、翻译键、颜色、显隐及图标                      |
-| `meta.role`、`meta.hidden`、`meta.env`、`meta.sameLevel`                        | 父组和叶子的角色限制同时生效。隐藏、环境和平级模式影响菜单。平级模式在当前标签下追加面包屑                                     |
-| `meta.keepAlive`、`meta.ignoreAutoResetScroll`、`meta.order`、`meta.windowOpen` | 控制叶子页缓存、滚动复位、顶层排序和 HTTP(S) 外部链接                                                                          |
+| Field                                                                           | Rule                                                                                                                                                                                                                                      |
+| ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `path`, `children`                                                              | Relative paths append to the parent group; absolute paths match from the root. Ordinary named and optional parameters are supported. Parameterized routes need `hidden` or `sameLevel`. Groups participate only in menus and permissions. |
+| `name`, `component`                                                             | Names are unique. Pages may reference only IDs in the [registry](config/views.ts). With `keepAlive`, the route name must match the page component name.                                                                                   |
+| `alias`, `redirect`                                                             | Support absolute leaf-page aliases and internal redirects to configured pages. Direct access through redirects uses the target page's permissions.                                                                                        |
+| `props`                                                                         | `true` forwards route params to the page; a JSON object is also supported.                                                                                                                                                                |
+| `meta.i18nKey`, `meta.noLocalTitle`, `meta.icon`, `meta.extra`                  | Translation keys take precedence over literal titles. Icons use [IconName](../icons/manifest.ts). Badges can configure text, translation keys, colors, visibility, and icons.                                                             |
+| `meta.role`, `meta.hidden`, `meta.env`, `meta.sameLevel`                        | Parent-group and leaf role restrictions both apply. Hidden, environment, and same-level settings affect menus. Same-level mode appends breadcrumbs under the current tab.                                                                 |
+| `meta.keepAlive`, `meta.ignoreAutoResetScroll`, `meta.order`, `meta.windowOpen` | Control leaf caching, scroll reset, top-level order, and HTTP(S) external links.                                                                                                                                                          |
 
-[JSON Schema](config/schema.ts) 描述字段，Valibot 从同一份定义推导类型并校验结构，导出时使用官方转换器生成 JSON Schema。[校验与转换](config/contract.ts) 额外验证页面 ID、图标、参数冲突、保留地址和重定向环。最多 300 个记录、8 层、256 KiB。函数、VNode、路由钩子等代码能力使用 TypeScript 模块。路由角色控制前端菜单与导航，后端仍需验证业务 API 权限。
+[JSON Schema](config/schema.ts) describes the fields. Valibot derives types and validates structure from the same definition; export uses the official JSON Schema converter. [Validation and conversion](config/contract.ts) additionally check view IDs, icons, parameter conflicts, reserved paths, and redirect loops. Limits are 300 records, 8 levels, and 256 KiB. Use TypeScript modules for executable features such as functions, VNodes, and route hooks. Roles control frontend menus/navigation; the backend must still authorize business APIs.
 
-仓库内可直接导出 Schema 给后端或 AI 使用。
+Export the schema directly from the repository for backends or AI tools:
 
 ```sh
 node --input-type=module -e "import {getRouteJsonSchema} from './src/router/config/json-schema.ts'; console.log(JSON.stringify(getRouteJsonSchema(), null, 2))"
 ```
 
-## 扩展静态页面
+## Adding static pages
 
-新增页面时先在 [页面注册表](config/views.ts) 注册稳定 ID 和组件名，再在 [Mock 初始 JSON](../mocks/data/routes.json) 或路由接口返回的数据里使用该 `component` ID。`name` 与缓存页面组件名保持一致。前端不再递归读取 TypeScript 菜单模块；初始 JSON 同时作为显式离线恢复来源。正常启动与编辑保存分别请求标准 GET/PUT 接口，简体中文和英文菜单文案仍放在两份 `menu.json`。
-系统配置和白名单见 [router-config.ts](../app-config/router-config.ts)。在 Vue setup 之外读取路由器时使用 `useVueRouter()`。变更后运行 `pnpm harness verify routing`，并核对菜单跳转、直达、刷新、切换来源、角色和缓存。
+Register a stable ID and component name in the [view registry](config/views.ts), then use that `component` ID in [initial mock JSON](../mocks/data/routes.json) or route API responses. Match `name` to the component name for cached views. The frontend no longer recursively reads TypeScript menu modules; initial JSON is also the explicit offline-recovery source. Normal startup and edited saves use standard GET/PUT endpoints respectively. Keep Simplified Chinese and English menu copy in the two `menu.json` files.
+
+Application settings and allowlists are in [router-config.ts](../app-config/router-config.ts). Use `useVueRouter()` to read the router outside Vue setup. After changes, run `pnpm harness verify routing` and check menu navigation, direct access, reload, source switching, roles, and caching.

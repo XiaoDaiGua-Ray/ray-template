@@ -1,16 +1,15 @@
-## 描述
+## Purpose
 
-> 所有全局可变 UI 状态统一由 Pinia 管理，按用途分包，通过 `src/store/hooks` 暴露响应式 getters 和 actions。
+> Pinia owns all globally mutable UI state, grouped by responsibility. `src/store/hooks` exposes reactive getters and actions.
 
-## 约束
+## Constraints
 
-- 状态管理器应该按照其用途进行分包（见名知意）
-- 包名以用途名命名
-  - 默认以 index.ts 作为入口，其余的辅助函数、类型，分别在该文件夹下进行补充（type.ts、helper.ts。。。）
-- 仓库使用 `piniaPluginPersistedstate` 作为中间件，用于缓存仓库数据避免刷新丢失（但是该方法有缺陷，不能缓存函数）
-  - 默认不全部缓存参数，如果需要缓存参数，需要在 `defineStore` 第三个参数配置 `persist` 属性
-  - `defineStore` 第一个参数必须全局唯一
-  - 缓存插件 key 应该按照 `piniaXXXStore` 格式命名（XXX 表示该包名称）
+- Group stores by responsibility, using names that make their purpose clear.
+- Name each directory after its responsibility. Use index.ts as the default entry point and keep helpers/types in the same directory, such as type.ts and helper.ts.
+- The repository uses `piniaPluginPersistedstate` to retain store data across reloads; it cannot persist functions.
+- State is not persisted wholesale by default. Enable the needed fields through `persist` in the third `defineStore` argument.
+- The first `defineStore` argument must be globally unique.
+- Name persistence keys `piniaXXXStore`, where XXX is the store name.
 
 ```ts
 export const piniaDemoStore = defineStore(
@@ -35,7 +34,7 @@ export const piniaDemoStore = defineStore(
 )
 ```
 
-- 注册对应的 getters actions
+Register corresponding getters and actions:
 
 ```ts
 // piniaDemoStore
@@ -60,24 +59,24 @@ export const useMenuActions = () => {
 }
 ```
 
-- 最后在 index.ts 中暴露
+Expose them from index.ts:
 
 ```ts
 export { useDemoGetters, useMenuActions } from './modules/demo'
 ```
 
-- 使用
+Usage:
 
 ```ts
 import { useDemoGetters, useMenuActions } from '@/store'
 ```
 
-## 运行时状态与布局偏好
+## Runtime state and layout preferences
 
-- `runtime`：全局加载、移动抽屉、页面刷新、内容最大化和内容加载动画。通过 `useRuntimeGetters` / `useRuntimeActions` 读取和修改；不持久化，应用卸载时释放 Store 与计时器。
-- `lock-screen`：锁屏状态也归入 Pinia，保留历史布尔值格式、缓存 key 与跨标签页同步。
-- `setting.layoutConfig`：布局模式、内容宽度与间距、顶栏和页脚固定方式。通过现有 `useSettingGetters` / `useSettingActions` 操作，使用原有设置缓存 key。旧缓存补默认值，不清空历史偏好。
-- 删除了独立的 `global-variable` 包；原五个状态名保留在 runtime 中，调用方改为 Store hooks。新增全局状态继续按用途放入 `src/store/modules`，不在普通模块创建共享 reactive 单例。
+- `runtime`: Global loading, mobile drawers, page refresh, content maximization, and content loading animations. Read/write through `useRuntimeGetters` / `useRuntimeActions`. Do not persist it; release the store and timers on application unmount.
+- `lock-screen`: Lock-screen state also belongs to Pinia. Preserve its historical boolean format, cache key, and cross-tab synchronization.
+- `setting.layoutConfig`: Layout mode, content width/spacing, and header/footer positioning. Use existing `useSettingGetters` / `useSettingActions` and the existing settings cache key. Add defaults to old caches without clearing historical preferences.
+- The separate `global-variable` module was removed. Its original five state names remain in runtime; callers use store hooks. Add global state by responsibility in `src/store/modules`, rather than creating shared reactive singletons in ordinary modules.
 
 ```ts
 import { useRuntimeActions, useRuntimeGetters } from '@/store'
@@ -89,14 +88,14 @@ setRuntimeState('globalSpinning', true)
 setRuntimeState('globalSpinning', false)
 ```
 
-布局用法和插槽见 [布局说明](../layout/README.md)。
+See the [layout guide](../layout/README.md) for usage and slots.
 
-## 菜单同步
+## Menu synchronization
 
-- 菜单树和路径索引在角色变化或显式刷新时构建，不修改模块中的原始路由。路由完成后用 Vue Router 已匹配的记录同步标签页和面包屑。
-- 保留原有缓存键和标签列表结构。恢复时按已注册路由和角色重建旧标签，忽略已经删除或不可访问的路由。只有标签列表变化时才写会话缓存。
-- KeepAlive 按最近访问顺序更新，去重并按上限裁剪。主题合并仅由生效主题驱动，色弱模式和文档标题独立监听。
+- Build menu trees and path indexes when roles change or during explicit refresh. Do not mutate original module routes. After navigation, synchronize tabs and breadcrumbs from Vue Router's matched records.
+- Preserve existing cache keys and tab-list structure. Restore historical tabs using registered routes and roles, ignoring deleted or inaccessible routes. Write the session cache only when the tab list changes.
+- Update KeepAlive in recent-access order, deduplicate, and trim to its limit. Merge themes only when the effective theme changes; observe color-weakness mode and document titles independently.
 
-## 最近访问与收藏
+## Recent navigation and favorites
 
-`navigation-history` 经 `useNavigationHistoryGetters` / `useNavigationHistoryActions` 暴露。按会话用户 id 隔离 Local Storage，只保存最多 10 个去重的最近菜单路径与收藏路径，不保存搜索词、标题、URL 查询参数或页面数据。显示和导航时从当前可见菜单重新解析，已撤权、隐藏或删除的路径不显示。切换账号即时清空内存视图并读取对应缓存；清空历史不删除收藏。
+Expose `navigation-history` through `useNavigationHistoryGetters` / `useNavigationHistoryActions`. Isolate Local Storage by session user id. Store up to 10 deduplicated recent menu paths and favorite paths, without search terms, titles, URL query parameters, or page data. Resolve display/navigation against currently visible menus; omit revoked, hidden, or deleted paths. Account switching immediately clears the in-memory view and reads the matching cache. Clearing history does not remove favorites.

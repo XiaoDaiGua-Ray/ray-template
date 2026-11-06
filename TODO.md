@@ -1,8 +1,8 @@
-需求：
+Requirements:
 
-- 检查
+- Review
 
-其他：
+Additional notes:
 
-1. 请分批次去完成以上任务
-2. 以上所有的改动都请放心大胆的去做！做你认为合理准确的事情，我把所有权限都交给你！放心去做！
+1. Complete the tasks above in batches.
+2. Proceed confidently with all the changes above. Do what you judge to be reasonable and accurate; you have full authorization for those tasks.

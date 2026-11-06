@@ -1,24 +1,24 @@
-# 布局与自定义
+# Layout and customization
 
-`RLayout` 保留现有 Vue 3 + TSX 结构、路由权限、菜单转换和页面缓存。访问 `/layout-demo` 或顶部设置抽屉的“布局”页签可即时预览配置。
+`RLayout` retains the existing Vue 3 + TSX structure, route permissions, menu conversion, and page caching. Preview configuration immediately at `/layout-demo` or the “布局” (Layout) tab in the top settings drawer.
 
-## 导航与内容
+## Navigation and content
 
-- `side`：完整侧边菜单。
-- `top`：完整顶部导航，Naive UI 处理横向溢出与子菜单。
-- `mixed`：顶部一级导航，侧栏显示当前一级菜单的可见子菜单；单页菜单不占侧栏空间。
-- `right`：完整侧边菜单放在内容右侧。
-- `split`：固定顶栏横跨全宽，左侧只显示当前分组的子菜单。关闭固定顶栏时，顶部导航随内容滚动。
-- ≤768px 自动使用完整菜单抽屉，不覆盖已保存的桌面模式。抽屉选中菜单后自动收起。
-- 侧栏与抽屉的 Logo 固定在菜单上方；滚动条从菜单区域开始。菜单设置中的原生滚动条开关只作用于菜单列表。
-- 内容支持流式铺满或定宽居中、640–2560px 最大宽度、0–48px 间距，以及顶栏/页脚固定或随内容滚动。标签和版权显隐沿用原设置。
-- 最大化内容区与页面、标签菜单共享 Pinia 状态。退出按钮浮在右上角，按 Esc 也可恢复。
-- 内容加载以可见滚动视口为基准。重新挂载立即显示提示，短时手动加载延迟 120ms 后显示。顶栏、标签栏和页脚固定时不被遮罩覆盖。
-- 「外观 → 页面切换动画」保留旧选项，并增加向上浮入和向左滑入。切换只动画化内容，系统启用减少动态效果时直接切换。
+- `side`: Complete sidebar menu.
+- `top`: Complete top navigation; Naive UI handles horizontal overflow and submenus.
+- `mixed`: First-level top navigation with visible children of the active group in the sidebar. Single-page menus do not occupy sidebar space.
+- `right`: Complete sidebar menu to the right of the content.
+- `split`: A fixed full-width top bar, with only the active group's children on the left. When the fixed top bar is disabled, top navigation scrolls with content.
+- At ≤768px, use the complete-menu drawer without overwriting saved desktop mode. Selecting a drawer item closes it automatically.
+- Sidebar/drawer logos remain fixed above the menu; scrolling begins at the menu region. The native-scrollbar option affects only the menu list.
+- Content supports fluid fill or centered fixed width, maximum widths of 640–2560px, spacing of 0–48px, and fixed or scrolling headers/footers. Tab and copyright visibility retain existing settings.
+- Maximized content shares Pinia state with pages and tab menus. An exit button floats at the top right; Esc restores the layout too.
+- Content loading uses the visible scrolling viewport. Remounting shows the indicator immediately; brief manual loading waits 120ms. Fixed headers, tabs, and footers are not covered by the overlay.
+- “外观 → 页面切换动画” (Appearance → Page transition) retains previous options and adds upward fade-in and leftward slide-in. Only content animates; reduced-motion system settings use immediate transitions.
 
-交互借鉴 [Vben 的布局偏好设置](https://doc.vben.pro/en/guide/essentials/settings.html)，复用现有 Naive UI 组件，不引入第二套布局框架。
+Interactions draw on [Vben layout preferences](https://doc.vben.pro/en/guide/essentials/settings.html), reusing existing Naive UI components without a second layout framework.
 
-## 配置与扩展
+## Configuration and extension
 
 ```tsx
 import { useSettingActions } from '@/store'
@@ -32,11 +32,11 @@ updateSettingState('layoutConfig', {
 })
 ```
 
-配置属于 `setting` Store，沿用原有持久化 key；旧缓存自动补默认值并规范化范围，不清空用户偏好。`src/store/modules/setting/constant.ts` 管理默认值。恢复默认布局只重置 `layoutConfig`。
+Configuration belongs to the `setting` store and retains its persistence key. Historical caches receive defaults and normalized ranges without clearing user preferences. `src/store/modules/setting/constant.ts` owns defaults. Restoring the default layout resets only `layoutConfig`.
 
-设置抽屉的五种布局预览固定一行，空间不足时可横向滚动。底部可将布局、外观、菜单、水印和通用偏好导出为 `ray-template-preferences.json`，或导入同格式文件。文件须通过版本和字段校验才会应用到当前浏览器，导入无需刷新。不包含登录、锁屏、路由配置或页面缓存数据。
+The settings drawer keeps its five layout previews in one row, scrolling horizontally if needed. Bottom controls export layout, appearance, menu, watermark, and general preferences as `ray-template-preferences.json`, or import the same format. Files must pass version/field validation before applying in the current browser; no reload is required. Login, lock-screen, route configuration, and page-cache data are excluded.
 
-需要替换区域时使用具名插槽：
+Use named slots to replace regions:
 
 ```tsx
 <RLayout>
@@ -50,10 +50,10 @@ updateSettingState('layoutConfig', {
 </RLayout>
 ```
 
-插槽替换遵循当前模式与显隐设置：顶部导航模式无 sidebar，关闭标签/版权后不渲染相应区域。自定义内容需要自行处理请求取消与路由内容；未替换时沿用默认 Provider 和路由缓存。
+Replaced slots honor the current mode and visibility settings: top-navigation mode has no sidebar; disabled tabs/copyright do not render their regions. Custom content must handle request cancellation and routed content. Without replacement, the default providers and route cache remain active.
 
-布局的内容滚动引用仍为 `LAYOUT_CONTENT_REF`，侧栏引用为 `LAYOUT_SIDER_REF`；`useContentScroll` / `useSiderScroll` 在执行时读取当前引用，支持模式切换与组件重新挂载。
+Layout scroll references remain `LAYOUT_CONTENT_REF` for content and `LAYOUT_SIDER_REF` for the sidebar. `useContentScroll` / `useSiderScroll` read the current reference when invoked, supporting mode changes and remounts.
 
-## 样式归属
+## Style ownership
 
-`index.scss` 负责布局外壳、内容滚动与最大化。顶部导航、菜单、标签栏和内容加载状态的样式随各自组件维护。设置抽屉与布局实验室共用 `LayoutSettings` 和 `LayoutSettings.scss`。方形选项卡片内的缩略图标出导航位置，卡片下方说明当前模式的菜单行为。卡片组为键盘焦点外框留出空间，选中状态由 `aria-pressed` 表示。
+`index.scss` owns the shell, content scrolling, and maximization. Top navigation, menus, tabs, and loading-state styles stay with their components. The settings drawer and layout lab share `LayoutSettings` and `LayoutSettings.scss`. Thumbnails within square option cards indicate navigation placement; text below explains menu behavior. Card groups reserve space for keyboard focus outlines, and `aria-pressed` represents selection.

@@ -18,7 +18,13 @@ const scopes = JSON.parse(
 const [action = '--help', scope, ...extra] = process.argv.slice(2)
 const testPattern = /^__test__\/(?:[\w-]+\/)+(?:[\w.-]+\.spec\.tsx?)?$/
 const scopePattern = /^[a-z][a-z\d]*(?:-[a-z\d]+)*$/
-const allowedChecks = new Set(['docs:check', 'packages:check', 'typecheck'])
+const allowedChecks = new Set([
+  'api:check',
+  'docs:check',
+  'icons:check',
+  'packages:check',
+  'typecheck',
+])
 const indexFiles = [
   'AGENTS.md',
   'llms.txt',
@@ -42,25 +48,27 @@ function checkScopes() {
     scopes,
   )) {
     if (!scopePattern.test(name) || name === 'all') {
-      problems.push(`无效任务域：${name}`)
+      problems.push(`Invalid scope: ${name}`)
     }
 
     if (typeof description !== 'string' || !description.trim()) {
-      problems.push(`${name} 需要任务描述`)
+      problems.push(`${name} requires a task description`)
     }
 
     if (!Array.isArray(tests) || !Array.isArray(checks)) {
-      problems.push(`${name} 的 tests 和 checks 必须为数组`)
+      problems.push(`${name}: tests and checks must be arrays`)
       continue
     }
 
     if (tests.length === 0 && checks.length === 0) {
-      problems.push(`${name} 需要至少一个回归测试路径或检查命令`)
+      problems.push(
+        `${name} requires at least one regression test path or check command`,
+      )
     }
 
     for (const script of checks) {
       if (!allowedChecks.has(script) || typeof scripts?.[script] !== 'string') {
-        problems.push(`${name} 的检查命令未注册：${script}`)
+        problems.push(`${name}: unregistered check command: ${script}`)
       }
     }
 
@@ -70,7 +78,7 @@ function checkScopes() {
         !testPattern.test(path) ||
         !existsSync(join(root, path))
       ) {
-        problems.push(`${name} 的回归测试路径无效：${path}`)
+        problems.push(`${name}: invalid regression test path: ${path}`)
         continue
       }
 
@@ -81,7 +89,9 @@ function checkScopes() {
         : stat.isFile()
 
       if (!hasTests) {
-        problems.push(`${name} 的回归测试路径没有用例：${path}`)
+        problems.push(
+          `${name}: regression test path contains no tests: ${path}`,
+        )
       }
     }
   }
@@ -100,7 +110,7 @@ function checkIndexes() {
     const file = join(root, path)
 
     if (!existsSync(file) || !statSync(file).isFile()) {
-      problems.push(`索引文档不存在：${path}`)
+      problems.push(`Index document does not exist: ${path}`)
       continue
     }
 
@@ -122,7 +132,7 @@ function checkIndexes() {
         fromRoot.startsWith(`..${sep}`) ||
         !existsSync(destination)
       ) {
-        problems.push(`${path} 的相对链接无效：${href}`)
+        problems.push(`${path}: invalid relative link: ${href}`)
       } else if (path === 'llms.txt') {
         entryLinks.add(destination)
       }
@@ -131,13 +141,13 @@ function checkIndexes() {
 
   for (const path of cards) {
     if (!entryLinks.has(join(root, path))) {
-      problems.push(`llms.txt 缺少可用的主题链接：${path}`)
+      problems.push(`llms.txt is missing a valid topic link: ${path}`)
     }
   }
 
   for (const file of globSync('harness/context/*.md', { cwd: root })) {
     if (!cards.includes(file.split(sep).join('/'))) {
-      problems.push(`主题索引尚未注册：${file}`)
+      problems.push(`Unregistered topic index: ${file}`)
     }
   }
 
@@ -167,9 +177,9 @@ function showContext(name) {
 
   const path = contextPath(name)
 
-  console.log(`阅读入口：${path}（正文链接相对此文件）\n`)
+  console.log(`Entry point: ${path} (body links are relative to this file)\n`)
   console.log(readFileSync(join(root, path), 'utf8').trimEnd())
-  console.log(`\npnpm harness verify ${name} 执行：`)
+  console.log(`\npnpm harness verify ${name} runs:`)
 
   for (const args of scopeCommands(name)) {
     console.log(`  pnpm ${args.join(' ')}`)
@@ -216,7 +226,7 @@ function verify(name) {
       exitCode = result.status ?? 1
       console.error(
         result.error?.message ??
-          `${command} 失败（${result.signal ?? exitCode}）`,
+          `${command} failed (${result.signal ?? exitCode})`,
       )
       break
     }
@@ -234,7 +244,7 @@ function verify(name) {
   }
 
   writeFileSync(reportPath, `${JSON.stringify(report, null, 2)}\n`)
-  console.log(`\n验收报告：${relative(root, reportPath)}`)
+  console.log(`\nVerification report: ${relative(root, reportPath)}`)
   process.exitCode = exitCode
 }
 
@@ -246,9 +256,11 @@ try {
     Object.hasOwn(scopes, scope)
 
   if (action === '--help' && !scope) {
-    console.log(`pnpm harness context [scope]    查看任务上下文
-pnpm harness verify [scope]     定向验证，省略 scope 时执行全量检查
-pnpm harness check              检查主题索引、相对链接和验证目标`)
+    console.log(`pnpm harness context [scope]    Show task context
+pnpm harness verify <scope>     Run targeted commands for everyday changes
+pnpm harness verify all         Run full checks (omitting scope still runs all)
+pnpm harness check              Validate topic indexes, relative links, and targets
+These commands do not launch a browser. Verify UI/UX separately by impact; see harness/README.md.`)
   } else if (
     action === 'context' &&
     extra.length === 0 &&
@@ -264,10 +276,12 @@ pnpm harness check              检查主题索引、相对链接和验证目标
   } else if (action === 'check' && !scope) {
     checkScopes()
     checkIndexes()
-    console.log('✓ Harness 索引、相对链接和验证目标有效')
+    console.log(
+      '✓ Harness indexes, relative links, and verification targets are valid',
+    )
   } else {
     throw new Error(
-      '无效命令或任务域。使用 pnpm harness --help 或 pnpm harness context。',
+      'Invalid command or scope. Use pnpm harness --help or pnpm harness context.',
     )
   }
 } catch (error) {

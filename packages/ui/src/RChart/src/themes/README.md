@@ -1,14 +1,14 @@
-# RChart 主题
+# RChart themes
 
-四套风格分别放在 `modern/`、`naive/`、`material/`、`plain/`，每套都有明、暗两份独立 JSON。文件名是 ECharts 注册名，例如 `modern/ray-modern.json` → `ray-modern`，`modern/ray-modern-dark.json` → `ray-modern-dark`。
+Four styles live in `modern/`, `naive/`, `material/`, and `plain/`. Each has separate light and dark JSON files. Filenames are ECharts registration names: for example, `modern/ray-modern.json` → `ray-modern` and `modern/ray-modern-dark.json` → `ray-modern-dark`.
 
-| 风格 | 配色与绘图样式 |
-| --- | --- |
-| Modern | Ray 蓝、冷色网格、虚线分隔、轻量面积填充 |
-| Naive | 翡翠绿、实线网格、较小圆角 |
-| Material | 紫色调、加粗折线、较大圆角与柔和面积填充 |
-| Plain | 低饱和色、点线网格、直角柱和无阴影提示框 |
+| Style    | Palette and rendering                                              |
+| -------- | ------------------------------------------------------------------ |
+| Modern   | Ray blue, cool grid colors, dashed dividers, and subtle area fills |
+| Naive    | Emerald green, solid grids, and smaller corner radii               |
+| Material | Purple tones, thicker lines, larger radii, and soft area fills     |
+| Plain    | Muted colors, dotted grids, square bars, and shadow-free tooltips  |
 
-使用 [ECharts 主题编辑器](https://echarts.apache.org/zh/theme-builder.html) 调整时，导出 JSON 放在对应目录。加载器按文件名自动注册；不同目录也不要使用相同的文件名。只有明色文件时继续使用该主题；提供 `-dark.json` 后随应用明暗切换。业务 `options` 中显式设置的颜色和样式仍优先。
+When editing with the [ECharts theme builder](https://echarts.apache.org/zh/theme-builder.html), export JSON to the appropriate directory. The loader registers themes by filename; filenames must be unique even across directories. A light-only theme remains active for both modes. Adding a `-dark.json` variant enables switching with the application theme. Explicit colors/styles in business `options` still take precedence.
 
-旧版 `macarons` 与 `macarons-dark` 已移除。原先写死主题名的页面可移除 `theme` 以跟随界面风格，或改成新主题的注册名。
+Legacy `macarons` and `macarons-dark` themes were removed. Pages with hardcoded names can omit `theme` to follow the interface style or use a new theme registration name.

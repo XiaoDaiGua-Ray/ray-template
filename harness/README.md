@@ -1,65 +1,90 @@
 # Ray Template AI Harness
 
-从 [AGENTS.md](../AGENTS.md) 进入。需要查实现时，从 [任务索引](../llms.txt) 打开相关主题；跨模块关系见 [架构地图](../docs/architecture.md)。只阅读索引无需安装依赖。
+Start with [AGENTS.md](../AGENTS.md). Use the [task index](../llms.txt) to locate implementations and the [architecture map](../docs/architecture.md) for relationships across modules. Reading the indexes does not require installing dependencies.
 
-## 开始任务
+## Starting a task
 
-1. 查看 `git status`。用静态入口或 `pnpm harness context` 选择任务域；`pnpm harness context <scope>` 显示对应索引及验证命令。跨域变更分别查看受影响的任务域。
-2. 需要运行验证时，根据 `.nvmrc` 和 `package.json#packageManager` 选择运行时，首次执行 `pnpm install --frozen-lockfile` 和 `pnpm env:check`。
-3. 明确可观察的验收条件，按需决定是否使用 subagent，追踪调用方和数据流后实施。多步迁移或跨会话接续时，记录范围、分阶段验收、关键决策与剩余项。可参考 [建设计划](plan.md)。
-4. 先运行定向验证，最后运行全量验收。
+1. Check `git status`. Choose a task area from the static index or `pnpm harness context`; `pnpm harness context <scope>` shows its index and verification commands. For changes across areas, consult each affected scope.
+2. When verification is needed, select the runtime from `.nvmrc` and `package.json#packageManager`. On initial setup, run `pnpm install --frozen-lockfile` and `pnpm env:check`.
+3. Define observable acceptance criteria, decide whether subagents would help, and trace callers and data flow before implementation. For multi-step migrations or work continued across sessions, record scope, staged acceptance criteria, key decisions, and remaining work. See the [development plan](plan.md) as a reference.
+4. Choose checks using the [verification scope](#choosing-the-verification-scope). Run relevant tests during development and confirm coverage at task completion. Run full checks only when a full-check condition applies. After checks pass, rerun only those affected by subsequent changes.
 
 ```sh
 pnpm harness context table-pro
 pnpm harness verify table-pro
-pnpm harness verify
 ```
 
-## 按需使用 subagent
+## Using subagents when useful
 
-- **决定是否委派。** 子任务边界清楚、结果可独立验收，且并行调查、分头实现或独立复核的收益大于沟通与合并成本时，可以启用 subagent。简单任务、步骤相互依赖或需要频繁协调共享文件的任务，通常由主模型直接处理。宿主没有提供 subagent 或当前任务不允许委派时，主模型继续执行。
-- **划清任务边界。** 交代目标、相关任务域、验收条件及只读或可写范围。并行实现时，每个文件只交给一方修改；边界未定时可先委派只读调查。委派沿用用户授权和仓库规则。
-- **核对并整合结果。** 子代理回传发现、改动、实际验证及未验证项。主模型复核并整合结果；有实现改动时，由主模型执行全量验收。
+- **Decide whether to delegate.** Use subagents when tasks have clear boundaries, results can be verified independently, and parallel investigation, implementation, or review is worth the coordination and integration cost. Handle simple tasks, dependent steps, or frequent edits to shared files directly. If the host does not provide subagents or the current task prohibits delegation, the lead agent continues the work.
+- **Define ownership.** Specify the objective, relevant scopes, acceptance criteria, and read-only or writable boundaries. Assign each file to one writer during parallel implementation. Start with read-only investigation if boundaries are unclear. Delegation inherits user authorization and repository rules.
+- **Review and integrate.** Subagents report findings, changes, actual verification, and unverified areas. The lead agent reviews the combined impact and completes integration checks. Delegation itself does not trigger full verification; select scope using the rules below.
 
-## 工程约定
+## Engineering conventions
 
-- 新增能力或组件前，先检索并查看项目现有组件、Hooks 与已安装组件库的 API 和调用示例，确认是否能通过既有 Props、插槽或布局 CSS 组合实现。已有能力足够时直接复用；只有确认存在能力缺口时才新增组件，并在现有任务记录或交付说明中交代缺口与选择。不要仅因需要撑满高度、滚动容器或一层样式包装就创建新组件。
-- UI 沿用 Vue 3 Composition API、`defineComponent` + TSX 与现有 SFC 的 `<script setup lang="ts">`，优先复用 Naive UI 和项目组件。图表使用 ECharts。
-- Vue、Router 和 Pinia API 由 `unplugin-auto-import` 管理。类型使用 `import type`，生成声明通过生成器更新。
-- 路由维持名称唯一、权限 meta、缓存和翻译键。变更权限时同时验证菜单可见性和直接导航。
-- Store 对外复用 `apps/admin/src/store/hooks`。持久化 key 和序列化格式属于已有数据契约，变更前检查历史数据。
-- 请求从 `apps/admin/src/api` 进入 `apps/admin/src/axios`。Mock 只用于演示与本地验证。服务端密钥不能放入会打包到浏览器的 `VITE_*`。
-- 维护公共 API 时检查调用方、导出与已有回归测试。涉及工程配置时更新对应文档和 [验证记录](../docs/toolchain-upgrade.md)。
+- Before adding a capability or component, inspect existing project components, hooks, and installed component-library APIs and examples. Determine whether existing props, slots, or layout CSS can meet the requirement. Reuse sufficient existing capabilities. Add a component only for an established capability gap, and record the gap and choice in an existing task record or delivery note. Do not create a component solely for full-height sizing, a scroll container, or a styling wrapper.
+- Follow existing Vue 3 Composition API patterns: `defineComponent` with TSX and `<script setup lang="ts">` for SFCs. Prefer Naive UI and project components. Use ECharts for charts.
+- `unplugin-auto-import` manages Vue, Router, and Pinia APIs. Use `import type` for types and update generated declarations through their generators.
+- Preserve unique route names, permission metadata, caching, and translation keys. When permissions change, verify both menu visibility and direct navigation.
+- Access stores through `apps/admin/src/store/hooks`. Persistence keys and serialization formats are existing data contracts; inspect historical data before changing them.
+- Requests flow from `apps/admin/src/api` into `apps/admin/src/axios`. Mocks are for demos and local verification. Never place server secrets in `VITE_*` variables that are bundled into the browser.
+- When maintaining public APIs, inspect callers, exports, and existing regression tests. For engineering configuration changes, update the corresponding documentation and [verification record](../docs/toolchain-upgrade.md).
 
-## 验收与证据
+## Verification and evidence
 
-| 命令                          | 验证范围                                                        |
-| ----------------------------- | --------------------------------------------------------------- |
-| `pnpm harness check`          | 主题已登记并可从入口到达；相对链接、回归路径和检查命令有效      |
-| `pnpm harness verify <scope>` | 环境检查和该任务域登记的 Vitest 回归或项目检查                  |
-| `pnpm harness verify`         | `pnpm check` 的全部检查                                         |
-| `pnpm check`                  | 环境、Harness、图标同步、类型、规范、格式、单测、应用与文档构建 |
+### Choosing the verification scope
 
-`verify` 逐步执行，首个失败即停止并返回非零退出码。运行结束时打印 `.harness-local/runs/<run>/report.json` 的位置，其中记录命令、结果、耗时、运行时和信号。每次执行独立留档。全量报告以 `pnpm check` 作为一个步骤，阶段详情查看当次终端输出。参数或上下文校验失败，以及被强制中断的运行，可能没有报告。
+Determine impact from the actual diff, callers, and data contracts before selecting commands. Line count does not measure risk: one permission condition, persistence key, or public export can affect multiple modules. Selecting verification scope does not require a separate approval step.
 
-GitHub Actions 在 Linux、Windows 和 macOS 运行同一份 `pnpm check`。单独执行 `pnpm lint`、`pnpm format:check` 和 `pnpm typecheck` 可定位问题。`pnpm lint:fix` 与 `pnpm format` 会改写文件。`pnpm check` 会同步图标清单并生成 `dist/production`，交付前检查生成差异。
+| Change                                                                            | Local verification                                                                                                                                                                                                    |
+| --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Maintainer documentation, wording, comments, or formatting with no runtime change | Check content and formatting of changed files. Run `pnpm harness check` when indexes, links, or Harness rules change. No browser is needed.                                                                           |
+| A single function, hook, or small fix with existing regression coverage           | Run the relevant test file and add a regression case if needed. Lint changed code; add type checking when types or exports are affected.                                                                              |
+| One task area or multiple affected callers                                        | Run `pnpm harness verify <scope>`. Select each affected scope for cross-area work, or run the relevant test files together. Add static checks appropriate to the change.                                              |
+| Documentation structure, links, code examples, or theme                           | Run `pnpm harness verify docs` for types, links, and the build. Use focused browser checks only when rendering or interaction is affected; see the [documentation workflow](../docs/docs-handoff.md#update-workflow). |
+| Integration risk, a release, or an explicit request for complete checks           | Run `pnpm harness verify all` once at task completion. Select browser coverage separately using the table below.                                                                                                      |
 
-### 浏览器验收
+Full command checks are required for changes to dependencies or the lockfile, workspace boundaries or public exports, TypeScript/Vite/build/CI configuration, or full-check orchestration; for cross-module impact that cannot be reliably bounded; for release preparation; or when explicitly requested. A local shared-component implementation, page, style, or copy change does not escalate solely because of its directory. Follow any user-specified verification scope and report its coverage limits.
 
-页面行为变化时使用 `pnpm dev`，打开 `http://127.0.0.1:9527/ray-template/`。涉及构建或部署子路径时，运行 `pnpm build` 和 `pnpm preview`，使用终端给出的地址和部署 base。用本地演示数据复现，核对受影响的路由、动作和控制台错误。
+For example, a CSV escaping fix can use `pnpm test:run __test__/components/table-pro-exports.spec.ts` and checks on the modified files. A page spacing change calls for that page and the affected widths. A global theme variable change calls for light/dark checks on representative consumers. Once relevant checks pass, verification is complete for that iteration. Do not repeatedly expand scope without a new change, failure, or evidence gap.
 
-| 变更                   | 检查                                                     |
-| ---------------------- | -------------------------------------------------------- |
-| 页面、主题或文案       | 对应页面、简体中文和英文、明暗主题。布局改动增加窄屏检查 |
-| 路由、权限或缓存       | 从菜单进入、直接访问、刷新，核对守卫和恢复行为           |
-| 图标、部署 base 或构建 | 检查生产预览、资源 URL 和控制台                          |
+`pnpm harness verify <scope>` runs only its registered commands; it does not automatically include ESLint, formatting, or every type check. For small fixes, run `pnpm exec eslint <changed-code-files> --max-warnings=0`, `pnpm exec prettier --check <changed-files>`, and relevant tests directly, then record commands and results in the delivery note. Existing scope suites are broad. A clearly isolated behavior does not need broader tests merely to obtain a JSON report.
 
-在交付或 PR 中记录复现步骤、实际结果及未验证项。临时报告、日志和截图放入 `.harness-local/`。浏览器结果单独记录，CLI 报告仅覆盖其中列出的命令。
+| Command                       | Coverage                                                                                                                 |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `pnpm harness check`          | Registered and reachable topics; valid relative links, regression paths, and check commands                              |
+| `pnpm harness verify <scope>` | Environment check plus the scope's registered Vitest regressions or project checks                                       |
+| `pnpm harness verify all`     | Explicitly runs all of `pnpm check`; the legacy command without a scope retains this behavior                            |
+| `pnpm check`                  | Environment, Harness, API/package boundaries, icon synchronization, types, lint, formatting, tests, and both site builds |
 
-## 维护
+`verify` runs steps sequentially, stops at the first failure, and returns a nonzero exit code. It prints the path to `.harness-local/runs/<run>/report.json` on completion. Reports contain commands, outcomes, durations, runtime, and signals; each invocation has a separate record. Full reports represent `pnpm check` as one step; consult that run's terminal output for phase details. Invalid arguments or context, and forcibly interrupted runs, may produce no report. None of these CLI commands launches a browser. Passing command checks does not establish UI/UX acceptance.
 
-影响外部读者的功能或兼容性改动，按 [文档联动说明](../docs/docs-handoff.md) 在同一变更中更新 `apps/docs`。单独用 `pnpm docs:check` 检查示例类型、文档链接和构建；用 `pnpm docs:preview` 验收生产子路径下的交互。
+GitHub Actions runs the same `pnpm check` on Linux, Windows, and macOS. Use `pnpm lint`, `pnpm format:check`, or `pnpm typecheck` separately to diagnose failures. `pnpm lint:fix` and `pnpm format` rewrite files. `pnpm check` synchronizes icon manifests and generates `dist/production`; review generated diffs before delivery.
 
-- 移动实现、适配层或示例时，更新 `harness/context/` 中受影响的索引。每个主题说明何时使用、先读哪些文件、谁拥有实现及如何验证。API 细节留在源码、模块 README 或读者文档。
-- 新增任务域时，在 [scopes.json](scopes.json) 注册简介和 `tests` 或 `checks`，添加同名 `harness/context/<scope>.md`，并从 [llms.txt](../llms.txt) 链入。测试目录以 `/` 结尾；项目检查复用 CLI 允许的根脚本。原有任务域可保留为较宽的验证入口。
-- 索引用普通行内相对链接指向仓库文件或目录。`pnpm harness check` 检查主题及其入口文档的文件目标，不请求外部链接或验证标题锚点。调整内容后再从一个真实任务出发走查实现和测试归属。
+### Browser verification
+
+Use browser verification only for changes to visible effects, user actions, or browser-specific capabilities. Maintainer documentation, comments, tests, Harness changes, and logic changes with no page impact do not trigger UI/UX verification. Reader-documentation wording corrections can be checked in source and with formatting tools; open the relevant page when rendering structure, example interaction, or layout is at risk. Report missing required browser evidence accurately; screenshots do not replace functional regressions.
+
+By default, use `pnpm dev` and open `http://127.0.0.1:9527/ray-template/`. Reproduce the affected page and action flow with local demo data, and inspect relevant console errors. Add dimensions below only when their corresponding behavior changes. Do not exhaustively combine pages, languages, themes, and viewports.
+
+| Change                                                          | Additional checks                                                                                                                                     |
+| --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Local interaction, validation, or state                         | Affected action and relevant success, failure, or recovery paths. Check keyboard operation when keyboard/focus behavior changes.                      |
+| Copy or internationalization                                    | Chinese and English on the affected page, interpolation, and fallback behavior. Check wrapping when text length affects layout.                       |
+| Layout, sizing, scrolling, or responsiveness                    | The affected area at desktop and narrow widths, such as 390px. Check only affected layout modes and long content.                                     |
+| Themes, colors, or shared visual variables                      | Light/dark themes and relevant readability. Select representative actual consumers of shared styles.                                                  |
+| Routing, permissions, or cache behavior                         | Menu entry, direct navigation, reload, and restoration for relevant roles/sources. Do not recheck unrelated pages.                                    |
+| Browser capabilities such as downloads, printing, or fullscreen | Actual browser behavior in the corresponding example. Unit tests establish only what they cover.                                                      |
+| Resource loading, deployment base, or build artifacts           | Build and use a production preview. Check affected entry points, resource URLs, and the console. Verify related admin iframes in the combined output. |
+
+For shared layout or global style changes, choose representative pages with different usage patterns, such as a table and a form, plus affected documentation examples. Define a cross-page matrix only for a site-wide redesign, release acceptance, or an explicit request. After acceptance, small follow-up fixes need only the relevant steps. Reuse results from the same task for pages and dimensions unaffected by the new changes.
+
+Record reproduction steps, actual observations, and unverified areas in the delivery note or PR. Put temporary reports, logs, and screenshots in `.harness-local/`. Record browser results separately; CLI reports cover only their listed commands.
+
+## Maintenance
+
+For behavior or compatibility changes that affect external readers, update `apps/docs` in the same change following the [documentation handoff](../docs/docs-handoff.md). `pnpm docs:check` separately checks example types, documentation links, and the build. Preview affected entry points when production subpaths or interactions are involved.
+
+- When moving implementations, adapters, or examples, update affected indexes in `harness/context/`. Each topic explains when to use it, which files to read first, implementation ownership, and verification. Keep API details in source, module READMEs, or reader documentation.
+- To add a task area, register its description and `tests` or `checks` in [scopes.json](scopes.json), add `harness/context/<scope>.md`, and link it from [llms.txt](../llms.txt). Test directories end with `/`; project checks reuse root scripts allowed by the CLI. Existing areas may remain as broader verification entry points.
+- Use ordinary inline relative links to repository files or directories. `pnpm harness check` checks file targets in topic indexes and their entry documents; it does not request external links or validate heading anchors. After editing, walk through a real task to confirm implementation and test ownership.

@@ -120,13 +120,13 @@ export default defineComponent({
 
 ## Checks, builds, and deployment
 
-| Command                       | What it does                                                                                |
-| ----------------------------- | ------------------------------------------------------------------------------------------- |
-| `pnpm test:run`               | Run the Vitest suite                                                                        |
-| `pnpm check`                  | Run the same checks as CI, including types, lint, formatting, tests, and a production build |
-| `pnpm harness context`        | Find entry points and checks for areas such as routing, UI, and APIs                        |
-| `pnpm harness verify`         | Run the full check and save a local report, or pass a scope to run targeted checks          |
-| `pnpm build` / `pnpm preview` | Build into `dist/production` or serve the build locally                                     |
+| Command                       | What it does                                                                                  |
+| ----------------------------- | --------------------------------------------------------------------------------------------- |
+| `pnpm test:run`               | Run the Vitest suite                                                                          |
+| `pnpm check`                  | Run the same checks as CI, including types, lint, formatting, tests, and a production build   |
+| `pnpm harness context`        | Find entry points and checks for areas such as routing, UI, and APIs                          |
+| `pnpm harness verify <scope>` | Run targeted checks and save a local report; use `all` for full integration or release checks |
+| `pnpm build` / `pnpm preview` | Build into `dist/production` or serve the build locally                                       |
 
 `pnpm docs:build` builds the documentation separately. `pnpm pages:build` assembles both builds under `dist/pages` for `/ray-template/` and `/ray-template/docs/`.
 

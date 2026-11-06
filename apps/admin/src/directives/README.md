@@ -1,17 +1,17 @@
-## 说明
+## Purpose
 
-> 全局自定义指令入口。
+> Entry point for global custom directives.
 
-## 规范
+## Conventions
 
-- 指令应该为全局的通用性指令
-- 如果指令需要与系统的数据进行关联，应该注意数据的管理与指令注册使用时机
+- Directives should provide reusable, application-wide behavior.
+- When a directive depends on application data, account for data ownership and the timing of registration and usage.
 
-## 新增指令说明
+## Adding a directive
 
-- 模板视 modules 中每一个文件包为一个模板的指令（全局），并且每个文件包的名称，也被视为该指令名称
-- 添加文件包后，`强制要求 index.ts 为指令的输出文件名`
-- modules 包中所有指令都会被自动合并到模板中
+- Each directory in modules is treated as one global directive; its directory name is also the directive name.
+- Every directive directory must export through a file named `index.ts`.
+- All directives in modules are automatically incorporated into the template.
 
 ```ts
 /**
@@ -40,8 +40,8 @@ export default demoDirective
 // 4. 按照上述步骤执行后，会自动在模板中创建一个 v-demo 的指令供全局使用
 ```
 
-## 说明与来源
+## Usage and attribution
 
-指令用法与绑定值示例统一维护在 [使用说明](README.DIR.md)，不在指令工厂前重复整段教程。`disabled` 仅限制 CSS 交互，业务权限和提交校验仍需独立处理。
+Keep directive usage and binding examples in the [usage guide](README.DIR.md), rather than repeating full tutorials before directive factories. `disabled` restricts CSS interaction only; business permissions and submission validation still require separate handling.
 
-水波纹辅助实现保留原有 [Pure Admin 来源标注](https://github.dev/pure-admin/vue-pure-admin/blob/main/src/components/ReCol/index.ts)。新增注释遵循 [仓库注释规范](../../../../docs/comment-style.md)。
+Retain the existing [Pure Admin attribution](https://github.dev/pure-admin/vue-pure-admin/blob/main/src/components/ReCol/index.ts) for the ripple helper. Follow the [repository comment style](../../../../docs/comment-style.md) for new comments.

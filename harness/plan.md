@@ -1,41 +1,72 @@
-# AI Harness 建设计划
+# AI Harness development plan
 
-目标是让接手 Ray Template 的开发者和 AI 助手，能按任务找到相关代码、独立复现验证，并把实际结果交给下一位维护者。工程入口和命令见 [AI Harness](README.md)。
+The goal is to help developers and AI agents taking over Ray Template find relevant code by task, reproduce checks independently, and pass observed results to the next maintainer. Entry points and commands are in the [AI Harness](README.md).
 
-| 阶段          | 建设内容                                                                                 | 验收条件                                                                           |
-| ------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| 1. 收拢上下文 | 重写根 `AGENTS.md`，移除旧工具配置和旧开发指南。保留架构、注释、视觉和工具链的各自职责   | README 指向新入口，活跃文档没有旧指南引用。TypeScript 项目说明可从架构地图找到     |
-| 2. 建立反馈   | 按路由、UI、API、图标、公共工具和 Harness 提供上下文与回归。复用 pnpm、Vitest 和构建命令 | 任务域可查询，定向验证可执行，缺失的上下文或回归路径会被拒绝                       |
-| 3. 接入验收   | 将 Harness 校验纳入 `pnpm check` 和现有 CI，提供本机 JSON 报告与浏览器验收步骤           | 定向和全量运行均可追溯，失败会以非零退出码返回，报告与截图排除在源码和打包输入之外 |
+| Phase                     | Work                                                                                                                                                                                | Acceptance criteria                                                                                                                                            |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1. Consolidate context    | Rewrite root `AGENTS.md`; remove obsolete tool configuration and development guides. Keep architecture, comments, visual guidance, and toolchain records in their respective roles. | The README points to the new entry point; active documents do not reference old guides. TypeScript project information is reachable from the architecture map. |
+| 2. Establish feedback     | Provide context and regressions for routing, UI, APIs, icons, shared utilities, and Harness. Reuse pnpm, Vitest, and build commands.                                                | Task areas can be queried, targeted checks run, and missing context or regression paths are rejected.                                                          |
+| 3. Integrate verification | Add Harness validation to `pnpm check` and existing CI; provide local JSON reports and browser verification guidance.                                                               | Targeted and full runs are traceable; failures return nonzero exit codes; reports and screenshots are excluded from source and package inputs.                 |
 
-日常维护时，以实际反复出现的失败为依据扩充 Harness。优先将已有覆盖缺口补进 Vitest，待浏览器流程有稳定夹具和可重复结果时，再评估纳入自动化门禁。迁移的实测结果见 [工具链记录](../docs/toolchain-upgrade.md)。
+Expand the Harness in response to repeated observed failures. Prefer filling coverage gaps in Vitest. Consider browser automation as a required gate only after its fixtures and results are stable and reproducible. Measured migration results are in the [toolchain record](../docs/toolchain-upgrade.md).
 
-设计参考 [OpenAI Docs 的仓库工作流实践](https://developers.openai.com/cookbook/examples/codex/iterating-development-workflows-with-codex) 与 [上下文分层建议](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra)。
+The design draws on [OpenAI's repository workflow practices](https://developers.openai.com/cookbook/examples/codex/iterating-development-workflows-with-codex) and [context-layering guidance](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra).
 
-## Monorepo 索引补全
+## Completing the monorepo index
 
-审查基线为 `58fc0b63`。现有命令、回归和报告已形成反馈闭环，主要缺口在查找和判断代码归属：
+Review baseline: `58fc0b63`. Existing commands, regressions, and reports already formed a feedback loop. The main gap was locating code and determining ownership:
 
-| 发现                                                                                   | 影响                                                                    |
-| -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| 架构地图混用旧 `src/` 路径与工作区路径，仍将路由、图标和组件实现归到应用目录           | 目录存在不等于拥有实现。例如应用侧 Schema、取消器和部分组件只是兼容入口 |
-| `ui` 同时覆盖布局、公共组件、文案、Hooks 和演示；没有 TablePro、文档站及构建的独立入口 | 查表格筛选或 VitePress 重定向时，需要自行从大目录找实现、示例和验证     |
-| `llms.txt`、架构地图与 `scopes.json` 分别列源码路径；检查只覆盖 JSON 里的路径          | 文件移动后，入口和说明可以互相矛盾而全量检查仍通过                      |
+| Finding                                                                                                                                               | Impact                                                                                                                                    |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| The architecture map mixed old `src/` paths with workspace paths and still assigned routing, icons, and component implementations to the application. | An existing directory does not imply ownership. Application schemas, cancellers, and some components are compatibility entry points.      |
+| `ui` covered layout, shared components, copy, hooks, and demos, without separate entry points for TablePro, the documentation site, or builds.        | Table filtering and VitePress redirects required manual searches across broad directories for implementation, examples, and verification. |
+| `llms.txt`, the architecture map, and `scopes.json` maintained separate source-path lists; validation covered only the JSON paths.                    | After a move, entry points and descriptions could contradict each other while full checks still passed.                                   |
 
-### 设计
+### Design
 
-1. `AGENTS.md` 只保留仓库级协作约定和入口；`llms.txt` 提供无需运行时的任务路由，按需链接 [架构地图](../docs/architecture.md) 和具体主题。
-2. `harness/context/<scope>.md` 按实际问题列首读源码、应用/共享包/示例边界及相关测试。行为契约留在源码、就近 README 和公开文档中。架构地图说明工作区、关键运行链和部署。
-3. `scopes.json` 保存主题简介与可执行验证配置；按 ID 定位同名索引，`context <scope>` 直接显示。保留六个已有 ID 和各自测试，新增 TablePro、布局、文档站和工具链。文档与工具链使用已有检查脚本。
-4. 将索引入口、相对链接和测试目标接入现有 `harness check`，继续由 `pnpm check` 和 CI 执行。范围是导航文档，不追踪外链或证明描述正确；语义通过走查和回归验证。
+1. Keep repository-wide collaboration rules and entry points in `AGENTS.md`. Use `llms.txt` as a task router that needs no runtime, linking to the [architecture map](../docs/architecture.md) and individual topics as needed.
+2. Organize `harness/context/<scope>.md` around actual questions, listing first-read source, application/shared-package/example boundaries, and relevant tests. Keep behavior contracts in source, nearby READMEs, and public documentation. The architecture map covers workspaces, key runtime flows, and deployment.
+3. Keep topic descriptions and executable verification configuration in `scopes.json`. Each ID resolves to a matching index displayed by `context <scope>`. Preserve the six existing IDs and their tests; add TablePro, layout, documentation, and toolchain scopes. Documentation and toolchain scopes use existing check scripts.
+4. Validate index entry points, relative links, and test targets through the existing `harness check`, still invoked by `pnpm check` and CI. This checks navigation documents, not external links or prose correctness; verify semantics through walkthroughs and regressions.
 
-### 实施前自审
+### Design review before implementation
 
-| 检查                                         | 修订后的决定                                                                                             |
-| -------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| 是否要在 JSON 和 Markdown 重复维护实现路径？ | 用同名索引作为 CLI 输出，正文只维护一份；不生成第二份源码树                                              |
-| 是否让每个任务先跑命令、阅读全图？           | 保留静态入口；按需求打开一张主题索引。架构图用于跨模块任务，不作为前置必读                               |
-| 是否给所有任务域强行配 Vitest？              | 文档用 `docs:check`；工具链用包边界与类型检查。明确哪些问题仍需生产预览或全量检查                        |
-| 是否能区分同名入口与真正实现？               | 用 TablePro 搜索、动态路由、请求取消、偏好导入、旧文档重定向和部署产物逐条走查，索引写明主实现和宿主适配 |
+| Question                                                              | Decision                                                                                                                                                                                                        |
+| --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Should JSON and Markdown duplicate implementation paths?              | Use the matching index as CLI output and maintain prose once; do not generate a second source tree.                                                                                                             |
+| Should every task start with a command and a full architecture read?  | Keep the static entry point and open the relevant topic. The architecture map supports cross-module tasks; it is not mandatory startup reading.                                                                 |
+| Should every scope have Vitest tests?                                 | Use `docs:check` for documentation and package/type checks for the toolchain. State which cases still need a production preview or full checks.                                                                 |
+| Can compatibility entry points be distinguished from implementations? | Walk through TablePro search, dynamic routes, request cancellation, preference import, legacy documentation redirects, and deployment artifacts. Name the primary implementation and host adapter in the index. |
 
-验收：静态入口可到达所有主题；原命令和报告契约兼容；断链、缺失主题和失效回归路径会使检查失败；代表任务能从索引到达实现和验证；最后执行 `pnpm harness verify`。
+Acceptance for that development batch: all topics are reachable from the static entry point; existing command and report contracts remain compatible; broken links, missing topics, and invalid regression paths fail validation; representative tasks reach the implementation and checks; finish with `pnpm harness verify`. For everyday tasks, follow the [README verification scope](README.md#choosing-the-verification-scope).
+
+## 2026-11-06: Structure review and verification scope
+
+Local review baseline: `969f764c`. The review covered root collaboration rules, 10 topic indexes and their registry, CLI/tests, architecture and documentation coordination, visual conventions, the PR template, Git hooks, CI, and local evidence directories. It was not a code review of every business implementation.
+
+### Comparison with official guidance
+
+| Official recommendation                                                                                                                                                               | Project assessment                                                                                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [Codex Best practices](https://learn.chatgpt.com/docs/learn/best-practices): concise repository guidance, task-specific context, clear completion criteria, and relevant checks       | The `AGENTS.md` → `llms.txt` → topic index → source/contracts/tests hierarchy is sound. Consult the architecture map and historical records as needed; the directory structure does not need rebuilding.           |
+| [Iterating Development Workflows](https://developers.openai.com/cookbook/examples/codex/iterating-development-workflows-with-codex): example files are adaptable workflow conventions | Existing `plan.md`, toolchain records, and local reports respectively hold design, observed verification, and command evidence. Copying filenames such as `GOALS.md`, `PLANS.md`, and `PROMPTS.md` is unnecessary. |
+| [Rethinking skills and prompts](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra): reduce irrelevant context and excessive testing instructions       | Requiring full checks after every implementation or integration, plus fixed page/documentation matrices, inflated the cost of small fixes. Select verification by impact instead.                                  |
+
+These sources offer practices, not a uniform Harness certification or directory compliance standard. The existing structure follows the main design principles; verification granularity needed adjustment.
+
+### Findings and changes
+
+| Finding                                                                                                                                                    | Change                                                                                                                                                                                  |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Root guidance and delegation rules escalated every implementation to full checks.                                                                          | Default to relevant test files or scopes. Run full checks once for integration risk, releases, or explicit requests; rerun only affected checks afterward.                              |
+| Visual guidance, the PR template, and documentation coordination turned page changes into a fixed list of languages, themes, viewports, and site features. | Point to the Harness condition table. Add dimensions based on the actual change, choose representative shared consumers, and skip browsers for rules or maintainer documentation alone. |
+| Targeted `api` regressions omitted OpenAPI/worker synchronization; `icons` required a separate manual manifest check.                                      | Register existing `api:check` and `icons:check` in their scopes. Retain the CLI script allowlist and stop before regressions when generated artifacts are stale.                        |
+| `verify ui` could be mistaken for browser verification.                                                                                                    | Clarify in the topic and CLI help that it runs registered commands only. Its JSON report does not establish browser acceptance.                                                         |
+
+### Retained behavior and verification limits
+
+- All 10 topics are reachable from the static entry point. Each of the 81 enumerated `.spec.ts/.spec.tsx` files belongs to at least one scope. Index validation establishes path existence and valid targets, not accurate prose or sufficient behavior coverage.
+- `ui` covers 37 test files and is suitable for scope-level regressions. A single-behavior fix can run its test file directly and record the result in the delivery note. Reuse existing entry points without adding a second system to infer scope from Git diffs and dependencies.
+- Preserve full checks when scope is omitted for command compatibility. Everyday guidance should show an explicit scope. Keep CI's three-platform `pnpm check` and deployment dependencies unchanged.
+- Continue writing local reports to `.harness-local/`, excluded from Git, lint/format scans, and package inputs. Full-report phase details still depend on terminal output. Record browser evidence separately; static checks do not prove runtime success.
+- Regressions cover targeted commands not appending full checks, stopping on generated-artifact check failure, and compatibility of explicit/legacy full-check entry points. Actual run results are in the [toolchain record](../docs/toolchain-upgrade.md). This change has no page effect and needs no UI/UX verification.

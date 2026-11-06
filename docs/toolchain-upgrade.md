@@ -1,217 +1,239 @@
-# 工具链升级记录（2026-11-02）
+# Toolchain upgrade record (2026-11-02)
 
-## 版本基线
+## Version baseline
 
-版本通过 npm 官方注册表的 `latest` 标签核实，锁文件包含对应的完整解析结果。只使用稳定版，不引入 beta/RC。Node.js 使用当前 LTS 26.13.0，pnpm 固定为 12.16.1；本机验证使用校验 SHA-256 后下载到临时目录的 Node，未替换全局 Node。
+Versions were verified against the official npm registry's `latest` tags; the lockfile contains the complete resolutions. Only stable releases were used, without beta/RC versions. The upgrade selected Node.js LTS 26.13.0 and pinned pnpm to 12.16.1. Local verification used Node downloaded to a temporary directory after SHA-256 verification; the global Node installation was not replaced.
 
-| 核心依赖            | 升级前                      | 当前                                     |
-| ------------------- | --------------------------- | ---------------------------------------- |
-| Node.js（`.nvmrc`） | 22.12.0                     | 26.13.0 LTS                              |
-| pnpm                | 未固定，CI 使用 9           | 12.16.1                                  |
-| Vite                | 7.2.6                       | 8.3.5                                    |
-| Vue                 | 3.5.25                      | 3.5.44                                   |
-| Vue Router          | 4.6.3                       | 5.4.0                                    |
-| Pinia               | 3.0.3                       | 4.1.0                                    |
-| Naive UI            | 2.43.2                      | 2.45.3                                   |
-| VueUse              | 13.1.0                      | 15.0.0                                   |
-| ECharts             | 6.0.0                       | 6.1.0                                    |
-| Axios               | 1.10.0                      | 1.21.0                                   |
-| TypeScript          | 5.9.3                       | 6.0.3（兼容上限）                        |
-| vue-tsc             | 2.2.8                       | 3.3.14                                   |
-| Vitest / UI         | 4.0.12                      | 5.0.5                                    |
-| ESLint              | 9.39.1                      | 10.14.0                                  |
-| typescript-eslint   | 8.47.0（拆包）              | 8.72.1                                   |
-| Prettier            | 3.6.2                       | 3.9.10                                   |
-| Husky               | 8.0.3                       | 9.1.7                                    |
-| lint-staged         | 15.4.3                      | 17.6.0                                   |
-| Mock 数据生成       | Mock.js 1.1.0               | Faker 10.6.0，中文 locale                |
-| SVG 雪碧图          | vite-plugin-svg-icons 2.0.1 | @spiriit/vite-plugin-svg-spritemap 7.2.0 |
+| Core dependency      | Before upgrade              | Recorded version                         |
+| -------------------- | --------------------------- | ---------------------------------------- |
+| Node.js (`.nvmrc`)   | 22.12.0                     | 26.13.0 LTS                              |
+| pnpm                 | Unpinned; CI used 9         | 12.16.1                                  |
+| Vite                 | 7.2.6                       | 8.3.5                                    |
+| Vue                  | 3.5.25                      | 3.5.44                                   |
+| Vue Router           | 4.6.3                       | 5.4.0                                    |
+| Pinia                | 3.0.3                       | 4.1.0                                    |
+| Naive UI             | 2.43.2                      | 2.45.3                                   |
+| VueUse               | 13.1.0                      | 15.0.0                                   |
+| ECharts              | 6.0.0                       | 6.1.0                                    |
+| Axios                | 1.10.0                      | 1.21.0                                   |
+| TypeScript           | 5.9.3                       | 6.0.3 (compatibility ceiling)            |
+| vue-tsc              | 2.2.8                       | 3.3.14                                   |
+| Vitest / UI          | 4.0.12                      | 5.0.5                                    |
+| ESLint               | 9.39.1                      | 10.14.0                                  |
+| typescript-eslint    | 8.47.0 (separate packages)  | 8.72.1                                   |
+| Prettier             | 3.6.2                       | 3.9.10                                   |
+| Husky                | 8.0.3                       | 9.1.7                                    |
+| lint-staged          | 15.4.3                      | 17.6.0                                   |
+| Mock data generation | Mock.js 1.1.0               | Faker 10.6.0, Chinese locale             |
+| SVG spritemaps       | vite-plugin-svg-icons 2.0.1 | @spiriit/vite-plugin-svg-spritemap 7.2.0 |
 
-其余保留的直接依赖也更新为核实到的稳定版并使用精确版本，完整列表见 `package.json`。没有新版本的依赖保留其已有最新版本。
+Other retained direct dependencies were also updated to verified stable releases and pinned exactly; see `package.json` for the full list. Dependencies with no newer release kept their existing latest version.
 
-## 必要适配
+## Required adaptations
 
-- 可选 CDN 改为 jsDelivr 的 npm 精确版本路径，使用发布包中实际存在的生产文件；移除已经不在依赖中的 dom-to-image 条目。默认仍使用本地 bundle。
-- Vite 8 使用 Rolldown/Oxc：移除无效 `build.transpile`，使用 `rolldownOptions` 和 Oxc 压缩参数，交由原生依赖图拆包；保留路由懒加载、压缩文件、部署 base 与各模式输出目录。
-- Node 配置使用 ESM 路径解析、显式 `.ts` 扩展名和 JSON import attributes，为 native config loader 做好适配。别名 `@api` 统一指向实际的 `src/api`，修正 TS `@images/*` 映射。
-- 替换旧 SVG 插件的缺失依赖和旧依赖树。`RIcon` 仍按 `prefix + name` 访问图标，新插件生成独立带 hash 的雪碧图并跟随部署 base；`<use>` 使用标准 `href`。
-- 移除会在开发/构建时自动修改源码的 `vite-plugin-eslint`；ESLint 10 使用原生 flat config。保留有价值的既有规则，格式交给 Prettier，lint/check 默认只读。
-- 更新 Husky 9 hook，移除 Husky 8 的初始化与旧 package.json hooks。暂存检查使用 `--no-warn-ignored`，只抑制显式传入已排除声明文件时的提示，真实 lint warning 仍会失败。移除实际未使用的 Webpack sprite loader、depcheck 和重复 ESLint 预设。
-- VueUse 的 `MaybeRef`/`MaybeRefOrGetter` 改从 Vue 导入；Axios 仅在已安装解包响应拦截器的边界公开返回 `data` 的原有接口，补充适配器回归用例。
-- 修复 TSX 演示中对解构 `const` 使用 `v-model` 产生的非法赋值，改为绑定组件实例属性。
-- Router 5 的权限守卫改为返回路由结果，保留未登录、角色与白名单判断；首页本身无权限时取消导航以免重定向循环，增加真实内存路由测试。
-- 开发依赖扫描限定 `index.html`，避免误扫旧构建目录；SVG 预览页的 glob 移到独立 `.ts` 模块，绕过 Vite 8 扫描器将保留 JSX 当作 JS 的限制。待上游支持后可重新评估该拆分。
-- Vitest 测试只复用 Vue/TSX 与自动导入转换，不启动 Mock 服务、HTML 注入、图标扫描或压缩插件。修复遗漏 `await` 的断言，更新水印/全屏用例中的过期预期，保留行为断言。
-- 既有颜色转换回归暴露 rgba 空格不一致与八位 hex 透明度丢失，已修正；图表异常保留原始 `cause`。
-- Mock.js 存在未修复的原型污染公告，且包含直接 `eval`；替换为 Faker 的中文实例，保持人员字段、分页接口和表格示例能力。新版 Mock 插件的 include 相对 `dir` 匹配，修正原先重复的 `mock/` 前缀并等待首次加载，实际验证了 API 响应。
-- 开发时打开 `#/tables/remote`，在 Network 的 Fetch/XHR 分类查看 `GET /api/list?page=1&pageSize=10`。接口使用站点根路径 `/api/list`，不带 `/ray-template/`。Vite 按启动日志中的实际端口访问；静态构建的页面使用同一套本地示例生成逻辑，不依赖 Mock 服务器。
-- 浏览器构建和 Autoprefixer 统一到 Vite 8 Baseline Widely Available。开发服务默认 loopback，局域网访问需显式 `--host`。监听排除全部构建目录和 `.ai-local`，避免构建报告时触发页面重复重载。
-- CI 与 Docker 使用同一 Node/pnpm，冻结锁文件安装。CI 合并重复流程并覆盖类型、lint、格式、测试、构建；保留检查通过后部署 `main` 到 `dist` 分支的行为。
+- Optional CDN loading uses exact npm-version paths on jsDelivr and production files that actually exist in published packages. Removed the dom-to-image entry, which was no longer a dependency. Local bundling remains the default.
+- Vite 8 uses Rolldown/Oxc. Removed ineffective `build.transpile`, adopted `rolldownOptions` and Oxc minification settings, and delegated chunking to the native dependency graph. Preserved lazy routes, compressed files, deployment bases, and per-mode output directories.
+- Node configuration uses ESM path resolution, explicit `.ts` extensions, and JSON import attributes for the native config loader. Unified `@api` with the actual `src/api` directory and fixed TypeScript's `@images/*` mapping.
+- Replaced the old SVG plugin's missing dependencies and obsolete dependency tree. `RIcon` still addressed icons through `prefix + name`; the new plugin generated separate hashed spritemaps respecting the deployment base. `<use>` uses standard `href`.
+- Removed `vite-plugin-eslint`, which rewrote source during development/builds. ESLint 10 uses native flat config. Retained useful existing rules, delegated formatting to Prettier, and kept lint/check behavior read-only by default.
+- Updated hooks for Husky 9, removing Husky 8 initialization and old package.json hooks. Staged checks use `--no-warn-ignored` only to suppress notices for explicitly supplied ignored declaration files; real lint warnings still fail. Removed unused Webpack sprite loaders, depcheck, and duplicate ESLint presets.
+- Import VueUse's `MaybeRef`/`MaybeRefOrGetter` from Vue. Axios exposes its existing API that returns `data` only at boundaries with installed response-unwrapping interceptors; adapter regressions were added.
+- Fixed invalid assignments generated by TSX demo `v-model` bindings to destructured `const` variables, using component-instance properties instead.
+- Router 5 permission guards return route results while retaining authentication, role, and allowlist checks. Cancel navigation when the home route is itself unauthorized to avoid redirect loops. Added real in-memory-router tests.
+- Limited development dependency scanning to `index.html` to avoid old build directories. Moved the SVG preview glob into a separate `.ts` module to work around Vite 8 scanning preserved JSX as JavaScript. Reassess the split when upstream supports that case.
+- Vitest reuses only Vue/TSX and auto-import transforms; it does not start mock services, HTML injection, icon scanning, or compression plugins. Fixed missing `await` assertions and stale watermark/fullscreen expectations while retaining behavioral assertions.
+- Existing color-conversion regressions exposed inconsistent rgba spacing and lost alpha in eight-digit hex colors; both were fixed. Chart errors retain their original `cause`.
+- Mock.js had an unresolved prototype-pollution advisory and direct `eval` usage. Replaced it with a Chinese Faker instance while retaining person fields, pagination endpoints, and table demos. The updated mock plugin matches include paths relative to `dir`; removed the duplicated `mock/` prefix, waited for initial loading, and verified API responses.
+- During development, open `#/tables/remote` and inspect `GET /api/list?page=1&pageSize=10` under Network's Fetch/XHR filter. The endpoint uses the site-root path `/api/list`, without `/ray-template/`. Use the actual Vite port in startup logs. At this stage, static builds used the same local example-generation logic without depending on a mock server.
+- Aligned browser builds and Autoprefixer with Vite 8's Baseline Widely Available target. The development server defaults to loopback; LAN access requires explicit `--host`. Excluded all build directories and `.ai-local` from watching to prevent repeated reloads during report builds.
+- CI and Docker use the same Node/pnpm versions and frozen-lockfile installs. Consolidated duplicate CI workflows to cover types, lint, formatting, tests, and builds. Preserved deployment from `main` to the `dist` branch after checks pass.
 
-## 兼容性限制与复查条件
+## Compatibility limits and reassessment conditions
 
 ### TypeScript 7
 
-npm 最新为 7.0.2，但 `vue-tsc` 的编译器包装机制尚未完整支持原生 TypeScript 7，`typescript-eslint@8.72.1` 的 peer 范围也明确为 `<6.1.0`。因此采用 6.0.3，而不关闭类型检查或制造 peer 冲突。待这两个上游均明确支持后，再解除 Dependabot 对 TypeScript 7 的限制并运行完整验证。
+The latest npm release at verification was 7.0.2, but `vue-tsc`'s compiler wrapper did not fully support native TypeScript 7, and `typescript-eslint@8.72.1` explicitly required `<6.1.0`. Retained 6.0.3 without disabling type checking or introducing peer conflicts. Once both upstream projects explicitly support TypeScript 7, remove the Dependabot restriction and run complete verification.
 
-### 兼容的间接依赖覆盖
+### Compatible transitive dependency overrides
 
-`pnpm-workspace.yaml` 中有三个有限范围的覆盖，避免升级后的上游依赖继续锁定有已知公告的旧大版本：
+Three narrowly scoped overrides in `pnpm-workspace.yaml` prevent upgraded dependencies from retaining older major versions with known advisories:
 
-| 覆盖                              | 已核实的调用契约                                | 移除条件                                         |
-| --------------------------------- | ----------------------------------------------- | ------------------------------------------------ |
-| `@logicflow/core>uuid` → 14.0.3   | LogicFlow 只使用无参数 `v4()` 生成 ID           | LogicFlow 自身升级到已修复版本，且流程图验证通过 |
-| `minimatch@>=10 <11.0.1` → 11.0.4 | ESLint 的匹配函数与类接口仍可用，完整 lint 验证 | 上游依赖允许 11+，移除覆盖后审计与 lint 通过     |
-| `glob@>=9 <14.0.2` → 14.0.3       | js-beautify CLI 使用 `hasMagic`、`globSync`     | 上游依赖允许已修复版本，移除覆盖后验证通过       |
+| Override                          | Verified usage contract                                                     | Removal condition                                                                 |
+| --------------------------------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `@logicflow/core>uuid` → 14.0.3   | LogicFlow uses only argument-free `v4()` for IDs                            | LogicFlow adopts a fixed version and flowchart verification passes                |
+| `minimatch@>=10 <11.0.1` → 11.0.4 | ESLint matching functions and class interfaces still work; full lint passed | Upstream permits 11+; audit and lint pass after removing the override             |
+| `glob@>=9 <14.0.2` → 14.0.3       | The js-beautify CLI uses `hasMagic` and `globSync`                          | Upstream permits a fixed version; verification passes after removing the override |
 
-依赖构建脚本采用 pnpm `allowBuilds` 列表。LogicFlow 的 AI 提示 postinstall 不参与运行时构建，明确禁用；其余仅保留已有原生依赖所需脚本。pnpm 自动记录的 `minimumReleaseAgeExclude` 是本次明确更新到最新稳定版产生的精确版本例外，不是关闭所有供应链检查。
+Dependency build scripts use pnpm's `allowBuilds` list. LogicFlow's AI-notice postinstall is unrelated to runtime builds and is explicitly disabled; other entries retain only scripts required by existing native dependencies. The exact-version `minimumReleaseAgeExclude` entries recorded by pnpm resulted from this explicit upgrade to the latest stable versions, not from disabling all supply-chain checks.
 
 ### CryptoJS
 
-CryptoJS 4.2.0 已停止维护，但仍是最后一个发布版本。现有同步 AES 接口和密文格式继续保留；只有在同时设计旧密文迁移、异步接口与调用方适配时，才可替换为 Web Crypto。客户端内置密钥不能视为服务端保密边界。
+CryptoJS 4.2.0 was unmaintained but remained the final published release. Preserve existing synchronous AES APIs and ciphertext formats. Replace them with Web Crypto only alongside a design for legacy-ciphertext migration, asynchronous APIs, and caller adaptation. Client-embedded keys are not a server-side confidentiality boundary.
 
-## 验证记录
+## Verification record
 
-在 macOS 本机使用 Node.js 26.13.0 / pnpm 12.16.1 验证：
+Verified locally on macOS with Node.js 26.13.0 / pnpm 12.16.1:
 
-| 检查                                                                    | 结果                                                                                                       |
-| ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `pnpm env:check`                                                        | 通过；避免与 pnpm 自带 `doctor` 子命令冲突                                                                 |
-| 冻结锁文件安装、`pnpm peers check`                                      | 通过，无 peer 冲突                                                                                         |
-| 全新临时目录 `CI=true HUSKY=0 pnpm install --frozen-lockfile --offline` | 通过，从缓存重建依赖，无需原有 node_modules                                                                |
-| `pnpm check`                                                            | 类型、ESLint（零 warning）、Prettier、42 个测试文件 / 146 条测试、生产构建通过                             |
-| `pnpm dev-build`                                                        | 通过，输出 `dist/development` 与 sourcemap                                                                 |
-| `pnpm report`                                                           | 通过，静态报告为 `dist/report/stats.html`，不打开浏览器或保持报告服务器                                    |
-| `vite build --configLoader native`                                      | 通过，配置不依赖旧加载器的扩展名猜测                                                                       |
-| 可选 CDN 构建                                                           | 通过；实际引用的 9 个精确版本脚本 URL 全部 HTTP 200，Chrome 登录、首页与 SVG 预览无控制台 error            |
-| `pnpm audit`                                                            | 0 info / low / moderate / high / critical；无忽略公告配置                                                  |
-| `pnpm outdated`                                                         | 仅报告 TypeScript 7 的兼容例外与最后版本 CryptoJS 的弃用标记                                               |
-| 三个间接依赖覆盖的 API                                                  | `uuid.v4/validate`、`globSync/hasMagic`、`minimatch/Minimatch` 调用通过                                    |
-| commitlint                                                              | 合规消息通过，错误格式消息被拒绝                                                                           |
-| Mock HTTP API                                                           | `/api/list?page=2&pageSize=10` 返回 10 条 / total 100；无分页返回 100 条，字段与年龄范围通过               |
-| Chrome 开发页面                                                         | 演示登录、首页、SVG 菜单图标、ECharts 图表、LogicFlow 节点和二维码渲染通过                                 |
-| Chrome 生产预览                                                         | 登录、首页显示真实依赖版本、高级表格中文数据、10→20 条切换、中英文菜单和明暗主题通过，检查时控制台无 error |
+| Check                                                                                     | Result                                                                                                                                                                               |
+| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `pnpm env:check`                                                                          | Passed; avoids colliding with pnpm's built-in `doctor` subcommand                                                                                                                    |
+| Frozen-lockfile install, `pnpm peers check`                                               | Passed without peer conflicts                                                                                                                                                        |
+| `CI=true HUSKY=0 pnpm install --frozen-lockfile --offline` in a fresh temporary directory | Passed; reconstructed dependencies from cache without the original node_modules                                                                                                      |
+| `pnpm check`                                                                              | Types, ESLint (zero warnings), Prettier, 42 test files / 146 tests, and production build passed                                                                                      |
+| `pnpm dev-build`                                                                          | Passed; produced `dist/development` and sourcemaps                                                                                                                                   |
+| `pnpm report`                                                                             | Passed; static report at `dist/report/stats.html`, without opening a browser or retaining a report server                                                                            |
+| `vite build --configLoader native`                                                        | Passed; configuration does not depend on legacy extension guessing                                                                                                                   |
+| Optional CDN build                                                                        | Passed; all 9 referenced exact-version script URLs returned HTTP 200. Chrome login, home, and SVG preview had no console errors.                                                     |
+| `pnpm audit`                                                                              | 0 info / low / moderate / high / critical; no ignored-advisory configuration                                                                                                         |
+| `pnpm outdated`                                                                           | Reported only the TypeScript 7 compatibility exception and final-release CryptoJS deprecation                                                                                        |
+| APIs of the three transitive overrides                                                    | `uuid.v4/validate`, `globSync/hasMagic`, and `minimatch/Minimatch` calls passed                                                                                                      |
+| commitlint                                                                                | Accepted valid messages and rejected invalid formats                                                                                                                                 |
+| Mock HTTP API                                                                             | `/api/list?page=2&pageSize=10` returned 10 records / total 100; no pagination returned 100. Field and age-range checks passed.                                                       |
+| Chrome development pages                                                                  | Demo login, home, SVG menu icons, ECharts, LogicFlow nodes, and QR rendering passed                                                                                                  |
+| Chrome production preview                                                                 | Login, real dependency versions on home, Chinese advanced-table data, 10→20 page-size changes, Chinese/English menus, and light/dark themes passed. No console errors were observed. |
 
-截图等本机证据位于忽略目录 `.ai-local/evidence/`。`production-home.png` 为生产首页，`production-table-dark.png` 为英文菜单和深色表格，`cdn-svg-icons.png` 为 CDN 构建的图标预览。临时安装、CDN 验证配置和产物不进入提交。
+Local evidence, including screenshots, is in ignored `.ai-local/evidence/`. `production-home.png` shows the production home page; `production-table-dark.png` shows English menus and a dark table; `cdn-svg-icons.png` shows CDN-build icons. Temporary installs, CDN verification configuration, and outputs are not committed.
 
-CI 工作流仅完成配置和官方 Action 输入核对，尚未在远端执行。当前机器未安装 Docker，因此 Dockerfile 未做实际镜像构建；也未验证真实后端、无界宿主、其他浏览器、最低版本设备和完整打印/下载链路。
+At this stage, CI configuration and official Action inputs had been checked, but remote CI had not run. Docker was not installed, so no image build was performed. Real backends, Wujie hosts, other browsers, minimum-version devices, and complete print/download flows were not verified.
 
-生产构建仍提示一个约 2 MB 的公共 chunk（包含模板公共组件依赖）及 ContentWrapper 同时静态/动态导入；功能检查通过，未提高告警阈值来隐藏问题。后续若做性能专项，应基于静态报告拆解组件导出与加载边界，并重新验证路由缓存及初始化顺序。
+The production build still reported a shared chunk of about 2 MB, including shared component dependencies, and mixed static/dynamic ContentWrapper imports. Functional checks passed; warning thresholds were not raised to hide these issues. A future performance effort should use the static report to examine component exports and loading boundaries, then reverify route caching and initialization order.
 
-## 2026-11-03：Hooks、布局和图标改造验证
+## 2026-11-03: Hook, layout, and icon refactor verification
 
-未升级依赖或改动锁文件。新增 `icons:generate` / `icons:check`，生成脚本使用项目现有 Prettier 配置输出代码，并保留 ESLint 所需的声明空行。Vite 按顶层分包生成独立雪碧图，名称与类型来自同一目录清单。
+No dependencies or lockfile entries changed. Added `icons:generate` / `icons:check`. The generator uses the project's existing Prettier configuration and preserves declaration spacing required by ESLint. Vite generates a separate spritemap per top-level group; names and types come from the same directory manifest.
 
-| 检查                                                            | 实际结果                                                                                                                                                                                |
-| --------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Node.js 26.13.0、pnpm 12.16.1、冻结锁文件安装、`pnpm env:check` | 通过；本机原有 Node 26.12.1 低于项目要求，本轮使用临时 26.13.0 运行时                                                                                                                   |
-| `pnpm typecheck`（包含 `icons:check`）、`pnpm lint`             | 通过，未降低规则或增加全局忽略                                                                                                                                                          |
-| `pnpm format:check` / `pnpm check`                              | 格式检查报本地 `TODO.md` 与 `.vscode/settings.json`，保留这两项非本任务变更；`pnpm check` 在格式阶段停止，未声称全绿                                                                    |
-| 本任务修改与新增文件的 Prettier 检查                            | 通过；生成清单也由项目 Prettier 配置直接格式化                                                                                                                                          |
-| `pnpm test:run`                                                 | 单独继续执行，50 个测试文件 / 173 条测试全部通过                                                                                                                                        |
-| `pnpm exec vite build`                                          | 单独继续执行并通过；44 个图标输出为 7 个带 hash 的独立包，各包 symbol ID 无重复                                                                                                         |
-| Chrome 开发版                                                   | 侧边、顶部、混合导航；嵌套页面菜单匹配；定宽 1200px 居中；390px 抽屉打开、选中自动收起且无页面横向溢出；刷新后保留桌面偏好；PNG 截图与元素全屏/恢复                                     |
-| Chrome 生产预览                                                 | 演示登录、44 个图标渲染、7 个带 base 的图标资源路径、完整图标复制操作、深色主题、中英文新页面文本、内容最大化及 Esc、页面卸载后刷新恢复、内容滚动到 300px、滚动页脚与既有自适应表格渲染 |
+| Check                                                                    | Observed result                                                                                                                                                                                                                                                                                   |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Node.js 26.13.0, pnpm 12.16.1, frozen-lockfile install, `pnpm env:check` | Passed. Existing local Node 26.12.1 was below the requirement, so this run used a temporary 26.13.0 runtime.                                                                                                                                                                                      |
+| `pnpm typecheck` (including `icons:check`), `pnpm lint`                  | Passed without weaker rules or new global ignores                                                                                                                                                                                                                                                 |
+| `pnpm format:check` / `pnpm check`                                       | Formatting flagged local `TODO.md` and `.vscode/settings.json`. Preserved those unrelated changes. `pnpm check` stopped at formatting; full success was not claimed.                                                                                                                              |
+| Prettier on files added/changed by this task                             | Passed; generated manifests were also formatted directly with project configuration                                                                                                                                                                                                               |
+| `pnpm test:run`                                                          | Run separately; all 50 test files / 173 tests passed                                                                                                                                                                                                                                              |
+| `pnpm exec vite build`                                                   | Run separately and passed; 44 icons produced 7 separate hashed groups with no duplicate symbol IDs within a group                                                                                                                                                                                 |
+| Chrome development build                                                 | Side/top/mixed navigation; nested-page menu matching; centered fixed width at 1200px; opening the drawer at 390px, collapsing after selection, and no page-level horizontal overflow; desktop preferences retained after reload; PNG screenshots and element fullscreen/restore                   |
+| Chrome production preview                                                | Demo login; 44 rendered icons; 7 icon asset paths respecting base; complete icon-copy operations; dark theme; Chinese/English new-page copy; content maximization and Esc; restoration after unmount/reload; content scrolled to 300px; scrolling footer and existing auto-height table rendering |
 
-Pinia 设置沿用原持久化 key，旧裸 Logo 名称在读取时迁移；锁屏仍使用历史布尔值格式。对应迁移、并发刷新、滚动实例替换、导航越界、右键异步关闭、全屏帧清理及截图失败处理均有回归用例。
+Pinia settings retained existing persistence keys. Legacy bare logo names migrate on read; lock screens still use the historical boolean format. Regressions cover the migration, concurrent refreshes, scroll-instance replacement, out-of-bounds navigation, asynchronous context-menu closure, fullscreen frame cleanup, and screenshot failures.
 
-本机截图位于 `.ai-local/evidence/2026-11-03/`。文件监听首次触发 EMFILE，本轮开发服务使用 `CHOKIDAR_USEPOLLING=1` 进行验收，未将该环境绕行写入默认开发配置。保留公共 chunk 大小、ContentWrapper 静态/动态导入及 Mock CORS 序列化提示；未调整告警阈值。本轮未验证实际纸张打印、最低版本浏览器或无界宿主。
+Local screenshots are in `.ai-local/evidence/2026-11-03/`. File watching initially hit EMFILE, so this development verification used `CHOKIDAR_USEPOLLING=1`; the workaround was not added to default development configuration. Shared-chunk size, mixed ContentWrapper imports, and mock CORS serialization warnings remain, without threshold changes. Physical printing, minimum-version browsers, and Wujie hosts were not verified.
 
-## 2026-11-03：自动同步、注释规范与视觉整理
+## 2026-11-03: Automatic synchronization, comment conventions, and visual cleanup
 
-本轮未升级依赖、未改动锁文件。图标生成已接入 `dev`、`build`、`dev-build`、`report`、`check` 与 Vite 构建入口；独立 `typecheck` 和 `icons:check` 保持只读。`AGENTS.md` 引入 [统一注释规范](comment-style.md)，页面排版与主题入口见 [视觉约定](ui-design.md)。
+No dependencies or lockfile entries changed. Icon generation is connected to `dev`, `build`, `dev-build`, `report`, `check`, and the Vite build entry point; standalone `typecheck` and `icons:check` remain read-only. `AGENTS.md` introduced the [shared comment style](comment-style.md). Page layout and theme entry points are in the [visual conventions](ui-design.md).
 
-| 检查                              | 实际结果                                                                                                                                                                     |
-| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 冻结锁文件安装与 `pnpm env:check` | 通过，使用 Node.js 26.13.0 / pnpm 12.16.1                                                                                                                                    |
-| `pnpm check`                      | 图标同步、类型和 ESLint 通过；格式阶段仅报未改动的 `.vscode/settings.json`，未声称全量检查通过                                                                               |
-| `pnpm test:run`                   | 单独执行，52 个测试文件 / 181 条测试全部通过                                                                                                                                 |
-| `pnpm build`                      | 通过，包含自动生成、类型检查和生产构建；最终为 44 个图标、7 个独立雪碧图                                                                                                     |
-| 无开发服务参与的构建              | 临时新增 SVG 后先确认 `icons:check` 报清单过期，再直接执行 `pnpm build`，自动生成成功；删除临时 SVG 后再次构建恢复最终产物                                                   |
-| 实际图标 HMR                      | 新增、改名、删除自动同步清单；修改内容后资源 hash 改变且保留搜索状态；新增/删除整个分包自动重建插件配置并通知浏览器重载；带连字符的分包名与符号链接路径的 CLI 执行有回归覆盖 |
-| 注释位置                          | 移除组件介绍块和重复堆叠；类型、Store 与常量说明按相邻声明重新核对，修正原登录状态说明中错误的存储介质描述                                                                   |
-| Chrome 排版                       | 工作台、Hooks、布局实验室、图标库；1440/1280px 桌面与 390px 单列，无页面横向溢出；保留登录页紧凑资源入口                                                                     |
-| 主题与语言                        | 生产页明暗切换、暗色选中态前景、中英文标题；修复热更新后国际化实例被替换导致显示原始键的边界，并覆盖初始化前创建 Hook 后恢复翻译的场景                                       |
+| Check                                        | Observed result                                                                                                                                                                                                                                                                       |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Frozen-lockfile install and `pnpm env:check` | Passed with Node.js 26.13.0 / pnpm 12.16.1                                                                                                                                                                                                                                            |
+| `pnpm check`                                 | Icon synchronization, types, and ESLint passed. Formatting flagged only unchanged `.vscode/settings.json`; full-check success was not claimed.                                                                                                                                        |
+| `pnpm test:run`                              | Run separately; all 52 test files / 181 tests passed                                                                                                                                                                                                                                  |
+| `pnpm build`                                 | Passed, including generation, types, and production build; final output contained 44 icons and 7 separate spritemaps                                                                                                                                                                  |
+| Build without a development server           | After adding a temporary SVG, confirmed `icons:check` reported a stale manifest, then ran `pnpm build` directly and verified automatic generation. Removed the temporary SVG and rebuilt final output.                                                                                |
+| Actual icon HMR                              | Add/rename/delete synchronized the manifest. Content edits changed asset hashes and retained search state. Adding/removing whole groups rebuilt plugin configuration and requested browser reloads. Regressions cover hyphenated group names and CLI execution through symlink paths. |
+| Comment placement                            | Removed component introductions and stacked duplicates. Rechecked type, store, and constant descriptions against adjacent declarations; corrected the login-state description's storage medium.                                                                                       |
+| Chrome layout                                | Dashboard, hooks, layout lab, and icon library at 1440/1280px desktop and 390px single-column widths, without page-level horizontal overflow. Retained compact login-page resource links.                                                                                             |
+| Themes and languages                         | Production light/dark switching, dark selected-state foregrounds, and Chinese/English headings. Fixed raw translation keys after HMR replaced the i18n instance; covered translation recovery for hooks created before initialization.                                                |
 
-开发验收仍使用本机 `CHOKIDAR_USEPOLLING=1`，未改动默认监听方式。浏览器控制连接在还原视口时中断，后续通过 Chrome 开发者工具的独立上下文核对最终生产产物；最终截图与阶段记录放在 `.ai-local/evidence/2026-11-03/polish/`。复杂基础组件自身的 Vue JSX 热替换场景未穷尽，生产验收基于最终完整加载的产物；没有把这些检查写成真实后端、最低版本设备或实体打印验收。
+Development verification still used local `CHOKIDAR_USEPOLLING=1` without changing the default watcher. The browser-control connection broke while restoring the viewport. A separate Chrome DevTools context then checked the final production artifacts. Final screenshots and phase records are in `.ai-local/evidence/2026-11-03/polish/`. Vue JSX hot replacement inside complex base components was not exhaustively tested. Production acceptance used freshly loaded final artifacts; these checks were not presented as real-backend, minimum-device, or physical-printing verification.
 
-公共 chunk 大小、ContentWrapper 静态/动态导入与 Mock CORS 序列化提示仍保留，未降低检查严格度或调高告警门槛。
+Shared-chunk size, mixed static/dynamic ContentWrapper imports, and mock CORS serialization warnings remain. Neither check strictness nor warning thresholds were relaxed.
 
-## 2026-11-03 TypeScript 项目配置拆分
+## 2026-11-03: TypeScript project configuration split
 
-旧配置只在 `vue-tsc` 命令行传入 `--noEmit`。直接读取项目配置时，`allowImportingTsExtensions` 会触发 TS5096。现在共享配置声明 `noEmit`，由根项目分别引用应用、Node 与测试配置。Vue JSX 和自动导入声明由应用及测试配置加载。TypeScript 6 的 `DOM` 已包含可迭代声明，Vite 继续通过 `build.sourcemap` 控制开发和生产的 sourcemap。
+The previous setup passed `--noEmit` only to the `vue-tsc` command. Reading project configuration directly caused `allowImportingTsExtensions` to trigger TS5096. Shared configuration now declares `noEmit`; the root references application, Node, and test configurations separately. Application/test configurations load Vue JSX and auto-import declarations. TypeScript 6's `DOM` includes iterable declarations. Vite still controls development/production sourcemaps through `build.sourcemap`.
 
-依赖与锁文件沿用当前版本。完整命令和项目归属见 [TypeScript 项目配置](architecture.md#typescript-项目配置)。
+Dependencies and the lockfile retained their existing versions. Commands and project ownership are in [TypeScript project configuration](architecture.md#typescript-project-configuration).
 
-在 Node.js 26.13.0 与 pnpm 12.16.1 下，`pnpm check` 通过类型、ESLint、Prettier、59 个测试文件的 240 个用例和生产构建。`pnpm dev-build` 通过，并生成开发版 JS sourcemap。通过 TypeScript 服务核对了应用入口、Vite 配置、Mock 文件和测试文件各自使用的项目。
+With Node.js 26.13.0 and pnpm 12.16.1, `pnpm check` passed types, ESLint, Prettier, 59 test files / 240 cases, and the production build. `pnpm dev-build` passed and produced development JS sourcemaps. The TypeScript service confirmed project ownership for the application entry point, Vite configuration, mock files, and tests.
 
-## 2026-11-03 AI Harness 迁移
+## 2026-11-03: AI Harness migration
 
-任务入口、范围清单和验收命令集中在 [AI Harness](../harness/README.md)。GitHub Actions 通过 `pnpm check` 校验上下文与回归路径。旧工具配置和旧开发指南已移除，TypeScript 增量缓存迁至 `node_modules/.cache/ray-template/`。依赖与锁文件沿用当前版本。
+Task entry points, scope registration, and verification commands were consolidated in the [AI Harness](../harness/README.md). GitHub Actions validates context and regression paths through `pnpm check`. Removed old tool configuration and developer guides. TypeScript incremental caches moved to `node_modules/.cache/ray-template/`. Dependencies and lockfile versions stayed unchanged.
 
-本机 macOS 使用 Node.js 26.13.0 和 pnpm 12.16.1。六个任务域的定向验证均通过。新增回归覆盖空测试目录，以及子命令失败时的退出码、停止执行和 JSON 报告。`pnpm harness verify` 通过 Harness 校验、类型、ESLint、Prettier、60 个测试文件的 242 个用例和生产构建。
+Local macOS verification used Node.js 26.13.0 and pnpm 12.16.1. Targeted checks passed for all six task scopes. New regressions cover empty test directories and exit codes, fail-fast behavior, and JSON reports when child commands fail. `pnpm harness verify` passed Harness validation, types, ESLint, Prettier, 60 test files / 242 cases, and the production build.
 
-本机报告保存在 `.harness-local/runs/`，`npm pack --dry-run --ignore-scripts` 确认本机证据目录不进入发布包。Windows 和 Linux 的执行结果待远端 CI 验证，浏览器验收按 Harness 中的独立步骤执行。
+Reports are saved in `.harness-local/runs/`. `npm pack --dry-run --ignore-scripts` confirmed that local evidence directories were excluded from the package. Windows/Linux results awaited remote CI. Browser verification follows the separate Harness steps.
 
-## 2026-11-03 组件目录与公开演示的检索配置
+## 2026-11-03: Component directories and public demo discovery
 
-通用组件统一放在 `src/components`，保留 `@/components` 入口并删除没有调用方的 `RCollapse`。双语 README 补充实际工作台截图、快速开始和二次开发入口。公开构建的 canonical、分享图和 sitemap 按 Vite base 生成，配置方式见[部署指南](architecture.md#deployment-and-search-discovery)。
+Shared components were consolidated in `src/components`, retaining `@/components` and removing the unused `RCollapse`. Bilingual READMEs gained actual dashboard screenshots, quick-start instructions, and customization entry points. Public-build canonical metadata, sharing images, and sitemaps follow the Vite base; see the [deployment guide](architecture.md#deployment-and-search-discovery).
 
-- `pnpm harness verify` 通过类型、ESLint、Prettier、63 个测试文件的 265 个用例和生产构建。
-- 检查了官方路径、自定义子路径与未设置站点源地址的构建。公开版本的首页、sitemap 和资源 URL 一致；普通构建输出 `noindex`。
-- Chrome 生产预览验证了桌面双列、390px 单列、中英文与明暗切换、预填演示登录，以及关闭 JavaScript 时的项目介绍和链接。GitHub About 描述、演示地址和主题已回读确认；未部署网站构建或验证搜索引擎收录。
+- `pnpm harness verify` passed types, ESLint, Prettier, 63 test files / 265 cases, and the production build.
+- Checked builds for the official path, a custom subpath, and an unset site origin. Public home, sitemap, and resource URLs were consistent; ordinary builds emitted `noindex`.
+- Chrome production previews verified desktop two-column and 390px single-column layouts, Chinese/English and light/dark switching, prefilled demo login, and project information/links with JavaScript disabled. GitHub About description, demo URL, and topics were read back and confirmed. Site builds were not deployed, and search-engine indexing was not verified.
 
-## 2026-11-04 GitHub Pages 静态发布
+## 2026-11-04: Static GitHub Pages deployment
 
-线上首页与 `dist` 分支的 `index.html` 一致，引用的 `js/_toKey-BqfG5Sv9.js` 在分支中存在，Pages 却返回 404。发布根目录缺少 `.nojekyll`，Jekyll 默认过滤下划线开头的文件。Vite 现在将 `public/.nojekyll` 复制到发布根目录，部署约定见[架构地图](architecture.md#deployment-and-search-discovery)。
+The live home page matched `index.html` on the `dist` branch, and the referenced `js/_toKey-BqfG5Sv9.js` existed on that branch, yet Pages returned 404. The deployment root lacked `.nojekyll`, so Jekyll filtered underscore-prefixed files. Vite now copies `public/.nojekyll` to the deployment root. See the [architecture map](architecture.md#deployment-and-search-discovery) for deployment conventions.
 
-- 干净的 `HEAD` 加本次修复复用本机已安装依赖执行 `pnpm harness verify`，66 个测试文件的 285 个用例与生产构建通过。原工作区的全量检查在 `__test__/router/config.spec.ts` 初始化时失败，独立执行 `pnpm build` 通过。
-- 构建产物包含 `.nojekyll`。生产预览首页引用的 12 个 JS 和 CSS 资源均返回 HTTP 200，内容与产物一致。Chrome 使用演示账号进入首页，控制台无错误。GitHub Pages 待部署后回查。
+- A clean `HEAD` plus this fix reused installed local dependencies to run `pnpm harness verify`; 66 test files / 285 cases and the production build passed. Full checks in the original worktree failed while initializing `__test__/router/config.spec.ts`; standalone `pnpm build` passed.
+- Build output contained `.nojekyll`. All 12 JS/CSS assets referenced by the production-preview home page returned HTTP 200 with content matching the output. Chrome entered home using the demo account without console errors. GitHub Pages required a post-deployment recheck.
 
-## 2026-11-04 文档工作区与页内示例
+## 2026-11-04: Documentation workspace and inline examples
 
-文档迁入 `apps/docs`，与后台和 `packages/utils` 共用根锁文件。VitePress `1.6.4` 使用 Vite `6.4.5`，覆盖只作用于 VitePress；后台保留 Vite `8.3.5`。`@/utils/precision` 转发共享包，RBarcode 仍由应用维护，文档按需加载原组件。
+Documentation moved into `apps/docs`, sharing the root lockfile with the admin application and `packages/utils`. VitePress `1.6.4` uses Vite `6.4.5`; the override applies only to VitePress, while the admin application retains Vite `8.3.5`. `@/utils/precision` re-exports the shared package. RBarcode was still maintained by the application and loaded on demand by documentation.
 
-- 本机 macOS（Node.js 26.13.0、pnpm 12.16.1）通过 `pnpm harness verify`，含 66 个测试文件、291 个用例，以及应用和文档生产构建。报告：`.harness-local/runs/all-ukYffY/report.json`。
-- 检查了 93 个旧路径的目标页和锚点。Chrome 在生产子路径验证了精度输入、条码重绘与非法输入恢复、示例代码、搜索、旧路径跳转、明暗切换和 390px 布局。
-- 当前只验证了本地构建。Docker 镜像、远端 CI 和 GitHub Pages 迁址未验证。
+- Local macOS verification with Node.js 26.13.0 and pnpm 12.16.1 passed `pnpm harness verify`: 66 test files, 291 cases, and application/documentation production builds. Report: `.harness-local/runs/all-ukYffY/report.json`.
+- Checked target pages and anchors for 93 legacy paths. Chrome verified precision input, barcode redraw and invalid-input recovery, example code, search, legacy redirects, light/dark switching, and 390px layouts under the production subpath.
+- Only local builds were verified. Docker images, remote CI, and the GitHub Pages site migration were not verified.
 
-## 2026-11-04 Ray Admin 与共享能力拆分
+## 2026-11-04: Separating Ray Admin and shared capabilities
 
-Ray Admin 的应用入口迁到 `apps/admin`，文档和应用经公开入口使用八个共享包。根目录保留开发、构建和 Harness 命令，应用与文档的 Vite 版本分别锁定。`pnpm pages:build` 生成组合产物，配置站点源地址后另生成旧文档跳转产物。
+Ray Admin's application entry point moved to `apps/admin`. Documentation and the application consume eight shared packages through public entry points. Development, build, and Harness commands remain at the root; application/documentation Vite versions are pinned separately. `pnpm pages:build` produces combined output and, when a site origin is configured, separate legacy-documentation redirects.
 
-- Node.js 26.13.0、pnpm 12.16.1 下冻结锁文件安装及 `pnpm harness verify` 通过。含包边界检查、独立类型检查、68 个测试文件的 293 个用例，以及后台和文档生产构建。报告位于 `.harness-local/runs/all-GPS5No/report.json`。
-- 开发服务器的 `/api/list` 返回 HTTP 200。Chrome 生产预览验证了演示登录、导航偏好刷新恢复、图标和文档交互，覆盖 TablePro 取消及失败重试、外壳导航和主题、精度工具、条码、路由校验、防抖和全屏。检查了 93 个旧路径的目标和锚点，并生成 138 个旧站跳转页。
-- Docker、无界宿主和远端 CI 未运行。旧站迁址需在 GitHub Pages 发布时另行验收。
+- Frozen-lockfile installation and `pnpm harness verify` passed with Node.js 26.13.0 and pnpm 12.16.1, including package boundaries, independent type checks, 68 test files / 293 cases, and admin/documentation production builds. Report: `.harness-local/runs/all-GPS5No/report.json`.
+- Development `/api/list` returned HTTP 200. Chrome production previews verified demo login, navigation-preference restoration after reload, icons, and documentation interactions: TablePro cancellation/failure retry, shell navigation/themes, precision utilities, barcodes, route validation, debounce, and fullscreen. Checked targets/anchors for 93 legacy paths and generated 138 legacy-site redirects.
+- Docker, Wujie hosts, and remote CI were not run. The legacy-site migration required separate verification when published to GitHub Pages.
 
-## 2026-11-04 文档示例与后台主题联动
+## 2026-11-04: Documentation examples and admin theme integration
 
-文档的组件预览复用后台的 Naive UI 明暗主题和语言配置。页内示例隔离 VitePress 正文样式，依赖后台上下文的示例由 Pages 同一次构建中的 `example.html` 运行。示例宿主只注册演示路由，使用内存缓存和独立 Store，文档直接引用运行的源码。
+Documentation component previews reuse the admin application's Naive UI light/dark themes and locale configuration. Inline examples isolate VitePress article styles. Examples requiring application context run through `example.html` from the same Pages build. The example host registers only demo routes, uses in-memory caching and an independent store, and documentation includes the source actually running.
 
-`pnpm harness verify` 通过 69 个测试文件的 294 个用例。合并产物核对了 22 个文档页中的 26 处内嵌入口和源码。Chrome 生产预览验证了 TablePro 样式、明暗主题、中文分页及失败重试，抽测了组件、指令、Hooks、工具交互和正常后台登录入口。桌面和 390px 预览中的边框内边距均为 12px。
+`pnpm harness verify` passed 69 test files / 294 cases. Checked 26 embedded entry points and source references across 22 documentation pages in the combined output. Chrome production previews verified TablePro styling, light/dark themes, Chinese pagination, and failure retry; sampled component, directive, hook, and utility interactions and the normal admin login entry point. Border padding was 12px in desktop and 390px previews.
 
-## 2026-11-05 HTTP Mock 与服务端契约
+## 2026-11-05: HTTP mocks and backend contracts
 
-演示已统一为 MSW 2.11.6：启动时等待 Service Worker 就绪，开发、生产预览与 GitHub Pages 复用同一套处理器。移除了仅开发可用的旧 Vite Mock 插件和生产直接调用本地人员数据的分支。初始路由迁入 Mock JSON，在线读写使用标准 GET/PUT 接口；组件白名单和外壳路由仍由前端持有。
+Demos now use MSW 2.11.6 consistently. Startup waits for Service Worker readiness; development, production previews, and GitHub Pages share handlers. Removed the development-only Vite mock plugin and the production branch that called local person data directly. Initial routes moved to mock JSON; online reads/writes use standard GET/PUT APIs. The frontend still owns the component allowlist and shell routes.
 
-浏览器验收复现了 MSW 3.x 约五分钟后失去拦截的[已知问题](https://github.com/mswjs/msw/issues/2801)，因此固定使用 2.11.6。业务请求前探测 Mock 标记，丢失时通过公开 stop/start API 恢复；恢复失败时阻止业务请求穿透。上游修复并通过长时运行与后台恢复验收后再评估升级。官方 worker 保持原样，不手工修改库的消息协议。
+Browser verification reproduced the [known MSW 3.x issue](https://github.com/mswjs/msw/issues/2801) in which interception stops after about five minutes, so the dependency was pinned to 2.11.6. Before business requests, probe the mock marker; if missing, recover through public stop/start APIs. Block business requests from falling through if recovery fails. Reassess the upgrade after an upstream fix passes long-running and background-resume verification. Keep the official worker unchanged; do not modify library message protocols manually.
 
-`pnpm api:generate` 从运行时 Schema 生成可下载的 OpenAPI 3.1；`pnpm api:check` 校验契约和 MSW 官方 worker 同步，并纳入全量检查。递归路由 Schema 的引用定位到所属 OpenAPI 组件，回归测试检查全部引用可解析。Node/pnpm 版本保持清单要求。接入与部署边界见[服务端指南](../apps/docs/guide/backend.md)。
+`pnpm api:generate` creates downloadable OpenAPI 3.1 from runtime schemas. `pnpm api:check` checks contract/official MSW worker synchronization and is included in full checks. Recursive route-schema references point to their owning OpenAPI components, and regressions verify that all references resolve. Node/pnpm requirements remain as specified by manifests. Integration/deployment boundaries are in the [backend guide](../apps/docs/guide/backend.md).
 
-- Node.js 26.13.0、pnpm 12.16.1 下，`pnpm harness verify` 通过类型、Lint、格式、包边界、79 个测试文件的 357 个用例，以及后台和文档生产构建。报告：`.harness-local/runs/all-z0kewW/report.json`。
-- 浏览器完成用户增删改查、重复输入与取消、批量操作、只读账号、收藏与历史隔离、键盘搜索、接口路由保存和刷新读回。1280px 桌面与 390px 窄屏验证两个区域独立滚动、中英文及明暗主题；文档契约入口返回最终 JSON。证据：`.harness-local/browser/admin-2026-11-05/report.json`。
-- Chrome 自动化连接中断后，完整生产验收使用独立的内置 Chromium 预览。长时间操作后 Mock 请求仍由 Service Worker 返回；当前浏览器工具不支持强制终止 worker，恢复并发与失败阻断由回归测试覆盖。未连接真实后端，未部署或运行远端 CI。
+- With Node.js 26.13.0 and pnpm 12.16.1, `pnpm harness verify` passed types, lint, formatting, package boundaries, 79 test files / 357 cases, and admin/documentation production builds. Report: `.harness-local/runs/all-z0kewW/report.json`.
+- Browser verification covered user CRUD, repeated input and cancellation, bulk operations, read-only accounts, favorite/history isolation, keyboard search, API-route saving, and reload readback. Verified independent scrolling in both regions, Chinese/English, and light/dark themes at 1280px desktop and 390px narrow widths. The documentation contract endpoint returned final JSON. Evidence: `.harness-local/browser/admin-2026-11-05/report.json`.
+- After the Chrome automation connection failed, full production acceptance used an independent embedded Chromium preview. Mock requests still came from the Service Worker after extended operation. The available browser tools could not forcibly terminate the worker; regressions covered concurrent recovery and failure blocking. No real backend was connected, and neither deployment nor remote CI ran.
 
-## 参考资料
+## 2026-11-06: Harness review and scoped verification
+
+Official-guidance comparisons, structural assessment, and findings are in the [Harness review record](../harness/plan.md#2026-11-06-structure-review-and-verification-scope). Root guidance, the PR template, topic indexes, visual conventions, and reader guides now select verification by impact: local fixes use relevant tests or scopes, visible behavior uses affected pages/dimensions, and integration risk, releases, or explicit requests trigger full checks. Targeted `api` and `icons` entry points now include existing generated-artifact synchronization checks.
+
+Local macOS verification used Node.js 26.13.0 and pnpm 12.16.1:
+
+- `pnpm harness check` passed. All 10 topics are reachable; all 81 test files are registered in at least one scope.
+- `pnpm harness verify harness` passed 11 cases covering targeted scope, fail-fast behavior, and full-check compatibility. Report: `.harness-local/runs/harness-MadWUc/report.json`.
+- Ran `pnpm harness verify all` once to verify this change to verification entry points. Types, ESLint, formatting, API/package boundaries, 81 test files / 371 cases, and admin/documentation builds passed. Report: `.harness-local/runs/all-3iyfPu/report.json`; complete output: `.harness-local/harness-review-2026-11-06.log`.
+- After updating remaining old rules in the public tooling guide, reran only affected `pnpm harness verify docs` and changed-file format/index checks. Documentation types, links, and build passed. Report: `.harness-local/runs/docs-Uge4Sg/report.json`.
+
+No page behavior changed, so no UI/UX browser matrix was run. Remote CI and deployment were not run. Large-chunk and mixed static/dynamic import warnings remain, as do Node's experimental localStorage notices; these existing issues were outside this task. Passing commands does not establish browser or real-backend acceptance.
+
+## 2026-11-06: English agent and maintainer guidance
+
+Translated agent entry points, Harness topics and workflow, internal architecture/convention/history records, source-adjacent maintenance guides, CLI messages, and matching regression assertions into English. Root guidance now records this language convention. Product copy, public reader documentation, code examples, and the existing Chinese code-comment policy retain their intended languages. Commands, scope IDs, report fields, and verification triggers are unchanged by this translation pass.
+
+- The translation covers 41 internal files. Hash comparisons confirmed that 99 protected product/reader files were unchanged from the start of this pass.
+- Static review confirmed unchanged link destinations and fenced code examples, valid local links and translated heading anchors, and unchanged scope commands. Remaining Chinese text consists of literal UI/brand names and code-comment examples.
+- `pnpm harness check`, targeted ESLint, and formatting checks passed. `pnpm harness verify harness` passed all 11 cases; report: `.harness-local/runs/harness-MVuum9/report.json`.
+- Local translation evidence is in `.harness-local/english-guidance/`. This pass did not rerun full application checks or browser acceptance because no application behavior or rendering changed.
+
+## References
 
 - [Node.js 26.13.0 LTS](https://nodejs.org/en/blog/release/v26.13.0)
-- [Vite 8 迁移说明](https://vite.dev/guide/migration)
-- [Vitest 5 迁移说明](https://vitest.dev/guide/migration/)
-- [Vue Router 5 迁移说明](https://router.vuejs.org/guide/migration/v4-to-v5)
-- [Vue Language Tools 的 TypeScript 7 支持进度](https://github.com/vuejs/language-tools/issues/5381)
-- [SVG Spritemap 子路径部署](https://spiriitlabs.github.io/vite-plugin-svg-spritemap/guide/deployment.html)
-- [Faker 本地化](https://fakerjs.dev/guide/localization.html)
+- [Vite 8 migration guide](https://vite.dev/guide/migration)
+- [Vitest 5 migration guide](https://vitest.dev/guide/migration/)
+- [Vue Router 5 migration guide](https://router.vuejs.org/guide/migration/v4-to-v5)
+- [Vue Language Tools TypeScript 7 support](https://github.com/vuejs/language-tools/issues/5381)
+- [SVG Spritemap subpath deployment](https://spiriitlabs.github.io/vite-plugin-svg-spritemap/guide/deployment.html)
+- [Faker localization](https://fakerjs.dev/guide/localization.html)
 
-### 远端 CI 回查
+### Remote CI follow-up
 
-[历史 Ubuntu 失败](https://github.com/XiaoDaiGua-Ray/ray-template/actions/runs/41588971650) 的失败项为 `detectOperatingSystem.spec.ts`。测试读取 Linux 运行器的真实 user agent，断言固定期待 `Unknown`。提交 `83bada95` 使用模拟 user agent 和触点数量覆盖各系统。当前基线 `80e80775` 的 [CI](https://github.com/XiaoDaiGua-Ray/ray-template/actions/runs/41612553267) 已通过 Ubuntu、macOS、Windows 和部署。现有矩阵继续运行同一条 `pnpm check`。
+The [historical Ubuntu failure](https://github.com/XiaoDaiGua-Ray/ray-template/actions/runs/41588971650) was in `detectOperatingSystem.spec.ts`: the test read the Linux runner's actual user agent but always expected `Unknown`. Commit `83bada95` covers systems with mocked user agents and touch-point counts. [CI](https://github.com/XiaoDaiGua-Ray/ray-template/actions/runs/41612553267) for recorded baseline `80e80775` passed Ubuntu, macOS, Windows, and deployment. The matrix continues to run the same `pnpm check`.
