@@ -236,7 +236,7 @@ Translated agent entry points, Harness topics and workflow, internal architectur
 
 ### Remote CI follow-up
 
-The [historical Ubuntu failure](https://github.com/XiaoDaiGua-Ray/ray-template/actions/runs/41588971650) was in `detectOperatingSystem.spec.ts`: the test read the Linux runner's actual user agent but always expected `Unknown`. Commit `83bada95` covers systems with mocked user agents and touch-point counts. [CI](https://github.com/XiaoDaiGua-Ray/ray-template/actions/runs/41612553267) for recorded baseline `80e80775` passed Ubuntu, macOS, Windows, and deployment. The matrix continues to run the same `pnpm check`.
+The [historical Ubuntu failure](https://github.com/XiaoDaiGua-Ray/ray-template/actions/runs/41588971650) was in `detectOperatingSystem.spec.ts`: the test read the Linux runner's actual user agent but always expected `Unknown`. Commit `83bada95` covers systems with mocked user agents and touch-point counts. [CI](https://github.com/XiaoDaiGua-Ray/ray-template/actions/runs/41612553267) for recorded baseline `80e80775` passed Ubuntu, macOS, Windows, and deployment. At that checkpoint, the matrix ran the same `pnpm check` on all three systems.
 
 <!-- fullstack:start -->
 
@@ -254,3 +254,18 @@ The server pins JOSE 6.2.12 for JWT signing and verification. The browser defaul
 
 The [PC acceptance record](../harness/fullstack-acceptance.md) contains the full Harness, real PostgreSQL/Redis, clean archive, Docker Compose and desktop Chrome results. It also records the external-service upgrade and the required sign-in after replacing legacy tokens. No remote workflow or public deployment was used.
 <!-- fullstack:end -->
+
+## 2026-11-06: Direct Pages builds on main
+
+Removed the Ubuntu/Windows/macOS verification matrix and the deployment job's dependency on it. The existing workflow file now contains one Pages job: every push to `main` builds the admin and documentation with `pnpm pages:build`, then publishes successful output to `dist`. It deliberately has no path filter, so shared packages, dependencies, tooling, and documentation cannot be omitted from the deployment trigger. Backend-only and maintenance changes also trigger a build. Manual dispatch is restricted to `main`; PRs and generated branches do not publish. The separate source-distributions workflow remains unchanged.
+
+Updated contributor guidance, both READMEs, architecture, and the reader tooling guide to distinguish local full verification from Pages publication. The build command, deployment branch, site paths, source-reference environment, and `.nojekyll` behavior are unchanged.
+
+Local verification used Node.js 26.13.0 and pnpm 12.16.1:
+
+- Parsed the workflow YAML and checked main pushes, manual dispatch, excluded branches, removal of the check dependency, and successful-build-before-publication ordering.
+- `pnpm harness verify all` passed environment, index, contract, boundary, type, lint, and format checks; 106 frontend test files / 552 cases; and both production site builds. It then stopped because the sandbox blocked the server tests from listening on loopback. Report: `.harness-local/runs/all-8AOcdZ/report.json`.
+- Re-ran only `pnpm server:check` with loopback permission: server types, 12 tests, and build passed. The optional real Redis test was skipped. The remaining `pnpm dist:check` passed for both source editions.
+- Reused the completed site builds for `node scripts/assemble-pages.mjs`; confirmed both entry pages, `.nojekyll`, the Mock worker, and both API contract files in `dist/pages`.
+
+Remote Actions and public deployment results were not inspected. No application rendering or asset-path behavior changed, so browser acceptance was not repeated.

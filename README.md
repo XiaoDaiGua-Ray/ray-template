@@ -190,7 +190,7 @@ In the complete repository, `pnpm check` also checks server types, tests, and bu
 
 <!-- fullstack:end -->
 
-CI is configured for **Linux, Windows, and macOS**. Read [AGENTS.md](AGENTS.md) and the [Harness verification guide](harness/README.md) before contributing. Default deployment paths are `/ray-template/` for the admin and `/ray-template/docs/` for documentation. See the [deployment guidance](docs/architecture.md#deployment-and-search-discovery) before changing them.
+The **Pages workflow** builds the admin and documentation on every push to `main` and publishes successful output to `dist`. It has no path filter or cross-platform check dependency; manual publication on `main` is also supported. Read [AGENTS.md](AGENTS.md) and the [Harness verification guide](harness/README.md) before contributing. Default deployment paths are `/ray-template/` for the admin and `/ray-template/docs/` for documentation. See the [deployment guidance](docs/architecture.md#deployment-and-search-discovery) before changing them.
 
 ## Version boundaries
 

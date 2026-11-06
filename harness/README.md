@@ -59,7 +59,7 @@ For example, a CSV escaping fix can use `pnpm test:run __test__/components/table
 
 `verify` runs steps sequentially, stops at the first failure, and returns a nonzero exit code. It prints the path to `.harness-local/runs/<run>/report.json` on completion. Reports contain commands, outcomes, durations, runtime, and signals; each invocation has a separate record. Full reports represent `pnpm check` as one step; consult that run's terminal output for phase details. Invalid arguments or context, and forcibly interrupted runs, may produce no report. None of these CLI commands launches a browser. Passing command checks does not establish UI/UX acceptance.
 
-GitHub Actions runs the same `pnpm check` on Linux, Windows, and macOS. Use `pnpm lint`, `pnpm format:check`, or `pnpm typecheck` separately to diagnose failures. `pnpm lint:fix` and `pnpm format` rewrite files. `pnpm check` synchronizes icon manifests and generates `dist/production`; review generated diffs before delivery.
+The Pages workflow runs `pnpm pages:build` on Ubuntu for every push to `main`, then publishes the combined site to `dist`. It has no path filter or cross-platform check dependency and can also be run manually on `main`. Local full verification remains `pnpm check`; select it using the rules above. Use `pnpm lint`, `pnpm format:check`, or `pnpm typecheck` separately to diagnose failures. `pnpm lint:fix` and `pnpm format` rewrite files. `pnpm check` synchronizes icon manifests and generates `dist/production`; review generated diffs before delivery.
 
 ### Browser verification
 
