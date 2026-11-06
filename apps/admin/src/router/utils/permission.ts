@@ -1,9 +1,13 @@
-import { APP_CATCH_KEY, WHITE_ROUTES } from '@/app-config'
-import { FORBIDDEN_ROUTE_PATH, NOT_FOUND_PAGE_PATH } from '@/router/constant'
+import { APP_CATCH_KEY } from '@/app-config'
+import {
+  FORBIDDEN_ROUTE_PATH,
+  isSystemRoute,
+  NOT_FOUND_PAGE_PATH,
+} from '@/router/constant'
 import { getStorage } from '@/utils/cache'
 import type { Router } from 'vue-router'
 import { resolveLandingPath } from './resolve-landing-path'
-import { validRole } from './valid-role'
+import { getRouteAccess } from './route-access'
 
 /**
  *
@@ -17,15 +21,13 @@ export const permissionRouter = (router: Router) => {
   router.beforeEach((to) => {
     const token = getStorage<string>(APP_CATCH_KEY.token, 'localStorage')
     const isLogin = to.path === '/'
+    const attempted = to.redirectedFrom ?? to
 
     if (typeof token !== 'string' || !token) {
       return isLogin
         ? true
-        : { path: '/', query: { redirect: to.fullPath }, replace: true }
+        : { path: '/', query: { redirect: attempted.fullPath }, replace: true }
     }
-
-    const isWhiteRoute =
-      typeof to.name === 'string' && WHITE_ROUTES.includes(to.name)
 
     if (isLogin) {
       const target = router.resolve(
@@ -47,11 +49,16 @@ export const permissionRouter = (router: Router) => {
         replace: true,
       }
 
-    if (!isWhiteRoute && !validRole(to.meta))
+    // Router 在守卫执行前展开重定向；状态页不能再次校验其已被拦截的来源。
+    if (
+      !isSystemRoute(to) &&
+      (getRouteAccess(router, to) === 'forbidden' ||
+        (to.redirectedFrom &&
+          getRouteAccess(router, attempted) === 'forbidden'))
+    )
       return {
         path: FORBIDDEN_ROUTE_PATH,
-        query: { from: to.fullPath },
-        replace: true,
+        query: { from: attempted.fullPath },
       }
 
     return true

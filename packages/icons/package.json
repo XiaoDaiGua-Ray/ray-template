@@ -6,5 +6,8 @@
     ".": "./src/index.ts",
     "./manifest": "./src/manifest.ts",
     "./assets": "./src/assets.ts"
+  },
+  "rayTemplate": {
+    "runtime": "browser"
   }
 }

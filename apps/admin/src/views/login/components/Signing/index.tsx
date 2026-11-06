@@ -1,3 +1,4 @@
+import { apiMockEnabled } from '@/api/admin/client'
 import { APP_CATCH_KEY } from '@/app-config'
 import { RForm, useForm } from '@/components'
 import { useI18n } from '@/hooks'
@@ -61,6 +62,8 @@ export default defineComponent({
 
     return () => (
       <RForm
+        {...{ method: 'post' }}
+        autocomplete="on"
         model={signingForm}
         onRegister={register}
         rules={rules.value}
@@ -71,8 +74,12 @@ export default defineComponent({
             v-model:value={signingForm.name}
             inputProps={{
               id: nameId,
-              name: 'ray-demo-user',
-              autocomplete: 'off',
+              name: 'username',
+              autocomplete: 'username',
+              autocapitalize: 'off',
+              autocorrect: 'off',
+              spellcheck: false,
+              required: true,
               enterkeyhint: 'next',
             }}
             placeholder={t('NamePlaceholder')}
@@ -87,8 +94,9 @@ export default defineComponent({
             v-model:value={signingForm.pwd}
             inputProps={{
               id: passwordId,
-              name: 'ray-demo-password',
-              autocomplete: 'off',
+              name: 'password',
+              autocomplete: 'current-password',
+              required: true,
               enterkeyhint: 'go',
             }}
             type="password"
@@ -105,34 +113,38 @@ export default defineComponent({
           >
             {t('Login')}
           </NButton>
-          <NButton
-            block
-            secondary
-            attrType="button"
-            disabled={loading.value}
-            onClick={() => {
-              signingForm.name = 'Ray Admin'
-              signingForm.pwd = '123456'
-              void handleLogin()
-            }}
-          >
-            {t('UseDemo')}
-          </NButton>
-          <NFlex>
-            {(['manager', 'member'] as const).map((role) => (
+          {apiMockEnabled && (
+            <>
               <NButton
+                block
                 secondary
+                attrType="button"
                 disabled={loading.value}
                 onClick={() => {
-                  signingForm.name = role
+                  signingForm.name = 'Ray Admin'
                   signingForm.pwd = '123456'
                   void handleLogin()
                 }}
               >
-                {t(role === 'manager' ? 'UseManager' : 'UseMember')}
+                {t('UseDemo')}
               </NButton>
-            ))}
-          </NFlex>
+              <NFlex>
+                {(['manager', 'member'] as const).map((role) => (
+                  <NButton
+                    secondary
+                    disabled={loading.value}
+                    onClick={() => {
+                      signingForm.name = role
+                      signingForm.pwd = '123456'
+                      void handleLogin()
+                    }}
+                  >
+                    {t(role === 'manager' ? 'UseManager' : 'UseMember')}
+                  </NButton>
+                ))}
+              </NFlex>
+            </>
+          )}
         </NFlex>
       </RForm>
     )

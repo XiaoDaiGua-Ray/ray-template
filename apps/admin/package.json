@@ -38,6 +38,13 @@
     "vue-i18n": "11.4.17",
     "vue-router": "5.4.0",
     "vue3-next-qrcode": "4.1.1",
-    "@ray-template/api-contracts": "workspace:*"
+    "@ray-template/api-contracts": "workspace:*",
+    "@ray-template/demo-data": "workspace:*"
+  },
+  "rayTemplate": {
+    "runtime": "browser"
+  },
+  "devDependencies": {
+    "vite": "8.3.5"
   }
 }

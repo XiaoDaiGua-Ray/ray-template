@@ -198,6 +198,59 @@ it('keeps status routes out of tabs and clears active business navigation', asyn
   }
 })
 
+it('removes shortcuts that lead through or to a route the current role cannot open', async () => {
+  const shortcuts = [
+    { path: '/private-link', redirect: '/private', meta: {} },
+    {
+      path: '/admin-link',
+      redirect: '/reports',
+      meta: { role: ['admin'] },
+    },
+    { path: '/via-admin', redirect: '/admin-link', meta: {} },
+    { path: '/open-link', redirect: '/reports', meta: {} },
+  ]
+
+  for (const shortcut of shortcuts) router.addRoute(shortcut)
+
+  state.routes = [...state.routes, ...shortcuts]
+  await menu.setupAppMenu()
+  expect(menu.options.map(({ fullPath }) => fullPath)).toContain('/via-admin')
+
+  piniaSigningStore().signingCallback.role = 'member'
+  await flushPromises()
+  expect(menu.options.map(({ fullPath }) => fullPath)).toEqual([
+    '/reports',
+    '/orders',
+    '/open-link',
+  ])
+})
+
+it('closes the 403 view back to an allowed tab without storing a denied tab', async () => {
+  piniaSigningStore().signingCallback.role = 'member'
+  await router.push('/reports?sort=desc#summary')
+  await router.push('/private')
+  await flushPromises()
+
+  expect(router.currentRoute.value.path).toBe('/403')
+  expect(actions.getCurrentTagIndex()).toBe(-1)
+  await actions.closeForbiddenPage()
+  await flushPromises()
+
+  expect(router.currentRoute.value.fullPath).toBe('/reports?sort=desc#summary')
+  expect(menu.menuTagOptions.map(({ fullPath }) => fullPath)).toEqual([
+    '/reports?sort=desc#summary',
+  ])
+})
+
+it('closes a directly opened 403 to the workspace with no business tags', async () => {
+  await router.push('/403')
+  await actions.closeForbiddenPage()
+  await flushPromises()
+
+  expect(router.currentRoute.value.path).toBe('/welcome')
+  expect(menu.menuTagOptions).toEqual([])
+})
+
 it('removes revoked tags and cached views without choosing another active page', async () => {
   await router.push('/reports')
   await router.push('/private?mode=edit#section')

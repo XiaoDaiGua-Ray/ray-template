@@ -9,3 +9,11 @@ dist
 **/node_modules
 **/.vitepress/cache
 **/.vitepress/dist
+**/.env
+**/.env.*
+!apps/admin/.env.development
+!apps/admin/.env.production
+!apps/admin/.env.test
+**/dist-test
+**/src/generated
+.pnpm-store

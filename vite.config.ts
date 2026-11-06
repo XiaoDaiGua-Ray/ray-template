@@ -103,6 +103,9 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       ...server,
+      ...(process.env.RAY_API_PROXY_TARGET
+        ? { proxy: { '/api/': { target: process.env.RAY_API_PROXY_TARGET } } }
+        : {}),
     },
   }
 })

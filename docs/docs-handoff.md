@@ -23,7 +23,7 @@ The site targets v6. Source links use monorepo paths, and release builds use `RA
 
 ## Pending reader-guide updates
 
-Application evidence is available in the [routing integration guide](../apps/admin/src/router/README.md), [schema](../packages/routing/src/schema.ts), [Segment notes](../packages/ui/src/RSegment/README.md), and [page design guide](ui-design.md). Add source switching, API examples, and version validation to `apps/docs/guide/routing.md`; document `fitContent` selection states and transitions in the component reference. Use updated login and management-page screenshots and check deployment subpaths.
+Application evidence is available in the [routing integration guide](../apps/admin/src/router/README.md), [schema](../packages/api-contracts/src/routes.ts), [Segment notes](../packages/ui/src/RSegment/README.md), and [page design guide](ui-design.md). Add source switching, API examples, and version validation to `apps/docs/guide/routing.md`; document `fitContent` selection states and transitions in the component reference. Use updated login and management-page screenshots and check deployment subpaths.
 
 Update `guide/layout.md` for reduced motion and the floating exit button. Add visual and JSON entry points to `guide/routing.md`, making clear that applying visual configuration stores it only in the current browser. Explain in `reference/hooks/layout.md` that loading indicators are positioned relative to the visible content area.
 

@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ESNext"],
+    "types": ["node"],
+    "paths": {},
+    "tsBuildInfoFile": "./node_modules/.cache/ray-template/tsconfig.universal.tsbuildinfo"
+  },
+  "include": [
+    "packages/api-contracts/src/**/*.ts",
+    "packages/demo-data/src/**/*.ts"
+  ]
+}

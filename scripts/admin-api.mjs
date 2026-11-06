@@ -1,5 +1,12 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { getAdminOpenApi } from '@ray-template/api-contracts/openapi'
+import { iconNames, retiredIcons } from '@ray-template/icons'
+import { routeViewCatalog } from '../apps/admin/src/router/config/views.ts'
+import {
+  ROUTE_MANAGEMENT_PATH,
+  SYSTEM_ROUTE_NAMES,
+  SYSTEM_ROUTE_PATHS,
+} from '../apps/admin/src/router/constant/index.ts'
 
 const file = new URL(
   '../apps/admin/public/contracts/admin-api.json',
@@ -41,4 +48,17 @@ if (process.argv.includes('--check')) {
   }
 
   console.log('Generated Admin API contracts for the app and docs.')
+}
+
+const catalogFile = new URL(
+  '../packages/demo-data/src/route-catalog.json',
+  import.meta.url,
+)
+const catalogContent = `${JSON.stringify({ views: routeViewCatalog, managementPath: ROUTE_MANAGEMENT_PATH, reservedPaths: SYSTEM_ROUTE_PATHS, reservedNames: [...SYSTEM_ROUTE_NAMES, 'RLogin', 'RLayout', 'RNotFound', 'RouteManagement', 'RouteManagementVisual', 'ErrorPage', 'RayTemplateDoc'], icons: iconNames, iconAliases: Object.fromEntries(retiredIcons) }, null, 2)}\n`
+
+if (process.argv.includes('--check')) {
+  if (readFileSync(catalogFile, 'utf8') !== catalogContent)
+    throw new Error('Route catalog is stale. Run pnpm api:generate.')
+} else {
+  writeFileSync(catalogFile, catalogContent)
 }

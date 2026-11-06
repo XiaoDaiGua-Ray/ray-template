@@ -15,6 +15,11 @@ coverage/
 .husky/_/
 .ai-local/
 .harness-local/
+**/dist-test/
+apps/server/src/generated/
+.pnpm-store/
 CHANGELOG.md
 packages/icons/src/
 packages/ui/src/RChart/src/themes/
+
+packages/demo-data/src/route-catalog.json

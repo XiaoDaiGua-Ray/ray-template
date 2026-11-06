@@ -72,10 +72,15 @@
   },
   "toolchain": {
     "description": "Workspaces, public exports, type checking, Vite, builds, and CI",
-    "checks": ["packages:check", "typecheck"]
+    "checks": ["packages:check", "typecheck"],
+    "tests": ["__test__/workspace/boundaries.spec.ts", "__test__/distribution/"]
   },
   "harness": {
     "description": "Indexes, regression scope, verification commands, and local reports",
     "tests": ["__test__/harness/"]
+  },
+  "server": {
+    "description": "Optional backend, PostgreSQL, Redis, security, sessions, and startup",
+    "checks": ["server:check"]
   }
 }

@@ -1,10 +1,10 @@
-import { iconNames, isIconName } from './manifest'
-import type { IconName } from './manifest'
+import { iconNames, isIconName } from './manifest.ts'
+import type { IconName } from './manifest.ts'
 
-export { iconNames, iconPackages, isIconName } from './manifest'
-export type { IconName, IconPackage } from './manifest'
+export { iconNames, iconPackages, isIconName } from './manifest.ts'
+export type { IconName, IconPackage } from './manifest.ts'
 
-const retiredIcons = new Map<string, IconName>([
+export const retiredIcons = new Map<string, IconName>([
   ['action/export_excel', 'action/download'],
   ['logo/office', 'navigation/table'],
   ['illustration/login_bg', 'navigation/other'],

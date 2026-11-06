@@ -4,6 +4,8 @@ import { getAppRawRoutes } from '@/router/app-route-modules'
 import { FORBIDDEN_ROUTE_PATH, isSystemRoute } from '@/router/constant'
 import { validMenuItemShow, validRole } from '@/router/utils'
 import { joinRoutePath } from '@/router/utils/join-route-path'
+import { getRouteAccess } from '@/router/utils/route-access'
+import type { RouteAccessLocation } from '@/router/utils/route-access'
 import { useKeepAliveActions } from '@/store'
 import type { MenuState } from '@/store/modules/menu/types'
 import type { AnyFn, AppMenuOption, MenuTagOptions } from '@/types'
@@ -12,7 +14,7 @@ import { equalRouterPath } from '@/utils/equal-router-path'
 import { updateObjectValue } from '@/utils/update-object-value'
 import { pick } from 'lodash-es'
 import { NEllipsis } from 'naive-ui'
-import type { LocationQuery, RouteRecordNormalized } from 'vue-router'
+import type { LocationQuery } from 'vue-router'
 import { piniaNavigationHistoryStore } from '../navigation-history'
 import { piniaSigningStore } from '../signing'
 import { pickRouteRecordNormalizedConstant } from './constant'
@@ -47,7 +49,8 @@ export const depthSearchAppMenu = (
 export const piniaMenuStore = defineStore(
   'menu',
   () => {
-    const { push, replace, resolve } = useRouter()
+    const router = useRouter()
+    const { push, replace, resolve } = router
     const route = useRoute()
     const { t } = useI18n()
     const { setKeepAliveInclude, retainKeepAliveInclude } =
@@ -285,15 +288,14 @@ export const piniaMenuStore = defineStore(
       }
     }
 
-    const optionForRoute = (path: string, matched: RouteRecordNormalized[]) => {
+    const optionForRoute = (location: RouteAccessLocation) => {
+      const { fullPath: path, matched } = location
       const record = matched.at(-1)
 
       if (
         !record ||
-        record.path === '/' ||
         record.redirect ||
-        isSystemRoute(record) ||
-        !validRole(record.meta)
+        getRouteAccess(router, location) !== 'allowed'
       )
         return
 
@@ -332,6 +334,14 @@ export const piniaMenuStore = defineStore(
           if (!validRole(curr.meta, currentRole)) continue
 
           const fullPath = joinRoutePath(parentPath, curr.path)
+
+          if (
+            'redirect' in curr &&
+            typeof curr.redirect === 'string' &&
+            getRouteAccess(router, resolve(fullPath), currentRole) !== 'allowed'
+          )
+            continue
+
           const children = curr.children?.length
             ? resolveRoutes(curr.children, fullPath)
             : void 0
@@ -358,17 +368,7 @@ export const piniaMenuStore = defineStore(
       const restoredTags = menuState.menuTagOptions.flatMap(({ fullPath }) => {
         if (typeof fullPath !== 'string' || !fullPath.startsWith('/')) return []
 
-        const restored = resolve(fullPath)
-        const record = restored.matched.at(-1)
-
-        if (
-          !record ||
-          !validRole(restored.meta, currentRole) ||
-          isSystemRoute(record)
-        )
-          return []
-
-        const option = optionForRoute(restored.fullPath, restored.matched)
+        const option = optionForRoute(resolve(fullPath))
 
         return option && !option.meta.sameLevel && !option.meta.windowOpen
           ? [option]
@@ -382,18 +382,13 @@ export const piniaMenuStore = defineStore(
       ]
       cacheTags()
 
-      const active = optionForRoute(route.fullPath, route.matched)
+      const active = optionForRoute(route)
 
       if (active) updateActiveMenu(active)
       else {
         clearActiveMenu()
 
-        if (
-          route.path !== '/' &&
-          !isSystemRoute(route) &&
-          route.matched.length &&
-          !validRole(route.meta, currentRole)
-        )
+        if (getRouteAccess(router, route, currentRole) === 'forbidden')
           await replace({
             path: FORBIDDEN_ROUTE_PATH,
             query: { from: route.fullPath },
@@ -455,8 +450,8 @@ export const piniaMenuStore = defineStore(
 
     watch(
       () => route.fullPath,
-      (path) => {
-        const option = optionForRoute(path, route.matched)
+      () => {
+        const option = optionForRoute(route)
 
         if (option) updateActiveMenu(option)
         else clearActiveMenu()

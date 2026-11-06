@@ -47,11 +47,13 @@ export const routeSourceStatus: {
   config?: RouteConfig
 } = { requested: preference.source, active: 'static' }
 
-export async function fetchRemoteRouteConfig(): Promise<RouteConfig> {
+export async function fetchRemoteRouteConfig(
+  view?: 'editor',
+): Promise<RouteConfig> {
   if (!import.meta.env.VITE_ROUTE_CONFIG_URL?.trim()) {
     const { parseRouteConfig } = await import('./contract')
 
-    return parseRouteConfig(JSON.stringify(await getAdminRoutes()))
+    return parseRouteConfig(JSON.stringify(await getAdminRoutes(view)))
   }
 
   if (!remoteRouteUrl) throw new Error('VITE_ROUTE_CONFIG_URL is missing.')

@@ -6,11 +6,16 @@
     ".": "./src/index.ts",
     "./admin": "./src/admin.ts",
     "./demo": "./src/demo.ts",
-    "./openapi": "./src/openapi.ts"
+    "./openapi": "./src/openapi.ts",
+    "./routes": "./src/routes.ts",
+    "./route-json-schema": "./src/route-json-schema.ts",
+    "./route-validation": "./src/route-validation.ts"
   },
   "dependencies": {
-    "@ray-template/routing": "workspace:*",
     "@valibot/to-json-schema": "1.8.0",
     "valibot": "1.5.0"
+  },
+  "rayTemplate": {
+    "runtime": "universal"
   }
 }

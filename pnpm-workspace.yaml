@@ -11,6 +11,9 @@ overrides:
   'minimatch@>=10.0.0 <11.0.1': 11.0.4
   'glob@>=9.0.0 <14.0.2': 14.0.3
 allowBuilds:
+  # Prisma preinstall checks the runtime; engines downloads the migration binary.
+  prisma: true
+  '@prisma/engines': true
   # 发布包已包含构建产物，postinstall 仅输出 AI 提示，不参与应用构建。
   '@logicflow/core': false
   # worker 由显式生成命令同步并校验，避免安装阶段自动改写公共资源。
@@ -20,6 +23,9 @@ allowBuilds:
   rs-module-lexer: true
   vue-demi: true
 peerDependencyRules:
+  allowedVersions:
+    # Docs uses Vue Router runtime only; its optional Vite plugin is not loaded.
+    'vue-router@5.4.0>vite': 6.4.5
   ignoreMissing:
     - '@algolia/client-search'
     - search-insights

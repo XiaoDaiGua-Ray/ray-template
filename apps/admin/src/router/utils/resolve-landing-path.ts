@@ -1,7 +1,6 @@
-import { WHITE_ROUTES } from '@/app-config'
-import { isSystemRoute, WELCOME_ROUTE_PATH } from '@/router/constant'
+import { WELCOME_ROUTE_PATH } from '@/router/constant'
 import type { Router } from 'vue-router'
-import { validRole } from './valid-role'
+import { getRouteAccess } from './route-access'
 
 /**
  *
@@ -24,34 +23,8 @@ export function resolveLandingPath(router: Router, requested?: unknown) {
     return WELCOME_ROUTE_PATH
 
   const original = router.resolve(requested)
-  let current = original
-  const visited = new Set<string>()
 
-  while (!visited.has(current.fullPath)) {
-    visited.add(current.fullPath)
-    const record = current.matched.at(-1)
-
-    if (!record || current.path === '/' || isSystemRoute(current))
-      return WELCOME_ROUTE_PATH
-
-    if (record.redirect) {
-      if (typeof record.redirect !== 'string') return WELCOME_ROUTE_PATH
-
-      current = router.resolve({
-        path: record.redirect,
-        query: current.query,
-        hash: current.hash,
-      })
-      continue
-    }
-
-    const allowed =
-      (typeof current.name === 'string' &&
-        WHITE_ROUTES.includes(current.name)) ||
-      validRole(current.meta)
-
-    return allowed ? original.fullPath : WELCOME_ROUTE_PATH
-  }
-
-  return WELCOME_ROUTE_PATH
+  return getRouteAccess(router, original) === 'allowed'
+    ? original.fullPath
+    : WELCOME_ROUTE_PATH
 }

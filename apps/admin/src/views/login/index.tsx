@@ -1,4 +1,5 @@
 import './index.scss'
+import { apiMockEnabled } from '@/api/admin/client'
 import AppShareLink from '@/app-components/app/AppShareLink'
 import { LOCAL_OPTIONS } from '@/app-config'
 import { RIcon } from '@/components'
@@ -64,23 +65,33 @@ export default defineComponent({
             <div class="login__panel-heading">
               <p class="login__eyebrow">{copy('Access')}</p>
               <h2 id="login-panel-heading">{copy('Welcome')}</h2>
-              <p>{copy('AccessDescription')}</p>
+              <p>
+                {copy(
+                  apiMockEnabled ? 'AccessDescription' : 'AccountDescription',
+                )}
+              </p>
             </div>
-            <NTabs v-model:value={this.tabsValue} type="line" size="medium">
-              <NTabPane tab={copy('Signing')} name="signing">
-                <Signing />
-              </NTabPane>
-              <NTabPane tab={copy('Register')} name="register">
-                <Register />
-              </NTabPane>
-              <NTabPane tab={copy('QRCodeSigning')} name="qrcodeSigning">
-                <QRCodeSigning />
-              </NTabPane>
-            </NTabs>
-            <div class="login__secondary">
-              <span>{copy('OtherSignInOptions')}</span>
-              <SSOSigning />
-            </div>
+            {apiMockEnabled ? (
+              <>
+                <NTabs v-model:value={this.tabsValue} type="line" size="medium">
+                  <NTabPane tab={copy('Signing')} name="signing">
+                    <Signing />
+                  </NTabPane>
+                  <NTabPane tab={copy('Register')} name="register">
+                    <Register />
+                  </NTabPane>
+                  <NTabPane tab={copy('QRCodeSigning')} name="qrcodeSigning">
+                    <QRCodeSigning />
+                  </NTabPane>
+                </NTabs>
+                <div class="login__secondary">
+                  <span>{copy('OtherSignInOptions')}</span>
+                  <SSOSigning />
+                </div>
+              </>
+            ) : (
+              <Signing />
+            )}
           </section>
         </div>
 

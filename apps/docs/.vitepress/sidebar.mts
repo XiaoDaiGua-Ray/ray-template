@@ -10,6 +10,7 @@ const guide = [
     text: '入门',
     items: [
       entry('快速开始', '/guide/start'),
+      entry('发行版本与快速启动', '/guide/distributions'),
       entry('v6 Monorepo 架构', '/guide/architecture'),
       entry('v5 与 v6 的版本分界', '/migration'),
       entry('第一个业务页面', '/guide/first-page'),

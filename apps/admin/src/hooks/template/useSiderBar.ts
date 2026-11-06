@@ -1,4 +1,5 @@
-import { WELCOME_ROUTE_PATH } from '@/router/constant'
+import { FORBIDDEN_ROUTE_PATH, WELCOME_ROUTE_PATH } from '@/router/constant'
+import { resolveLandingPath } from '@/router/utils/resolve-landing-path'
 import { useMenuActions, useMenuGetters } from '@/store'
 import type { Key, MenuTagOptions } from '@/types'
 import { useVueRouter } from './useVueRouter'
@@ -127,6 +128,21 @@ export function useSiderBar() {
     return router.replace(WELCOME_ROUTE_PATH)
   }
 
+  const closeForbiddenPage = () => {
+    if (router.currentRoute.value.path !== FORBIDDEN_ROUTE_PATH) return
+
+    const previous = resolveLandingPath(
+      router,
+      router.options.history.state.back,
+    )
+    const target =
+      previous === WELCOME_ROUTE_PATH
+        ? resolveLandingPath(router, getMenuTagOptions.value.at(-1)?.fullPath)
+        : previous
+
+    return router.replace(target)
+  }
+
   /**
    *
    * @param target 要保留的边界标签对象、索引或路径
@@ -193,6 +209,7 @@ export function useSiderBar() {
   return {
     close,
     closeAll,
+    closeForbiddenPage,
     closeRight,
     closeLeft,
     closeOther,

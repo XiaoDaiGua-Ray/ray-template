@@ -1,0 +1,115 @@
+x-server-environment: &server-environment
+  NODE_ENV: production
+  HOST: 0.0.0.0
+  PORT: '3000'
+  DATABASE_URL: ${APP_DATABASE_URL:-postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-ray_template}}
+  REDIS_URL: ${APP_REDIS_URL:-redis://:${REDIS_PASSWORD}@redis:6379}
+  DEMO_ENABLED: ${APP_DEMO_ENABLED:-false}
+  CORS_ORIGINS: ${APP_ORIGINS:-http://127.0.0.1:${APP_PORT:-8080},http://localhost:${APP_PORT:-8080}}
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?Run pnpm fullstack:setup first}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Run pnpm fullstack:setup first}
+      POSTGRES_DB: ${POSTGRES_DB:-ray_template}
+    ports:
+      - '127.0.0.1:${POSTGRES_PORT:-5432}:5432'
+    volumes:
+      - postgres:/var/lib/postgresql
+    healthcheck:
+      test:
+        ['CMD-SHELL', 'pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"']
+      interval: 3s
+      timeout: 3s
+      retries: 20
+  redis:
+    image: redis:8.2.11-alpine
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?Run pnpm fullstack:setup first}
+      REDISCLI_AUTH: ${REDIS_PASSWORD:?Run pnpm fullstack:setup first}
+    command:
+      [
+        'sh',
+        '-c',
+        'exec redis-server --appendonly yes --requirepass "$${REDIS_PASSWORD}"',
+      ]
+    ports:
+      - '127.0.0.1:${REDIS_PORT:-6379}:6379'
+    volumes:
+      - redis:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 3s
+      timeout: 3s
+      retries: 20
+  initialize:
+    profiles: ['app']
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+      target: server
+    environment:
+      <<: *server-environment
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@example.com}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Run pnpm fullstack:setup first}
+    command:
+      [
+        'sh',
+        '-c',
+        './node_modules/.bin/prisma migrate deploy && node dist/cli.mjs seed',
+      ]
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+  server:
+    profiles: ['app']
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+      target: server
+    environment:
+      <<: *server-environment
+      TRUST_PROXY: ${APP_PROXY_NETWORK:-172.30.67}.2
+      LOGIN_RATE_LIMIT_MAX: ${APP_LOGIN_RATE_LIMIT_MAX:-10}
+    command: ['node', 'dist/main.mjs']
+    depends_on:
+      initialize: { condition: service_completed_successfully }
+    networks: [default, proxy]
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          'fetch("http://127.0.0.1:3000/api/health/ready").then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))',
+        ]
+      interval: 10s
+      timeout: 4s
+      retries: 5
+  admin:
+    profiles: ['app']
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+      target: admin
+    ports:
+      - '127.0.0.1:${APP_PORT:-8080}:80'
+    networks:
+      proxy:
+        ipv4_address: ${APP_PROXY_NETWORK:-172.30.67}.2
+    depends_on:
+      server: { condition: service_healthy }
+volumes:
+  postgres:
+  redis:
+
+networks:
+  default: {}
+  proxy:
+    ipam:
+      config:
+        - subnet: ${APP_PROXY_NETWORK:-172.30.67}.0/24
+          ip_range: ${APP_PROXY_NETWORK:-172.30.67}.128/25

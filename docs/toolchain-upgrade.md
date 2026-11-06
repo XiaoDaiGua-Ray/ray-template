@@ -237,3 +237,14 @@ Translated agent entry points, Harness topics and workflow, internal architectur
 ### Remote CI follow-up
 
 The [historical Ubuntu failure](https://github.com/XiaoDaiGua-Ray/ray-template/actions/runs/41588971650) was in `detectOperatingSystem.spec.ts`: the test read the Linux runner's actual user agent but always expected `Unknown`. Commit `83bada95` covers systems with mocked user agents and touch-point counts. [CI](https://github.com/XiaoDaiGua-Ray/ray-template/actions/runs/41612553267) for recorded baseline `80e80775` passed Ubuntu, macOS, Windows, and deployment. The matrix continues to run the same `pnpm check`.
+
+<!-- fullstack:start -->
+
+## 2026-11-06: Optional server and source distributions checkpoint
+
+Added explicit browser/server/universal workspace ownership, universal route contracts and shared demo fixtures, and independent frontend/fullstack source exports with pruned lockfiles. The optional server pins NestJS 12.3.3, Prisma 7.10.1, node-redis 6.3.1 and esbuild 0.28.2. Prisma runtime checks and migration-engine downloads are explicitly allowed. The documentation still uses Vite 6; its Vue Router runtime does not load the optional Vite plugin, so that single peer combination is explicitly recorded in the workspace config.
+
+Full Harness verification passed with Node 26.13.0 and pnpm 12.16.1: 103 frontend test files / 535 tests, 13 backend unit/platform tests with real Redis, API and workspace checks, types, lint/format, and both application builds. Six backend HTTP integration tests separately passed on temporary PostgreSQL 18.6 and Redis 8.2.11. The real external-service setup command applied Prisma migrations and initialized a private local administrator. No fixed production passwords were introduced.
+
+An exported frontend archive extracted outside the repository passed frozen dependency installation, API/package/Harness checks and production build. Frontend/fullstack archive projection and nine distribution regressions passed. Fullstack standalone install, container images, browser integration and remote workflows remain pending. Follow the [pause checkpoint](../harness/plan.md) for remaining scope and local evidence. No Git commit, push, branch publication or release was performed.
+<!-- fullstack:end -->

@@ -19,4 +19,12 @@ module.exports = {
   singleAttributePerLine: false,
   bracketSameLine: false,
   plugins: ['@ianvs/prettier-plugin-sort-imports'],
+  overrides: [
+    {
+      files: 'apps/server/**/*.ts',
+      options: {
+        importOrderParserPlugins: ['typescript', 'decorators-legacy'],
+      },
+    },
+  ],
 }

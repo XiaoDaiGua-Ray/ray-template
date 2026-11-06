@@ -1,0 +1,20 @@
+{
+  "name": "@ray-template/demo-data",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./orders": "./src/orders.ts",
+    "./users": "./src/users.ts",
+    "./people": "./src/people.ts",
+    "./route-people": "./src/route-people.ts"
+  },
+  "dependencies": {
+    "@faker-js/faker": "10.6.0",
+    "@ray-template/api-contracts": "workspace:*",
+    "valibot": "1.5.0"
+  },
+  "rayTemplate": {
+    "runtime": "universal"
+  }
+}

@@ -21,8 +21,26 @@ function setupRouter(rootRole?: string[]) {
       { path: '/500', name: 'ErrorPage500', component },
       { path: '/dashboard', component, meta: { role: rootRole } },
       { path: '/allowed', component, meta: { role: ['admin'] } },
-      { path: '/denied', component, meta: { role: ['editor'] } },
+      {
+        path: '/denied',
+        alias: '/denied-alias',
+        component,
+        meta: { role: ['editor'] },
+      },
       { path: '/legacy', redirect: '/allowed' },
+      { path: '/alias-shortcut', redirect: '/denied-alias' },
+      {
+        path: '/private-shortcut',
+        redirect: '/allowed',
+        meta: { role: ['editor'] },
+      },
+      { path: '/via-private', redirect: '/private-shortcut' },
+      {
+        path: '/restricted-group',
+        component,
+        meta: { role: ['editor'] },
+        children: [{ path: 'page', component, meta: { role: ['admin'] } }],
+      },
       {
         path: '/docs',
         name: 'RayTemplateDoc',
@@ -81,6 +99,34 @@ describe('Router 5 permission guard', () => {
 
     expect(router.currentRoute.value.path).toBe('/403')
     expect(router.currentRoute.value.query.from).toBe('/denied')
+  })
+
+  it.each([
+    '/alias-shortcut',
+    '/private-shortcut',
+    '/via-private',
+    '/restricted-group/page',
+  ])('blocks %s and keeps the attempted URL', async (path) => {
+    setStorage(APP_CATCH_KEY.token, 'demo-token', 'localStorage')
+    const router = setupRouter()
+    const attempted = `${path}?filter=open#row`
+
+    await router.push(attempted)
+
+    expect(router.currentRoute.value.path).toBe('/403')
+    expect(router.currentRoute.value.query.from).toBe(attempted)
+  })
+
+  it('retains a restricted redirect entry through sign-in for permission checking', async () => {
+    const router = setupRouter()
+    const attempted = '/via-private?source=link#report'
+
+    await router.push(attempted)
+    expect(router.currentRoute.value.query.redirect).toBe(attempted)
+    setStorage(APP_CATCH_KEY.token, 'demo-token', 'localStorage')
+    expect(
+      resolveLandingPath(router, router.currentRoute.value.query.redirect),
+    ).toBe('/welcome')
   })
 
   it('does not depend on the legacy dashboard being permitted', async () => {

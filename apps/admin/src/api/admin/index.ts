@@ -21,8 +21,11 @@ export const getAdminSession = () =>
   adminRequest('auth/session', sessionSchema, { method: 'get' })
 export const logoutAdmin = () =>
   adminRequest('auth/logout', v.null(), { method: 'post' })
-export const getAdminRoutes = () =>
-  adminRequest('route-config', routeConfigSchema, { method: 'get' })
+export const getAdminRoutes = (view?: 'editor') =>
+  adminRequest('route-config', routeConfigSchema, {
+    method: 'get',
+    params: view ? { view } : void 0,
+  })
 export const updateAdminRoutes = (config: RouteConfig) =>
   adminRequest('route-config', routeConfigSchema, {
     method: 'put',

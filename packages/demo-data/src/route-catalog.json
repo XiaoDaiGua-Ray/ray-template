@@ -1,0 +1,257 @@
+{
+  "views": [
+    {
+      "id": "dashboard",
+      "name": "RDashboard"
+    },
+    {
+      "id": "system/users",
+      "name": "UserManagement"
+    },
+    {
+      "id": "demo/axios",
+      "name": "RAxios"
+    },
+    {
+      "id": "demo/barcode-demo",
+      "name": "BarcodeDemo"
+    },
+    {
+      "id": "demo/cache-demo",
+      "name": "CacheDemo"
+    },
+    {
+      "id": "demo/context-menu",
+      "name": "ContextMenuDemo"
+    },
+    {
+      "id": "demo/directive",
+      "name": "RDirective"
+    },
+    {
+      "id": "demo/doc",
+      "name": "RTemplateDoc"
+    },
+    {
+      "id": "demo/draggable-card",
+      "name": "DraggableCardDemo"
+    },
+    {
+      "id": "demo/echart",
+      "name": "REchart"
+    },
+    {
+      "id": "demo/flow-demo",
+      "name": "RFlowDemo"
+    },
+    {
+      "id": "demo/form",
+      "name": "RFormDemo"
+    },
+    {
+      "id": "demo/hooks/web-hooks",
+      "name": "WebHooks"
+    },
+    {
+      "id": "demo/iframe",
+      "name": "IframeDemo"
+    },
+    {
+      "id": "demo/layout-demo",
+      "name": "LayoutDemo"
+    },
+    {
+      "id": "demo/modal-demo",
+      "name": "ModalDemo"
+    },
+    {
+      "id": "demo/multi/views/multi-menu-one",
+      "name": "MultiMenuOne"
+    },
+    {
+      "id": "demo/multi/views/multi-menu-two/views/sub-menu-other",
+      "name": "SubMenuOther"
+    },
+    {
+      "id": "demo/multi/views/multi-menu-two/views/sub-menu/views/multi-menu-two-one",
+      "name": "MultiMenuTwoOne"
+    },
+    {
+      "id": "demo/precision",
+      "name": "CalculatePrecision"
+    },
+    {
+      "id": "demo/qrcode",
+      "name": "RQRCodeDemo"
+    },
+    {
+      "id": "demo/rely/views/rely-about",
+      "name": "RelyAbout"
+    },
+    {
+      "id": "demo/router-demo/router-demo-detail",
+      "name": "RouterDemoDetail"
+    },
+    {
+      "id": "demo/router-demo/router-demo-home",
+      "name": "RouterDemoHome"
+    },
+    {
+      "id": "demo/scroll-reveal",
+      "name": "ScrollReveal"
+    },
+    {
+      "id": "demo/segment",
+      "name": "SegmentDemo"
+    },
+    {
+      "id": "demo/svg-icons",
+      "name": "PreviewSVGIcons"
+    },
+    {
+      "id": "demo/tables/auto-height",
+      "name": "TableDemoAutoHeight"
+    },
+    {
+      "id": "demo/tables/basic",
+      "name": "TableDemoBasic"
+    },
+    {
+      "id": "demo/tables/columns",
+      "name": "TableDemoColumns"
+    },
+    {
+      "id": "demo/tables/controlled",
+      "name": "TableDemoControlled"
+    },
+    {
+      "id": "demo/tables/custom",
+      "name": "TableDemoCustom"
+    },
+    {
+      "id": "demo/tables/hooks-output",
+      "name": "TableDemoHooksOutput"
+    },
+    {
+      "id": "demo/tables/hooks-query",
+      "name": "TableDemoHooksQuery"
+    },
+    {
+      "id": "demo/tables/hooks-selection",
+      "name": "TableDemoHooksSelection"
+    },
+    {
+      "id": "demo/tables/printing",
+      "name": "TableDemoPrinting"
+    },
+    {
+      "id": "demo/tables/remote",
+      "name": "TableDemoRemote"
+    },
+    {
+      "id": "demo/tables/search",
+      "name": "TableDemoSearch"
+    },
+    {
+      "id": "demo/template-hooks",
+      "name": "TemplateHooks"
+    }
+  ],
+  "managementPath": "/route-management",
+  "reservedPaths": [
+    "/welcome",
+    "/403",
+    "/404",
+    "/500"
+  ],
+  "reservedNames": [
+    "RWelcome",
+    "ErrorPage403",
+    "ErrorPage404",
+    "ErrorPage500",
+    "RNotFound",
+    "RLogin",
+    "RLayout",
+    "RNotFound",
+    "RouteManagement",
+    "RouteManagementVisual",
+    "ErrorPage",
+    "RayTemplateDoc"
+  ],
+  "icons": [
+    "action/add",
+    "action/adjustment",
+    "action/close",
+    "action/close_all",
+    "action/close_left",
+    "action/close_other",
+    "action/close_right",
+    "action/copy",
+    "action/copy-image",
+    "action/delete",
+    "action/download",
+    "action/draggable",
+    "action/edit",
+    "action/external-link",
+    "action/filter",
+    "action/fullscreen",
+    "action/fullscreen_fold",
+    "action/link",
+    "action/lock",
+    "action/more",
+    "action/mouse",
+    "action/out",
+    "action/print",
+    "action/reload",
+    "action/search",
+    "action/setting",
+    "action/shared",
+    "action/table-bordered",
+    "action/table-striped",
+    "action/upload",
+    "directional/enter",
+    "directional/expanded",
+    "directional/left_arrow",
+    "directional/resize_h",
+    "directional/right_arrow",
+    "directional/row_end",
+    "directional/row_head",
+    "logo/axios",
+    "logo/github",
+    "logo/google",
+    "logo/ray",
+    "logo/twitter",
+    "navigation/appearance",
+    "navigation/barcode",
+    "navigation/components",
+    "navigation/dashboard",
+    "navigation/database",
+    "navigation/document",
+    "navigation/echart",
+    "navigation/flow",
+    "navigation/form",
+    "navigation/icons",
+    "navigation/layout",
+    "navigation/menu",
+    "navigation/other",
+    "navigation/qr_code",
+    "navigation/rely",
+    "navigation/routing",
+    "navigation/table",
+    "navigation/window",
+    "status/error",
+    "status/question",
+    "status/success",
+    "status/warning",
+    "system/dark",
+    "system/language",
+    "system/light",
+    "system/system_os",
+    "system/watermark"
+  ],
+  "iconAliases": {
+    "action/export_excel": "action/download",
+    "logo/office": "navigation/table",
+    "illustration/login_bg": "navigation/other"
+  }
+}

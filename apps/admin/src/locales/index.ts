@@ -31,7 +31,6 @@ const createI18nOptions = async () => {
     locale,
     messages: messages as unknown as I18nOptions['messages'],
     sync: true,
-    missingWarn: false,
     silentFallbackWarn: true,
     fallbackLocale: SYSTEM_FALLBACK_LOCALE,
   })

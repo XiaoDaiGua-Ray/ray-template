@@ -3036,8 +3036,13 @@
       "get": {
         "operationId": "getRouteConfig",
         "summary": "getRouteConfig",
-        "description": "Session or public bootstrap endpoint.",
-        "security": [],
+        "description": "Public navigation snapshot. Request view=editor with routes:write to read the complete saved configuration, including disabled demo routes.",
+        "security": [
+          {},
+          {
+            "bearerAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -3125,7 +3130,17 @@
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "view",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "const": "editor"
+            }
+          }
+        ]
       },
       "put": {
         "operationId": "updateRouteConfig",

@@ -34,4 +34,5 @@ coverage/
 .env.*.local
 .ai-local/
 .harness-local/
+.pnpm-store/
 apps/docs/.vitepress/cache/

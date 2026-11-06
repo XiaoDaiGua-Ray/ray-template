@@ -37,5 +37,8 @@
   "peerDependencies": {
     "vue": "3.5.44",
     "naive-ui": "2.45.3"
+  },
+  "rayTemplate": {
+    "runtime": "browser"
   }
 }

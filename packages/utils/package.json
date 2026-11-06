@@ -17,5 +17,8 @@
   "dependencies": {
     "currency.js": "2.0.4",
     "lodash-es": "4.18.1"
+  },
+  "rayTemplate": {
+    "runtime": "browser"
   }
 }

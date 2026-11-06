@@ -1,4 +1,3 @@
-import { routeConfigSchema } from '@ray-template/routing/schema'
 import { toJsonSchema } from '@valibot/to-json-schema'
 import * as v from 'valibot'
 import {
@@ -31,6 +30,7 @@ import {
   searchOptionsQuerySchema,
   searchOptionsSchema,
 } from './demo.ts'
+import { routeConfigSchema } from './routes.ts'
 
 export function getAdminOpenApi() {
   const schemas = Object.fromEntries(
@@ -228,7 +228,20 @@ export function getAdminOpenApi() {
       '/admin/auth/session': { get: operation('getSession', 'Session') },
       '/admin/auth/logout': { post: operation('logout', null) },
       '/admin/route-config': {
-        get: operation('getRouteConfig', 'RouteConfig', void 0, void 0, true),
+        get: {
+          ...operation('getRouteConfig', 'RouteConfig', void 0, void 0, true),
+          description:
+            'Public navigation snapshot. Request view=editor with routes:write to read the complete saved configuration, including disabled demo routes.',
+          security: [{}, { bearerAuth: [] }],
+          parameters: [
+            {
+              name: 'view',
+              in: 'query',
+              required: false,
+              schema: { const: 'editor' },
+            },
+          ],
+        },
         put: operation(
           'updateRouteConfig',
           'RouteConfig',

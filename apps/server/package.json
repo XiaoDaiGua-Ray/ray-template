@@ -1,0 +1,52 @@
+{
+  "name": "@ray-template/server",
+  "version": "6.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --env-file-if-exists=.env.local scripts/build.mjs --watch",
+    "build": "pnpm db:generate && node scripts/build.mjs",
+    "start": "node --env-file-if-exists=.env.local dist/main.mjs",
+    "typecheck": "pnpm db:generate && tsc --noEmit",
+    "test": "pnpm db:generate && node scripts/build.mjs --tests && node --test dist-test/unit.test.mjs dist-test/platform.test.mjs",
+    "test:integration": "pnpm db:generate && node scripts/build.mjs --tests && node --test dist-test/integration.test.mjs",
+    "check": "pnpm typecheck && pnpm test && pnpm build",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate deploy",
+    "db:seed": "pnpm build && node --env-file-if-exists=.env.local dist/cli.mjs seed",
+    "credential:set": "pnpm build && node --env-file-if-exists=.env.local dist/cli.mjs password"
+  },
+  "dependencies": {
+    "@faker-js/faker": "10.6.0",
+    "@nestjs/common": "12.3.3",
+    "@nestjs/core": "12.3.3",
+    "@nestjs/platform-express": "12.3.3",
+    "@prisma/adapter-pg": "7.10.1",
+    "@prisma/client": "7.10.1",
+    "@ray-template/api-contracts": "workspace:*",
+    "@ray-template/demo-data": "workspace:*",
+    "pg": "8.23.1",
+    "redis": "6.3.1",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.2",
+    "valibot": "1.5.0",
+    "express": "5.3.0"
+  },
+  "devDependencies": {
+    "@types/express": "5.0.6",
+    "@types/node": "26.6.6",
+    "@types/pg": "8.23.1",
+    "esbuild": "0.28.2",
+    "prisma": "7.10.1",
+    "typescript": "6.0.3"
+  },
+  "rayTemplate": {
+    "runtime": "server"
+  },
+  "files": [
+    "dist",
+    "prisma",
+    "prisma.config.ts",
+    "README.md"
+  ]
+}

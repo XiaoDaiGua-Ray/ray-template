@@ -1,6 +1,6 @@
 import './index.scss'
 import AppPageHeader from '@/app-components/app/AppPageHeader'
-import { useI18n } from '@/hooks'
+import { useAccess, useI18n } from '@/hooks'
 import { getStaticAppRoutes } from '@/router/app-route-modules'
 import { exportRouteConfig, parseRouteConfig } from '@/router/config/contract'
 import type { RouteConfig } from '@/router/config/schema'
@@ -32,6 +32,7 @@ export default defineComponent({
   name: 'RouteManagement',
   setup() {
     const { t } = useI18n('routeManagement')
+    const { hasPermission } = useAccess()
     const source = ref<RouteSource>(routeSourceStatus.requested)
     const draft = ref('')
     const checked = shallowRef<RouteConfig>()
@@ -65,9 +66,6 @@ export default defineComponent({
         report(reason)
       }
     }
-
-    if (routeSourceStatus.config) setDraft(routeSourceStatus.config)
-    else loadStatic()
 
     const validate = () => {
       try {
@@ -132,13 +130,22 @@ export default defineComponent({
       busy.value = true
 
       try {
-        setDraft(await fetchRemoteRouteConfig())
+        setDraft(
+          await fetchRemoteRouteConfig(
+            hasPermission('routes:write') ? 'editor' : void 0,
+          ),
+        )
       } catch (reason) {
         report(reason)
       } finally {
         busy.value = false
       }
     }
+
+    if (routeSourceStatus.active === 'remote') void loadRemote()
+    else if (routeSourceStatus.config) setDraft(routeSourceStatus.config)
+    else loadStatic()
+
     const apply = async () => {
       if (busy.value) return
 

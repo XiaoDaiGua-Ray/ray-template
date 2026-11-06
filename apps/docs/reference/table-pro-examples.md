@@ -68,7 +68,7 @@ import AdminExample from '../examples/AdminExample.vue'
 
 <<< ../../admin/src/api/demo/data.ts
 
-<<< ../../admin/src/mocks/data/orders.ts
+<<< ../../../packages/demo-data/src/orders.ts
 :::
 
 ## 自适应高度与虚拟滚动

@@ -6,7 +6,7 @@
 
 Ray Template 是基于 Vue 3、TypeScript / TSX 和 Naive UI 的开源中后台模板，适合管理后台、运营工作台和内部工具。完整应用、共享包和交互文档放在同一工作区，克隆即可运行，再按业务调整界面、页面和接口。
 
-**4 种视觉风格 · 5 种导航布局 · 11 个 TablePro 示例 · 9 个共享包**
+**4 种视觉风格 · 5 种导航布局 · 11 个 TablePro 示例 · 10 个共享包**
 
 [![默认 Modern 浅色风格的完整欢迎页，展示侧边导航和工作空间概览](docs/assets/readme/welcome-modern-light.png)](https://xiaodaigua-ray.github.io/ray-template/#/dashboard)
 
@@ -82,10 +82,10 @@ Ray Admin 与文档站采用 **pnpm Monorepo**。业务接入留在应用层，�
 flowchart TB
   Admin["Ray Admin · apps/admin"]
   Docs["交互文档 · apps/docs"]
-  Shared["9 个共享 workspace 包"]
+  Shared["10 个共享 workspace 包"]
   UI["界面：ui · admin-shell"]
   Interaction["交互：composables · directives · icons"]
-  Data["数据：http · api-contracts · routing · utils"]
+  Data["数据：http · api-contracts · demo-data · routing · utils"]
   Admin --> Shared
   Docs --> Shared
   Shared --> UI
@@ -120,6 +120,29 @@ pnpm dev
 1. **先体验界面**：在「设置」中切换风格与布局，再查看用户管理和 TablePro。
 2. **写第一个页面**：参考[现有示例](apps/admin/src/views/demo)，登记页面组件 ID，添加路由及中英文菜单文案。
 3. **接入业务接口**：保留页面契约，按[后端接入指南](apps/docs/guide/backend.md)连接自己的服务。
+
+## 选择源码发行版本
+
+纯前端发行包包含 Admin、文档、共享包和 Mock，独立安装与运行，不需要数据库或 Redis。执行 `pnpm dist:frontend`，在 `dist/distributions/` 得到 `ray-template-frontend-<version>.tar.gz` 和对应源码目录。解压后执行 `pnpm install --frozen-lockfile`、`pnpm dev`。
+
+每份发行物都包含 `distribution.json`，记录版本、来源提交及工作区状态、工作区清单和内容摘要。导出会裁剪锁文件与依赖、命令和仅供全栈使用的说明，并排除本地配置、凭据、构建输出和依赖目录。详情见[发行版本与快速启动](apps/docs/guide/distributions.md)。
+
+<!-- fullstack:start -->
+
+完整源码还包含可选的 [NestJS 服务端](apps/server)，以 PostgreSQL 保存用户、权限、会话、路由与审计，并使用 Redis 提供限流和演示数据缓存。执行 `pnpm dist:fullstack` 生成同版本的全栈源码归档。
+
+安装依赖后，准备 Docker Compose，执行：
+
+```sh
+pnpm fullstack:setup
+pnpm dev:full
+```
+
+`setup` 创建私有的 `apps/server/.env.local`、启动数据库与 Redis、迁移并初始化管理员。管理员密码随机生成并保存在该文件中；真实后端不接受 Mock 演示密码。重复执行保留已有配置和账号。已经有 PostgreSQL、Redis 时，可提供 `DATABASE_URL`、`REDIS_URL` 并执行 `pnpm fullstack:setup --external`。`pnpm fullstack:stop` 停止 Compose 服务并保留数据卷。
+
+[源码发行工作流](.github/workflows/distributions.yaml) 验证两个归档后，可以生成或更新 `frontend` 分支，也可以给已有 GitHub Release 附加源码归档。需要从 `main` 手动运行并选择对应操作。容器启动见[发行版本与快速启动](apps/docs/guide/distributions.md#容器启动)。
+
+<!-- fullstack:end -->
 
 ## 开发与交付
 

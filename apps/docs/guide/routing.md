@@ -4,7 +4,7 @@
 import RouteConfigDemo from '../examples/RouteConfigDemo.vue'
 </script>
 
-正常启动从 `GET /admin/route-config` 读取版本化路由 JSON，按 `meta.order` 排序；路由树用于菜单与面包屑，页面记录展开后注册到 Vue Router。Mock 的初始路由表位于 `apps/admin/src/mocks/data/routes.json`，前端只保留组件 ID 注册表和外壳必需路由。默认使用 hash 路由，例如 `/ray-template/#/orders`。
+正常启动从 `GET /admin/route-config` 读取版本化路由 JSON，按 `meta.order` 排序；路由树用于菜单与面包屑，页面记录展开后注册到 Vue Router。Mock 的初始路由表位于 `packages/demo-data/src/routes.json`，前端只保留组件 ID 注册表和外壳必需路由。默认使用 hash 路由，例如 `/ray-template/#/orders`。
 
 ## 路由配置交互校验
 
@@ -36,11 +36,11 @@ import RouteConfigDemo from '../examples/RouteConfigDemo.vue'
 | `ignoreAutoResetScroll`    | 允许页面保留内容区滚动位置，详见滚动工具实现。                                            |
 | `extra`                    | 菜单标记的文本、图标、类型和显隐，见 [useBadge](../reference/hooks/navigation#usebadge)。 |
 
-嵌套子路由使用相对路径时会继承父路径。内置示例按用途分组，并以绝对路径保留原有页面地址。查看 [布局与路由示例](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/mocks/data/routes.json) 里的分组及多级菜单。
+嵌套子路由使用相对路径时会继承父路径。内置示例按用途分组，并以绝对路径保留原有页面地址。查看 [布局与路由示例](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/packages/demo-data/src/routes.json) 里的分组及多级菜单。
 
 ## 登录和角色
 
-默认登录页为 `/`。无会话访问业务地址时，守卫将完整地址放入登录页的 `redirect` 参数；登录后仅恢复当前角色仍有权限的已注册业务地址，保留 query 和 hash。没有有效目标时进入 `/welcome`，不会自动选择仪表盘或第一个菜单。菜单隐藏的页面仍可能允许直达。接入真实业务时，在后端校验会话、权限和资源归属。
+默认登录页为 `/`。无会话访问业务地址时，守卫将完整地址放入登录页的 `redirect` 参数；登录后仅恢复当前角色仍有权限的已注册业务地址，保留 query 和 hash。没有有效目标时进入 `/welcome`，不会自动选择仪表盘或第一个菜单。对重定向路由，菜单和守卫都会检查入口、各级跳转和最终目标的权限。菜单隐藏的页面仍可能允许直达。接入真实业务时，在后端校验会话、权限和资源归属。
 
 ## 空工作区和状态页
 
@@ -48,7 +48,7 @@ import RouteConfigDemo from '../examples/RouteConfigDemo.vue'
 
 所有业务标签都可以关闭，包括原首页和最后一项。关闭当前标签后切换到相邻项；关闭最后一项或全部标签进入空工作区，同时释放对应 KeepAlive 缓存。一个具体 pathname 保留一个标签，查询参数或片段变化会更新标签保存的完整地址。角色变化后，失去权限的标签与缓存会被移除，不会自动激活其他业务页。
 
-- `/403`：已登录，但当前页面无权限。
+- `/403`：已登录，但当前页面无权限。页签栏的「关闭当前页面」会返回仍有权限的上一页或已打开页签，没有可恢复的页面时回到工作区。
 - `/404`：目标页面不存在；原始目标保留在 `query.from`。
 - `/500`：路由解析或页面懒加载失败；只对仍存在且允许访问的 `query.from` 显示重试。
 

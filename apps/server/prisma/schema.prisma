@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Department {
+  id       String       @id
+  parentId String?
+  name     String
+  labelKey String?
+  parent   Department?  @relation("DepartmentTree", fields: [parentId], references: [id], onDelete: Restrict)
+  children Department[] @relation("DepartmentTree")
+  users    User[]
+
+  @@index([parentId])
+}
+
+model Role {
+  value       String           @id
+  label       String
+  labelKey    String?
+  permissions RolePermission[]
+  users       User[]
+}
+
+model Permission {
+  code  String           @id
+  roles RolePermission[]
+}
+
+model RolePermission {
+  roleValue      String
+  permissionCode String
+  role           Role       @relation(fields: [roleValue], references: [value], onDelete: Cascade)
+  permission     Permission @relation(fields: [permissionCode], references: [code], onDelete: Cascade)
+
+  @@id([roleValue, permissionCode])
+}
+
+model User {
+  id           String      @id @default(uuid())
+  username     String
+  usernameKey  String      @unique
+  name         String
+  email        String
+  emailKey     String      @unique
+  phone        String      @default("")
+  departmentId String
+  role         String
+  status       String      @default("enabled")
+  remark       String      @default("")
+  createdAt    DateTime    @default(now()) @db.Timestamptz(3)
+  updatedAt    DateTime    @updatedAt @db.Timestamptz(3)
+  department   Department  @relation(fields: [departmentId], references: [id], onDelete: Restrict)
+  roleRecord   Role        @relation(fields: [role], references: [value], onDelete: Restrict)
+  credential   Credential?
+  sessions     Session[]
+
+  @@index([departmentId])
+  @@index([role, status])
+}
+
+model Credential {
+  userId       String   @id
+  passwordHash String
+  updatedAt    DateTime @updatedAt @db.Timestamptz(3)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Session {
+  tokenHash String   @id
+  userId    String
+  expiresAt DateTime @db.Timestamptz(3)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model RouteConfig {
+  id        String   @id
+  config    Json
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  actorId    String?
+  action     String
+  resourceId String?
+  requestId  String?
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+
+  @@index([createdAt])
+  @@index([actorId, createdAt])
+}

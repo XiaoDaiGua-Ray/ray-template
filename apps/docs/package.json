@@ -26,5 +26,8 @@
     "sass": "1.107.1",
     "vite": "6.4.5",
     "vitepress": "1.6.4"
+  },
+  "rayTemplate": {
+    "runtime": "browser"
   }
 }

@@ -48,6 +48,8 @@ export default defineComponent({
     const { t } = useI18n('routeManagement')
     const { hasPermission } = useAccess()
     const saving = ref(false)
+    const loading = ref(false)
+    const loaded = ref(false)
     const text = (key: string) => t<string>(key)
     const { t: translate } = useI18n()
     const records = ref<RouteConfigRecord[]>([])
@@ -104,10 +106,14 @@ export default defineComponent({
       valid.value = false
     }
     const load = async () => {
+      loading.value = true
+
       try {
         const config =
           routeSourceStatus.active === 'remote'
-            ? await fetchRemoteRouteConfig()
+            ? await fetchRemoteRouteConfig(
+                hasPermission('routes:write') ? 'editor' : void 0,
+              )
             : (routeSourceStatus.config ??
               exportRouteConfig(getStaticAppRoutes()))
 
@@ -115,8 +121,11 @@ export default defineComponent({
         selected.value = tree.value.options[0]?.key as number | undefined
         expanded.value = []
         clearResult()
+        loaded.value = true
       } catch (reason) {
         report(reason)
+      } finally {
+        loading.value = false
       }
     }
 
@@ -138,7 +147,13 @@ export default defineComponent({
       }
     }
     const apply = async () => {
-      if (saving.value || !hasPermission('routes:write')) return
+      if (
+        !loaded.value ||
+        loading.value ||
+        saving.value ||
+        !hasPermission('routes:write')
+      )
+        return
 
       const config = validate()
 
@@ -352,7 +367,9 @@ export default defineComponent({
               type="primary"
               onClick={apply}
               loading={saving.value}
-              disabled={!hasPermission('routes:write')}
+              disabled={
+                !loaded.value || loading.value || !hasPermission('routes:write')
+              }
             >
               {text('apply')}
             </NButton>

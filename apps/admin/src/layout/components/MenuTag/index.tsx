@@ -1,5 +1,6 @@
 import { RIcon, RMoreDropdown } from '@/components'
 import { useI18n, useMaximize, useSiderBar, useSpinning } from '@/hooks'
+import { FORBIDDEN_ROUTE_PATH } from '@/router/constant'
 import { useMenuActions, useMenuGetters, useRuntimeGetters } from '@/store'
 import type { AppMenuOption, MenuTagOptions } from '@/types'
 import { ShellTab } from '@ray-template/admin-shell'
@@ -21,6 +22,9 @@ export default defineComponent({
   setup(_, { expose }) {
     const scrollRef = useTemplateRef<ScrollbarInst | null>('scrollRef')
     const tagsRef = useTemplateRef<HTMLElement>('tags')
+    const actionsButton = useTemplateRef<HTMLButtonElement>('actionsButton')
+    const route = useRoute()
+    const showingForbidden = computed(() => route.path === FORBIDDEN_ROUTE_PATH)
     const { t } = useI18n('menuTag')
     const { getCurrentMenuOption, getMenuTagOptions } = useMenuGetters()
     const getMenuKey = computed(
@@ -31,6 +35,7 @@ export default defineComponent({
     const { reload } = useSpinning()
     const {
       close,
+      closeForbiddenPage,
       closeAll: $closeAll,
       closeRight: $closeRight,
       closeLeft: $closeLeft,
@@ -40,14 +45,27 @@ export default defineComponent({
     } = useSiderBar()
     // 当前右键标签页索引位置
     const currentContextmenuIndex = ref(-1)
+    const closeStatus = async (restoreFocus: boolean) => {
+      const navigation = closeForbiddenPage()
+
+      if (!navigation || (await navigation) || !restoreFocus) return
+
+      await nextTick()
+      const active = tagsRef.value?.querySelector<HTMLButtonElement>(
+        '.menu-tag__tab[aria-current="page"]',
+      )
+      const focus = active ?? actionsButton.value
+
+      focus?.focus()
+    }
     // 下拉菜单
     const moreOptions = computed(() => [
       {
         label: t('closeCurrent'),
         key: 'closeCurrentPage',
-        disabled: !canClose(
-          getMenuTagOptions.value[currentContextmenuIndex.value],
-        ),
+        disabled:
+          !(showingForbidden.value && currentContextmenuIndex.value === -1) &&
+          !canClose(getMenuTagOptions.value[currentContextmenuIndex.value]),
         icon: () => <RIcon name="action/close" size="1em" />,
       },
       {
@@ -107,6 +125,9 @@ export default defineComponent({
     ])
     const actionMap = {
       closeCurrentPage: () => {
+        if (showingForbidden.value && currentContextmenuIndex.value === -1)
+          return closeStatus(true)
+
         closeCurrentMenuTag(currentContextmenuIndex.value)
       },
       reloadCurrentPage: () => {
@@ -218,7 +239,7 @@ export default defineComponent({
 
       const fn = actionMap[key as keyof typeof actionMap]
 
-      fn?.()
+      return fn?.()
     }
 
     // 右键点击标签页
@@ -284,6 +305,8 @@ export default defineComponent({
       syncScroll,
       scrollRef,
       tagsRef,
+      showingForbidden,
+      closeStatus,
       actionDropdownSelect,
       actionState,
       menuTagContextMenu,
@@ -389,6 +412,17 @@ export default defineComponent({
               <Chevron direction="right" />
             </button>
             <div class="menu-tag__tools">
+              {this.showingForbidden && (
+                <button
+                  type="button"
+                  class="menu-tag__control"
+                  aria-label={$t('menuTag.closeCurrent')}
+                  title={$t('menuTag.closeCurrent')}
+                  onClick={(event) => this.closeStatus(event.detail === 0)}
+                >
+                  <RIcon name="action/close" size={16} aria-hidden="true" />
+                </button>
+              )}
               <button
                 type="button"
                 class="menu-tag__control"
@@ -422,6 +456,7 @@ export default defineComponent({
                 onSelect={actionDropdownSelect}
               >
                 <button
+                  ref="actionsButton"
                   type="button"
                   class="menu-tag__control"
                   aria-label={$t('menuTag.actions')}

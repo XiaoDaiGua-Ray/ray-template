@@ -2,7 +2,6 @@ import { userListQuerySchema } from '@/api/admin/contracts'
 import { listPeople } from '@/demo-data/people'
 import {
   chartsQuerySchema,
-  orderSchema,
   orderSearchInputSchema,
   ownerSearchInputSchema,
   personListQuerySchema,
@@ -10,17 +9,16 @@ import {
   routePeopleQuerySchema,
   searchOptionsQuerySchema,
 } from '@ray-template/api-contracts/demo'
+import {
+  getDemoCharts,
+  getOrderOptions,
+  listRouteDemoPeople,
+  requestFixture,
+  searchDemoOrders,
+  searchDemoOwners,
+} from '@ray-template/demo-data'
 import { delay, http, HttpResponse } from 'msw'
 import * as v from 'valibot'
-import charts from './data/charts.json'
-import {
-  getOrderLabels,
-  getOrderOptions,
-  orderMatchesQuery,
-  orders,
-  owners,
-} from './data/orders'
-import requestFixture from './data/request.json'
 import { routeDemoPeople } from './data/route-people'
 import { MockApiError } from './database'
 import type { AdminDatabase } from './database'
@@ -78,21 +76,9 @@ export function createAdminHandlers(database: AdminDatabase, apiBase: string) {
     ),
     http.get(url('admin/demo/request'), () => respond(() => requestFixture)),
     http.get(url('admin/demo/charts'), ({ request }) =>
-      respond(() => {
-        const { refresh } = readQuery(request, chartsQuerySchema)
-
-        return refresh
-          ? {
-              ...charts,
-              lines: charts.lines.map((line) => ({
-                ...line,
-                values: line.values.map(() =>
-                  Math.floor((Math.random() + 1) * 100),
-                ),
-              })),
-            }
-          : charts
-      }),
+      respond(() =>
+        getDemoCharts(readQuery(request, chartsQuerySchema).refresh),
+      ),
     ),
     http.get(url('admin/demo/search-options'), ({ request }) =>
       respond(() =>
@@ -102,21 +88,9 @@ export function createAdminHandlers(database: AdminDatabase, apiBase: string) {
       ),
     ),
     http.get(url('admin/demo/route-people'), ({ request }) =>
-      respond(() => {
-        const {
-          page = 1,
-          pageSize = 10,
-          name,
-        } = readQuery(request, routePeopleQuerySchema)
-        const matches = routeDemoPeople.filter(
-          (person) => name === void 0 || person.name === name,
-        )
-
-        return {
-          items: matches.slice((page - 1) * pageSize, page * pageSize),
-          total: matches.length,
-        }
-      }),
+      respond(() =>
+        listRouteDemoPeople(readQuery(request, routePeopleQuerySchema)),
+      ),
     ),
     http.get(url('admin/demo/route-people/:id'), ({ params }) =>
       respond(() => {
@@ -136,16 +110,7 @@ export function createAdminHandlers(database: AdminDatabase, apiBase: string) {
 
         if (body.fail) throw new MockApiError(503, 'requestFailed')
 
-        const copy = getOrderLabels(body.locale)
-
-        return owners.flatMap(({ id, orgId }, index) =>
-          orgId === body.orgId &&
-          copy.people[index]
-            .toLowerCase()
-            .includes(body.keyword.trim().toLowerCase())
-            ? [{ label: copy.people[index], value: id }]
-            : [],
-        )
+        return searchDemoOwners(body.orgId, body.keyword, body.locale)
       }),
     ),
     http.post(url('admin/demo/orders/search'), ({ request }) =>
@@ -154,27 +119,7 @@ export function createAdminHandlers(database: AdminDatabase, apiBase: string) {
 
         if (body.fail) throw new MockApiError(503, 'requestFailed')
 
-        const copy = getOrderLabels(body.locale)
-        const matches = orders
-          .map((row) =>
-            v.parse(orderSchema, {
-              ...row,
-              product: copy.products[row.productIndex],
-              statusLabel: copy.statuses[row.statusIndex],
-              organization: copy.teams[row.orgId === 'north' ? 0 : 1],
-              owner: copy.people[row.ownerIndex],
-              warehouse: copy.warehouses[row.warehouseIndex],
-              deliveryLabel:
-                copy.deliveries[row.delivery === 'express' ? 1 : 0],
-            }),
-          )
-          .filter((row) => orderMatchesQuery(row, body.query))
-        const { page = 1, pageSize = 5 } = body.query
-
-        return {
-          items: matches.slice((page - 1) * pageSize, page * pageSize),
-          total: matches.length,
-        }
+        return searchDemoOrders(body.query, body.locale)
       }),
     ),
     http.post(url('admin/auth/login'), ({ request }) =>
@@ -186,8 +131,19 @@ export function createAdminHandlers(database: AdminDatabase, apiBase: string) {
     http.post(url('admin/auth/logout'), ({ request }) =>
       respond(() => database.logout(token(request))),
     ),
-    http.get(url('admin/route-config'), () =>
-      respond(() => database.getRoutes()),
+    http.get(url('admin/route-config'), ({ request }) =>
+      respond(() => {
+        const view = new URL(request.url).searchParams.getAll('view')
+
+        if (view.length) {
+          if (view.length !== 1 || view[0] !== 'editor')
+            throw new MockApiError(400, 'invalid')
+
+          database.authorize(token(request), 'routes:write')
+        }
+
+        return database.getRoutes()
+      }),
     ),
     http.put(url('admin/route-config'), ({ request }) =>
       respond(async () =>

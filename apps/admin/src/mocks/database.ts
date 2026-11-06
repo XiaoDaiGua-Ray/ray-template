@@ -16,8 +16,8 @@ import type {
 } from '@/api/admin/contracts'
 import { parseRouteConfig } from '@/router/config/contract'
 import type { RouteConfig } from '@/router/config/schema'
+import { initialRoutes } from '@ray-template/demo-data'
 import * as v from 'valibot'
-import initialRoutes from './data/routes.json'
 import { createInitialUsers, initialUserOptions } from './data/users'
 
 export class MockApiError extends Error {

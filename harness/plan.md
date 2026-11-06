@@ -1,5 +1,50 @@
 # AI Harness development plan
 
+<!-- fullstack:start -->
+
+## 2026-11-06: Optional backend and source distributions
+
+The approved scope is one development workspace with independently usable frontend and fullstack source distributions, followed by a NestJS backend. Backend security, authentication, Redis, logging, and operational foundations are part of this batch. No remote commit, branch publication, release, or deployment is authorized by this implementation task.
+
+1. Establish application isolation and universal contract boundaries. Move route schemas and reusable demo fixtures into browser-independent workspace packages; preserve frontend compatibility entry points.
+2. Export frontend and fullstack source trees and archives from the same source, including independent frozen-installable lockfiles. Exclude secrets, local evidence, dependencies, and build outputs. Prepare release/branch automation without publishing it.
+3. Add NestJS and PostgreSQL persistence behind the existing API contract. Preserve Bearer sessions for this integration; cookie authentication is a separate protocol migration. Include revocation, RBAC, atomic writes, account protection, audit records, Redis limits/cache, configuration validation, sanitized logs, health checks, and graceful shutdown.
+4. Provide repeatable setup, local fullstack orchestration, Compose configuration, database migrations, and credential provisioning without fixed passwords. Preserve existing data on repeated setup.
+
+Acceptance: both distributions pass isolated frozen installation and their checks/builds; backend HTTP tests use real PostgreSQL and Redis; frontend mock mode and the real-backend login/user/route flows work in a browser; full Harness checks pass once after integration. Docker/remote workflows require separate evidence and must not be reported as verified without execution. Local reports belong in `.harness-local/`.
+
+Parallel ownership: the lead owns integration, shared packages, package-boundary checks, launchers and documentation; distribution and backend agents own their assigned new files, with platform infrastructure isolated under the server's `src/platform` directory.
+
+### Pause checkpoint requested by the user
+
+The user requested an active pause before 17:55 Asia/Shanghai on 2026-11-06 because connectivity will end at 18:00. Resume this implementation in the same worktree; changes are uncommitted and unpublished.
+
+Implemented: workspace runtime ownership checks; shared universal route schemas/semantic parser and generated view/icon catalog; shared demo fixtures; independent frontend/fullstack source export with pruned lockfiles and provenance; NestJS core auth/users/routes with PostgreSQL persistence, scrypt passwords, hashed opaque tokens, live authorization, atomic writes and audit; Redis limits/cache infrastructure, configuration validation, sanitized logs, CORS/security headers, health and shutdown; setup/Compose/development launchers; bilingual delivery and backend documentation. `pnpm fullstack:setup` replaces the proposed `pnpm setup` because the latter is a pnpm builtin. Login demo buttons are now restricted to Mock mode; real sign-in inputs use username/current-password autofill, stable names and required fields.
+
+Observed validation before pause:
+
+- Frontend checks: 103 Vitest files / 535 tests, types, lint, format, API/package checks, production build and documentation build passed. Full `pnpm harness verify all` passed; report: `.harness-local/runs/all-JcqVqb/report.json`, log: `.harness-local/full-check.log`.
+- Server: type check/build and 13 unit/platform tests passed, including real Redis. Six HTTP integration tests passed on real PostgreSQL and Redis, covering authorization, uniqueness, transaction atomicity, revocation, semantic route validation, process restart persistence and repeat seed.
+- Real `pnpm fullstack:setup --external` passed Prisma migrate deploy and administrator initialization in an isolated local PostgreSQL schema. The generated private `.env.local` is ignored and must never enter artifacts or logs.
+- Frontend source archive extracted outside the repository passed frozen install, package/Harness/API checks and production build. The source exporter passed nine regression cases. Fullstack source projection passed structural checks; its standalone installation is still pending.
+- Local PostgreSQL 18.6 and Redis 8.2.11 binaries are retained under `.harness-local/services/`. Their test endpoints were localhost ports 15432/16379; services must be restarted before real integration tests. Both temporary services were stopped before the pause.
+
+Remaining work at the pause, in order:
+
+1. Implement the optional Nest demo endpoints using shared fixtures and the Redis read cache. The backend currently implements core admin endpoints only; existing frontend demo/chart calls are not yet served. Ensure `DEMO_ENABLED=false` has an explicit menu/endpoint policy.
+2. Run actual `pnpm dev:full` startup/shutdown/error-path checks and browser acceptance for mock and real-backend login, user operations, permissions, route saves and reloads. Login gating/autofill changes have source/build verification only.
+3. Validate the isolated fullstack archive, package deploy output and Compose images. Docker is absent locally; the container definitions are unverified. Verify forwarded client IP trust, origins and non-default ports before calling container setup production-ready.
+4. Implement source-release artifact and generated frontend-branch workflow (currently not written). No branch, tag, release, commit or deployment has been published; obtain required Git/publication authorization before those remote actions.
+5. Review combined changes, add focused missing regressions (launcher and real-backend login/demo flows), rerun only affected checks after fixes, and regenerate final archives. Preserve the initial one-mainline/two-distribution design and production credential separation.
+
+Modern Web Guidance applied: `autofill-sign-in-form` ("Use `autocomplete="current-password"` for the password input in a sign-in form") and `forms` ("turn off text correction on fields that hold identifiers rather than prose"). The retrieved guide is retained at `/var/folders/3n/76yvbw114mn8205ykb9npv2r0000gn/T/mwg-guide-73479-1793958308167.md`; browser acceptance is pending.
+
+### Resumed implementation
+
+The same worktree now includes the demo controllers and shared queries, the protected editor snapshot, the hardened dev launcher and Compose entry point, and a manually dispatched source distribution workflow. Mock and backend mode were exercised in Chrome with isolated test data, including real sign-in, user changes, read-only permissions, route persistence, and demo reads. The workflow can verify and archive a source revision, update the generated `frontend` branch, or attach assets to an existing release. Local acceptance evidence is kept in `.harness-local/fullstack-resume/`; remote workflow execution and publication require a separate authorized run.
+
+<!-- fullstack:end -->
+
 The goal is to help developers and AI agents taking over Ray Template find relevant code by task, reproduce checks independently, and pass observed results to the next maintainer. Entry points and commands are in the [AI Harness](README.md).
 
 | Phase                     | Work                                                                                                                                                                                | Acceptance criteria                                                                                                                                            |

@@ -1,4 +1,4 @@
-import initialRoutes from '@/mocks/data/routes.json'
+import { initialRoutes } from '@ray-template/demo-data'
 import { parseRouteConfig, toRuntimeRoutes } from './config/contract'
 import { ROUTE_MANAGEMENT_PATH } from './constant'
 import type { AppRouteRecordRaw } from './types'

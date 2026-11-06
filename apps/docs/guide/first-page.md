@@ -40,7 +40,7 @@ export default defineComponent({
 orders: { load: () => import('@/views/orders'), name: 'Orders' },
 ```
 
-在 Mock 初始路由 JSON `apps/admin/src/mocks/data/routes.json` 中加入以下记录，或由自己的路由接口返回：
+在 Mock 初始路由 JSON `packages/demo-data/src/routes.json` 中加入以下记录，或由自己的路由接口返回：
 
 ```json
 {

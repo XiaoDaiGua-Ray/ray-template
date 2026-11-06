@@ -6,7 +6,7 @@
 
 Ray Template is an open-source frontend template for admin dashboards, operations consoles, and internal tools. It brings together a working application, reusable packages, and interactive documentation. Start with the demo, choose a look, and connect your business APIs.
 
-**4 visual styles · 5 navigation layouts · 11 TablePro examples · 9 shared packages**
+**4 visual styles · 5 navigation layouts · 11 TablePro examples · 10 shared packages**
 
 [![The complete Ray Admin welcome page in the default Modern light style with side navigation](docs/assets/readme/welcome-modern-light.png)](https://xiaodaigua-ray.github.io/ray-template/#/dashboard)
 
@@ -82,10 +82,10 @@ Ray Admin and the documentation live in one **pnpm monorepo**. Business integrat
 flowchart TB
   Admin["Ray Admin · apps/admin"]
   Docs["Interactive docs · apps/docs"]
-  Shared["9 shared workspace packages"]
+  Shared["10 shared workspace packages"]
   UI["Interface: ui · admin-shell"]
   Interaction["Interaction: composables · directives · icons"]
-  Data["Data: http · api-contracts · routing · utils"]
+  Data["Data: http · api-contracts · demo-data · routing · utils"]
   Admin --> Shared
   Docs --> Shared
   Shared --> UI
@@ -120,6 +120,29 @@ Open [http://127.0.0.1:9527/ray-template/](http://127.0.0.1:9527/ray-template/) 
 1. **Try the interface.** Open Settings to change styles and layouts, then explore Users and TablePro.
 2. **Build a page.** Start with an [existing example](apps/admin/src/views/demo), register its view ID, and add a route with bilingual menu labels.
 3. **Connect your API.** Keep the page contract and connect your backend using the [integration guide](apps/docs/guide/backend.md).
+
+## Choose a source distribution
+
+The frontend distribution contains Admin, documentation, shared packages, and Mock. It installs and runs independently without a database or Redis. Run `pnpm dist:frontend` to produce `ray-template-frontend-<version>.tar.gz` and its source directory under `dist/distributions/`. Extract it, then run `pnpm install --frozen-lockfile` and `pnpm dev`.
+
+Each artifact includes `distribution.json` with its version, source commit and workspace state, workspace list, and content digest. Export prunes the lockfile, dependencies, commands, and fullstack-only documentation, and excludes local configuration, credentials, build output, and installed dependencies. See [distributions and startup](apps/docs/guide/distributions.md).
+
+<!-- fullstack:start -->
+
+The complete source also includes an optional [NestJS server](apps/server). PostgreSQL stores users, permissions, sessions, route configuration, and audits; Redis provides rate limits and cache for demonstration reads. Run `pnpm dist:fullstack` to export the matching fullstack source archive.
+
+After installing dependencies, prepare Docker Compose and run:
+
+```sh
+pnpm fullstack:setup
+pnpm dev:full
+```
+
+`setup` creates the private `apps/server/.env.local`, starts PostgreSQL and Redis, applies migrations, and initializes the administrator. The generated administrator password is stored in that file; Mock passwords do not authenticate against the server. Repeating setup preserves existing configuration and accounts. For existing PostgreSQL and Redis services, provide `DATABASE_URL` and `REDIS_URL` and run `pnpm fullstack:setup --external`. `pnpm fullstack:stop` stops Compose services while retaining their data volumes.
+
+The [Source distributions workflow](.github/workflows/distributions.yaml) verifies both archives before it can update the generated `frontend` branch or attach assets to an existing GitHub Release. Those actions are explicitly selected when running the workflow from `main`. See the [Compose and release instructions](apps/docs/guide/distributions.md#容器启动).
+
+<!-- fullstack:end -->
 
 ## Development and delivery
 

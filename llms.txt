@@ -6,6 +6,10 @@ Follow [AGENTS.md](AGENTS.md) and select the entry point for the task. Read this
 
 ## Task index
 
+<!-- fullstack:start -->
+- [server](harness/context/server.md): Optional NestJS backend, PostgreSQL, Redis, security, authentication, logs, and source distributions.
+<!-- fullstack:end -->
+
 - [routing](harness/context/routing.md): Pages and menus, dynamic route JSON, view IDs, roles, and guards.
 - [layout](harness/context/layout.md): Bootstrap, providers, navigation, KeepAlive, Pinia, and preference import/export.
 - [ui](harness/context/ui.md): Shared components, pages and login, themes and bilingual copy, hooks, and directives.

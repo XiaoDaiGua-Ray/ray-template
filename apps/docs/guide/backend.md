@@ -1,6 +1,6 @@
 # 服务端接入与标准契约
 
-登录、会话、用户管理与路由管理使用同一套 HTTP API。开发环境与静态在线演示都由 MSW 在网络层模拟响应；页面和 Store 不直接读取 Mock 数据库。接入自有服务端时，保留页面与调用方法，替换接口地址和实现即可。
+登录、会话、用户管理与路由管理使用同一套 HTTP API。源码发行和启动方式见[发行版本与快速启动](./distributions)。开发环境与静态在线演示都由 MSW 在网络层模拟响应；页面和 Store 不直接读取 Mock 数据库。接入自有服务端时，保留页面与调用方法，替换接口地址和实现即可。
 
 <script setup>
 import { withBase } from 'vitepress'
@@ -8,7 +8,7 @@ import { withBase } from 'vitepress'
 
 <a :href="withBase('/contracts/admin-api.json')" target="_blank" rel="noreferrer">下载 OpenAPI 3.1 契约</a>
 
-契约从 workspace 包 `@ray-template/api-contracts` 和路由 Schema 生成，含请求体、响应、查询参数、Bearer 认证与权限码。登录与用户契约通过 `/admin` 子路径导入，演示接口通过 `/demo` 导入，`/openapi` 导出 OpenAPI 生成函数。包不读取浏览器状态，前端、Mock 和自有服务端可共享类型与运行时校验；包当前随仓库使用，尚未发布到 npm。应用原有 `api/admin/contracts.ts`、`api/demo/contracts.ts` 路径仍为兼容入口。修改后运行 `pnpm api:generate`；全量验证中的 `pnpm api:check` 检查文件与运行时 Schema 一致。
+契约从 workspace 包 `@ray-template/api-contracts` 和路由 Schema 生成，含请求体、响应、查询参数、Bearer 认证与权限码。登录与用户契约通过 `/admin` 子路径导入，演示接口通过 `/demo` 导入，路由 Schema 通过 `/routes` 导入，`/openapi` 导出 OpenAPI 生成函数。路由 Schema 的权威来源是 `packages/api-contracts/src/routes.ts`，routing 包中的旧入口保留转导出。包不读取浏览器状态，前端、Mock 和自有服务端可共享类型与运行时校验；包当前随仓库使用，尚未发布到 npm。应用原有 `api/admin/contracts.ts`、`api/demo/contracts.ts` 路径仍为兼容入口。修改后运行 `pnpm api:generate`；全量验证中的 `pnpm api:check` 检查文件与运行时 Schema 一致。
 
 ```ts
 import type { ApiResponse, UserInput } from '@ray-template/api-contracts/admin'
@@ -31,6 +31,26 @@ VITE_API_BASE_URL=https://your-api.example.com/api/
 也可以使用同源 `/api/`，由部署代理转发。设置 `VITE_API_BASE_URL` 后默认关闭 Mock，显式 `VITE_API_MOCK=true` 才重新启用。接口基址可以包含版本前缀；页面只通过 `api/admin` 的方法调用，不拼接固定域名。`VITE_*` 会进入浏览器产物，仅用于公开配置。
 
 Mock 在应用启动前完成 Service Worker 注册。每次 API 请求前检查内部健康标记；浏览器回收 worker 后，在同一个 MSW 客户端实例上调用 `stop()` / `start()` 恢复，避免旧实例残留的监听器将请求放行。恢复失败则阻止业务请求继续发送，表单和演示数据保持原样。内部 `GET /admin/mock-health` 仅由 Mock 使用，关闭 Mock 后不请求这个接口。默认脚本路径为 `/ray-template/mockServiceWorker.js`，作用域为应用 base；静态服务器必须按原路径提供该文件。浏览器需要 HTTPS 或 localhost。GitHub Pages 只托管静态文件，这些 API 由已启动的页面中的 Mock 响应；直接在地址栏打开 API 地址会返回 404。真实后端模式不启动 Mock，也不会在请求失败时返回伪造业务数据。当前锁定 MSW 2.11.6，安装不自动执行其 worker 复制脚本；升级时显式运行 `pnpm exec msw init apps/admin/public --save`，再做契约和浏览器验证。
+
+<!-- fullstack:start -->
+
+## 配套 NestJS 服务端
+
+完整源码中的 `apps/server` 实现相同的 `/api/admin/*` 协议，页面层继续使用现有 API 调用。默认开发入口为 `pnpm fullstack:setup`、`pnpm dev:full`；已有 PostgreSQL 和 Redis 时使用 `pnpm fullstack:setup --external`。管理员凭据保存在私有的 `apps/server/.env.local`，不使用 Mock 演示密码，详细步骤见[全栈发行包](./distributions#全栈发行包)。
+
+用户、部门、角色授权、会话、路由配置和操作审计持久化到 PostgreSQL。账号与邮箱通过规范化唯一字段避免大小写冲突；批量写入、账号保护与审计在事务内执行。初始化只补齐初始数据，重复运行保留已有配置、路由与账号。
+
+认证保持 Bearer 协议，服务端用随机令牌建立可撤销会话，只保存令牌摘要；密码使用带随机盐的 scrypt 派生。每次请求重新校验用户状态、会话有效期和权限。退出、账号停用、角色变更或显式重设凭据会影响相应会话，前端权限显示不能替代接口授权。
+
+用户资料创建接口不接收密码，新建账号需由安全环境提供 `CREDENTIAL_USERNAME`、`CREDENTIAL_PASSWORD` 后执行 `pnpm server:credential:set`，才能登录。密码长度为 12–128 字符，修改凭据同时撤销已有会话。
+
+Redis 为 API 和登录提供跨进程限流，并缓存可重建的演示读取结果；会话与权限不经过该缓存。请求均带 `X-Request-Id`，JSON 日志记录路由模板、状态和耗时，排除请求体、查询串、凭据和原始连接错误。就绪接口为 `/api/health/ready`，同时检查数据库与 Redis；存活接口为 `/api/health/live`。
+
+配置要求明确的 CORS 来源和可信代理，默认不信任转发头。非法 JSON、超大请求、限流和依赖故障分别返回标准错误包络。配套后端不提供 `POST /admin/users/reset`。Redis 故障时返回 503，不切回内存认证或 Mock 数据。
+
+`DEMO_ENABLED` 在开发环境默认开启，生产环境默认关闭。开启时，`/admin/demo/*` 提供与 Mock 一致的公开演示数据；关闭时接口返回 404，公开运行配置移除演示视图及指向它们的重定向。已保存的路由保持完整，管理员可继续编辑。若显式选择本地或静态路由来源，这些浏览器草稿由使用者管理，服务端仍禁用演示接口。
+
+<!-- fullstack:end -->
 
 ## 统一响应
 
@@ -57,7 +77,7 @@ Mock 在应用启动前完成 Service Worker 注册。每次 API 请求前检查
 }
 ```
 
-400 表示输入不合法，401 表示会话失效，403 表示权限不足，404 表示对象不存在，409 表示账号/邮箱冲突或当前账号保护，503 表示演示数据库写入失败。`error.key` 是稳定的业务错误标识；可选的 `error.fields` 为字段到错误键的映射。API 层把错误转换为 `AdminApiError`，用户页将已约定的错误键翻译为中英文提示。读取响应也会经过 Schema 校验。
+400 表示输入不合法，401 表示会话失效，403 表示权限不足，404 表示对象不存在，409 表示账号/邮箱冲突或当前账号保护，413 表示请求体过大，429 表示请求受到限流，503 表示存储或依赖暂时不可用（Mock 中包括演示数据库写入失败）。`error.key` 是稳定的业务错误标识；可选的 `error.fields` 为字段到错误键的映射。API 层把错误转换为 `AdminApiError`，用户页将已约定的错误键翻译为中英文提示。读取响应也会经过 Schema 校验。
 
 ## 登录、会话与权限
 
@@ -126,9 +146,9 @@ hasPermission(['users:update', 'users:delete'], 'any')
 
 ## 路由管理
 
-`GET /admin/route-config` 是公开的前端启动配置接口，返回 `data: { version: 1, routes: [...] }`；路由元数据不包含业务秘密。`PUT /admin/route-config` 以同一结构提交，需要 `routes:write`。若自有系统需要受保护的菜单读取，可在 API 适配层把读取移到登录后，并保留登录与错误页的启动路由。
+`GET /admin/route-config` 是公开的前端启动配置接口，返回 `data: { version: 1, routes: [...] }`；路由元数据不包含业务秘密。维护路由时，携带 `routes:write` 权限的会话请求 `GET /admin/route-config?view=editor` 读取完整配置，再以同一结构提交 `PUT /admin/route-config`。若自有系统需要受保护的菜单读取，可在 API 适配层把读取移到登录后，并保留登录与错误页的启动路由。
 
-现有菜单表已迁到 `apps/admin/src/mocks/data/routes.json`，作为 Mock 初始数据库和显式离线恢复来源。正常在线启动走 GET，路由可视化与 JSON 的接口模式保存走 PUT，成功后重新加载并从接口读回。真实后端模式下，远端读取失败会中止启动，不会自动展示内置业务菜单；用户显式选定的本地或静态来源仍可用于离线恢复。导入、导出与接口中的路由内容使用同一结构，详情见[路由契约](./routing)。
+现有菜单表已迁到 `packages/demo-data/src/routes.json`，作为 Mock 初始数据库和显式离线恢复来源。正常在线启动走 GET，路由可视化与 JSON 的接口模式保存走 PUT，成功后重新加载并从接口读回。真实后端模式下，远端读取失败会中止启动，不会自动展示内置业务菜单；用户显式选定的本地或静态来源仍可用于离线恢复。导入、导出与接口中的路由内容使用同一结构，详情见[路由契约](./routing)。
 
 前端 `router/config/views.ts` 保留组件 ID 白名单，接口只返回 ID；后端或 AI 不需要传递组件代码。登录、404 和受保护的路由管理入口由外壳保留。原 `VITE_ROUTE_CONFIG_URL` 仍兼容旧的原始 JSON 读取接口；完整读写接入使用上面的标准 API 基址。
 

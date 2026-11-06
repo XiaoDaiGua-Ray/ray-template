@@ -11,7 +11,7 @@
     "dev": "pnpm icons:generate && vite",
     "icons:generate": "node scripts/icons.mjs",
     "icons:check": "node scripts/icons.mjs --check",
-    "typecheck": "pnpm icons:check && vue-tsc --build",
+    "typecheck": "pnpm icons:check && vue-tsc --build && tsc -p tsconfig.universal.json",
     "build": "pnpm icons:generate && pnpm typecheck && vite build",
     "preview": "vite preview",
     "docs:dev": "pnpm --filter @ray-template/docs dev",
@@ -29,12 +29,28 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "harness": "node harness/run.mjs",
-    "check": "pnpm env:check && pnpm harness check && pnpm api:check && pnpm packages:check && pnpm icons:generate && pnpm typecheck && pnpm lint && pnpm format:check && pnpm test:run && vite build && pnpm docs:check",
+    "check": "pnpm check:frontend && pnpm server:check && pnpm dist:check",
     "env:check": "node scripts/doctor.mjs",
     "packages:check": "node scripts/check-package-boundaries.mjs",
     "pages:build": "pnpm build && pnpm docs:build && node scripts/assemble-pages.mjs",
     "api:generate": "node scripts/admin-api.mjs",
-    "api:check": "node scripts/admin-api.mjs --check"
+    "api:check": "node scripts/admin-api.mjs --check",
+    "check:frontend": "pnpm env:check && pnpm harness check && pnpm api:check && pnpm packages:check && pnpm icons:generate && pnpm typecheck && pnpm lint && pnpm format:check && pnpm test:run && vite build && pnpm docs:check",
+    "dist:frontend": "node scripts/distributions.mjs frontend",
+    "dist:fullstack": "node scripts/distributions.mjs fullstack",
+    "dist:check": "node scripts/distributions.mjs --check",
+    "dev:full": "node scripts/fullstack.mjs dev",
+    "fullstack:stop": "node scripts/fullstack.mjs stop",
+    "server:dev": "pnpm --filter @ray-template/server dev",
+    "server:build": "pnpm --filter @ray-template/server build",
+    "server:start": "pnpm --filter @ray-template/server start",
+    "server:check": "pnpm --filter @ray-template/server check",
+    "server:test": "pnpm --filter @ray-template/server test",
+    "server:test:integration": "pnpm --filter @ray-template/server test:integration",
+    "server:db:migrate": "pnpm --filter @ray-template/server db:migrate",
+    "server:db:seed": "pnpm --filter @ray-template/server db:seed",
+    "server:credential:set": "pnpm --filter @ray-template/server credential:set",
+    "fullstack:setup": "node scripts/fullstack.mjs setup"
   },
   "lint-staged": {
     "*.{js,mjs,cjs,ts,tsx,vue}": [
@@ -80,7 +96,8 @@
     "vue-i18n": "11.4.17",
     "vue-router": "5.4.0",
     "vue3-next-qrcode": "4.1.1",
-    "@ray-template/api-contracts": "workspace:*"
+    "@ray-template/api-contracts": "workspace:*",
+    "@ray-template/demo-data": "workspace:*"
   },
   "devDependencies": {
     "@commitlint/cli": "21.2.4",
@@ -123,7 +140,9 @@
     "vite-svg-loader": "5.1.3",
     "vitest": "5.0.5",
     "vue-eslint-parser": "10.4.1",
-    "vue-tsc": "3.3.14"
+    "vue-tsc": "3.3.14",
+    "yaml": "2.9.1",
+    "esbuild": "0.28.2"
   },
   "description": "Ray Template is an open-source Vue 3 admin dashboard template built with TypeScript (TSX), Vite and Naive UI. Includes role-based routing, responsive layouts and data tables.",
   "repository": {
@@ -140,7 +159,7 @@
     "vite",
     "naive-ui",
     "pinia",
-    "中后台模板"
+    "\u4e2d\u540e\u53f0\u6a21\u677f"
   ],
   "license": "MIT",
   "author": {

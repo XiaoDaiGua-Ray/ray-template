@@ -16,6 +16,7 @@
   "Access": "WORKSPACE ACCESS",
   "Welcome": "Welcome to Ray Admin",
   "AccessDescription": "Explore the workspace and component demos using the demo account.",
+  "AccountDescription": "Sign in with your administrator or provisioned account.",
   "UseDemo": "Continue with demo account",
   "SignInError": "Sign-in failed. Please try again.",
   "RegisterHint": "This registration example is ready to connect to your account service.",

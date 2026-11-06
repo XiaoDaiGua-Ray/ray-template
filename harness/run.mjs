@@ -23,6 +23,7 @@ const allowedChecks = new Set([
   'docs:check',
   'icons:check',
   'packages:check',
+  'server:check',
   'typecheck',
 ])
 const indexFiles = [

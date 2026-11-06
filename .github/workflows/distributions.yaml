@@ -1,0 +1,141 @@
+name: Source distributions
+
+on:
+  workflow_dispatch:
+    inputs:
+      sync_frontend:
+        description: Update the generated frontend branch from main
+        type: boolean
+        default: false
+      release_tag:
+        description: Attach assets to the existing release for this tag (optional)
+        type: string
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+concurrency:
+  group: source-distributions
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      source: ${{ steps.source.outputs.commit }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Select the source revision
+        id: source
+        env:
+          RELEASE_TAG: ${{ inputs.release_tag }}
+          SYNC_FRONTEND: ${{ inputs.sync_frontend }}
+        run: |
+          if [[ -n "$RELEASE_TAG" ]]; then
+            [[ "$SYNC_FRONTEND" == false ]] || { echo "Run branch sync and release attachment separately."; exit 1; }
+            [[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([.-][a-zA-Z0-9.-]+)?$ ]]
+            source=$(git rev-parse --verify "refs/tags/$RELEASE_TAG^{commit}")
+            git merge-base --is-ancestor "$source" "$GITHUB_SHA"
+            git checkout --detach "$source"
+            [[ "v$(node -p 'require("./package.json").version')" == "$RELEASE_TAG" ]]
+          fi
+          echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version-file: .nvmrc
+      - uses: pnpm/action-setup@v6.1.0
+      - name: Export both source distributions
+        env:
+          HUSKY: '0'
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm dist:frontend
+          pnpm dist:fullstack
+          cd dist/distributions
+          sha256sum ray-template-*.tar.gz > SHA256SUMS.txt
+      - name: Verify independent installations and builds
+        env:
+          HUSKY: '0'
+        run: |
+          version=$(node -p 'require("./package.json").version')
+          for edition in frontend fullstack; do
+            name="ray-template-$edition-$version"
+            tar -xzf "dist/distributions/$name.tar.gz" -C "$RUNNER_TEMP"
+            (
+              cd "$RUNNER_TEMP/$name"
+              pnpm install --frozen-lockfile
+              pnpm check
+              if [[ "$edition" == fullstack ]]; then
+                node deploy/smoke.mjs
+              fi
+            )
+          done
+      - uses: actions/upload-artifact@v7
+        with:
+          name: source-distributions
+          path: |
+            dist/distributions/ray-template-*.tar.gz
+            dist/distributions/SHA256SUMS.txt
+          if-no-files-found: error
+          compression-level: 0
+
+  sync-frontend:
+    if: inputs.sync_frontend && inputs.release_tag == ''
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v8
+        with:
+          name: source-distributions
+          path: ${{ runner.temp }}/source-distributions
+      - name: Update the generated branch
+        run: |
+          version=$(node -p 'require("./package.json").version')
+          name="ray-template-frontend-$version"
+          artifacts="$RUNNER_TEMP/source-distributions"
+          (cd "$artifacts" && sha256sum --check SHA256SUMS.txt)
+          tar -xzf "$artifacts/$name.tar.gz" -C "$RUNNER_TEMP"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          bash scripts/sync-frontend.sh "$RUNNER_TEMP/$name"
+
+  attach-release:
+    if: inputs.release_tag != '' && !inputs.sync_frontend
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/download-artifact@v8
+        with:
+          name: source-distributions
+          path: ${{ runner.temp }}/source-distributions
+      - name: Attach source archives to the existing release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+          SOURCE: ${{ needs.verify.outputs.source }}
+        run: |
+          [[ "$(git rev-parse --verify "refs/tags/$RELEASE_TAG^{commit}")" == "$SOURCE" ]]
+          gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --json tagName >/dev/null
+          cd "$RUNNER_TEMP/source-distributions"
+          sha256sum --check SHA256SUMS.txt
+          gh release upload "$RELEASE_TAG" ray-template-*.tar.gz SHA256SUMS.txt --repo "$GITHUB_REPOSITORY"
