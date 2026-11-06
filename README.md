@@ -1,54 +1,109 @@
-# Ray Template · Vue 3 Admin Dashboard Template
+# Ray Template
 
-[简体中文](README.zh-CN.md) · **[Live demo](https://xiaodaigua-ray.github.io/ray-template/)** · **[Documentation](https://xiaodaigua-ray.github.io/ray-template/docs/)** · [Quick start](#quick-start)
+**Four visual styles. Five navigation layouts. A Vue 3 workspace you can make your own.**
 
-Ray Template is an **open-source, ready-to-run frontend template** for admin dashboards, back-office tools, and internal apps. Run the demo to try a workspace with role-based menus and page tabs, then reuse TablePro list pages, workspace layouts, and route modules in your own app.
+[简体中文](README.zh-CN.md) · **[Live demo](https://xiaodaigua-ray.github.io/ray-template/)** · **[Documentation](https://xiaodaigua-ray.github.io/ray-template/docs/)** · [Quick start](#quick-start) · [Architecture](#one-workspace-shared-building-blocks)
 
-**Ray Template 6.0.0 starts a new major version.** It organizes Ray Admin, the documentation site, and reusable packages in one workspace. v6 does not offer an in-place upgrade from v5 or guarantee compatibility with v5 imports, APIs, deployment settings, or browser data. Existing projects can stay on [legacy/v5](https://github.com/XiaoDaiGua-Ray/ray-template/tree/legacy/v5), the final v5 main snapshot at `6f095b7` with manifest version `5.2.5`, or use the existing [v5.2.4 tag](https://github.com/XiaoDaiGua-Ray/ray-template/tree/v5.2.4).
+Ray Template is an open-source frontend template for admin dashboards, operations consoles, and internal tools. It brings together a working application, reusable packages, and interactive documentation. Start with the demo, choose a look, and connect your business APIs.
 
-[v6 architecture and adoption guide](apps/docs/guide/architecture.md) · [Version boundaries](apps/docs/migration.md)
+**4 visual styles · 5 navigation layouts · 11 TablePro examples · 9 shared packages**
 
-**Stack**: Vue 3 · TypeScript / TSX · Naive UI · Vue Router · Pinia · Vue I18n · Vite / Rolldown · Axios · Vitest
+[![The complete Ray Admin welcome page in the default Modern light style with side navigation](docs/assets/readme/welcome-modern-light.png)](https://xiaodaigua-ray.github.io/ray-template/#/dashboard)
 
-[![Ray Template's TablePro people directory with search, pagination, column settings, and sidebar navigation](docs/assets/tablepro-preview.jpg)](https://xiaodaigua-ray.github.io/ray-template/)
+[![The complete Ray Admin welcome page in the default Modern light style with side navigation](docs/assets/readme/table-modern-light.png)](https://xiaodaigua-ray.github.io/ray-template/#/tables/auto-height)
 
-Sign in with the prefilled form. Open **Tables → Remote search and pagination** to try the list shown above, or **Layout playground** to experiment with the workspace.
+_The complete welcome page · Default Modern style · Light mode._
 
-## Core features
+## Choose your look and layout
 
-### TablePro for simple tables and data-heavy pages
+### Four styles across the interface
 
-Use `RTablePro` with `bare` for a plain table, or add search, pagination, and a toolbar for a full list page. Column definitions, selection, sorting, and custom cells follow Naive UI DataTable.
+| Style        | Character                                                                |
+| ------------ | ------------------------------------------------------------------------ |
+| **Modern**   | Blue accents, balanced spacing, and soft corners. The default workspace. |
+| **Naive UI** | Native controls, familiar proportions, and green accents.                |
+| **Material** | Tonal surfaces, larger corners, and capsule-shaped buttons.              |
+| **Plain**    | Neutral colors, compact corners, and flat surfaces.                      |
 
-- **Search and pagination**: Pass local `data` or a `request(params, signal)` function that returns `{ data, total }`. Remote queries accept only the latest result. A failed query keeps existing rows visible and lets users retry.
-- **Long lists and column controls**: Fill the available workspace and use virtual scrolling for large lists. Users can show, hide, reorder, or pin columns. Set `columnStateKey` to remember hidden columns across reloads.
-- **CSV and printing**: Export or print the current page's visible data columns by default. Point printing at a custom region for documents that need their own layout.
+Styles cover the shell, controls, tables, and chart themes. Each supports light and dark modes; follow the system or choose a mode yourself. Customize the primary color and export or import your preferences as JSON.
 
-[TablePro API and data contract](packages/ui/src/RTablePro/README.md)
+![The complete Ray Admin welcome page in Modern dark mode, using the same layout as the light version](docs/assets/readme/welcome-modern-dark.png)
 
-### A configurable workspace
+[![The complete Ray Admin welcome page in the default Modern light style with side navigation](docs/assets/readme/table-modern-dark.png)](https://xiaodaigua-ray.github.io/ray-template/#/tables/auto-height)
 
-Switch between sidebar, top, and mixed navigation. Narrow screens use a menu drawer. The workspace supports fixed or fluid width, a pinned header and footer, and a maximized content area. Pinia saves layout preferences. Try changes live in the layout playground or use named slots to replace the header, sidebar, tabs, and footer.
+_The same welcome page in Modern dark mode._
 
-Page tabs keep multiple tasks open, and breadcrumbs show where you are. Find menu items with `⌘/Ctrl + K`, and switch between light and dark themes or English and Simplified Chinese.
+### Five ways to organize the workspace
 
-[Layout playground source](apps/admin/src/views/demo/layout-demo.tsx) · [Layout configuration and slots](apps/admin/src/layout/README.md)
+**Side · Top · Mixed · Right · Split**
 
-### HTTP route configuration connects pages, menus, and permissions
+Keep navigation in a sidebar, move it to the top or right, or separate top-level groups from their child menus. Choose fluid or centered content, adjust spacing, and pin the header or footer. Narrow screens use a menu drawer.
 
-Register the page component ID in `apps/admin/src/router/config/views.ts`, then return its route record from the API to generate navigation and breadcrumbs. Initial demo records live in `apps/admin/src/mocks/data/routes.json`. Route metadata controls menu labels and icons, roles, visibility, and `keepAlive`. Detail pages can extend the breadcrumb while keeping the current menu and tab. Role checks cover both menu filtering and direct navigation. Connect your backend to validate sessions and authorize API requests.
+Page tabs, KeepAlive, breadcrumbs, `⌘/Ctrl + K` search, content maximization, page transitions, and English / Simplified Chinese are built in. Layout, appearance, and menu preferences update live and persist in the browser.
 
-[Routing guide](apps/admin/src/router/README.md) · [Nested navigation and caching example](apps/admin/src/mocks/data/routes.json)
+[Appearance and theme tokens](apps/docs/guide/appearance.md) · [Layout playground](apps/docs/guide/layout.md) · [Shell integration](apps/admin/src/layout/README.md)
 
-### Reusable components, composables, and SVG icons
+## TablePro, ready for business workflows
 
-- **Components**: Start with `RForm` and `RModal` for forms and dialogs. `RChart` manages ECharts initialization, resizing, and theme changes. The demo also includes LogicFlow diagrams, barcodes, and draggable cards. [Component guide](apps/admin/src/components/README.md)
-- **Composables**: Template hooks cover page refresh, content maximization, menu badges, and watermarks. Web hooks demonstrate screenshots, printing, and element fullscreen. The examples include expandable usage code. [Composables and examples](apps/admin/src/hooks/README.md)
-- **SVG icons**: Add an SVG to a group under `packages/icons/src` to generate typed names and sprites. Routes and `RIcon` share names such as `navigation/dashboard`. The icon gallery lets you browse by group and copy TSX usage. [SVG icon workflow](packages/icons/src/A_README.md)
+Use `RTablePro` for a plain table, a searchable directory, or a dense operations page. Column definitions and custom cells follow Naive UI DataTable.
+
+- **Search that grows with the page.** Text, numbers, multiple selection, dates, trees, cascades, and custom fields; validation, dependent remote options, and manual or debounced submission.
+- **Local and remote data.** Local filtering, component-managed requests, or pagination controlled by the page. Remote queries accept only the latest result and forward cancellation signals.
+- **A usable data workspace.** Automatic height, virtual scrolling, column visibility, reordering, pinning, and stored column preferences.
+- **Everyday tools.** Copy the table as a PNG, export CSV, print a table or custom region, and add row menus or toolbar actions.
+- **Control from your page.** `useTablePro` exposes search, pagination, current-page data, and request state. Selection stays in the page's controlled row keys.
+
+Failed queries clear the failed result and report the error; users can query again or reload. The examples cover success, cancellation, and failure recovery.
+
+Explore [11 runnable examples](https://xiaodaigua-ray.github.io/ray-template/docs/reference/table-pro-examples.html), including advanced search, controlled pagination, column settings, printing, and instance hooks. Each includes the source that actually runs.
+
+[TablePro API](apps/docs/reference/table-pro.md) · [Component contract](packages/ui/src/RTablePro/README.md) · [First business page](apps/docs/guide/first-page.md)
+
+## A working application to build on
+
+| Area                        | Included                                                                                                                       |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| **Users and organizations** | Organization tree, member search, create/edit/detail flows, account status, roles, and permission-aware actions.               |
+| **Routes and permissions**  | Visual and JSON route editors, menu generation, role-based navigation, direct-route guards, and page caching.                  |
+| **Forms and dialogs**       | `RForm`, `useForm`, and `RModal` with validation, reset, loading, and runnable examples.                                       |
+| **Charts and interaction**  | ECharts lifecycle and theme handling, LogicFlow, draggable cards, context menus, screenshots, printing, and fullscreen.        |
+| **Icons and utilities**     | Typed SVG names and generated sprites, QR codes, barcodes, precision arithmetic, storage helpers, composables, and directives. |
+| **Documentation**           | Guides, API references, and interactive examples using the same workspace packages as the application.                         |
+
+The demo uses **MSW HTTP mocks** for login, users, routes, and example data, both in development and on the static hosted site. To connect a backend, set `VITE_API_BASE_URL` and `VITE_API_MOCK=false`. Shared schemas and generated **OpenAPI 3.1** describe the contract; your backend owns real sessions and API authorization.
+
+[Backend integration](apps/docs/guide/backend.md) · [Routing guide](apps/admin/src/router/README.md) · [Components](apps/docs/reference/components.md) · [Composables](apps/docs/reference/hooks.md)
+
+## One workspace, shared building blocks
+
+Ray Admin and the documentation live in one **pnpm monorepo**. Business integration stays in the application; reusable capabilities have explicit package entry points.
+
+```mermaid
+flowchart TB
+  Admin["Ray Admin · apps/admin"]
+  Docs["Interactive docs · apps/docs"]
+  Shared["9 shared workspace packages"]
+  UI["Interface: ui · admin-shell"]
+  Interaction["Interaction: composables · directives · icons"]
+  Data["Data: http · api-contracts · routing · utils"]
+  Admin --> Shared
+  Docs --> Shared
+  Shared --> UI
+  Shared --> Interaction
+  Shared --> Data
+```
+
+- **[apps/admin](apps/admin)** owns pages, sessions, Pinia, route registration, API integration, and mocks.
+- **[apps/docs](apps/docs)** runs shared components and embeds application examples from the same build.
+- **[packages](packages)** exposes public `exports`; boundary checks validate imports, declared dependencies, and cycles. These are workspace packages, not separately published npm packages.
+
+Semantic theme tokens let custom pages follow the selected style, mode, and primary color. The shell exposes runtime layout dimensions and slots for the header, sidebar, tabs, footer, and content.
+
+[Architecture map](docs/architecture.md) · [API contracts](packages/api-contracts/README.md) · [Custom CSS contract](docs/ui-design.md#custom-css-contract)
 
 ## Quick start
 
-Use the pinned **Node.js 26.13.0** and **pnpm 12.16.1**. With nvm:
+Use **Node.js 26.13.0** and **pnpm 12.16.1**, as pinned in the repository.
 
 ```sh
 git clone https://github.com/XiaoDaiGua-Ray/ray-template.git
@@ -60,78 +115,35 @@ pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-Open [http://127.0.0.1:9527/ray-template/](http://127.0.0.1:9527/ray-template/) or use the URL printed by Vite. The prefilled demo sign-in and mock data let you run the template before connecting a backend.
+Open [http://127.0.0.1:9527/ray-template/](http://127.0.0.1:9527/ray-template/) and click **Continue with demo account**. The login page also offers manager and read-only accounts. No business backend is needed to explore the demo.
 
-Run `pnpm docs:dev` to develop the [documentation and interactive examples](apps/docs/README.md) from the same checkout.
+1. **Try the interface.** Open Settings to change styles and layouts, then explore Users and TablePro.
+2. **Build a page.** Start with an [existing example](apps/admin/src/views/demo), register its view ID, and add a route with bilingual menu labels.
+3. **Connect your API.** Keep the page contract and connect your backend using the [integration guide](apps/docs/guide/backend.md).
 
-## Project structure
+## Development and delivery
 
-```text
-ray-template/
-├── apps/
-│   ├── admin/          # Ray Admin: pages, sessions, permissions, env and mocks
-│   └── docs/           # VitePress: guides, API reference and live examples
-├── packages/
-│   ├── admin-shell/    # Layout, navigation, tabs, settings and transitions
-│   ├── ui/             # TablePro, RBarcode, RChart and other shared components
-│   ├── composables/    # Reusable Vue composables and browser helpers
-│   ├── directives/     # Vue directives
-│   ├── icons/          # SVG assets, icon names and manifest
-│   ├── routing/        # Route schemas, validation and menu helpers
-│   ├── http/           # HTTP clients, interceptors and request cancellation
-│   └── utils/          # Precision, object and storage utilities
-├── harness/            # Regression checks and local reports
-└── pnpm-lock.yaml      # Shared workspace lockfile
-```
+**Vue 3 · TypeScript / TSX · Naive UI · Vite / Rolldown · Pinia · Vue Router · Vue I18n · Axios · MSW · Vitest**
 
-Ray Admin starts in `apps/admin/src/main.ts`. Its `App.tsx` supplies theme, translations, icons, and column preference storage. Shared packages expose public entry points through `exports`. The documentation runs the same packages. The [TablePro demo](apps/docs/reference/table-pro.md) uses simulated requests to show cancellation and retry, while the [layout playground](apps/docs/guide/layout.md) runs with its own in-memory router.
+| Command                        | Purpose                                                                                                |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| `pnpm dev` / `pnpm docs:dev`   | Develop the application or documentation.                                                              |
+| `pnpm build` / `pnpm preview`  | Build or preview the admin application.                                                                |
+| `pnpm pages:build`             | Assemble the admin and documentation into `dist/pages`.                                                |
+| `pnpm harness context <scope>` | Find the implementation, contracts, and relevant checks.                                               |
+| `pnpm harness verify <scope>`  | Run checks for the affected area and save a report.                                                    |
+| `pnpm check`                   | Check the environment, contracts, package boundaries, types, lint, formatting, tests, and both builds. |
 
-See the [architecture map](docs/architecture.md) for how these modules work together.
+CI is configured for **Linux, Windows, and macOS**. The [task index](llms.txt) and [AI Harness](harness/README.md) provide navigable engineering context for maintainers and coding agents.
 
-## Build your first business page
+Default deployment paths are `/ray-template/` for the admin and `/ray-template/docs/` for documentation. See [deployment guidance](docs/architecture.md#deployment-and-search-discovery) before changing the base paths.
 
-This small people directory uses the template's mock query function. To adapt it for orders or inventory, replace the columns, search fields, and request function.
+## Version boundaries
 
-```tsx
-import { getPersonList } from '@/api/demo/mock/person'
-import { RTablePro } from '@ray-template/ui/table-pro'
-import { defineComponent } from 'vue'
+**v6 introduces the monorepo architecture.** It does not provide an in-place upgrade from v5 or guarantee compatibility with v5 imports, APIs, deployment settings, or browser data.
 
-export default defineComponent({
-  setup() {
-    return () => (
-      <RTablePro
-        columns={[
-          { title: 'Name', key: 'name' },
-          { title: 'Email', key: 'email' },
-        ]}
-        request={getPersonList}
-        search={[{ key: 'name', label: 'Name' }]}
-        columnStateKey="demo:people"
-      />
-    )
-  },
-})
-```
+Existing projects can stay on [legacy/v5](https://github.com/XiaoDaiGua-Ray/ray-template/tree/legacy/v5), the final v5 main snapshot `6f095b7` with manifest version `5.2.5`, or use the [v5.2.4 tag](https://github.com/XiaoDaiGua-Ray/ray-template/tree/v5.2.4). Read the [migration notes](apps/docs/migration.md) before adopting v6.
 
-1. **Build the view.** Add a page in `apps/admin/src/views`. The [remote table example](apps/admin/src/views/demo/tables/remote.tsx) shows sorting, row selection, and toolbar actions.
-2. **Connect navigation.** Register the page component ID and add its route to the Mock JSON or your backend response, with English and Simplified Chinese menu labels. Follow the [routing guide](apps/admin/src/router/README.md) when setting up page caching.
-3. **Connect your data.** Define your API in `apps/admin/src/api`, use `apps/admin/src/axios` for interceptors and request cancellation, and connect your real sign-in and session. Development and static previews use the same HTTP Mock API. The [backend contract](apps/docs/guide/backend.md) includes authentication, permission codes, users, routes, and a generated OpenAPI specification. [Request layer guide](apps/admin/src/axios/README.md)
+---
 
-## Checks, builds, and deployment
-
-| Command                       | What it does                                                                                  |
-| ----------------------------- | --------------------------------------------------------------------------------------------- |
-| `pnpm test:run`               | Run the Vitest suite                                                                          |
-| `pnpm check`                  | Run the same checks as CI, including types, lint, formatting, tests, and a production build   |
-| `pnpm harness context`        | Find entry points and checks for areas such as routing, UI, and APIs                          |
-| `pnpm harness verify <scope>` | Run targeted checks and save a local report; use `all` for full integration or release checks |
-| `pnpm build` / `pnpm preview` | Build into `dist/production` or serve the build locally                                       |
-
-`pnpm docs:build` builds the documentation separately. `pnpm pages:build` assembles both builds under `dist/pages` for `/ray-template/` and `/ray-template/docs/`.
-
-Use the [architecture map](docs/architecture.md) to find module and configuration entry points. See the [deployment guide](docs/architecture.md#deployment-and-search-discovery) for root or subpath hosting and search metadata. Contributors and coding agents share the instructions in [AGENTS.md](AGENTS.md) and the [AI Harness](harness/README.md).
-
-[MIT License](LICENSE) · [Changelog](CHANGELOG.md) · [Issues](https://github.com/XiaoDaiGua-Ray/ray-template/issues)
-
-Use the [task index](llms.txt) to find the owning implementation, its consumers, and verification steps without installing dependencies. `pnpm harness context <scope>` shows the same index entry alongside the commands it runs.
+[MIT License](LICENSE) · [Changelog](CHANGELOG.md) · [Report an issue](https://github.com/XiaoDaiGua-Ray/ray-template/issues) · [Contributor guidance](AGENTS.md)
