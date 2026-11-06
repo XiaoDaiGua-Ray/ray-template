@@ -1,1 +1,0 @@
-export{Xt as getRouteJsonSchema}from"./directives-C3MG3Skx.js";

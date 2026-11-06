@@ -1,0 +1,1 @@
+import{v as e,y as t}from"./runtime-core.esm-bundler-BvnVMcQz.js";import{t as n}from"./error-Y7LpcWcS.js";var r=t({name:`ErrorPage403`,setup:()=>()=>e(n,{status:`403`},null)});export{r as default};

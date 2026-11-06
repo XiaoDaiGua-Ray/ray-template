@@ -1,1 +1,0 @@
-import{v as e,y as t}from"./runtime-core.esm-bundler-BvnVMcQz.js";import{t as n}from"./CacheRouteExample-BivsOAFi.js";var r=t({name:`SubMenuOther`,render(){return e(n,{title:this.$t(`showcase.multiOtherTitle`),description:this.$t(`showcase.multiOtherDescription`)},null)}});export{r as default};
