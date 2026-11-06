@@ -269,3 +269,11 @@ Local verification used Node.js 26.13.0 and pnpm 12.16.1:
 - Reused the completed site builds for `node scripts/assemble-pages.mjs`; confirmed both entry pages, `.nojekyll`, the Mock worker, and both API contract files in `dist/pages`.
 
 Remote Actions and public deployment results were not inspected. No application rendering or asset-path behavior changed, so browser acceptance was not repeated.
+
+## 2026-11-06: GitHub Pages artifact deployment
+
+The branch publishing source (`dist` at `/`) runs a GitHub-managed workflow whose runner labels and artifact action are set by GitHub. The repository workflow now builds and deploys on `ubuntu-24.04`. It uploads `dist/pages` with `actions/upload-pages-artifact@v5.0.0` and deploys with `actions/deploy-pages@v5.0.1`. The upload action delegates to `upload-artifact` v7, and both JavaScript actions use Node.js 24. [Runner migration](https://github.com/actions/runner-images/issues/14748) · [Pages artifact release](https://github.com/actions/upload-pages-artifact/releases/tag/v5.0.0) · [Deployment action metadata](https://github.com/actions/deploy-pages/blob/v5.0.1/action.yml)
+
+Build and deployment use separate jobs. The build has read access to the source. Only the deploy job receives Pages and OIDC write permissions. The build keeps `.nojekyll` in the artifact and uses the same site paths and source reference. For rollout, set the repository's Pages source to GitHub Actions and allow `main` in the `github-pages` environment. [Publishing source setup](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#publishing-with-a-custom-github-actions-workflow)
+
+Local validation passed `actionlint` 1.7.12 and `pnpm harness verify all`, including both production builds, 569 frontend tests, and 12 server tests. The optional real Redis test was skipped. Assembling `dist/pages` confirmed both site entry points, both API contracts, the mock worker, and `.nojekyll`. The `github-pages` environment already allows `main`. The new workflow's hosted deployment is pending the source switch.

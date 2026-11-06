@@ -190,7 +190,7 @@ In the complete repository, `pnpm check` also checks server types, tests, and bu
 
 <!-- fullstack:end -->
 
-The **Pages workflow** builds the admin and documentation on every push to `main` and publishes successful output to `dist`. It has no path filter or cross-platform check dependency; manual publication on `main` is also supported. Read [AGENTS.md](AGENTS.md) and the [Harness verification guide](harness/README.md) before contributing. Default deployment paths are `/ray-template/` for the admin and `/ray-template/docs/` for documentation. See the [deployment guidance](docs/architecture.md#deployment-and-search-discovery) before changing them.
+The **Pages workflow** builds the admin and documentation on every push to `main` and publishes the `dist/pages` artifact to GitHub Pages. It also supports manual publication on `main` and runs independently of cross-platform checks. Read [AGENTS.md](AGENTS.md) and the [Harness verification guide](harness/README.md) before contributing. Default deployment paths are `/ray-template/` for the admin and `/ray-template/docs/` for documentation. See the [deployment guidance](docs/architecture.md#deployment-and-search-discovery) for Pages setup.
 
 ## Version boundaries
 

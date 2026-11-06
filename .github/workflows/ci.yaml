@@ -13,14 +13,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    name: Build and publish Pages
+  build:
+    name: Build admin and documentation
     if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v7.1.0
         with:
           node-version-file: .nvmrc
@@ -32,8 +32,23 @@ jobs:
         env:
           RAY_TEMPLATE_SITE_ORIGIN: ${{ github.repository == 'XiaoDaiGua-Ray/ray-template' && 'https://xiaodaigua-ray.github.io' || vars.RAY_TEMPLATE_SITE_ORIGIN }}
           RAY_TEMPLATE_SOURCE_REF: ${{ github.sha }}
-      - name: Publish combined site to dist
-        uses: JamesIves/github-pages-deploy-action@v4.9.0
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5.0.0
         with:
-          branch: dist
-          folder: dist/pages
+          path: dist/pages
+          include-hidden-files: true
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish Pages artifact
+        id: deployment
+        uses: actions/deploy-pages@v5.0.1

@@ -190,7 +190,7 @@ pnpm dev:full
 
 <!-- fullstack:end -->
 
-**Pages 工作流**在 `main` 每次 push 后构建后台与文档，成功后发布到 `dist`。不设路径过滤，不依赖三平台检查，也支持在 `main` 手动重发。贡献前阅读 [AGENTS.md](AGENTS.md) 与 [Harness 验证说明](harness/README.md)。默认部署路径为后台 `/ray-template/`、文档 `/ray-template/docs/`，修改前请查看[部署约定](docs/architecture.md#deployment-and-search-discovery)。
+**Pages 工作流**在 `main` 每次 push 后构建后台与文档，将 `dist/pages` 产物直接发布到 GitHub Pages。它独立于跨平台检查，也支持在 `main` 手动发布。贡献前阅读 [AGENTS.md](AGENTS.md) 与 [Harness 验证说明](harness/README.md)。默认部署路径为后台 `/ray-template/`、文档 `/ray-template/docs/`，Pages 配置见[部署约定](docs/architecture.md#deployment-and-search-discovery)。
 
 ## 版本边界
 

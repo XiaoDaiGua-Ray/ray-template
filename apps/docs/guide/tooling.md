@@ -28,7 +28,7 @@
 
 `pnpm build` 输出 `dist/production`。将产物部署到与 `vite.custom.config.ts` 中 `base` 对应的路径。默认应用为 `/ray-template/`，域名根目录部署改为 `/`。Vite 默认打包本地依赖；可选 CDN 模式需另外确认目标环境能访问 CDN。
 
-组合部署使用 `pnpm pages:build`，将 `dist/pages` 作为同一个站点的产物。官方地址为 `/ray-template/`，其下 `docs/` 目录提供 v6 官网。Pages 工作流在 `main` 每次 push 后于 Ubuntu 构建，成功后发布到 `dist` 分支；不设路径过滤，也不依赖三平台检查，因此后台、文档、共享包、依赖和构建配置变动都会触发。支持在 `main` 手动重发，其他分支和 PR 不发布到正式站点。构建时传入 `RAY_TEMPLATE_SOURCE_REF`，把文档的当前源码链接固定到发布提交。
+组合部署使用 `pnpm pages:build`，将 `dist/pages` 作为同一个站点的产物。官方地址为 `/ray-template/`，其下 `docs/` 目录提供 v6 官网。Pages 工作流在 `main` 每次 push 后于 Ubuntu 24.04 构建，通过 GitHub Pages 制品部署，也支持在 `main` 手动发布。构建时传入 `RAY_TEMPLATE_SOURCE_REF`，把文档的当前源码链接固定到发布提交。使用此工作流前，在仓库 **Settings → Pages → Source** 选择 **GitHub Actions**，并确认 `github-pages` 部署环境允许 `main`。
 
 公开生产部署可在构建环境设置 `RAY_TEMPLATE_SITE_ORIGIN` 为实际站点源地址（例如 `https://example.com`），由 base 补足路径。未配置时应用产物使用 `noindex`。公开 sitemap 列出入口页，登录后的 hash 路由用于应用交互。
 
