@@ -17,7 +17,7 @@ export function enableApiMock() {
       createAdminDatabase(getStorageInstance('localStorage')),
       base,
     )
-    let worker = setupWorker(...handlers)
+    const worker = setupWorker(...handlers)
     const start = () =>
       worker.start({
         serviceWorker: {
@@ -44,8 +44,8 @@ export function enableApiMock() {
         return response.ok && response.headers.get('x-ray-mock') === 'active'
       },
       async () => {
-        await worker.stop()
-        worker = setupWorker(...handlers)
+        // 复用实例以清理旧监听器；MSW 2.11.6 的已停止实例仍会抢先回复 PASSTHROUGH。
+        worker.stop()
         await start()
       },
     )

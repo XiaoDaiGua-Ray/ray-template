@@ -30,7 +30,7 @@ VITE_API_BASE_URL=https://your-api.example.com/api/
 
 也可以使用同源 `/api/`，由部署代理转发。设置 `VITE_API_BASE_URL` 后默认关闭 Mock，显式 `VITE_API_MOCK=true` 才重新启用。接口基址可以包含版本前缀；页面只通过 `api/admin` 的方法调用，不拼接固定域名。`VITE_*` 会进入浏览器产物，仅用于公开配置。
 
-Mock 在应用启动前完成 Service Worker 注册。每次 API 请求前检查内部健康标记；浏览器回收 worker 后，使用公开 API 恢复，失败则阻止业务请求继续发送，表单和演示数据保持原样。内部 `GET /admin/mock-health` 仅由 Mock 使用，关闭 Mock 后不请求这个接口。默认脚本路径为 `/ray-template/mockServiceWorker.js`，作用域为应用 base；静态服务器必须按原路径提供该文件。浏览器需要 HTTPS 或 localhost。真实后端模式不启动 Mock，也不会在请求失败时返回伪造业务数据。当前锁定 MSW 2.11.6，安装不自动执行其 worker 复制脚本；升级时显式运行 `pnpm exec msw init apps/admin/public --save`，再做契约和浏览器验证。
+Mock 在应用启动前完成 Service Worker 注册。每次 API 请求前检查内部健康标记；浏览器回收 worker 后，在同一个 MSW 客户端实例上调用 `stop()` / `start()` 恢复，避免旧实例残留的监听器将请求放行。恢复失败则阻止业务请求继续发送，表单和演示数据保持原样。内部 `GET /admin/mock-health` 仅由 Mock 使用，关闭 Mock 后不请求这个接口。默认脚本路径为 `/ray-template/mockServiceWorker.js`，作用域为应用 base；静态服务器必须按原路径提供该文件。浏览器需要 HTTPS 或 localhost。GitHub Pages 只托管静态文件，这些 API 由已启动的页面中的 Mock 响应；直接在地址栏打开 API 地址会返回 404。真实后端模式不启动 Mock，也不会在请求失败时返回伪造业务数据。当前锁定 MSW 2.11.6，安装不自动执行其 worker 复制脚本；升级时显式运行 `pnpm exec msw init apps/admin/public --save`，再做契约和浏览器验证。
 
 ## 统一响应
 
