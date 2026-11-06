@@ -196,18 +196,15 @@ export default defineComponent({
                 class="r-account-profile__summary"
                 aria-label={t('details')}
               >
-                <div class="r-account-profile__cover" aria-hidden="true" />
                 <div class="r-account-profile__summary-body">
                   <div class="r-account-profile__identity">
-                    <div class="r-account-profile__avatar-frame">
-                      <AccountAvatar
-                        class="r-account-profile__avatar"
-                        name={account.name}
-                        src={account.avatar || getSigningCallback.value.avatar}
-                        size={72}
-                        objectFit="cover"
-                      />
-                    </div>
+                    <AccountAvatar
+                      class="r-account-profile__avatar"
+                      name={account.name}
+                      src={account.avatar || getSigningCallback.value.avatar}
+                      size={64}
+                      objectFit="cover"
+                    />
                     <div class="r-account-profile__identity-copy">
                       <h2>{account.name}</h2>
                       <p class="r-account-profile__handle">
@@ -227,12 +224,7 @@ export default defineComponent({
                     <div>
                       <dt>{t('role')}</dt>
                       <dd>
-                        <NTag
-                          type="primary"
-                          size="small"
-                          round
-                          bordered={false}
-                        >
+                        <NTag type="primary" size="small" bordered={false}>
                           {roleKey && te?.(roleKey)
                             ? translate(roleKey)
                             : account.role}

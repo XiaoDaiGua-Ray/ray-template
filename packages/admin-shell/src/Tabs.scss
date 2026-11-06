@@ -82,16 +82,11 @@
   display: grid;
   flex: none;
   place-items: center;
-  inline-size: 0;
+  inline-size: 26px;
   block-size: 26px;
   padding: 0;
   overflow: hidden;
   border-radius: var(--r-control-radius);
-  opacity: 0;
-  pointer-events: none;
-  transition:
-    inline-size 160ms var(--r-bezier),
-    opacity 120ms ease;
 
   &::before {
     content: '';
@@ -120,25 +115,9 @@
   }
 }
 
-.menu-tag__item:focus-within .menu-tag__close {
-  inline-size: 26px;
-  opacity: 1;
-  pointer-events: auto;
-}
-
-@media (hover: hover) {
-  .menu-tag__item:hover .menu-tag__close {
-    inline-size: 26px;
-    opacity: 1;
-    pointer-events: auto;
-  }
-}
-
 @media (hover: none) {
-  .menu-tag__item--active .menu-tag__close {
+  .menu-tag__close {
     inline-size: 32px;
-    opacity: 1;
-    pointer-events: auto;
   }
 }
 
@@ -221,7 +200,6 @@
     animation: none;
   }
 
-  .menu-tag__close,
   .menu-tag__close::before {
     transition: none;
   }

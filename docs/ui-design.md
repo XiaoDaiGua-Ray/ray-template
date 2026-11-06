@@ -10,7 +10,7 @@ The template uses restrained blues and neutral colors. Refinement comes from con
 - Use accent colors for selection and primary actions; distinguish body text, descriptions, and eyebrow labels by color hierarchy. Page descriptions must remain readable: when a preset does not define a body-safe muted color, use the library's secondary text color rather than its weaker tertiary color.
 - Use subtle dividers between top bars, tab bars, and sidebars rather than layered shadows. A small number of content cards may use two-layer shadows.
 - Page surfaces use only the active preset's explicit soft shadow; library overlay shadows are not inherited by ordinary page cards. Naive's floating menus and dialogs retain their native elevation.
-- Page tabs normally show only their names. Reveal the close button on hover or focus; touch users can close the active tab directly.
+- Page tabs keep their close buttons visible and reserve the button width so hovering never expands a tab beyond the scroll viewport. Touch targets use the larger close-button width.
 - The preference drawer uses one or two field columns according to available width. Keep section navigation and reset actions in consistent positions.
 - When content is maximized, provide an exit control above the content, accessible by button or Esc.
 - Reuse `AppPageHeader` for page headings: an eyebrow, one main title, a short description, and optional actions. Do not replace page hierarchy with long descriptions or equally prominent card headings.

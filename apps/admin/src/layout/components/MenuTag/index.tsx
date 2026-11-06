@@ -1,3 +1,4 @@
+import './index.scss'
 import { RIcon, RMoreDropdown } from '@/components'
 import { useI18n, useMaximize, useSiderBar, useSpinning } from '@/hooks'
 import { FORBIDDEN_ROUTE_PATH } from '@/router/constant'
@@ -248,13 +249,22 @@ export default defineComponent({
       e.preventDefault()
 
       currentContextmenuIndex.value = idx
-      actionState.actionDropdownShow = false
+      actionState.x = e.clientX
+      actionState.y = e.clientY
+      actionState.actionDropdownShow = true
+    }
 
-      nextTick(() => {
-        actionState.x = e.clientX
-        actionState.y = e.clientY
-        actionState.actionDropdownShow = true
-      })
+    const dismissContextMenu = (event: MouseEvent | TouchEvent) => {
+      // clickoutside 在 mouseup 触发；标签上的同一次右键抬起不能关闭刚切换的菜单。
+      if (
+        event instanceof MouseEvent &&
+        event.button === 2 &&
+        event.target instanceof Element &&
+        tagsRef.value?.contains(event.target.closest('.menu-tag__item'))
+      )
+        return
+
+      actionState.actionDropdownShow = false
     }
 
     const setCurrentContextmenuIndex = () => {
@@ -310,6 +320,7 @@ export default defineComponent({
       actionDropdownSelect,
       actionState,
       menuTagContextMenu,
+      dismissContextMenu,
       setCurrentContextmenuIndex,
       maximize,
       reload,
@@ -336,14 +347,14 @@ export default defineComponent({
             options={this.moreOptions}
             x={this.actionState.x}
             y={this.actionState.y}
-            keyboard={false}
             show={this.actionState.actionDropdownShow}
             trigger="manual"
             placement="bottom-start"
             onSelect={actionDropdownSelect}
-            onClickoutside={() => {
-              this.actionState.actionDropdownShow = false
+            onUpdateShow={(show) => {
+              this.actionState.actionDropdownShow = show
             }}
+            onClickoutside={this.dismissContextMenu}
           />
           <NFlex
             class="menu-tag-space"

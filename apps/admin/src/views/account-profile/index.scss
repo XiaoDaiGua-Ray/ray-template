@@ -1,7 +1,7 @@
 .r-account-profile {
   container: account-profile / inline-size;
   display: grid;
-  gap: 18px;
+  gap: 24px;
   max-inline-size: 1160px;
   margin-inline: auto;
   padding-block: 10px 28px;
@@ -12,7 +12,6 @@
   }
 
   &__summary,
-  &__navigation,
   &__panel {
     min-inline-size: 0;
     border: 1px solid var(--r-line);
@@ -21,39 +20,11 @@
     box-shadow: var(--r-shadow-soft);
   }
 
-  &__cover {
-    position: relative;
-    overflow: hidden;
-    block-size: clamp(80px, 9.5cqi, 110px);
-    border-radius: var(--r-radius) var(--r-radius) 0 0;
-    background: linear-gradient(
-      112deg,
-      color-mix(in oklch, var(--r-theme-primary-color) 76%, var(--r-text)),
-      var(--r-theme-primary-color) 48%,
-      color-mix(in oklch, var(--r-theme-primary-color) 77%, var(--r-surface))
-    );
-
-    &::after {
-      position: absolute;
-      inset-block: 0;
-      inset-inline-end: 0;
-      inline-size: min(56%, 520px);
-      background: repeating-radial-gradient(
-        ellipse at 79% 8%,
-        transparent 0 17px,
-        color-mix(in srgb, var(--r-surface) 24%, transparent) 18px 19px,
-        transparent 20px 29px
-      );
-      mask-image: linear-gradient(90deg, transparent, black 43%);
-      content: '';
-    }
-  }
-
   &__summary-body {
     display: grid;
     align-items: center;
-    gap: 16px 26px;
-    padding: 14px clamp(16px, 3cqi, 24px) 16px;
+    gap: 20px 24px;
+    padding: clamp(16px, 3cqi, 24px);
   }
 
   &__identity {
@@ -63,21 +34,8 @@
     min-inline-size: 0;
   }
 
-  &__avatar-frame {
-    position: relative;
-    z-index: 1;
-    display: grid;
-    flex: none;
-    align-self: flex-start;
-    margin-block-start: -42px;
-    padding: 4px;
-    border: 1px solid var(--r-line);
-    border-radius: var(--r-radius);
-    background: var(--r-surface);
-    box-shadow: var(--r-shadow-soft);
-  }
-
   &__avatar.r-account-avatar {
+    flex: none;
     border-radius: var(--r-control-radius);
   }
 
@@ -86,7 +44,7 @@
 
     h2 {
       color: var(--r-text);
-      font-size: 23px;
+      font-size: 21px;
       font-weight: 650;
       line-height: 1.28;
       letter-spacing: -0.02em;
@@ -105,22 +63,20 @@
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: stretch;
-    gap: 8px;
+    gap: 16px;
     margin: 0;
+    padding-block-start: 20px;
+    border-block-start: 1px solid var(--r-line);
 
     > div {
       display: grid;
       align-content: start;
-      gap: 4px;
-      padding: 8px 12px;
-      border: 1px solid var(--r-line);
-      border-radius: var(--r-control-radius);
-      background: var(--r-surface-muted);
+      gap: 6px;
     }
 
     dt {
       color: var(--r-text-muted);
-      font-size: 11px;
+      font-size: 12px;
       line-height: 1.45;
     }
 
@@ -138,21 +94,21 @@
   &__workspace {
     display: grid;
     align-items: start;
-    gap: 16px;
+    gap: 24px;
   }
 
   &__navigation {
     display: grid;
-    gap: 5px;
-    padding: 7px;
+    min-inline-size: 0;
+    gap: 8px;
   }
 
   &__section {
     display: grid;
-    grid-template-columns: 34px minmax(0, 1fr) auto;
+    grid-template-columns: 22px minmax(0, 1fr) auto;
     align-items: center;
-    gap: 9px;
-    padding: 9px 10px;
+    gap: 12px;
+    padding: 14px 12px;
     border: 1px solid transparent;
     border-radius: var(--r-control-radius);
     background: transparent;
@@ -161,21 +117,13 @@
     text-align: start;
     cursor: pointer;
 
-    &:hover {
+    &:hover:not([aria-selected='true']) {
       background: var(--r-surface-hover);
     }
 
     &[aria-selected='true'] {
-      border-color: color-mix(
-        in srgb,
-        var(--r-theme-primary-color) 26%,
-        var(--r-line)
-      );
-      background: color-mix(
-        in srgb,
-        var(--r-theme-primary-color) 11%,
-        var(--r-surface)
-      );
+      border-color: var(--r-control-border);
+      background: var(--r-surface-muted);
       color: var(--r-selected-text);
     }
   }
@@ -183,16 +131,7 @@
   &__section-icon {
     display: grid;
     place-items: center;
-    inline-size: 34px;
-    block-size: 34px;
-    border-radius: var(--r-control-radius);
-    background: var(--r-surface-muted);
-    color: var(--r-text-secondary);
-  }
-
-  &__section[aria-selected='true'] &__section-icon {
-    background: var(--r-surface);
-    color: var(--r-primary-text);
+    color: inherit;
   }
 
   &__section-copy {
@@ -209,7 +148,7 @@
 
   &__section-hint {
     color: var(--r-text-secondary);
-    font-size: 11px;
+    font-size: 12px;
     line-height: 1.4;
   }
 
@@ -290,6 +229,13 @@
 @container account-profile (min-width: 49rem) {
   .r-account-profile__summary-body {
     grid-template-columns: minmax(0, 1fr) minmax(250px, 0.58fr);
+  }
+
+  .r-account-profile__facts {
+    padding-block-start: 0;
+    padding-inline-start: 24px;
+    border-block-start: 0;
+    border-inline-start: 1px solid var(--r-line);
   }
 
   .r-account-profile__workspace {
