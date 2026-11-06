@@ -1,5 +1,6 @@
-import { flushPromises, mount } from '@vue/test-utils'
+import { DOMWrapper, flushPromises, mount } from '@vue/test-utils'
 import { NDataTable, NDropdown } from 'naive-ui'
+import type { DropdownOption } from 'naive-ui'
 import { RTablePro } from '../../packages/ui/src/RTablePro'
 import type { TableProRequest } from '../../packages/ui/src/RTablePro'
 import * as csv from '../../packages/ui/src/RTablePro/src/csv'
@@ -9,6 +10,31 @@ const columns = [{ key: 'name', title: 'Name' }]
 const data = [{ id: 1, name: 'Ray' }]
 
 afterEach(() => vi.restoreAllMocks())
+
+it.each([void 0, 'small', 'medium', 'large'] as const)(
+  'checks the effective density before any interaction when size is %s',
+  (size) => {
+    const wrapper = mount(RTablePro, { props: { columns, data, size } })
+
+    try {
+      const density = wrapper
+        .getComponent(NDropdown)
+        .props('options')
+        ?.find((option) => option.key === 'density') as DropdownOption
+      const choices = density.children as DropdownOption[]
+      const expected = size ?? 'medium'
+
+      expect(wrapper.getComponent(NDataTable).props('size')).toBe(expected)
+      expect(
+        choices
+          .filter((option) => option.props?.['aria-checked'])
+          .map((option) => option.key),
+      ).toEqual([`density:${expected}`])
+    } finally {
+      wrapper.unmount()
+    }
+  },
+)
 
 it('hides print by default and groups secondary actions under one menu', async () => {
   const wrapper = mount(RTablePro, { props: { columns, data } })
@@ -100,6 +126,80 @@ it('updates density and appearance without changing caller defaults', async () =
     })
     await wrapper.setProps({ size: 'large' })
     expect(wrapper.getComponent(NDataTable).props('size')).toBe('large')
+    await wrapper.setProps({ size: void 0 })
+    expect(wrapper.getComponent(NDataTable).props('size')).toBe('medium')
+    const density = menu
+      .props('options')
+      ?.find((option) => option.key === 'density') as DropdownOption
+
+    expect(
+      (density.children as DropdownOption[])
+        .filter((option) => option.props?.['aria-checked'])
+        .map((option) => option.key),
+    ).toEqual(['density:medium'])
+  } finally {
+    wrapper.unmount()
+  }
+})
+
+it('keeps appearance icons visible when checked or unchecked', async () => {
+  const wrapper = mount(RTablePro, {
+    props: {
+      columns,
+      data,
+      size: 'medium',
+      striped: false,
+      bordered: true,
+      showPrint: true,
+    },
+  })
+  const page = new DOMWrapper(document.body)
+  const openMenu = async () => {
+    await wrapper.get('[aria-label="More actions"]').trigger('click')
+    await vi.dynamicImportSettled()
+    await flushPromises()
+  }
+  const appearanceOption = (label: string) =>
+    page
+      .findAll('[role="menuitemcheckbox"]')
+      .find((option) => option.text().includes(label))!
+
+  try {
+    await openMenu()
+
+    for (const label of ['Table density', 'Export CSV', 'Print table']) {
+      const option = page
+        .findAll('.n-dropdown-option-body')
+        .find((option) => option.text().includes(label))!
+
+      expect(option.get('svg').html()).toContain('<path')
+    }
+
+    for (const [label, initial] of [
+      ['Striped rows', false],
+      ['Table border', true],
+    ] as const) {
+      const option = appearanceOption(label)
+      const icon = option.get('.n-dropdown-option-body__prefix svg').html()
+
+      expect(icon).toContain('<path')
+      expect(option.attributes('aria-checked')).toBe(String(initial))
+      expect(option.get('.r-table-action-label__check').text()).toBe(
+        initial ? '✓' : '',
+      )
+      await option.trigger('click')
+      await flushPromises()
+      await openMenu()
+      const updated = appearanceOption(label)
+
+      expect(updated.attributes('aria-checked')).toBe(String(!initial))
+      expect(updated.get('.r-table-action-label__check').text()).toBe(
+        initial ? '' : '✓',
+      )
+      expect(updated.get('.n-dropdown-option-body__prefix svg').html()).toBe(
+        icon,
+      )
+    }
   } finally {
     wrapper.unmount()
   }

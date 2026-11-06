@@ -336,6 +336,15 @@ export default defineComponent({
       }
     }
 
+    const renderCheckedActionLabel = (label: string, checked: boolean) => (
+      <span class="r-table-action-label">
+        <span>{label}</span>
+        <span class="r-table-action-label__check" aria-hidden="true">
+          {checked ? '✓' : ''}
+        </span>
+      </span>
+    )
+
     const actionOptions = computed<NonNullable<DropdownProps['options']>>(
       () => [
         {
@@ -363,8 +372,8 @@ export default defineComponent({
 
           return {
             key,
-            label: t(key),
-            icon: () => <span aria-hidden="true">{checked ? '✓' : ''}</span>,
+            label: () => renderCheckedActionLabel(t(key), !!checked),
+            icon: () => <RIcon name={`action/table-${key}`} size={16} />,
             props: { role: 'menuitemcheckbox', 'aria-checked': checked },
           }
         }),

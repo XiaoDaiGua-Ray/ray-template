@@ -27,7 +27,7 @@ import { RTablePro } from '@/components'
 - `autoHeight` 默认使用当前布局的可用高度，宿主外部使用视口高度；嵌入特定区域时可以用 CSS 变量 `--r-table-height` 覆盖。较短的屏幕保留表格的最小操作高度。
 - 只接收最新的请求结果。切换请求源或有效筛选条件会立即清空旧行和总数；切页或修改每页条数会隐藏旧行并保留同一范围的总数。当前页未加载时，实例取数返回空、底层实例返回 `null`，CSV 和打印不会启动。请求失败后显示空态并清空总数，通过宿主 Toast 提醒。可用 `onRequestError` 接收详情、用实例 `reload()` 重试，或显式提供 `error` 插槽接管提示。
 - 需要实例时使用 `shallowRef<TableProInst>()`。实例提供 `reload(resetPage?)`、`setPage`、`setPageSize`、`getCurrentPageData`、`downloadCsv`、`print`、`copyImage` 和 `getTableInstance`。额外区域可用 `toolbar`、`tableFooter`、`tableAction` 插槽。
-- 工具栏将业务 `toolbar` 插槽与内置工具分组。`request` 模式提供刷新，列设置、复制图片和全屏保持直接入口；「更多操作」统一收纳密度、斑马纹、边框与 CSV。打印默认隐藏，设置 `showPrint` 后出现在该菜单。`tool={false}` 隐藏全部内置工具，仍保留业务插槽。
+- 工具栏将业务 `toolbar` 插槽与内置工具分组。`request` 模式提供刷新，列设置、复制图片和全屏保持直接入口；「更多操作」统一收纳密度、斑马纹、边框与 CSV。斑马纹和边框的功能图标始终显示，选中状态在文字右侧单独标记；密度子菜单只保留文字和选中标记。TablePro 的 `size` 默认是 `medium`（标准），菜单与表格共用该值；传入 `small` 或 `large` 时分别选中紧凑或宽松。打印默认隐藏，设置 `showPrint` 后出现在该菜单。`tool={false}` 隐藏全部内置工具，仍保留业务插槽。
 
 ## 注册 Hook
 

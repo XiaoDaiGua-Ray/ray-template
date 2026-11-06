@@ -27,6 +27,8 @@ export const iconNames = [
   'action/search',
   'action/setting',
   'action/shared',
+  'action/table-bordered',
+  'action/table-striped',
   'action/upload',
   'directional/enter',
   'directional/expanded',

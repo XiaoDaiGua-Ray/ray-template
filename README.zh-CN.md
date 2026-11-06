@@ -10,9 +10,9 @@ Ray Template 是基于 Vue 3、TypeScript / TSX 和 Naive UI 的开源中后台�
 
 [![默认 Modern 浅色风格的完整欢迎页，展示侧边导航和工作空间概览](docs/assets/readme/welcome-modern-light.png)](https://xiaodaigua-ray.github.io/ray-template/#/dashboard)
 
-[![The complete Ray Admin welcome page in the default Modern light style with side navigation](docs/assets/readme/table-modern-light.png)](https://xiaodaigua-ray.github.io/ray-template/#/tables/auto-height)
+[![Modern 浅色主题下的 TablePro，展示自适应高度、搜索、分页与工具栏操作](docs/assets/readme/table-modern-light.png)](https://xiaodaigua-ray.github.io/ray-template/#/tables/auto-height)
 
-_完整欢迎页 · 默认 Modern 风格 · 浅色主题。_
+_欢迎页与 TablePro · 默认 Modern 风格 · 浅色主题。_
 
 ## 风格与布局
 
@@ -29,9 +29,9 @@ _完整欢迎页 · 默认 Modern 风格 · 浅色主题。_
 
 ![Modern 深色主题下的完整欢迎页，与浅色版本使用相同布局](docs/assets/readme/welcome-modern-dark.png)
 
-[![The complete Ray Admin welcome page in the default Modern light style with side navigation](docs/assets/readme/table-modern-dark.png)](https://xiaodaigua-ray.github.io/ray-template/#/tables/auto-height)
+[![Modern 深色主题下的 TablePro，展示自适应高度、搜索、分页与工具栏操作](docs/assets/readme/table-modern-dark.png)](https://xiaodaigua-ray.github.io/ray-template/#/tables/auto-height)
 
-_相同的欢迎页与布局，切换至 Modern 深色主题。_
+_相同的欢迎页与 TablePro，切换至 Modern 深色主题。_
 
 ### 五种导航，适配不同工作方式
 
@@ -142,7 +142,7 @@ CI 配置覆盖 **Linux、Windows 和 macOS**。[任务索引](llms.txt)与 [AI 
 
 **v6 启用 Monorepo 架构。** 不提供 v5 原地升级，也不保证兼容 v5 的内部导入、接口、部署配置或浏览器数据。
 
-已有项目可以继续使用 [legacy/v5](https://github.com/XiaoDaiGua-Ray/ray-template/tree/legacy/v5)（最后的 v5 主线快照 `6f095b7`，清单版本 `5.2.5`），或使用 [v5.2.4 标签](https://github.com/XiaoDaiGua-Ray/ray-template/tree/v5.2.4)。采用 v6 前请先阅读[迁移说明](apps/docs/migration.md)。
+已有项目可以继续使用 [legacy/v5](https://github.com/XiaoDaiGua-Ray/ray-template/tree/legacy/v5)（最后的 v5 主线快照 `6f095b7`，清单版本 `5.2.5`），或使用对应的 [v5.2.5 标签](https://github.com/XiaoDaiGua-Ray/ray-template/tree/v5.2.5)。采用 v6 前请先阅读[迁移说明](apps/docs/migration.md)。
 
 ---
 

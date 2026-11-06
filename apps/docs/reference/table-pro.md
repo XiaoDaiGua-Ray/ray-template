@@ -121,7 +121,7 @@ const renderTable = () => (
 
 实例还提供 `setPage`、`setPageSize`、`getCurrentPageData`、`downloadCsv`、`print`、`copyImage` 和 `getTableInstance`。扩展表格区域可用 `title`、`toolbar`、`tableFooter`、`tableAction`；错误区域用 `error` 插槽。
 
-工具栏分为业务操作与内置工具两组。`request` 模式提供刷新，列设置、复制图片和全屏为直接入口；密度、斑马纹、边框和 CSV 收入「更多操作」。打印默认不显示，设置 `showPrint` 后才加入菜单。`tool={false}` 隐藏内置工具，保留自定义 `toolbar` 插槽。
+工具栏分为业务操作与内置工具两组。`request` 模式提供刷新，列设置、复制图片和全屏为直接入口；密度、斑马纹、边框和 CSV 收入「更多操作」。斑马纹和边框的功能图标始终显示，选中状态在文字右侧单独标记；密度子菜单只保留文字和选中标记。TablePro 的 `size` 默认是 `medium`（标准），菜单与表格共用该值；传入 `small` 或 `large` 时分别选中紧凑或宽松。打印默认不显示，设置 `showPrint` 后才加入菜单。`tool={false}` 隐藏内置工具，保留自定义 `toolbar` 插槽。
 
 ### `useTablePro`
 

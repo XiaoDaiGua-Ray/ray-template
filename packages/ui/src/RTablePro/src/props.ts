@@ -39,6 +39,7 @@ const panelControls = {
 
 export const tablePanelProps = {
   ...omit(dataTableProps, ['onPageChange', 'onPageSizeChange']),
+  size: { type: dataTableProps.size, default: 'medium' },
   ...panelControls,
   rowActionsDisabled: Boolean,
   /** 由查询层提供；手动 data 模式通过自定义工具栏提供刷新 */

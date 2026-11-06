@@ -2,7 +2,7 @@
 
 操作、方向、导航、状态和系统图标来自 [Iconfont · 迈鼎icon](https://www.iconfont.cn/collections/detail?cid=51731) 的 IconPark 线性图形。原作者为 [ByteDance IconPark](https://github.com/bytedance/IconPark)，Copyright 2019-present Bytedance Inc.；开源许可见 [Apache 2.0](LICENSE-ICONPARK)。表内 ID 对应该合辑的具体条目。入包时保留原始绘制路径，去掉透明画布路径和导出属性。按实际图形边界重设正方形视图框，让常规图标的主体约占八成半；省略号和展开箭头保留更多留白。轮廓补少量描边，使小尺寸下的线条更清楚，填充和描边均使用 `currentColor`。
 
-`action/close_all` 是本仓库绘制的叠页关闭图标。
+The `action/close_all`, `action/table-striped`, and `action/table-bordered` icons are original artwork in this repository, covered by its MIT license.
 
 品牌标识沿用仓库已有的 SVG。不要将品牌标识与这批通用线性图标的来源或许可混用。
 

@@ -10,9 +10,9 @@ Ray Template is an open-source frontend template for admin dashboards, operation
 
 [![The complete Ray Admin welcome page in the default Modern light style with side navigation](docs/assets/readme/welcome-modern-light.png)](https://xiaodaigua-ray.github.io/ray-template/#/dashboard)
 
-[![The complete Ray Admin welcome page in the default Modern light style with side navigation](docs/assets/readme/table-modern-light.png)](https://xiaodaigua-ray.github.io/ray-template/#/tables/auto-height)
+[![TablePro with automatic height, search, pagination, and toolbar actions in Modern light mode](docs/assets/readme/table-modern-light.png)](https://xiaodaigua-ray.github.io/ray-template/#/tables/auto-height)
 
-_The complete welcome page · Default Modern style · Light mode._
+_Welcome page and TablePro · Default Modern style · Light mode._
 
 ## Choose your look and layout
 
@@ -29,9 +29,9 @@ Styles cover the shell, controls, tables, and chart themes. Each supports light 
 
 ![The complete Ray Admin welcome page in Modern dark mode, using the same layout as the light version](docs/assets/readme/welcome-modern-dark.png)
 
-[![The complete Ray Admin welcome page in the default Modern light style with side navigation](docs/assets/readme/table-modern-dark.png)](https://xiaodaigua-ray.github.io/ray-template/#/tables/auto-height)
+[![TablePro with automatic height, search, pagination, and toolbar actions in Modern dark mode](docs/assets/readme/table-modern-dark.png)](https://xiaodaigua-ray.github.io/ray-template/#/tables/auto-height)
 
-_The same welcome page in Modern dark mode._
+_The same welcome page and TablePro in Modern dark mode._
 
 ### Five ways to organize the workspace
 
@@ -142,7 +142,7 @@ Default deployment paths are `/ray-template/` for the admin and `/ray-template/d
 
 **v6 introduces the monorepo architecture.** It does not provide an in-place upgrade from v5 or guarantee compatibility with v5 imports, APIs, deployment settings, or browser data.
 
-Existing projects can stay on [legacy/v5](https://github.com/XiaoDaiGua-Ray/ray-template/tree/legacy/v5), the final v5 main snapshot `6f095b7` with manifest version `5.2.5`, or use the [v5.2.4 tag](https://github.com/XiaoDaiGua-Ray/ray-template/tree/v5.2.4). Read the [migration notes](apps/docs/migration.md) before adopting v6.
+Existing projects can stay on [legacy/v5](https://github.com/XiaoDaiGua-Ray/ray-template/tree/legacy/v5), the final v5 main snapshot `6f095b7` with manifest version `5.2.5`, or use the matching [v5.2.5 tag](https://github.com/XiaoDaiGua-Ray/ray-template/tree/v5.2.5). Read the [migration notes](apps/docs/migration.md) before adopting v6.
 
 ---
 
