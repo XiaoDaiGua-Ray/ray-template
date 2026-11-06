@@ -1,1 +1,0 @@
-import{vn as e,yn as t}from"./Close-D8ap5Wyu.js";import{t as n}from"./CacheRouteExample-B2stazRZ.js";var r=t({name:`MultiMenuTwoOne`,render(){return e(n,{title:this.$t(`showcase.multiNestedTitle`),description:this.$t(`showcase.multiNestedDescription`)},null)}});export{r as default};

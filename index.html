@@ -19,11 +19,39 @@
     <meta name="description" content="Ray Template 是基于 Vue 3、TypeScript（TSX）、Vite 和 Naive UI 的开源中后台管理模板，内置权限路由、响应式布局、数据表格和中英文切换。" />
     <meta name="color-scheme" content="light dark" />
     <script>
+      // 入口依赖可能在 main.ts 执行前失败；捕获不冒泡的模块加载错误和窗口求值错误。
+      window.addEventListener(
+        'error',
+        function handleStartupError(event) {
+          const splash = document.getElementById('pre-loading-animation')
+
+          if (!splash) {
+            window.removeEventListener('error', handleStartupError, true)
+            return
+          }
+
+          if (
+            event instanceof ErrorEvent ||
+            (event.target instanceof HTMLScriptElement &&
+              event.target.type === 'module')
+          ) {
+            splash.setAttribute('data-state', 'failed')
+          }
+        },
+        true,
+      )
       try {
         const settings = JSON.parse(
           localStorage.getItem('piniaSettingStore') ||
             'null',
         )
+        document.documentElement.dataset.bootStyle = [
+          'plain',
+          'naive',
+          'material',
+        ].includes(settings?.themeStyle)
+          ? settings.themeStyle
+          : 'modern'
         const mode = settings?.appTheme
         if (mode !== 'auto') {
           const dark =
@@ -42,20 +70,21 @@
         }
       } catch {}
     </script>
-    <style>html.r-template--dark{--lightningcss-light: ;--lightningcss-dark:initial;color-scheme:dark}html.r-template--light{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light}.ray-boot{z-index:1;color:canvastext;color:var(--lightningcss-light,#182436)var(--lightningcss-dark,#e9eef7);background:canvas;text-align:center;background:var(--lightningcss-light,#f8f9fc)var(--lightningcss-dark,#141b27);place-items:center;padding:24px;font:400 14px/1.5 system-ui,sans-serif;display:grid;position:fixed;inset:0}.ray-boot__mark{border-radius:16px;margin:0 auto 16px;display:block}.ray-boot__title{letter-spacing:-.025em;font-size:24px;font-weight:650;display:block}.ray-boot__label{color:inherit;color:var(--lightningcss-light,#52647c)var(--lightningcss-dark,#b3c0d3);margin:4px 0 0}.ray-boot__track{background:currentColor;background:var(--lightningcss-light,#dce4f2)var(--lightningcss-dark,#36435c);border-radius:4px;block-size:3px;inline-size:112px;margin:20px auto 0;display:block;position:relative;overflow:hidden}.ray-boot__track:after{border-radius:inherit;background:highlight;content:"";background:var(--lightningcss-light,#3b63d9)var(--lightningcss-dark,#aabaff);inline-size:40%;animation:1.45s ease-in-out infinite alternate ray-boot-sweep;position:absolute;inset-block:0;inset-inline-start:0}@keyframes ray-boot-sweep{0%{transform:translate(0)}to{transform:translate(150%)}}.ray-boot progress{clip-path:inset(50%);block-size:1px;inline-size:1px;position:absolute}.ray-boot__failure,.ray-boot [lang=en-US],html:lang(en) .ray-boot [lang=zh-CN]{display:none}html:lang(en) .ray-boot [lang=en-US]{display:inline}.ray-boot[data-state=failed] .ray-boot__pending{display:none}.ray-boot[data-state=failed] .ray-boot__failure{display:block}.ray-boot__retry{color:inherit;font:inherit;cursor:pointer;background:0 0;border:1px solid;border-radius:6px;margin-block-start:12px;padding:5px 12px}@media (prefers-reduced-motion:reduce){.ray-boot__track:after{animation:none;transform:translate(75%)}}</style>
+    <style>html.r-template--dark{--lightningcss-light: ;--lightningcss-dark:initial;color-scheme:dark}html.r-template--light{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light}.ray-boot{--boot-canvas:var(--lightningcss-light,#f5f7fb)var(--lightningcss-dark,#101722);--boot-surface:var(--lightningcss-light,#fff)var(--lightningcss-dark,#172131);--boot-line:var(--lightningcss-light,#e4e9f1)var(--lightningcss-dark,#2c394d);--boot-text:var(--lightningcss-light,#1d2a3e)var(--lightningcss-dark,#e9eef7);--boot-muted:var(--lightningcss-light,#52647c)var(--lightningcss-dark,#b3c0d3);--boot-accent:var(--lightningcss-light,#3b63d9)var(--lightningcss-dark,#aabaff);--boot-radius:20px;--boot-shadow:0 2px 6px #00000008;z-index:1;color:var(--boot-text);background:canvas;background:var(--boot-canvas);text-align:center;place-items:center;padding:24px;font:400 14px/1.5 system-ui,sans-serif;display:grid;position:fixed;inset:0}html[data-boot-style=plain] .ray-boot{--boot-canvas:var(--lightningcss-light,#f5f5f5)var(--lightningcss-dark,#161616);--boot-surface:var(--lightningcss-light,#fff)var(--lightningcss-dark,#202020);--boot-line:var(--lightningcss-light,#e0e0e0)var(--lightningcss-dark,#383838);--boot-text:var(--lightningcss-light,#252525)var(--lightningcss-dark,#ededed);--boot-muted:var(--lightningcss-light,#616161)var(--lightningcss-dark,#b9b9b9);--boot-accent:var(--lightningcss-light,#454545)var(--lightningcss-dark,#d5d5d5);--boot-radius:2px;--boot-shadow:none}html[data-boot-style=naive] .ray-boot{--boot-canvas:var(--lightningcss-light,#fff)var(--lightningcss-dark,#101014);--boot-surface:var(--lightningcss-light,#fff)var(--lightningcss-dark,#18181c);--boot-line:var(--lightningcss-light,#efeff5)var(--lightningcss-dark,#343438);--boot-text:var(--lightningcss-light,#333639)var(--lightningcss-dark,#f0f0f0);--boot-muted:var(--lightningcss-light,#666970)var(--lightningcss-dark,#b5b5b8);--boot-accent:var(--lightningcss-light,#18a058)var(--lightningcss-dark,#63e2b7);--boot-radius:4px;--boot-shadow:none}html[data-boot-style=material] .ray-boot{--boot-canvas:var(--lightningcss-light,#f5f1fa)var(--lightningcss-dark,#16121c);--boot-surface:var(--lightningcss-light,#fffaff)var(--lightningcss-dark,#241e2c);--boot-line:var(--lightningcss-light,#e1d8ea)var(--lightningcss-dark,#473c52);--boot-text:var(--lightningcss-light,#201a29)var(--lightningcss-dark,#f1e7fa);--boot-muted:var(--lightningcss-light,#433a50)var(--lightningcss-dark,#ded0e8);--boot-accent:var(--lightningcss-light,#655292)var(--lightningcss-dark,#d6bbff);--boot-radius:28px}.ray-boot__content{animation:.32s ease-out both ray-boot-reveal}.ray-boot__brand{border:1px solid var(--boot-line);border-radius:var(--boot-radius);background:var(--boot-surface);block-size:80px;inline-size:80px;box-shadow:var(--boot-shadow);place-items:center;margin:0 auto 22px;display:grid}.ray-boot__mark{display:block}.ray-boot__title{letter-spacing:-.035em;font-size:24px;font-weight:600;display:block}.ray-boot__label{color:var(--boot-muted);letter-spacing:.015em;margin:14px 0 0;font-size:12px}.ray-boot__track{background:currentColor;background:var(--boot-line);border-radius:1px;block-size:2px;inline-size:112px;margin:24px auto 0;display:block;position:relative;overflow:hidden}.ray-boot__track:after{border-radius:inherit;background:highlight;background:var(--boot-accent);content:"";inline-size:40%;animation:1.4s ease-in-out infinite alternate ray-boot-sweep;position:absolute;inset-block:0;inset-inline-start:0}@keyframes ray-boot-sweep{0%{transform:translate(0)}to{transform:translate(150%)}}@keyframes ray-boot-reveal{0%{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}.ray-boot progress{clip-path:inset(50%);block-size:1px;inline-size:1px;position:absolute}.ray-boot__failure,.ray-boot [lang=en-US],html:lang(en) .ray-boot [lang=zh-CN]{display:none}html:lang(en) .ray-boot [lang=en-US]{display:inline}.ray-boot[data-state=failed] .ray-boot__pending{display:none}.ray-boot[data-state=failed] .ray-boot__failure{display:block}.ray-boot__retry{color:inherit;font:inherit;cursor:pointer;background:0 0;border:1px solid;border-radius:6px;margin-block-start:12px;padding:5px 12px}.ray-boot__retry:focus-visible{outline:2px solid var(--boot-accent);outline-offset:3px}@media (prefers-reduced-motion:reduce){.ray-boot__content{animation:none}.ray-boot__track:after{animation-duration:6s}}@media (forced-colors:active){.ray-boot{color:canvastext;background:canvas}.ray-boot__brand{box-shadow:none;background:canvas;border-color:buttonborder}.ray-boot__label{color:canvastext}.ray-boot__track{border-block-end:2px solid graytext}.ray-boot__track:after{border-block-end:2px solid highlight}}</style>
     <noscript>
       <style>#pre-loading-animation{display:none}</style>
     </noscript>
-    <script type="module" crossorigin src="/ray-template/js/index-B-5Wc_ZA.js"></script>
-    <link rel="modulepreload" crossorigin href="/ray-template/js/toString-BWDzaUQG.js">
-    <link rel="modulepreload" crossorigin href="/ray-template/js/Close-D8ap5Wyu.js">
-    <link rel="modulepreload" crossorigin href="/ray-template/js/_toKey-BqfG5Sv9.js">
+    <script type="module" crossorigin src="/ray-template/js/index-BoslJOO6.js"></script>
+    <link rel="modulepreload" crossorigin href="/ray-template/js/isObject-dxr8ANCS.js">
+    <link rel="modulepreload" crossorigin href="/ray-template/js/runtime-core.esm-bundler-CcpTTixp.js">
+    <link rel="modulepreload" crossorigin href="/ray-template/js/toString-DR1yTSS6.js">
+    <link rel="modulepreload" crossorigin href="/ray-template/js/Card-DWNnI9T1.js">
+    <link rel="modulepreload" crossorigin href="/ray-template/js/cache-BonQsa9B.js">
+    <link rel="modulepreload" crossorigin href="/ray-template/js/_toKey-BmfEqiaH.js">
     <link rel="modulepreload" crossorigin href="/ray-template/js/preload-helper-B5zr4nmU.js">
-    <link rel="modulepreload" crossorigin href="/ray-template/js/utils-BO1jyBmv.js">
-    <link rel="modulepreload" crossorigin href="/ray-template/js/InputNumber-Bc7oBMaF.js">
-    <link rel="modulepreload" crossorigin href="/ray-template/js/schema-rQn3Oa0L.js">
-    <link rel="modulepreload" crossorigin href="/ray-template/js/directives-Cup3lpxw.js">
-    <link rel="stylesheet" crossorigin href="/ray-template/css/directives-Da_zzUIE.css">
+    <link rel="modulepreload" crossorigin href="/ray-template/js/schema-D2Zautpg.js">
+    <link rel="modulepreload" crossorigin href="/ray-template/js/directives-toLJ0LRh.js">
+    <link rel="stylesheet" crossorigin href="/ray-template/css/directives-W43HnI7D.css">
   </head>
   <body>
     <div id="app"></div>
@@ -74,22 +103,24 @@
       </main>
     </noscript>
     <div id="pre-loading-animation" class="ray-boot">
-      <div>
-        <img
-          class="ray-boot__mark"
-          src="/ray-template/ray.svg"
-          width="56"
-          height="56"
-          alt=""
-        />
+      <div class="ray-boot__content">
+        <span class="ray-boot__brand">
+          <img
+            class="ray-boot__mark"
+            src="/ray-template/ray.svg"
+            width="48"
+            height="48"
+            alt=""
+          />
+        </span>
         <strong class="ray-boot__title">Ray Admin</strong>
         <div class="ray-boot__pending">
+          <span class="ray-boot__track" aria-hidden="true"></span>
           <p class="ray-boot__label" id="ray-boot-label">
             <span lang="zh-CN">正在载入工作区</span>
             <span lang="en-US">Loading your workspace</span>
           </p>
           <progress aria-labelledby="ray-boot-label"></progress>
-          <span class="ray-boot__track" aria-hidden="true"></span>
         </div>
         <div class="ray-boot__failure" role="alert">
           <p class="ray-boot__label">

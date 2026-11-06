@@ -1,1 +1,0 @@
-import{vn as e,yn as t}from"./Close-D8ap5Wyu.js";var n=t({name:`DemoResult`,props:{label:{type:String,required:!0},error:Boolean},setup(t,{slots:n}){return()=>e(`div`,{class:[`r-demo-result`,{"r-demo-result--error":t.error}],role:`status`},[e(`span`,{class:`r-demo-result__label`},[t.label]),e(`div`,{class:`r-demo-result__value`},[n.default?.()])])}});export{n as t};

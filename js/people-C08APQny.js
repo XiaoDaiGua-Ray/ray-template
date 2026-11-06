@@ -1,1 +1,0 @@
-var e=e=>[{title:e(`name`),key:`name`,width:112},{title:e(`email`),key:`email`,width:228,ellipsis:{tooltip:!0}},{title:e(`address`),key:`address`,width:150,ellipsis:{tooltip:!0}},{title:e(`age`),key:`age`,width:72,align:`right`},{title:e(`created`),key:`createDate`,width:128},{title:`ID`,key:`id`,width:218,ellipsis:{tooltip:!0}}];export{e as t};

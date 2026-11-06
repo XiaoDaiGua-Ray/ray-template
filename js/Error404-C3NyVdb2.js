@@ -1,0 +1,1 @@
+import{v as e,y as t}from"./runtime-core.esm-bundler-CcpTTixp.js";import{t as n}from"./error-DEi0FZUX.js";var r=t({name:`ErrorPage404`,setup:()=>()=>e(n,{status:`404`},null)});export{r as default};
