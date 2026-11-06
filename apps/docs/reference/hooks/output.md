@@ -25,6 +25,8 @@ import AdminExample from '../../examples/AdminExample.vue'
 
 `options` 也可传 html-to-image 的选项，如 `backgroundColor`、`pixelRatio`、`filter`。`beforeCreate(element)` 在目标检查前调用，`created(result, element)` 在成功后调用；回调的结果类型涵盖全部格式，应先检查类型。`createdError(error)` 接收错误，Promise 仍以 `Error` 拒绝；`finally(element)` 每次都会调用，目标未解析时可能为空。截图要在目标挂载后执行，跨域图片和字体需满足浏览器加载限制。
 
+渲染库在第一次 `create` 时按需加载，未使用截图的页面无需下载该依赖。依赖加载失败也会进入上述错误和清理回调。
+
 ```ts
 import { useDomToImage } from '@/hooks'
 import { ref } from 'vue'

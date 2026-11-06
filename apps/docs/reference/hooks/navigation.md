@@ -8,7 +8,7 @@ import AdminExample from '../../examples/AdminExample.vue'
 
 ## 交互示例
 
-<AdminExample path="/template-hooks" title="导航、首页、标签和标记" focus="useAppNavigation,useAppRoot,useSiderBar,useBadge" layout />
+<AdminExample path="/template-hooks" title="导航、标签和标记" focus="useAppNavigation,useSiderBar,useBadge" layout />
 
 ::: details 查看示例源码
 <<< @/../admin/src/views/demo/template-hooks/index.tsx
@@ -55,17 +55,16 @@ export function useTableNavigation() {
 }
 ```
 
-## useAppRoot
+## useAppRoot（兼容接口）
 
-`getRootRoute`、`getRootPath`、`getRootName` 是计算引用。`setRootRoute({ name?, path? })` 与当前首页信息合并并更新设置，不会当场导航。给首页使用已注册的完整路径，路径和名称一起更新，确保目标页有访问权限。启动时校验首页路径是否在 Router 中。
+此接口已废弃，仅为旧调用方保留历史偏好的读写。`getRootRoute`、`getRootPath`、`getRootName` 是计算引用，`setRootRoute({ name?, path? })` 合并更新该字段；它不再控制登录落点、标签保护或关闭全部后的导航，也没有启动时首页校验。空工作区固定使用 `/welcome`。新代码直接通过 Router 显式导航。
 
 ```ts
-import { useAppRoot } from '@/hooks'
+import { useVueRouter } from '@/hooks'
 
-export function useResetHome() {
-  const { getRootPath, setRootRoute } = useAppRoot()
-  const reset = () => setRootRoute({ name: 'Dashboard', path: '/dashboard' })
-  return { getRootPath, reset }
+export function useOpenWorkspace() {
+  const { router } = useVueRouter()
+  return () => router.replace('/welcome')
 }
 ```
 
@@ -73,14 +72,14 @@ export function useResetHome() {
 
 操作工作区的标签页。接受 `CloseMenuTag` 的方法可传从 0 开始的索引、与标签 `fullPath` 匹配的字符串或标签对象。
 
-| 方法                                                 | 行为                                                     |
-| ---------------------------------------------------- | -------------------------------------------------------- |
-| `getCurrentTagIndex()`                               | 当前标签索引；找不到返回 `-1`。                          |
-| `checkCloseLeft(target)` / `checkCloseRight(target)` | 检查目标对应方向是否有标签可关。                         |
-| `close(target)`                                      | 关闭一个标签。最后一个标签保留。关闭激活项时切到相邻项。 |
-| `closeLeft(target)` / `closeRight(target)`           | 关闭目标左侧或右侧标签。需要时切换至目标。               |
-| `closeOther(target)`                                 | 只保留目标并激活。                                       |
-| `closeAll()`                                         | 在首页路由存在时清空标签并重新激活首页。                 |
+| 方法                                                 | 行为                                                         |
+| ---------------------------------------------------- | ------------------------------------------------------------ |
+| `getCurrentTagIndex()`                               | 当前标签索引；找不到返回 `-1`。                              |
+| `checkCloseLeft(target)` / `checkCloseRight(target)` | 检查目标对应方向是否有标签可关。                             |
+| `close(target)`                                      | 关闭业务标签；激活项切到相邻项，最后一项关闭后进入空工作区。 |
+| `closeLeft(target)` / `closeRight(target)`           | 关闭目标左侧或右侧标签。需要时切换至目标。                   |
+| `closeOther(target)`                                 | 只保留目标并激活。                                           |
+| `closeAll()`                                         | 清空业务标签及其缓存，进入 `/welcome`，不依赖业务首页。      |
 
 不要在存在未保存表单的工作流里直接调用批量关闭；这些方法不会替业务处理未保存确认。
 

@@ -22,16 +22,16 @@ export const renderReport = (url: string) => (
 )
 ```
 
-| 属性                                 | 默认     | 说明                                                                                                       |
-| ------------------------------------ | -------- | ---------------------------------------------------------------------------------------------------------- |
-| `src`                                | 必填     | iframe 地址。接收用户输入时应由业务限制可嵌入来源。                                                        |
-| `width` / `height`                   | `'100%'` | CSS 尺寸。百分比高度依赖父级。                                                                             |
-| `frameborder`                        | `0`      | 模板边框样式变量。                                                                                         |
-| `iframeWrapperClass` / `iframeClass` | 无       | 外层容器与原生 iframe 的类名。                                                                             |
-| `title` / `name` / `allow`           | 无       | 原生 iframe 属性。`title` 用于辅助技术识别。                                                               |
-| `lazy`                               | `true`   | 字符串 `'lazy'` 或 `'eager'`。当前实现把布尔 `true` 和 `false` 都映射为 `'lazy'`，主动加载请写 `'eager'`。 |
-| `customSpinProps`                    | `{}`     | NSpin 配置，`show` 由组件内状态覆盖。                                                                      |
+| 属性                                 | 默认     | 说明                                                       |
+| ------------------------------------ | -------- | ---------------------------------------------------------- |
+| `src`                                | 必填     | iframe 地址。接收用户输入时应由业务限制可嵌入来源。        |
+| `width` / `height`                   | `'100%'` | CSS 尺寸。百分比高度依赖父级。                             |
+| `frameborder`                        | `0`      | 模板边框样式变量。                                         |
+| `iframeWrapperClass` / `iframeClass` | 无       | 外层容器与原生 iframe 的类名。                             |
+| `title` / `name` / `allow`           | 无       | 原生 iframe 属性。`title` 用于辅助技术识别。               |
+| `lazy`                               | `true`   | `true` / `'lazy'` 延迟加载，`false` / `'eager'` 主动加载。 |
+| `customSpinProps`                    | `{}`     | NSpin 配置，`show` 由组件内状态覆盖。                      |
 
-`onSuccess(iframe, event)` 和 `onError` 支持函数或回调数组。当前错误分支只传 `event`，与 Props 类型声明的双参数有差异；需要处理错误时不要假定有元素参数。首次 `load` / `error` 后关闭 Spin，当前实现不在 `src` 变更时重置加载状态；每次切换地址都要显示加载时可给组件不同的 `key`。`iframeInst` 是组件实际暴露的 DOM 引用。额外插槽交给 Spin，但默认内容始终为 iframe。
+`onSuccess(iframe, event)` 和 `onError(event)` 支持函数或回调数组。每次 `src` 变化都会重新显示 Spin，在 `load` / `error` 后关闭。组件 ref 上的 `iframe` 和兼容别名 `iframeInst` 都是原生 DOM 元素（尚未挂载时为 `null`）；Vue 已自动解包，无需再访问 `.value`。额外插槽交给 Spin，但默认内容始终为 iframe。
 
 [组件实现](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/packages/ui/src/RIframe/src/Iframe.tsx) · [Props](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/packages/ui/src/RIframe/src/props.ts)

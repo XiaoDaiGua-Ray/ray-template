@@ -1,7 +1,7 @@
 import type { Recordable } from '@ray-template/utils/types'
 import { cloneDeep } from 'lodash-es'
 import type { Ref } from 'vue'
-import { ref, shallowRef } from 'vue'
+import { onScopeDispose, ref, shallowRef } from 'vue'
 import type {
   FormValidateCallback,
   RFormInst,
@@ -11,31 +11,14 @@ import type {
 
 /**
  *
+ * @param model 初始模型或每次创建模型的工厂
+ * @param rules 校验规则或每次创建规则的工厂
+ *
  * @description
- * 获取 RForm 实例。
- * 让你能够便捷的调用相关的一些已封装方法。
+ * 管理表单模型、规则与实例方法。对象输入深拷贝，工厂自行保证返回独立对象；
+ * 实例操作必须先通过 RForm 的 onRegister 绑定注册函数。
  *
- * @warning
- * 值得注意的是，必须手动调用 register 方法，否则不能正常使用。
- * 在使用 相关 hooks 的时候，需要注意生命周期，确保 register 方法已经被调用与表格实例已经被初始化；
- * 不要在父组件 create 阶段就去调用 hook，如果需要，请使用 nextTick 包裹。
- *
- * @example
- * defineComponent({
- *   setup() {
- *     const [register, { ...Hooks }] = useForm()
- *
- *     return {
- *      register,
- *      ...Hooks,
- *     }
- *   },
- *   render() {
- *     const { register, ...Hooks } = this
- *
- *     return <RForm onRegister={register} />
- *   },
- * })
+ * @returns 注册函数、响应式模型与表单操作方法
  */
 const useForm = <
   T extends Recordable = Recordable,
@@ -47,12 +30,30 @@ const useForm = <
   const formRef = shallowRef<RFormInst>()
   const formModelRef = ref<T>()
 
+  /**
+   *
+   * @param inst 挂载后的 Naive UI 表单实例
+   *
+   * @description
+   * 注册表单，并在所属组件卸载时清理同一实例的引用。
+   */
   const register = (inst: RFormInst) => {
     if (inst) {
       formRef.value = inst
+      onScopeDispose(() => {
+        if (formRef.value === inst) formRef.value = void 0
+      }, true)
     }
   }
 
+  /**
+   *
+   * @description
+   * 读取已注册且仍挂载的表单。
+   *
+   * @returns 当前表单实例
+   * @throws 未注册或表单已卸载时抛错
+   */
   const getFormInstance = () => {
     if (!formRef.value) {
       throw new Error(
@@ -63,7 +64,11 @@ const useForm = <
     return formRef.value
   }
 
-  // 初始化 formModelRef 的值，根据 model 的类型进行初始化
+  /**
+   *
+   * @description
+   * 为当前 Hook 建立初始模型；对象输入深拷贝，工厂结果直接使用。
+   */
   const initialFormModel = () => {
     if (typeof model === 'function') {
       formModelRef.value = model() ?? ({} as T)
@@ -74,8 +79,14 @@ const useForm = <
 
   /**
    *
+   * @param callback 校验完成回调
+   * @param shouldRuleBeApplied 选择本次需要执行的规则
+   *
    * @description
    * 验证表单，Promise rejection 的返回值类型是 FormValidationError[]。
+   *
+   * @returns Naive UI 校验 Promise
+   * @throws 尚未注册时抛错，校验失败时 Promise 拒绝
    *
    * @see https://www.naiveui.com/zh-CN/dark/components/form#inline.vue
    */
@@ -88,6 +99,8 @@ const useForm = <
    *
    * @description
    * 还原表单到未验证状态。
+   *
+   * @throws 尚未注册或表单已卸载时抛错
    *
    * @see https://www.naiveui.com/zh-CN/dark/components/form#Form-Methods
    */
@@ -137,6 +150,8 @@ const useForm = <
    * 获取验证表单项的规则。
    *
    * 调用该方法时，需要确保初始化 useForm 方法的时候传入了 rules，否则可能有意想不到的问题发生。
+   *
+   * @returns 工厂返回的规则或初始化规则的深拷贝，未配置时为空对象
    */
   const formRules = () => {
     if (typeof rules === 'function') {
@@ -150,10 +165,6 @@ const useForm = <
    *
    * @param values 需要重置的表单值，该参数会覆盖初始化值
    *
-   * @warning
-   * 请注意初始化值的问题，如果设置初始化值为 undefined，
-   * 则会导致 reset 初始化操作失败，必须使用 null 作为初始化的空值。
-   *
    * @description
    * 重置表单的值，依赖 useForm 传入的初始化值。
    * 该方法会将初始化传入的值视为整个表单的初始化绑定值。
@@ -162,7 +173,7 @@ const useForm = <
    * 所以，最佳的实践应该是初始化 useForm 方法的时候，就应该确定好初始化值。
    * 然后，在需要重置表单的时候，直接调用该方法即可。
    */
-  const reset = <Values extends T = T>(values?: Values & Recordable) => {
+  const reset = <Values extends Partial<T> = Partial<T>>(values?: Values) => {
     formModelRef.value = Object.assign(
       formModelRef.value as T,
       formModel(),
@@ -182,6 +193,9 @@ const useForm = <
    *
    * 注意，该方法想要正常运转，需要在定义 rules 时定义唯一 key；
    * 否则，该逻辑执行会失败。
+   *
+   * @returns 匹配规则的校验 Promise
+   * @throws key 为空、实例不可用时抛错，校验失败时 Promise 拒绝
    *
    * @example
    * const [register, { validateTargetField }] = useForm(
@@ -215,9 +229,10 @@ const useForm = <
 
   /**
    *
+   * @param values 需要浅合并到当前模型的字段，不修改初始模型
+   *
    * @description
-   * 更新表单的值，该方法会覆盖初始化值。
-   * 推荐在表单组件中使用该方法，而不是直接修改表单的值，符合函数式的理念。
+   * 更新当前模型，保留对象引用和未提供的字段。
    *
    * @example
    * const [register, { updateFormCondition }] = useForm(
@@ -230,7 +245,7 @@ const useForm = <
    *  name: 'John',
    * })
    */
-  const updateFormCondition = (values: T & Recordable) => {
+  const updateFormCondition = (values: Partial<T>) => {
     formModelRef.value = Object.assign(formModelRef.value as T, values)
   }
 

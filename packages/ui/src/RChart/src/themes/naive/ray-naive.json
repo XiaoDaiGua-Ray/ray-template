@@ -53,11 +53,11 @@
     },
     "axisPointer": {
       "lineStyle": {
-        "color": "rgb(224, 224, 230)",
+        "color": "rgb(118, 124, 130)",
         "type": "solid"
       },
       "crossStyle": {
-        "color": "rgb(224, 224, 230)",
+        "color": "rgb(118, 124, 130)",
         "type": "solid"
       },
       "label": {

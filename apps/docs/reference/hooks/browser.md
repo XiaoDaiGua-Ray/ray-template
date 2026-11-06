@@ -46,7 +46,7 @@ export function useListDensity() {
 | `zIndex`                         | 指定层级；省略时随进入顺序分配。                     |
 | `backgroundColor` / `transition` | 指定背景与过渡。传 `'none'` 关闭过渡。               |
 
-退出和卸载都会恢复原行内样式并取消待处理动画帧。作用域销毁会直接恢复，随后执行 `exit` 回调。若交互需要 Esc 或按钮关闭，页面应绑定 `exit()`。
+退出和卸载都会恢复原行内样式并取消待处理动画帧。作用域销毁会直接恢复，随后执行 `exit` 回调；销毁后旧实例不能再次进入全屏。若交互需要 Esc 或按钮关闭，页面应绑定 `exit()`。
 
 ```ts
 import { useElementFullscreen } from '@/hooks'

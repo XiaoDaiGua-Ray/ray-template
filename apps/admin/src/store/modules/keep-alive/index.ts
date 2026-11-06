@@ -41,10 +41,24 @@ export const piniaKeepAliveStore = defineStore(
     // 获取当前缓存队列
     const getKeepAliveInclude = () => state.keepAliveInclude
 
+    /**
+     *
+     * @param names 当前仍打开且允许访问的业务组件名称
+     *
+     * @description
+     * 移除已关闭或失去权限的页面缓存，空工作区不会保留隐式首页。
+     */
+    const retainKeepAliveInclude = (names: ReadonlySet<string>) => {
+      state.keepAliveInclude = state.keepAliveInclude.filter((name) =>
+        names.has(name),
+      )
+    }
+
     return {
       ...toRefs(state),
       setKeepAliveInclude,
       getKeepAliveInclude,
+      retainKeepAliveInclude,
     }
   },
   {

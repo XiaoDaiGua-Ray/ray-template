@@ -270,7 +270,10 @@ export default defineComponent({
                                     )}
                                     <span>{option.breadcrumbLabel}</span>
                                     {option.meta.windowOpen && (
-                                      <RIcon name="action/shared" size={14} />
+                                      <RIcon
+                                        name="action/external-link"
+                                        size={14}
+                                      />
                                     )}
                                   </button>
                                   <NButton

@@ -1,4 +1,12 @@
 {
+  "tableControls": "表格工具",
+  "moreActions": "更多操作",
+  "copyImage": "复制表格图片",
+  "copyingImage": "正在复制表格图片…",
+  "copyImageSuccess": "表格图片已复制",
+  "copyImageUnsupported": "当前浏览器无法复制 PNG 图片，请使用支持此功能的浏览器，并通过 HTTPS 或 localhost 访问。",
+  "copyImagePermission": "剪贴板访问被拒绝，请允许剪贴板权限后重试。",
+  "copyImageError": "表格图片复制失败，请检查表格中的图片和字体后重试。",
   "httpSource": "本地 Mock 接口",
   "localSource": "本地示例数据",
   "directory": "人员列表",

@@ -30,7 +30,7 @@ import AdminExample from '../examples/AdminExample.vue'
 
 1. 复制某行姓名或邮箱的一部分，填入上方筛选区并提交。查询回到第 1 页，分页使用筛选后的总数。
 2. 清除条件后排序「年龄」并翻页。年龄排序通过 `onUpdateSorter` 转成 `params.sortAge`，在分页前作用于整个结果集。
-3. 分别在两页勾选行；工具栏显示跨页选中总数。「导出 CSV」依然导出当前页可见数据列。
+3. 分别在两页勾选行；工具栏显示跨页选中总数。「更多操作 → 导出 CSV」导出当前页可见数据列。
 4. 点击「模拟请求失败」，观察旧行清空和错误提示；点击「刷新」恢复。传给 `request` 的 `signal` 可转交给 HTTP 客户端。
 
 <AdminExample path="/tables/remote" title="远端查询、服务端排序与重试" :height="695" deferred />
@@ -105,9 +105,13 @@ import AdminExample from '../examples/AdminExample.vue'
 <<< ../../admin/src/views/demo/tables/custom.tsx
 :::
 
+## 复制图片
+
+在上方任意完整表格点击「复制表格图片」，再粘贴到支持图片的聊天或文档。可先在列设置中隐藏、固定列，或横向滚动后复制，对比当前表格可视区域。虚拟滚动只复制当前已渲染的可视内容；不会补齐全部行。入口默认显示，可用 `showCopyImage={false}` 隐藏；打印入口仍然默认隐藏。
+
 ## 打印与 CSV
 
-先按姓名筛选，或在列设置中隐藏一列。点击工具栏的打印图标，预览当前页可见数据列。再点击「打印独立摘要」，预览 `print({ target })` 指向的自定义区域；该区域可有自己的版式。只需查看时，在浏览器的打印对话框选择取消即可。
+本例显式设置 `showPrint`。先按姓名筛选，或在列设置中隐藏一列，再点击「更多操作 → 打印表格」，预览当前页可见数据列；默认表格不会显示打印入口。点击「打印独立摘要」可预览 `print({ target })` 指向的自定义区域。只需查看时，在浏览器的打印对话框选择取消即可。
 
 <AdminExample path="/tables/printing" title="打印当前页与打印自定义区域" :height="710" deferred />
 

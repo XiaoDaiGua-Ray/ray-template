@@ -4,6 +4,7 @@ import AppShareLink from '@/app-components/app/AppShareLink'
 import { RIcon } from '@/components'
 import { useI18n } from '@/hooks'
 import { useMenuGetters } from '@/store'
+import type { AppMenuOption } from '@/types'
 import { NCard, NDescriptions, NDescriptionsItem } from 'naive-ui'
 import { RouterLink } from 'vue-router'
 
@@ -43,18 +44,28 @@ export default defineComponent({
       },
       {
         path: '/svg-icons',
-        icon: 'directional/resize_h',
+        icon: 'navigation/icons',
         title: 'icons',
         description: 'iconsDescription',
       },
     ] as const
-    const shortcuts = computed(() =>
-      destinations.filter((item) =>
-        getMenuOptions.value.some(
-          (menu) => menu.fullPath === item.path && menu.show !== false,
-        ),
-      ),
-    )
+    const shortcuts = computed(() => {
+      const visiblePaths = new Set<string>()
+      const collect = (menus: AppMenuOption[]) => {
+        for (const menu of menus) {
+          // 菜单树已经按角色过滤；隐藏任一祖先时，整条分支都不能成为快捷入口。
+          if (menu.show === false) continue
+
+          if (!menu.meta.windowOpen) visiblePaths.add(menu.fullPath)
+
+          if (menu.children?.length) collect(menu.children)
+        }
+      }
+
+      collect(getMenuOptions.value)
+
+      return destinations.filter(({ path }) => visiblePaths.has(path))
+    })
 
     return () => (
       <section class="r-dashboard">
@@ -96,7 +107,7 @@ export default defineComponent({
                   </span>
                   <RIcon
                     class="r-dashboard-shortcut__arrow"
-                    name="directional/expanded"
+                    name="directional/right_arrow"
                     size={14}
                   />
                 </RouterLink>
@@ -120,7 +131,7 @@ export default defineComponent({
                 target="_blank"
                 rel="noreferrer"
               >
-                GitHub Issues <RIcon name="action/shared" size={12} />
+                GitHub Issues <RIcon name="action/external-link" size={12} />
               </a>
               {text('feedbackAfter')}
             </p>

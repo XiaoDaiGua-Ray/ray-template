@@ -44,6 +44,7 @@ export interface SettingState {
   copyrightSwitch: boolean
   contentTransition: string
   watermarkConfig: WatermarkConfig
+  /** 历史兼容偏好，不参与默认导航或标签保护。 */
   appRootRoute: AppRootRoute
   /**
    *

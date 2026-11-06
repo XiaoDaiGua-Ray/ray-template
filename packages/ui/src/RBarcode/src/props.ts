@@ -158,7 +158,7 @@ const props = {
    * @description
    * 是否启用响应式尺寸，当容器大小变化时自动重新渲染条形码。
    *
-   * 如果启用了该属性，width 和 height 配置项将失效。
+   * width 或 height 为 'responsive' 时按容器尺寸计算对应维度，固定尺寸仍然保留。
    *
    * @default false
    */

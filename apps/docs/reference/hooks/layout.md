@@ -37,7 +37,7 @@ export function useReportLayout() {
 | `openSpin()` / `closeSpin()` | 开关布局内容区的加载动画，不改变应用全局 Spin。 |
 | `reload(wait?)`              | 卸载当前内容后重新挂载，缺省等待 800ms。        |
 
-只想表示请求未完成时使用 Spin，并在 `finally` 关闭。`reload` 会丢失当前页面未持久化的本地状态；多次重载时，Runtime Store 只保留最后一次恢复计时。
+内容区用细线进度与普通文本提示呈现加载；`openSpin` 持续超过 120ms 才显示，短操作不会闪烁，`reload` 则立即显示。只想表示请求未完成时调用 `openSpin`，并在 `finally` 用 `closeSpin` 关闭。`reload` 会丢失当前页面未持久化的本地状态；多次重载时，Runtime Store 只保留最后一次恢复计时。
 
 ```ts
 import { useSpinning } from '@/hooks'

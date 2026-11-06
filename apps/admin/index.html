@@ -8,11 +8,39 @@
     <meta name="description" content="<%= siteInfo.description %>" />
     <meta name="color-scheme" content="light dark" />
     <script>
+      // 入口依赖可能在 main.ts 执行前失败；捕获不冒泡的模块加载错误和窗口求值错误。
+      window.addEventListener(
+        'error',
+        function handleStartupError(event) {
+          const splash = document.getElementById('pre-loading-animation')
+
+          if (!splash) {
+            window.removeEventListener('error', handleStartupError, true)
+            return
+          }
+
+          if (
+            event instanceof ErrorEvent ||
+            (event.target instanceof HTMLScriptElement &&
+              event.target.type === 'module')
+          ) {
+            splash.setAttribute('data-state', 'failed')
+          }
+        },
+        true,
+      )
       try {
         const settings = JSON.parse(
           localStorage.getItem('<%= storageKeys.appPiniaSettingStore %>') ||
             'null',
         )
+        document.documentElement.dataset.bootStyle = [
+          'plain',
+          'naive',
+          'material',
+        ].includes(settings?.themeStyle)
+          ? settings.themeStyle
+          : 'modern'
         const mode = settings?.appTheme
         if (mode !== 'auto') {
           const dark =
@@ -40,6 +68,14 @@
       }
 
       .ray-boot {
+        --boot-canvas: light-dark(#f5f7fb, #101722);
+        --boot-surface: light-dark(#fff, #172131);
+        --boot-line: light-dark(#e4e9f1, #2c394d);
+        --boot-text: light-dark(#1d2a3e, #e9eef7);
+        --boot-muted: light-dark(#52647c, #b3c0d3);
+        --boot-accent: light-dark(#3b63d9, #aabaff);
+        --boot-radius: 20px;
+        --boot-shadow: 0 2px 6px rgb(0 0 0 / 3%);
         position: fixed;
         z-index: 1;
         inset: 0;
@@ -47,32 +83,80 @@
         place-items: center;
         padding: 24px;
         color: CanvasText;
-        color: light-dark(#182436, #e9eef7);
+        color: var(--boot-text);
         background: Canvas;
-        background: light-dark(#f8f9fc, #141b27);
+        background: var(--boot-canvas);
         font:
           400 14px / 1.5 system-ui,
           sans-serif;
         text-align: center;
       }
 
+      html[data-boot-style='plain'] .ray-boot {
+        --boot-canvas: light-dark(#f5f5f5, #161616);
+        --boot-surface: light-dark(#fff, #202020);
+        --boot-line: light-dark(#e0e0e0, #383838);
+        --boot-text: light-dark(#252525, #ededed);
+        --boot-muted: light-dark(#616161, #b9b9b9);
+        --boot-accent: light-dark(#454545, #d5d5d5);
+        --boot-radius: 2px;
+        --boot-shadow: none;
+      }
+
+      html[data-boot-style='naive'] .ray-boot {
+        --boot-canvas: light-dark(#fff, #101014);
+        --boot-surface: light-dark(#fff, #18181c);
+        --boot-line: light-dark(#efeff5, #343438);
+        --boot-text: light-dark(#333639, #f0f0f0);
+        --boot-muted: light-dark(#666970, #b5b5b8);
+        --boot-accent: light-dark(#18a058, #63e2b7);
+        --boot-radius: 4px;
+        --boot-shadow: none;
+      }
+
+      html[data-boot-style='material'] .ray-boot {
+        --boot-canvas: light-dark(#f5f1fa, #16121c);
+        --boot-surface: light-dark(#fffaff, #241e2c);
+        --boot-line: light-dark(#e1d8ea, #473c52);
+        --boot-text: light-dark(#201a29, #f1e7fa);
+        --boot-muted: light-dark(#433a50, #ded0e8);
+        --boot-accent: light-dark(#655292, #d6bbff);
+        --boot-radius: 28px;
+      }
+
+      .ray-boot__content {
+        animation: ray-boot-reveal 320ms ease-out both;
+      }
+
+      .ray-boot__brand {
+        display: grid;
+        place-items: center;
+        inline-size: 80px;
+        block-size: 80px;
+        margin: 0 auto 22px;
+        border: 1px solid var(--boot-line);
+        border-radius: var(--boot-radius);
+        background: var(--boot-surface);
+        box-shadow: var(--boot-shadow);
+      }
+
       .ray-boot__mark {
         display: block;
-        margin: 0 auto 16px;
-        border-radius: 16px;
       }
 
       .ray-boot__title {
         display: block;
         font-size: 24px;
-        font-weight: 650;
-        letter-spacing: -0.025em;
+        font-weight: 600;
+        letter-spacing: -0.035em;
       }
 
       .ray-boot__label {
-        margin: 4px 0 0;
+        margin: 14px 0 0;
         color: inherit;
-        color: light-dark(#52647c, #b3c0d3);
+        color: var(--boot-muted);
+        font-size: 12px;
+        letter-spacing: 0.015em;
       }
 
       .ray-boot__track {
@@ -80,11 +164,11 @@
         position: relative;
         overflow: hidden;
         inline-size: 112px;
-        block-size: 3px;
-        margin: 20px auto 0;
-        border-radius: 4px;
+        block-size: 2px;
+        margin: 24px auto 0;
+        border-radius: 1px;
         background: currentColor;
-        background: light-dark(#dce4f2, #36435c);
+        background: var(--boot-line);
       }
 
       .ray-boot__track::after {
@@ -94,8 +178,8 @@
         inline-size: 40%;
         border-radius: inherit;
         background: Highlight;
-        background: light-dark(#3b63d9, #aabaff);
-        animation: ray-boot-sweep 1.45s ease-in-out infinite alternate;
+        background: var(--boot-accent);
+        animation: ray-boot-sweep 1.4s ease-in-out infinite alternate;
         content: '';
       }
 
@@ -105,6 +189,17 @@
         }
         to {
           transform: translateX(150%);
+        }
+      }
+
+      @keyframes ray-boot-reveal {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
       }
 
@@ -147,10 +242,43 @@
         cursor: pointer;
       }
 
+      .ray-boot__retry:focus-visible {
+        outline: 2px solid var(--boot-accent);
+        outline-offset: 3px;
+      }
+
       @media (prefers-reduced-motion: reduce) {
-        .ray-boot__track::after {
+        .ray-boot__content {
           animation: none;
-          transform: translateX(75%);
+        }
+
+        .ray-boot__track::after {
+          animation-duration: 6s;
+        }
+      }
+
+      @media (forced-colors: active) {
+        .ray-boot {
+          color: CanvasText;
+          background: Canvas;
+        }
+
+        .ray-boot__brand {
+          border-color: ButtonBorder;
+          background: Canvas;
+          box-shadow: none;
+        }
+
+        .ray-boot__label {
+          color: CanvasText;
+        }
+
+        .ray-boot__track {
+          border-block-end: 2px solid GrayText;
+        }
+
+        .ray-boot__track::after {
+          border-block-end: 2px solid Highlight;
         }
       }
     </style>
@@ -179,22 +307,24 @@
       </main>
     </noscript>
     <div id="pre-loading-animation" class="ray-boot">
-      <div>
-        <img
-          class="ray-boot__mark"
-          src="/ray.svg"
-          width="56"
-          height="56"
-          alt=""
-        />
+      <div class="ray-boot__content">
+        <span class="ray-boot__brand">
+          <img
+            class="ray-boot__mark"
+            src="/ray.svg"
+            width="48"
+            height="48"
+            alt=""
+          />
+        </span>
         <strong class="ray-boot__title"><%= preloadingConfig.title %></strong>
         <div class="ray-boot__pending">
+          <span class="ray-boot__track" aria-hidden="true"></span>
           <p class="ray-boot__label" id="ray-boot-label">
             <span lang="zh-CN">正在载入工作区</span>
             <span lang="en-US">Loading your workspace</span>
           </p>
           <progress aria-labelledby="ray-boot-label"></progress>
-          <span class="ray-boot__track" aria-hidden="true"></span>
         </div>
         <div class="ray-boot__failure" role="alert">
           <p class="ray-boot__label">

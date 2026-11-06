@@ -40,6 +40,48 @@ const mountPersistedSettings = () => {
 }
 
 describe('layout preferences', () => {
+  it.each([
+    { title: 'Ray Admin', migrated: '/welcome' },
+    { title: 'Custom workspace', migrated: '/dashboard' },
+  ])(
+    'migrates only the legacy default logo target ($title)',
+    ({ title, migrated }) => {
+      localStorage.setItem(
+        APP_CATCH_KEY.appPiniaSettingStore,
+        JSON.stringify({
+          sideBarLogo: {
+            icon: 'logo/ray',
+            title,
+            url: '/dashboard',
+            jumpType: 'station',
+          },
+          appRootRoute: { name: 'Old', path: '/old-unregistered-home' },
+        }),
+      )
+      const first = mountPersistedSettings()
+      const store = piniaSettingStore()
+
+      expect(store.sideBarLogo?.url).toBe(migrated)
+      expect(store.appRootRoute.path).toBe('/old-unregistered-home')
+      store.updateSettingState('sideBarLogo', { url: '/dashboard' })
+      store.$persist()
+      first.app.unmount()
+      disposePinia(first.pinia)
+      const second = mountPersistedSettings()
+
+      try {
+        expect(piniaSettingStore().sideBarLogo?.url).toBe('/dashboard')
+        expect(
+          piniaSettingStore().exportPreferences().preferences,
+        ).not.toHaveProperty('workspaceLandingMigrated')
+      } finally {
+        second.app.unmount()
+        disposePinia(second.pinia)
+        localStorage.removeItem(APP_CATCH_KEY.appPiniaSettingStore)
+      }
+    },
+  )
+
   it('adds defaults and bounds persisted or programmatic invalid values', () => {
     expect(normalizeLayoutConfig(null)).toEqual(
       getDefaultSettingConfig().layoutConfig,

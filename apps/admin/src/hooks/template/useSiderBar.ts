@@ -1,10 +1,6 @@
-import { NOT_FOUND_ROUTE_PATH } from '@/router/constant'
-import { validRole } from '@/router/utils/valid-role'
+import { WELCOME_ROUTE_PATH } from '@/router/constant'
 import { useMenuActions, useMenuGetters } from '@/store'
-import { pickRouteRecordNormalizedConstant } from '@/store/modules/menu/constant'
-import type { AppMenuOption, Key, MenuTagOptions } from '@/types'
-import { pick } from 'lodash-es'
-import { useAppRoot } from './useAppRoot'
+import type { Key, MenuTagOptions } from '@/types'
 import { useVueRouter } from './useVueRouter'
 
 export type CloseMenuTag = Key | MenuTagOptions
@@ -38,23 +34,32 @@ const normalMenuTagOption = (target: CloseMenuTag, fn: string) => {
   return { option: tags[index], index }
 }
 
+/**
+ *
+ * @returns 标签页检查与关闭方法；状态由共享菜单 Store 持有。
+ */
 export function useSiderBar() {
-  const { getMenuTagOptions, getMenuKey } = useMenuGetters()
-  const {
-    changeMenuModelValue,
-    spliceMenTagOptions,
-    setMenuTagOptions,
-    resolveOption,
-  } = useMenuActions()
+  const { getMenuTagOptions, getCurrentMenuOption } = useMenuGetters()
+  const { router } = useVueRouter()
+  const { changeMenuModelValue, spliceMenTagOptions, setMenuTagOptions } =
+    useMenuActions()
 
-  // 获取当前激活标签页索引位置
+  /**
+   *
+   * @returns 当前激活标签的索引；未找到时为 -1。
+   */
   const getCurrentTagIndex = () => {
     return getMenuTagOptions.value.findIndex(
-      (curr) => curr.fullPath === getMenuKey.value,
+      (curr) => curr.fullPath === getCurrentMenuOption.value?.fullPath,
     )
   }
 
-  // 校验指定标签右侧是否有可关闭的标签
+  /**
+   *
+   * @param target 标签对象、索引或路径
+   *
+   * @returns 目标右侧是否还有标签；目标无效时返回 false。
+   */
   const checkCloseRight = (target: CloseMenuTag) => {
     const normal = normalMenuTagOption(target, 'checkCloseRight')
 
@@ -68,63 +73,67 @@ export function useSiderBar() {
     return false
   }
 
-  // 校验指定标签左侧是否有可关闭的标签
+  /**
+   *
+   * @param target 标签对象、索引或路径
+   *
+   * @returns 目标左侧是否还有标签；目标无效时返回 false。
+   */
   const checkCloseLeft = (target: CloseMenuTag) => {
     const normal = normalMenuTagOption(target, 'checkCloseLeft')
 
     return !!normal && normal.index > 0
   }
 
-  // 关闭当前标签
+  /**
+   *
+   * @param target 要关闭的标签对象、索引或路径
+   *
+   * @description
+   * 所有业务标签都可关闭；关闭最后一项进入空工作区，其余激活项切换到相邻标签。
+   *
+   * @returns 需要跳转时返回 Router 导航结果。
+   */
   const close = (target: CloseMenuTag) => {
     const normal = normalMenuTagOption(target, 'close')
 
-    if (getMenuTagOptions.value.length === 1) {
-      return
-    }
-
     if (normal) {
       const { index, option } = normal
+      const active = option.fullPath === getCurrentMenuOption.value?.fullPath
 
       spliceMenTagOptions(index)
 
-      if (option.fullPath === getMenuKey.value) {
+      if (!getMenuTagOptions.value.length)
+        return router.replace(WELCOME_ROUTE_PATH)
+
+      if (active) {
         const tag = getMenuTagOptions.value[Math.max(0, index - 1)]
 
-        tag && changeMenuModelValue(tag.fullPath, tag)
+        return tag && changeMenuModelValue(tag.fullPath, tag)
       }
     }
   }
 
-  // 关闭所有标签并且导航至 root path
+  /**
+   *
+   * @description
+   * 清空所有业务标签及其缓存，然后进入空工作区；不依赖任何业务首页。
+   *
+   * @returns Router 导航结果。
+   */
   const closeAll = () => {
-    const { getRootPath } = useAppRoot()
-    const { router } = useVueRouter()
-    const home = router.resolve(getRootPath.value)
-    const record = home.matched.at(-1)
+    setMenuTagOptions([], false)
 
-    if (
-      !record ||
-      record.path === NOT_FOUND_ROUTE_PATH ||
-      record.redirect ||
-      !validRole(home.meta)
-    )
-      return
-
-    const option = resolveOption({
-      ...(pick(
-        record,
-        pickRouteRecordNormalizedConstant,
-      ) as unknown as AppMenuOption),
-      fullPath: home.path,
-    })
-
-    setMenuTagOptions(option, false)
-
-    return changeMenuModelValue(home.path, option, home.query)
+    return router.replace(WELCOME_ROUTE_PATH)
   }
 
-  // 目标标签页右侧所有标签页
+  /**
+   *
+   * @param target 要保留的边界标签对象、索引或路径
+   *
+   * @description
+   * 关闭右侧标签；激活项被移除时切换到边界标签。
+   */
   const closeRight = (target: CloseMenuTag) => {
     const normal = normalMenuTagOption(target, 'closeRight')
 
@@ -135,15 +144,18 @@ export function useSiderBar() {
 
       spliceMenTagOptions(index + 1, spliceLength)
 
-      if (index <= currentIndex) {
-        if (getMenuKey.value !== option.fullPath) {
-          changeMenuModelValue(option.fullPath, option)
-        }
-      }
+      if (currentIndex > index)
+        return changeMenuModelValue(option.fullPath, option)
     }
   }
 
-  // 关闭目标标签页左侧所有标签页
+  /**
+   *
+   * @param target 要保留的边界标签对象、索引或路径
+   *
+   * @description
+   * 关闭左侧标签；激活项被移除时切换到边界标签。
+   */
   const closeLeft = (target: CloseMenuTag) => {
     const normal = normalMenuTagOption(target, 'closeLeft')
 
@@ -153,27 +165,28 @@ export function useSiderBar() {
 
       spliceMenTagOptions(0, index)
 
-      if (currentIndex <= index) {
-        if (getMenuKey.value !== option.fullPath) {
-          changeMenuModelValue(option.fullPath, option)
-        }
-      }
+      if (currentIndex >= 0 && currentIndex < index)
+        return changeMenuModelValue(option.fullPath, option)
     }
   }
 
-  // 关闭除了当前索引的所有菜单项
+  /**
+   *
+   * @param target 要保留的标签对象、索引或路径
+   *
+   * @description
+   * 仅保留并激活目标标签；目标无效时不操作。
+   */
   const closeOther = (target: CloseMenuTag) => {
     const normal = normalMenuTagOption(target, 'closeOther')
 
     if (normal) {
       const { option } = normal
 
-      if (getMenuKey.value !== option.fullPath) {
-        spliceMenTagOptions(0, getMenuTagOptions.value.length)
-        changeMenuModelValue(option.fullPath, option)
-      } else {
-        setMenuTagOptions(option, false)
-      }
+      setMenuTagOptions(option, false)
+
+      if (getCurrentMenuOption.value?.fullPath !== option.fullPath)
+        return changeMenuModelValue(option.fullPath, option)
     }
   }
 

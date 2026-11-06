@@ -1,5 +1,45 @@
 .error-page {
-  width: 100%;
-  height: 100vh;
-  @include flexCenter;
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  min-inline-size: 0;
+  min-block-size: max(
+    440px,
+    calc(
+      var(--layout-content-height, 100dvh) - 2 *
+        var(--layout-content-gutter, 20px)
+    )
+  );
+  padding: 40px 12px;
+  color: var(--r-text);
+
+  > .n-result {
+    inline-size: min(100%, 560px);
+  }
+
+  &__mark {
+    display: flex;
+    justify-content: center;
+    margin-block-end: 24px;
+    color: var(--r-primary-text);
+    font-family: var(--r-font-mono);
+    font-size: clamp(64px, 16cqi, 100px);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.08em;
+  }
+
+  .r-page-header {
+    display: block;
+    text-align: center;
+  }
+
+  .r-page-header__description {
+    max-inline-size: 46ch;
+    margin-inline: auto;
+  }
+
+  .n-result-footer {
+    margin-block-start: 28px;
+  }
 }

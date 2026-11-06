@@ -14,6 +14,7 @@ import {
   getStaticAppRoutes,
   setAppRouteModules,
 } from '@/router/app-route-modules'
+import { getSystemRoutes } from '@/router/routes'
 import type { AppRouteRecordRaw } from '@/router/types'
 import { expandRoutes } from '@/router/utils/expand-routes'
 import { joinRoutePath } from '@/router/utils/join-route-path'
@@ -103,6 +104,7 @@ const DocumentationExample = defineComponent({
         `${iconSprites[name.split('/')[0] as IconPackage]}#${prefix}-${name}`,
       columnStorage: createStorage(window.sessionStorage, 'ray-doc-examples'),
       reportError: (message) => window.$message?.error(message),
+      reportSuccess: (message) => window.$message?.success(message),
     })
 
     return () => (
@@ -143,7 +145,10 @@ async function mountExample() {
   router.removeRoute('RLayout')
   setAppRouteModules(examples)
 
-  const routes = expandRoutes(examples) as unknown as RouteRecordRaw[]
+  const routes = [
+    ...expandRoutes(examples),
+    ...getSystemRoutes(),
+  ] as unknown as RouteRecordRaw[]
 
   if (withLayout) {
     router.addRoute({ path: '/', component: Layout, children: routes })
@@ -151,7 +156,6 @@ async function mountExample() {
     for (const route of routes) router.addRoute(route)
   }
 
-  router.addRoute({ path: '/:pathMatch(.*)*', redirect: '/dashboard' })
   app.use(router)
   await router.isReady()
 

@@ -64,7 +64,5 @@
   .r-layout-full *::before,
   .r-layout-full *::after {
     scroll-behavior: auto !important;
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
   }
 }

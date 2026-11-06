@@ -2,11 +2,10 @@
   <DemoFrame>
     <div class="ray-demo">
       <RCollapseGrid
-        :open="open"
+        v-model:open="open"
         :cols="2"
         :collapsedRows="1"
         :collapseToggleText="copy.toggle"
-        @update:open="(collapsed) => (open = !collapsed)"
       >
         <NGridItem v-for="field in fields" :key="field">
           <NInput

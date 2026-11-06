@@ -2,7 +2,6 @@ import './index.scss'
 import { LAYOUT_CONTENT_SPIN_WHEN_ROUTE_CHANGE } from '@/app-config'
 import { useI18n } from '@/hooks'
 import { useRuntimeGetters } from '@/store'
-import { NSpin } from 'naive-ui'
 
 export default defineComponent({
   name: 'ContentLoading',
@@ -11,6 +10,7 @@ export default defineComponent({
     const { globalMainLayoutLoad, layoutContentSpinning } = useRuntimeGetters()
     const routePending = ref(false)
     const visible = ref(false)
+    const labelId = useId()
 
     if (LAYOUT_CONTENT_SPIN_WHEN_ROUTE_CHANGE) {
       const router = useRouter()
@@ -43,7 +43,6 @@ export default defineComponent({
 
     return () => (
       <div
-        role="status"
         class={[
           'layout-content-loading',
           { 'layout-content-loading--visible': visible.value },
@@ -51,8 +50,9 @@ export default defineComponent({
       >
         {visible.value ? (
           <div class="layout-content-loading__indicator">
-            <NSpin size="small" aria-hidden="true" />
-            <span>{t('loading')}</span>
+            <progress aria-labelledby={labelId} />
+            <span class="layout-content-loading__track" aria-hidden="true" />
+            <span id={labelId}>{t('loading')}</span>
           </div>
         ) : null}
       </div>

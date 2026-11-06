@@ -1,0 +1,25 @@
+{
+  "moreActions": "More actions",
+  "lockScreen": {
+    "title": "Lock screen",
+    "passwordRule": "Enter a password of 6–12 characters",
+    "lockPlaceholder": "Enter a screen lock password",
+    "unlockPlaceholder": "Enter your screen lock password",
+    "lock": "Lock screen",
+    "warning": "Warning",
+    "returnPrompt": "Return to the sign-in page and sign in again?",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "passwordChanged": "The screen lock password has changed. Please sign in again.",
+    "signIn": "Sign in again",
+    "wrongPassword": "Incorrect password. Please try again.",
+    "backToSignIn": "Back to sign in",
+    "unlock": "Unlock"
+  },
+  "version": {
+    "title": "New version available",
+    "description": "The application has been updated. Confirm to reload and sign in again.",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  }
+}

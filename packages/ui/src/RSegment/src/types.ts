@@ -60,6 +60,6 @@ export interface RSegmentOptions {
 export type RSegmentWidth = number | 'block' | 'fitContent'
 
 export interface RSegmentProps extends Omit<TabsProps, OmitTabsPropsKeys> {
-  options?: RSegmentOptions
+  options?: RSegmentOptions[]
   width?: RSegmentWidth
 }

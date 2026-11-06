@@ -184,7 +184,7 @@ export const removeStyle = (
  * @param defaultColor 默认颜色值
  *
  * @description
- * 转换 rgb/hex/hsl 颜色；已有 rgba/hsla 会更新 alpha，四位和八位 hex 保留自带透明度。
+ * 转换逗号分隔的 rgb/hsl 和 hex 颜色；rgba/hsla 会更新 alpha，四位和八位 hex 保留自带透明度。
  * 无法识别时返回默认色或原始值。
  */
 export const colorToRgba = (

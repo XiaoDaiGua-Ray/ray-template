@@ -13,6 +13,20 @@ import type {
   TableProSearchValues,
 } from './types'
 
+/**
+ *
+ * @param fields 当前搜索字段的读取器
+ * @param options 当前搜索配置的读取器
+ * @param validate 支持查询是否仍有效的校验函数
+ * @param restoreValidation 清除界面校验反馈
+ * @param reportError 报告转换或提交异常并返回失败状态
+ * @param commit 提交已确认的草稿快照
+ *
+ * @description
+ * 持有搜索草稿、字段依赖及防抖计时器；编辑或卸载会使旧校验和延迟提交失效。
+ *
+ * @returns 草稿状态与读取、修改、提交、重置和字段协调方法
+ */
 export function useTableSearch(
   fields: () => readonly TableProSearchFieldConfig[],
   options: () => TableProSearchOptions | undefined,
@@ -43,6 +57,13 @@ export function useTableSearch(
     },
   )
 
+  /**
+   *
+   * @description
+   * 校验当前草稿快照，期间有新编辑时放弃旧提交。
+   *
+   * @returns 当前快照是否成功提交
+   */
   const submit = async () => {
     cancelPending()
     const current = revision
@@ -60,6 +81,13 @@ export function useTableSearch(
     }
   }
 
+  /**
+   *
+   * @param values 本次更新的字段值
+   *
+   * @description
+   * 清理类型不匹配的值、重置依赖字段，并按配置安排防抖提交；等值更新保持引用不变。
+   */
   const setValues = (values: TableProSearchValues) => {
     const next = patchSearchValues(
       fields(),
@@ -78,6 +106,13 @@ export function useTableSearch(
     }
   }
 
+  /**
+   *
+   * @description
+   * 取消待执行提交、恢复初始草稿并清除校验，随后提交重置后的快照。
+   *
+   * @returns 提交函数的结果
+   */
   const reset = () => {
     cancelPending()
     draft.value = initialSearchValues(fields(), options())
@@ -86,6 +121,13 @@ export function useTableSearch(
     return commit(draft.value, 'reset')
   }
 
+  /**
+   *
+   * @param retainedKeys 字段定义变化后允许保留草稿的键
+   *
+   * @description
+   * 取消旧校验与计时器，按最新字段定义补入默认值并移除失效字段。
+   */
   const reconcile = (retainedKeys: ReadonlySet<string>) => {
     cancelPending()
     const defaults = initialSearchValues(fields(), options())

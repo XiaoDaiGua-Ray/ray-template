@@ -2,6 +2,7 @@ import {
   appExpandRoutes,
   getAppRawRoutes,
   getStaticAppRoutes,
+  setAppRouteModules,
 } from '@/router/app-route-modules'
 import {
   exportRouteConfig,
@@ -153,10 +154,10 @@ describe('route configuration', () => {
       [{ ...page, path: '/reports', meta: { keepAlive: true } }],
       /registered component name/i,
     ],
-    [
-      [{ ...page, path: '/dashboard', meta: { role: ['editor'] } }],
-      /all authenticated roles/i,
-    ],
+    [[{ ...page, path: '/welcome' }], /reserved/i],
+    [[{ ...page, path: '/reports', alias: '/403' }], /reserved/i],
+    [[{ ...page, path: '/reports', name: 'ErrorPage500' }], /reserved/i],
+    [[{ ...page, path: '/404' }], /reserved/i],
     [
       [{ path: '/external', meta: { windowOpen: 'javascript:alert(1)' } }],
       /windowOpen/,
@@ -186,6 +187,27 @@ describe('route configuration', () => {
     ],
   ])('rejects invalid routes %j', (routes, message) => {
     expect(() => parse(routes)).toThrow(message)
+  })
+
+  it('allows restricted dashboard pages and does not inject one into custom sources', () => {
+    expect(
+      parse([{ ...page, path: '/dashboard', meta: { role: ['editor'] } }])
+        .routes,
+    ).toHaveLength(1)
+
+    try {
+      setAppRouteModules(
+        toRuntimeRoutes(parse([{ ...page, path: '/reports' }])),
+      )
+      expect(appExpandRoutes().some(({ path }) => path === '/dashboard')).toBe(
+        false,
+      )
+      expect(appExpandRoutes().some(({ path }) => path === '/reports')).toBe(
+        true,
+      )
+    } finally {
+      setAppRouteModules(getStaticAppRoutes())
+    }
   })
 
   it('sorts missing order consistently and leaves the input in place', () => {

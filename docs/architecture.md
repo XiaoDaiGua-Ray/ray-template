@@ -37,6 +37,8 @@ Application `@/components`, `@/hooks`, and `@/utils` include compatibility entry
 | Documentation examples    | Documentation can consume shared packages directly. When application context is required, [AdminExample.vue](../apps/docs/examples/AdminExample.vue) embeds [example.html](../apps/admin/example.html) with isolated bootstrap, restricted routes, and in-memory caching.                                                                                                | [Documentation and examples](../harness/context/docs.md)                         |
 | Application configuration | [Vite](../vite.config.ts) injects `__APP_CFG__` and `__DEV__`; [application configuration](../apps/admin/src/app-config) is grouped by design, requests, routing, and caching.                                                                                                                                                                                           | [Build and toolchain](../harness/context/toolchain.md)                           |
 
+After a successful development mount, [application doctor](../apps/admin/src/doctor/README.md) reports configuration warnings independently of startup failures. It does not initialize services or impose a business home route.
+
 Maintain guides and runnable examples for public behavior changes through [application/documentation coordination](docs-handoff.md). See [visual and layout guidance](ui-design.md) for page design and [comment style](comment-style.md) for code comments.
 
 ## TypeScript project configuration

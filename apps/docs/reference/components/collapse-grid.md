@@ -4,7 +4,7 @@
 import CollapseGridDemo from '../../examples/CollapseGridDemo.vue'
 </script>
 
-适合有多个条件的搜索表单。底层用 `NGrid` 渲染，子项必须是 `NGridItem`。使用 `cols`、`responsive`、`collapsedRows`、`xGap` 和 `yGap` 配置网格；未指定间距或传 `0` 时当前实现回退到 12。
+适合有多个条件的搜索表单。底层用 `NGrid` 渲染，子项必须是 `NGridItem`。使用 `cols`、`responsive`、`collapsedRows`、`xGap` 和 `yGap` 配置网格；未指定间距时回退到 12，传 `0` 保留零间距。
 
 ## 交互示例
 
@@ -26,8 +26,8 @@ import CollapseGridDemo from '../../examples/CollapseGridDemo.vue'
 
 `default` 渲染筛选项，`action` 渲染查询按钮，`collapse(collapsed)` 可替换展开按钮。自定义折叠插槽只收到布尔值，需要自行绑定按钮并修改 `open`。
 
-::: warning 受控状态与更新事件
-`onUpdateOpen` 和 `onUpdate:open` 回传的是内部 `collapsed`，与 `open` 相反。当前基线使用受控模式时手动取反，避免直接双向绑定把语义接反。两个监听器同时绑定会各调用一次。
+::: tip 受控状态与更新事件
+`onUpdateOpen` 和 `onUpdate:open` 回传展开状态，可直接绑定 `v-model:open`。旧版接入中为修正事件反向而添加的取反处理应删除。两个监听器同时绑定会各调用一次。默认切换按钮支持键盘，并通过 `aria-expanded` 表示当前状态。
 :::
 
 ```tsx
@@ -43,8 +43,8 @@ export default defineComponent({
         open={open.value}
         cols={3}
         collapsedRows={1}
-        onUpdateOpen={(collapsed) => {
-          open.value = !collapsed
+        onUpdateOpen={(value) => {
+          open.value = value
         }}
       >
         {{

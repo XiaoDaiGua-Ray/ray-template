@@ -28,7 +28,11 @@ export async function setupRouter(app: App<Element>) {
     for (const route of getLayoutRoutes()) router.addRoute('RLayout', route)
 
     vueRouterRegister(router)
-  })()
+  })().catch((error: unknown) => {
+    // 同页重挂载可以重试暂时失败的配置加载；成功初始化仍只注册一次守卫。
+    initialize = void 0
+    throw error
+  })
   await initialize
   app.use(router)
 }

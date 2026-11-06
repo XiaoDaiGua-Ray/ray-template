@@ -1,4 +1,5 @@
 import type { BasicTarget } from '@ray-template/composables/types'
+import type { UseDomToImageOptions } from '@ray-template/composables/useDomToImage'
 import type {
   CascaderProps,
   DataTableInst,
@@ -8,6 +9,7 @@ import type {
   FormItemRule,
   InputNumberProps,
   InputProps,
+  PaginationProps,
   SelectOption,
   SelectProps,
   TimePickerProps,
@@ -15,6 +17,32 @@ import type {
 } from 'naive-ui'
 import type { VNodeChild } from 'vue'
 import type { LeafColumn } from './columns'
+
+/**
+ *
+ * @description
+ * 仅使用 Naive UI 当前的分页更新事件，不再接收旧版 change 别名。
+ */
+export type TableProPagination = Omit<
+  PaginationProps,
+  'onChange' | 'onPageSizeChange'
+>
+
+/**
+ *
+ * @description
+ * PNG 渲染选项；截图范围固定为当前表格 DOM，生命周期与剪贴板写入由组件管理。
+ */
+export type TableProImageOptions = Omit<
+  UseDomToImageOptions<HTMLElement, 'blob'>,
+  | 'imageType'
+  | 'type'
+  | 'quality'
+  | 'beforeCreate'
+  | 'created'
+  | 'createdError'
+  | 'finally'
+>
 
 export interface TableProPrintOptions {
   target?: BasicTarget<HTMLElement>
@@ -38,6 +66,8 @@ export interface TablePanelInst {
   getTableInstance: () => DataTableInst | null
   print: (options?: TableProPrintOptions) => Promise<boolean>
   downloadCsv: DataTableInst['downloadCsv']
+  /** 从用户点击事件中调用，复制当前表格区域 PNG；成功写入时返回 true */
+  copyImage: (options?: TableProImageOptions) => Promise<boolean>
 }
 
 export interface TableProParams extends Record<string, unknown> {

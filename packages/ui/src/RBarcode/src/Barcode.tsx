@@ -2,21 +2,9 @@ import './index.scss'
 import { completeSize } from '@ray-template/composables/element'
 import { call } from '@ray-template/composables/vue/call'
 import { useResizeObserver } from '@vueuse/core'
-import type { UseResizeObserverReturn } from '@vueuse/core'
 import barcode from 'jsbarcode'
 import { NSpin } from 'naive-ui'
-import {
-  computed,
-  defineComponent,
-  nextTick,
-  onBeforeUnmount,
-  onMounted,
-  ref,
-  useTemplateRef,
-  watch,
-  watchEffect,
-} from 'vue'
-import type { WatchStopHandle } from 'vue'
+import { computed, defineComponent, ref, useTemplateRef, watch } from 'vue'
 import props from './props'
 
 export default defineComponent({
@@ -28,7 +16,6 @@ export default defineComponent({
     )
     const containerRef = useTemplateRef<HTMLDivElement>('containerRef')
     const containerSize = ref({ width: 0, height: 0 })
-    let resizeObserverReturn: UseResizeObserverReturn | null
 
     const cssVars = computed(() => {
       let width = completeSize(props.width)
@@ -49,8 +36,11 @@ export default defineComponent({
 
       return cssVar
     })
-    let watchStop: WatchStopHandle
-
+    /**
+     *
+     * @description
+     * 在 DOM 更新后重绘当前条码；复用同一观察器，配置变化由 Vue 合并到一次渲染。
+     */
     const barcodeRender = () => {
       if (!barcodeRef.value) {
         return
@@ -64,17 +54,12 @@ export default defineComponent({
         })
 
         // 如果是响应式模式，根据容器尺寸调整条形码选项
-        if (containerSize.value.width > 0) {
-          if (props.width === 'responsive') {
-            assignOptions.width = Math.max(1, containerSize.value.width / 100)
-          }
+        if (props.width === 'responsive' && containerSize.value.width > 0) {
+          assignOptions.width = Math.max(1, containerSize.value.width / 100)
+        }
 
-          if (props.height === 'responsive') {
-            assignOptions.height = Math.max(
-              20,
-              containerSize.value.height * 0.8,
-            )
-          }
+        if (props.height === 'responsive' && containerSize.value.height > 0) {
+          assignOptions.height = Math.max(20, containerSize.value.height * 0.8)
         }
 
         barcode(
@@ -101,57 +86,33 @@ export default defineComponent({
       }
     }
 
-    watchEffect(() => {
-      if (props.watchText) {
-        watchStop?.()
+    useResizeObserver(
+      () => (props.responsive ? containerRef.value : null),
+      ([entry]) => {
+        if (!entry) return
 
-        watchStop = watch(() => props.text, barcodeRender)
-      } else {
-        watchStop?.()
-      }
+        const { width, height } = entry.contentRect
+        const previous = containerSize.value
 
-      // 监听容器尺寸变化
-      if (props.responsive) {
-        resizeObserverReturn?.stop()
+        if (previous.width !== width || previous.height !== height)
+          containerSize.value = { width, height }
+      },
+    )
 
-        resizeObserverReturn = useResizeObserver(
-          containerRef,
-          (entries: readonly ResizeObserverEntry[]) => {
-            const entry = entries[0]
-
-            if (entry) {
-              const { width, height } = entry.contentRect
-
-              containerSize.value = { width, height }
-
-              nextTick(() => {
-                barcodeRender()
-              })
-            }
-          },
-        )
-      } else {
-        resizeObserverReturn?.stop()
-
-        resizeObserverReturn = null
-      }
-    })
-
-    onMounted(() => {
-      // 初始化容器尺寸
-      if (containerRef.value) {
-        const rect = containerRef.value.getBoundingClientRect()
-
-        containerSize.value = { width: rect.width, height: rect.height }
-      }
-
-      nextTick(() => {
-        barcodeRender()
-      })
-    })
-    onBeforeUnmount(() => {
-      watchStop?.()
-    })
+    watch(
+      [
+        barcodeRef,
+        () => (props.watchText ? props.text : void 0),
+        () => props.format,
+        () => props.options,
+        () => props.width,
+        () => props.height,
+        () => props.responsive,
+        containerSize,
+      ],
+      barcodeRender,
+      { deep: true, flush: 'post' },
+    )
 
     return {
       barcodeRef,

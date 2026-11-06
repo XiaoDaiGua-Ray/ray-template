@@ -9,11 +9,21 @@ After login, open **路由管理** (Route management). Both child pages are regi
 
 | Source        | Read behavior                                                    | Applying changes                                                                           |
 | ------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| Static routes | Read TypeScript files under [modules](modules)                   | Select static routes and apply                                                             |
+| Static routes | Read the bundled [initial JSON](../mocks/data/routes.json)       | Select static routes and apply                                                             |
 | Local JSON    | Read configuration saved in the current browser                  | Import a file or edit JSON, validate, then apply                                           |
 | Backend API   | Request deployment-configured `VITE_ROUTE_CONFIG_URL` at startup | Select the backend source and apply. The URL comes from frontend deployment configuration. |
 
-Applying reloads the page and rebuilds route matching, menus, and tabs. With an API URL configured, a new browser defaults to the backend source. Explicit source choices are stored in the current browser. API errors, timeouts, or validation failures fall back to static routes and display the reason on the management page. The shell retains login, management, and 404 pages. An internal home page is added when `/dashboard` is absent.
+Applying reloads the page and rebuilds route matching, menus, and tabs. With an API URL configured, a new browser defaults to the backend source. Explicit source choices are stored in the current browser. In real-backend mode, a failed configured remote source stops startup and shows the boot error; it does not silently substitute demo routes. The shell retains login, management, `/welcome`, `/403`, `/404`, and `/500`. No dashboard or other business page is injected into a custom source.
+
+## Neutral workspace and recovery
+
+`/welcome` is the shell's state with no active business route. It is not a protected home tab and is never stored in business tabs, menu selection, navigation history, or KeepAlive. An authenticated visit to `/` opens it unless the login URL contains a valid authorized `redirect` target. That explicit target retains its query and hash. External, missing, denied, and error-page redirect targets fall back to `/welcome`.
+
+All business tabs, including the former home and the final tab, can close. Closing an active tab selects its adjacent remaining tab; closing the final tab or all tabs opens `/welcome` and removes their cached component names. One tab is retained per concrete pathname, with its latest full URL for query/hash restoration. System states clear active menu/breadcrumb state without fabricating a first-menu selection.
+
+Authenticated forbidden direct links go to `/403`; unknown paths go to `/404`; route resolution or lazy-loader failures go to `/500`. Status routes carry the attempted URL in `query.from`. Recovery actions validate it through `resolveLandingPath` before navigating, and error-page failures do not create redirect loops. Role changes prune unauthorized tags/cache entries and show `/403` for a revoked current page.
+
+System paths (including descendants and aliases) and route names are reserved by the application contract. The generic contract accepts `reservedPaths` and `reservedNames` supplied by its host. `homePath` is retained only as an ignored deprecated catalog option. Application `useAppRoot`/`appRootRoute` remain inert legacy preference accessors to avoid breaking stored settings and old consumers; they no longer affect landing, closing, permissions, or startup validation. The root-setting demo controls were removed. The old `redirectRouterToDashboard` export is a deprecated alias for neutral `redirectRouterToWorkspace`.
 
 ## Backend and AI contract
 

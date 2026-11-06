@@ -48,9 +48,17 @@ export const useElementFullscreen = (
   } = options ?? {}
 
   const isFullscreen = ref(false)
+  let disposed = false
   let frame: number | undefined
   let restore: (() => void) | undefined
 
+  /**
+   *
+   * @description
+   * 恢复进入前的样式并取消待执行动画帧；尚未进入时不操作。
+   *
+   * @throws beforeExit 抛错时保留全屏；exit 回调的错误在样式恢复后传播。
+   */
   const exit = () => {
     if (!restore) return
 
@@ -59,7 +67,16 @@ export const useElementFullscreen = (
     onExit?.()
   }
 
+  /**
+   *
+   * @description
+   * 解析当前目标并进入 CSS 全屏；目标无效、已被占用或作用域已销毁时忽略。
+   *
+   * @throws 前置回调或目标 getter 的错误会中止进入；enter 回调的错误在进入后传播。
+   */
   const enter = () => {
+    if (disposed) return
+
     const element = unrefElement(target)
 
     if (!(element instanceof HTMLElement) || activeElements.has(element)) return
@@ -130,12 +147,19 @@ export const useElementFullscreen = (
     onEnter?.()
   }
 
+  /**
+   *
+   * @description
+   * 按当前实例状态调用 enter 或 exit，遵循对应回调与异常规则。
+   */
   const toggleFullscreen = () => {
     if (isFullscreen.value) exit()
     else enter()
   }
 
   effectDispose(() => {
+    disposed = true
+
     if (!restore) return
 
     // 作用域销毁必须释放样式和动画帧，不允许前置回调取消。

@@ -12,4 +12,6 @@ Organize reusable components by name under `src/components`. Import components a
 
 Component styles load with their entry points. Scope changes to Naive UI internals using the current component's class. When a component must fill its container, declare dimensions at the call site or within the component. Fullscreen `RModal` card content scrolls only on overflow; `RBarcode` loading regions follow barcode dimensions or responsive containers.
 
+Custom styles follow the [CSS token, scope, and responsive-sizing contract](../../../../docs/ui-design.md#custom-css). Admin components inherit the existing providers; standalone shared-package consumers use the [public host example](../../../../apps/docs/examples/ThemeScopeExample.vue) instead of importing application stores or writing global theme variables.
+
 Examples are in `src/views/demo`. Independent hook interactions and lifecycle conventions are in the [hook guide](../hooks/README.md). Follow the [comment style](../../../../docs/comment-style.md) when adding/editing comments; put complete tutorials in READMEs and demo pages.

@@ -1,11 +1,13 @@
 import { APP_CATCH_KEY } from '@/app-config'
 import { RModal } from '@/components'
+import { useI18n } from '@/hooks'
 import { useSigningActions } from '@/store'
 import { getStorage, setStorage } from '@/utils'
 
 export default defineComponent({
   name: 'AppVersionProvider',
   setup() {
+    const { t } = useI18n('appComponents.version')
     const {
       pkg: { version },
     } = __APP_CFG__
@@ -30,6 +32,7 @@ export default defineComponent({
     return {
       modalShow,
       logout,
+      t,
     }
   },
   render() {
@@ -43,12 +46,12 @@ export default defineComponent({
           maskClosable={false}
           preset="dialog"
           closable={false}
-          title="发现新版本"
-          content="当前版本已更新，点击确认加载新版本~"
+          title={this.t('title')}
+          content={this.t('description')}
           zIndex={999999999}
           draggable
-          positiveText="确认"
-          negativeText="取消"
+          positiveText={this.t('confirm')}
+          negativeText={this.t('cancel')}
           onPositiveClick={logout}
           onNegativeClick={() => {
             this.modalShow = false

@@ -1,7 +1,8 @@
 import { getAdminSession, loginAdmin, logoutAdmin } from '@/api/admin'
 import { AdminApiError } from '@/api/admin/client'
 import { APP_CATCH_KEY } from '@/app-config'
-import { useSiderBar, useVueRouter } from '@/hooks'
+import { useVueRouter } from '@/hooks'
+import { useMenuActions } from '@/store/hooks/useMenuStore'
 import type {
   SigningCallback,
   SigningForm,
@@ -75,7 +76,7 @@ export const piniaSigningStore = defineStore(
      * 如果 toSigning 传递 true 则会重定向至登录页。
      */
     const clearSigningCallback = (toSigning: boolean) => {
-      const { closeAll } = useSiderBar()
+      const { setMenuTagOptions } = useMenuActions()
       const {
         appPiniaMenuStore,
         appPiniaSigningStore,
@@ -98,10 +99,9 @@ export const piniaSigningStore = defineStore(
       removeStorage(appMenuKey, 'localStorage')
       removeStorage(APP_CATCH_KEY.isAppLockScreen, 'localStorage')
       // 关闭所有侧边栏标签
-      closeAll()
+      setMenuTagOptions([], false)
 
       if (toSigning) {
-        router.clearRoutes()
         void router.replace('/')
 
         setTimeout(() => {

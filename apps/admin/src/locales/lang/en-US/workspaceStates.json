@@ -1,0 +1,38 @@
+{
+  "welcome": {
+    "eyebrow": "Your workspace",
+    "title": "Ready for your next task",
+    "description": "Choose a starting point below, or use the navigation menu to begin your next task.",
+    "shortcuts": "Choose a page",
+    "recent": "Recently visited",
+    "openPage": "Open page",
+    "navigationHint": "Only available pages appear here, with your recent visits first.",
+    "noPagesTitle": "No starting points are available yet",
+    "noPagesDescription": "There are no navigation entries to show. Ask an administrator to check the page configuration or your access."
+  },
+  "forbidden": {
+    "eyebrow": "Access restricted",
+    "title": "This page is not available to you",
+    "description": "Your account does not have access. Choose another page from your workspace, or ask an administrator for access."
+  },
+  "notFound": {
+    "eyebrow": "Page not found",
+    "title": "We couldn't find this page",
+    "description": "The link may have expired, or the page may have moved. Return to your workspace to choose an available page."
+  },
+  "serverError": {
+    "eyebrow": "Loading interrupted",
+    "title": "This page couldn't load",
+    "description": "The page didn't finish loading. Try again, or return to your workspace to continue elsewhere."
+  },
+  "unavailable": {
+    "eyebrow": "Page status",
+    "title": "This content isn't available",
+    "description": "Return to your workspace to choose another available page."
+  },
+  "actions": {
+    "workspace": "Back to workspace",
+    "back": "Previous page",
+    "retry": "Try again"
+  }
+}

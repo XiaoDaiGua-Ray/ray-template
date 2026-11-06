@@ -1,0 +1,38 @@
+{
+  "welcome": {
+    "eyebrow": "你的工作区",
+    "title": "工作区已就绪",
+    "description": "选择一个入口，或从导航菜单打开页面，开始下一项工作。",
+    "shortcuts": "选择一个页面",
+    "recent": "最近访问",
+    "openPage": "打开页面",
+    "navigationHint": "这里展示当前可用的入口，最近访问的页面会优先出现。",
+    "noPagesTitle": "暂时没有可用的入口",
+    "noPagesDescription": "当前没有可显示的导航入口。请联系管理员确认页面配置或访问权限。"
+  },
+  "forbidden": {
+    "eyebrow": "访问受限",
+    "title": "暂时无法访问此页面",
+    "description": "当前账号没有访问权限。你可以返回工作区选择其他页面，或联系管理员开通权限。"
+  },
+  "notFound": {
+    "eyebrow": "页面未找到",
+    "title": "找不到这个页面",
+    "description": "链接可能已失效，或页面地址发生了变化。返回工作区，重新选择一个可用的页面。"
+  },
+  "serverError": {
+    "eyebrow": "加载中断",
+    "title": "页面暂时无法加载",
+    "description": "这次加载没有完成。可以重新尝试，或返回工作区继续其他工作。"
+  },
+  "unavailable": {
+    "eyebrow": "页面状态",
+    "title": "暂时无法显示此内容",
+    "description": "你可以返回工作区，选择其他可用的页面。"
+  },
+  "actions": {
+    "workspace": "返回工作区",
+    "back": "返回上一页",
+    "retry": "重试加载"
+  }
+}

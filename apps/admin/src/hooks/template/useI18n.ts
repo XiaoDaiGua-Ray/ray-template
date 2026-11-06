@@ -30,6 +30,13 @@ const getI18nKey = (namespace: string | undefined, key: string) => {
  * @returns 始终可用的翻译、语言设置方法，以及初始化后的原生能力。
  */
 export const useI18n = (namespace?: string): OverrideUseI18nReturnType => {
+  /**
+   *
+   * @param key 命名空间内的键、完整翻译键或无命名空间的普通文本
+   * @param args 原样转交 vue-i18n 的插值和翻译选项
+   *
+   * @returns 翻译结果；空键返回空字符串，实例尚未创建时返回解析后的键。
+   */
   const translate = <T extends string = string>(
     key: string,
     ...args: unknown[]
@@ -51,6 +58,13 @@ export const useI18n = (namespace?: string): OverrideUseI18nReturnType => {
     return nativeTranslate(fullKey, ...args) as T
   }
 
+  /**
+   *
+   * @param lang 要写入国际化实例与 html lang 属性的语言标识
+   *
+   * @description
+   * 实例尚未创建时不操作；应用界面切换应使用 Setting Store，以同步日期和组件库。
+   */
   const locale = (lang: string) => {
     const instance = i18n
 

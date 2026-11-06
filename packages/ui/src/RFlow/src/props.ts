@@ -83,7 +83,7 @@ const props = {
    */
   options: {
     type: Object as PropType<FlowOptions>,
-    default: getDefaultFlowOptions(),
+    default: getDefaultFlowOptions,
   },
   /**
    *

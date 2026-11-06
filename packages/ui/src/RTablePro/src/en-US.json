@@ -1,4 +1,12 @@
 {
+  "tableControls": "Table controls",
+  "moreActions": "More actions",
+  "copyImage": "Copy table image",
+  "copyingImage": "Copying table image…",
+  "copyImageSuccess": "Table image copied",
+  "copyImageUnsupported": "This browser cannot copy PNG images. Use a supported browser over HTTPS or localhost.",
+  "copyImagePermission": "Clipboard access was denied. Allow clipboard access and try again.",
+  "copyImageError": "Couldn't copy the table image. Check its images and fonts, then try again.",
   "httpSource": "Local mock API",
   "localSource": "Local demo data",
   "directory": "People directory",

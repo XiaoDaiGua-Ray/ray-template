@@ -1,0 +1,25 @@
+{
+  "moreActions": "更多操作",
+  "lockScreen": {
+    "title": "锁定屏幕",
+    "passwordRule": "请输入 6 至 12 位密码",
+    "lockPlaceholder": "请输入锁屏密码",
+    "unlockPlaceholder": "请输入解锁密码",
+    "lock": "锁屏",
+    "warning": "提示",
+    "returnPrompt": "是否返回登录页并重新登录？",
+    "confirm": "确定",
+    "cancel": "取消",
+    "passwordChanged": "检测到锁屏密码已被修改，请重新登录",
+    "signIn": "重新登录",
+    "wrongPassword": "密码错误，请重新输入",
+    "backToSignIn": "返回登录",
+    "unlock": "进入系统"
+  },
+  "version": {
+    "title": "发现新版本",
+    "description": "应用已更新，确认后将重新加载并登录。",
+    "confirm": "确认",
+    "cancel": "取消"
+  }
+}

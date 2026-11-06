@@ -77,11 +77,17 @@ export const usePagination = (
       'onUpdate:page-size',
       'onUpdate:pageSize',
     ]),
+    // 配置可通过返回的引用修改，默认候选不能跨实例共享可变数组。
+    pageSizes: options?.pageSizes ?? [...DEFAULT_OPTIONS.pageSizes!],
     ...paginationMethods,
   }))
   // 分页配置
   const paginationRef = ref<PaginationProps>(mergedOptions.value)
 
+  /**
+   *
+   * @returns 当前总条数；未设置时返回 0。
+   */
   const getItemCount = () => paginationRef.value.itemCount ?? 0
 
   /**
@@ -95,6 +101,10 @@ export const usePagination = (
     paginationRef.value.itemCount = itemCount
   }
 
+  /**
+   *
+   * @returns 当前页码，初始默认值为 1。
+   */
   const getPage = () => paginationRef.value.page as number
 
   /**
@@ -108,6 +118,10 @@ export const usePagination = (
     paginationMethods.onUpdatePage(page)
   }
 
+  /**
+   *
+   * @returns 当前每页条数，初始默认值为 10。
+   */
   const getPageSize = () => paginationRef.value.pageSize as number
 
   /**
@@ -121,6 +135,10 @@ export const usePagination = (
     paginationMethods.onUpdatePageSize(pageSize)
   }
 
+  /**
+   *
+   * @returns 当前响应式配置本身；不创建快照，修改会影响当前实例。
+   */
   const getPagination = () => paginationRef.value as UsePaginationOptions
 
   /**
@@ -143,7 +161,8 @@ export const usePagination = (
    * 页码恢复为 1，每页条数取第一个选项的值；选项为空时使用 10。
    */
   const resetPagination = () => {
-    const { pageSizes, pageChange, pageSizeChange } = mergedOptions.value
+    const { pageChange, pageSizeChange } = mergedOptions.value
+    const { pageSizes } = paginationRef.value
 
     paginationRef.value.page = DEFAULT_OPTIONS.page
     const firstSize = pageSizes?.[0]

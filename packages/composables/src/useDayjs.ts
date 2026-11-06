@@ -23,8 +23,14 @@ const defaultDayjsFormat = 'YYYY-MM-DD HH:mm:ss'
 
 /**
  *
+ * @param locales 应用语言键到 Day.js locale 的映射
+ * @param fallback 未知语言键使用的 Day.js locale
+ * @param legacyGlobalLocale 是否兼容应用共享的 Day.js 全局语言
+ *
  * @description
  * 日期格式化使用本地时区；兼容模式沿用 Day.js 全局语言。
+ *
+ * @returns 日期格式化、比较、范围与语言设置方法。
  */
 export const createDayjsTools = <T extends string>(
   locales: Record<T, string>,

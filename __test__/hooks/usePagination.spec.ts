@@ -94,3 +94,25 @@ it('resets to the first object page size and reports new values to the current c
   expect(api.getCallback()).toBeUndefined()
   expect(callback).toHaveBeenCalledOnce()
 })
+
+it('keeps mutable default page-size options local to each instance', () => {
+  const [first] = usePagination()
+  const [second] = usePagination()
+
+  first.value.pageSizes!.splice(0, 1, 5)
+
+  expect(second.value.pageSizes).toEqual([10, 20, 50, 100])
+  expect(usePagination()[0].value.pageSizes).toEqual([10, 20, 50, 100])
+})
+
+it('resets using the currently configured page sizes after replacing them', () => {
+  const [pagination, api] = usePagination()
+
+  pagination.value.pageSizes = [{ label: 'Twenty five', value: 25 }]
+  api.resetPagination()
+  expect(api.getPageSize()).toBe(25)
+
+  pagination.value.pageSizes = []
+  api.resetPagination()
+  expect(api.getPageSize()).toBe(10)
+})

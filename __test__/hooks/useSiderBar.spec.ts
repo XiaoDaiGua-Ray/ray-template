@@ -1,189 +1,243 @@
-import { useAppRoot } from '../../apps/admin/src/hooks/template/useAppRoot'
-import { useSiderBar } from '../../apps/admin/src/hooks/template/useSiderBar'
-import { useVueRouter } from '../../apps/admin/src/hooks/web/useVueRouter'
-import { firstMenuLeaf } from '../../apps/admin/src/layout/navigation'
-import { useMenuActions, useMenuGetters } from '../../apps/admin/src/store'
-import type {
-  AppMenuOption,
-  MenuTagOptions,
-} from '../../apps/admin/src/types/modules/app'
-import setupMiniApp from '../utils/setupMiniApp'
+import { APP_CATCH_KEY } from '@/app-config'
+import { useAppRoot } from '@/hooks/template/useAppRoot'
+import { useSiderBar } from '@/hooks/template/useSiderBar'
+import { setupI18n } from '@/locales'
+import { permissionRouter } from '@/router/utils/permission'
+import { piniaKeepAliveStore } from '@/store/modules/keep-alive'
+import { piniaMenuStore } from '@/store/modules/menu'
+import { piniaSettingStore } from '@/store/modules/setting'
+import { piniaSigningStore } from '@/store/modules/signing'
+import { setStorage } from '@/utils/cache'
+import { flushPromises, mount } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { createPinia, disposePinia, setActivePinia } from 'pinia'
+import { defineComponent, h } from 'vue'
+import { createMemoryHistory, createRouter } from 'vue-router'
+import type { Router } from 'vue-router'
 
-describe('useSiderBar', async () => {
-  await setupMiniApp()
+const state = vi.hoisted(() => ({
+  router: null as unknown,
+  routes: [] as unknown[],
+}))
 
-  const { setMenuTagOptions, resolveOption } = useMenuActions()
-  const {
-    close,
-    closeAll,
-    closeRight,
-    closeLeft,
-    closeOther,
-    getCurrentTagIndex,
-    checkCloseRight,
-    checkCloseLeft,
-  } = useSiderBar()
+vi.mock('../../apps/admin/src/hooks/template/useVueRouter', () => ({
+  useVueRouter: () => ({ router: state.router }),
+}))
+vi.mock('../../apps/admin/src/router/app-route-modules', () => ({
+  getAppRawRoutes: () => state.routes,
+  appExpandRoutes: () => state.routes,
+}))
 
-  const updateMenuTagOptions = () => {
-    const { router } = useVueRouter()
-    const routes = router.getRoutes() as unknown as AppMenuOption[]
+let pinia: ReturnType<typeof createPinia>
+let router: Router
+let wrapper: VueWrapper
+let menu: ReturnType<typeof piniaMenuStore>
+let actions: ReturnType<typeof useSiderBar>
 
-    routes.forEach((curr) =>
-      setMenuTagOptions(
-        resolveOption({
-          ...curr,
-          fullPath: curr.path,
-        }),
-        true,
-      ),
-    )
+beforeEach(async () => {
+  localStorage.clear()
+  sessionStorage.clear()
+  const component = { render: () => h('div') }
+  const business = [
+    { path: '/reports', name: 'Reports', component, meta: { keepAlive: true } },
+    { path: '/orders', name: 'Orders', component, meta: {} },
+    {
+      path: '/private',
+      name: 'Private',
+      component,
+      meta: { role: ['admin'], keepAlive: true },
+    },
+  ]
+
+  state.routes = business
+  router = createRouter({
+    history: createMemoryHistory(),
+    routes: [
+      { path: '/', name: 'RLogin', component },
+      {
+        path: '/welcome',
+        name: 'RWelcome',
+        component,
+        meta: { i18nKey: 'workspaceStates.welcome.title' },
+      },
+      {
+        path: '/403',
+        name: 'ErrorPage403',
+        component,
+        meta: { i18nKey: 'workspaceStates.forbidden.title' },
+      },
+      { path: '/404', name: 'ErrorPage404', component },
+      { path: '/500', name: 'ErrorPage500', component },
+      { path: '/:catchAll(.*)', name: 'RNotFound', redirect: '/404' },
+      ...business,
+    ],
+  })
+  state.router = router
+  pinia = createPinia()
+  setActivePinia(pinia)
+  piniaSigningStore().signingCallback = {
+    id: 'one',
+    name: 'Tester',
+    role: 'admin',
   }
+  setStorage(APP_CATCH_KEY.token, 'token', 'localStorage')
+  setStorage(APP_CATCH_KEY.appMenuTagOptions, [{ fullPath: '/dashboard' }])
+  setStorage(APP_CATCH_KEY.appMenuKey, '/dashboard')
+  permissionRouter(router)
+  await router.push('/welcome')
+  wrapper = mount(
+    defineComponent({
+      setup() {
+        menu = piniaMenuStore()
+        actions = useSiderBar()
 
-  it('should close target tag', async () => {
-    updateMenuTagOptions()
+        return () => h('div')
+      },
+    }),
+    { global: { plugins: [pinia, router] } },
+  )
+  await flushPromises()
+})
 
-    const { getMenuOptions, getMenuTagOptions } = useMenuGetters()
-    const [dashboard] = getMenuOptions.value
-    const beforeIndex = getMenuTagOptions.value.findIndex(
-      (curr) => curr.fullPath === dashboard.fullPath,
-    )
+afterEach(() => {
+  wrapper.unmount()
+  disposePinia(pinia)
+  router.options.history.destroy()
+})
 
-    close(dashboard.fullPath)
+it('starts with no active business page and never injects a missing cached dashboard', () => {
+  expect(menu.menuTagOptions).toEqual([])
+  expect(menu.menuKey).toBeNull()
+  expect(menu.currentMenuOption).toBeNull()
+  expect(menu.breadcrumbOptions).toEqual([])
+  expect(router.currentRoute.value.path).toBe('/welcome')
+  expect(menu.options.map(({ fullPath }) => fullPath)).toEqual([
+    '/reports',
+    '/orders',
+    '/private',
+  ])
+})
 
-    await nextTick()
+it('closes the final business tab, even when it is the legacy root preference', async () => {
+  useAppRoot().setRootRoute({ path: '/reports', name: 'Reports' })
+  await router.push('/reports?sort=asc#summary')
+  await flushPromises()
+  expect(actions.getCurrentTagIndex()).toBe(0)
+  expect(piniaKeepAliveStore().keepAliveInclude).toEqual(['Reports'])
+  await actions.close(0)
+  await flushPromises()
+  expect(menu.menuTagOptions).toEqual([])
+  expect(menu.menuKey).toBeNull()
+  expect(menu.currentMenuOption).toBeNull()
+  expect(piniaKeepAliveStore().keepAliveInclude).toEqual([])
+  expect(router.currentRoute.value.path).toBe('/welcome')
+})
 
-    const afterIndex = getMenuTagOptions.value.findIndex(
-      (curr) => curr.fullPath === dashboard.fullPath,
-    )
+it('stores one tag per pathname and restores its latest query and hash', async () => {
+  await router.push('/reports?sort=asc#first')
+  await router.push('/reports?sort=desc#summary')
+  await router.push('/orders')
+  await flushPromises()
+  expect(menu.menuTagOptions.map(({ fullPath }) => fullPath)).toEqual([
+    '/reports?sort=desc#summary',
+    '/orders',
+  ])
+  await actions.close('/orders')
+  await flushPromises()
+  expect(router.currentRoute.value.fullPath).toBe('/reports?sort=desc#summary')
+  expect(menu.menuKey).toBe('/reports')
+  expect(actions.getCurrentTagIndex()).toBe(0)
+})
 
-    expect(beforeIndex).not.toBe(afterIndex)
-  })
+it('closes left, right and other tabs without protecting any business path', async () => {
+  for (const path of ['/reports', '/orders', '/private'])
+    await router.push(path)
 
-  it('should close all tags', async () => {
-    updateMenuTagOptions()
+  await flushPromises()
+  expect(actions.checkCloseLeft('/orders')).toBe(true)
+  expect(actions.checkCloseRight('/orders')).toBe(true)
+  await actions.closeRight('/orders')
+  await flushPromises()
+  expect(router.currentRoute.value.path).toBe('/orders')
+  expect(menu.menuTagOptions.map(({ fullPath }) => fullPath)).toEqual([
+    '/reports',
+    '/orders',
+  ])
+  await actions.closeLeft('/orders')
+  await router.push('/reports')
+  await actions.closeOther('/orders')
+  await flushPromises()
+  expect(menu.menuTagOptions.map(({ fullPath }) => fullPath)).toEqual([
+    '/orders',
+  ])
+  expect(router.currentRoute.value.path).toBe('/orders')
+})
 
-    const { getMenuTagOptions } = useMenuGetters()
+it('closes all tags independently of missing or unauthorized root preferences', async () => {
+  await router.push('/reports')
+  await router.push('/orders')
+  useAppRoot().setRootRoute({ path: '/deleted-home' })
+  await actions.closeAll()
+  await flushPromises()
+  expect(menu.menuTagOptions).toEqual([])
+  expect(router.currentRoute.value.path).toBe('/welcome')
+})
 
-    closeAll()
+it('keeps status routes out of tabs and clears active business navigation', async () => {
+  await router.push('/reports')
 
-    await nextTick()
+  for (const path of ['/welcome', '/403', '/404', '/500']) {
+    await router.push(path)
+    await flushPromises()
+    expect(menu.currentMenuOption).toBeNull()
+    expect(menu.menuKey).toBeNull()
+    expect(menu.breadcrumbOptions).toEqual([])
+    expect(menu.menuTagOptions.map(({ fullPath }) => fullPath)).toEqual([
+      '/reports',
+    ])
+  }
+})
 
-    const afterLength = getMenuTagOptions.value.length
+it('removes revoked tags and cached views without choosing another active page', async () => {
+  await router.push('/reports')
+  await router.push('/private?mode=edit#section')
+  piniaSigningStore().signingCallback.role = 'member'
+  await flushPromises()
+  expect(menu.menuTagOptions.map(({ fullPath }) => fullPath)).toEqual([
+    '/reports',
+  ])
+  expect(piniaKeepAliveStore().keepAliveInclude).toEqual(['Reports'])
+  expect(menu.currentMenuOption).toBeNull()
+  expect(router.currentRoute.value.path).toBe('/403')
+  expect(router.currentRoute.value.query.from).toBe(
+    '/private?mode=edit#section',
+  )
+})
 
-    expect(afterLength).toBe(1)
-  })
+it('clears account-owned tabs without recreating the still-visible page during logout', async () => {
+  await router.push('/reports')
+  piniaSigningStore().signingCallback = {} as never
+  await flushPromises()
+  expect(menu.menuTagOptions).toEqual([])
+  expect(menu.currentMenuOption).toBeNull()
+  expect(piniaKeepAliveStore().keepAliveInclude).toEqual([])
+})
 
-  it('should close right tags', async () => {
-    updateMenuTagOptions()
+it('updates neutral and status document titles when the language changes', async () => {
+  await setupI18n(wrapper.vm.$.appContext.app)
+  const settings = piniaSettingStore()
 
-    const { getMenuOptions, getMenuTagOptions } = useMenuGetters()
-    const [dashboard] = getMenuOptions.value
-    const beforeIndex = getMenuTagOptions.value.findIndex(
-      (curr) => curr.fullPath === dashboard.fullPath,
-    )
-
-    expect(!!getMenuTagOptions.value[beforeIndex + 1]).toBe(true)
-
-    closeRight(dashboard.fullPath)
-
-    await nextTick()
-
-    const afterIndex = getMenuTagOptions.value.findIndex(
-      (curr) => curr.fullPath === dashboard.fullPath,
-    )
-
-    expect(getMenuTagOptions.value[afterIndex + 1]).toBe(void 0)
-  })
-
-  it('should close left tags', async () => {
-    updateMenuTagOptions()
-
-    const { getMenuOptions, getMenuTagOptions } = useMenuGetters()
-    const [dashboard] = getMenuOptions.value
-
-    closeLeft(dashboard.fullPath)
-
-    await nextTick()
-
-    const afterIndex = getMenuTagOptions.value.findIndex(
-      (curr) => curr.fullPath === dashboard.fullPath,
-    )
-
-    expect(getMenuTagOptions.value[afterIndex - 1]).toBe(void 0)
-  })
-
-  it('should get current tag index', async () => {
-    updateMenuTagOptions()
-
-    const { getMenuOptions, getMenuTagOptions } = useMenuGetters()
-    const [dashboard] = getMenuOptions.value
-
-    const index = getMenuOptions.value.findIndex(
-      (curr) => curr.fullPath === dashboard.fullPath,
-    )
-
-    expect(getCurrentTagIndex()).toBe(index)
-  })
-
-  it('should close other tags', async () => {
-    updateMenuTagOptions()
-
-    const { getMenuOptions, getMenuTagOptions } = useMenuGetters()
-    const [dashboard] = getMenuOptions.value
-
-    closeOther(dashboard.fullPath)
-
-    await nextTick()
-
-    expect(getMenuTagOptions.value[0].fullPath).toBe(dashboard.fullPath)
-    expect(getMenuTagOptions.value.length).toBe(1)
-  })
-
-  it('check menuTagOptions left or right can close', async () => {
-    updateMenuTagOptions()
-
-    const { getMenuOptions, getMenuTagOptions } = useMenuGetters()
-    const [f, group] = getMenuOptions.value
-    const s = firstMenuLeaf(group)!
-
-    closeRight(f.fullPath)
-
-    await nextTick()
-
-    const canClose = checkCloseRight(f.fullPath)
-
-    expect(canClose).toBe(false)
-
-    updateMenuTagOptions()
-
-    closeLeft(f.fullPath)
-
-    await nextTick()
-
-    const canCloseLeft = checkCloseLeft(f.fullPath)
-
-    expect(canCloseLeft).toBe(false)
-
-    updateMenuTagOptions()
-
-    expect(checkCloseRight(s.fullPath)).toBe(true)
-    expect(checkCloseLeft(s.fullPath)).toBe(true)
-  })
-  it('keeps existing tags if the configured home route is no longer registered', () => {
-    updateMenuTagOptions()
-    const { getMenuTagOptions } = useMenuGetters()
-    const { getRootRoute, setRootRoute } = useAppRoot()
-    const currentRoot = { ...getRootRoute.value }
-    const currentTags = getMenuTagOptions.value.map((item) => item.fullPath)
-
-    try {
-      setRootRoute({ path: '/deleted-home-route' })
-      closeAll()
-      expect(getMenuTagOptions.value.map((item) => item.fullPath)).toEqual(
-        currentTags,
-      )
-    } finally {
-      setRootRoute(currentRoot)
-    }
-  })
+  settings.updateLocale('zh-CN')
+  await router.push('/403')
+  await flushPromises()
+  expect(document.title).toContain('暂时无法访问此页面')
+  settings.updateLocale('en-US')
+  await flushPromises()
+  expect(document.title).toContain('This page is not available to you')
+  await router.push('/welcome')
+  await flushPromises()
+  expect(document.title).toContain('Ready for your next task')
+  settings.updateLocale('zh-CN')
+  await flushPromises()
+  expect(document.title).toContain('工作区已就绪')
 })

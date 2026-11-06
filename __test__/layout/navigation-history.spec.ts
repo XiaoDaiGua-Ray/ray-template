@@ -47,6 +47,8 @@ it('isolates accounts and restores each account without storing titles or URL pa
 
   store.recordVisit('/system/users')
   store.recordVisit('/search?private=value')
+  store.recordVisit('/welcome')
+  store.toggleFavorite('/500')
   store.toggleFavorite('/system/users')
   account('two')
   expect(store.recentPaths).toEqual([])

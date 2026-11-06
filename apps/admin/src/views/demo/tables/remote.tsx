@@ -79,20 +79,6 @@ export default defineComponent({
               ) : null}
               <NButton
                 size="small"
-                secondary
-                onClick={() => table.value?.downloadCsv()}
-              >
-                {t('csv')}
-              </NButton>
-              <NButton
-                size="small"
-                secondary
-                onClick={() => table.value?.reload()}
-              >
-                {t('reload')}
-              </NButton>
-              <NButton
-                size="small"
                 quaternary
                 onClick={() => {
                   failNext = true

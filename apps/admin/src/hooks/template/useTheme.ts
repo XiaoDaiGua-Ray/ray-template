@@ -12,21 +12,29 @@ export interface AppThemeInfo {
   themeI18nLabel: string
 }
 
+/**
+ *
+ * @description
+ * 每个 Hook 实例复用主题引用与翻译器；读取快照时仍反映当前主题和语言。
+ *
+ * @returns 读取当前主题快照、切换明暗模式及跟随系统主题的方法。
+ */
 export const useTheme = () => {
+  const { getAppTheme: isDark } = useSettingGetters()
+  const { updateSettingState } = useSettingActions()
+  const { t } = useI18n()
+
   /**
    *
    * @returns 当前主题、固定英文标签和随语言切换的翻译标签。
    */
   const getAppTheme = (): AppThemeInfo => {
-    const { getAppTheme } = useSettingGetters()
-    const { t } = useI18n()
-
     return {
-      theme: getAppTheme.value,
-      themeI18nLabel: getAppTheme.value
+      theme: isDark.value,
+      themeI18nLabel: isDark.value
         ? t('headerSettingOptions.ThemeOptions.Dark')
         : t('headerSettingOptions.ThemeOptions.Light'),
-      themeLabel: getAppTheme.value ? 'Dark' : 'Light',
+      themeLabel: isDark.value ? 'Dark' : 'Light',
     }
   }
 
@@ -36,8 +44,6 @@ export const useTheme = () => {
    * 切换至暗色主题
    */
   const darkTheme = () => {
-    const { updateSettingState } = useSettingActions()
-
     updateSettingState('appTheme', 'dark')
   }
 
@@ -47,8 +53,6 @@ export const useTheme = () => {
    * 切换至明色主题
    */
   const lightTheme = () => {
-    const { updateSettingState } = useSettingActions()
-
     updateSettingState('appTheme', 'light')
   }
 
@@ -58,8 +62,6 @@ export const useTheme = () => {
    * 同步系统主题。
    */
   const syncSystemTheme = () => {
-    const { updateSettingState } = useSettingActions()
-
     updateSettingState('appTheme', 'auto')
   }
 
@@ -69,11 +71,7 @@ export const useTheme = () => {
    * 切换到与当前相反的手动主题。
    */
   const toggleTheme = () => {
-    const { getAppTheme } = useSettingGetters()
-    const theme = getAppTheme.value
-    const { updateSettingState } = useSettingActions()
-
-    updateSettingState('appTheme', !theme ? 'dark' : 'light')
+    updateSettingState('appTheme', isDark.value ? 'light' : 'dark')
   }
 
   return {

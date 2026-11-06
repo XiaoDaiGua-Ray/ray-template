@@ -74,13 +74,17 @@ export default defineComponent({
     const submission = ref<string>()
     const status = ref('form.waiting')
 
+    const finish = () => {
+      submission.value = JSON.stringify(model.value, null, 2)
+      status.value = 'form.submitted'
+    }
+
     const submit = async (event: Event) => {
       event.preventDefault()
 
       try {
         await validate()
-        submission.value = JSON.stringify(model.value, null, 2)
-        status.value = 'form.submitted'
+        finish()
       } catch {
         submission.value = void 0
         status.value = 'form.invalid'
@@ -96,6 +100,8 @@ export default defineComponent({
               rules={rules.value}
               onRegister={register}
               onSubmit={submit}
+              submitWhenEnter
+              onFinish={finish}
             >
               <NGrid cols="1 480:2" responsive="self" xGap={16}>
                 <NFormItemGi

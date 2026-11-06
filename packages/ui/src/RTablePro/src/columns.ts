@@ -10,9 +10,24 @@ export type ColumnLayoutPatch = Partial<
   Pick<KeyedColumn, 'fixed' | 'resizable'>
 >
 
+/**
+ *
+ * @param column 数据表列定义
+ *
+ * @returns 是否为带业务键的数据列或分组列
+ */
 export const hasColumnKey = (column: DataTableColumn): column is KeyedColumn =>
   'key' in column
 
+/**
+ *
+ * @param columns 按展示顺序排列的列定义
+ *
+ * @description
+ * 展开分组并跳过选择、展开等功能列；保留叶子列对象引用，供导出与可见性逻辑共用。
+ *
+ * @returns 按展示顺序排列的叶子列
+ */
 export const getLeafColumns = (columns: DataTableColumn[]): LeafColumn[] =>
   columns.flatMap((column) =>
     !hasColumnKey(column)
@@ -41,6 +56,43 @@ const applyRootOrder = (
   )
 }
 
+/**
+ *
+ * @param column 要调整的数据列或分组列
+ * @param patch 本次布局调整，fixed 显式为 undefined 表示取消固定
+ *
+ * @description
+ * Naive UI 表体读取叶子列自身的 fixed；分组固定需同步子树，仅传播 fixed，不覆盖子列其它配置。
+ *
+ * @returns 独立的调整结果，未涉及的子树保留原引用
+ */
+const applyColumnPatch = <Column extends KeyedColumn>(
+  column: Column,
+  patch: ColumnLayoutPatch,
+): Column => {
+  if (!('children' in column) || !Object.hasOwn(patch, 'fixed'))
+    return { ...column, ...patch }
+
+  return {
+    ...column,
+    ...patch,
+    children: column.children.map((child) =>
+      applyColumnPatch(child, { fixed: patch.fixed }),
+    ),
+  }
+}
+
+/**
+ *
+ * @param columns 当前完整列定义
+ * @param onUpdate 受控模式的完整列更新回调
+ * @param onReset 受控模式的重置回调
+ *
+ * @description
+ * 在受控回调与本地布局补丁间选择单一状态来源，不直接修改输入列。
+ *
+ * @returns 布局后的列及排序、补丁、重置方法
+ */
 export const useColumnLayout = (
   columns: Ref<DataTableColumn[]>,
   onUpdate: Ref<((columns: DataTableColumn[]) => void) | undefined>,
@@ -60,9 +112,11 @@ export const useColumnLayout = (
     if (!adjustments?.size) return arranged
 
     return arranged.map((column) => {
-      const patch = hasColumnKey(column) && adjustments.get(column.key)
+      if (!hasColumnKey(column)) return column
 
-      return patch ? { ...column, ...patch } : column
+      const patch = adjustments.get(column.key)
+
+      return patch ? applyColumnPatch(column, patch) : column
     })
   })
 
@@ -79,7 +133,7 @@ export const useColumnLayout = (
       onUpdate.value(
         columns.value.map((column) =>
           hasColumnKey(column) && column.key === key
-            ? { ...column, ...patch }
+            ? applyColumnPatch(column, patch)
             : column,
         ),
       )
@@ -124,15 +178,14 @@ const filterColumns = (
 
     if (!('children' in column)) return hidden.has(column.key) ? [] : [column]
 
-    const children = column.children.filter((child) => !hidden.has(child.key))
+    const children = filterColumns(
+      column.children,
+      hidden,
+    ) as typeof column.children
 
     if (!children.length) return []
 
-    return [
-      children.length === column.children.length
-        ? column
-        : { ...column, children },
-    ]
+    return [children === column.children ? column : { ...column, children }]
   })
 
   return filtered.length === columns.length &&
@@ -150,6 +203,17 @@ const isColumnKey = (value: unknown): value is TableColumnKey =>
   typeof value === 'string' ||
   (typeof value === 'number' && Number.isFinite(value))
 
+/**
+ *
+ * @param columns 包含隐藏列的完整列定义
+ * @param scope 可选持久化标识，空值表示不写入存储
+ * @param storage 隐藏列状态存储，浏览器中默认使用 localStorage
+ *
+ * @description
+ * 按叶子列键维护可见性，忽略已删除的键并至少保留一列；未变更的分支复用原对象。
+ *
+ * @returns 可见列、隐藏键与切换、重置方法
+ */
 export const useColumnVisibility = (
   columns: Ref<DataTableColumn[]>,
   scope: Ref<string | undefined>,

@@ -94,6 +94,6 @@ export const amount = format(add('0.1', '0.2'), {
 export const parts = distribute(10, 3, { precision: 2, type: 'string' })
 ```
 
-分摊或货币结算由业务明确小数位和舍入规则。保留字符串或整数分值跨接口传输可避免展示时的二进制浮点误差。
+分摊或货币结算由业务明确小数位和舍入规则。currency.js 使用 JavaScript Number 存储缩放后的整数，金额乘以 `10 ** precision` 后需仍在安全整数范围内；这些方法不提供任意精度运算。保留字符串或整数分值跨接口传输可避免展示时的二进制浮点误差。
 
 [基础函数](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/packages/utils/src/core/index.ts) · [精度实现](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/packages/utils/src/precision.ts) · [日期选择器辅助](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/utils/get-date-by-naive-date-picker.ts)

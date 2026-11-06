@@ -45,14 +45,19 @@ export const uuid = (length = 16, radix = 62) => {
 
   const range = 2 ** 32
   const limit = range - (range % radix)
-  const sample = new Uint32Array(1)
+  // 小批量复用缓冲区，避免每个字符都跨越一次 Web Crypto 边界。
+  const samples = new Uint32Array(Math.min(length, 128))
   let result = ''
 
   while (result.length < length) {
-    crypto.getRandomValues(sample)
+    crypto.getRandomValues(samples)
 
-    // 丢弃无法均匀分配到字符集的样本。
-    if (sample[0] < limit) result += chars[sample[0] % radix]
+    for (const sample of samples) {
+      // 丢弃无法均匀分配到字符集的样本。
+      if (sample < limit) result += chars[sample % radix]
+
+      if (result.length === length) break
+    }
   }
 
   return result

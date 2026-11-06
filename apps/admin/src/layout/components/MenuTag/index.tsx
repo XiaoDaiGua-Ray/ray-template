@@ -1,11 +1,5 @@
 import { RIcon, RMoreDropdown } from '@/components'
-import {
-  useAppRoot,
-  useI18n,
-  useMaximize,
-  useSiderBar,
-  useSpinning,
-} from '@/hooks'
+import { useI18n, useMaximize, useSiderBar, useSpinning } from '@/hooks'
 import { useMenuActions, useMenuGetters, useRuntimeGetters } from '@/store'
 import type { AppMenuOption, MenuTagOptions } from '@/types'
 import { ShellTab } from '@ray-template/admin-shell'
@@ -28,9 +22,11 @@ export default defineComponent({
     const scrollRef = useTemplateRef<ScrollbarInst | null>('scrollRef')
     const tagsRef = useTemplateRef<HTMLElement>('tags')
     const { t } = useI18n('menuTag')
-    const { getMenuKey, getMenuTagOptions } = useMenuGetters()
+    const { getCurrentMenuOption, getMenuTagOptions } = useMenuGetters()
+    const getMenuKey = computed(
+      () => getCurrentMenuOption.value?.fullPath ?? null,
+    )
     const { changeMenuModelValue } = useMenuActions()
-    const { getRootPath } = useAppRoot()
     const { maximize } = useMaximize()
     const { reload } = useSpinning()
     const {
@@ -67,6 +63,7 @@ export default defineComponent({
       {
         label: t('newWindow'),
         key: 'windowOpenTab',
+        disabled: !getMenuTagOptions.value[currentContextmenuIndex.value],
         icon: () => <RIcon name="navigation/window" size="1em" />,
       },
       {
@@ -96,14 +93,16 @@ export default defineComponent({
       {
         label: t('closeOther'),
         key: 'closeOther',
-        disabled: getMenuTagOptions.value.length < 2,
+        disabled:
+          getMenuTagOptions.value.length < 2 ||
+          !getMenuTagOptions.value[currentContextmenuIndex.value],
         icon: () => <RIcon name="action/close_other" size="1em" />,
       },
       {
         label: t('closeAll'),
         key: 'closeAll',
         icon: () => <RIcon name="action/close_all" size="1em" />,
-        disabled: getMenuTagOptions.value.length < 2,
+        disabled: getMenuTagOptions.value.length === 0,
       },
     ])
     const actionMap = {
@@ -153,10 +152,7 @@ export default defineComponent({
       actionDropdownShow: false,
     })
     const globalMainLayoutLoad = useRuntimeGetters().globalMainLayoutLoad
-    const canClose = (option?: MenuTagOptions) =>
-      !!option &&
-      getMenuTagOptions.value.length > 1 &&
-      option.fullPath !== getRootPath.value
+    const canClose = (option?: MenuTagOptions) => !!option
 
     const closeCurrentMenuTag = (index: number, restoreFocus = false) => {
       const option = getMenuTagOptions.value[index]

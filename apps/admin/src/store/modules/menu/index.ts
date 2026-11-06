@@ -1,7 +1,8 @@
 import { APP_CATCH_KEY } from '@/app-config'
 import { useI18n } from '@/hooks'
 import { getAppRawRoutes } from '@/router/app-route-modules'
-import { canSkipRoute, validMenuItemShow, validRole } from '@/router/utils'
+import { FORBIDDEN_ROUTE_PATH, isSystemRoute } from '@/router/constant'
+import { validMenuItemShow, validRole } from '@/router/utils'
 import { joinRoutePath } from '@/router/utils/join-route-path'
 import { useKeepAliveActions } from '@/store'
 import type { MenuState } from '@/store/modules/menu/types'
@@ -18,7 +19,6 @@ import { pickRouteRecordNormalizedConstant } from './constant'
 import {
   createMenuExtra,
   createMenuIcon,
-  getCatchMenuKey,
   getCatchMenuTagOptions,
   updateDocumentTitle,
 } from './utils'
@@ -47,13 +47,14 @@ export const depthSearchAppMenu = (
 export const piniaMenuStore = defineStore(
   'menu',
   () => {
-    const { push, resolve } = useRouter()
+    const { push, replace, resolve } = useRouter()
     const route = useRoute()
     const { t } = useI18n()
-    const { setKeepAliveInclude } = useKeepAliveActions()
+    const { setKeepAliveInclude, retainKeepAliveInclude } =
+      useKeepAliveActions()
 
     const menuState = reactive<MenuState>({
-      menuKey: getCatchMenuKey(), // 当前菜单 `key`
+      menuKey: null, // 当前菜单由实际 URL 决定，不从缓存选择首页。
       options: [], // 菜单列表
       collapsed: false, // 是否折叠菜单
       menuTagOptions: getCatchMenuTagOptions(), // tag 标签菜单
@@ -66,7 +67,10 @@ export const piniaMenuStore = defineStore(
       string,
       { option: AppMenuOption; parentPath: string }
     >()
-    const cacheTags = () =>
+    const cacheTags = () => {
+      retainKeepAliveInclude(
+        new Set(menuState.menuTagOptions.map(({ name }) => name)),
+      )
       setStorage(
         APP_CATCH_KEY.appMenuTagOptions,
         menuState.menuTagOptions.map(
@@ -91,6 +95,14 @@ export const piniaMenuStore = defineStore(
           }),
         ),
       )
+    }
+
+    const clearActiveMenu = () => {
+      menuState.menuKey = null
+      menuState.currentMenuOption = null
+      menuState.breadcrumbOptions = []
+      setStorage(APP_CATCH_KEY.appMenuKey, null)
+    }
 
     /**
      *
@@ -180,13 +192,21 @@ export const piniaMenuStore = defineStore(
       isAppend = true,
     ) => {
       const isArray = Array.isArray(options)
-      const arr = isArray ? [...options] : [options]
+      const arr = (isArray ? [...options] : [options]).filter(
+        (option) =>
+          option.fullPath !== '/' &&
+          !isSystemRoute({ ...option, path: resolve(option.fullPath).path }) &&
+          !option.meta.sameLevel &&
+          !option.meta.windowOpen,
+      )
 
       isAppend
         ? menuState.menuTagOptions.push(...arr)
         : (menuState.menuTagOptions = arr)
 
       cacheTags()
+
+      if (!menuState.menuTagOptions.length) clearActiveMenu()
     }
 
     const updateActiveMenu = (option: AppMenuOption) => {
@@ -194,21 +214,28 @@ export const piniaMenuStore = defineStore(
       updateDocumentTitle(option)
 
       if (option.meta.sameLevel) {
-        if (
-          !menuState.breadcrumbOptions.some(({ key }) => key === option.key)
-        ) {
-          menuState.breadcrumbOptions.push(option)
-        }
+        const existing = menuState.breadcrumbOptions.findIndex(
+          ({ key }) => key === option.key,
+        )
+
+        if (existing < 0) menuState.breadcrumbOptions.push(option)
+        else menuState.breadcrumbOptions[existing] = option
 
         return
       }
 
-      if (
-        !menuState.menuTagOptions.some(
-          ({ fullPath }) => fullPath === option.fullPath,
-        )
-      ) {
+      const pathname = resolve(option.fullPath).path
+      const tagIndex = menuState.menuTagOptions.findIndex(
+        ({ fullPath }) => resolve(fullPath).path === pathname,
+      )
+
+      if (tagIndex < 0) {
         menuState.menuTagOptions.push(option)
+        cacheTags()
+      } else if (
+        menuState.menuTagOptions[tagIndex].fullPath !== option.fullPath
+      ) {
+        menuState.menuTagOptions[tagIndex] = option
         cacheTags()
       }
 
@@ -224,7 +251,7 @@ export const piniaMenuStore = defineStore(
         !option.children?.length &&
         !option.fullPath.includes(':')
       ) {
-        navigationHistory.recordVisit(option.fullPath)
+        navigationHistory.recordVisit(pathname)
       }
 
       if (menuState.menuKey !== option.key) {
@@ -247,26 +274,47 @@ export const piniaMenuStore = defineStore(
       const path = String(key)
 
       if (route.fullPath === path && !query) updateActiveMenu(option)
-      else return push({ path, query })
+      else {
+        const target = resolve(path)
+
+        return push({
+          path: target.path,
+          hash: target.hash,
+          query: { ...target.query, ...query },
+        })
+      }
     }
 
     const optionForRoute = (path: string, matched: RouteRecordNormalized[]) => {
       const record = matched.at(-1)
 
-      if (!record || record.path === '/' || record.redirect) return
+      if (
+        !record ||
+        record.path === '/' ||
+        record.redirect ||
+        isSystemRoute(record) ||
+        !validRole(record.meta)
+      )
+        return
 
       const canonicalPath = record.aliasOf?.path ?? record.path
       const menuOption = menuIndex.get(canonicalPath)?.option
 
-      if (menuOption && !canonicalPath.includes(':')) return menuOption
+      if (menuOption && !canonicalPath.includes(':'))
+        return menuOption.fullPath === path
+          ? menuOption
+          : { ...menuOption, fullPath: path }
 
-      return resolveOption({
-        ...(pick(
-          record,
-          pickRouteRecordNormalizedConstant,
-        ) as unknown as AppMenuOption),
-        fullPath: path,
-      })
+      return {
+        ...resolveOption({
+          ...(pick(
+            record,
+            pickRouteRecordNormalizedConstant,
+          ) as unknown as AppMenuOption),
+          fullPath: path,
+        }),
+        key: resolve(path).path,
+      }
     }
 
     const setupAppMenu = async () => {
@@ -313,34 +361,44 @@ export const piniaMenuStore = defineStore(
         const restored = resolve(fullPath)
         const record = restored.matched.at(-1)
 
-        if (!record || !validRole(record.meta, currentRole)) return []
+        if (
+          !record ||
+          !validRole(restored.meta, currentRole) ||
+          isSystemRoute(record)
+        )
+          return []
 
-        const option = optionForRoute(restored.path, restored.matched)
+        const option = optionForRoute(restored.fullPath, restored.matched)
 
         return option && !option.meta.sameLevel && !option.meta.windowOpen
           ? [option]
           : []
       })
 
-      menuState.menuTagOptions = restoredTags
+      menuState.menuTagOptions = [
+        ...new Map(
+          restoredTags.map((option) => [resolve(option.fullPath).path, option]),
+        ).values(),
+      ]
       cacheTags()
 
-      const active = optionForRoute(route.path, route.matched)
-
-      if (!active || active.meta.sameLevel) {
-        const cached = menuIndex.get(String(menuState.menuKey))?.option
-        const first =
-          cached &&
-          !cached.children &&
-          cached.show !== false &&
-          !cached.meta.windowOpen
-            ? cached
-            : canSkipRoute(menuState.options)
-
-        if (first) updateActiveMenu(first as AppMenuOption)
-      }
+      const active = optionForRoute(route.fullPath, route.matched)
 
       if (active) updateActiveMenu(active)
+      else {
+        clearActiveMenu()
+
+        if (
+          route.path !== '/' &&
+          !isSystemRoute(route) &&
+          route.matched.length &&
+          !validRole(route.meta, currentRole)
+        )
+          await replace({
+            path: FORBIDDEN_ROUTE_PATH,
+            query: { from: route.fullPath },
+          })
+      }
     }
 
     /**
@@ -368,26 +426,55 @@ export const piniaMenuStore = defineStore(
 
       cacheTags()
 
+      if (!menuState.menuTagOptions.length) clearActiveMenu()
+
       return r
     }
 
-    watch(() => signing.signingCallback.role, setupAppMenu, { immediate: true })
+    watch(
+      () => [
+        signing.signingCallback.role,
+        signing.signingCallback.id || signing.signingCallback.name,
+      ],
+      (current, previous) => {
+        if (previous?.[1] && current[1] !== previous[1]) {
+          menuState.menuTagOptions = []
+
+          if (!current[1]) {
+            cacheTags()
+            clearActiveMenu()
+
+            return
+          }
+        }
+
+        void setupAppMenu()
+      },
+      { immediate: true },
+    )
 
     watch(
-      () => route.path,
+      () => route.fullPath,
       (path) => {
         const option = optionForRoute(path, route.matched)
 
         if (option) updateActiveMenu(option)
+        else clearActiveMenu()
       },
     )
 
     watch(
-      () => menuState.currentMenuOption?.breadcrumbLabel,
       () => {
-        if (menuState.currentMenuOption)
-          updateDocumentTitle(menuState.currentMenuOption)
+        const { i18nKey, noLocalTitle } = route.meta
+
+        return i18nKey
+          ? t(i18nKey)
+          : (noLocalTitle ?? menuState.currentMenuOption?.breadcrumbLabel)
       },
+      (label) => {
+        if (label) updateDocumentTitle({ breadcrumbLabel: String(label) })
+      },
+      { immediate: true },
     )
 
     return {
@@ -405,7 +492,7 @@ export const piniaMenuStore = defineStore(
     persist: {
       key: APP_CATCH_KEY.appPiniaMenuStore,
       storage: window.localStorage,
-      pick: ['menuKey', 'collapsed'],
+      pick: ['collapsed'],
     },
   },
 )

@@ -29,6 +29,7 @@ export default defineComponent({
       translate: t,
       columnStorage: createStorage(window.localStorage, APP_CATCH_KEY_PREFIX),
       reportError: (message) => window.$message?.error(message),
+      reportSuccess: (message) => window.$message?.success(message),
       iconUrl: (name, prefix) =>
         `${iconSprites[name.split('/')[0] as IconPackage]}#${prefix}-${name}`,
     })

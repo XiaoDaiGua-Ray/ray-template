@@ -6,13 +6,23 @@ import type { DownloadAnyFileDataType } from '../types'
  *
  * @returns PNG Data URL。
  */
-export const arrayBufferToBase64Image = (data: ArrayBuffer) =>
-  'data:image/png;base64,' +
-  btoa(
-    Array.from(new Uint8Array(data), (byte) => String.fromCharCode(byte)).join(
-      '',
-    ),
-  )
+export const arrayBufferToBase64Image = (data: ArrayBuffer) => {
+  const bytes = new Uint8Array(data)
+
+  // 原生编码避免中间二进制字符串；旧浏览器继续使用分块回退。
+  if (typeof bytes.toBase64 === 'function') {
+    return 'data:image/png;base64,' + bytes.toBase64()
+  }
+
+  const chunks: string[] = []
+
+  // 分块限制函数参数个数，也避免为每个字节分配一个字符串数组项。
+  for (let offset = 0; offset < bytes.length; offset += 0x8000) {
+    chunks.push(String.fromCharCode(...bytes.subarray(offset, offset + 0x8000)))
+  }
+
+  return 'data:image/png;base64,' + btoa(chunks.join(''))
+}
 
 /**
  *

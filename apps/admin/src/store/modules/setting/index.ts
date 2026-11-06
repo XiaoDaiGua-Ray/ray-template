@@ -3,6 +3,7 @@ import { useDayjs, useI18n } from '@/hooks'
 import type { LocalKey } from '@/hooks'
 import { resolveIconName } from '@/icons'
 import { getAppDefaultLanguage } from '@/locales/utils'
+import { WELCOME_ROUTE_PATH } from '@/router/constant'
 import type { SettingState } from '@/store/modules/setting/types'
 import type { AnyFn } from '@/types'
 import { setStorage } from '@/utils/cache'
@@ -34,16 +35,16 @@ export const piniaSettingStore = defineStore(
       localeLanguage: getAppDefaultLanguage(),
       // 锁屏开关
       lockScreenSwitch: false,
-      // 根路由信息
+      // 仅供旧版 useAppRoot 调用方读取；不再控制路由跳转或标签保护。
       appRootRoute: {
-        name: 'Dashboard',
-        path: '/dashboard',
+        name: 'RWelcome',
+        path: WELCOME_ROUTE_PATH,
       },
       // 侧边栏设置
       sideBarLogo: {
         icon: 'logo/ray',
         title: 'Ray Admin',
-        url: '/dashboard',
+        url: WELCOME_ROUTE_PATH,
         jumpType: 'station',
       },
       ...cloneDeep(getDefaultSettingConfig()),
@@ -209,14 +210,30 @@ export const piniaSettingStore = defineStore(
       storage: window.localStorage,
       serializer: {
         serialize: (state) =>
-          JSON.stringify({ ...state, menuIconSizesUpdated: true }),
+          JSON.stringify({
+            ...state,
+            menuIconSizesUpdated: true,
+            workspaceLandingMigrated: true,
+          }),
         deserialize: (json) => {
-          const { menuIconSizesUpdated, ...state } = JSON.parse(
-            json,
-          ) as Partial<SettingState> & {
-            menuIconSizesUpdated?: boolean
-          }
+          const { menuIconSizesUpdated, workspaceLandingMigrated, ...state } =
+            JSON.parse(json) as Partial<SettingState> & {
+              menuIconSizesUpdated?: boolean
+              workspaceLandingMigrated?: boolean
+            }
           const { menuConfig } = state
+
+          // 只迁移旧版整套默认 Logo；自定义目标保持显式导航语义。
+          if (
+            !workspaceLandingMigrated &&
+            state.sideBarLogo?.url === '/dashboard' &&
+            state.sideBarLogo.title === 'Ray Admin' &&
+            typeof state.sideBarLogo.icon === 'string' &&
+            resolveIconName(state.sideBarLogo.icon) === 'logo/ray' &&
+            state.sideBarLogo.jumpType === 'station'
+          ) {
+            state.sideBarLogo.url = WELCOME_ROUTE_PATH
+          }
 
           // 旧缓存写入了整组默认值。仅升级旧的尺寸组合，保留此后保存的自定义值。
           if (

@@ -29,6 +29,13 @@ export interface LoadingOptions {
 
 export type ChartTheme = string | null
 
+/**
+ *
+ * @description
+ * 保留旧版组件 ref 结构以兼容既有类型引用；当前 RChart 通过 onRegister 提供实例。
+ *
+ * @deprecated 当前调用请使用 UseChartReturn，组件 ref 不实现此旧版结构。
+ */
 export interface RChartInst {
   /**
    *

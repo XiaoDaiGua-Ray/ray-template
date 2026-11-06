@@ -26,7 +26,16 @@ export const useMaximize = (defaults?: MaximizeOptions) => {
     useRuntimeGetters()
   const { setRuntimeState } = useRuntimeActions()
 
-  // 最大化由布局 class 驱动；不同页面、标签菜单与退出按钮共享同一状态。
+  /**
+   *
+   * @param full 是否最大化内容区
+   * @param options 覆盖默认回调、样式与滚动位置
+   *
+   * @description
+   * 最大化由布局 class 驱动；不同调用方共享状态，仅最新一次切换执行完成回调。
+   *
+   * @throws 前置回调抛错时中止切换；完成回调由 Vue nextTick 调度。
+   */
   const maximize = (full: boolean, options?: MaximizeOptions) => {
     if (layoutContentMaximize.value === full) return
 
@@ -62,6 +71,11 @@ export const useMaximize = (defaults?: MaximizeOptions) => {
     isLayoutContentMaximized: layoutContentMaximize,
     isFullscreen: layoutContentMaximize,
     maximize,
+    /**
+     *
+     * @description
+     * 使用初始化时的默认配置切换共享最大化状态。
+     */
     toggleFullscreen: () => maximize(!layoutContentMaximize.value),
   }
 }

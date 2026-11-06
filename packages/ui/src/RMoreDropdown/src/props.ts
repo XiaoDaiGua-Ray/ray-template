@@ -4,6 +4,10 @@ import type { PropType } from 'vue'
 
 const props = {
   ...dropdownProps,
+  placement: {
+    ...dropdownProps.placement,
+    default: 'bottom-start',
+  },
   icon: {
     type: String as PropType<IconName>,
     default: 'action/more',
@@ -11,6 +15,8 @@ const props = {
   iconSize: {
     type: Number,
   },
+  /** 默认图标按钮的可访问名称，自定义触发插槽自行提供名称 */
+  triggerLabel: String,
   cursor: {
     type: String,
     default: 'inherit',

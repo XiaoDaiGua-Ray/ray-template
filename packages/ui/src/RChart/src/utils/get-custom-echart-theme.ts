@@ -1,5 +1,13 @@
 import type { ChartThemeRawArray } from '../types'
 
+/**
+ *
+ * @description
+ * 读取随包构建的主题 JSON，以不含扩展名的文件名作为 ECharts 注册名。
+ *
+ * @returns 可直接注册的主题名称与配置；明暗变体保留各自注册名。
+ * @throws 不同目录中的主题文件同名时抛错，避免注册结果受遍历顺序影响。
+ */
 export const getCustomEchartTheme = (): ChartThemeRawArray[] => {
   const modules = import.meta.glob<ChartThemeRawArray['theme']>(
     '../themes/**/*.json',

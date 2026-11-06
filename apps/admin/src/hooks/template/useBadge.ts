@@ -5,6 +5,14 @@ import type { AppMenuOption } from '@/types'
 
 export type BadgeKey = string | AppMenuOption
 
+/**
+ *
+ * @param target 菜单路径或菜单项
+ * @param extra 合并到当前菜单的标记配置
+ *
+ * @description
+ * 通过已加载的菜单树定位真实对象，并重建其标记渲染入口，避免只更新传入的副本。
+ */
 const updateBadge = (target: BadgeKey, extra: AppMenuExtraOptions) => {
   const { getMenuOptions } = useMenuGetters()
   const key = typeof target === 'string' ? target : target?.fullPath
@@ -23,6 +31,10 @@ const updateBadge = (target: BadgeKey, extra: AppMenuExtraOptions) => {
   option.extra = createMenuExtra(option)
 }
 
+/**
+ *
+ * @returns 按菜单路径查找并修改共享标记的方法；未加载的菜单不会被创建。
+ */
 export function useBadge() {
   /**
    *

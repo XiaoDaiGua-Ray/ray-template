@@ -1,12 +1,12 @@
 import App from './App'
 import './styles/entry'
 import type { App as AppType } from 'vue'
-import { setupRayTemplateCore } from './__ray-template'
 import { apiMockEnabled } from './api/admin/client'
 import { installAutocompleteDefaults } from './app-components/provider/AppAutocompleteDefaults'
 import { GLOBAL_CLASS_NAMES } from './app-config'
 import { setupDayjs } from './dayjs'
 import { setupDirectives } from './directives'
+import { runAppDoctor } from './doctor'
 import { setupI18n } from './locales'
 import { setupRouter } from './router'
 import { setupStore } from './store'
@@ -56,7 +56,8 @@ const setupTemplate = async () => {
   await setupPlugins(app)
   app.mount('#app')
   bootSplash()?.remove()
-  await setupRayTemplateCore()
+
+  if (__DEV__) runAppDoctor()
 }
 
 /**
@@ -76,7 +77,8 @@ const setupWujieTemplate = async () => {
       await setupPlugins(instance)
       instance.mount('#app')
       bootSplash()?.remove()
-      await setupRayTemplateCore()
+
+      if (__DEV__) runAppDoctor()
     } catch (error) {
       showBootError(error)
       throw error

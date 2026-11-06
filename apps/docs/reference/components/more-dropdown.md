@@ -16,13 +16,14 @@ import MoreDropdownDemo from '../../examples/MoreDropdownDemo.vue'
 <<< @/examples/MoreDropdownDemo.vue
 :::
 
-| 属性       | 默认            | 说明                                  |
-| ---------- | --------------- | ------------------------------------- |
-| `icon`     | `'action/more'` | 类型为 `IconName`，使用完整分包路径。 |
-| `iconSize` | 跟随 RIcon      | 触发图标大小，省略时为 20 px。        |
-| `cursor`   | `'inherit'`     | 默认继承所在控件的指针样式。          |
+| 属性           | 默认                            | 说明                                  |
+| -------------- | ------------------------------- | ------------------------------------- |
+| `icon`         | `'action/more'`                 | 类型为 `IconName`，使用完整分包路径。 |
+| `iconSize`     | 跟随 RIcon                      | 触发图标大小，省略时为 20 px。        |
+| `cursor`       | `'inherit'`                     | 默认继承所在控件的指针样式。          |
+| `triggerLabel` | 跟随注入翻译或 `'More actions'` | 默认图标按钮的可访问名称。            |
 
-`default` 插槽替换图标触发器。只有图标时建议用具有可访问名称的原生按钮或 `NButton`，方便键盘进入。列表行中根据业务需要阻止触发器的点击冒泡，避免同时触发行导航。
+默认触发器是可键盘聚焦的图标按钮。`placement` 默认 `'bottom-start'`，可由调用方覆盖。`default` 插槽替换整个触发器，自定义触发器应使用具有可访问名称的原生按钮或 `NButton`。列表行中根据业务需要阻止点击冒泡，避免同时触发行导航。
 
 ```tsx
 import { RIcon, RMoreDropdown } from '@/components'

@@ -1,4 +1,4 @@
-import { computed, defineComponent, ref } from 'vue'
+import { computed, defineComponent, ref, watch } from 'vue'
 import './index.scss'
 import { completeSize } from '@ray-template/composables/element'
 import { call } from '@ray-template/composables/vue'
@@ -22,6 +22,13 @@ export default defineComponent({
     })
     const iframeRef = useTemplateRef<HTMLIFrameElement>('iframeRef')
     const spinShow = ref(true)
+
+    watch(
+      () => props.src,
+      () => {
+        spinShow.value = true
+      },
+    )
 
     const iframeLoadSuccess = (e: Event) => {
       spinShow.value = false
@@ -47,6 +54,7 @@ export default defineComponent({
     useEventListener(iframeRef, 'error', iframeLoadError)
 
     expose({
+      iframe: iframeRef,
       iframeInst: iframeRef,
     })
 

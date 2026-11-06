@@ -34,6 +34,7 @@ import TablePanel from './TablePanel'
 import type {
   TablePanelInst,
   TableProColumn,
+  TableProPagination,
   TableProParams,
   TableProQueryState,
   TableProRequest,
@@ -59,7 +60,7 @@ const props = {
     type: Array as PropType<TableProColumn[]>,
   },
   pagination: {
-    type: [Boolean, Object] as PropType<boolean | PaginationProps>,
+    type: [Boolean, Object] as PropType<boolean | TableProPagination>,
     default: void 0,
   },
   pageSize: { type: Number, default: 10 },
@@ -80,14 +81,23 @@ const props = {
 export type TableProProps = ExtractPublicPropTypes<typeof props>
 
 export interface TableProInst extends TablePanelInst {
+  /** 远端查询状态；本地数据模式下为 null */
   readonly queryState: TableProQueryState | null
+  /** 重载当前查询，resetPage 为 true 时先回到第一页 */
   reload: (resetPage?: boolean) => Promise<void>
+  /** 切换合法页码，远端模式等待对应请求完成 */
   setPage: (page: number) => Promise<void>
+  /** 修改每页数量并回到第一页 */
   setPageSize: (pageSize: number) => Promise<void>
+  /** 读取当前查询已确认的数据，未就绪时返回空数组 */
   getCurrentPageData: () => readonly Readonly<Record<string, unknown>>[]
+  /** 复制当前草稿或已应用搜索值，默认读取草稿 */
   getSearchValues: (source?: 'draft' | 'applied') => TableProSearchValues
+  /** 修改已定义的搜索字段，提交时机由搜索配置决定 */
   setSearchValues: (values: TableProSearchValues) => void
+  /** 校验并提交当前搜索，失效或失败时返回 false */
   submitSearch: () => Promise<boolean>
+  /** 恢复并提交默认搜索值 */
   resetSearch: () => Promise<boolean>
 }
 
@@ -231,11 +241,7 @@ export default defineComponent({
       page.value = value
       pager.value.notifyPage(value)
 
-      for (const handler of [
-        props.onUpdatePage,
-        props['onUpdate:page'],
-        props.onPageChange,
-      ])
+      for (const handler of [props.onUpdatePage, props['onUpdate:page']])
         if (handler) call(handler, value)
 
       return true
@@ -315,7 +321,6 @@ export default defineComponent({
       pager.value.notifyPageSize(value)
 
       for (const handler of [
-        props.onPageSizeChange,
         props.onUpdatePageSize,
         props['onUpdate:pageSize'],
       ])
@@ -463,6 +468,10 @@ export default defineComponent({
         if (!props.request || activeResult.value)
           table.value?.downloadCsv(options)
       },
+      copyImage: (options) =>
+        (!props.request || activeResult.value
+          ? table.value?.copyImage(options)
+          : void 0) ?? Promise.resolve(false),
     }
 
     expose(instance)
@@ -500,6 +509,7 @@ export default defineComponent({
               : localRows.value.rows
           }
           rowActionsDisabled={!!request && !activeResult.value}
+          reload={request ? reload : void 0}
           loading={requestPhase.value === 'loading' || externalLoading}
           pagination={paginationProps}
           onUpdatePage={setPage}

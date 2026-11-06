@@ -13,7 +13,7 @@
   min-width: 0;
   padding: 13px 16px;
   border: 1px solid var(--r-line);
-  border-radius: 8px;
+  border-radius: var(--r-control-radius);
   color: var(--r-text-secondary);
   text-decoration: none;
   font-size: 13px;

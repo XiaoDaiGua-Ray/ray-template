@@ -10,17 +10,19 @@ import {
 } from 'vue'
 import { useUiServices } from '../../services'
 import './index.scss'
+import { unrefElement } from '@ray-template/composables/vue'
 import { useElementSize } from '@vueuse/core'
 import { NDataTable, NDropdown, useThemeVars } from 'naive-ui'
-import type { DataTableInst, DataTableProps } from 'naive-ui'
+import type { DataTableInst, DataTableProps, DropdownProps } from 'naive-ui'
 import { useTemplateRef } from 'vue'
+import type { ComponentPublicInstance } from 'vue'
+import { RIcon } from '../../RIcon'
 import { useColumnLayout, useColumnVisibility } from './columns'
-import AppearanceSettings from './components/AppearanceSettings'
 import ColumnSettings from './components/ColumnSettings'
 import Fullscreen from './components/Fullscreen'
-import Size from './components/Size'
 import ToolButton from './components/ToolButton'
 import { buildTableCsv, downloadTableCsv } from './csv'
+import { copyTableImage } from './image'
 import { useTableLocale } from './locale'
 import {
   buildPrintableTable,
@@ -29,12 +31,17 @@ import {
 } from './printing'
 import { tablePanelProps, toNativeTableProps } from './props'
 import { config } from './shared'
-import type {
-  PropsComponentPopselectKeys,
-  TablePanelInst,
-  TableProRowContext,
-} from './types'
+import type { TablePanelInst, TableProRowContext } from './types'
 
+/**
+ *
+ * @param prop 外部属性读取器
+ *
+ * @description
+ * 外部值改变前允许面板持有本地覆盖，外部更新后自动回归调用方配置。
+ *
+ * @returns 可写的当前展示值
+ */
 const useLocalOverride = <Value,>(prop: () => Value) => {
   const source = computed(() => ({ value: prop() }))
   const local = shallowRef<{ source: typeof source.value; value: Value }>()
@@ -56,7 +63,7 @@ export default defineComponent({
   props: tablePanelProps,
   setup(props, { attrs, slots, expose }) {
     const { t } = useTableLocale()
-    const { columnStorage, reportError } = useUiServices()
+    const { columnStorage, reportError, reportSuccess } = useUiServices()
     const theme = useThemeVars()
     const cardStyle = computed(() => ({
       '--r-table-card-surface': theme.value.cardColor,
@@ -65,7 +72,9 @@ export default defineComponent({
       '--r-table-card-text': theme.value.textColor1,
       '--r-table-card-muted': theme.value.textColor2,
     }))
-    const table = useTemplateRef<DataTableInst>('dataTable')
+    const table = useTemplateRef<DataTableInst & ComponentPublicInstance>(
+      'dataTable',
+    )
     const wrapper = useTemplateRef<HTMLElement>('wrapper')
     const responsivePager = computed(() =>
       typeof props.pagination === 'object' && props.pagination.simple == null
@@ -99,10 +108,34 @@ export default defineComponent({
         columnStorage,
       )
     const printing = ref(false)
+    const copyingImage = ref(false)
+    const imageFeedback = shallowRef<{ key: string; error: boolean }>()
     let pendingPrint: AbortController | undefined
+    let pendingImage: AbortController | undefined
+    let disposed = false
     const cancelPrint = () => pendingPrint?.abort()
+    const cancelImage = () => pendingImage?.abort()
 
-    onBeforeUnmount(cancelPrint)
+    onBeforeUnmount(() => {
+      disposed = true
+      cancelPrint()
+      cancelImage()
+    })
+
+    const reportImageResult = (key: string, error: boolean) => {
+      const notify = error ? reportError : reportSuccess
+
+      imageFeedback.value = { key, error }
+
+      if (notify) {
+        try {
+          notify(t(key))
+          imageFeedback.value = void 0
+        } catch {
+          // 宿主消息服务不可用时保留局部反馈，不改变已经完成的剪贴板结果。
+        }
+      }
+    }
 
     provide(config.wrapperKey, wrapper)
     const size = useLocalOverride(() => props.size)
@@ -118,17 +151,81 @@ export default defineComponent({
         () => props.data,
         () => props.rowActionsDisabled,
         () => props.contextMenuOptions,
+        () => props.loading,
       ],
-      ([data, disabled], [previousData, previouslyDisabled]) => {
+      ([data, disabled, , loading], [previousData, previouslyDisabled]) => {
         closeContext()
 
-        if (data !== previousData || disabled !== previouslyDisabled)
+        if (data !== previousData || disabled !== previouslyDisabled) {
           cancelPrint()
+          cancelImage()
+          imageFeedback.value = void 0
+        }
+
+        if (loading) cancelImage()
       },
     )
 
     const handle: TablePanelInst = {
       getTableInstance: () => table.value,
+      copyImage: async (options) => {
+        if (
+          disposed ||
+          copyingImage.value ||
+          props.loading ||
+          props.rowActionsDisabled
+        )
+          return false
+
+        const target = unrefElement(table)
+
+        if (!(target instanceof HTMLElement)) return false
+
+        const current = new AbortController()
+
+        pendingImage = current
+        copyingImage.value = true
+        imageFeedback.value = void 0
+
+        try {
+          await copyTableImage(
+            target,
+            {
+              backgroundColor: theme.value.cardColor,
+              ...props.copyImageOptions,
+              ...options,
+            },
+            current.signal,
+          )
+
+          if (!disposed && !current.signal.aborted)
+            reportImageResult('copyImageSuccess', false)
+
+          return true
+        } catch (error) {
+          const name = error instanceof Error ? error.name : ''
+
+          if (!disposed && !current.signal.aborted) {
+            if (name === 'AbortError') return false
+
+            reportImageResult(
+              name === 'NotSupportedError'
+                ? 'copyImageUnsupported'
+                : name === 'NotAllowedError'
+                  ? 'copyImagePermission'
+                  : 'copyImageError',
+              true,
+            )
+          }
+
+          return false
+        } finally {
+          if (pendingImage === current) {
+            pendingImage = void 0
+            copyingImage.value = false
+          }
+        }
+      },
       downloadCsv: (options) => {
         if (props.rowActionsDisabled) return
 
@@ -239,9 +336,96 @@ export default defineComponent({
       }
     }
 
-    const changeAppearance = (values: PropsComponentPopselectKeys[]) => {
-      striped.value = values.includes('striped')
-      bordered.value = values.includes('bordered')
+    const actionOptions = computed<NonNullable<DropdownProps['options']>>(
+      () => [
+        {
+          key: 'density',
+          label: t('density'),
+          icon: () => <RIcon name="action/adjustment" size={16} />,
+          children: (['small', 'medium', 'large'] as const).map(
+            (value, index) => ({
+              key: `density:${value}`,
+              label: t(['compact', 'standard', 'comfortable'][index]),
+              icon: () => (
+                <span aria-hidden="true">
+                  {size.value === value ? '✓' : ''}
+                </span>
+              ),
+              props: {
+                role: 'menuitemradio',
+                'aria-checked': size.value === value,
+              },
+            }),
+          ),
+        },
+        ...(['striped', 'bordered'] as const).map((key) => {
+          const checked = key === 'striped' ? striped.value : bordered.value
+
+          return {
+            key,
+            label: t(key),
+            icon: () => <span aria-hidden="true">{checked ? '✓' : ''}</span>,
+            props: { role: 'menuitemcheckbox', 'aria-checked': checked },
+          }
+        }),
+        { key: 'output-divider', type: 'divider' },
+        {
+          key: 'csv',
+          label: t('csv'),
+          icon: () => <RIcon name="action/download" size={16} />,
+          disabled:
+            props.rowActionsDisabled || props.loading || !props.columns.length,
+        },
+        ...(props.showPrint
+          ? [
+              {
+                key: 'print',
+                label: t('print'),
+                icon: () => <RIcon name="action/print" size={16} />,
+                disabled:
+                  props.rowActionsDisabled || props.loading || printing.value,
+              },
+            ]
+          : []),
+      ],
+    )
+
+    /**
+     *
+     * @param key 工具菜单操作键
+     *
+     * @description
+     * 复用实例导出和打印路径；外观只更新本地覆盖，不改变调用方列或数据。
+     */
+    const selectAction = async (key: string | number) => {
+      switch (key) {
+        case 'density:small':
+          size.value = 'small'
+          break
+        case 'density:medium':
+          size.value = 'medium'
+          break
+        case 'density:large':
+          size.value = 'large'
+          break
+        case 'striped':
+          striped.value = !striped.value
+          break
+        case 'bordered':
+          bordered.value = !bordered.value
+          break
+        case 'csv':
+          if (!props.loading) handle.downloadCsv()
+
+          break
+        case 'print':
+          if (props.showPrint && !(await handle.print()))
+            reportError?.(t('printError'))
+
+          break
+        default:
+          break
+      }
     }
 
     const nativeProps = computed(() => toNativeTableProps(props))
@@ -297,29 +481,26 @@ export default defineComponent({
                 ) : null}
                 {showToolbar ? (
                   <div class="r-table__toolbar">
-                    {toolbar?.()}
+                    {toolbar ? (
+                      <div class="r-table__business-actions">{toolbar()}</div>
+                    ) : null}
                     {tool ? (
-                      <>
-                        <ToolButton
-                          icon="action/print"
-                          label={t('print')}
-                          disabled={
-                            rowActionsDisabled ||
-                            props.loading ||
-                            printing.value
-                          }
-                          onClick={async () => {
-                            if (!(await handle.print()))
-                              reportError?.(t('printError'))
-                          }}
-                        />
-                        <Size
-                          size={size.value}
-                          onChange={(value) => {
-                            size.value = value
-                          }}
-                        />
-                        <Fullscreen />
+                      <div
+                        class={[
+                          'r-table__utilities',
+                          { 'r-table__utilities--separated': !!toolbar },
+                        ]}
+                        role="group"
+                        aria-label={t('tableControls')}
+                      >
+                        {props.reload ? (
+                          <ToolButton
+                            icon="action/reload"
+                            label={t('reload')}
+                            disabled={props.loading}
+                            onClick={props.reload}
+                          />
+                        ) : null}
                         {props.columns.length ? (
                           <ColumnSettings
                             columns={layoutColumns.value}
@@ -332,16 +513,55 @@ export default defineComponent({
                             onResetLayout={resetLayout}
                           />
                         ) : null}
-                        <AppearanceSettings
-                          striped={striped.value}
-                          bordered={bordered.value}
-                          onChange={changeAppearance}
-                        />
-                      </>
+                        {props.showCopyImage ? (
+                          <ToolButton
+                            icon="action/copy-image"
+                            label={t(
+                              copyingImage.value ? 'copyingImage' : 'copyImage',
+                            )}
+                            loading={copyingImage.value}
+                            disabled={
+                              props.rowActionsDisabled ||
+                              props.loading ||
+                              copyingImage.value
+                            }
+                            onClick={() => {
+                              void handle.copyImage()
+                            }}
+                          />
+                        ) : null}
+                        <Fullscreen />
+                        <NDropdown
+                          class="r-table__action-menu"
+                          trigger="click"
+                          placement="bottom-end"
+                          options={actionOptions.value}
+                          onSelect={selectAction}
+                        >
+                          <ToolButton
+                            icon="action/more"
+                            label={t('moreActions')}
+                            aria-haspopup="menu"
+                          />
+                        </NDropdown>
+                      </div>
                     ) : null}
                   </div>
                 ) : null}
               </header>
+            ) : null}
+            {imageFeedback.value ? (
+              <p
+                class="r-table__image-feedback"
+                role={imageFeedback.value.error ? 'alert' : 'status'}
+                style={{
+                  color: imageFeedback.value.error
+                    ? theme.value.errorColor
+                    : theme.value.successColor,
+                }}
+              >
+                {t(imageFeedback.value.key)}
+              </p>
             ) : null}
             <NDataTable
               {...nativeProps.value}

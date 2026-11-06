@@ -25,7 +25,7 @@ import AdminExample from '../../examples/AdminExample.vue'
 | `getCallback()` / `setCallback(callback?)` | 读取、替换或移除通用回调。                                                       |
 | `resetPagination()`                        | 页码回到 1，每页条数取第一个 `pageSizes` 的数字或对象 `value`，没有候选则用 10。 |
 
-页码和页大小更新先改状态，再调用通用 `callback`，然后通知对应事件。重置同时调用两个专用事件。远端查询建议只在通用回调发请求，避免两次加载。Hook 不会自动请求或裁剪数据，初始加载由页面负责。`RTablePro` 的 `request` 已管理分页，通常无需再套一层本 Hook。
+页码和页大小更新先改状态，再调用通用 `callback`，然后通知对应事件。重置读取当前 `pagination.value.pageSizes`，同时调用两个专用事件；各实例的默认候选数组彼此独立。远端查询建议只在通用回调发请求，避免两次加载。Hook 不会自动请求或裁剪数据，初始加载由页面负责。`RTablePro` 的 `request` 已管理分页，通常无需再套一层本 Hook。
 
 ```ts
 import { usePagination } from '@/hooks'

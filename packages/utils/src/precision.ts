@@ -10,8 +10,15 @@ export interface CurrencyOptions extends Options {
   type?: OriginalValueType
 }
 
+/** 以八位小数缩放为 Number 整数；调用方需确保缩放后的金额仍在安全整数范围内。 */
 const defaultOptions = { precision: 8, decimal: '.' }
 
+/**
+ *
+ * @param value 待判断的值
+ *
+ * @returns 是否为当前 currency.js 构造器创建的实例。
+ */
 export const isCurrency = (value: unknown): value is currency =>
   value instanceof currency
 

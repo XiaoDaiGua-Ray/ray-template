@@ -8,7 +8,7 @@ export interface ChartProviderOptions {
 
 /**
  *
- * @param 配置项
+ * @param options 提供给当前后代图表的配置
  *
  * @description
  * 全局 chart 配置项。

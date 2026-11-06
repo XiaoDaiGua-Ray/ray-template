@@ -1,7 +1,6 @@
 import { RIcon } from '@/components'
 import {
   useAppNavigation,
-  useAppRoot,
   useBadge,
   useContentScroll,
   useI18n,
@@ -32,7 +31,6 @@ export default defineComponent({
     const badge = useBadge()
     const spinning = useSpinning()
     const maximize = useMaximize()
-    const root = useAppRoot()
     const tags = useSiderBar()
     const { navigationTo } = useAppNavigation()
     const contentScrollTo = useContentScroll()
@@ -72,7 +70,7 @@ export default defineComponent({
         title={label('templateTitle')}
         description={text('templateIntro')}
         eyebrow={label('templateEyebrow')}
-        meta="10 Hooks"
+        meta="9 Hooks"
       >
         <h2 class="r-demo-section-heading">{label('appearanceAndPage')}</h2>
         <div class="r-hook-grid">
@@ -217,37 +215,6 @@ export default defineComponent({
                 <NButton onClick={() => navigationTo(0)}>
                   {text('firstMenu')}
                 </NButton>
-              </NFlex>
-            ),
-          )}
-          {example(
-            'useAppRoot',
-            `const { getRootRoute, getRootPath, getRootName, setRootRoute } = useAppRoot()\nsetRootRoute({ name: 'TemplateHooks', path: '/template-hooks' })`,
-            () => (
-              <NFlex vertical>
-                <code>{JSON.stringify(root.getRootRoute.value)}</code>
-                <NFlex>
-                  <NButton
-                    onClick={() =>
-                      root.setRootRoute({
-                        name: 'TemplateHooks',
-                        path: '/template-hooks',
-                      })
-                    }
-                  >
-                    {text('useCurrentHome')}
-                  </NButton>
-                  <NButton
-                    onClick={() =>
-                      root.setRootRoute({
-                        name: 'Dashboard',
-                        path: '/dashboard',
-                      })
-                    }
-                  >
-                    {text('restoreHome')}
-                  </NButton>
-                </NFlex>
               </NFlex>
             ),
           )}

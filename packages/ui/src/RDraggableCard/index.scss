@@ -17,6 +17,10 @@
 .draggable-card-enter-active,
 .draggable-card-leave-active {
   transition: opacity 0.3s var(--r-bezier);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 }
 
 .draggable-card-enter-from,

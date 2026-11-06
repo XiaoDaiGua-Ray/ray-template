@@ -21,7 +21,6 @@ import { computed, ref, useId } from 'vue'
 const load = async () => ({})
 const { parseRouteConfig } = createRouteContract({
   layout: load,
-  homePath: '/overview',
   managementPath: '/route-management',
   findRouteView: (view) =>
     view === 'overview' ? { name: 'Overview', load } : void 0,

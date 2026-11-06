@@ -1,33 +1,28 @@
-import {
-  toBlob,
-  toCanvas,
-  toJpeg,
-  toPixelData,
-  toPng,
-  toSvg,
-} from 'html-to-image'
+import type * as HtmlToImage from 'html-to-image'
 import type { BasicTarget, TargetType } from './types'
 import { unrefElement } from './vue/unref-element'
 
 // html-to-image 方法
 const domToImageMethods = {
-  svg: toSvg,
-  png: toPng,
-  jpeg: toJpeg,
-  blob: toBlob,
-  pixelData: toPixelData,
-  canvas: toCanvas,
+  svg: 'toSvg',
+  png: 'toPng',
+  jpeg: 'toJpeg',
+  blob: 'toBlob',
+  pixelData: 'toPixelData',
+  canvas: 'toCanvas',
 } as const
 
 // 获取 html-to-image Options
-type HtmlToImageOptions = Partial<NonNullable<Parameters<typeof toPng>[1]>>
+type HtmlToImageOptions = Partial<
+  NonNullable<Parameters<typeof HtmlToImage.toPng>[1]>
+>
 
 // 获取 html-to-image 方法 keys
 type DomToImageMethodKeys = keyof typeof domToImageMethods
 
 // 获取 html-to-image 方法返回值
 type DomToImageReturnType<ImageType extends DomToImageMethodKeys> = Awaited<
-  ReturnType<(typeof domToImageMethods)[ImageType]>
+  ReturnType<(typeof HtmlToImage)[(typeof domToImageMethods)[ImageType]]>
 >
 
 // 自定义拓展 Options
@@ -62,6 +57,7 @@ export type UseDomToImageOptions<
  *
  * @description
  * 本次 create 的格式覆盖默认配置，缺省为 JPEG；created 可能收到不同格式的结果。
+ * 渲染库在首次创建时按需加载，未使用截图的页面不必下载它。
  *
  * @returns create 方法，其 Promise 结果类型跟随所选格式。
  */
@@ -102,7 +98,8 @@ export const useDomToImage = <
         throw new Error('[useDomToImage]: target element is undefined.')
 
       const imageTypeKey = imageType ?? _imageType ?? 'jpeg'
-      const result = await domToImageMethods[imageTypeKey](
+      const renderers = await import('html-to-image')
+      const result = await renderers[domToImageMethods[imageTypeKey]](
         element,
         imageOptions,
       )

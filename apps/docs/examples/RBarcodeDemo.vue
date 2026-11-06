@@ -45,7 +45,6 @@
       :aria-label="`${format}: ${text}`"
     >
       <RBarcode
-        :key="format"
         :text="text"
         :format="format"
         :options="options"

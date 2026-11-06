@@ -119,7 +119,9 @@ const renderTable = () => (
 )
 ```
 
-实例还提供 `setPage`、`setPageSize`、`getCurrentPageData`、`downloadCsv`、`print` 和 `getTableInstance`。扩展表格区域可用 `title`、`toolbar`、`tableFooter`、`tableAction`；错误区域用 `error` 插槽。
+实例还提供 `setPage`、`setPageSize`、`getCurrentPageData`、`downloadCsv`、`print`、`copyImage` 和 `getTableInstance`。扩展表格区域可用 `title`、`toolbar`、`tableFooter`、`tableAction`；错误区域用 `error` 插槽。
+
+工具栏分为业务操作与内置工具两组。`request` 模式提供刷新，列设置、复制图片和全屏为直接入口；密度、斑马纹、边框和 CSV 收入「更多操作」。打印默认不显示，设置 `showPrint` 后才加入菜单。`tool={false}` 隐藏内置工具，保留自定义 `toolbar` 插槽。
 
 ### `useTablePro`
 
@@ -164,6 +166,25 @@ SFC 使用 `<RTablePro @register="register" />`。每张表单独调用一次 Ho
 
 试试[在线列设置示例](./table-pro-examples#列设置与缓存)。每张表使用稳定且唯一的列 key。列设置可以勾选显示、拖动或用上移与下移按钮调整根列顺序、固定或启用列宽调整；分组子列跟随根列。使用 `columnStateKey` 跨刷新保留隐藏列，按账户或租户隔离时将标识纳入 key。缓存不存数据、列定义、顺序、固定位置或列宽。调用方接管列配置可用 `v-model:columns`，返回包含隐藏列的完整定义。「恢复列布局」保留显隐；受控列由调用方通过 `onResetColumnLayout` 恢复自己的列定义。
 
+## 复制表格图片
+
+工具栏默认显示「复制表格图片」，把当前表格的表头、行、内部滚动可视区域及原生分页复制为 PNG，然后可粘贴到聊天或文档。图片排除 TablePro 标题、搜索、工具栏、提示区、`tableFooter` 和 `tableAction`；保留当前滚动位置与固定列。捕获范围是表格自身的 DOM 可视盒，虚拟滚动不会补画未挂载行，也不会请求其它页。
+
+```tsx
+const [register, { copyImage }] = useTablePro()
+
+<RTablePro onRegister={register} columns={columns} data={rows} copyImageOptions={{ pixelRatio: 1 }} />
+<NButton onClick={() => void copyImage()}>复制表格图片</NButton>
+```
+
+`showCopyImage={false}` 只隐藏按钮；实例和 Hook 的 `copyImage(options?)` 仍可使用。输出固定 PNG，`copyImageOptions` 支持 `pixelRatio`、背景、尺寸、样式、过滤、字体与资源请求配置，单次调用参数优先。默认设备像素比最高为 2。过滤回调收到临时快照节点，请按类名或数据属性判断。
+
+必须直接从用户点击事件调用，之前不要 `await` 其它任务。图片生成可异步完成，但剪贴板请求需要保留用户激活；实现将 `Promise<Blob>` 提前交给原生 `ClipboardItem`。[WebKit Clipboard API](https://webkit.org/blog/10855/async-clipboard-api/)
+
+成功写入返回 `true`；加载中、重复调用、未确认的数据、取消和失败返回 `false`。需要 HTTPS/localhost、支持 PNG 写入的浏览器及剪贴板许可；权限、资源或渲染失败都有反馈。数据更换或卸载会取消尚未就绪的图片并移除临时节点，无法撤销浏览器已经接受的写入。跨源图片、字体和受保护的画布仍受浏览器策略影响；完整当前页数据导出使用 CSV 或打印。
+
+RIcon 的同源精灵图和本地 `#symbol` 会在临时副本中展开，保留静态矢量、尺寸与 `currentColor`，不复制导入 ID。只允许同源注册精灵图或公共 `.svg`，不携带凭据或跟随重定向；单次最多 16 个文件、每个 1 MiB。该路径不支持嵌套引用、paint server、样式表和动态 CSS 值。快照会移除脚本及内联事件属性，并拒绝 `iframe/object/embed/audio/video` 活动嵌入内容。
+
 ## 打印与 CSV
 
 试试[在线打印与 CSV 示例](./table-pro-examples#打印与-csv)。默认取当前页可见数据列。打印按当前筛选和排序输出独立表格，不复刻 Vue 单元格、操作区、展开区或合并布局。报表等专用版式通过 `printTableOptions.target` 指定元素、ref 或 getter；默认复制宿主样式表、根节点主题和普通表单的当前值，也可设置 `includePageStyles: false`。单次调用可传 `title` 和专用 `style`。依赖区域外祖先、脚本或嵌入内容的区域需要专用打印 CSS；密码和文件值不会复制。真实纸张输出由浏览器负责。
@@ -180,7 +201,7 @@ Naive UI DataTable 的列定义、选择、展开、加载、空态和虚拟滚�
 | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
 | `bare`                                      | 默认关。移除卡片外观并隐藏标题及工具栏，省略 `pagination` 时不分页；显式搜索、底部插槽仍可使用。                             |
 | `autoHeight`                                | 默认关；开启时让内部 DataTable 使用 `flexHeight`，适合有可用高度的布局。                                                     |
-| `tool`                                      | 默认开，控制打印、密度、全屏、列设置和外观等内置工具。关掉仍可用自定义 `toolbar`。                                           |
+| `tool`                                      | 默认开，控制复制图片、密度、全屏、列设置和外观等内置工具。关掉仍可用自定义 `toolbar`。                                       |
 | `title`                                     | 字符串或 VNode。存在 `title` 插槽时优先渲染插槽。                                                                            |
 | `pagination`                                | 普通模式缺省开，`false` 关闭；对象透传 Naive UI Pagination。容器小于 600px 时默认简洁模式，显式 `simple` 优先。              |
 | `pageSize`                                  | 默认 10；`pagination.pageSize`、`pagination.defaultPageSize` 依次优先。远端初始页读 `pagination.defaultPage`。               |
@@ -191,9 +212,14 @@ Naive UI DataTable 的列定义、选择、展开、加载、空态和虚拟滚�
 | `downloadCsvTableOptions`                   | 内置导出默认配置，模板实现使用 `fileName`、`keepOriginalData`。                                                              |
 | `onResetColumnLayout`                       | 受控列的恢复布局回调。调用方在回调里更新 `columns`。                                                                         |
 | `printTableOptions`                         | 打印配置，支持 `target`、`title`、`style`、`includePageStyles`、`formatHeader`、`formatCell`。                               |
+| `showPrint`                                 | 默认 `false`；控制「更多操作」菜单内的打印入口，实例 `print()` 仍可按需调用。                                                |
+| `showCopyImage`                             | 默认 `true`；控制内置复制 PNG 按钮，实例 `copyImage()` 不受影响。                                                            |
+| `copyImageOptions`                          | PNG 渲染默认配置，单次 `copyImage(options)` 可覆盖；详见[复制表格图片](#复制表格图片)。                                      |
 | `contextMenuOptions` / `onContextMenuClick` | 行菜单选项及选择回调 `(key, option, { row, index })`。右键、Shift+F10 或菜单键打开；业务行事件可用 `preventDefault()` 阻止。 |
 
 常用事件有 `onRequestError(error)`（或 SFC `@request-error`）、`onUpdatePage`、`onUpdatePageSize`、`onUpdate:columns`。内部更新和受控回调走同一入口；已传入受控值时由调用方更新对应值。行选择、排序等依然沿用 DataTable 事件；需要服务端排序时，将条件写入 `params`。
+
+分页对象使用 `TableProPagination`。旧 `pagination.onChange/onPageSizeChange` 及顶层 `onPageChange/onPageSizeChange` 不再调用，请迁移为 `onUpdatePage/onUpdatePageSize` 或 `onUpdate:page/onUpdate:pageSize`；原生分页组件不会再收到旧字段。
 
 | 插槽                          | 参数与位置                                                                                       |
 | ----------------------------- | ------------------------------------------------------------------------------------------------ |
@@ -204,7 +230,7 @@ Naive UI DataTable 的列定义、选择、展开、加载、空态和虚拟滚�
 | `tableFooter` / `tableAction` | DataTable 之后的额外区域。                                                                       |
 | 其余插槽                      | 转给 Naive UI DataTable，例如空态和加载。                                                        |
 
-`TableProInst` 的 `reload(resetPage?)`、`setPage(page)`、`setPageSize(size)` 返回 `Promise<void>`。请求错误由事件报告；该 Promise 的完成不能用作业务成功判据。`getTableInstance()` 可能为 `null`；`print(options?)` 返回 `Promise<boolean>` 表示是否发起预览；`downloadCsv(options?)` 发起浏览器下载。
+`TableProInst` 的 `reload(resetPage?)`、`setPage(page)`、`setPageSize(size)` 返回 `Promise<void>`。请求错误由事件报告；该 Promise 的完成不能用作业务成功判据。`getTableInstance()` 可能为 `null`；`print(options?)` 返回 `Promise<boolean>` 表示是否发起预览；`downloadCsv(options?)` 发起浏览器下载；`copyImage(options?)` 返回是否成功写入 PNG 剪贴板。
 
 远端请求将 `params` 与已提交筛选合并，后者覆盖同名项，页码字段最后由表格写入。关闭分页时也会删除传入的 `page` 和 `pageSize`。`total` 需要是非负安全整数，`data` 必须是数组。若筛选或删除数据后当前页超出范围，会收敛到最后一页，并在有结果时重查。
 

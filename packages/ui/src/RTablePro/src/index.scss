@@ -41,8 +41,32 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-end;
-    gap: 6px;
+    gap: 8px;
     margin-inline-start: auto;
+  }
+
+  &__business-actions,
+  &__utilities {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    min-inline-size: 0;
+  }
+
+  &__business-actions {
+    gap: 8px;
+  }
+
+  &__utilities--separated {
+    padding-inline-start: 8px;
+    border-inline-start: 1px solid var(--r-line, var(--r-table-card-divider));
+  }
+
+  &__image-feedback {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
   }
 
   &__heading {

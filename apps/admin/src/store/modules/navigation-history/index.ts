@@ -1,4 +1,5 @@
 import { APP_CATCH_KEY } from '@/app-config'
+import { isSystemRoute } from '@/router/constant'
 import { getStorageInstance } from '@/utils/cache-backend'
 import { piniaSigningStore } from '../signing'
 
@@ -6,6 +7,7 @@ const validPath = (value: unknown): value is string =>
   typeof value === 'string' &&
   value.startsWith('/') &&
   !value.startsWith('//') &&
+  !isSystemRoute({ path: value }) &&
   value.length <= 512 &&
   !/[?#:]/u.test(value)
 

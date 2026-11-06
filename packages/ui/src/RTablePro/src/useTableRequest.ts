@@ -10,6 +10,14 @@ import type {
 type RequestScope = { request: TableProRequest; filters: TableProParams }
 type Paging = { page: number; pageSize: number }
 
+/**
+ *
+ * @description
+ * 使用调用方提供的请求、过滤和分页读取器管理远端查询。新请求与卸载会取消旧请求，
+ * 仅当前查询的结果可以进入状态；错误交给 reportError，不覆盖其他查询的加载状态。
+ *
+ * @returns 重载方法、当前结果、总数、阶段及只读查询状态
+ */
 export function useTableRequest({
   request,
   filters,
@@ -70,6 +78,11 @@ export function useTableRequest({
   })
   let pending: AbortController | undefined
 
+  /**
+   *
+   * @description
+   * 取消前一次请求，以当前参数重新查询；页码越界时回退到当前最后一页继续请求。
+   */
   const reload = async () => {
     pending?.abort()
     const currentScope = scope.value

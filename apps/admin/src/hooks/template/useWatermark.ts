@@ -1,5 +1,9 @@
 import { useSettingActions, useSettingGetters } from '@/store'
 
+/**
+ *
+ * @returns 更新共享水印文本与显隐的方法，修改通过设置 Store 持久化。
+ */
 export const useWatermark = () => {
   /**
    *

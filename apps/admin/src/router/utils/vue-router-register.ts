@@ -1,6 +1,7 @@
 import { SETUP_ROUTER_ACTION } from '@/app-config'
 import type { Router } from 'vue-router'
 import { permissionRouter } from './permission'
+import { setupRouterErrors } from './setup-router-errors'
 import { setupRouterLoadingBar } from './setup-router-loading-bar'
 
 /**
@@ -11,6 +12,7 @@ import { setupRouterLoadingBar } from './setup-router-loading-bar'
  * 统一的路由相关功能配置，虽然该方法有点蠢。
  */
 export const vueRouterRegister = (router: Router) => {
+  setupRouterErrors(router)
   const { setupRouterLoadingBar: cfgSetupRouterLoadingBar, setupRouterGuard } =
     SETUP_ROUTER_ACTION
 

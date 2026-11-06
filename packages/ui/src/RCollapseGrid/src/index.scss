@@ -2,11 +2,21 @@
   box-sizing: border-box;
 
   & .collapse-icon {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
     height: 100%;
     display: flex;
     align-items: center;
     cursor: pointer;
     transition: color 0.3s var(--r-bezier);
+
+    &:focus-visible {
+      outline: 2px solid var(--r-primary-color, currentColor);
+      outline-offset: 4px;
+    }
 
     > .collapse-icon--arrow {
       margin-left: 0.5em;
@@ -18,6 +28,13 @@
       &.collapse-icon--arrow__expanded {
         transform: rotate(90deg);
       }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .collapse-icon,
+    .collapse-icon > .collapse-icon--arrow {
+      transition: none;
     }
   }
 

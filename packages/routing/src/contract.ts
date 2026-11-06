@@ -13,8 +13,13 @@ export interface RouteCatalog {
     | { name: string; load: NonNullable<AppRouteRecordRaw['component']> }
     | undefined
   findRouteViewId(loader: unknown): string | undefined
-  homePath: string
+  /**
+   *
+   * @deprecated 首页不再具有路由校验或默认导航特权，保留字段仅兼容旧调用方。
+   */
+  homePath?: string
   managementPath: string
+  reservedPaths?: readonly string[]
   reservedNames?: readonly string[]
 }
 
@@ -24,12 +29,16 @@ export function createRouteContract(catalog: RouteCatalog) {
     findRouteView,
     findRouteViewId,
     managementPath: ROUTE_MANAGEMENT_PATH,
-    homePath: DEFAULT_HOME_PATH,
   } = catalog
+  const reservedPaths =
+    catalog.reservedPaths?.map((path) => path.toLowerCase()) ?? []
   const isReservedPath = (path: string) =>
     path === '/' ||
     path === ROUTE_MANAGEMENT_PATH ||
-    path.startsWith(`${ROUTE_MANAGEMENT_PATH}/`)
+    path.startsWith(`${ROUTE_MANAGEMENT_PATH}/`) ||
+    reservedPaths.some(
+      (reserved) => path === reserved || path.startsWith(`${reserved}/`),
+    )
   const reservedNames = new Set(
     catalog.reservedNames?.map((name) => name.toLowerCase()),
   )
@@ -74,11 +83,7 @@ export function createRouteContract(catalog: RouteCatalog) {
     const menuPaths = new Set<string>()
     const matchPatterns = new Set<string>()
 
-    const visit = (
-      records: RouteConfigRecord[],
-      parent = '',
-      restricted = false,
-    ) => {
+    const visit = (records: RouteConfigRecord[], parent = '') => {
       for (const record of records) {
         const { name, component, children, alias, redirect, props, meta } =
           record
@@ -126,7 +131,7 @@ export function createRouteContract(catalog: RouteCatalog) {
 
           if (path.includes(':')) fail('Use static paths for menu groups.')
 
-          visit(children, path, restricted || !!meta.role?.length)
+          visit(children, path)
           continue
         }
 
@@ -162,18 +167,6 @@ export function createRouteContract(catalog: RouteCatalog) {
 
           if (isReservedPath(key) || paths.has(key))
             fail(`Duplicate or reserved path "${address}".`)
-
-          if (
-            key === DEFAULT_HOME_PATH &&
-            (address !== path ||
-              path !== DEFAULT_HOME_PATH ||
-              !view ||
-              restricted ||
-              meta.role?.length)
-          )
-            fail(
-              '/dashboard must be a view accessible to all authenticated roles.',
-            )
 
           if (address !== path && (address.includes(':') || path.includes(':')))
             fail('Aliases require a static page path.')

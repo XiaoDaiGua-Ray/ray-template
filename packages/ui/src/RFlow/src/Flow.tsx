@@ -17,9 +17,6 @@ import { useTemplateRef } from 'vue'
 import props from './props'
 import type { FlowGraphData, G } from './types'
 
-// 是否首次注册插件
-let isSetup = false
-
 export default defineComponent({
   name: 'RFlow',
   props,
@@ -38,48 +35,37 @@ export default defineComponent({
     })
     // 流程图实例
     const logicFlowInstRef = shallowRef<LogicFlow>()
-    // 需要禁用的流程图配置项
-    const readonlyOptions = {
-      nodeTextEdit: false,
-      edgeTextEdit: false,
-      textEdit: false,
-    }
+    let editableConfig: ReturnType<LogicFlow['getEditConfig']> | undefined
+    let keyboardDisabled = false
     // 默认流程图数据
     const defaultGraphData = {
       nodes: [],
       edges: [],
     }
 
-    // 注册流程图插件
-    const registerExtension = () => {
-      if (!isSetup) {
-        props.use?.filter(Boolean).forEach((curr) => LogicFlow.use(curr))
-
-        isSetup = true
-      }
-    }
-
-    // 动态根据 readonly 配置项修改流程图配置
+    /**
+     *
+     * @param bool 是否启用只读模式
+     *
+     * @description
+     * 进入只读前保存实例的交互配置，退出时恢复，避免覆盖调用方禁用的编辑项或快捷键。
+     */
     const updateFlowConfig = (bool: boolean) => {
-      if (!logicFlowInstRef.value) {
-        return
+      const instance = logicFlowInstRef.value
+
+      if (!instance) return
+
+      if (bool) {
+        editableConfig = instance.getEditConfig()
+        keyboardDisabled = instance.keyboard.disabled
+        instance.updateEditConfig({ isSilentMode: true })
+      } else if (editableConfig) {
+        instance.updateEditConfig(editableConfig)
+
+        if (keyboardDisabled) instance.keyboard.disable()
+
+        editableConfig = void 0
       }
-
-      const ops = Object.entries(readonlyOptions).reduce(
-        (acc, [key]) => {
-          acc[key as keyof typeof acc] = !bool
-
-          return acc
-        },
-        {} as typeof readonlyOptions,
-      )
-
-      // 单独处理 isSilentMode 配置项
-      Object.assign(readonlyOptions, ops, {
-        isSilentMode: bool,
-        adjustNodePosition: !bool,
-      })
-      logicFlowInstRef.value.updateEditConfig(readonlyOptions)
     }
 
     /**
@@ -92,13 +78,16 @@ export default defineComponent({
      * 会自动忽略 container 属性，即使是配置了。
      */
     const setupFlowRender = (graphData?: FlowGraphData) => {
-      registerExtension()
-
       if (!flowDomRef.value) {
         return
       }
 
       const { options, readonly } = props
+
+      // LogicFlow 按 pluginName 去重；后挂载实例仍需注册自己的插件。
+      props.use
+        ?.filter(Boolean)
+        .forEach((extension) => LogicFlow.use(extension))
 
       // 初始化流程图实例
       logicFlowInstRef.value = new LogicFlow({
@@ -112,13 +101,10 @@ export default defineComponent({
       updateFlowConfig(readonly)
     }
 
-    watch(
-      () => props.data,
-      (data) => {
-        if (props.watchData && data)
-          logicFlowInstRef.value?.renderRawData(data as G)
-      },
-    )
+    watch([() => props.data, () => props.watchData], ([data, enabled]) => {
+      if (enabled)
+        logicFlowInstRef.value?.renderRawData((data ?? defaultGraphData) as G)
+    })
     watch(() => props.readonly, updateFlowConfig)
 
     onMounted(() => {

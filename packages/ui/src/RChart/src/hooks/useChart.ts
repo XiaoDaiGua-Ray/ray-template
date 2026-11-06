@@ -4,30 +4,10 @@ import type { ECharts } from 'echarts/core'
 /**
  *
  * @description
- * 获取 RChart 实例。
- * 让你能够便捷的调用相关的一些已封装方法。
+ * 通过 RChart 的 onRegister 取得实例及组件拥有的重建、销毁方法。
+ * 手动销毁后仍可通过 render 重建；真正的资源释放由组件负责。
  *
- * @warning
- * 值得注意的是，必须手动调用 register 方法，否则不能正常使用。
- * 在使用 相关 hooks 的时候，需要注意生命周期，确保 register 方法已经被调用与表格实例已经被初始化；
- * 不要在父组件 create 阶段就去调用 hook，如果需要，请使用 nextTick 包裹。
- *
- * @example
- * defineComponent({
- *   setup() {
- *     const [register, { ...Hooks }] = useChart()
- *
- *     return {
- *      register,
- *      ...Hooks,
- *     }
- *   },
- *   render() {
- *     const { register, ...Hooks } = this
- *
- *     return <RChart onRegister={register} />
- *   },
- * })
+ * @returns 注册函数与实例访问、销毁、重建方法
  */
 const useChart = () => {
   let echartInst: ECharts
@@ -36,7 +16,9 @@ const useChart = () => {
 
   /**
    *
-   * @param inst echart instance
+   * @param inst 当前 ECharts 实例
+   * @param render 由组件提供的重建入口
+   * @param dispose 由组件提供的销毁入口
    *
    * @description
    * 注册当前 echart 实例，用于使用 useChart hook。
@@ -55,6 +37,9 @@ const useChart = () => {
    * 获取当前 echart 实例。
    *
    * 如果未在调用前注册 onRegister 事件，则会抛出异常。
+   *
+   * @returns 实例及组件拥有的重建、销毁方法
+   * @throws 尚未通过 onRegister 注册时抛错
    *
    * @example
    * const [register, { getChartInstance }] = useChart()
@@ -80,6 +65,9 @@ const useChart = () => {
    * @description
    * chart 是否已经销毁。
    * 如果销毁则返回 true，否则返回 false。
+   *
+   * @returns 最近注册的图表是否已销毁
+   * @throws 尚未注册时抛错
    */
   const isDisposed = () => !!getChartInstance().echartInst?.isDisposed()
 
@@ -87,6 +75,8 @@ const useChart = () => {
    *
    * @description
    * 销毁当前 chart 实例。
+   *
+   * @throws 尚未注册时抛错
    */
   const dispose = () => getChartInstance().dispose.call(null)
 
@@ -94,6 +84,8 @@ const useChart = () => {
    *
    * @description
    * 渲染当前 chart 实例。
+   *
+   * @throws 尚未注册时抛错
    */
   const render = () => getChartInstance().render.call(null)
 

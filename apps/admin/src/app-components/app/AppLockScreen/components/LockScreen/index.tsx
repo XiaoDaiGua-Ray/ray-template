@@ -1,8 +1,12 @@
 import AppAvatar from '@/app-components/app/AppAvatar'
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
-import { rules, useCondition } from '@/app-components/app/AppLockScreen/shared'
+import {
+  useCondition,
+  useLockRules,
+} from '@/app-components/app/AppLockScreen/shared'
 import { APP_CATCH_KEY } from '@/app-config'
 import { RForm, useForm } from '@/components'
+import { useI18n } from '@/hooks'
 import { useSettingActions } from '@/store'
 import { encrypt, setStorage } from '@/utils'
 import { NButton, NFormItem, NInput } from 'naive-ui'
@@ -12,6 +16,8 @@ import { useTemplateRef } from 'vue'
 const LockScreen = defineComponent({
   name: 'LockScreen',
   setup() {
+    const { t } = useI18n('appComponents.lockScreen')
+    const rules = useLockRules()
     const [register, { validate }] = useForm()
     const inputInstRef = useTemplateRef<InputInst | null>('inputInstRef')
 
@@ -22,18 +28,35 @@ const LockScreen = defineComponent({
       lockCondition: useCondition(),
     })
 
-    const lockScreen = () => {
-      validate().then(() => {
-        setLockAppScreen(true)
-        updateSettingState('lockScreenSwitch', false)
+    let validating = false
+    /**
+     *
+     * @description
+     * 校验成功后先保存密码，再启用锁屏；重复触发与字段校验失败不会写入状态。
+     */
+    const lockScreen = async () => {
+      if (validating) return
+
+      validating = true
+
+      try {
+        try {
+          await validate()
+        } catch {
+          return
+        }
+
         setStorage(
           APP_CATCH_KEY.appLockScreenPasswordKey,
           encrypt(state.lockCondition.lockPassword),
           'localStorage',
         )
-
+        setLockAppScreen(true)
+        updateSettingState('lockScreenSwitch', false)
         state.lockCondition = useCondition()
-      })
+      } finally {
+        validating = false
+      }
     }
 
     onMounted(() => {
@@ -47,6 +70,8 @@ const LockScreen = defineComponent({
       lockScreen,
       register,
       inputInstRef,
+      rules,
+      t,
     }
   },
   render() {
@@ -63,7 +88,7 @@ const LockScreen = defineComponent({
           <RForm
             ref="formInstRef"
             model={this.lockCondition}
-            rules={rules}
+            rules={this.rules}
             labelPlacement="left"
             onRegister={register}
           >
@@ -72,21 +97,21 @@ const LockScreen = defineComponent({
                 ref="inputInstRef"
                 v-model:value={this.lockCondition.lockPassword}
                 type="password"
-                placeholder="请输入锁屏密码"
+                placeholder={this.t('lockPlaceholder')}
                 clearable
                 showPasswordOn="click"
                 minlength={6}
                 maxlength={12}
                 onKeydown={(e: KeyboardEvent) => {
-                  if (e.code === 'Enter') {
-                    this.lockScreen()
+                  if (e.key === 'Enter' && !e.isComposing && !e.repeat) {
+                    return this.lockScreen()
                   }
                 }}
                 autofocus
               />
             </NFormItem>
-            <NButton type="primary" onClick={this.lockScreen.bind(this)}>
-              锁屏
+            <NButton type="primary" onClick={this.lockScreen}>
+              {this.t('lock')}
             </NButton>
           </RForm>
         </div>

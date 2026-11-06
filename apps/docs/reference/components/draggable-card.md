@@ -16,7 +16,7 @@ import AdminExample from '../../examples/AdminExample.vue'
 | `width` / `zIndex`    | `600` / 无                | 卡片宽度与层级。                                                    |
 | `animation`           | `false`                   | 启用进场过渡。                                                      |
 
-位置可用 `top-left`、`top-right`、`bottom-left`、`bottom-right`、`center`、`top-center`、`bottom-center`。替换 `defaultPosition` 引用会触发重定位；没有公开拖拽事件或位置持久化。选择器需要在布局中真实存在，容器应有明确尺寸。组件初始化会访问 `document`，仅在浏览器侧渲染。继承 Card 属性和插槽。
+位置可用 `top-left`、`top-right`、`bottom-left`、`bottom-right`、`center`、`top-center`、`bottom-center`。替换 `defaultPosition`、`padding` 或边界引用会触发重定位，开关 `dad` 保留当前位置；没有公开拖拽事件或位置持久化。选择器需要在布局中真实存在，容器应有明确尺寸。服务端不创建拖拽 DOM；浏览器挂载后建立交互，关闭拖拽或卸载时释放监听器，最后一个卡片卸载后移除共享容器。继承 Card 属性和插槽，进场动画尊重减少动态效果设置。
 
 ## 交互示例
 

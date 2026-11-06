@@ -7,6 +7,13 @@ const labelsByLocale = {
   en: { ...en, fullscreen: 'Full screen', exitFullscreen: 'Exit full screen' },
 }
 
+/**
+ *
+ * @description
+ * 优先使用宿主注入的翻译函数，缺失键时回退到表格内置的中文或英文文案。
+ *
+ * @returns 读取最新语言并处理简单参数插值的翻译方法
+ */
 export function useTableLocale() {
   const { translate, locale } = useUiServices()
 

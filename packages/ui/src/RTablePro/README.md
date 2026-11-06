@@ -26,7 +26,8 @@ import { RTablePro } from '@/components'
 - 行标识默认取 `row.id` 或 `row.key`，其他字段使用 `rowKey`。宽表可设置 `scrollX` 和列宽，横向滚动留在表格内部。根列拖动或固定时保留分组的子列。
 - `autoHeight` 默认使用当前布局的可用高度，宿主外部使用视口高度；嵌入特定区域时可以用 CSS 变量 `--r-table-height` 覆盖。较短的屏幕保留表格的最小操作高度。
 - 只接收最新的请求结果。切换请求源或有效筛选条件会立即清空旧行和总数；切页或修改每页条数会隐藏旧行并保留同一范围的总数。当前页未加载时，实例取数返回空、底层实例返回 `null`，CSV 和打印不会启动。请求失败后显示空态并清空总数，通过宿主 Toast 提醒。可用 `onRequestError` 接收详情、用实例 `reload()` 重试，或显式提供 `error` 插槽接管提示。
-- 需要实例时使用 `shallowRef<TableProInst>()`。实例提供 `reload(resetPage?)`、`setPage`、`setPageSize`、`getCurrentPageData`、`downloadCsv`、`print` 和 `getTableInstance`。额外区域可用 `toolbar`、`tableFooter`、`tableAction` 插槽。
+- 需要实例时使用 `shallowRef<TableProInst>()`。实例提供 `reload(resetPage?)`、`setPage`、`setPageSize`、`getCurrentPageData`、`downloadCsv`、`print`、`copyImage` 和 `getTableInstance`。额外区域可用 `toolbar`、`tableFooter`、`tableAction` 插槽。
+- 工具栏将业务 `toolbar` 插槽与内置工具分组。`request` 模式提供刷新，列设置、复制图片和全屏保持直接入口；「更多操作」统一收纳密度、斑马纹、边框与 CSV。打印默认隐藏，设置 `showPrint` 后出现在该菜单。`tool={false}` 隐藏全部内置工具，仍保留业务插槽。
 
 ## 注册 Hook
 
@@ -58,10 +59,41 @@ const reloadFromFirstPage = () => reload(true)
 - 使用 Naive UI 的列 `key`，同一表的列 key 唯一且稳定。勾选状态独立于列定义；列分组会跟随子列，选择列和展开列不会被勾选隐藏。至少保留一个数据列。
 - 缓存是按表格标识分隔的本地偏好。只保存隐藏列的 key，启用或切换标识时读一次，用户改动时才写入。新增列默认显示，失效 key 不影响渲染，恢复全部列会清除缓存。不传标识时仅保留实例内状态。需要按账号或租户隔离时，将其标识纳入 key。
 - 页面需要接管列顺序、固定位置或 `resizable` 时，可以用 `v-model:columns`；收到的是完整列定义，包含已隐藏的列。显隐始终由列设置维护，固定列仍遵守 Naive UI 的数字列宽约定。
+- 在列设置中固定或取消固定分组时，同步更新该组所有后代的 `fixed`，使表头和表体保持一致；列宽、渲染器、调整宽度等其它配置保持不变。分组固定要求全部叶子列具有数字宽度。本地与受控模式使用相同规则，均不修改调用方的原始列定义。
 - 「恢复列布局」恢复根列顺序、固定和调整宽度开关，保留隐藏列；「恢复全部列」只恢复显隐。受控列由调用方提供 `onResetColumnLayout` 并应用自己的初始定义，未提供时不显示恢复布局按钮。
 - 不缓存行数据、列定义、回调、列宽、固定或顺序。默认模式用列 key 维护实例内的调整；更新列标题、渲染器等定义不会抹掉用户调整。
 
+## 复制表格图片
+
+默认工具栏提供「复制表格图片」，将当前 `NDataTable` 的表头、行、内部滚动可视区域及原生分页器复制为 PNG。图片不包括 TablePro 标题、搜索区、工具栏、提示区、`tableFooter` 或 `tableAction`。这是表格自身的 DOM 可视盒，不是整张网页的屏幕截图，也不会为复制主动滚动或加载其它页。虚拟滚动只包含已渲染且位于可视盒内的内容；需要完整当前页数据时使用 CSV 或打印。
+
+```tsx
+const [register, { copyImage }] = useTablePro()
+
+<RTablePro
+  onRegister={register}
+  columns={columns}
+  data={rows}
+  copyImageOptions={{ pixelRatio: 1 }}
+/>
+
+// 直接在用户点击回调里调用，不要先等待其它异步操作。
+<NButton onClick={() => void copyImage()}>复制图片</NButton>
+```
+
+`showCopyImage={false}` 隐藏内置按钮，不影响实例或 Hook 的 `copyImage(options?)`。默认分辨率使用设备像素比并限制为最高 2，`copyImageOptions` 和单次参数可覆盖 `pixelRatio`、`backgroundColor`、尺寸、`style`、`filter`、字体及资源请求选项；单次参数优先。输出固定为 PNG，不接收格式、JPEG quality 或渲染生命周期回调。`filter` 处理临时快照中的节点，应按类名或数据属性判断，而不要比较原始 DOM 对象身份。
+
+复制成功返回 `true`；加载中、重复调用、未确认的远端数据、取消或失败返回 `false`。组件使用原生 Clipboard API，在点击调用栈内把 PNG Promise 交给 `ClipboardItem`，随后按需加载现有渲染库。需要浏览器支持及 HTTPS/localhost，权限被拒绝时显示对应反馈。独立使用时在表格旁显示状态，宿主可通过 `UiServices.reportSuccess/reportError` 接管。外部图片、字体或受保护的画布可能使渲染失败，可配置资源请求或占位图。
+
+快照保留当前滚动位置与固定列；成功、失败、数据替换和卸载均清理临时节点，重复操作不会启动并行截图。取消会阻止尚未就绪的图片交给剪贴板，但无法撤销浏览器已经接受的写入。
+
+RIcon 外部精灵图和本地 `#symbol` 会在快照中展开为独立静态 SVG，保留视口尺寸与 `currentColor`，移除导入 ID，避免多行图标互相干扰。只读取同源注册精灵图或公共 `.svg` 文件，不携带凭据、不跟随重定向；每次最多 16 个资源，每个最多 1 MiB，并共用同一取消信号。展开路径支持静态几何和呈现属性，不提供嵌套引用、paint server、样式表或动态 CSS 值（`var/env/attr`）的兼容。
+
+快照连接到文档前移除脚本和内联事件属性。`iframe/object/embed/audio/video` 嵌入内容会明确拒绝，避免在临时副本中重新启动活动内容；普通图片与 canvas 仍沿用上述资源策略。
+
 ## 打印和 CSV
+
+打印入口默认隐藏。业务页面可用 `showPrint` 在「更多操作」中启用打印；实例 `print(options?)` 始终可由业务显式调用。CSV 入口位于同一菜单。
 
 内置打印按当前排序、筛选和分页打印**当前页数据和可见列**。使用单独的白底 HTML 表格，跨纸页重复表头；不打印搜索、操作、复选框、展开区、分页或插槽。虚拟滚动不影响取数。需要特殊单元格文本时用 `formatCell`；未配置时沿用 `getCsvCell` 或字段值。自定义 Vue 单元格、树展开状态和合并格不会复刻为打印布局；需要复刻时指定自定义区域。
 
@@ -70,6 +102,7 @@ const reloadFromFirstPage = () => reload(true)
   columns={columns}
   data={rows}
   printTableOptions={{ target: reportRef }}
+  showPrint
 />
 ```
 
@@ -78,6 +111,8 @@ const reloadFromFirstPage = () => reload(true)
 CSV 默认导出当前页可见数据列；`keepOriginalData` 使用传入的整批数据（远端模式不会为导出额外请求）。`allowExport: false` 排除对应列，`getCsvCell` / `getCsvHeader` 返回原始文本，由组件处理 CSV 转义。
 
 ## Naive UI 的配置边界
+
+分页配置使用 `TableProPagination`：请将旧 `pagination.onChange` 改为 `onUpdatePage`（或 `onUpdate:page`），将 `pagination.onPageSizeChange` 改为 `onUpdatePageSize`（或 `onUpdate:pageSize`）。TablePro 顶层旧 `onPageChange/onPageSizeChange` 同样迁移到对应更新事件。旧字段不再调用，也不会被继续透传给 Naive UI；现行回调及回调数组仍支持。
 
 普通列配置、选择、展开、排序、筛选、汇总、虚拟滚动、固定列、空状态和加载插槽沿用 [DataTable API](https://www.naiveui.com/zh-CN/components/data-table)。`pagination` 对象透传 [Pagination API](https://www.naiveui.com/zh-CN/components/pagination) 的配置，包括快速跳页、页码模板和回调。配置了 `request` 时页码、每页条数和总数由 TablePro 管理；初始页用 `pagination.defaultPage`，运行时跳页用实例 `setPage`。手动远端模式可以直接传 `remote + data + pagination`，由调用方负责切换范围时清空旧数据。本地和手动远端受控模式由调用方在分页回调中更新 `pagination.page/pageSize`；搜索重置和实例操作也会触发同一回调。服务端排序、过滤继续使用 Naive UI 的事件，在调用方将条件传给 `params`，组件不会推断接口字段。页数很大时可配置 `pagination.showQuickJumpDropdown: false`。
 

@@ -80,7 +80,6 @@ export default defineComponent({
               <div class="r-demo-artifact r-demo-artifact--barcode">
                 {text.value.trim() && (
                   <RBarcode
-                    key={`${format.value}-${colored.value}-${responsive.value}`}
                     text={text.value}
                     format={format.value}
                     responsive={responsive.value}

@@ -1,24 +1,25 @@
-import { APP_CATCH_KEY } from '@/app-config'
-import { useAppRoot, useVueRouter } from '@/hooks'
-import { setStorage } from '@/utils/cache'
-import { resolveLandingPath } from './resolve-landing-path'
+import { useVueRouter } from '@/hooks/template/useVueRouter'
+import { WELCOME_ROUTE_PATH } from '@/router/constant'
 
 /**
  *
- * @param replace 是否使用
+ * @param isReplace 是否替换当前历史记录，默认 true
  *
  * @description
- * 重定向路由至首页，默认采用替换方法重定向。
+ * 进入没有活动业务路由的工作区，不创建或激活业务标签。
+ *
+ * @returns Router 导航结果。
  */
-export const redirectRouterToDashboard = (isReplace = true) => {
+export const redirectRouterToWorkspace = (isReplace = true) => {
   const { router } = useVueRouter()
 
-  const { push, replace } = router
-  const { getRootPath } = useAppRoot()
-
-  const path = resolveLandingPath(router, getRootPath.value)
-
-  setStorage(APP_CATCH_KEY.appMenuKey, path, 'localStorage')
-
-  return isReplace ? replace(path) : push(path)
+  return isReplace
+    ? router.replace(WELCOME_ROUTE_PATH)
+    : router.push(WELCOME_ROUTE_PATH)
 }
+
+/**
+ *
+ * @deprecated 兼容旧导出名；现在进入空工作区，请改用 redirectRouterToWorkspace。
+ */
+export const redirectRouterToDashboard = redirectRouterToWorkspace

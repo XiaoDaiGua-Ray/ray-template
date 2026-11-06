@@ -68,7 +68,6 @@ export default defineComponent({
         </NCard>
         {scope.value && target.value && (
           <RDraggableCard
-            key={`${scope.value}-${String(position.value)}`}
             restrictionElement={
               scope.value === 'bounded' ? target.value : 'body'
             }

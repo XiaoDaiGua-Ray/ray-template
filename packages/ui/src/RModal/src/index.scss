@@ -10,6 +10,8 @@
 }
 
 .r-modal {
+  width: var(--r-modal-width);
+
   &.n-card {
     width: var(--r-modal-card-width);
   }

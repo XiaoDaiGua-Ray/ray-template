@@ -7,6 +7,11 @@ const AppAvatar = defineComponent({
   name: 'AppAvatar',
   props: {
     ...avatarProps,
+    round: { type: Boolean, default: true },
+    objectFit: {
+      type: String as PropType<AvatarProps['objectFit']>,
+      default: 'cover',
+    },
     cursor: {
       type: String,
       default: 'auto',
@@ -17,7 +22,7 @@ const AppAvatar = defineComponent({
     },
     avatarSize: {
       type: [String, Number] as PropType<AvatarProps['size']>,
-      default: 'medium',
+      default: void 0,
     },
     vertical: {
       type: Boolean,
@@ -35,14 +40,12 @@ const AppAvatar = defineComponent({
     const { getSigningCallback, avatarSize, spaceSize, $props, vertical } = this
 
     return (
-      <NButton quaternary strong focusable={false}>
+      <NButton quaternary strong style={{ cursor: this.cursor }}>
         <NFlex align="center" size={spaceSize} vertical={vertical}>
           <NAvatar
             {...($props as AvatarProps)}
             src={getSigningCallback?.avatar}
-            objectFit="cover"
-            round
-            size={avatarSize}
+            size={avatarSize ?? this.size}
           >
             {{
               default: () =>

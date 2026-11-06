@@ -1,65 +1,107 @@
 import '../../index.scss'
 import AppAvatar from '@/app-components/app/AppAvatar'
 import useAppLockScreen from '@/app-components/app/AppLockScreen/appLockVar'
-import { rules, useCondition } from '@/app-components/app/AppLockScreen/shared'
+import {
+  useCondition,
+  useLockRules,
+} from '@/app-components/app/AppLockScreen/shared'
 import { APP_CATCH_KEY } from '@/app-config'
 import { RForm, useForm } from '@/components'
-import { useDevice } from '@/hooks'
-import { useSettingActions, useSigningActions } from '@/store'
+import { useDevice, useI18n } from '@/hooks'
+import {
+  useSettingActions,
+  useSettingGetters,
+  useSigningActions,
+} from '@/store'
 import { decrypt, getStorage, removeStorage } from '@/utils'
+import { useEventListener } from '@vueuse/core'
 import dayjs from 'dayjs'
 import { NButton, NFlex, NFormItem, NInput } from 'naive-ui'
 
 export default defineComponent({
   name: 'UnlockScreen',
   setup() {
+    const { t } = useI18n('appComponents.lockScreen')
+    const rules = useLockRules()
     const [register, { validate }] = useForm()
 
     const { logout } = useSigningActions()
     const { updateSettingState } = useSettingActions()
     const { setLockAppScreen } = useAppLockScreen()
     const { isTabletOrSmaller } = useDevice()
+    const { getLocaleLanguage } = useSettingGetters()
+    const now = shallowRef(dayjs())
+    const clock = computed(() => {
+      const date = now.value.locale(
+        getLocaleLanguage.value === 'zh-CN' ? 'zh-cn' : 'en',
+      )
 
-    const HH_MM_FORMAT = 'HH:mm'
-    const AM_PM_FORMAT = 'A'
-    const YY_MM_DD_FORMAT = 'YYYY-MM-DD'
-    const DDD_FORMAT = 'ddd'
+      return {
+        HH_MM: date.format('HH:mm'),
+        AM_PM: date.format('A'),
+        YY_MM_DD: date.format('YYYY-MM-DD'),
+        DDD: date.format('ddd'),
+      }
+    })
 
     const state = reactive({
       lockCondition: useCondition(),
-      HH_MM: dayjs().format(HH_MM_FORMAT),
-      AM_PM: dayjs().format(AM_PM_FORMAT),
-      YY_MM_DD: dayjs().format(YY_MM_DD_FORMAT),
-      DDD: dayjs().format(DDD_FORMAT),
     })
-    const dayInterval = setInterval(() => {
-      state.HH_MM = dayjs().format(HH_MM_FORMAT)
-      state.AM_PM = dayjs().format(AM_PM_FORMAT)
-    }, 6_000)
-    const yearInterval = setInterval(() => {
-      state.YY_MM_DD = dayjs().format(YY_MM_DD_FORMAT)
-      state.DDD = dayjs().format(DDD_FORMAT)
-    }, 86_400_000)
+    let clockTimer: ReturnType<typeof setTimeout> | undefined
 
-    const toSigningFn = () => {
-      removeStorage(APP_CATCH_KEY.appLockScreenPasswordKey, 'localStorage')
-      updateSettingState('lockScreenSwitch', false)
-      setTimeout(() => {
-        logout()
-      }, 100)
+    /**
+     *
+     * @description
+     * 按分钟边界更新全部时间字段；页面隐藏时暂停，恢复可见时立即校准，避免跨日日期滞后。
+     */
+    const updateClock = () => {
+      clearTimeout(clockTimer)
+
+      if (document.hidden) return
+
+      now.value = dayjs()
+      clockTimer = setTimeout(updateClock, 60_000 - (Date.now() % 60_000))
     }
 
+    onMounted(updateClock)
+    useEventListener(document, 'visibilitychange', updateClock)
+    onBeforeUnmount(() => clearTimeout(clockTimer))
+
+    /**
+     *
+     * @description
+     * 清理锁屏密码并执行统一退出流程，不创建脱离组件生命周期的延迟计时器。
+     */
+    const toSigningFn = async () => {
+      removeStorage(APP_CATCH_KEY.appLockScreenPasswordKey, 'localStorage')
+      updateSettingState('lockScreenSwitch', false)
+      await logout()
+    }
+
+    /**
+     *
+     * @description
+     * 显示重新登录确认框，由确认回调执行退出。
+     */
     const backToSigning = () => {
       window.$dialog.warning({
-        title: '警告',
-        content: '是否返回到登陆页并且重新登录',
-        positiveText: '确定',
-        negativeText: '重新登录',
+        title: t('warning'),
+        content: t('returnPrompt'),
+        positiveText: t('confirm'),
+        negativeText: t('cancel'),
         onPositiveClick: toSigningFn,
       })
     }
 
-    const unlockScreen = () => {
+    let validating = false
+    /**
+     *
+     * @description
+     * 校验输入并比较当前缓存密码，成功后解除锁屏；失败保持锁定并显示对应提示。
+     */
+    const unlockScreen = async () => {
+      if (validating) return
+
       const catchPassword = getStorage<string>(
         APP_CATCH_KEY.appLockScreenPasswordKey,
         'localStorage',
@@ -67,12 +109,12 @@ export default defineComponent({
 
       if (!catchPassword) {
         window.$dialog.warning({
-          title: '警告',
-          content: () => '检测到锁屏密码被修改，请重新登录',
+          title: t('warning'),
+          content: () => t('passwordChanged'),
           closable: false,
           maskClosable: false,
           closeOnEsc: false,
-          positiveText: '重新登录',
+          positiveText: t('signIn'),
           onPositiveClick: toSigningFn,
         })
 
@@ -81,7 +123,15 @@ export default defineComponent({
 
       const dCatchPassword = decrypt(catchPassword)
 
-      validate().then(() => {
+      validating = true
+
+      try {
+        try {
+          await validate()
+        } catch {
+          return
+        }
+
         if (dCatchPassword === state.lockCondition.lockPassword) {
           setLockAppScreen(false)
           updateSettingState('lockScreenSwitch', false)
@@ -89,15 +139,12 @@ export default defineComponent({
 
           state.lockCondition = useCondition()
         } else {
-          window.$message.warning('密码错误，请重新输入')
+          window.$message.warning(t('wrongPassword'))
         }
-      })
+      } finally {
+        validating = false
+      }
     }
-
-    onBeforeUnmount(() => {
-      clearInterval(dayInterval)
-      clearInterval(yearInterval)
-    })
 
     return {
       ...toRefs(state),
@@ -105,11 +152,14 @@ export default defineComponent({
       unlockScreen,
       isTabletOrSmaller,
       register,
+      rules,
+      clock,
+      t,
     }
   },
   render() {
     const { isTabletOrSmaller } = this
-    const { HH_MM, AM_PM, YY_MM_DD, DDD } = this
+    const { HH_MM, AM_PM, YY_MM_DD, DDD } = this.clock
     const hmSplit = HH_MM.split(':')
     const { unlockScreen, backToSigning, register } = this
 
@@ -142,37 +192,29 @@ export default defineComponent({
               <RForm
                 onRegister={register}
                 model={this.lockCondition}
-                rules={rules}
+                rules={this.rules}
               >
                 <NFormItem path="lockPassword">
                   <NInput
                     autofocus
                     v-model:value={this.lockCondition.lockPassword}
                     type="password"
-                    placeholder="请输入解锁密码"
+                    placeholder={this.t('unlockPlaceholder')}
                     clearable
                     minlength={6}
                     onKeydown={(e: KeyboardEvent) => {
-                      if (e.code === 'Enter') {
-                        unlockScreen()
+                      if (e.key === 'Enter' && !e.isComposing && !e.repeat) {
+                        return unlockScreen()
                       }
                     }}
                   />
                 </NFormItem>
                 <NFlex justify="space-between">
-                  <NButton
-                    type="primary"
-                    text
-                    onClick={backToSigning.bind(this)}
-                  >
-                    返回登陆
+                  <NButton type="primary" text onClick={backToSigning}>
+                    {this.t('backToSignIn')}
                   </NButton>
-                  <NButton
-                    type="primary"
-                    text
-                    onClick={unlockScreen.bind(this)}
-                  >
-                    进入系统
+                  <NButton type="primary" text onClick={unlockScreen}>
+                    {this.t('unlock')}
                   </NButton>
                 </NFlex>
               </RForm>

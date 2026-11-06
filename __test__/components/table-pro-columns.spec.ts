@@ -4,7 +4,10 @@ import { mount } from '@vue/test-utils'
 import { NDataTable, NTree } from 'naive-ui'
 import type { DataTableColumn } from 'naive-ui'
 import { effectScope, nextTick, ref, shallowRef } from 'vue'
-import { useColumnVisibility } from '../../packages/ui/src/RTablePro/src/columns'
+import {
+  getLeafColumns,
+  useColumnVisibility,
+} from '../../packages/ui/src/RTablePro/src/columns'
 import ColumnSettings from '../../packages/ui/src/RTablePro/src/components/ColumnSettings'
 
 const name = { key: 'name', title: 'Name' }
@@ -18,6 +21,28 @@ const cacheKey = (key: string) => prefixCacheKey(`table-pro:columns:v1:${key}`)
 afterEach(() => {
   localStorage.clear()
   columns.value = [selection, group, region]
+})
+
+it('filters nested leaves and prunes empty groups while retaining unaffected branches', () => {
+  const scope = effectScope()
+  const nested = { key: 'outer', children: [group] }
+  const source = shallowRef<DataTableColumn[]>([nested, region])
+
+  try {
+    const state = scope.run(() => useColumnVisibility(source, ref()))!
+
+    state.setColumnVisible('email', false)
+    expect(
+      getLeafColumns(state.visibleColumns.value).map(({ key }) => key),
+    ).toEqual(['name', 'region'])
+    expect(state.visibleColumns.value[1]).toBe(region)
+    state.setColumnVisible('name', false)
+    expect(state.visibleColumns.value).toEqual([region])
+    state.resetColumns()
+    expect(state.visibleColumns.value).toBe(source.value)
+  } finally {
+    scope.stop()
+  }
 })
 
 it('stores only hidden leaf keys, restores them on mount, and isolates separate keys', () => {
@@ -99,6 +124,126 @@ it('updates visibility without touching storage when no key is configured', () =
     scope.stop()
   }
 })
+
+it.each([false, true])(
+  'pins and unpins every group descendant without mutating source definitions (controlled=%s)',
+  async (controlled) => {
+    const renderName = (row: { name: string }) => row.name
+    const nameColumn = {
+      ...name,
+      width: 120,
+      resizable: true,
+      render: renderName,
+    }
+    const emailColumn = {
+      ...email,
+      width: 180,
+      resizable: false,
+      fixed: 'right' as const,
+    }
+    const children = [nameColumn, emailColumn]
+    const nested = { key: 'inner', title: 'Details', children }
+    const grouped = { key: 'contact', title: 'Contact', children: [nested] }
+    const unaffected = { ...region, width: 140, fixed: 'right' as const }
+    const input: DataTableColumn[] = [grouped, unaffected]
+
+    for (const value of [
+      nameColumn,
+      emailColumn,
+      children,
+      nested,
+      grouped.children,
+      grouped,
+      unaffected,
+      input,
+    ])
+      Object.freeze(value)
+
+    const update = vi.fn()
+    const wrapper = mount(RTablePro, {
+      props: {
+        columns: input,
+        data: [
+          { id: 1, name: 'Alice', email: 'alice@example.test', region: 'West' },
+        ],
+        scrollX: 440,
+        ...(controlled ? { 'onUpdate:columns': update } : {}),
+      },
+    })
+
+    try {
+      const settings = wrapper.getComponent(ColumnSettings)
+      const table = wrapper.getComponent(NDataTable)
+      const patch = async (value: {
+        fixed?: 'left' | 'right'
+        resizable?: boolean
+      }) => {
+        settings.vm.$emit('patchColumn', 'contact', value)
+
+        if (controlled)
+          await wrapper.setProps({ columns: update.mock.lastCall![0] })
+        else await nextTick()
+      }
+
+      await patch({ resizable: true })
+      expect(table.props('columns')![0]).toMatchObject({
+        children: [
+          {
+            children: [
+              { resizable: true },
+              { resizable: false, fixed: 'right' },
+            ],
+          },
+        ],
+      })
+
+      for (const fixed of ['left', 'right', void 0] as const) {
+        await patch({ fixed })
+        const result = table.props('columns')!
+        const leaves = getLeafColumns(result)
+
+        expect(result[0].fixed).toBe(fixed)
+        expect('children' in result[0] && result[0].children[0].fixed).toBe(
+          fixed,
+        )
+        expect(leaves[0]).toMatchObject({
+          key: 'name',
+          width: 120,
+          resizable: true,
+          render: renderName,
+        })
+        expect(leaves[1]).toMatchObject({
+          key: 'email',
+          width: 180,
+          resizable: false,
+        })
+        expect(leaves[0].fixed).toBe(fixed)
+        expect(leaves[1].fixed).toBe(fixed)
+        expect(result[1]).toBe(unaffected)
+
+        for (const key of ['name', 'email']) {
+          const cell = wrapper.get(`tbody td[data-col-key="${key}"]`)
+
+          if (fixed)
+            expect(cell.classes()).toContain(`n-data-table-td--fixed-${fixed}`)
+          else
+            expect(
+              cell.classes().some((name) => name.includes('--fixed-')),
+            ).toBe(false)
+        }
+      }
+
+      expect(nameColumn).not.toHaveProperty('fixed')
+      expect(emailColumn.fixed).toBe('right')
+      expect(grouped).not.toHaveProperty('fixed')
+      expect(nested).not.toHaveProperty('fixed')
+      expect(grouped.children[0]).toBe(nested)
+      expect(nested.children).toBe(children)
+    } finally {
+      wrapper.unmount()
+    }
+  },
+)
 
 it('provides the full settings with a frozen plain columns array and keeps adjustments when definitions change', async () => {
   const input: DataTableColumn[] = [

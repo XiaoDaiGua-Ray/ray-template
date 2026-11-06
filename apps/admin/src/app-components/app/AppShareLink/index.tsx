@@ -67,7 +67,7 @@ export default defineComponent({
             >
               <NAvatar round src={item.icon} size={24} />
               <span>{this.t(item.tooltip)}</span>
-              <RIcon name="action/shared" size={13} />
+              <RIcon name="action/external-link" size={13} />
             </a>
           ))}
         </div>

@@ -2,15 +2,14 @@ import type { PropType } from 'vue'
 import {
   computed,
   defineComponent,
-  nextTick,
-  onMounted,
+  onBeforeUnmount,
+  onUnmounted,
   useTemplateRef,
-  watchEffect,
+  watch,
 } from 'vue'
 import './index.scss'
 import { completeSize, queryElements } from '@ray-template/composables/element'
 import { unrefElement } from '@ray-template/composables/vue'
-import type { AnyFn } from '@ray-template/utils/types'
 import type { MaybeElement } from '@vueuse/core'
 import interact from 'interactjs'
 import { cardProps, NCard } from 'naive-ui'
@@ -44,7 +43,7 @@ const props = {
    * @default body
    */
   restrictionElement: {
-    type: [String, HTMLElement, Function, Object] as PropType<
+    type: [String, Function, Object] as PropType<
       string | HTMLElement | (() => VNode) | MaybeRefOrGetter<MaybeElement>
     >,
     default: 'body',
@@ -150,22 +149,23 @@ export default defineComponent({
       }
     })
     let isSetup = false
-    const cacheProps = {
-      defaultPosition: props.defaultPosition,
-      dad: props.dad,
-    }
 
     // 创建 DraggableCard 容器
     const createDraggableCardContainer = () => {
+      if (typeof document === 'undefined') return null
+
       if (!document.getElementById(CONTAINER_ID)) {
         const container = document.createElement('div')
 
         container.id = CONTAINER_ID
-        document.documentElement.appendChild(container)
+        container.dataset.rDraggableOwned = ''
+        document.body.appendChild(container)
       }
+
+      return document.getElementById(CONTAINER_ID)
     }
 
-    createDraggableCardContainer()
+    const container = createDraggableCardContainer()
 
     // 获取 card, restrictionElement 的 dom 信息
     const getDom = () => {
@@ -328,40 +328,48 @@ export default defineComponent({
       interactInst = null
     }
 
-    // 更新拖拽
-    const refreshDraggableWhenPropsChange = (fn: AnyFn) => {
-      isSetup = false
-
-      fn()
-      setupDraggable()
-    }
-
     expose()
 
-    watchEffect(() => {
-      props.dad ? setupDraggable() : resetDraggable()
+    watch(
+      [
+        cardRef,
+        () => props.dad,
+        () => props.defaultPosition,
+        () => props.padding,
+        () => props.restrictionElement,
+        () => props.restrictRectOptions,
+      ],
+      (values, previous) => {
+        // 开关拖拽保留当前位置；定位配置或实际节点替换时重新计算位置。
+        if ([0, 2, 3, 4].some((index) => values[index] !== previous[index]))
+          isSetup = false
 
-      if (props.defaultPosition !== cacheProps.defaultPosition) {
-        refreshDraggableWhenPropsChange(() => {
-          cacheProps.defaultPosition = props.defaultPosition
-        })
-      }
-    })
-
-    onMounted(() => {
-      nextTick(() => {
+        resetDraggable()
         setupDraggable()
-      })
+      },
+      { flush: 'post' },
+    )
+    onBeforeUnmount(resetDraggable)
+    onUnmounted(() => {
+      // 多个卡片共用容器，最后一个卸载后再释放组件创建的节点。
+      if (
+        container?.hasAttribute('data-r-draggable-owned') &&
+        !container.childElementCount
+      )
+        container.remove()
     })
 
     return {
       cardRef,
       CONTAINER_ID,
       cssVars,
+      container,
     }
   },
   render() {
     const { $attrs, $slots, $props, CONTAINER_ID, cssVars, animation } = this
+
+    if (!this.container) return null
 
     return (
       <Teleport to={`#${CONTAINER_ID}`}>

@@ -1,6 +1,6 @@
 import initialRoutes from '@/mocks/data/routes.json'
 import { parseRouteConfig, toRuntimeRoutes } from './config/contract'
-import { DEFAULT_HOME_PATH, ROUTE_MANAGEMENT_PATH } from './constant'
+import { ROUTE_MANAGEMENT_PATH } from './constant'
 import type { AppRouteRecordRaw } from './types'
 import { expandRoutes } from './utils/expand-routes'
 import { orderRoutes } from './utils/order-routes'
@@ -35,16 +35,7 @@ export const getStaticAppRoutes = () =>
 let activeRoutes: AppRouteRecordRaw[] | undefined
 
 export function setAppRouteModules(routes: AppRouteRecordRaw[]) {
-  const fallback = getStaticAppRoutes().find(
-    ({ path }) => path === DEFAULT_HOME_PATH,
-  )
-  const hasHome = expandRoutes(routes).some(
-    ({ path }) => path === DEFAULT_HOME_PATH,
-  )
-
-  activeRoutes = orderRoutes(
-    hasHome || !fallback ? routes : [...routes, fallback],
-  )
+  activeRoutes = orderRoutes(routes)
 }
 
 export const getAppRawRoutes = () => [

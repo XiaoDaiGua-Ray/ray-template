@@ -1,6 +1,6 @@
 import { APP_CATCH_KEY } from '@/app-config'
 import { RIcon } from '@/components'
-import { useAppRoot, useI18n } from '@/hooks'
+import { useI18n } from '@/hooks'
 import { resolveIconName } from '@/icons'
 import type { AppMenuKey, AppMenuOption } from '@/types/modules/app'
 import { getStorage } from '@/utils/cache'
@@ -107,7 +107,9 @@ export const parseAndFindMatchingNodes = (
  * 动态修改浏览器标题。
  * 会自动拼接 sideBarLogo.title。
  */
-export const updateDocumentTitle = (option: AppMenuOption) => {
+export const updateDocumentTitle = (
+  option: Pick<AppMenuOption, 'breadcrumbLabel'>,
+) => {
   const { dynamicDocumentTitle } = piniaSettingStore()
 
   if (!dynamicDocumentTitle) {
@@ -210,22 +212,12 @@ export const createMenuExtra = (option: AppMenuOption) => {
 
 /**
  *
- * @returns 获取缓存的菜单 key
- *
- * @description
- * 获取缓存的菜单 key，如果没有缓存，则返回根路径
- *
- * @example
- * getCatchMenuKey() // '/dashboard'
+ * @returns 缓存中的业务菜单 key；缺少缓存时返回 null，不选择默认菜单。
  */
 export const getCatchMenuKey = () => {
-  const { getRootPath } = useAppRoot()
   const cacheMenuKey = getStorage<AppMenuKey>(
     APP_CATCH_KEY.appMenuKey,
     'sessionStorage',
-    {
-      defaultValue: getRootPath.value,
-    },
   )
 
   return cacheMenuKey

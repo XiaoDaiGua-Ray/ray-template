@@ -1,6 +1,6 @@
 import { APP_CATCH_KEY, WHITE_ROUTES } from '@/app-config'
-import { useAppRoot } from '@/hooks'
-import { getStorage, setStorage } from '@/utils/cache'
+import { FORBIDDEN_ROUTE_PATH, NOT_FOUND_PAGE_PATH } from '@/router/constant'
+import { getStorage } from '@/utils/cache'
 import type { Router } from 'vue-router'
 import { resolveLandingPath } from './resolve-landing-path'
 import { validRole } from './valid-role'
@@ -18,24 +18,41 @@ export const permissionRouter = (router: Router) => {
     const token = getStorage<string>(APP_CATCH_KEY.token, 'localStorage')
     const isLogin = to.path === '/'
 
-    if (token === null) {
-      return isLogin ? true : { path: '/', replace: true }
+    if (typeof token !== 'string' || !token) {
+      return isLogin
+        ? true
+        : { path: '/', query: { redirect: to.fullPath }, replace: true }
     }
 
     const isWhiteRoute =
       typeof to.name === 'string' && WHITE_ROUTES.includes(to.name)
 
-    if (isLogin || (!isWhiteRoute && !validRole(to.meta))) {
-      const { getRootPath } = useAppRoot()
-      const rootPath = resolveLandingPath(router, getRootPath.value)
+    if (isLogin) {
+      const target = router.resolve(
+        resolveLandingPath(router, to.query.redirect),
+      )
 
-      // 保留既有重定向时的缓存行为；若首页本身无权限，取消导航以免循环。
-      setStorage(APP_CATCH_KEY.appMenuKey, rootPath, 'localStorage')
-
-      return to.fullPath === rootPath
-        ? false
-        : { path: rootPath, replace: true }
+      return {
+        path: target.path,
+        query: target.query,
+        hash: target.hash,
+        replace: true,
+      }
     }
+
+    if (!to.matched.length)
+      return {
+        path: NOT_FOUND_PAGE_PATH,
+        query: { from: to.fullPath },
+        replace: true,
+      }
+
+    if (!isWhiteRoute && !validRole(to.meta))
+      return {
+        path: FORBIDDEN_ROUTE_PATH,
+        query: { from: to.fullPath },
+        replace: true,
+      }
 
     return true
   })

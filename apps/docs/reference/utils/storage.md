@@ -39,6 +39,8 @@ export const clearOrderFilter = () =>
   removeStorage('order-filter', 'sessionStorage', options)
 ```
 
+独立包中的 `createStorage(storage, prefix?)` 为宿主提供的同步后端生成 `get`、`set`、`remove`。它使用相同的 JSON 格式；读取失败返回 `null`，写入或删除失败不向外抛错。不能序列化的值（包括 `undefined`、函数和循环引用）不会覆盖已有内容。前缀直接与键拼接。
+
 ## 兼容 AES JSON
 
 下面的实验可以比较缓存键前缀，并用示例口令把一段 JSON 加密后还原。

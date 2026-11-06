@@ -1,6 +1,6 @@
 import { APP_CATCH_KEY } from '@/app-config'
 import { RForm, useForm } from '@/components'
-import { useAppRoot, useI18n } from '@/hooks'
+import { useI18n } from '@/hooks'
 import { resolveLandingPath } from '@/router/utils/resolve-landing-path'
 import { useSigningActions } from '@/store'
 import { setStorage } from '@/utils'
@@ -12,8 +12,8 @@ export default defineComponent({
     const [register, { validate }] = useForm()
     const { t } = useI18n('views.login.index')
     const { signing } = useSigningActions()
-    const { getRootPath } = useAppRoot()
     const router = useRouter()
+    const route = useRoute()
     const loading = ref(false)
     const signingForm = reactive({ name: '', pwd: '' })
     const nameId = useId()
@@ -51,7 +51,7 @@ export default defineComponent({
         if (res.code !== 0) throw new Error(res.message)
 
         setStorage(APP_CATCH_KEY.signing, res.data, 'localStorage')
-        await router.push(resolveLandingPath(router, getRootPath.value))
+        await router.replace(resolveLandingPath(router, route.query.redirect))
       } catch {
         window.$message.error(t('SignInError'))
       } finally {

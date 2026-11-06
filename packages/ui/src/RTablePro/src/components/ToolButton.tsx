@@ -9,6 +9,7 @@ export default defineComponent({
     icon: { type: String as PropType<IconName>, required: true },
     label: { type: String, required: true },
     disabled: Boolean,
+    loading: Boolean,
     onClick: {
       type: Function as PropType<(event: MouseEvent) => unknown>,
       default: void 0,
@@ -23,6 +24,7 @@ export default defineComponent({
         aria-label={props.label}
         {...{ title: props.label }}
         disabled={props.disabled}
+        loading={props.loading}
         onClick={props.onClick}
       >
         {{

@@ -57,6 +57,10 @@ export default defineComponent({
 
 默认使用 `ray-modern`、`ray-naive`、`ray-material` 或 `ray-plain`，各有 `-dark` 变体。`theme="default"` 使用 ECharts 内建主题，`autoChangeTheme=true` 时随应用明暗变化；显式指定其他注册名时固定使用该主题。设置 `autoChangeTheme=false` 可禁用自动选择暗色变体。旧版 `macarons` 与 `macarons-dark` 已移除。
 
+八套主题的画布、文本、图例、坐标轴、提示层和数据配色成组设计，并与对应风格的卡片表面对齐。现代化使用冷色系，Naive 以绿色起始，Material 使用紫色与柔和色组，朴素使用低饱和分类色；切换应用主色不会单独改写数据色。页面 `options` 的显式样式仍优先于主题。
+
+默认加载层使用当前图表配色。自定义主题的透明或无效背景会回退到相应明暗表面色，避免透明背景被转换为黑色遮罩；可通过 `loadingOptions` 显式覆盖遮罩、文字或旋转图标。
+
 切换主题会调用 ECharts 6 的 `setTheme`，保留实例和事件监听。ECharts 会重建内部选项模型，图例选择、缩放和通过合并模式写入的增量配置可能被重置。需要保留这些值时，将它们作为完整 `options` 提供。
 
 ## 卡片预设和回调

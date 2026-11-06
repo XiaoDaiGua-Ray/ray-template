@@ -25,16 +25,21 @@ export default defineComponent({
       modelCollapsed.value = !modelCollapsed.value
 
       if (onUpdateOpen) {
-        call(onUpdateOpen, modelCollapsed.value)
+        call(onUpdateOpen, !modelCollapsed.value)
       }
 
       if (_onUpdateOpen) {
-        call(_onUpdateOpen, modelCollapsed.value)
+        call(_onUpdateOpen, !modelCollapsed.value)
       }
     }
 
     const CollapseIcon = (collapse: boolean) => (
-      <div class="collapse-icon" onClick={collapseClick.bind(this)}>
+      <button
+        type="button"
+        class="collapse-icon"
+        aria-expanded={!collapse}
+        onClick={collapseClick}
+      >
         <span>
           {collapse ? props.collapseToggleText[0] : props.collapseToggleText[1]}
         </span>
@@ -45,7 +50,7 @@ export default defineComponent({
           name="directional/expanded"
           size="14"
         />
-      </div>
+      </button>
     )
 
     watchEffect(() => {
@@ -81,8 +86,8 @@ export default defineComponent({
               class="r-collapse-grid"
               {...($props as GridProps)}
               collapsed={modelCollapsed}
-              xGap={xGap || 12}
-              yGap={yGap || 12}
+              xGap={xGap ?? 12}
+              yGap={yGap ?? 12}
               collapsedRows={collapsedRows}
             >
               {defaultSlot?.()}

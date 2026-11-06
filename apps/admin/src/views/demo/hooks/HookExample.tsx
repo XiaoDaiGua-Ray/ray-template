@@ -13,7 +13,7 @@ export default defineComponent({
   },
   setup(props, { slots }) {
     const { t } = useI18n('showcase')
-    const focus = inject(exampleFocusKey)
+    const focus = inject(exampleFocusKey, void 0)
     const route = focus && useRoute()
 
     return () =>

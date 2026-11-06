@@ -22,6 +22,7 @@ export default defineComponent({
         columns={createPeopleColumns(t)}
         data={data.value}
         loading={loading.value}
+        showPrint
         pageSize={20}
         scrollX={920}
         search={[{ key: 'name', label: t('name'), placeholder: t('nameHint') }]}

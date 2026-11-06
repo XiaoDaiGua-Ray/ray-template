@@ -10,17 +10,18 @@ import type { RSegmentOptions } from './types'
 
 const iconSegmentTab = (option: RSegmentOptions) => {
   const { icon, label } = option
+  const content = typeof label === 'function' ? label() : label
 
   if (icon) {
     return (
       <NFlex align="center" wrap={false} size="small">
         {typeof icon === 'function' ? icon() : icon}
-        <div>{label}</div>
+        <div>{content}</div>
       </NFlex>
     )
   }
 
-  return label
+  return content
 }
 
 const popoverSegmentTab = (option: RSegmentOptions) => {
@@ -107,7 +108,7 @@ export default defineComponent({
             <NTab
               key={curr.key}
               name={curr.key}
-              tab={
+              tab={() =>
                 !curr.popover ? iconSegmentTab(curr) : popoverSegmentTab(curr)
               }
               disabled={curr.disabled}

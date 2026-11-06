@@ -8,7 +8,6 @@ import { provideUiServices } from '@ray-template/ui/services'
 import { flushPromises, mount } from '@vue/test-utils'
 import { NDataTable, NDropdown, NPagination } from 'naive-ui'
 import { defineComponent, h } from 'vue'
-import Size from '../../packages/ui/src/RTablePro/src/components/Size'
 import * as csv from '../../packages/ui/src/RTablePro/src/csv'
 
 const columns = [{ title: 'Name', key: 'name' }]
@@ -568,7 +567,9 @@ it('provides the row that opened the context menu and discards it after data cha
     },
     global: { stubs: { teleport: true } },
   })
-  const menu = wrapper.getComponent(NDropdown)
+  const menu = wrapper
+    .findAllComponents(NDropdown)
+    .find((dropdown) => dropdown.props('trigger') === 'manual')!
 
   try {
     const entry = wrapper.get('tbody tr')
@@ -634,7 +635,7 @@ it('respects a changed density prop without reviving an earlier local choice', a
   const native = wrapper.getComponent(NDataTable)
 
   try {
-    wrapper.getComponent(Size).vm.$emit('change', 'small')
+    wrapper.getComponent(NDropdown).vm.$emit('select', 'density:small')
     await wrapper.vm.$nextTick()
     expect(native.props('size')).toBe('small')
     await wrapper.setProps({ size: 'large' })

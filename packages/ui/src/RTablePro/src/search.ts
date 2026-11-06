@@ -11,18 +11,40 @@ import type {
 
 type Row = Readonly<Record<string, unknown>>
 
+/**
+ *
+ * @param search 搜索配置
+ *
+ * @returns 是否使用兼容的字段数组配置
+ */
 export function isSearchArray(
   search: TableProSearchConfig | undefined,
 ): search is readonly TableProSearchFieldConfig[] {
   return Array.isArray(search)
 }
 
+/**
+ *
+ * @param search 字段数组、完整配置或禁用标记
+ *
+ * @returns 统一的搜索配置，禁用时为 undefined
+ */
 export function resolveSearchOptions(
   search: TableProSearchConfig | undefined,
 ): TableProSearchOptions | undefined {
   return isSearchArray(search) ? { fields: search } : search || void 0
 }
 
+/**
+ *
+ * @param options 搜索配置
+ * @param columns 完整列定义
+ *
+ * @description
+ * 优先使用显式字段，否则从叶子列提取；重复键保留首次出现的定义。
+ *
+ * @returns 去重后的搜索字段
+ */
 export function resolveSearchFields(
   options: TableProSearchOptions,
   columns: TableProColumn[],
@@ -54,6 +76,15 @@ export function resolveSearchFields(
   })
 }
 
+/**
+ *
+ * @param values 扁平搜索值快照
+ *
+ * @description
+ * 复制字段容器和数组型字段，防止调用方修改内部快照；标量无需深拷贝。
+ *
+ * @returns 独立的搜索值容器
+ */
 export function copySearchValues<Value>(
   values: Readonly<Record<string, Value>>,
 ): Record<string, Value> {
@@ -65,6 +96,14 @@ export function copySearchValues<Value>(
   )
 }
 
+/**
+ *
+ * @param field 当前字段定义
+ * @param values 当前草稿或已应用值
+ *
+ * @returns 字段是否可见；兼容字段始终可见
+ * @throws visible 回调异常原样传播，由表格边界处理
+ */
 export function isSearchFieldVisible(
   field: TableProSearchFieldConfig,
   values: TableProSearchValues,
@@ -148,6 +187,13 @@ function sanitizeValue(
   }
 }
 
+/**
+ *
+ * @param fields 当前字段定义
+ * @param values 候选搜索值
+ *
+ * @returns 仅包含已定义字段的值，不匹配字段类型的值归一为 null
+ */
 export function pickSearchValues(
   fields: readonly TableProSearchFieldConfig[],
   values: TableProSearchValues,
@@ -157,6 +203,13 @@ export function pickSearchValues(
   )
 }
 
+/**
+ *
+ * @param fields 当前字段定义
+ * @param options 可选初始值配置
+ *
+ * @returns 经字段类型校验的初始草稿，整体初始值覆盖单字段初始值
+ */
 export function initialSearchValues(
   fields: readonly TableProSearchFieldConfig[],
   options: TableProSearchOptions | undefined,
@@ -182,6 +235,12 @@ const sameValue = (
     left.length === right.length &&
     left.every((value, index) => value === right[index]))
 
+/**
+ *
+ * @param fields 当前字段定义
+ *
+ * @returns 从上游字段键到直接依赖字段键的索引，供单次变更遍历复用
+ */
 export const createSearchDependencies = (
   fields: readonly TableProSearchFieldConfig[],
 ) => {
@@ -201,6 +260,18 @@ export const createSearchDependencies = (
   return dependents
 }
 
+/**
+ *
+ * @param fields 当前字段定义
+ * @param previous 上一次草稿
+ * @param patch 本次字段补丁
+ * @param dependents 已计算的反向依赖索引
+ *
+ * @description
+ * 校验补丁并清空受影响的下游字段；本次显式赋值优先，循环依赖不会重复遍历。
+ *
+ * @returns 新草稿；没有实际变化时复用 previous
+ */
 export function patchSearchValues(
   fields: readonly TableProSearchFieldConfig[],
   previous: TableProSearchValues,
@@ -229,6 +300,13 @@ export function patchSearchValues(
   return next
 }
 
+/**
+ *
+ * @param field 新字段定义
+ * @param previous 旧字段定义
+ *
+ * @returns 字段值形状是否兼容，供动态字段保留草稿时判断
+ */
 export function sameSearchField(
   field: TableProSearchFieldConfig,
   previous: TableProSearchFieldConfig | undefined,
@@ -244,6 +322,13 @@ export function sameSearchField(
   )
 }
 
+/**
+ *
+ * @param field 新字段定义
+ * @param previous 旧字段定义
+ *
+ * @returns 值形状、可见性、取值、匹配与转换回调是否一致
+ */
 export function sameSearchBehavior(
   field: TableProSearchFieldConfig,
   previous: TableProSearchFieldConfig | undefined,
@@ -260,11 +345,29 @@ export function sameSearchBehavior(
   )
 }
 
+/**
+ *
+ * @param fields 当前字段定义
+ * @param values 当前搜索值
+ *
+ * @returns 当前可见的字段，保留输入顺序
+ * @throws 可见性回调异常原样传播
+ */
 export const visibleSearchFields = (
   fields: readonly TableProSearchFieldConfig[],
   values: TableProSearchValues,
 ) => fields.filter((field) => isSearchFieldVisible(field, values))
 
+/**
+ *
+ * @param fields 本次应用的字段
+ * @param values 候选搜索值
+ *
+ * @description
+ * 校验字段类型、裁剪文本并移除空值；数字 0 和布尔 false 保留。
+ *
+ * @returns 可用于请求或本地过滤的搜索快照
+ */
 export function normalizeSearchValues(
   fields: readonly TableProSearchFieldConfig[],
   values: TableProSearchValues,
@@ -286,6 +389,17 @@ export function normalizeSearchValues(
   )
 }
 
+/**
+ *
+ * @param fields 搜索字段定义
+ * @param values 已校验的搜索值
+ *
+ * @description
+ * 执行字段转换并移除 page、pageSize 保留键，分页始终由表格状态提供。
+ *
+ * @returns 请求参数对象
+ * @throws transform 回调异常原样传播
+ */
 export function toSearchParams(
   fields: readonly TableProSearchFieldConfig[],
   values: TableProSearchValues,
@@ -311,6 +425,16 @@ export function toSearchParams(
   return params
 }
 
+/**
+ *
+ * @param fields 搜索字段定义
+ * @param values 已归一化的过滤值
+ *
+ * @description
+ * 为一次搜索编译匹配函数，预先建立键索引、多选集合及文本关键词，避免逐行重复准备。
+ *
+ * @returns 逐行匹配函数；没有过滤条件时为 null
+ */
 export function createSearchPredicate(
   fields: readonly TableProSearchFieldConfig[],
   values: TableProSearchValues,

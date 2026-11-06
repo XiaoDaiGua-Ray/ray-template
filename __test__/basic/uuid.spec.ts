@@ -31,3 +31,26 @@ it('enforces the requested radix and rejects invalid bounds', () => {
   expect(() => uuid(-1)).toThrow(RangeError)
   expect(() => uuid(Infinity)).toThrow(RangeError)
 })
+
+it('rejects biased samples while filling identifiers across several batches', () => {
+  let batch = 0
+  const random = vi
+    .spyOn(crypto, 'getRandomValues')
+    .mockImplementation((samples) => {
+      const values = samples as Uint32Array
+
+      values.fill(batch++ === 0 ? 0xffffffff : 9)
+
+      return samples
+    })
+
+  try {
+    expect(uuid(257, 10)).toBe('9'.repeat(257))
+  } finally {
+    random.mockRestore()
+  }
+})
+
+it('supports long identifiers without exceeding the Web Crypto byte quota', () => {
+  expect(uuid(70000, 10)).toMatch(/^\d{70000}$/)
+})

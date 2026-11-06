@@ -29,12 +29,25 @@ const displayText = (value: unknown): string => {
     : ''
 }
 
+/**
+ *
+ * @param doc 打印表格所属文档
+ * @param columns 当前可见列
+ * @param rows 当前页数据快照
+ * @param options 表头与单元格格式化选项
+ *
+ * @description
+ * 生成保留分组表头的独立表格，文本通过 textContent 写入，不执行数据中的 HTML。
+ *
+ * @returns 尚未插入文档的表格元素
+ */
 export const buildPrintableTable = (
   doc: Document,
   columns: DataTableColumn[],
   rows: Record<string, unknown>[],
-  { formatHeader, formatCell }: TableProPrintOptions = {},
+  options: TableProPrintOptions = {},
 ) => {
+  const { formatHeader, formatCell } = options
   const table = doc.createElement('table')
   const leaves = getLeafColumns(columns)
   const header = table.createTHead()
@@ -224,6 +237,16 @@ const copyPageStyles = (source: Document, destination: Document) => {
   return links
 }
 
+/**
+ *
+ * @param options 可选打印目标与样式配置
+ * @param defaultTable 未指定目标时创建默认表格的工厂
+ *
+ * @description
+ * 自定义目标会复制为独立节点，并去除脚本、嵌入内容、内联事件与敏感表单值。
+ *
+ * @returns 可打印节点；目标不存在或不可打印时为 null
+ */
 export const resolvePrintContent = (
   options: TableProPrintOptions,
   defaultTable: () => HTMLElement | null,
@@ -235,6 +258,19 @@ export const resolvePrintContent = (
   return target instanceof HTMLElement ? cloneRegion(target) : null
 }
 
+/**
+ *
+ * @param content 待插入打印 iframe 的独立内容节点
+ * @param options 标题、样式及页面样式继承选项
+ * @param signal 可选取消信号，只在调起浏览器打印前取消
+ *
+ * @description
+ * 在沙箱 iframe 中等待图片、样式与字体（最多 2 秒），再调起浏览器打印。
+ * iframe 在打印完成、失败或兜底超时后释放；返回成功只表示已请求打印。
+ *
+ * @returns 是否已调起浏览器打印，提前取消时为 false
+ * @throws 文档不可用或浏览器打印调用失败时抛错
+ */
 export const printTableContent = async (
   content: HTMLElement,
   options: TableProPrintOptions,

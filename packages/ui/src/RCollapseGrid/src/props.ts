@@ -1,4 +1,4 @@
-import type { AnyFn, MaybeArray } from '@ray-template/utils/types'
+import type { MaybeArray } from '@ray-template/utils/types'
 import { gridProps } from 'naive-ui'
 import type { PropType } from 'vue'
 import type { ActionAlignType, CollapseToggleText } from './types'
@@ -29,11 +29,8 @@ const props = {
   open: {
     /**
      *
-     * 是否折叠操作栏
-     *
-     * 默认折叠
-     *
-     * `true` 收起, `false` 展开
+     * @description
+     * 是否展开全部网格行，true 展开，false 收起；更新事件返回展开状态。
      */
     type: Boolean,
     default: false,
@@ -55,7 +52,7 @@ const props = {
      *
      * 卡片边框
      *
-     * 默认 `false`
+     * 默认 `true`
      */
     type: Boolean,
     default: true,

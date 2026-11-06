@@ -101,6 +101,15 @@ export type ThemeStyle = (typeof themeStyles)[number]
 
 export const DEFAULT_THEME_STYLE: ThemeStyle = 'modern'
 
+/**
+ *
+ * @param value 持久化或外部传入的界面风格
+ *
+ * @description
+ * 保留已支持的风格；历史缓存中的缺失或无效值回退到默认风格。
+ *
+ * @returns 可用于主题预设索引的风格名称。
+ */
 export const normalizeThemeStyle = (value: unknown): ThemeStyle =>
   themeStyles.find((style) => style === value) ?? DEFAULT_THEME_STYLE
 
@@ -150,6 +159,7 @@ export const themeStyleOverrides: Record<ThemeStyle, ThemePalette> = {
         textColor3: '#b9a9c4',
         borderColor: '#867791',
         dividerColor: '#473c52',
+        boxShadow1: '0 2px 8px rgb(0 0 0 / 16%)',
       },
       Layout: { siderColor: '#241e2c', headerColor: '#241e2c' },
     },
@@ -192,6 +202,16 @@ export const themeStyleOverrides: Record<ThemeStyle, ThemePalette> = {
   },
 }
 
+/**
+ *
+ * @param vars 当前 Naive UI 主题变量
+ * @param overrides 当前风格和用户主色的合并配置
+ *
+ * @description
+ * 将组件主题映射为页面语义变量。页面阴影只采用显式预设，避免继承浮层阴影。
+ *
+ * @returns 供主题容器写入的 CSS 自定义属性。
+ */
 export const createRayThemeStyle = (
   vars: ReturnType<typeof useThemeVars>['value'],
   overrides: GlobalThemeOverrides,
@@ -206,8 +226,10 @@ export const createRayThemeStyle = (
   '--r-token-border': vars.borderColor,
   '--r-token-text': vars.textColor1,
   '--r-token-text-secondary': vars.textColor2,
-  '--r-token-text-muted': vars.textColor3,
-  '--r-token-shadow': vars.boxShadow1,
+  // 组件库的弱文本不一定满足正文对比度，页面说明文字回退到次级文本色。
+  '--r-token-text-muted': overrides.common?.textColor3 ?? vars.textColor2,
+  // 页面卡片不能直接继承组件库用于浮层的高强度阴影。
+  '--r-token-shadow': overrides.common?.boxShadow1 ?? 'none',
   '--r-token-radius':
     typeof overrides.Card?.borderRadius === 'string'
       ? overrides.Card.borderRadius

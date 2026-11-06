@@ -61,18 +61,18 @@ export default defineComponent({
 
 ## 属性与事件
 
-除 `onSubmit` 外，继承 `NForm` 的公开属性。默认插槽传给 `NForm`。
+继承 `NForm` 的公开属性和 `onSubmit` 事件，默认插槽传给 `NForm`。
 
-| 属性                 | 默认    | 说明                                                                   |
-| -------------------- | ------- | ---------------------------------------------------------------------- |
-| `loading`            | `false` | 外层 Spin 状态，由调用方开关。                                         |
-| `loadingDescription` | 无      | 加载说明。                                                             |
-| `autocomplete`       | `'off'` | 挂载时写到表单 DOM。                                                   |
-| `submitWhenEnter`    | `false` | 创建时启用 Enter 捕获，阻止默认行为，校验成功后调用 `onFinish`。       |
-| `onFinish`           | 无      | Enter 校验完成回调。自定义提交按钮要自行调用 `validate()` 并执行提交。 |
-| `onRegister(inst)`   | 无      | 挂载后传出 Naive UI Form 实例。接受单函数或回调数组。                  |
+| 属性                 | 默认    | 说明                                                                                               |
+| -------------------- | ------- | -------------------------------------------------------------------------------------------------- |
+| `loading`            | `false` | 外层 Spin 状态，由调用方开关。                                                                     |
+| `loadingDescription` | 无      | 加载说明。                                                                                         |
+| `autocomplete`       | `'off'` | 挂载时写到表单 DOM。                                                                               |
+| `submitWhenEnter`    | `false` | 可动态启用单行输入的 Enter 提交；校验成功后调用 `onFinish`，加载中或上次提交未结束时忽略重复提交。 |
+| `onFinish`           | 无      | Enter 校验完成回调。自定义提交按钮要自行调用 `validate()` 并执行提交。                             |
+| `onRegister(inst)`   | 无      | 挂载后传出 Naive UI Form 实例。接受单函数或回调数组。                                              |
 
-含多行输入、搜索选择器或嵌套表单时，先确认 Enter 是否应被捕获。组件没有把 Form 方法直接暴露为模板 ref。
+输入法确认、多行换行、组合框、按钮、修饰键和已被控件 `preventDefault()` 的 Enter 保留原生行为。键盘提交的校验失败由表单展示；`onFinish` 的异常交给 Vue 的错误处理。调用 `useForm.validate()` 仍需处理其 Promise 拒绝。组件没有把 Form 方法直接暴露为模板 ref。
 
 ## useForm
 
@@ -82,7 +82,7 @@ export default defineComponent({
 | ------------------------------------------- | ------------------------------------------------------------------ |
 | `formConditionRef`                          | 响应式模型，传给 `RForm.model` 并用于输入绑定。                    |
 | `formModel()` / `formRules()`               | 重新取得初始模型和规则。                                           |
-| `getFormInstance()`                         | 获取已注册实例，未注册时抛错。                                     |
+| `getFormInstance()`                         | 获取已注册实例，未注册或已卸载时抛错。                             |
 | `validate(callback?, shouldRuleBeApplied?)` | 透传 Naive UI 校验；失败要处理 Promise 拒绝。                      |
 | `validateTargetField(key)`                  | 按规则对象的唯一 `key` 筛选规则，`key` 不等同于 `NFormItem.path`。 |
 | `restoreValidation()`                       | 清除当前校验状态，保留输入。                                       |

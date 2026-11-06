@@ -53,11 +53,11 @@
     },
     "axisPointer": {
       "lineStyle": {
-        "color": "rgba(255, 255, 255, 0.24)",
+        "color": "rgba(255, 255, 255, 0.52)",
         "type": "dotted"
       },
       "crossStyle": {
-        "color": "rgba(255, 255, 255, 0.24)",
+        "color": "rgba(255, 255, 255, 0.52)",
         "type": "dotted"
       },
       "label": {

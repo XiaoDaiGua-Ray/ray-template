@@ -93,8 +93,10 @@ See the [layout guide](../layout/README.md) for usage and slots.
 ## Menu synchronization
 
 - Build menu trees and path indexes when roles change or during explicit refresh. Do not mutate original module routes. After navigation, synchronize tabs and breadcrumbs from Vue Router's matched records.
+- No business root is mandatory or protected. System states (`/welcome`, `/403`, `/404`, `/500`) have no active business menu, breadcrumb, or tab. Never fabricate an active tab from cached selection or the first visible menu.
 - Preserve existing cache keys and tab-list structure. Restore historical tabs using registered routes and roles, ignoring deleted or inaccessible routes. Write the session cache only when the tab list changes.
-- Update KeepAlive in recent-access order, deduplicate, and trim to its limit. Merge themes only when the effective theme changes; observe color-weakness mode and document titles independently.
+- Keep one tag per concrete pathname and preserve its latest query/hash in `fullPath`; keep the sidebar's `menuKey` canonical. Derive menu selection from Router rather than a persisted key.
+- Update KeepAlive in recent-access order, deduplicate, trim to its limit, and prune closed or revoked tab names. Merge themes only when the effective theme changes; observe color-weakness mode and document titles independently.
 
 ## Recent navigation and favorites
 

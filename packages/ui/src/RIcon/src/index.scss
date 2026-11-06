@@ -10,7 +10,6 @@
   justify-content: center;
   align-items: center;
   color: var(--r-icon-color);
-  transform: translateZ(0);
   opacity: var(--r-icon-depth);
   cursor: var(--r-icon-cursor);
 
@@ -26,6 +25,11 @@
   stroke-dasharray: var(--r-icon-path-length);
   stroke-dashoffset: var(--r-icon-path-length);
   animation: rayIconPathAnimate 2s forwards;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
 }
 
 @keyframes rayIconPathAnimate {

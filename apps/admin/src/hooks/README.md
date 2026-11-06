@@ -10,7 +10,6 @@ Shared hooks are exported through `@/hooks`. Internal callers should import by r
 | template   | `useBadge`                 | `/template-hooks`: menu badge text, icons, and visibility                                                              | [useBadge](../../../../__test__/hooks/useBadge.spec.ts)                                  |
 | template   | `useWatermark`             | `/template-hooks`: text, show, hide, and toggle                                                                        | [useWatermark](../../../../__test__/hooks/useWatermark.spec.ts)                          |
 | template   | `useAppNavigation`         | `/template-hooks`: full paths, indexes, nested menus, and query                                                        | [useAppNavigation](../../../../__test__/hooks/useAppNavigation.spec.ts)                  |
-| template   | `useAppRoot`               | `/template-hooks`: read home, use the current page, restore dashboard                                                  | [useAppRoot](../../../../__test__/hooks/useAppRoot.spec.ts)                              |
 | template   | `useSiderBar`              | `/template-hooks`: close tabs by path or close left/right/other/all tabs                                               | [useSiderBar](../../../../__test__/hooks/useSiderBar.spec.ts)                            |
 | template   | `useContentScroll`         | `/template-hooks`: scroll content to top or coordinates                                                                | [useLayoutScroll](../../../../__test__/hooks/useLayoutScroll.spec.ts)                    |
 | template   | `useSiderScroll`           | `/template-hooks`: scroll sidebar to top or coordinates                                                                | [useLayoutScroll](../../../../__test__/hooks/useLayoutScroll.spec.ts)                    |
@@ -26,6 +25,8 @@ Shared hooks are exported through `@/hooks`. Internal callers should import by r
 
 ## Lifecycle and state
 
+- `useAppRoot` is a deprecated compatibility accessor for stored preferences. It has no landing, tab protection, permission, or startup-validation effect and is no longer an interactive demo. Explicit navigation uses Router; closing the final/all business tabs opens the neutral `/welcome` workspace.
+
 - Create composables in `setup` or an active effect scope. Trigger DOM operations from user events or post-mount callbacks. Clean up events, subscriptions, and animation frames with the scope.
 - Pinia `runtime` owns global UI state, accessed through `useRuntimeGetters` / `useRuntimeActions`. It is not persisted.
 - `useSpinning().reload(wait)` unmounts the page. The runtime store owns the restoration timer; the latest refresh wins across repeated calls.
@@ -36,7 +37,9 @@ Shared hooks are exported through `@/hooks`. Internal callers should import by r
 - `useDomToImage` return types follow the default format or the current `create(format)` call. Failures reject with Error. `finally` also runs when the target is missing, so its argument may be empty. The `created` callback receives results from runtime format overrides as well; its argument is a union of actual output types and must be narrowed first.
 - `useI18n('hooks').t('code')` and `.t('hooks.code')` address the same translation key. Switch application locales with `useSettingActions().updateLocale` to keep dates and component-library locales synchronized.
 - Development HMR reuses the internationalization instance. Translation methods created before initialization read the current instance at invocation rather than permanently retaining the fallback that returns raw keys.
-- `usePagination` resets to the value of the first pageSizes option and supports Naive UI object options. Calling `setCallback()` removes the default callback.
+- `usePagination` resets to the first option in the current `pagination.value.pageSizes` and supports Naive UI object options. Default option arrays are isolated between instances. Calling `setCallback()` removes the default callback.
+- `useDomToImage` loads the rendering library on the first `create` call; import failures use the same error and cleanup callbacks as renderer failures.
+- A disposed `useElementFullscreen` instance cannot enter again; create a fresh instance in a live scope when a target is remounted.
 - `usePrint` unwraps its target when called. DOM targets print as HTML by default. Blob images and binary PDFs are converted first; callers can await the returned Promise.
 
 Screenshots and printing depend on real browsers. Happy DOM tests verify state and error handling; they do not replace native print-dialog or physical-output acceptance.

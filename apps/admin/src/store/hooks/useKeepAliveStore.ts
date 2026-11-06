@@ -16,10 +16,12 @@ export const useKeepAliveGetters = () => {
 }
 
 export const useKeepAliveActions = () => {
-  const { setKeepAliveInclude, getKeepAliveInclude } = piniaKeepAliveStore()
+  const { setKeepAliveInclude, getKeepAliveInclude, retainKeepAliveInclude } =
+    piniaKeepAliveStore()
 
   return {
     setKeepAliveInclude,
     getKeepAliveInclude,
+    retainKeepAliveInclude,
   }
 }

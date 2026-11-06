@@ -76,7 +76,9 @@ export default defineComponent({
         typeof column.title === 'string' ? column.title : String(column.key)
       const hasWidth =
         'children' in column
-          ? column.children.every((child) => typeof child.width === 'number')
+          ? getLeafColumns(column.children).every(
+              (child) => typeof child.width === 'number',
+            )
           : typeof column.width === 'number'
 
       return (

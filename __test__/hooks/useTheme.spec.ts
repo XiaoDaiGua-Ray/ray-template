@@ -1,5 +1,8 @@
 import { useTheme } from '../../apps/admin/src/hooks/template/useTheme'
-import { useSettingGetters } from '../../apps/admin/src/store'
+import {
+  useSettingActions,
+  useSettingGetters,
+} from '../../apps/admin/src/store'
 import setupMiniApp from '../utils/setupMiniApp'
 
 describe('useTheme', async () => {
@@ -44,6 +47,28 @@ describe('useTheme', async () => {
 
     expect(__lightTheme).toBe(false)
     expect(__lightThemeLabel).toBe('Light')
+  })
+
+  it('keeps a reused hook reactive to language and theme changes', () => {
+    const { updateLocale } = useSettingActions()
+    const previousLocale = useSettingGetters().getLocaleLanguage.value
+
+    try {
+      darkTheme()
+      updateLocale('en-US')
+      expect(getAppTheme().themeI18nLabel).toBe('Dark')
+      updateLocale('zh-CN')
+      expect(getAppTheme().themeI18nLabel).toBe('暗色')
+      lightTheme()
+      expect(getAppTheme()).toMatchObject({
+        theme: false,
+        themeLabel: 'Light',
+        themeI18nLabel: '明亮',
+      })
+    } finally {
+      updateLocale(previousLocale)
+      lightTheme()
+    }
   })
 
   it('selects auto mode and applies the system color preference', () => {

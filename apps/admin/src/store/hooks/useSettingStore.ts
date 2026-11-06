@@ -85,7 +85,7 @@ export const useSettingGetters = () => {
   /**
    *
    * @description
-   * 获取 app 根路由。
+   * 获取历史首页偏好，仅用于兼容，不影响工作区导航。
    */
   const getAppRootRoute = computed(() => variable.appRootRoute)
 

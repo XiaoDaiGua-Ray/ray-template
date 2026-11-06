@@ -31,6 +31,8 @@ For ordinary buttons, `<RIcon name="action/search" />` uses the default 20 px bo
 
 See the [source and license inventory](../ICON-SOURCES.md). Legacy Excel export, Office, and login illustration icons were retired. Historical route/menu reads migrate them to download, table, and generic-page icons respectively.
 
+Choose a glyph for the actual interaction: `navigation/table` denotes a data grid, `action/external-link` denotes an external destination, `action/shared` denotes sharing, and `action/copy-image` denotes region capture. Forward navigation uses a right arrow without rotating an expansion chevron. Status glyphs share a circular container and comparable optical size; keep that family coherent when adding states.
+
 ## Generation and injection
 
 - Adding, editing, deleting, or moving an SVG causes the development server to check/synchronize `packages/icons/src/manifest.ts`. Adding/removing an entire group restarts the server automatically.

@@ -1,4 +1,4 @@
-import { useRuntimeActions, useRuntimeGetters } from '@/store'
+import { useRuntimeGetters } from '@/store'
 import { NSpin, spinProps } from 'naive-ui'
 import type { SpinProps } from 'naive-ui'
 
@@ -7,10 +7,11 @@ const GlobalSpin = defineComponent({
   props: {
     ...spinProps,
   },
-  setup() {
-    const overrides = {
+  setup(props) {
+    const overrides = computed(() => ({
       opacitySpinning: '0.3',
-    }
+      ...props.themeOverrides,
+    }))
     const spinValue = useRuntimeGetters().globalSpinning
 
     return {

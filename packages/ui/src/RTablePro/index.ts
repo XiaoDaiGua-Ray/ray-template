@@ -18,4 +18,6 @@ export type {
   TableProSearchValue,
   TableProSearchValues,
   TableProPrintOptions,
+  TableProImageOptions,
+  TableProPagination,
 } from './src/types'
