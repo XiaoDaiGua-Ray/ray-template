@@ -1,0 +1,1 @@
+import{v as e,y as t}from"./runtime-core.esm-bundler-CcpTTixp.js";import{t as n}from"./error-BsbGmrlm.js";var r=t({name:`ErrorPage500`,setup:()=>()=>e(n,{status:`500`},null)});export{r as default};
