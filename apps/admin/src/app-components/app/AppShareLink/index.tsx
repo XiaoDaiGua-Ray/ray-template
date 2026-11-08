@@ -2,14 +2,14 @@ import './index.scss'
 import { RAY_TEMPLATE_DOCS_URL } from '@/app-config'
 import { RIcon } from '@/components'
 import { useI18n } from '@/hooks'
-import { NAvatar } from 'naive-ui'
+import type { IconName } from '@/icons'
 import type { PropType } from 'vue'
 
-interface AvatarOptions {
+interface ShareLinkOption {
   key: string
   src: string
   tooltip: string
-  icon: string
+  icon: IconName
 }
 
 export default defineComponent({
@@ -22,40 +22,40 @@ export default defineComponent({
   },
   setup() {
     const { t } = useI18n('dashboard')
-    const avatarOptions: AvatarOptions[] = [
+    const links: ShareLinkOption[] = [
       {
         key: 'ray-js-note',
         src: 'https://note.youdao.com/s/ObWEe2BB',
         tooltip: 'links.notes',
-        icon: 'https://avatars.githubusercontent.com/u/51957438?v=4',
+        icon: 'navigation/form',
       },
       {
         key: 'ray-js-cover',
         src: 'https://note.youdao.com/s/IC8xKPdB',
         tooltip: 'links.interviews',
-        icon: 'https://avatars.githubusercontent.com/u/51957438?v=4',
+        icon: 'status/question',
       },
       {
         key: 'ray-template-doc',
         src: RAY_TEMPLATE_DOCS_URL,
         tooltip: 'links.docs',
-        icon: 'https://avatars.githubusercontent.com/u/51957438?v=4',
+        icon: 'navigation/document',
       },
       {
         key: 'ray-template-doc-out',
         src: 'https://ray-template.yunkuangao.com/',
         tooltip: 'links.docsMirror',
-        icon: 'https://avatars.githubusercontent.com/u/51957438?v=4',
+        icon: 'navigation/window',
       },
     ]
 
-    return { avatarOptions, t }
+    return { links, t }
   },
   render() {
     return (
       <div class={['r-share-links', `r-share-links--${this.variant}`]}>
         <div class="r-share-links__grid">
-          {this.avatarOptions.map((item) => (
+          {this.links.map((item) => (
             <a
               class="r-share-link"
               href={item.src}
@@ -65,9 +65,15 @@ export default defineComponent({
               rel="noreferrer"
               key={item.key}
             >
-              <NAvatar round src={item.icon} size={24} />
-              <span>{this.t(item.tooltip)}</span>
-              <RIcon name="action/external-link" size={13} />
+              <span class="r-share-link__icon" aria-hidden="true">
+                <RIcon name={item.icon} size={20} />
+              </span>
+              <span class="r-share-link__label">{this.t(item.tooltip)}</span>
+              <RIcon
+                class="r-share-link__arrow"
+                name="action/external-link"
+                size={14}
+              />
             </a>
           ))}
         </div>

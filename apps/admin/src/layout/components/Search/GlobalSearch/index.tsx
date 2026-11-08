@@ -1,6 +1,6 @@
 import './index.scss'
 import { RIcon } from '@/components'
-import { useDevice, useI18n } from '@/hooks'
+import { useI18n } from '@/hooks'
 import { positionSelectedMenuItem } from '@/layout/utils/position-selected-menu-item'
 import {
   useMenuActions,
@@ -40,11 +40,6 @@ export default defineComponent({
         emit('update:show', value)
 
         if (!value) resetSearch()
-      },
-    })
-    const { isTabletOrSmaller } = useDevice({
-      observer: (small) => {
-        if (small) modelShow.value = false
       },
     })
     const visibleLeaves = computed(() => {
@@ -157,8 +152,7 @@ export default defineComponent({
     }
 
     useEventListener(window, 'keydown', (event: KeyboardEvent) => {
-      if (event.isComposing || isTabletOrSmaller.value || modelShow.value)
-        return
+      if (event.isComposing || modelShow.value) return
 
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
         event.preventDefault()
@@ -167,168 +161,162 @@ export default defineComponent({
       }
     })
 
-    return () =>
-      isTabletOrSmaller.value ? null : (
-        <NModal
-          show={modelShow.value}
-          onUpdateShow={(value) => {
-            modelShow.value = value
-          }}
-          onAfterEnter={() => input.value?.focus()}
-          transformOrigin="center"
-          displayDirective="if"
+    return () => (
+      <NModal
+        show={modelShow.value}
+        onUpdateShow={(value) => {
+          modelShow.value = value
+        }}
+        onAfterEnter={() => input.value?.focus()}
+        transformOrigin="center"
+        displayDirective="if"
+      >
+        <NCard
+          class="global-search"
+          role="dialog"
+          aria-modal="true"
+          aria-label={t('title')}
         >
-          <NCard
-            class="global-search"
-            role="dialog"
-            aria-modal="true"
-            aria-label={t('title')}
-          >
-            {{
-              header: () => (
-                <div class="global-search__header">
-                  <label for={inputId}>{t('title')}</label>
-                  <NButton
-                    quaternary
-                    size="small"
-                    aria-label={t('close')}
-                    onClick={() => {
-                      modelShow.value = false
-                    }}
-                  >
-                    <RIcon name="action/close" />
-                  </NButton>
-                </div>
-              ),
-              default: () => (
-                <>
-                  <NInput
-                    ref={input}
-                    size="large"
-                    value={searchValue.value}
-                    onUpdateValue={(value) => {
-                      searchValue.value = value
-                    }}
-                    placeholder={t('placeholder')}
-                    inputProps={{
-                      id: inputId,
-                      name: 'page-search',
-                      autocapitalize: 'off',
-                      spellcheck: false,
-                    }}
-                    onKeydown={(event) => moveResult(event, true)}
-                    clearable
-                  >
-                    {{ prefix: () => <RIcon name="action/search" /> }}
-                  </NInput>
-                  {storageUnavailable.value && (
-                    <p class="global-search__hint" role="status">
-                      {t('storageUnavailable')}
+          {{
+            header: () => (
+              <div class="global-search__header">
+                <label for={inputId}>{t('title')}</label>
+                <NButton
+                  quaternary
+                  size="small"
+                  aria-label={t('close')}
+                  onClick={() => {
+                    modelShow.value = false
+                  }}
+                >
+                  <RIcon name="action/close" />
+                </NButton>
+              </div>
+            ),
+            default: () => (
+              <>
+                <NInput
+                  ref={input}
+                  size="large"
+                  value={searchValue.value}
+                  onUpdateValue={(value) => {
+                    searchValue.value = value
+                  }}
+                  placeholder={t('placeholder')}
+                  inputProps={{
+                    id: inputId,
+                    name: 'page-search',
+                    autocapitalize: 'off',
+                    spellcheck: false,
+                  }}
+                  onKeydown={(event) => moveResult(event, true)}
+                  clearable
+                >
+                  {{ prefix: () => <RIcon name="action/search" /> }}
+                </NInput>
+                {storageUnavailable.value && (
+                  <p class="global-search__hint" role="status">
+                    {t('storageUnavailable')}
+                  </p>
+                )}
+                <NScrollbar class="global-search__results">
+                  {options.value.length ? (
+                    groups.value.map((group) => (
+                      <section class="global-search__group" key={group.key}>
+                        <div class="global-search__group-heading">
+                          <h2>{t(group.key)}</h2>
+                        </div>
+                        <ul role="list">
+                          {group.options.map((option) => {
+                            const favorite = favoritePaths.value.includes(
+                              option.fullPath,
+                            )
+
+                            return (
+                              <li
+                                key={option.fullPath}
+                                class="global-search__item"
+                              >
+                                <button
+                                  type="button"
+                                  class="global-search__destination"
+                                  ref={(element) => {
+                                    if (element instanceof HTMLButtonElement)
+                                      rowButtons.set(option.fullPath, element)
+                                    else rowButtons.delete(option.fullPath)
+                                  }}
+                                  onFocus={() => {
+                                    activeIndex.value =
+                                      options.value.indexOf(option)
+                                  }}
+                                  onKeydown={(event) => moveResult(event)}
+                                  onClick={() => void openPage(option)}
+                                >
+                                  {typeof option.meta.icon === 'string' &&
+                                  option.meta.icon ? (
+                                    <RIcon name={option.meta.icon} size={20} />
+                                  ) : (
+                                    <RIcon name="navigation/menu" size={20} />
+                                  )}
+                                  <span>{option.breadcrumbLabel}</span>
+                                  {option.meta.windowOpen && (
+                                    <RIcon
+                                      name="action/external-link"
+                                      size={14}
+                                    />
+                                  )}
+                                </button>
+                                <NButton
+                                  quaternary
+                                  size="small"
+                                  class="global-search__favorite"
+                                  type={favorite ? 'primary' : 'default'}
+                                  aria-pressed={favorite}
+                                  aria-label={t(
+                                    favorite ? 'removeFavorite' : 'addFavorite',
+                                    { title: option.breadcrumbLabel },
+                                  )}
+                                  onClick={() => toggle(option.fullPath)}
+                                >
+                                  <span aria-hidden="true">
+                                    {favorite ? '★' : '☆'}
+                                  </span>
+                                </NButton>
+                              </li>
+                            )
+                          })}
+                        </ul>
+                      </section>
+                    ))
+                  ) : (
+                    <p class="global-search__empty">
+                      {t(searchValue.value.trim() ? 'noResults' : 'empty')}
                     </p>
                   )}
-                  <NScrollbar style="max-height: min(440px, calc(100dvh - 260px))">
-                    {options.value.length ? (
-                      groups.value.map((group) => (
-                        <section class="global-search__group" key={group.key}>
-                          <div class="global-search__group-heading">
-                            <h2>{t(group.key)}</h2>
-                          </div>
-                          <ul role="list">
-                            {group.options.map((option) => {
-                              const favorite = favoritePaths.value.includes(
-                                option.fullPath,
-                              )
-
-                              return (
-                                <li
-                                  key={option.fullPath}
-                                  class="global-search__item"
-                                >
-                                  <button
-                                    type="button"
-                                    class="global-search__destination"
-                                    ref={(element) => {
-                                      if (element instanceof HTMLButtonElement)
-                                        rowButtons.set(option.fullPath, element)
-                                      else rowButtons.delete(option.fullPath)
-                                    }}
-                                    onFocus={() => {
-                                      activeIndex.value =
-                                        options.value.indexOf(option)
-                                    }}
-                                    onKeydown={(event) => moveResult(event)}
-                                    onClick={() => void openPage(option)}
-                                  >
-                                    {typeof option.meta.icon === 'string' &&
-                                    option.meta.icon ? (
-                                      <RIcon
-                                        name={option.meta.icon}
-                                        size={20}
-                                      />
-                                    ) : (
-                                      <RIcon name="navigation/menu" size={20} />
-                                    )}
-                                    <span>{option.breadcrumbLabel}</span>
-                                    {option.meta.windowOpen && (
-                                      <RIcon
-                                        name="action/external-link"
-                                        size={14}
-                                      />
-                                    )}
-                                  </button>
-                                  <NButton
-                                    quaternary
-                                    size="small"
-                                    class="global-search__favorite"
-                                    type={favorite ? 'primary' : 'default'}
-                                    aria-pressed={favorite}
-                                    aria-label={t(
-                                      favorite
-                                        ? 'removeFavorite'
-                                        : 'addFavorite',
-                                      { title: option.breadcrumbLabel },
-                                    )}
-                                    onClick={() => toggle(option.fullPath)}
-                                  >
-                                    <span aria-hidden="true">
-                                      {favorite ? '★' : '☆'}
-                                    </span>
-                                  </NButton>
-                                </li>
-                              )
-                            })}
-                          </ul>
-                        </section>
-                      ))
-                    ) : (
-                      <p class="global-search__empty">
-                        {t(searchValue.value.trim() ? 'noResults' : 'empty')}
-                      </p>
-                    )}
-                  </NScrollbar>
-                </>
-              ),
-              action: () => (
-                <div class="global-search__help">
-                  <span>
-                    <kbd>↑</kbd> <kbd>↓</kbd> {t('move')}
-                  </span>
-                  <span>
-                    <kbd>↵</kbd> {t('open')}
-                  </span>
-                  <span>
-                    <kbd>Esc</kbd> {t('close')}
-                  </span>
-                  {recentPaths.value.length > 0 && (
-                    <NButton text size="tiny" onClick={clearRecent}>
-                      {t('clearRecent')}
-                    </NButton>
-                  )}
-                </div>
-              ),
-            }}
-          </NCard>
-        </NModal>
-      )
+                </NScrollbar>
+              </>
+            ),
+            action: () => (
+              <div class="global-search__help">
+                <span class="global-search__shortcut">
+                  <kbd>↑</kbd> <kbd>↓</kbd> {t('move')}
+                </span>
+                <span class="global-search__shortcut">
+                  <kbd>↵</kbd> {t('open')}
+                </span>
+                <span class="global-search__shortcut">
+                  <kbd>Esc</kbd> {t('close')}
+                </span>
+                {recentPaths.value.length > 0 && (
+                  <NButton text size="tiny" onClick={clearRecent}>
+                    {t('clearRecent')}
+                  </NButton>
+                )}
+              </div>
+            ),
+          }}
+        </NCard>
+      </NModal>
+    )
   },
 })

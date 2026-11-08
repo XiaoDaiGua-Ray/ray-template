@@ -4,9 +4,12 @@ import AppAvatar from '@/app-components/app/AppAvatar'
 import { LOCAL_OPTIONS } from '@/app-config'
 import { RIcon } from '@/components'
 import { useDevice, useI18n } from '@/hooks'
-import { useSettingActions, useSettingGetters } from '@/store'
-import { NButton, NDropdown, NFlex, NLayoutHeader, NScrollbar } from 'naive-ui'
-import type { VNode } from 'vue'
+import {
+  useSettingActions,
+  useSettingGetters,
+  useSigningGetters,
+} from '@/store'
+import { NButton, NDropdown, NFlex, NLayoutHeader } from 'naive-ui'
 import { useFullscreen } from 'vue-hooks-plus'
 import {
   Breadcrumb,
@@ -37,6 +40,8 @@ export default defineComponent({
     const { getDrawerPlacement, getBreadcrumbSwitch } = useSettingGetters()
     // 是否显示设置抽屉
     const showSettings = ref(false)
+    const accountMenuShown = ref(false)
+    const { getSigningCallback } = useSigningGetters()
     // 是否展示全局搜索
     const globalSearchShown = ref(false)
     // 当前是否为平板或者更小的设备
@@ -74,7 +79,7 @@ export default defineComponent({
         showSettings.value = true
       },
       github: () => {
-        window.open('https://github.com/XiaoDaiGua-Ray/r-template')
+        window.open('https://github.com/XiaoDaiGua-Ray/ray-template')
       },
       fullscreen: () => {
         if (!isEnabled) {
@@ -98,15 +103,6 @@ export default defineComponent({
       iconEventMap[key]?.()
     }
 
-    /**
-     *
-     * @param vnode 需要渲染的节点
-     * @returns 如果是平板或者更小的设备, 就返回 null, 否则返回 vnode
-     */
-    const isRenderVNode = (vnode: VNode) => {
-      return isTabletOrSmaller.value ? null : vnode
-    }
-
     return {
       t,
       isFullscreen,
@@ -118,7 +114,9 @@ export default defineComponent({
       getDrawerPlacement,
       getBreadcrumbSwitch,
       globalSearchShown,
-      isRenderVNode,
+      isTabletOrSmaller,
+      accountMenuShown,
+      getSigningCallback,
     }
   },
   render() {
@@ -128,7 +126,7 @@ export default defineComponent({
       getDrawerPlacement,
       getBreadcrumbSwitch,
     } = this
-    const { toolIconClick, updateLocale, isRenderVNode } = this
+    const { toolIconClick, updateLocale } = this
 
     return (
       <NLayoutHeader class="layout-header">
@@ -139,10 +137,16 @@ export default defineComponent({
           justify="space-between"
           wrap={false}
         >
-          <NFlex align="center" wrap={false}>
+          <NFlex
+            class="layout-header__navigation"
+            align="center"
+            size={this.isTabletOrSmaller ? 4 : 12}
+            wrap={false}
+          >
             {leftIconOptions.map((curr) => (
               <NButton
                 quaternary
+                class="layout-header__menu-toggle"
                 key={curr.name}
                 aria-label={this.t<string>('layout.toggleMenu')}
                 onClick={toolIconClick.bind(this, curr.eventKey ?? curr.name)}
@@ -158,15 +162,32 @@ export default defineComponent({
             ))}
             {getBreadcrumbSwitch ? <Breadcrumb /> : null}
           </NFlex>
-          <NFlex justify="end" align="center" size={[0, 0]} wrap={false}>
-            {isRenderVNode(
+          <NFlex
+            class="layout-header__actions"
+            justify="end"
+            align="center"
+            size={[4, 0]}
+            wrap={false}
+          >
+            {this.isTabletOrSmaller ? (
+              <NButton
+                quaternary
+                class="override-button__layout"
+                aria-label={this.t<string>('headerTooltip.Search')}
+                onClick={() => {
+                  this.globalSearchShown = true
+                }}
+              >
+                <RIcon name="action/search" size={20} />
+              </NButton>
+            ) : (
               <GlobalSearchButton
                 onClick={(e) => {
                   e.stopPropagation()
 
                   this.globalSearchShown = true
                 }}
-              />,
+              />
             )}
             {rightTooltipIconOptions.map((curr) => (
               <NButton
@@ -185,7 +206,7 @@ export default defineComponent({
                 )}
                 onClick={toolIconClick.bind(this, curr.eventKey ?? curr.name)}
               >
-                <RIcon name={curr.name} />
+                <RIcon name={curr.name} size={20} />
               </NButton>
             ))}
             <NDropdown
@@ -198,19 +219,57 @@ export default defineComponent({
                 aria-label={this.t<string>('layout.language')}
                 class="override-button__layout"
               >
-                <RIcon name="system/language" />
+                <RIcon name="system/language" size={20} />
               </NButton>
             </NDropdown>
             <NDropdown
-              options={createAvatarOptions(this.t)}
+              class="layout-account-menu"
+              placement="bottom-end"
+              show={this.accountMenuShown}
+              onUpdateShow={(show) => {
+                this.accountMenuShown = show
+              }}
+              options={[
+                {
+                  key: 'identity',
+                  type: 'render',
+                  render: () => (
+                    <div class="layout-account-menu__identity">
+                      <span>{this.t('account.eyebrow')}</span>
+                      <strong>{this.getSigningCallback.name}</strong>
+                    </div>
+                  ),
+                },
+                { key: 'identity-divider', type: 'divider' },
+                ...createAvatarOptions(this.t),
+              ]}
               onSelect={(key) => void avatarDropdownClick(key)}
               trigger="click"
             >
               <AppAvatar
-                avatarSize={24}
+                avatarSize={30}
+                cursor="pointer"
+                aria-label={this.t<string>('account.menu', {
+                  name: this.getSigningCallback.name,
+                })}
+                aria-haspopup="menu"
+                aria-expanded={this.accountMenuShown}
                 spaceSize={[8, 0]}
-                class="override-button__layout"
-              />
+                class={[
+                  'layout-header__account',
+                  { 'is-open': this.accountMenuShown },
+                ]}
+              >
+                {{
+                  suffix: () => (
+                    <RIcon
+                      class="layout-header__account-chevron"
+                      name="directional/expanded"
+                      size={14}
+                    />
+                  ),
+                }}
+              </AppAvatar>
             </NDropdown>
           </NFlex>
         </NFlex>

@@ -60,9 +60,36 @@
   .n-data-table-base-body {
     overscroll-behavior: contain;
   }
-  &--stacked &__list {
+  &--stacked {
     block-size: auto;
-    min-block-size: 100%;
+    gap: 20px;
+
+    > .n-spin-container {
+      flex: none;
+    }
+
+    > .n-spin-container > .n-spin-content {
+      block-size: auto;
+    }
+
+    .user-management__layout,
+    .user-management__list-viewport,
+    .user-management__list {
+      block-size: auto;
+    }
+
+    .user-management__organization {
+      max-block-size: 18rem;
+    }
+
+    .user-management__list-viewport > .n-scrollbar-container,
+    .n-data-table-base-body {
+      overscroll-behavior-y: auto;
+    }
+
+    .user-management__list-viewport > .n-scrollbar-container {
+      block-size: auto;
+    }
   }
   &--stacked &__list > .r-table {
     flex: none;
@@ -124,7 +151,8 @@
 @container (max-width: 850px) {
   .user-management__layout {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: minmax(100px, 1fr) minmax(0, 3fr);
+    grid-template-rows: auto auto;
+    gap: 16px;
   }
 }
 @media (max-width: 600px) {

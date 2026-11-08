@@ -30,6 +30,7 @@
   "restoreButton": "Exit fullscreen",
   "loading": "Loading",
   "tab": "Layout",
+  "closeMenu": "Close navigation menu",
   "toggleMenu": "Open navigation menu",
   "language": "Change language"
 }

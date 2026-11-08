@@ -45,9 +45,11 @@ export default defineComponent({
     const { dropdownSelect, breadcrumbItemClick } = this
 
     return isTabletOrSmaller ? (
-      <div style="display: none;"></div>
+      <span class="layout-breadcrumb__current" aria-current="page">
+        {getBreadcrumbOptions.at(-1)?.breadcrumbLabel}
+      </span>
     ) : (
-      <NBreadcrumb>
+      <NBreadcrumb class="layout-breadcrumb">
         <TransitionGroup tag="li" name="breadcrumb" appear>
           {getBreadcrumbOptions.map((curr) => (
             <NBreadcrumbItem

@@ -1,7 +1,13 @@
 .global-search.n-card {
-  width: min(650px, calc(100vw - 40px));
-  margin: 60px auto auto;
-  border-radius: 12px;
+  inline-size: min(650px, calc(100dvw - 24px));
+  max-block-size: calc(100dvh - 24px);
+  margin: 12px auto auto;
+  border-radius: var(--r-radius);
+
+  .n-card__content {
+    min-block-size: 0;
+    overflow: auto;
+  }
 
   .n-card__action {
     padding: 12px 20px;
@@ -39,7 +45,7 @@
 .global-search__item {
   gap: 4px;
   border: 1px solid var(--r-line);
-  border-radius: 8px;
+  border-radius: var(--r-control-radius);
   margin-block: 6px;
   padding-inline-end: 8px;
 
@@ -57,7 +63,7 @@
   min-height: 46px;
   padding: 10px 12px;
   border: 0;
-  border-radius: 8px;
+  border-radius: var(--r-control-radius);
   background: transparent;
   color: var(--r-text);
   text-align: start;
@@ -95,5 +101,45 @@
     padding: 2px 5px;
     border: 1px solid var(--r-line);
     border-radius: 4px;
+  }
+}
+
+.global-search__results {
+  max-block-size: min(440px, calc(100dvh - 230px));
+}
+
+@media (max-width: 768px) {
+  .global-search.n-card {
+    .n-card-header {
+      padding: 12px 16px;
+    }
+
+    .n-card__content {
+      padding-inline: 16px;
+    }
+
+    .n-card__action {
+      padding: 12px 16px;
+    }
+  }
+
+  .global-search__header > .n-button,
+  .global-search__favorite {
+    min-inline-size: 44px;
+    min-block-size: 44px;
+  }
+
+  .global-search__shortcut {
+    display: none;
+  }
+
+  .global-search__help:has(> :not(.global-search__shortcut)) {
+    justify-content: flex-end;
+  }
+}
+
+@media (min-width: 769px) {
+  .global-search.n-card {
+    margin-block-start: min(60px, 8dvh);
   }
 }

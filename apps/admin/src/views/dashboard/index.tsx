@@ -14,6 +14,7 @@ export default defineComponent({
     const { t } = useI18n('dashboard')
     const text = (key: string) => t<string>(key)
     const { getMenuOptions } = useMenuGetters()
+    const shortcutsTitle = useId()
     const { dependencies, devDependencies } = __APP_CFG__.pkg
     const stack = [
       { name: 'Vue', version: dependencies.vue, detail: 'Composition API' },
@@ -38,7 +39,7 @@ export default defineComponent({
       },
       {
         path: '/layout-demo',
-        icon: 'navigation/menu',
+        icon: 'navigation/layout',
         title: 'layout',
         description: 'layoutDescription',
       },
@@ -70,6 +71,7 @@ export default defineComponent({
     return () => (
       <section class="r-dashboard">
         <AppPageHeader
+          class="r-dashboard__header"
           title={text('title')}
           description={text('description')}
           eyebrow="RAY TEMPLATE / WORKSPACE"
@@ -90,18 +92,21 @@ export default defineComponent({
           ))}
         </div>
         {shortcuts.value.length ? (
-          <NCard title={text('explore')}>
-            <div class="r-dashboard-shortcuts">
+          <section aria-labelledby={shortcutsTitle}>
+            <h2 id={shortcutsTitle} class="r-dashboard__section-title">
+              {text('explore')}
+            </h2>
+            <nav class="r-dashboard-shortcuts" aria-labelledby={shortcutsTitle}>
               {shortcuts.value.map((item) => (
                 <RouterLink
                   key={item.path}
                   to={item.path}
                   class="r-dashboard-shortcut"
                 >
-                  <span class="r-dashboard-shortcut__icon">
+                  <span class="r-dashboard-shortcut__icon" aria-hidden="true">
                     <RIcon name={item.icon} size={20} />
                   </span>
-                  <span>
+                  <span class="r-dashboard-shortcut__copy">
                     <strong>{text(item.title)}</strong>
                     <small>{text(item.description)}</small>
                   </span>
@@ -112,8 +117,8 @@ export default defineComponent({
                   />
                 </RouterLink>
               ))}
-            </div>
-          </NCard>
+            </nav>
+          </section>
         ) : null}
         <div class="r-dashboard-info">
           <NCard title={text('project')}>

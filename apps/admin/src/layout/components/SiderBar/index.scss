@@ -1,20 +1,121 @@
 .layout-header {
-  height: $layoutHeaderHeight;
-  padding: 0 $layoutRouterViewContainer;
+  block-size: $layoutHeaderHeight;
+  padding-inline: $layoutRouterViewContainer;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid var(--r-line);
+  border-block-end: 1px solid var(--r-line);
 
   > .layout-header__method {
-    width: 100%;
+    inline-size: 100%;
+    min-inline-size: 0;
+    gap: 16px;
+  }
+
+  &__navigation {
+    min-inline-size: 0;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  &__actions {
+    flex-shrink: 0;
   }
 
   .n-breadcrumb {
     font-size: 13px;
   }
+
+  .override-button__layout,
+  &__menu-toggle {
+    inline-size: 36px;
+    padding: 0;
+    border-radius: var(--r-control-radius);
+    color: var(--r-text-secondary);
+  }
+
+  &__account {
+    block-size: 40px;
+    margin-inline-start: 8px;
+    padding-inline: 8px;
+    border-radius: var(--r-control-radius);
+
+    &.is-open {
+      background: var(--r-surface-hover);
+    }
+
+    .r-app-avatar__name {
+      max-inline-size: 9rem;
+      font-weight: 500;
+    }
+  }
+
+  &__account-chevron {
+    color: var(--r-text-muted);
+    transition: transform 160ms ease;
+  }
+
+  &__account.is-open &__account-chevron {
+    transform: rotate(180deg);
+  }
 }
 
-.override-button__layout {
-  padding: 0 9px;
-  border-radius: 8px;
+.layout-account-menu {
+  min-inline-size: 224px;
+  max-inline-size: calc(100dvw - 24px);
+
+  &__identity {
+    display: grid;
+    gap: 4px;
+    max-inline-size: 256px;
+    padding: 12px 16px 8px;
+    overflow-wrap: anywhere;
+
+    > span {
+      color: var(--r-text-muted);
+      font-size: 12px;
+    }
+
+    > strong {
+      color: var(--r-text);
+      font-size: 14px;
+      font-weight: 600;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .layout-header {
+    padding-inline: 8px;
+
+    > .layout-header__method {
+      gap: 4px;
+    }
+
+    .override-button__layout,
+    &__menu-toggle,
+    &__account {
+      inline-size: 44px;
+      block-size: 44px;
+      padding: 0;
+    }
+
+    &__account {
+      margin-inline-start: 0;
+
+      .r-app-avatar__name,
+      .layout-header__account-chevron {
+        display: none;
+      }
+    }
+  }
+
+  .layout-account-menu .n-dropdown-option-body {
+    min-block-size: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .layout-header__account-chevron {
+    transition: none;
+  }
 }

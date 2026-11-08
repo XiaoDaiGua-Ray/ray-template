@@ -153,6 +153,23 @@ export const AdminShell = defineComponent({
                 ]}
                 style={props.maximized ? props.maximizedStyle : void 0}
               >
+                {props.maximized ? (
+                  <button
+                    type="button"
+                    class="r-layout-content-restore__button"
+                    aria-label={props.restoreLabel}
+                    title={props.restoreLabel}
+                    {...{
+                      onVnodeMounted: ({ el }: VNode) => {
+                        if (el instanceof HTMLElement)
+                          el.focus({ preventScroll: true })
+                      },
+                    }}
+                    onClick={() => props.restore?.()}
+                  >
+                    <RIcon name="action/fullscreen_fold" size={18} />
+                  </button>
+                ) : null}
                 <NLayoutContent
                   ref={props.contentRef}
                   class="r-layout-full__viewer-content"
@@ -171,23 +188,6 @@ export const AdminShell = defineComponent({
                   {!config.fixedFooter ? footer() : null}
                 </NLayoutContent>
                 {slots.loading?.()}
-                {props.maximized ? (
-                  <button
-                    type="button"
-                    class="r-layout-content-restore__button"
-                    aria-label={props.restoreLabel}
-                    title={props.restoreLabel}
-                    {...{
-                      onVnodeMounted: ({ el }: VNode) => {
-                        if (el instanceof HTMLElement)
-                          el.focus({ preventScroll: true })
-                      },
-                    }}
-                    onClick={() => props.restore?.()}
-                  >
-                    <RIcon name="action/fullscreen_fold" />
-                  </button>
-                ) : null}
               </div>
               {config.fixedFooter ? footer() : null}
             </NLayoutContent>

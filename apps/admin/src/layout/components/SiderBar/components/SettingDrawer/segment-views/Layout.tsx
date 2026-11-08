@@ -37,7 +37,11 @@ export default defineComponent({
       <div class="r-settings-stack">
         <SettingsSection title={t('layout.presets')}>
           <p class="r-settings-hint">{t('layout.presetsHint')}</p>
-          <div class="r-settings-actions r-workspace-presets">
+          <div
+            class="r-settings-actions r-workspace-presets"
+            role="group"
+            aria-label={t('layout.presets')}
+          >
             {Object.entries(workspacePresets).map(([key, config]) => (
               <NButton
                 key={key}
@@ -53,6 +57,11 @@ export default defineComponent({
               </NButton>
             ))}
           </div>
+          <p class="r-workspace-presets__current">
+            <span>{t('layout.current')}</span>
+            <strong>{t(`layout.${activePreset.value ?? 'custom'}`)}</strong>
+            <span>{getLayoutConfig.value.contentPadding} px</span>
+          </p>
         </SettingsSection>
         <SettingsSection title={t('section.layout')}>
           <LayoutSettings showDescription />

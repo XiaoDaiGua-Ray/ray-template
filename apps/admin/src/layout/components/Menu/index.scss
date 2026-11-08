@@ -65,3 +65,25 @@
     outline-offset: -2px;
   }
 }
+
+.app-menu__mobile-heading {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  min-inline-size: 0;
+  padding-inline-end: 8px;
+  border-block-end: 1px solid var(--r-line);
+
+  .r-menu__logo {
+    flex: 1;
+    min-inline-size: 0;
+    padding-inline: 16px 8px;
+    border-block-end: 0;
+  }
+
+  .app-menu__close {
+    min-inline-size: 44px;
+    min-block-size: 44px;
+    margin-inline-start: auto;
+  }
+}

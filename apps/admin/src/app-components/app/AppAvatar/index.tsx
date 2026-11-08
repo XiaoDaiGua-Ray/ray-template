@@ -84,12 +84,13 @@ const AppAvatar = defineComponent({
 
     return (
       <NButton
+        class="r-app-avatar"
         quaternary
         strong
         style={{ cursor: this.cursor }}
         {...{ 'aria-label': showName ? void 0 : name }}
       >
-        <NFlex align="center" size={spaceSize} vertical={vertical}>
+        <NFlex align="center" size={spaceSize} vertical={vertical} wrap={false}>
           <AccountAvatar
             {...($props as AvatarProps)}
             name={name}
@@ -114,6 +115,7 @@ const AppAvatar = defineComponent({
               {name}
             </span>
           )}
+          {this.$slots.suffix?.()}
         </NFlex>
       </NButton>
     )

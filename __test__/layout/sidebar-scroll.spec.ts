@@ -1,12 +1,14 @@
-import { mount } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
 import { createPinia, disposePinia, setActivePinia } from 'pinia'
 import { nextTick } from 'vue'
 import { useSiderScroll } from '../../apps/admin/src/hooks/template/useSiderScroll'
 import Menu from '../../apps/admin/src/layout/components/Menu'
 import { router } from '../../apps/admin/src/router'
 import { piniaMenuStore } from '../../apps/admin/src/store/modules/menu'
+import { piniaRuntimeStore } from '../../apps/admin/src/store/modules/runtime'
 import { piniaSettingStore } from '../../apps/admin/src/store/modules/setting'
 import { positionSelectedMenuItem } from '../../apps/admin/src/utils'
+import setupMiniApp from '../utils/setupMiniApp'
 
 it.each([
   [true, '.n-layout-scroll-container'],
@@ -78,3 +80,46 @@ it.each([
     }
   },
 )
+
+it('keeps the desktop collapse preference while the phone menu opens and closes', async () => {
+  vi.stubGlobal('innerWidth', 390)
+  const { app } = await setupMiniApp()
+  const menu = piniaMenuStore()
+  const runtime = piniaRuntimeStore()
+
+  menu.updateMenuState('collapsed', true)
+  runtime.setRuntimeState('globalDrawerValue', true)
+  const wrapper = mount(Menu, {
+    attachTo: document.body,
+    global: {
+      plugins: [router],
+      stubs: {
+        teleport: true,
+        RIcon: { inheritAttrs: false, template: '<span />' },
+      },
+    },
+  })
+
+  try {
+    await flushPromises()
+    expect(menu.collapsed).toBe(true)
+    expect(wrapper.find('.app-menu__mobile-heading').exists()).toBe(true)
+    expect(wrapper.find('.n-layout-sider--collapsed').exists()).toBe(false)
+
+    await wrapper.get('.app-menu__close').trigger('click')
+    expect(runtime.globalDrawerValue).toBe(false)
+    runtime.setRuntimeState('globalDrawerValue', true)
+
+    vi.stubGlobal('innerWidth', 1440)
+    window.dispatchEvent(new Event('resize'))
+    await flushPromises()
+    expect(runtime.globalDrawerValue).toBe(false)
+    expect(menu.collapsed).toBe(true)
+    expect(wrapper.find('.app-menu__mobile-heading').exists()).toBe(false)
+    expect(wrapper.find('.n-layout-sider--collapsed').exists()).toBe(true)
+  } finally {
+    wrapper.unmount()
+    app.unmount()
+    vi.unstubAllGlobals()
+  }
+})

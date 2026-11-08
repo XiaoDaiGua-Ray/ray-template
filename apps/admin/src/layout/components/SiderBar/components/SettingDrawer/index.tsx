@@ -144,9 +144,18 @@ export default defineComponent({
             ),
             default: () => (
               <NTabs
-                type="segment"
+                type="line"
                 defaultValue="appearance"
                 class="r-settings-tabs"
+                tabClass="r-settings-tabs__tab"
+                tabsPadding={14}
+                themeOverrides={{
+                  tabGapMediumLine: '16px',
+                  tabPaddingMediumLine: '10px 4px',
+                  tabTextColorActiveLine: 'var(--r-primary-text)',
+                  tabTextColorHoverLine: 'var(--r-primary-text)',
+                  barColor: 'var(--r-primary-text)',
+                }}
               >
                 {categories.map(({ key, icon, view: View }) => (
                   <NTabPane

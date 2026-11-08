@@ -154,6 +154,8 @@
     "spacious": "Comfortable spacing",
     "compact": "Compact spacing",
     "reading": "Centered reading",
+    "current": "Current",
+    "custom": "Custom spacing",
     "focus": "Focus workspace",
     "maximize": "Maximize content",
     "maximizeHint": "Temporarily hide navigation and the footer. Close settings to see the result, then press Esc or use the exit button to restore. This resets on page reload."

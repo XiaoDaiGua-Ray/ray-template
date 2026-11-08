@@ -1,6 +1,7 @@
 import './index.scss'
 import { LAYOUT_SIDER_REF } from '@/app-config'
-import { useDevice } from '@/hooks'
+import { RIcon } from '@/components'
+import { useDevice, useI18n } from '@/hooks'
 import { positionSelectedMenuItem } from '@/layout/utils/position-selected-menu-item'
 import {
   useMenuActions,
@@ -10,7 +11,7 @@ import {
   useSettingGetters,
 } from '@/store'
 import type { AppMenuOption, NaiveMenuOptions } from '@/types'
-import { NDrawer, NLayoutContent, NLayoutSider, NMenu } from 'naive-ui'
+import { NButton, NDrawer, NLayoutContent, NLayoutSider, NMenu } from 'naive-ui'
 import type { MenuInst } from 'naive-ui'
 import type { PropType } from 'vue'
 import SiderBarLogo from './components/SiderBarLogo'
@@ -25,16 +26,15 @@ export default defineComponent({
   },
   setup(props) {
     const menuRef = shallowRef<MenuInst | null>(null)
-    const { changeMenuModelValue, collapsedMenu, updateMenuState } =
-      useMenuActions()
+    const { changeMenuModelValue, collapsedMenu } = useMenuActions()
+    const { t } = useI18n('layout')
     const { getAppTheme, getMenuConfig } = useSettingGetters()
     const { getMenuOptions, getCollapsed, getMenuKey } = useMenuGetters()
     const { globalDrawerValue } = useRuntimeGetters()
     const { setRuntimeState } = useRuntimeActions()
     const { isTabletOrSmaller, width } = useDevice({
       observer: (isSmaller) => {
-        if (isSmaller) updateMenuState('collapsed', false)
-        else setRuntimeState('globalDrawerValue', false)
+        if (!isSmaller) setRuntimeState('globalDrawerValue', false)
       },
     })
     const menuWidth = computed(() =>
@@ -59,6 +59,11 @@ export default defineComponent({
       { flush: 'post' },
     )
 
+    const logo = () =>
+      props.showLogo && getMenuConfig.value.menuSiderBarLogo ? (
+        <SiderBarLogo collapsed={collapsed.value} />
+      ) : null
+
     const basicMenu = () => (
       <NLayoutSider
         class={['app-menu__sider', { 'app-menu__sider--end': props.end }]}
@@ -73,9 +78,28 @@ export default defineComponent({
         collapsed={collapsed.value}
         inverted={getMenuConfig.value.inverted}
       >
-        {props.showLogo && getMenuConfig.value.menuSiderBarLogo ? (
-          <SiderBarLogo collapsed={collapsed.value} />
-        ) : null}
+        {isTabletOrSmaller.value ? (
+          <div class="app-menu__mobile-heading">
+            {logo()}
+            <NButton
+              quaternary
+              class="app-menu__close"
+              aria-label={t('closeMenu')}
+              themeOverrides={{
+                textColor: 'inherit',
+                colorQuaternaryHover:
+                  'color-mix(in srgb, currentColor 10%, transparent)',
+                colorQuaternaryPressed:
+                  'color-mix(in srgb, currentColor 18%, transparent)',
+              }}
+              onClick={() => setRuntimeState('globalDrawerValue', false)}
+            >
+              <RIcon name="action/close" />
+            </NButton>
+          </div>
+        ) : (
+          logo()
+        )}
         <NLayoutContent
           class="app-menu__scroll"
           nativeScrollbar={getMenuConfig.value.nativeScrollbar}
@@ -114,6 +138,9 @@ export default defineComponent({
             }}
             accordion={getMenuConfig.value.accordion}
             iconSize={getMenuConfig.value.iconSize}
+            themeOverrides={
+              isTabletOrSmaller.value ? { itemHeight: '44px' } : void 0
+            }
             inverted={getMenuConfig.value.inverted}
           />
         </NLayoutContent>
@@ -129,7 +156,6 @@ export default defineComponent({
           onUpdateShow={(value) => setRuntimeState('globalDrawerValue', value)}
           placement="left"
           displayDirective="show"
-          autoFocus={false}
         >
           {basicMenu()}
         </NDrawer>

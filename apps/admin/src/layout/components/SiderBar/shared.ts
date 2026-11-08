@@ -1,4 +1,5 @@
 import { apiMockEnabled } from '@/api/admin/client'
+import { RIcon } from '@/components'
 import { useI18n } from '@/hooks'
 import { router } from '@/router'
 import { ACCOUNT_PROFILE_PATH } from '@/router/constant'
@@ -9,10 +10,12 @@ export const createAvatarOptions = (t: ReturnType<typeof useI18n>['t']) => [
   {
     key: 'person',
     label: t('account.profile'),
+    icon: () => h(RIcon, { name: 'navigation/form', size: 18 }),
   },
   {
     key: 'lockScreen',
     label: t(apiMockEnabled ? 'account.lockScreen' : 'account.lockSession'),
+    icon: () => h(RIcon, { name: 'action/lock', size: 18 }),
   },
   {
     type: 'divider',
@@ -21,6 +24,7 @@ export const createAvatarOptions = (t: ReturnType<typeof useI18n>['t']) => [
   {
     key: 'logout',
     label: t('account.signOut'),
+    icon: () => h(RIcon, { name: 'action/out', size: 18 }),
   },
 ]
 
@@ -46,11 +50,13 @@ export const avatarDropdownClick = async (key: string | number) => {
   }
 
   if (key === 'logout') {
-    window.$dialog.warning({
+    window.$dialog.create({
       title: t('signOut'),
+      showIcon: false,
       content: t('signOutPrompt'),
       positiveText: t('signOut'),
       negativeText: t('cancel'),
+      positiveButtonProps: { type: 'primary' },
       onPositiveClick: () => signOut(),
     })
   }

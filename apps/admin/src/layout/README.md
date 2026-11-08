@@ -12,7 +12,7 @@
 - At ≤768px, use the complete-menu drawer without overwriting saved desktop mode. Selecting a drawer item closes it automatically.
 - Sidebar/drawer logos remain fixed above the menu; scrolling begins at the menu region. The native-scrollbar option affects only the menu list.
 - Content supports fluid fill or centered fixed width, maximum widths of 640–2560px, spacing of 0–48px, and fixed or scrolling headers/footers. Tab and copyright visibility retain existing settings.
-- Maximized content shares Pinia state with pages and tab menus. An exit button floats at the top right; Esc restores the layout too.
+- Maximized content shares Pinia state with pages and tab menus. The exit button floats at the top right. On narrow screens the shell reserves no space for it. Click it or press Esc to restore the layout.
 - Content loading uses the visible scrolling viewport. Remounting shows the indicator immediately; brief manual loading waits 120ms. Fixed headers, tabs, and footers are not covered by the overlay.
 - “外观 → 页面切换动画” (Appearance → Page transition) retains previous options and adds upward fade-in and leftward slide-in. Only content animates; reduced-motion system settings use immediate transitions.
 

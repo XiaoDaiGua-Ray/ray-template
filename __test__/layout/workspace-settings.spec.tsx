@@ -16,6 +16,71 @@ describe('workspace preference shortcuts', () => {
 
   afterEach(() => disposePinia(pinia))
 
+  it('identifies the default spacing when settings first opens', () => {
+    const wrapper = mount(Layout, { global: { plugins: [pinia] } })
+
+    try {
+      const selected = wrapper.findAll(
+        '.r-workspace-presets button[aria-pressed="true"]',
+      )
+
+      expect(selected).toHaveLength(1)
+      expect(selected[0].text()).toContain('preferences.layout.spacious')
+      expect(wrapper.get('.r-workspace-presets__current').text()).toContain(
+        '24 px',
+      )
+    } finally {
+      wrapper.unmount()
+    }
+  })
+
+  it.each([
+    { contentWidth: 'fluid' as const, contentPadding: 16 },
+    {
+      contentWidth: 'fixed' as const,
+      contentMaxWidth: 1200,
+      contentPadding: 24,
+    },
+  ])('shows saved custom spacing without changing it: %j', async (layout) => {
+    const store = piniaSettingStore()
+
+    store.updateSettingState('layoutConfig', layout)
+    const previousLayout = { ...store.layoutConfig }
+    const wrapper = mount(Layout, { global: { plugins: [pinia] } })
+
+    try {
+      const current = wrapper.get('.r-workspace-presets__current')
+
+      expect(current.text()).toContain('preferences.layout.custom')
+      expect(current.text()).toContain(`${layout.contentPadding} px`)
+      expect(
+        wrapper.findAll('.r-workspace-presets button[aria-pressed="true"]'),
+      ).toHaveLength(0)
+      expect(store.layoutConfig).toEqual(previousLayout)
+
+      await wrapper
+        .findAll('.r-workspace-presets button')
+        .find((button) => button.text() === 'preferences.layout.compact')!
+        .trigger('click')
+
+      expect(current.text()).toContain('preferences.layout.compact')
+      expect(current.text()).toContain('8 px')
+      expect(
+        wrapper.get('.r-workspace-presets button[aria-pressed="true"]').text(),
+      ).toContain('preferences.layout.compact')
+
+      await wrapper
+        .findAll('button')
+        .find((button) => button.text() === 'layout.reset')!
+        .trigger('click')
+
+      expect(current.text()).toContain('preferences.layout.spacious')
+      expect(current.text()).toContain('24 px')
+    } finally {
+      wrapper.unmount()
+    }
+  })
+
   it('applies reading spacing without replacing navigation or fixed bars', async () => {
     const store = piniaSettingStore()
 

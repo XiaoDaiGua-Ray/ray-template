@@ -154,6 +154,8 @@
     "spacious": "舒适间距",
     "compact": "紧凑间距",
     "reading": "居中阅读",
+    "current": "当前",
+    "custom": "自定义间距",
     "focus": "专注工作",
     "maximize": "内容区最大化",
     "maximizeHint": "临时隐藏导航和页脚。关闭设置抽屉后可查看效果，按 Esc 或点击退出按钮恢复；刷新页面不保留。"

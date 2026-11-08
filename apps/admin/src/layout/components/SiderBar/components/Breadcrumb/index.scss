@@ -1,4 +1,4 @@
-.n-breadcrumb .n-breadcrumb-item {
+.layout-breadcrumb .n-breadcrumb-item {
   &.breadcrumb-enter-active,
   &.breadcrumb-leave-active {
     transition: all 0.3s var(--r-bezier);
@@ -17,4 +17,18 @@
   &.breadcrumb-leave-active {
     position: absolute;
   }
+}
+
+.layout-breadcrumb,
+.layout-breadcrumb__current {
+  min-inline-size: 0;
+}
+
+.layout-breadcrumb__current {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--r-text);
 }
