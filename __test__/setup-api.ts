@@ -9,7 +9,7 @@ if (typeof document !== 'undefined') {
   )
 
   // 部分旧 Hook 用例在 describe 收集阶段启动应用，拦截必须先于该阶段就绪。
-  server.listen({ onUnhandledRequest: 'bypass' })
+  server.listen({ onUnhandledFrame: 'bypass' })
   afterEach(() => server.resetHandlers())
   afterAll(() => server.close())
 }

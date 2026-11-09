@@ -24,7 +24,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue-jsx": "5.1.6",
     "sass": "1.107.1",
-    "vite": "8.3.6",
+    "vite": "6.4.5",
     "vitepress": "1.6.4"
   },
   "rayTemplate": {

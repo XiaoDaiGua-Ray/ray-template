@@ -2,6 +2,8 @@ import { apiMockEnabled, apiUrl } from '@/api/admin/client'
 import { installMockRequestGuard } from '@/axios/instance'
 import { getStorageInstance } from '@/utils/cache-backend'
 import { setupWorker } from 'msw/browser'
+import { HttpNetworkFrame } from 'msw/experimental'
+import { version as mswVersion } from 'msw/package.json'
 import { createMockConnection } from './connection'
 import { createAdminDatabase } from './database'
 import { createAdminHandlers } from './handlers'
@@ -21,12 +23,23 @@ export function enableApiMock() {
     const start = () =>
       worker.start({
         serviceWorker: {
-          url: `${import.meta.env.BASE_URL}mockServiceWorker.js`,
+          // 版本变化时注册新脚本，避免启动阶段与旧版 worker 握手。
+          url: `${import.meta.env.BASE_URL}mockServiceWorker.js?v=${mswVersion}`,
           options: { scope: import.meta.env.BASE_URL },
         },
         quiet: true,
-        onUnhandledRequest: (request, print) => {
-          if (request.url.startsWith(base)) print.error()
+        onUnhandledFrame: ({ frame }) => {
+          if (!(frame instanceof HttpNetworkFrame)) return
+
+          const { method, url } = frame.data.request
+
+          if (!url.startsWith(base)) return
+
+          console.error(
+            `[MSW] No mock handler for ${method} ${new URL(url).pathname}`,
+          )
+          // MSW 3 的默认错误回调只记录日志，拒绝此帧才能阻止请求穿透。
+          throw Response.error()
         },
       })
 
@@ -44,7 +57,7 @@ export function enableApiMock() {
         return response.ok && response.headers.get('x-ray-mock') === 'active'
       },
       async () => {
-        // 复用实例以清理旧监听器；MSW 2.11.6 的已停止实例仍会抢先回复 PASSTHROUGH。
+        // 重启同一个实例，保持监听器和拦截状态由同一个客户端管理。
         worker.stop()
         await start()
       },

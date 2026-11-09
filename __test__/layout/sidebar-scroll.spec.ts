@@ -40,6 +40,7 @@ it.each([
     try {
       piniaMenuStore().updateMenuState('menuKey', '/selected')
       await nextTick()
+      await vi.dynamicImportSettled()
       const logo = wrapper.get('.r-menu__logo').element
       const scroller = wrapper.get<HTMLElement>(
         `.app-menu__scroll ${selector}`,

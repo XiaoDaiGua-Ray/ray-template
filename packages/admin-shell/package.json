@@ -15,7 +15,7 @@
     "lodash-es": "4.18.1"
   },
   "peerDependencies": {
-    "vue": "3.5.44",
+    "vue": "3.5.45",
     "naive-ui": "2.45.3",
     "vue-router": "5.4.0"
   },
