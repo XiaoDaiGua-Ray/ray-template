@@ -1,3 +1,5 @@
+import { version as mswVersion } from 'msw/package.json'
+
 const { installGuard, setupWorker } = vi.hoisted(() => ({
   installGuard: vi.fn<(guard: (url: string) => Promise<void>) => void>(),
   setupWorker: vi.fn(),
@@ -21,6 +23,14 @@ it('restarts the same MSW client across repeated and concurrent recoveries', asy
 
   await Promise.all([enableApiMock(), enableApiMock()])
   expect(installGuard).toHaveBeenCalledOnce()
+  expect(worker.start).toHaveBeenCalledWith(
+    expect.objectContaining({
+      serviceWorker: {
+        url: `${import.meta.env.BASE_URL}mockServiceWorker.js?v=${mswVersion}`,
+        options: { scope: import.meta.env.BASE_URL },
+      },
+    }),
+  )
 
   const guard = installGuard.mock.calls[0]![0]
   const probe = vi
@@ -43,6 +53,5 @@ it('restarts the same MSW client across repeated and concurrent recoveries', asy
   expect(worker.stop).toHaveBeenCalledTimes(2)
   expect(worker.start).toHaveBeenCalledTimes(3)
   expect(probe).toHaveBeenCalledTimes(4)
-  // MSW 2.11.6 的已停止实例仍会响应 PASSTHROUGH，不能创建新实例与它竞争。
   expect(setupWorker).toHaveBeenCalledOnce()
 })

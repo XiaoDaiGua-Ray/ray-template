@@ -17,7 +17,8 @@ import {
   searchDemoOrders,
   searchDemoOwners,
 } from '@ray-template/demo-data'
-import { delay, http, HttpResponse } from 'msw'
+import { http, HttpResponse } from 'msw/http'
+import { delay } from 'msw/utils/delay'
 import * as v from 'valibot'
 import { routeDemoPeople } from './data/route-people'
 import { MockApiError } from './database'
