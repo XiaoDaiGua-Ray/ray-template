@@ -26,7 +26,7 @@
     "dayjs": "1.11.23"
   },
   "peerDependencies": {
-    "vue": "3.5.44",
+    "vue": "3.5.45",
     "naive-ui": "2.45.3"
   },
   "rayTemplate": {
