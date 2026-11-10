@@ -1,11 +1,12 @@
 import './index.scss'
-import { RIcon, useModal } from '@/components'
 import { useI18n } from '@/hooks'
 import { useMenuActions, useSettingActions } from '@/store'
 import { getDefaultSettingConfig } from '@/store/modules/setting/constant'
 import { PREFERENCE_FILE_LIMIT } from '@/store/modules/setting/preference-file'
 import type { SettingState } from '@/store/modules/setting/types'
 import { downloadAnyFile } from '@/utils/files'
+import { RIcon } from '@ray-template/ui/icon'
+import { useModal } from '@ray-template/ui/modal'
 import { cloneDeep, forIn } from 'lodash-es'
 import {
   drawerProps,

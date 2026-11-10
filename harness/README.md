@@ -30,6 +30,14 @@ pnpm harness verify table-pro
 - Requests flow from `apps/admin/src/api` into `apps/admin/src/axios`. Mocks are for demos and local verification. Never place server secrets in `VITE_*` variables that are bundled into the browser.
 - When maintaining public APIs, inspect callers, exports, and existing regression tests. For engineering configuration changes, update the corresponding documentation and [verification record](../docs/toolchain-upgrade.md).
 
+### Runtime import boundaries
+
+Across workspaces, prefer the narrowest existing public entry point declared in `package.json#exports`, such as `@ray-template/ui/icon` or `@ray-template/routing/navigation`. Within a workspace, import the owning module or a focused feature entry point.
+
+Keep aggregate exports for cohesive APIs and existing compatibility. Use feature entry points in startup and shared code to keep unrelated styles, module initialization, and large dependencies outside those paths. Point dynamic imports at the specific feature entry point.
+
+When changing a startup or lazy loading boundary, inspect the production dependency graph and the requests and bytes loaded by the affected page.
+
 ## Verification and evidence
 
 ### Choosing the verification scope

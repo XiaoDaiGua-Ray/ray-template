@@ -1,6 +1,6 @@
-import { RTablePro, useTablePro } from '@/components'
 import { useI18n } from '@/hooks/template/useI18n'
 import type { Person } from '@ray-template/api-contracts/demo'
+import { RTablePro, useTablePro } from '@ray-template/ui/table-pro'
 import { NButton, NFlex } from 'naive-ui'
 import type { DataTableColumns } from 'naive-ui'
 import DemoPage from '../components/DemoPage'

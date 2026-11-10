@@ -1,8 +1,8 @@
 import { apiMockEnabled } from '@/api/admin/client'
 import { getPersonList } from '@/api/demo/mock/person'
 import type { PersonListParams } from '@/api/demo/mock/person'
-import { RTablePro, useTablePro } from '@/components'
 import { useI18n } from '@/hooks/template/useI18n'
+import { RTablePro, useTablePro } from '@ray-template/ui/table-pro'
 import {
   NButton,
   NCard,

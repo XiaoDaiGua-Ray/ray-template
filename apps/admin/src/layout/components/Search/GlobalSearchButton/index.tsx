@@ -1,7 +1,7 @@
 import './index.scss'
-import { RIcon } from '@/components'
 import type { MaybeArray } from '@/types'
 import { call, detectOperatingSystem } from '@/utils'
+import { RIcon } from '@ray-template/ui/icon'
 import { NButton, NFlex } from 'naive-ui'
 import type { PropType } from 'vue'
 

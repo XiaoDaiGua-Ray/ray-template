@@ -3,8 +3,8 @@ import DemoResult from '../components/DemoResult'
 import './index.scss'
 import { getDemoCharts } from '@/api/demo/data'
 import type { DemoCharts } from '@/api/demo/data'
-import { RChart, useChart } from '@/components'
 import { useI18n } from '@/hooks'
+import { RChart, useChart } from '@ray-template/ui/chart'
 import { NButton, NCard, NFlex, NSwitch } from 'naive-ui'
 
 const Echart = defineComponent({

@@ -1,8 +1,8 @@
 import { APP_CATCH_KEY } from '@/app-config'
-import { RModal } from '@/components'
 import { useI18n } from '@/hooks'
 import { useSigningActions } from '@/store'
-import { getStorage, setStorage } from '@/utils'
+import { getStorage, setStorage } from '@/utils/cache'
+import { RModal } from '@ray-template/ui/modal'
 
 export default defineComponent({
   name: 'AppVersionProvider',

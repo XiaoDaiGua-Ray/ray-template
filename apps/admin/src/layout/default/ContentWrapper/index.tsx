@@ -1,5 +1,5 @@
 import AppRequestCancelerProvider from '@/app-components/provider/AppRequestCancelerProvider'
-import { RTransitionComponent } from '@/components'
+import { RTransitionComponent } from '@/components/RTransitionComponent'
 import { useRuntimeGetters, useSettingGetters } from '@/store'
 
 export default defineComponent({

@@ -1,10 +1,10 @@
 import './index.scss'
 import AppPageHeader from '@/app-components/app/AppPageHeader'
 import AppShareLink from '@/app-components/app/AppShareLink'
-import { RIcon } from '@/components'
 import { useI18n } from '@/hooks'
 import { useMenuGetters } from '@/store'
 import type { AppMenuOption } from '@/types'
+import { RIcon } from '@ray-template/ui/icon'
 import { NCard, NDescriptions, NDescriptionsItem } from 'naive-ui'
 import { RouterLink } from 'vue-router'
 

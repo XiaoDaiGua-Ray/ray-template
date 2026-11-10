@@ -1,6 +1,6 @@
 import './index.scss'
-import { RIcon } from '@/components'
 import { useI18n } from '@/hooks'
+import { RIcon } from '@ray-template/ui/icon'
 import { NButton, NCard } from 'naive-ui'
 import { exampleFocusKey } from './example-focus'
 

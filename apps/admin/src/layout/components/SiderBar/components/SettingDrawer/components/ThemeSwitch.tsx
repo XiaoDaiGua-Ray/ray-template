@@ -1,6 +1,6 @@
-import { RIcon } from '@/components'
 import { useTheme } from '@/hooks'
 import { useSettingGetters } from '@/store'
+import { RIcon } from '@ray-template/ui/icon'
 import { NFlex, NSwitch, NTooltip } from 'naive-ui'
 
 export default defineComponent({

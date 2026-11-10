@@ -1,9 +1,9 @@
 import { apiMockEnabled } from '@/api/admin/client'
-import { RIcon } from '@/components'
 import { useI18n } from '@/hooks'
 import { router } from '@/router'
 import { ACCOUNT_PROFILE_PATH } from '@/router/constant'
 import { useSettingActions, useSigningActions } from '@/store'
+import { RIcon } from '@ray-template/ui/icon'
 import type { IconOptions, IconOptionsFC } from './type'
 
 export const createAvatarOptions = (t: ReturnType<typeof useI18n>['t']) => [

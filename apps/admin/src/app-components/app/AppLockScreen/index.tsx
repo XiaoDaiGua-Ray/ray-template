@@ -1,6 +1,6 @@
-import { RModal } from '@/components'
 import { useI18n } from '@/hooks'
 import { useSettingActions, useSettingGetters } from '@/store'
+import { RModal } from '@ray-template/ui/modal'
 import LockScreen from './components/LockScreen'
 
 const AppLockScreen = defineComponent({

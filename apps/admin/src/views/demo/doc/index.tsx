@@ -1,6 +1,6 @@
 import { RAY_TEMPLATE_DOCS_URL } from '@/app-config'
-import { RIframe } from '@/components'
 import { useI18n } from '@/hooks'
+import { RIframe } from '@ray-template/ui/iframe'
 
 export default defineComponent({
   name: 'RTemplateDoc',

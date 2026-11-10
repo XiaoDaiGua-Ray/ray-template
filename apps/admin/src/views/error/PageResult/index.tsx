@@ -1,9 +1,9 @@
 import './index.scss'
 import AppPageHeader from '@/app-components/app/AppPageHeader'
-import { RIcon } from '@/components'
 import { useI18n } from '@/hooks'
 import { WELCOME_ROUTE_PATH } from '@/router/constant'
 import { resolveLandingPath } from '@/router/utils/resolve-landing-path'
+import { RIcon } from '@ray-template/ui/icon'
 import { NButton, NFlex, NResult, resultProps } from 'naive-ui'
 
 const statusKeys = {

@@ -1,1 +1,1 @@
-export { expandRoutes } from '@ray-template/routing'
+export { expandRoutes } from '@ray-template/routing/expand-routes'

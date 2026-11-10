@@ -1,5 +1,5 @@
-import { RFlow, useFlow } from '@/components'
 import { useI18n } from '@/hooks'
+import { RFlow, useFlow } from '@ray-template/ui/flow'
 import { NButton, NCard, NFlex, NSwitch, NTag } from 'naive-ui'
 import DemoPage from './components/DemoPage'
 import DemoResult from './components/DemoResult'

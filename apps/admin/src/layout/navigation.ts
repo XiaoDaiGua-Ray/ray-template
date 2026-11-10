@@ -1,1 +1,1 @@
-export { findMenuRoot, firstMenuLeaf } from '@ray-template/routing'
+export { findMenuRoot, firstMenuLeaf } from '@ray-template/routing/navigation'

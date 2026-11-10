@@ -1,0 +1,8 @@
+export { default as TableDemoAutoHeight } from './auto-height'
+export { default as TableDemoBasic } from './basic'
+export { default as TableDemoColumns } from './columns'
+export { default as TableDemoControlled } from './controlled'
+export { default as TableDemoCustom } from './custom'
+export { default as TableDemoHooksOutput } from './hooks-output'
+export { default as TableDemoHooksSelection } from './hooks-selection'
+export { default as TableDemoPrinting } from './printing'

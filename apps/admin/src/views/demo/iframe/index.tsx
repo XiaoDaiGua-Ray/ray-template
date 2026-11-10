@@ -1,5 +1,5 @@
-import { RIframe } from '@/components'
 import { useI18n } from '@/hooks'
+import { RIframe } from '@ray-template/ui/iframe'
 import { NButton, NCard, NTag } from 'naive-ui'
 import DemoPage from '../components/DemoPage'
 

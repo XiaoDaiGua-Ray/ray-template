@@ -12,25 +12,24 @@ vi.mock('@/api/admin/client', () => ({
   apiUrl: (path: string) => `http://localhost/ray-template/api/${path}`,
 }))
 
+beforeEach(() => {
+  vi.resetModules()
+  installGuard.mockClear()
+  setupWorker.mockReset()
+})
+
 afterEach(() => vi.restoreAllMocks())
 
-it('restarts the same MSW client across repeated and concurrent recoveries', async () => {
-  const worker = { start: vi.fn(async () => {}), stop: vi.fn() }
+it('starts on the first API request and shares repeated concurrent recoveries', async () => {
+  const worker = { start: vi.fn(async () => {}), stop: vi.fn(async () => {}) }
 
   setupWorker.mockReturnValue(worker)
 
-  const { enableApiMock } = await import('@/mocks/browser')
+  const { registerApiMock } = await import('@/mocks/register')
 
-  await Promise.all([enableApiMock(), enableApiMock()])
+  registerApiMock()
+  registerApiMock()
   expect(installGuard).toHaveBeenCalledOnce()
-  expect(worker.start).toHaveBeenCalledWith(
-    expect.objectContaining({
-      serviceWorker: {
-        url: `${import.meta.env.BASE_URL}mockServiceWorker.js?v=${mswVersion}`,
-        options: { scope: import.meta.env.BASE_URL },
-      },
-    }),
-  )
 
   const guard = installGuard.mock.calls[0]![0]
   const probe = vi
@@ -41,6 +40,20 @@ it('restarts the same MSW client across repeated and concurrent recoveries', asy
 
   await guard('http://localhost/unrelated')
   expect(probe).not.toHaveBeenCalled()
+  expect(setupWorker).not.toHaveBeenCalled()
+
+  await Promise.all([
+    guard('http://localhost/ray-template/api/admin/auth/session'),
+    guard('http://localhost/ray-template/api/admin/routes'),
+  ])
+  expect(worker.start).toHaveBeenCalledExactlyOnceWith(
+    expect.objectContaining({
+      serviceWorker: {
+        url: `${import.meta.env.BASE_URL}mockServiceWorker.js?v=${mswVersion}`,
+        options: { scope: import.meta.env.BASE_URL },
+      },
+    }),
+  )
 
   for (let attempt = 0; attempt < 2; attempt++) {
     probe.mockResolvedValueOnce(new Response(null, { status: 404 }))
@@ -52,6 +65,33 @@ it('restarts the same MSW client across repeated and concurrent recoveries', asy
 
   expect(worker.stop).toHaveBeenCalledTimes(2)
   expect(worker.start).toHaveBeenCalledTimes(3)
-  expect(probe).toHaveBeenCalledTimes(4)
+  expect(probe).toHaveBeenCalledTimes(5)
+  expect(setupWorker).toHaveBeenCalledOnce()
+})
+
+it('blocks API requests if startup fails and retries the same client', async () => {
+  const worker = {
+    start: vi.fn(async () => {}).mockRejectedValueOnce(new Error('offline')),
+    stop: vi.fn(async () => {}),
+  }
+
+  setupWorker.mockReturnValue(worker)
+  const probe = vi
+    .spyOn(globalThis, 'fetch')
+    .mockResolvedValue(
+      new Response(null, { headers: { 'x-ray-mock': 'active' } }),
+    )
+  const { registerApiMock } = await import('@/mocks/register')
+
+  registerApiMock()
+  const guard = installGuard.mock.calls[0]![0]
+  const url = 'http://localhost/ray-template/api/admin/auth/login'
+
+  await expect(guard(url)).rejects.toThrow('offline')
+  expect(probe).not.toHaveBeenCalled()
+  await expect(guard(url)).resolves.toBeUndefined()
+  expect(probe).toHaveBeenCalledOnce()
+  expect(worker.stop).toHaveBeenCalledOnce()
+  expect(worker.start).toHaveBeenCalledTimes(2)
   expect(setupWorker).toHaveBeenCalledOnce()
 })

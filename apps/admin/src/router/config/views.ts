@@ -58,17 +58,18 @@ const views = {
     name: 'ModalDemo',
   },
   'demo/multi/views/multi-menu-one': {
-    load: () => import('@/views/demo/multi/views/multi-menu-one/index'),
+    load: () =>
+      import('@/views/demo/multi').then((views) => views.MultiMenuOne),
     name: 'MultiMenuOne',
   },
   'demo/multi/views/multi-menu-two/views/sub-menu-other': {
     load: () =>
-      import('@/views/demo/multi/views/multi-menu-two/views/sub-menu-other/index'),
+      import('@/views/demo/multi').then((views) => views.SubMenuOther),
     name: 'SubMenuOther',
   },
   'demo/multi/views/multi-menu-two/views/sub-menu/views/multi-menu-two-one': {
     load: () =>
-      import('@/views/demo/multi/views/multi-menu-two/views/sub-menu/views/multi-menu-two-one/index'),
+      import('@/views/demo/multi').then((views) => views.MultiMenuTwoOne),
     name: 'MultiMenuTwoOne',
   },
   'demo/precision': {
@@ -104,27 +105,33 @@ const views = {
     name: 'PreviewSVGIcons',
   },
   'demo/tables/auto-height': {
-    load: () => import('@/views/demo/tables/auto-height'),
+    load: () =>
+      import('@/views/demo/tables').then((views) => views.TableDemoAutoHeight),
     name: 'TableDemoAutoHeight',
   },
   'demo/tables/basic': {
-    load: () => import('@/views/demo/tables/basic'),
+    load: () =>
+      import('@/views/demo/tables').then((views) => views.TableDemoBasic),
     name: 'TableDemoBasic',
   },
   'demo/tables/columns': {
-    load: () => import('@/views/demo/tables/columns'),
+    load: () =>
+      import('@/views/demo/tables').then((views) => views.TableDemoColumns),
     name: 'TableDemoColumns',
   },
   'demo/tables/controlled': {
-    load: () => import('@/views/demo/tables/controlled'),
+    load: () =>
+      import('@/views/demo/tables').then((views) => views.TableDemoControlled),
     name: 'TableDemoControlled',
   },
   'demo/tables/custom': {
-    load: () => import('@/views/demo/tables/custom'),
+    load: () =>
+      import('@/views/demo/tables').then((views) => views.TableDemoCustom),
     name: 'TableDemoCustom',
   },
   'demo/tables/hooks-output': {
-    load: () => import('@/views/demo/tables/hooks-output'),
+    load: () =>
+      import('@/views/demo/tables').then((views) => views.TableDemoHooksOutput),
     name: 'TableDemoHooksOutput',
   },
   'demo/tables/hooks-query': {
@@ -132,11 +139,15 @@ const views = {
     name: 'TableDemoHooksQuery',
   },
   'demo/tables/hooks-selection': {
-    load: () => import('@/views/demo/tables/hooks-selection'),
+    load: () =>
+      import('@/views/demo/tables').then(
+        (views) => views.TableDemoHooksSelection,
+      ),
     name: 'TableDemoHooksSelection',
   },
   'demo/tables/printing': {
-    load: () => import('@/views/demo/tables/printing'),
+    load: () =>
+      import('@/views/demo/tables').then((views) => views.TableDemoPrinting),
     name: 'TableDemoPrinting',
   },
   'demo/tables/remote': {

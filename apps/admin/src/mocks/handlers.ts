@@ -1,5 +1,4 @@
 import { userListQuerySchema } from '@/api/admin/contracts'
-import { listPeople } from '@/demo-data/people'
 import {
   chartsQuerySchema,
   orderSearchInputSchema,
@@ -218,6 +217,7 @@ export function createAdminHandlers(database: AdminDatabase, apiBase: string) {
 
         if (query.fail) throw new MockApiError(503, 'requestFailed')
 
+        const { listPeople } = await import('@/demo-data/people')
         const result = listPeople({
           ...query,
           page: query.page ?? 1,

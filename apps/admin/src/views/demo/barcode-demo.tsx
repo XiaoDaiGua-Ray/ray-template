@@ -1,5 +1,5 @@
-import { RBarcode } from '@/components'
 import { useI18n } from '@/hooks'
+import { RBarcode } from '@ray-template/ui/barcode'
 import { NCard, NFlex, NFormItem, NInput, NSelect, NSwitch } from 'naive-ui'
 import DemoPage from './components/DemoPage'
 import DemoResult from './components/DemoResult'

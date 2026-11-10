@@ -1,9 +1,9 @@
 import './index.scss'
 import AppPageHeader from '@/app-components/app/AppPageHeader'
-import { RIcon } from '@/components'
 import { useI18n } from '@/hooks'
 import { useMenuGetters, useNavigationHistoryGetters } from '@/store'
 import type { AppMenuOption } from '@/types'
+import { RIcon } from '@ray-template/ui/icon'
 import { RouterLink } from 'vue-router'
 
 export default defineComponent({

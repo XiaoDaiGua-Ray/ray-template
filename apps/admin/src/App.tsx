@@ -1,6 +1,5 @@
 import { apiMockEnabled } from '@/api/admin/client'
 import AppGlobalSpin from '@/app-components/app/AppGlobalSpin'
-import AppLockScreen from '@/app-components/app/AppLockScreen'
 import AppNaiveGlobalProvider from '@/app-components/provider/AppNaiveGlobalProvider'
 import AppStyleProvider from '@/app-components/provider/AppStyleProvider'
 import AppVersionProvider from '@/app-components/provider/AppVersionProvider'
@@ -18,10 +17,15 @@ import { provideUiServices } from '@ray-template/ui/services'
 import { createStorage } from '@ray-template/utils/storage'
 import { RouterView } from 'vue-router'
 
+const AppLockScreen = defineAsyncComponent(
+  () => import('@/app-components/app/AppLockScreen'),
+)
+
 export default defineComponent({
   name: 'App',
   setup() {
-    const { getAppTheme, getThemeStyle } = useSettingGetters()
+    const { getAppTheme, getThemeStyle, getLockScreenSwitch } =
+      useSettingGetters()
     const { t } = useI18n()
 
     provideUiServices({
@@ -34,12 +38,19 @@ export default defineComponent({
       iconUrl: (name, prefix) =>
         `${iconSprites[name.split('/')[0] as IconPackage]}#${prefix}-${name}`,
     })
+
+    // 首次打开后保留弹窗实例，让关闭动画正常完成。
+    const lockScreenRequested = computed<boolean>(
+      (requested) => !!requested || getLockScreenSwitch.value,
+    )
+
+    return { lockScreenRequested }
   },
   render() {
     return (
       <AppNaiveGlobalProvider>
         <AppVersionProvider />
-        {apiMockEnabled && <AppLockScreen />}
+        {apiMockEnabled && this.lockScreenRequested && <AppLockScreen />}
         <AppStyleProvider />
         <AppWatermarkProvider />
         <AppGlobalSpin>

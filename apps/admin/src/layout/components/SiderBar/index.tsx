@@ -2,13 +2,13 @@ import { useRuntimeActions, useRuntimeGetters } from '@/store'
 import './index.scss'
 import AppAvatar from '@/app-components/app/AppAvatar'
 import { LOCAL_OPTIONS } from '@/app-config'
-import { RIcon } from '@/components'
 import { useDevice, useI18n } from '@/hooks'
 import {
   useSettingActions,
   useSettingGetters,
   useSigningGetters,
 } from '@/store'
+import { RIcon } from '@ray-template/ui/icon'
 import { NButton, NDropdown, NFlex, NLayoutHeader } from 'naive-ui'
 import { useFullscreen } from 'vue-hooks-plus'
 import {

@@ -1,6 +1,6 @@
 import './TopNavigation.scss'
-import { findMenuRoot, firstMenuLeaf } from '@ray-template/routing'
 import type { AppMenuKey, AppMenuOption } from '@ray-template/routing'
+import { findMenuRoot, firstMenuLeaf } from '@ray-template/routing/navigation'
 import { NMenu } from 'naive-ui'
 import type { MenuOption } from 'naive-ui'
 import { computed, defineComponent } from 'vue'

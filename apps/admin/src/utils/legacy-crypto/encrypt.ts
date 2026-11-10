@@ -1,4 +1,5 @@
-import { AES, lib } from 'crypto-js'
+import AES from 'crypto-js/aes'
+import CryptoJS from 'crypto-js/core'
 import { CRYPTO_KEY } from './constant'
 import type { WordArray } from './types'
 
@@ -21,7 +22,7 @@ export const encrypt = (data: unknown, key?: string | WordArray) => {
     throw new TypeError('[encrypt]: Value is not JSON serializable.')
 
   if (typeof key === 'object') {
-    const iv = lib.WordArray.random(16)
+    const iv = CryptoJS.lib.WordArray.random(16)
     const ciphertext = AES.encrypt(json, key, { iv })
 
     return `${iv.toString()}:${ciphertext.toString()}`

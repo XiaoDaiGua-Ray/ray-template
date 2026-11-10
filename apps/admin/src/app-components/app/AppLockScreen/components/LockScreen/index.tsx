@@ -5,10 +5,10 @@ import {
   useLockRules,
 } from '@/app-components/app/AppLockScreen/shared'
 import { APP_CATCH_KEY } from '@/app-config'
-import { RForm, useForm } from '@/components'
 import { useI18n } from '@/hooks'
 import { useSettingActions } from '@/store'
 import { encrypt, setStorage } from '@/utils'
+import { RForm, useForm } from '@ray-template/ui/form'
 import { NButton, NFormItem, NInput } from 'naive-ui'
 import type { InputInst } from 'naive-ui'
 import { useTemplateRef } from 'vue'

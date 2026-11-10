@@ -10,9 +10,9 @@ import type { AccountProfile } from '@/api/admin/contracts'
 import AccountPasswordForm from '@/app-components/app/AccountPasswordForm'
 import AccountAvatar from '@/app-components/app/AppAvatar/AccountAvatar'
 import AppPageHeader from '@/app-components/app/AppPageHeader'
-import { RIcon } from '@/components'
 import { useI18n } from '@/hooks'
 import { useSigningActions, useSigningGetters } from '@/store'
+import { RIcon } from '@ray-template/ui/icon'
 import {
   NAlert,
   NButton,

@@ -1,8 +1,8 @@
 import './index.scss'
 import { RAY_TEMPLATE_DOCS_URL } from '@/app-config'
-import { RIcon } from '@/components'
 import { useI18n } from '@/hooks'
 import type { IconName } from '@/icons'
+import { RIcon } from '@ray-template/ui/icon'
 import type { PropType } from 'vue'
 
 interface ShareLinkOption {

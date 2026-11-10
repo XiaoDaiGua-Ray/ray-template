@@ -1,4 +1,4 @@
-import Layout from '@/layout'
+import type { Component } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 import { appExpandRoutes } from './app-route-modules'
 import {
@@ -21,9 +21,9 @@ const legacyRedirects = [
   { path: '/table-auto-height', redirect: '/tables/auto-height' },
 ]
 
-export const constantRoutes: RouteRecordRaw[] = [
-  { path: '/', name: 'RLogin', component: () => import('@/views/login') },
-  { path: '/', name: 'RLayout', component: Layout },
+export const getRootRoutes = (login: Component): RouteRecordRaw[] => [
+  { path: '/', name: 'RLogin', component: login },
+  { path: '/', name: 'RLayout', component: () => import('@/layout') },
 ]
 
 export function getLayoutRoutes(): RouteRecordRaw[] {
@@ -72,19 +72,22 @@ export const getSystemRoutes = (): RouteRecordRaw[] => [
   {
     path: FORBIDDEN_ROUTE_PATH,
     name: 'ErrorPage403',
-    component: () => import('@/views/error/views/Error403'),
+    component: () =>
+      import('@/views/error/system-errors').then((views) => views.Error403),
     meta: { i18nKey: 'workspaceStates.forbidden.title', hidden: true },
   },
   {
     path: NOT_FOUND_PAGE_PATH,
     name: 'ErrorPage404',
-    component: () => import('@/views/error/views/Error404'),
+    component: () =>
+      import('@/views/error/system-errors').then((views) => views.Error404),
     meta: { i18nKey: 'workspaceStates.notFound.title', hidden: true },
   },
   {
     path: SERVER_ERROR_ROUTE_PATH,
     name: 'ErrorPage500',
-    component: () => import('@/views/error/views/Error500'),
+    component: () =>
+      import('@/views/error/system-errors').then((views) => views.Error500),
     meta: { i18nKey: 'workspaceStates.serverError.title', hidden: true },
   },
   {

@@ -1,7 +1,7 @@
 import './index.scss'
-import { RIcon } from '@/components'
 import { useI18n } from '@/hooks'
 import { iconNames, iconPackages } from '@/icons'
+import { RIcon } from '@ray-template/ui/icon'
 import {
   NCard,
   NEmpty,

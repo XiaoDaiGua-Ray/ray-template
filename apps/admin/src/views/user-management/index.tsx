@@ -12,15 +12,18 @@ import { AdminApiError, apiMockEnabled } from '@/api/admin/client'
 import type { AdminUser, UserOptions, UserStatus } from '@/api/admin/contracts'
 import AccountPasswordForm from '@/app-components/app/AccountPasswordForm'
 import AppPageHeader from '@/app-components/app/AppPageHeader'
-import { RIcon, RTablePro } from '@/components'
-import type { TableProInst } from '@/components'
 import { useAccess, useI18n } from '@/hooks'
 import {
   useSettingGetters,
   useSigningActions,
   useSigningGetters,
 } from '@/store'
-import type { TableProSearchFieldConfig } from '@ray-template/ui/table-pro'
+import { RIcon } from '@ray-template/ui/icon'
+import { RTablePro } from '@ray-template/ui/table-pro'
+import type {
+  TableProInst,
+  TableProSearchFieldConfig,
+} from '@ray-template/ui/table-pro'
 import { useElementSize } from '@vueuse/core'
 import {
   NAlert,

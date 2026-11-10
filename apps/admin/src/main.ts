@@ -1,19 +1,21 @@
 import App from './App'
 import './styles/entry'
 import type { App as AppType } from 'vue'
-import { apiMockEnabled, bindAdminUnauthorized } from './api/admin/client'
+import { bindAdminUnauthorized } from './api/admin/client'
 import { installAutocompleteDefaults } from './app-components/provider/AppAutocompleteDefaults'
 import { GLOBAL_CLASS_NAMES } from './app-config'
 import { setupDayjs } from './dayjs'
 import { setupDirectives } from './directives'
 import { runAppDoctor } from './doctor'
 import { setupI18n } from './locales'
+import { registerApiMock } from './mocks/register'
 import { setupRouter } from './router'
 import { setupStore } from './store'
 import {
   adminSessionChangeKey,
   piniaSigningStore,
 } from './store/modules/signing'
+import Login from './views/login'
 
 const bootSplash = () =>
   document.getElementById(GLOBAL_CLASS_NAMES.preLoadingAnimation)
@@ -33,18 +35,13 @@ const showBootError = (error: unknown) => {
  * 注册时应该注意每个插件的加载顺序。
  */
 const setupPlugins = async (inst: AppType<Element>) => {
-  if (apiMockEnabled) {
-    const { enableApiMock } = await import('./mocks/browser')
-
-    await enableApiMock()
-  }
-
+  registerApiMock()
   setupStore(inst)
-  await setupI18n(inst)
+  setupI18n(inst)
   const signing = inst.runWithContext(() => piniaSigningStore())
 
   await signing.restoreSession()
-  await setupRouter(inst, !!signing.signingCallback.id)
+  await setupRouter(inst, !!signing.signingCallback.id, Login)
   const unbindUnauthorized = bindAdminUnauthorized(signing.expireSession)
   const syncSession = (event: StorageEvent) => {
     if (event.key === adminSessionChangeKey) location.reload()
@@ -118,7 +115,7 @@ const setupWujieTemplate = async () => {
  * # 示例
  * const setupTemplate = async () => {
  *   const app = createApp(App)
- *   await setupRouter(app)
+ *   await setupRouter(app, false, Login)
  *   ...
  * }
  * setupTemplate()

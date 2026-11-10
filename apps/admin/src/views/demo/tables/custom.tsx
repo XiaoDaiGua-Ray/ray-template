@@ -1,5 +1,5 @@
-import { RTablePro, useTablePro } from '@/components'
 import { useI18n } from '@/hooks/template/useI18n'
+import { RTablePro, useTablePro } from '@ray-template/ui/table-pro'
 import { NButton, NFlex, NInput } from 'naive-ui'
 import { createPeopleColumns } from './people'
 import { usePeopleData } from './usePeopleData'

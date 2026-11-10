@@ -1,7 +1,9 @@
-import { RIcon, RSegment } from '@/components'
-import type { RSegmentOptions, RSegmentWidth } from '@/components'
+import type { RSegmentWidth } from '@/components'
 import { useI18n } from '@/hooks'
 import type { ComponentSize } from '@/types'
+import { RIcon } from '@ray-template/ui/icon'
+import { RSegment } from '@ray-template/ui/segment'
+import type { RSegmentOptions } from '@ray-template/ui/segment'
 import { NCard, NFlex, NRadioButton, NRadioGroup } from 'naive-ui'
 import DemoPage from '../components/DemoPage'
 

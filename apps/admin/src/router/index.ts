@@ -1,18 +1,18 @@
-import type { App } from 'vue'
+import type { App, Component } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { getStaticAppRoutes, setAppRouteModules } from './app-route-modules'
 import { loadRouteConfig, resetRouteSource } from './config/source'
 import {
-  constantRoutes,
   getAccountProfileRoute,
   getLayoutRoutes,
+  getRootRoutes,
   getSystemRoutes,
 } from './routes'
 import { scrollViewToTop, vueRouterRegister } from './utils'
 
 export const router = createRouter({
   history: createWebHashHistory(),
-  routes: constantRoutes,
+  routes: [],
   scrollBehavior: (to) => {
     scrollViewToTop(to)
   },
@@ -63,7 +63,15 @@ export function loadAccountRoutes() {
 
 let registered = false
 
-export async function setupRouter(app: App<Element>, authenticated: boolean) {
+export async function setupRouter(
+  app: App<Element>,
+  authenticated: boolean,
+  login: Component,
+) {
+  if (!router.hasRoute('RLayout')) {
+    for (const route of getRootRoutes(login)) router.addRoute(route)
+  }
+
   if (authenticated) await loadAccountRoutes()
   else clearAccountRoutes()
 

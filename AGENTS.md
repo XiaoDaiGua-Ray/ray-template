@@ -4,6 +4,7 @@ A Vue 3 + TSX admin template with an admin application, a documentation site, an
 
 - To locate an implementation, choose a topic from the [task index](llms.txt) or `pnpm harness context <scope>`. Consult the [architecture map](docs/architecture.md) for changes that cross module boundaries.
 - Check `git status` first and preserve existing changes. Trace callers and existing data contracts before changing routing, persistence, requests, or shared components.
+- Prefer feature entry points for runtime imports. Follow the [runtime import boundaries](harness/README.md#runtime-import-boundaries) when adding exports or changing what loads at startup or on demand.
 - For complex tasks, the lead agent may choose to use subagents under the [delegation guidelines](harness/README.md#using-subagents-when-useful), when the host supports them and current permissions allow it. Delegation needs no separate approval. The lead agent owns integration and final verification.
 - Write agent guidance and internal engineering documentation in English. Preserve the intended languages of product copy and reader-facing documentation.
 - Follow the [comment style](docs/comment-style.md) when adding or editing comments. Maintain both Chinese and English product copy. For visible behavior changes, use [browser verification](harness/README.md#browser-verification) only for affected pages, actions, and dimensions.

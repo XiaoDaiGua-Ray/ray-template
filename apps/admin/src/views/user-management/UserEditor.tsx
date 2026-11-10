@@ -1,8 +1,8 @@
 import { createUser, updateUser } from '@/api/admin'
 import { AdminApiError } from '@/api/admin/client'
 import type { AdminUser, UserInput, UserOptions } from '@/api/admin/contracts'
-import { RForm, useForm } from '@/components'
 import { useAccess, useI18n } from '@/hooks'
+import { RForm, useForm } from '@ray-template/ui/form'
 import {
   NAlert,
   NButton,

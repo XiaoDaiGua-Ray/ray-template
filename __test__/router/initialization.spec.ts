@@ -16,7 +16,7 @@ vi.mock('../../apps/admin/src/router/config/source', () => ({
   resetRouteSource: vi.fn(),
 }))
 vi.mock('../../apps/admin/src/router/routes', () => ({
-  constantRoutes: [
+  getRootRoutes: () => [
     { path: '/', name: 'RLayout', component: { render: () => null } },
   ],
   getLayoutRoutes: () => [],
@@ -43,7 +43,7 @@ it('loads no business routes before login, then shares a retry and registers gua
     .mockResolvedValue(void 0)
 
   try {
-    await setupRouter(app, false)
+    await setupRouter(app, false, { render: () => null })
     expect(load).not.toHaveBeenCalled()
     await expect(loadAccountRoutes()).rejects.toThrow(
       'route endpoint unavailable',

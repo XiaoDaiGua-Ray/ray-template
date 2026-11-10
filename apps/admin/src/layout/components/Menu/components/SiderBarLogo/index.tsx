@@ -1,8 +1,8 @@
 import { resolveIconName } from '@/icons'
 import './index.scss'
-import { RIcon } from '@/components'
 import { useSettingGetters } from '@/store'
 import { isValueType, renderNode } from '@/utils'
+import { RIcon } from '@ray-template/ui/icon'
 import { NEllipsis, NTooltip } from 'naive-ui'
 
 export default defineComponent({

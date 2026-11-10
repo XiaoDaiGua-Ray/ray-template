@@ -1,6 +1,6 @@
-import { RDraggableCard } from '@/components'
-import type { DefaultPosition } from '@/components'
 import { useI18n } from '@/hooks'
+import RDraggableCard from '@ray-template/ui/draggable-card'
+import type { DefaultPosition } from '@ray-template/ui/draggable-card'
 import { NButton, NCard, NFlex, NSelect, NSwitch, NTag } from 'naive-ui'
 import DemoPage from './components/DemoPage'
 

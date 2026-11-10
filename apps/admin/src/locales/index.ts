@@ -22,9 +22,9 @@ if (import.meta.hot) {
  *
  * @returns 尚未安装到应用的国际化实例
  */
-const createI18nOptions = async () => {
+const createI18nOptions = () => {
   const locale = getAppDefaultLanguage()
-  const messages = await getAppLocalMessages(LOCAL_OPTIONS)
+  const messages = getAppLocalMessages(LOCAL_OPTIONS)
 
   const i18nInstance = createI18n({
     legacy: false,
@@ -45,8 +45,8 @@ const createI18nOptions = async () => {
  * @description
  * 安装国际化插件，并更新共享的国际化实例。
  */
-export const setupI18n = async (app: App<Element>) => {
-  const i18nInstance = await createI18nOptions()
+export const setupI18n = (app: App<Element>) => {
+  const i18nInstance = createI18nOptions()
 
   app.use(i18nInstance)
 

@@ -4,6 +4,11 @@ import type {
   AppLocalesModules,
 } from '@/locales/types'
 
+const locales = import.meta.glob<AppLocalesModules['default']>('../lang/*.ts', {
+  eager: true,
+  import: 'default',
+})
+
 /**
  *
  * @param localOptions 语言包下拉配置项
@@ -12,21 +17,18 @@ import type {
  * 获取当前应用的所有语言包。
  *
  * @example
- * const messages = await getAppLocalMessages(localOptions)
+ * const messages = getAppLocalMessages(localOptions)
  */
-export const getAppLocalMessages = async (
+export const getAppLocalMessages = (
   localOptions: AppLocalesDropdownMixedOption[],
 ) => {
-  const message = {} as AppCurrentAppMessages
+  const entries = localOptions.map(({ key }) => {
+    const locale = locales[`../lang/${key}.ts`]
 
-  for (const curr of localOptions) {
-    const msg: AppLocalesModules = await import(`@/locales/lang/${curr.key}.ts`)
-    const key = curr.key as keyof AppCurrentAppMessages
+    if (!locale) throw new Error(`Unknown locale: ${key}`)
 
-    if (key) {
-      message[key] = msg?.default?.message ?? {}
-    }
-  }
+    return [key, locale.message] as const
+  })
 
-  return message
+  return Object.fromEntries(entries) as AppCurrentAppMessages
 }

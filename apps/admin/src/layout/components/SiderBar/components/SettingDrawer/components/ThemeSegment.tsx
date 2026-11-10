@@ -1,7 +1,8 @@
-import { RIcon, RSegment } from '@/components'
 import { useI18n } from '@/hooks'
 import { useSettingActions, useSettingGetters } from '@/store'
 import type { SettingState } from '@/store/modules/setting/types'
+import { RIcon } from '@ray-template/ui/icon'
+import { RSegment } from '@ray-template/ui/segment'
 
 export default defineComponent({
   name: 'ThemeSegment',

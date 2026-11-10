@@ -1,7 +1,7 @@
 import type { IconName } from '@/icons'
 import type { PropType } from 'vue'
 import './index.scss'
-import { RIcon } from '@/components'
+import { RIcon } from '@ray-template/ui/icon'
 import { NTooltip, tooltipProps } from 'naive-ui'
 import type { TooltipProps } from 'naive-ui'
 

@@ -1,5 +1,5 @@
-import { RModal, useModal } from '@/components'
 import { useI18n } from '@/hooks'
+import { RModal, useModal } from '@ray-template/ui/modal'
 import { NButton, NCard, NFlex, NInputNumber, NTag } from 'naive-ui'
 import DemoPage from '../components/DemoPage'
 import DemoResult from '../components/DemoResult'

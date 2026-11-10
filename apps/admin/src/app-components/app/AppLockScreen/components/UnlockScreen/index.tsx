@@ -6,7 +6,6 @@ import {
   useLockRules,
 } from '@/app-components/app/AppLockScreen/shared'
 import { APP_CATCH_KEY } from '@/app-config'
-import { RForm, useForm } from '@/components'
 import { useDevice, useI18n } from '@/hooks'
 import {
   useSettingActions,
@@ -14,6 +13,7 @@ import {
   useSigningActions,
 } from '@/store'
 import { decrypt, getStorage, removeStorage } from '@/utils'
+import { RForm, useForm } from '@ray-template/ui/form'
 import { useEventListener } from '@vueuse/core'
 import dayjs from 'dayjs'
 import { NButton, NFlex, NFormItem, NInput } from 'naive-ui'

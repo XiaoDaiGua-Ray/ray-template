@@ -1,5 +1,4 @@
 import './index.scss'
-import { RIcon } from '@/components'
 import { useI18n } from '@/hooks'
 import { positionSelectedMenuItem } from '@/layout/utils/position-selected-menu-item'
 import {
@@ -9,6 +8,7 @@ import {
   useNavigationHistoryGetters,
 } from '@/store'
 import type { AppMenuOption } from '@/types'
+import { RIcon } from '@ray-template/ui/icon'
 import { useEventListener } from '@vueuse/core'
 import { NButton, NCard, NInput, NModal, NScrollbar } from 'naive-ui'
 import type { InputInst } from 'naive-ui'

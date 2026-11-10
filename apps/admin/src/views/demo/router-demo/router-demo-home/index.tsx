@@ -1,10 +1,10 @@
 import { getRouteDemoPeople } from '@/api/demo/data'
-import { RTablePro } from '@/components'
 import { useI18n } from '@/hooks'
 import type {
   RouteDemoPerson,
   RoutePeopleQuery,
 } from '@ray-template/api-contracts/demo'
+import { RTablePro } from '@ray-template/ui/table-pro'
 import { NButton, NFlex } from 'naive-ui'
 import type { DataTableColumns } from 'naive-ui'
 

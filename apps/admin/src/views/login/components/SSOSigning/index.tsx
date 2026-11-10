@@ -1,5 +1,5 @@
-import { RIcon } from '@/components'
 import type { IconName } from '@/icons'
+import { RIcon } from '@ray-template/ui/icon'
 import { NButton, NFlex, NTooltip } from 'naive-ui'
 
 const providers = [

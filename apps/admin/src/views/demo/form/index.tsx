@@ -1,5 +1,5 @@
-import { RForm, useForm } from '@/components'
 import { useI18n } from '@/hooks'
+import { RForm, useForm } from '@ray-template/ui/form'
 import {
   NButton,
   NCard,

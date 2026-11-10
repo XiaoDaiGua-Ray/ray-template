@@ -6,7 +6,10 @@
     ".": "./src/index.ts",
     "./schema": "./src/schema.ts",
     "./json-schema": "./src/json-schema.ts",
+    "./expand-routes": "./src/expand-routes.ts",
     "./join-route-path": "./src/join-route-path.ts",
+    "./navigation": "./src/navigation.ts",
+    "./order-routes": "./src/order-routes.ts",
     "./contract": "./src/contract.ts",
     "./types": "./src/types.ts"
   },

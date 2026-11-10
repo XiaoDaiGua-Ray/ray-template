@@ -18,6 +18,7 @@ export default defineConfig(({ mode }) => {
     appPrimaryColor,
     base,
   } = config
+  const defaultBuild = buildOptions(mode)
 
   const __APP_CFG__ = {
     pkg: {
@@ -42,7 +43,27 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: alias,
     },
-    plugins: vitePlugins(mode),
+    plugins: [
+      vitePlugins(mode),
+      mode === 'production' && {
+        name: 'ray:clean-production-output',
+        apply: 'build' as const,
+        config({ build, environments }) {
+          const client = environments?.client?.build
+
+          // 只清理项目默认产物，保留对自定义输出目录的 Vite 默认保护。
+          if (
+            (client?.outDir ?? build?.outDir) === defaultBuild.outDir &&
+            client?.emptyOutDir == null &&
+            build?.emptyOutDir == null
+          ) {
+            return {
+              environments: { client: { build: { emptyOutDir: true } } },
+            }
+          }
+        },
+      },
+    ],
     optimizeDeps: {
       entries: ['index.html'],
       include: [
@@ -66,7 +87,7 @@ export default defineConfig(({ mode }) => {
       ],
     },
     build: {
-      ...buildOptions(mode),
+      ...defaultBuild,
       target: 'baseline-widely-available',
       rolldownOptions: {
         input: {
@@ -78,7 +99,26 @@ export default defineConfig(({ mode }) => {
           ),
         },
         output: {
-          // 交由 Rolldown 按依赖图拆包，避免手动按 pnpm 目录分组造成循环依赖。
+          // 只归并共用的框架与工具代码，图表渲染器随图表页加载。
+          codeSplitting: {
+            groups: [
+              {
+                name: 'app-framework',
+                test: /[\\/]node_modules[\\/](?:vue|vue-router|vue-i18n|pinia|@vue[\\/](?:runtime-core|runtime-dom|reactivity|shared))[\\/]/,
+                priority: 20,
+              },
+              {
+                name: 'lodash-shared',
+                test: /[\\/]node_modules[\\/]lodash-es[\\/]/,
+                minShareCount: 2,
+                priority: 10,
+              },
+              {
+                name: 'chart-renderer',
+                test: /[\\/]node_modules[\\/]zrender[\\/]/,
+              },
+            ],
+          },
           minify: {
             compress: {
               dropConsole: mode === 'production',

@@ -1,10 +1,10 @@
 import { AdminApiError, apiMockEnabled } from '@/api/admin/client'
-import { RForm, useForm } from '@/components'
 import { useI18n } from '@/hooks'
 import { loadAccountRoutes } from '@/router'
 import { resolveLandingPath } from '@/router/utils/resolve-landing-path'
 import { useSigningActions } from '@/store'
 import { announceAdminSessionChange } from '@/store/modules/signing'
+import { RForm, useForm } from '@ray-template/ui/form'
 import { NButton, NFlex, NFormItem, NInput } from 'naive-ui'
 
 export default defineComponent({

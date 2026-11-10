@@ -1,5 +1,4 @@
 import './styles/entry'
-import { apiMockEnabled } from '@/api/admin/client'
 import AppNaiveGlobalProvider from '@/app-components/provider/AppNaiveGlobalProvider'
 import AppStyleProvider from '@/app-components/provider/AppStyleProvider'
 import AppWatermarkProvider from '@/app-components/provider/AppWatermarkProvider'
@@ -7,8 +6,8 @@ import { APP_THEME } from '@/app-config'
 import { setupDayjs } from '@/dayjs'
 import { setupDirectives } from '@/directives'
 import { useI18n, useTheme } from '@/hooks'
-import Layout from '@/layout'
 import { setupI18n } from '@/locales'
+import { registerApiMock } from '@/mocks/register'
 import { router } from '@/router'
 import {
   getStaticAppRoutes,
@@ -119,17 +118,12 @@ const DocumentationExample = defineComponent({
 
 async function mountExample() {
   useMemoryCache()
-
-  if (apiMockEnabled) {
-    const { enableApiMock } = await import('./mocks/browser')
-
-    await enableApiMock()
-  }
+  registerApiMock()
 
   const app = createApp(DocumentationExample)
 
   app.use(createPinia())
-  await setupI18n(app)
+  setupI18n(app)
   setupDayjs()
   setupDirectives(app)
 
@@ -141,8 +135,6 @@ async function mountExample() {
   if (params.get('theme') === 'dark') darkTheme()
   else lightTheme()
 
-  router.removeRoute('RLogin')
-  router.removeRoute('RLayout')
   setAppRouteModules(examples)
 
   const routes = [
@@ -151,7 +143,11 @@ async function mountExample() {
   ] as unknown as RouteRecordRaw[]
 
   if (withLayout) {
-    router.addRoute({ path: '/', component: Layout, children: routes })
+    router.addRoute({
+      path: '/',
+      component: () => import('@/layout'),
+      children: routes,
+    })
   } else {
     for (const route of routes) router.addRoute(route)
   }

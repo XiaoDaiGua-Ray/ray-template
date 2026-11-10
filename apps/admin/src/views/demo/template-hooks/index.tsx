@@ -1,4 +1,3 @@
-import { RIcon } from '@/components'
 import {
   useAppNavigation,
   useBadge,
@@ -13,6 +12,7 @@ import {
   useWatermark,
 } from '@/hooks'
 import { useMenuGetters, useRuntimeGetters, useSettingGetters } from '@/store'
+import { RIcon } from '@ray-template/ui/icon'
 import { useTimeoutFn } from '@vueuse/core'
 import { NButton, NFlex, NInput, NTag } from 'naive-ui'
 import DemoPage from '../components/DemoPage'

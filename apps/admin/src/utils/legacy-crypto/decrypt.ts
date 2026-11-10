@@ -1,4 +1,5 @@
-import { AES, enc } from 'crypto-js'
+import AES from 'crypto-js/aes'
+import CryptoJS from 'crypto-js/core'
 import { CRYPTO_KEY } from './constant'
 import type { CipherParams, WordArray } from './types'
 
@@ -18,18 +19,20 @@ export const decrypt = (
       const parts =
         typeof data === 'string' ? /^([a-f0-9]{32}):(.+)$/i.exec(data) : null
       const iv =
-        typeof data === 'string' ? parts && enc.Hex.parse(parts[1]) : data.iv
+        typeof data === 'string'
+          ? parts && CryptoJS.enc.Hex.parse(parts[1])
+          : data.iv
 
       if (!iv) throw new Error('Missing AES initialization vector.')
 
       const decrypted = AES.decrypt(parts?.[2] ?? data, key, { iv })
 
-      return JSON.parse(decrypted.toString(enc.Utf8))
+      return JSON.parse(decrypted.toString(CryptoJS.enc.Utf8))
     }
 
     const decrypted = AES.decrypt(data, key || CRYPTO_KEY)
 
-    return JSON.parse(decrypted.toString(enc.Utf8))
+    return JSON.parse(decrypted.toString(CryptoJS.enc.Utf8))
   } catch (error) {
     console.error('[decrypt]: Invalid ciphertext or key.', error)
   }
