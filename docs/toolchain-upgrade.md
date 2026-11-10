@@ -52,7 +52,7 @@ Other retained direct dependencies were also updated to verified stable releases
 
 ### TypeScript 7
 
-The latest npm release at verification was 7.0.2, but `vue-tsc`'s compiler wrapper did not fully support native TypeScript 7, and `typescript-eslint@8.72.1` explicitly required `<6.1.0`. Retained 6.0.3 without disabling type checking or introducing peer conflicts. Once both upstream projects explicitly support TypeScript 7, remove the Dependabot restriction and run complete verification.
+The latest npm release at verification was 7.0.2, but `vue-tsc`'s compiler wrapper did not fully support native TypeScript 7, and `typescript-eslint@8.72.1` explicitly required `<6.1.0`. Retained 6.0.3 without disabling type checking or introducing peer conflicts. Upgrade only after both upstream projects explicitly support TypeScript 7 and complete verification passes.
 
 ### Compatible transitive dependency overrides
 
