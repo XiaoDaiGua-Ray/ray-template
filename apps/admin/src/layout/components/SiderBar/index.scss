@@ -33,6 +33,24 @@
     color: var(--r-text-secondary);
   }
 
+  :is(
+    .layout-header__menu-toggle,
+    .override-button__layout,
+    .layout-header__account
+  ) {
+    &:focus-visible {
+      outline: 2px solid var(--r-theme-primary-color);
+      outline-offset: -2px;
+    }
+
+    @media (hover: none) {
+      // 抽屉关闭会将焦点交还给触发按钮，触屏浏览器也可能保留 :hover。
+      &:is(:hover, :focus):not(:active, :focus-visible, :disabled, .is-open) {
+        background-color: var(--n-color);
+      }
+    }
+  }
+
   &__account {
     block-size: 40px;
     margin-inline-start: 8px;
