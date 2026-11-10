@@ -25,7 +25,7 @@
     "@vueuse/core": "15.0.0"
   },
   "peerDependencies": {
-    "vue": "3.5.44"
+    "vue": "3.5.45"
   },
   "rayTemplate": {
     "runtime": "browser"
