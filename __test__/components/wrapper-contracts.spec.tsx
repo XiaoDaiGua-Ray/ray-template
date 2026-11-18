@@ -3,6 +3,7 @@ import { NDropdown, NForm, NFormItem, NGrid, NSpin } from 'naive-ui'
 import { defineComponent, h, nextTick, ref } from 'vue'
 import { RCollapseGrid } from '../../packages/ui/src/RCollapseGrid'
 import { RForm, useForm } from '../../packages/ui/src/RForm'
+import { RIcon } from '../../packages/ui/src/RIcon'
 import { RIframe } from '../../packages/ui/src/RIframe'
 import type { RIframeInst } from '../../packages/ui/src/RIframe/src/types'
 import { RMoreDropdown } from '../../packages/ui/src/RMoreDropdown'
@@ -57,6 +58,51 @@ it('forwards dropdown placement and renders segment label functions', () => {
   } finally {
     dropdown.unmount()
     segment.unmount()
+  }
+})
+
+it('preserves SVG root paint when no sprite service is installed', async () => {
+  const wrapper = mount(RIcon, { props: { name: 'action/close_all' } })
+
+  try {
+    await vi.waitFor(() => expect(wrapper.find('svg rect').exists()).toBe(true))
+    expect(wrapper.get('svg').attributes()).toMatchObject({
+      fill: 'none',
+      stroke: 'currentColor',
+      'stroke-width': '1.8',
+    })
+  } finally {
+    wrapper.unmount()
+  }
+})
+
+it('moves segment focus past disabled choices and emits each change once', async () => {
+  const change = vi.fn()
+  const wrapper = mount(RSegment, {
+    attachTo: document.body,
+    props: {
+      options: [
+        { key: 'a', label: 'A' },
+        { key: 'b', label: 'B', disabled: true },
+        { key: 'c', label: 'C' },
+      ],
+      onUpdateValue: change,
+    },
+  })
+
+  try {
+    const [a, b, c] = wrapper.findAll('[role="radio"]')
+
+    expect(a.attributes('tabindex')).toBe('0')
+    expect(b.attributes('aria-disabled')).toBe('true')
+    await a.trigger('keydown', { key: 'ArrowRight' })
+    expect(change.mock.calls).toEqual([['c']])
+    expect(document.activeElement).toBe(c.element)
+    expect(c.attributes('aria-checked')).toBe('true')
+    await c.trigger('keydown', { key: 'Home' })
+    expect(a.attributes('aria-checked')).toBe('true')
+  } finally {
+    wrapper.unmount()
   }
 })
 

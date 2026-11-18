@@ -1,4 +1,5 @@
 import { initialRoutes } from '@ray-template/demo-data'
+import { computed, shallowRef } from 'vue'
 import { parseRouteConfig, toRuntimeRoutes } from './config/contract'
 import { ROUTE_MANAGEMENT_PATH } from './constant'
 import type { AppRouteRecordRaw } from './types'
@@ -38,16 +39,18 @@ const managementRoute: AppRouteRecordRaw = {
 export const getStaticAppRoutes = () =>
   orderRoutes(toRuntimeRoutes(parseRouteConfig(JSON.stringify(initialRoutes))))
 
-let activeRoutes: AppRouteRecordRaw[] | undefined
+const activeRoutes = shallowRef<AppRouteRecordRaw[]>()
 
 export function setAppRouteModules(routes: AppRouteRecordRaw[]) {
-  activeRoutes = orderRoutes(routes)
+  activeRoutes.value = orderRoutes(routes)
 }
 
-export const getAppRawRoutes = () => [
-  ...(activeRoutes ?? getStaticAppRoutes()),
+const rawRoutes = computed(() => [
+  ...(activeRoutes.value ?? getStaticAppRoutes()),
   managementRoute,
-]
+])
+
+export const getAppRawRoutes = () => rawRoutes.value
 
 export const appExpandRoutes = () =>
   expandRoutes(getAppRawRoutes()).filter(({ meta }) => !meta.windowOpen)

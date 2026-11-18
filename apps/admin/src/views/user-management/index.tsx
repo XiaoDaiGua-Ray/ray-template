@@ -8,7 +8,7 @@ import {
   setUserCredential,
   updateUserStatus,
 } from '@/api/admin'
-import { AdminApiError, apiMockEnabled } from '@/api/admin/client'
+import { apiMockEnabled } from '@/api/admin/client'
 import type { AdminUser, UserOptions, UserStatus } from '@/api/admin/contracts'
 import AccountPasswordForm from '@/app-components/app/AccountPasswordForm'
 import AppPageHeader from '@/app-components/app/AppPageHeader'
@@ -40,6 +40,7 @@ import {
   NTree,
 } from 'naive-ui'
 import type { DataTableColumns, TreeOption } from 'naive-ui'
+import { useUserErrorMessage } from './error-message'
 import UserEditor from './UserEditor'
 
 export default defineComponent({
@@ -77,6 +78,7 @@ export default defineComponent({
     const checked = ref<(string | number)[]>([])
     const editorOpen = ref(false)
     const editing = shallowRef<AdminUser>()
+    const editingRevision = ref<string>()
     const details = shallowRef<AdminUser>()
     const credentialTarget = shallowRef<AdminUser>()
     const loadingUser = ref('')
@@ -84,10 +86,7 @@ export default defineComponent({
     const abort = new AbortController()
 
     onScopeDispose(() => abort.abort())
-    const errorText = (error: unknown) =>
-      t(
-        `errors.${error instanceof AdminApiError ? error.key : 'requestFailed'}`,
-      )
+    const errorText = useUserErrorMessage()
     const loadOptions = async () => {
       optionLoading.value = true
       optionError.value = false
@@ -199,7 +198,9 @@ export default defineComponent({
       loadingUser.value = id
 
       try {
-        const user = await getUser(id, abort.signal)
+        const user = await getUser(id, abort.signal, (revision) => {
+          if (edit) editingRevision.value = revision
+        })
 
         if (abort.signal.aborted) return
 
@@ -554,6 +555,7 @@ export default defineComponent({
         {editorOpen.value && options.value && (
           <UserEditor
             user={editing.value}
+            revision={editingRevision.value}
             options={options.value}
             departmentId={departmentId.value || void 0}
             currentUserId={getSigningCallback.value.id}

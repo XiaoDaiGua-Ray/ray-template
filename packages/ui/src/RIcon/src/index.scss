@@ -13,11 +13,10 @@
   opacity: var(--r-icon-depth);
   cursor: var(--r-icon-cursor);
 
-  & svg[RIconAttribute='r-icon'] {
+  > svg {
     display: block;
     width: var(--r-icon-width);
     height: var(--r-icon-height);
-    fill: currentColor;
   }
 }
 

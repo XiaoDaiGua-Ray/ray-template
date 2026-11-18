@@ -3,7 +3,7 @@ import * as v from 'valibot'
 const text = v.pipe(v.string(), v.minLength(1), v.maxLength(256))
 const finiteNumber = v.pipe(v.number(), v.finite())
 const title = v.union([text, finiteNumber])
-const icon = v.pipe(text, v.regex(/^[\w-]+\/[\w-]+$/))
+const icon = v.pipe(text, v.regex(/^[a-z][a-z0-9_-]*(\/[a-z][a-z0-9_-]*)+$/))
 const segment = '(?:[\\w~.-]+|:[A-Za-z_]\\w*\\??)'
 const absolutePath = v.pipe(
   text,

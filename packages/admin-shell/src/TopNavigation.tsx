@@ -5,6 +5,7 @@ import { NMenu } from 'naive-ui'
 import type { MenuOption } from 'naive-ui'
 import { computed, defineComponent } from 'vue'
 import type { PropType } from 'vue'
+import { useMenuKeyboard } from './menu-keyboard'
 
 export const ShellTopNavigation = defineComponent({
   name: 'ShellTopNavigation',
@@ -20,6 +21,7 @@ export const ShellTopNavigation = defineComponent({
     },
   },
   setup(props, { slots }) {
+    const keyboard = useMenuKeyboard(true)
     const mixed = computed(() => props.grouped)
     const options = computed(() =>
       mixed.value
@@ -43,10 +45,16 @@ export const ShellTopNavigation = defineComponent({
     }
 
     return () => (
-      <nav class="r-layout-top-navigation" aria-label={props.label}>
+      <nav
+        class="r-layout-top-navigation r-shell-menu"
+        aria-label={props.label}
+        onKeydown={keyboard.onKeydown}
+      >
         {slots.logo?.()}
         <NMenu
           mode="horizontal"
+          nodeProps={keyboard.nodeProps}
+          dropdownProps={keyboard.dropdownProps}
           responsive
           iconSize={props.iconSize}
           collapsedIconSize={props.iconSize}

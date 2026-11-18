@@ -129,3 +129,26 @@ it('keeps distinct fullPath cache entries while reusing the same page component'
   expect(host.querySelector('[data-page="one"]')?.textContent).toBe('one-1')
   expect(mounts.one).toBe(2)
 })
+
+it.each([true, false])(
+  'remounts the refreshed URL and retains other cached URLs (cache=%s)',
+  async (cache) => {
+    await mountRoutes(cache)
+    await navigate('/one?view=other')
+    await vi.advanceTimersByTimeAsync(714)
+    expect(host.querySelector('[data-page="one"]')?.textContent).toBe('one-2')
+
+    await wrapper!.setProps({ refreshingPath: '/one?view=other' })
+    await vi.advanceTimersByTimeAsync(714)
+    expect(host.querySelector('[data-page="one"]')).toBeNull()
+    await wrapper!.setProps({ refreshingPath: null })
+    await vi.advanceTimersByTimeAsync(714)
+    expect(host.querySelector('[data-page="one"]')?.textContent).toBe('one-3')
+
+    await navigate('/one')
+    await vi.advanceTimersByTimeAsync(714)
+    expect(host.querySelector('[data-page="one"]')?.textContent).toBe(
+      cache ? 'one-1' : 'one-4',
+    )
+  },
+)

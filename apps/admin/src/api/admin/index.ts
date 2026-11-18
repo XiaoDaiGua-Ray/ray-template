@@ -45,16 +45,30 @@ export const setUserCredential = (id: string, newPassword: string) =>
     method: 'put',
     data: { newPassword },
   })
-export const getAdminRoutes = (view?: 'editor', signal?: AbortSignal) =>
-  adminRequest('route-config', routeConfigSchema, {
-    method: 'get',
-    params: view ? { view } : void 0,
-    signal,
-  })
-export const updateAdminRoutes = (config: RouteConfig) =>
+export const getAdminRoutes = (
+  view?: 'editor',
+  signal?: AbortSignal,
+  onRevision?: (revision: string | undefined) => void,
+) =>
+  adminRequest(
+    'route-config',
+    routeConfigSchema,
+    {
+      method: 'get',
+      params: view ? { view } : void 0,
+      signal,
+    },
+    onRevision,
+  )
+
+const revisionHeaders = (revision?: string) =>
+  revision ? { 'If-Match': `"${revision}"` } : {}
+
+export const updateAdminRoutes = (config: RouteConfig, revision?: string) =>
   adminRequest('route-config', routeConfigSchema, {
     method: 'put',
     data: config,
+    headers: revisionHeaders(revision),
   })
 export const getUserOptions = (signal?: AbortSignal) =>
   adminRequest('users/options', userOptionsSchema, { method: 'get', signal })
@@ -70,16 +84,26 @@ export const getUsers = async (
 
   return { data: items, total }
 }
-export const getUser = (id: string, signal?: AbortSignal) =>
-  adminRequest(`users/${encodeURIComponent(id)}`, userSchema, {
-    method: 'get',
-    signal,
-  })
+export const getUser = (
+  id: string,
+  signal?: AbortSignal,
+  onRevision?: (revision: string | undefined) => void,
+) =>
+  adminRequest(
+    `users/${encodeURIComponent(id)}`,
+    userSchema,
+    {
+      method: 'get',
+      signal,
+    },
+    onRevision,
+  )
 export const createUser = (data: UserInput) =>
   adminRequest('users', userSchema, { method: 'post', data })
-export const updateUser = (id: string, data: UserInput) =>
+export const updateUser = (id: string, data: UserInput, revision?: string) =>
   adminRequest(`users/${encodeURIComponent(id)}`, userSchema, {
     method: 'put',
+    headers: revisionHeaders(revision),
     data,
   })
 export const deleteUsers = (ids: string[]) =>

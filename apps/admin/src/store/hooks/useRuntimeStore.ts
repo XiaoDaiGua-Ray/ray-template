@@ -7,6 +7,7 @@ export const useRuntimeGetters = () => {
   return {
     globalSpinning: readonly(state.globalSpinning),
     globalDrawerValue: readonly(state.globalDrawerValue),
+    refreshingPath: readonly(state.refreshingPath),
     globalMainLayoutLoad: readonly(state.globalMainLayoutLoad),
     layoutContentMaximize: readonly(state.layoutContentMaximize),
     layoutContentMaximizeVersion: readonly(state.layoutContentMaximizeVersion),

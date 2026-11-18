@@ -71,16 +71,14 @@ export function useAppNavigation() {
       return deepNavigation(menu)
     }
 
-    if (typeof target !== 'string')
-      return navigate({ path: target.fullPath, query })
-
-    const resolved = router.resolve(target)
+    const path = typeof target === 'string' ? target : target.fullPath
+    const resolved = router.resolve(path)
 
     if (
       !resolved.matched.length ||
       resolved.matched.at(-1)?.path === NOT_FOUND_ROUTE_PATH
     ) {
-      console.warn(`[navigationTo]: The path "${target}" is not found.`)
+      console.warn(`[navigationTo]: The path "${path}" is not found.`)
 
       return
     }

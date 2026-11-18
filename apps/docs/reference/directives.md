@@ -70,7 +70,7 @@ const countClick = () => {
 ```
 
 - `options.leading` / `trailing` 决定在等待周期首尾是否执行；防抖还可设 `maxWait`。挂载时读取绑定值，更新不会重绑。若回调依赖变动数据，让原函数在执行时读取响应式值。
-- 当前实现将监听器句柄保存在指令工厂闭包，多个绑定实例共用同一清理位置。需要同一指令同时绑多个元素或动态修改间隔时，在组件里单独创建防抖或节流函数并清理。
+- 同一指令可以绑定多个元素。每个元素独立计时，卸载时只清理自己的监听器和待执行回调。需要动态修改间隔时，可更换元素的 `key` 重新绑定。
 - 防抖和节流只约束事件触发，异步请求仍需独立处理取消、并发或幂等。
 
 [防抖源码](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/packages/directives/src/modules/debounce/index.ts) · [节流源码](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/packages/directives/src/modules/throttle/index.ts)
@@ -103,7 +103,7 @@ const countClick = () => {
 
 ## v-disabled
 
-接收布尔值并修改原生 `disabled` 属性和模板禁用样式。当前实现关闭禁用时仍会写入空的 `disabled` 属性，HTML 原生按钮将继续视为禁用。因此原生控件使用 `:disabled="busy"`，Naive UI 使用对应 `disabled` prop。对自定义控件，要同时处理指针、键盘与可访问状态；样式不能取代业务权限检查。
+原生表单控件使用布尔 `disabled` 属性。表单、容器和自定义控件的根元素使用 `inert`，禁用期间子树退出键盘焦点顺序，指针也无法操作。绑定值恢复为 `false` 后即可继续交互。组件库提供 `disabled` prop 时优先使用它。
 
 [源码](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/packages/directives/src/modules/disabled/index.ts)
 

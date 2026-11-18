@@ -434,9 +434,10 @@ export const piniaMenuStore = defineStore(
     }
 
     watch(
-      () => [
-        signing.signingCallback.role,
-        signing.signingCallback.id || signing.signingCallback.name,
+      [
+        () => signing.signingCallback.role,
+        () => signing.signingCallback.id || signing.signingCallback.name,
+        getAppRawRoutes,
       ],
       (current, previous) => {
         if (previous?.[1] && current[1] !== previous[1]) {

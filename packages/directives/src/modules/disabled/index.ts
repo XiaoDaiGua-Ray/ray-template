@@ -1,22 +1,12 @@
-import { removeClass, setClass } from '@ray-template/composables/element'
 import type { CustomDirectiveFC } from '../../types'
 
 const updateElementDisabledType = (el: HTMLElement, value: boolean) => {
-  if (el) {
-    const classes = 'r-template__directive--disabled'
+  const nativeControl = el.matches(
+    'button, input, select, textarea, fieldset, optgroup, option',
+  )
 
-    if (value) {
-      el.setAttribute('disabled', 'disabled')
-
-      setClass(el, classes)
-    } else {
-      el.removeAttribute('disabled')
-
-      removeClass(el, classes)
-    }
-
-    el?.setAttribute('disabled', value ? 'disabled' : '')
-  }
+  el.toggleAttribute(nativeControl ? 'disabled' : 'inert', value)
+  el.classList.toggle('r-template__directive--disabled', value)
 }
 
 const disabledDirective: CustomDirectiveFC<HTMLElement, boolean> = () => {

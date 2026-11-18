@@ -92,7 +92,8 @@ const renderRemote = () => (
 
 - `initialValues` 优先于字段的 `initialValue`。默认条件参与首查，重置恢复默认并重新查询。字段配置 `rules` 后，查询按钮和 `submitSearch()` 会校验，失败保留上次结果。重置会清理校验提示并应用默认值。空值、空白文本和空数组省略，`0` 和 `false` 保留。
 - `transform(value, values)` 返回请求参数片段。例如日期区间可返回 `{ createdFrom, createdTo }`，原字段不再进入参数。本地匹配仍使用字段值。列表请求按外部 `params`、转换后的搜索参数、表格的 `page` 和 `pageSize` 合并，提交回到第 1 页，分页和重试沿用已提交的条件。
-- `onSearch` 接收 `{ values, params, reason }`，`reason` 为 `submit` 或 `reset`。使用对象式 `search` 与 `remote + data + pagination` 时，可在事件中自行取数并控制页码和总数。搜索回调抛错会触发 `onSearchError`，并保留上次有效条件；本地默认字段读取支持 `customer.name` 等路径，`getValue` 优先。动态替换字段的匹配、读取、转换或可见规则时，仍兼容的条件会按新规则重新计算。
+- 处理字段时，`visible`、`transform`、`getValue` 或 `matches` 抛错会触发 `onSearchError`，本次提交保留上次有效条件。本地字段读取支持 `customer.name` 等路径，优先使用 `getValue`。动态替换字段规则时，仍兼容的条件会按新规则重新计算。
+- 条件应用后，`onSearch` 接收 `{ values, params, reason }`，`reason` 为 `submit` 或 `reset`。在手动远端模式下，可在该事件中取数并管理页码和总数。监听器抛出的异常进入 Vue 的事件错误处理，已应用的条件会保留。调用方负责显示请求错误和提供重试。
 - 实例和 `useTablePro()` 都提供 `getSearchValues('draft' | 'applied')`、`setSearchValues(patch)`、`submitSearch()`、`resetSearch()`。读取默认是草稿。提交和重置返回 `Promise<boolean>`，表示是否成功应用条件。设 `submitMode: 'change'` 可在编辑时防抖提交，`debounce` 默认 300 ms。
 
 ### 远程选项、联动和布局

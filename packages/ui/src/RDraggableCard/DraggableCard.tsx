@@ -303,7 +303,7 @@ export default defineComponent({
         .draggable({
           inertia: true,
           autoScroll: true,
-          allowFrom: cardHeader ? '.n-card-header' : '.n-card__content',
+          allowFrom: cardHeader ? '.n-card-header' : '.n-card-content',
           modifiers: [interact.modifiers.restrictRect(restrictRectOptions)],
           listeners: {
             move: (event) => {

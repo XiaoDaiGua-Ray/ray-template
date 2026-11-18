@@ -789,7 +789,7 @@
                       "type": "string",
                       "minLength": 1,
                       "maxLength": 256,
-                      "pattern": "^[\\w-]+\\/[\\w-]+$",
+                      "pattern": "^[a-z][a-z0-9_-]*(\\/[a-z][a-z0-9_-]*)+$",
                       "description": "IconName from src/icons/manifest.ts."
                     },
                     "role": {
@@ -878,7 +878,7 @@
                           "type": "string",
                           "minLength": 1,
                           "maxLength": 256,
-                          "pattern": "^[\\w-]+\\/[\\w-]+$"
+                          "pattern": "^[a-z][a-z0-9_-]*(\\/[a-z][a-z0-9_-]*)+$"
                         },
                         "show": {
                           "type": "boolean"
@@ -1024,7 +1024,7 @@
                     "type": "string",
                     "minLength": 1,
                     "maxLength": 256,
-                    "pattern": "^[\\w-]+\\/[\\w-]+$",
+                    "pattern": "^[a-z][a-z0-9_-]*(\\/[a-z][a-z0-9_-]*)+$",
                     "description": "IconName from src/icons/manifest.ts."
                   },
                   "role": {
@@ -1113,7 +1113,7 @@
                         "type": "string",
                         "minLength": 1,
                         "maxLength": 256,
-                        "pattern": "^[\\w-]+\\/[\\w-]+$"
+                        "pattern": "^[a-z][a-z0-9_-]*(\\/[a-z][a-z0-9_-]*)+$"
                       },
                       "show": {
                         "type": "boolean"
@@ -1960,6 +1960,9 @@
           },
           "data": {
             "type": "null"
+          },
+          "revision": {
+            "type": "string"
           },
           "error": {
             "type": "object",
@@ -3879,6 +3882,10 @@
                     "msg": {
                       "type": "string"
                     },
+                    "revision": {
+                      "type": "string",
+                      "description": "Opaque edit revision. Route configuration includes it only for view=editor."
+                    },
                     "data": {
                       "$ref": "#/components/schemas/RouteConfig"
                     }
@@ -4001,6 +4008,17 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Quoted revision from the editor read. A changed resource returns 412 editConflict."
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -4069,6 +4087,16 @@
             }
           },
           "409": {
+            "description": "See error.key for a stable machine-readable reason.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "412": {
             "description": "See error.key for a stable machine-readable reason.",
             "content": {
               "application/json": {
@@ -4751,6 +4779,10 @@
                     "msg": {
                       "type": "string"
                     },
+                    "revision": {
+                      "type": "string",
+                      "description": "Opaque edit revision. Route configuration includes it only for view=editor."
+                    },
                     "data": {
                       "$ref": "#/components/schemas/User"
                     }
@@ -4863,6 +4895,17 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Quoted revision from the editor read. A changed resource returns 412 editConflict."
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -4931,6 +4974,16 @@
             }
           },
           "409": {
+            "description": "See error.key for a stable machine-readable reason.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "412": {
             "description": "See error.key for a stable machine-readable reason.",
             "content": {
               "application/json": {

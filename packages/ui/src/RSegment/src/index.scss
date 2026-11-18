@@ -1,6 +1,11 @@
 .r-segment {
   width: var(--r-segment-width);
   max-inline-size: 100%;
+
+  [role='radio']:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: -2px;
+  }
 }
 
 .r-segment--intrinsic {

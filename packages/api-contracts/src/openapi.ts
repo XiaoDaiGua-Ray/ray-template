@@ -98,6 +98,7 @@ export function getAdminOpenApi() {
     permission?: string,
     input?: string,
     publicEndpoint = false,
+    editing?: 'read' | 'write',
   ) => ({
     operationId: id,
     summary: id,
@@ -112,6 +113,20 @@ export function getAdminOpenApi() {
     ...(input
       ? { requestBody: { required: true, content: json(ref(input)) } }
       : {}),
+    ...(editing === 'write'
+      ? {
+          parameters: [
+            {
+              name: 'If-Match',
+              in: 'header',
+              required: false,
+              schema: { type: 'string' },
+              description:
+                'Quoted revision from the editor read. A changed resource returns 412 editConflict.',
+            },
+          ],
+        }
+      : {}),
     responses: {
       '200': {
         description: 'Success',
@@ -121,6 +136,15 @@ export function getAdminOpenApi() {
           properties: {
             code: { const: 200 },
             msg: { type: 'string' },
+            ...(editing === 'read'
+              ? {
+                  revision: {
+                    type: 'string',
+                    description:
+                      'Opaque edit revision. Route configuration includes it only for view=editor.',
+                  },
+                }
+              : {}),
             data: Array.isArray(result)
               ? { anyOf: result.map(ref) }
               : result
@@ -130,7 +154,17 @@ export function getAdminOpenApi() {
         }),
       },
       ...Object.fromEntries(
-        [400, 401, 403, 404, 409, 413, 429, 503].map((status) => [
+        [
+          400,
+          401,
+          403,
+          404,
+          409,
+          ...(editing === 'write' ? [412] : []),
+          413,
+          429,
+          503,
+        ].map((status) => [
           status,
           {
             description: 'See error.key for a stable machine-readable reason.',
@@ -285,7 +319,14 @@ export function getAdminOpenApi() {
       },
       '/admin/route-config': {
         get: {
-          ...operation('getRouteConfig', 'RouteConfig'),
+          ...operation(
+            'getRouteConfig',
+            'RouteConfig',
+            void 0,
+            void 0,
+            false,
+            'read',
+          ),
           description:
             'Authorized navigation snapshot for the current session; returns an empty routes array without routes:read. Request view=editor with routes:write to read the complete saved configuration.',
           parameters: [
@@ -302,6 +343,8 @@ export function getAdminOpenApi() {
           'RouteConfig',
           'routes:write',
           'RouteConfig',
+          false,
+          'write',
         ),
       },
       '/admin/users/options': {
@@ -325,8 +368,15 @@ export function getAdminOpenApi() {
       },
       '/admin/users/{id}': {
         parameters: [pathId],
-        get: operation('getUser', 'User', 'users:read'),
-        put: operation('updateUser', 'User', 'users:update', 'UserInput'),
+        get: operation('getUser', 'User', 'users:read', void 0, false, 'read'),
+        put: operation(
+          'updateUser',
+          'User',
+          'users:update',
+          'UserInput',
+          false,
+          'write',
+        ),
       },
       '/admin/users/batch-delete': {
         post: operation('deleteUsers', 'Changed', 'users:delete', 'Ids'),

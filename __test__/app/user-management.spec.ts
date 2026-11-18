@@ -1,7 +1,9 @@
 import * as adminApi from '@/api/admin'
+import { AdminApiError } from '@/api/admin/client'
 import { router } from '@/router'
 import { piniaSigningStore } from '@/store/modules/signing'
 import UserManagement from '@/views/user-management'
+import { useUserErrorMessage } from '@/views/user-management/error-message'
 import { flushPromises, mount } from '@vue/test-utils'
 import setupMiniApp from '../utils/setupMiniApp'
 
@@ -54,5 +56,23 @@ it('keeps the current list and selection context when opening and closing an edi
     window.$message = message
     localStorage.clear()
     vi.restoreAllMocks()
+  }
+})
+
+it('shows localized limit and outage messages and falls back for unknown server errors', async () => {
+  const { app } = await setupMiniApp()
+
+  try {
+    const message = useUserErrorMessage()
+    const label = (code: number, key: string) =>
+      message(new AdminApiError(code, key, key))
+
+    expect(label(429, 'tooManyRequests')).toBe('请求过于频繁，请稍后再试。')
+    expect(label(503, 'serviceUnavailable')).toBe(
+      '服务暂时不可用，请稍后重试。',
+    )
+    expect(label(500, 'unexpectedCode')).toBe('请求失败，请稍后重试。')
+  } finally {
+    app.unmount()
   }
 })

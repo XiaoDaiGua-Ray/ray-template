@@ -2,19 +2,20 @@
 
 ## Runtime Store
 
-`useRuntimeGetters()` 提供只读 ref；`useRuntimeActions()` 返回 `setRuntimeState(key, value)`、`reloadContent(wait = 800)`。这些 UI 状态不持久化。
+`useRuntimeGetters()` 提供只读 ref；`useRuntimeActions()` 返回 `setRuntimeState(key, value)`、`reloadContent(wait = 800, path?)`。这些 UI 状态不持久化。
 
 | 字段                           | 默认              | 用途                                                       |
 | ------------------------------ | ----------------- | ---------------------------------------------------------- |
 | `globalSpinning`               | `false`           | 全局 Spin。                                                |
 | `globalDrawerValue`            | `false`           | 窄屏菜单抽屉。                                             |
 | `globalMainLayoutLoad`         | `true`            | 默认布局是否挂载页面内容。                                 |
+| `refreshingPath`               | `null`            | 当前单页刷新的完整地址。                                   |
 | `layoutContentMaximize`        | `false`           | 工作区最大化。                                             |
 | `layoutContentMaximizeVersion` | `0`               | 最大化状态变动序号，用于过滤过期回调，业务代码不直接更新。 |
 | `layoutContentSpinning`        | `false`           | 布局内容区 Spin。                                          |
 | `layoutContentMaximizeStyle`   | `{ zIndex: 999 }` | 最大化的层级、背景、过渡样式。                             |
 
-`reloadContent` 暂时卸载当前内容并等待恢复；多次调用只保留最后一个计时，Store 卸载时清理计时。`useSpinning().reload()` 是同一动作。控制最大化时用 [useMaximize](../hooks/layout#usemaximize) 来保留回调和退出逻辑。全局 Spin 和内容 Spin 互相独立。
+`reloadContent` 传入当前完整地址时重新挂载该页面，省略地址时释放整个内容区的缓存实例。多次调用只保留最后一个计时，Store 卸载时清理计时。页面可调用 `useSpinning().reload()` 刷新当前页，或调用 `reloadWorkspace()` 刷新整工作区。控制最大化时用 [useMaximize](../hooks/layout#usemaximize) 来保留回调和退出逻辑。全局 Spin 和内容 Spin 互相独立。
 
 ```ts
 import { useRuntimeActions } from '@/store'

@@ -71,15 +71,24 @@ async function demoDigest(password: string, salt: string) {
   ).join('')
 }
 
-export function createAdminDatabase(storage?: Storage) {
-  const key = 'rayMockAdmin.v1'
+const snapshotKey = 'rayMockAdmin.v1'
+const aliases = new Map(
+  Object.entries({
+    'ray admin': 'user001',
+    admin: 'user001',
+    manager: 'user011',
+    member: 'user002',
+  }),
+)
+
+function openSnapshot(storage?: Storage) {
   let users = createInitialUsers()
   let routes = parseRouteConfig(JSON.stringify(initialRoutes))
   let sessions: v.InferOutput<typeof loginResultSchema>[] = []
   let credentials: v.InferOutput<typeof snapshotSchema>['credentials'] = []
 
   try {
-    const raw = storage?.getItem(key)
+    const raw = storage?.getItem(snapshotKey)
 
     if (raw) {
       const value = v.parse(snapshotSchema, JSON.parse(raw))
@@ -107,7 +116,7 @@ export function createAdminDatabase(storage?: Storage) {
   }) => {
     try {
       storage?.setItem(
-        key,
+        snapshotKey,
         JSON.stringify({
           version: 1,
           users,
@@ -261,25 +270,16 @@ export function createAdminDatabase(storage?: Storage) {
     authorize,
     async login(input: unknown) {
       const { username, password } = parseInput(loginInputSchema, input)
-      const aliases = new Map(
-        Object.entries({
-          'ray admin': 'user001',
-          admin: 'user001',
-          manager: 'user011',
-          member: 'user002',
-        }),
-      )
       const key = username.toLowerCase()
-      const user = users.find(
-        (item) =>
-          item.username.toLowerCase() === (aliases.get(key) ?? key) &&
-          item.status === 'enabled',
-      )
+      const user =
+        users.find((item) => item.username.toLowerCase() === key) ??
+        users.find((item) => item.username.toLowerCase() === aliases.get(key))
 
       const snapshot = credentials
 
       if (
         !user ||
+        user.status !== 'enabled' ||
         !(await matchesPassword(user, password)) ||
         snapshot !== credentials ||
         !users.includes(user)
@@ -540,4 +540,38 @@ export function createAdminDatabase(storage?: Storage) {
   }
 }
 
-export type AdminDatabase = ReturnType<typeof createAdminDatabase>
+type Snapshot = ReturnType<typeof openSnapshot>
+
+export type AdminDatabase = <T>(
+  action: (snapshot: Snapshot) => T | Promise<T>,
+) => Promise<T>
+
+export function createAdminDatabase(
+  storage?: Storage,
+  locks = globalThis.navigator?.locks,
+): AdminDatabase {
+  if (storage) {
+    return async (action) => {
+      if (!locks) throw new MockApiError(503, 'storage')
+
+      // 在同源标签共享的锁内重新读取快照，异步校验和提交也属于同一操作。
+      return locks.request(snapshotKey, async () =>
+        action(openSnapshot(storage)),
+      )
+    }
+  }
+
+  const database = openSnapshot()
+  let pending = Promise.resolve()
+
+  return (action) => {
+    const result = pending.then(() => action(database))
+
+    pending = result.then(
+      () => {},
+      () => {},
+    )
+
+    return result
+  }
+}

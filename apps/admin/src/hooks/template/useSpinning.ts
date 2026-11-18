@@ -1,4 +1,5 @@
 import { useRuntimeActions } from '@/store'
+import { useVueRouter } from './useVueRouter'
 
 /**
  *
@@ -9,7 +10,10 @@ import { useRuntimeActions } from '@/store'
  * @returns 页面刷新以及手动开启、关闭加载状态的方法。
  */
 export const useSpinning = () => {
-  const { reloadContent: reload, setRuntimeState } = useRuntimeActions()
+  const { reloadContent, setRuntimeState } = useRuntimeActions()
+  const reload = (wait?: number) =>
+    reloadContent(wait, useVueRouter().router.currentRoute.value.fullPath)
+  const reloadWorkspace = (wait?: number) => reloadContent(wait)
 
   /**
    *
@@ -25,7 +29,7 @@ export const useSpinning = () => {
    */
   const closeSpin = () => setRuntimeState('layoutContentSpinning', false)
 
-  return { reload, openSpin, closeSpin }
+  return { reload, reloadWorkspace, openSpin, closeSpin }
 }
 
 export type UseSpinningReturnType = ReturnType<typeof useSpinning>

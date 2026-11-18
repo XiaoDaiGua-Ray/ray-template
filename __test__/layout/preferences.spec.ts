@@ -252,6 +252,64 @@ describe('layout preferences', () => {
     }
   })
 
+  it('uses the contrast of each resolved button fill after importing an accent and switching modes', () => {
+    const pinia = createPinia()
+
+    setActivePinia(pinia)
+    const store = piniaSettingStore()
+    const file = store.exportPreferences()
+    const paints: string[] = []
+    let pixels = [45, 140, 240, 255, 76, 157, 242, 255]
+    const context = {
+      fillStyle: '',
+      fillRect() {
+        paints.push(this.fillStyle)
+      },
+      getImageData: () => ({ data: new Uint8ClampedArray(pixels) }),
+    }
+    const canvas = vi
+      .spyOn(HTMLCanvasElement.prototype, 'getContext')
+      .mockReturnValue(context as unknown as CanvasRenderingContext2D)
+
+    try {
+      store.changePrimaryColor('#2d8cf0')
+      expect(store.themeOverrides.Button).toMatchObject({
+        colorPrimary: 'rgb(45, 140, 240)',
+        textColorPrimary: '#000',
+        textColorHoverPrimary: '#000',
+      })
+      const primaryColor = 'hsla(0, 0%, 90%, 0.1)'
+
+      store.importPreferences(
+        JSON.stringify({
+          ...file,
+          preferences: { ...file.preferences, primaryColor, appTheme: 'dark' },
+        }),
+      )
+      pixels = [44, 53, 67, 255, 199, 200, 202, 255]
+      expect(store.themeOverrides.Button).toMatchObject({
+        textColorPrimary: '#fff',
+        textColorPressedPrimary: '#fff',
+        textColorHoverPrimary: '#000',
+        textColorFocusPrimary: '#000',
+      })
+      expect(paints.slice(-3)).toEqual([
+        '#172131',
+        primaryColor,
+        'hsla(0, 0%, 90%, 0.85)',
+      ])
+      store.updateSettingState('appTheme', 'light')
+      pixels = [252, 252, 252, 255, 234, 234, 234, 255]
+      expect(store.themeOverrides.Button?.textColorPrimary).toBe('#000')
+      expect(paints.at(-3)).toBe('#ffffff')
+      store.changePrimaryColor()
+      expect(store.themeOverrides.Button?.textColorPrimary).toBeUndefined()
+    } finally {
+      canvas.mockRestore()
+      disposePinia(pinia)
+    }
+  })
+
   it('does not change any preference when the file contains invalid settings', () => {
     const pinia = createPinia()
 

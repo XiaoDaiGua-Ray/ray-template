@@ -507,7 +507,7 @@ export default defineComponent({
                             icon="action/reload"
                             label={t('reload')}
                             disabled={props.loading}
-                            onClick={props.reload}
+                            onClick={() => props.reload?.()}
                           />
                         ) : null}
                         {props.columns.length ? (

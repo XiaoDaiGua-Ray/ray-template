@@ -27,6 +27,36 @@ import type { AppRawRequestConfig, CancelerParams } from './types'
 export default class RequestCanceler {
   /** 待处理请求的 Map，key 为请求标识，value 为 AbortController */
   private readonly pendingRequest = new Map<string, AbortController>()
+  private readonly fileIds = new WeakMap<File, number>()
+  private nextFileId = 0
+
+  private serializePart(value: unknown) {
+    if (
+      typeof URLSearchParams !== 'undefined' &&
+      value instanceof URLSearchParams
+    )
+      return ['query', value.toString()]
+
+    if (typeof FormData !== 'undefined' && value instanceof FormData) {
+      const entries = Array.from(value, ([key, entry]) => {
+        if (typeof entry === 'string') return [key, entry]
+
+        // 文件同名且尺寸相同也可能有不同内容，只将同一文件实例视为相同。
+        let id = this.fileIds.get(entry)
+
+        if (id === void 0) {
+          id = ++this.nextFileId
+          this.fileIds.set(entry, id)
+        }
+
+        return [key, id]
+      })
+
+      return ['form', entries]
+    }
+
+    return JSON.stringify(value)
+  }
 
   /**
    *
@@ -57,7 +87,12 @@ export default class RequestCanceler {
   ): string {
     const { method = '', url = '', params, data } = config
 
-    return [url, method, JSON.stringify(params), JSON.stringify(data)].join('&')
+    return JSON.stringify([
+      url,
+      method,
+      this.serializePart(params),
+      this.serializePart(data),
+    ])
   }
 
   /**

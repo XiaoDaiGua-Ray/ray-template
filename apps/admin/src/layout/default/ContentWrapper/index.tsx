@@ -5,17 +5,18 @@ import { useRuntimeGetters, useSettingGetters } from '@/store'
 export default defineComponent({
   name: 'LayoutContentWrapper',
   setup() {
-    const { globalMainLayoutLoad } = useRuntimeGetters()
+    const { globalMainLayoutLoad, refreshingPath } = useRuntimeGetters()
     const { getContentTransition } = useSettingGetters()
 
     return () => (
       <>
         <AppRequestCancelerProvider />
-        {globalMainLayoutLoad.value ? (
+        {globalMainLayoutLoad.value || refreshingPath.value !== null ? (
           <RTransitionComponent
             class="content-wrapper"
             transitionPropName={`${getContentTransition.value}-transform`}
             transitionAppear={false}
+            refreshingPath={refreshingPath.value}
           />
         ) : null}
       </>

@@ -20,4 +20,4 @@ const loadOrders = (signal: AbortSignal) =>
   })
 ```
 
-When supplying a signal, set `cancelConfig.cancel` to `false` to avoid default-canceller replacement, and own the abort lifecycle. The person list demonstrates [forwarding TablePro's signal](../api/demo/mock/person.ts). `useRequest` wraps the same instance and must run within an active Vue effect scope.
+The canceller compares encoded URLSearchParams and ordered FormData entries, including file identity. Passing a signal or setting `cancelConfig.cancel` to `false` opts out of default cancellation. The person list demonstrates [forwarding TablePro's signal](../api/demo/mock/person.ts). `useRequest` wraps the same instance and must run within an active Vue effect scope.

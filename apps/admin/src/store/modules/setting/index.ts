@@ -15,8 +15,10 @@ import {
 } from '@ray-template/ui/theme-presets'
 import { usePreferredDark } from '@vueuse/core'
 import { cloneDeep } from 'lodash-es'
+import { darkTheme, lightTheme } from 'naive-ui'
 import { getDefaultSettingConfig, normalizeLayoutConfig } from './constant'
 import { createPreferenceFile, parsePreferenceFile } from './preference-file'
+import { primaryButtonColors } from './primary-button-colors'
 
 export const piniaSettingStore = defineStore(
   'setting',
@@ -90,12 +92,26 @@ export const piniaSettingStore = defineStore(
         style === 'modern'
           ? APP_THEME.appNaiveUIThemeOverrides[mode]
           : themeStyleOverrides[style][mode]
+      const accent = settingState.primaryColorOverride.common
+      const surface =
+        preset.common?.cardColor ??
+        (mode === 'dark' ? darkTheme : lightTheme).common.cardColor
 
       return {
         ...preset,
+        ...(accent?.primaryColor && {
+          Button: {
+            ...preset.Button,
+            ...primaryButtonColors(
+              accent.primaryColor,
+              accent.primaryColorHover ?? accent.primaryColor,
+              surface,
+            ),
+          },
+        }),
         common: {
           ...preset.common,
-          ...settingState.primaryColorOverride.common,
+          ...accent,
         },
       }
     })

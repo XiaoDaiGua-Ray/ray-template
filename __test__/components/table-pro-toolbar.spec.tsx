@@ -1,7 +1,7 @@
 import { DOMWrapper, flushPromises, mount } from '@vue/test-utils'
 import { NDataTable, NDropdown } from 'naive-ui'
 import type { DropdownOption } from 'naive-ui'
-import { RTablePro } from '../../packages/ui/src/RTablePro'
+import { RTablePro, useTablePro } from '../../packages/ui/src/RTablePro'
 import type { TableProRequest } from '../../packages/ui/src/RTablePro'
 import * as csv from '../../packages/ui/src/RTablePro/src/csv'
 import * as printing from '../../packages/ui/src/RTablePro/src/printing'
@@ -206,20 +206,22 @@ it('keeps appearance icons visible when checked or unchecked', async () => {
 })
 
 it('refreshes the current remote query and preserves the caller toolbar when tools are disabled', async () => {
-  const request = vi.fn<TableProRequest>(async () => ({ data, total: 1 }))
+  const [register, actions] = useTablePro()
+  const request = vi.fn<TableProRequest>(async () => ({ data, total: 30 }))
   const wrapper = mount(RTablePro, {
-    props: { columns, request },
+    props: { columns, request, onRegister: register },
     slots: { toolbar: 'Business action' },
   })
 
   try {
     await flushPromises()
     expect(request).toHaveBeenCalledOnce()
+    await actions.setPage(2)
+    await flushPromises()
     await wrapper.get('[aria-label="Refresh"]').trigger('click')
     await flushPromises()
-    expect(request).toHaveBeenCalledTimes(2)
-    expect(request.mock.lastCall?.[0]).toEqual(request.mock.calls[0][0])
-    expect(request.mock.lastCall?.[1]).not.toBe(request.mock.calls[0][1])
+    expect(request.mock.calls.map(([params]) => params.page)).toEqual([1, 2, 2])
+    expect(request.mock.lastCall?.[1]).not.toBe(request.mock.calls[1][1])
     expect(wrapper.get('.r-table__business-actions').text()).toBe(
       'Business action',
     )

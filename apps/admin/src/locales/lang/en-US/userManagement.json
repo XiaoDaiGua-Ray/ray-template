@@ -78,7 +78,11 @@
     "invalidCredentials": "Incorrect username or password.",
     "forbidden": "Your account does not have permission for this action.",
     "invalidRoutes": "The route configuration failed validation.",
-    "requestFailed": "The request failed. Please retry."
+    "requestFailed": "The request failed. Please retry.",
+    "editConflict": "Someone else changed this account. Reopen the editor and review the latest values before saving.",
+    "serverStorage": "The server cannot access its database. Try again later.",
+    "serviceUnavailable": "The service is temporarily unavailable. Try again later.",
+    "tooManyRequests": "Too many requests. Wait before trying again."
   },
   "allUsers": "All users",
   "apiContract": "API contract"

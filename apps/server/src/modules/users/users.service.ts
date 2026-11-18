@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common'
 import {
   credentialInputSchema,
+  editRevision,
   idsSchema,
   statusInputSchema,
   userInputSchema,
@@ -190,6 +191,7 @@ export class UsersService {
     token: string | null,
     requestId: string | null,
     id?: string,
+    ifMatch?: string,
   ) {
     const value = parseInput(userInputSchema, input)
 
@@ -203,6 +205,13 @@ export class UsersService {
 
       if (existing)
         await this.assertManageRole(transaction, session, existing.role)
+
+      if (
+        existing &&
+        ifMatch !== void 0 &&
+        ifMatch !== `"${await editRevision(userView(existing))}"`
+      )
+        throw new ApiError(412, 'editConflict')
 
       await this.assertManageRole(transaction, session, value.role)
 

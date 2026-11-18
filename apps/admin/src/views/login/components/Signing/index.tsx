@@ -135,7 +135,7 @@ export default defineComponent({
                 attrType="button"
                 disabled={loading.value}
                 onClick={() => {
-                  signingForm.name = 'Ray Admin'
+                  signingForm.name = 'user001'
                   signingForm.pwd = '123456'
                   void handleLogin()
                 }}
@@ -148,7 +148,8 @@ export default defineComponent({
                     secondary
                     disabled={loading.value}
                     onClick={() => {
-                      signingForm.name = role
+                      signingForm.name =
+                        role === 'manager' ? 'user011' : 'user002'
                       signingForm.pwd = '123456'
                       void handleLogin()
                     }}

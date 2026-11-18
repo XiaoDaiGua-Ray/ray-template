@@ -132,7 +132,15 @@ export default defineComponent({
 
         closeCurrentMenuTag(currentContextmenuIndex.value)
       },
-      reloadCurrentPage: () => {
+      reloadCurrentPage: async () => {
+        const option = getMenuTagOptions.value[currentContextmenuIndex.value]
+
+        if (option && route.fullPath !== option.fullPath) {
+          await changeMenuModelValue(option.fullPath, option)
+
+          if (route.fullPath !== option.fullPath) return
+        }
+
         reload()
       },
       closeAll: () => {

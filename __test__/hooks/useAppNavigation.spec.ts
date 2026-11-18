@@ -36,8 +36,15 @@ describe('useAppNavigation', () => {
     expect(pending).toBeInstanceOf(Promise)
     await pending
     expect(state.router?.currentRoute.value.path).toBe('/target')
-    await navigationTo({ fullPath: '/items/4' } as AppMenuOption)
-    expect(state.router?.currentRoute.value.path).toBe('/items/4')
+    await navigationTo(
+      { fullPath: '/items/4?q=one#details' } as AppMenuOption,
+      {
+        query: { page: '2' },
+      },
+    )
+    expect(state.router?.currentRoute.value.fullPath).toBe(
+      '/items/4?q=one&page=2#details',
+    )
   })
 
   it('resolves a dynamic path and preserves URL query and hash when replacing', async () => {

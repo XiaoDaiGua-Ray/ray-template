@@ -6,6 +6,8 @@ import AdminExample from '../../examples/AdminExample.vue'
 
 `RSegment` 用 Naive UI Tabs 的 `segment` 模式渲染选项。通过 `value` 和 `onUpdateValue`（或 `v-model:value`）切换业务状态，`defaultValue` 可提供非受控初值。页面内容由调用方根据值渲染。
 
+分段器通过单选组向辅助技术描述选项。可用 `aria-label` 指定组名。Tab 进入当前选项，左右方向键切换并跳过禁用项，Home 和 End 选择首尾可用项。
+
 | 属性             | 默认           | 说明                                                |
 | ---------------- | -------------- | --------------------------------------------------- |
 | `options`        | `[]`           | `RSegmentOptions[]`，每个选项的 `key` 需唯一。      |

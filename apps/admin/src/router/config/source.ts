@@ -14,6 +14,8 @@ const storageKey = 'rayRouteConfig.v1'
 
 export const remoteRouteUrl =
   import.meta.env.VITE_ROUTE_CONFIG_URL?.trim() || apiUrl('admin/route-config')
+export const remoteRoutesReadOnly =
+  !!import.meta.env.VITE_ROUTE_CONFIG_URL?.trim()
 export const serverRoutesRequired =
   !apiMockEnabled && !import.meta.env.VITE_ROUTE_CONFIG_URL?.trim()
 
@@ -54,11 +56,14 @@ export const routeSourceStatus: {
 export async function fetchRemoteRouteConfig(
   view?: 'editor',
   signal?: AbortSignal,
+  onRevision?: (revision: string | undefined) => void,
 ): Promise<RouteConfig> {
   if (!import.meta.env.VITE_ROUTE_CONFIG_URL?.trim()) {
     const { parseRouteConfig } = await import('./contract')
 
-    return parseRouteConfig(JSON.stringify(await getAdminRoutes(view, signal)))
+    return parseRouteConfig(
+      JSON.stringify(await getAdminRoutes(view, signal, onRevision)),
+    )
   }
 
   if (!remoteRouteUrl) throw new Error('VITE_ROUTE_CONFIG_URL is missing.')
@@ -86,13 +91,30 @@ export async function fetchRemoteRouteConfig(
   return parseRouteConfig(await response.text())
 }
 
-export async function saveRemoteRouteConfig(config: RouteConfig) {
+export async function readRouteEditorSnapshot() {
+  let revision: string | undefined
+  const config = await fetchRemoteRouteConfig('editor', void 0, (value) => {
+    revision = value
+  })
+
+  return { config, revision }
+}
+
+export async function activateRemoteRouteSource() {
+  await fetchRemoteRouteConfig()
+  saveRouteSource('remote')
+}
+
+export async function saveRemoteRouteConfig(
+  config: RouteConfig,
+  revision?: string,
+) {
   if (import.meta.env.VITE_ROUTE_CONFIG_URL?.trim())
     throw new Error(
       'VITE_ROUTE_CONFIG_URL is a read-only legacy endpoint. Configure VITE_API_BASE_URL for route writes.',
     )
 
-  await updateAdminRoutes(config)
+  await updateAdminRoutes(config, revision)
   saveRouteSource('remote')
 }
 

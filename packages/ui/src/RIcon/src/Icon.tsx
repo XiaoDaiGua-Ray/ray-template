@@ -50,25 +50,27 @@ export default defineComponent({
     }
   },
   render() {
+    const svgAttrs = { RIconAttribute: 'r-icon', 'aria-hidden': true }
+
     return (
       <span
         class={['r-icon', this.customClassName]}
         style={[this.cssVars]}
         onClick={this.iconClick}
       >
-        <svg
-          viewBox={this.asset?.viewBox}
-          innerHTML={this.asset?.body}
-          fill={this.color}
-          {...({
-            RIconAttribute: 'r-icon',
-            'aria-hidden': true,
-          } as object)}
-        >
-          {this.symbolId ? (
-            <use href={this.symbolId} fill={this.color} />
-          ) : null}
-        </svg>
+        {this.asset ? (
+          <svg
+            {...svgAttrs}
+            viewBox={this.asset.viewBox}
+            fill={this.color}
+            {...this.asset.paint}
+            innerHTML={this.asset.body}
+          />
+        ) : (
+          <svg {...svgAttrs} fill={this.color}>
+            {this.symbolId && <use href={this.symbolId} fill={this.color} />}
+          </svg>
+        )}
       </span>
     )
   },

@@ -23,6 +23,8 @@
   "collapseSearch": "收起筛选",
   "searchYes": "是",
   "searchNo": "否",
+  "searchRangeStart": "{field}开始",
+  "searchRangeEnd": "{field}结束",
   "searchError": "无法生成查询条件",
   "searchOptionsError": "选项加载失败",
   "reload": "刷新",

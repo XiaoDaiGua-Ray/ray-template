@@ -78,7 +78,11 @@
     "invalidCredentials": "账号或密码错误。",
     "forbidden": "当前账号没有执行此操作的权限。",
     "invalidRoutes": "路由配置未通过校验。",
-    "requestFailed": "请求失败，请稍后重试。"
+    "requestFailed": "请求失败，请稍后重试。",
+    "editConflict": "此账号已被其他人修改。请重新打开编辑框，核对最新内容后再保存。",
+    "serverStorage": "服务器暂时无法访问数据库，请稍后重试。",
+    "serviceUnavailable": "服务暂时不可用，请稍后重试。",
+    "tooManyRequests": "请求过于频繁，请稍后再试。"
   },
   "allUsers": "全部用户",
   "apiContract": "API 接入契约"

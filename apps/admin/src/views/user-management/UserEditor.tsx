@@ -1,5 +1,4 @@
 import { createUser, updateUser } from '@/api/admin'
-import { AdminApiError } from '@/api/admin/client'
 import type { AdminUser, UserInput, UserOptions } from '@/api/admin/contracts'
 import { useAccess, useI18n } from '@/hooks'
 import { RForm, useForm } from '@ray-template/ui/form'
@@ -16,6 +15,7 @@ import {
 } from 'naive-ui'
 import type { FormRules, InputInst } from 'naive-ui'
 import type { PropType } from 'vue'
+import { useUserErrorMessage } from './error-message'
 
 export default defineComponent({
   name: 'UserEditor',
@@ -23,11 +23,13 @@ export default defineComponent({
     user: { type: Object as PropType<AdminUser>, default: void 0 },
     options: { type: Object as PropType<UserOptions>, required: true },
     departmentId: { type: String, default: void 0 },
+    revision: { type: String, default: void 0 },
     currentUserId: { type: String, default: void 0 },
   },
   emits: { close: () => true, saved: (_user: AdminUser) => true },
   setup(props, { emit }) {
     const { t } = useI18n('userManagement')
+    const errorText = useUserErrorMessage()
     const { t: translate } = useI18n()
     const { hasPermission } = useAccess()
     const initial: UserInput = {
@@ -129,14 +131,12 @@ export default defineComponent({
         }
 
         const user = props.user
-          ? await updateUser(props.user.id, model.value)
+          ? await updateUser(props.user.id, model.value, props.revision)
           : await createUser(model.value)
 
         emit('saved', user)
       } catch (reason) {
-        error.value = t(
-          `errors.${reason instanceof AdminApiError ? reason.key : 'requestFailed'}`,
-        )
+        error.value = errorText(reason)
       } finally {
         saving.value = false
       }

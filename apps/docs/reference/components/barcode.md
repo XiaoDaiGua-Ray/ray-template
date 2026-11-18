@@ -45,6 +45,8 @@ export const renderOrderBarcode = (orderNo: string) => (
 | `watchText`        | `true`      | 文本变化时重绘。`format`、`options`（包括响应式嵌套字段）、尺寸和渲染介质变化也会自动重绘，无需更换 `key`。 |
 | `loading`          | `false`     | 控制 Spin；调用方负责开关。                                                                                 |
 
+例如 `responsive width="responsive" :height="48"` 会让宽度跟随容器，高度保持 48px。高度随容器变化时，请给父容器设置明确的高度。
+
 `onSuccess(text, format, options)`、`onError(error)`、`onFinally()` 支持函数或回调数组。成功回调收到原始 options；组件响应式调整的条宽和条高不写回该对象。绘制异常通过 `onError` 通知，业务代码可据此提示或清理旧预览。
 
 支持 `CODE39`、`CODE128` 及 `A/B/C` 变体、`EAN13/EAN8/EAN5/EAN2`、`UPC`、`ITF14/ITF`、`MSI/MSI10/MSI11/MSI1010/MSI1110`、`pharmacode`、`codabar`。使用 EAN 或 UPC 前验证输入长度和校验位。打印后是否可扫取决于设备和成品尺寸。

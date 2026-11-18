@@ -16,6 +16,8 @@ import { withBase } from 'vitepress'
 <<< @/examples/ShellDemo.vue
 :::
 
+菜单支持键盘操作。Tab 可聚焦菜单项，Enter 或空格展开分组或打开页面。侧栏用上下方向键移动焦点，顶部菜单用左右方向键。折叠侧栏和顶部菜单的子菜单可用方向键选择、Enter 打开、Esc 关闭。
+
 ## 配置工作区
 
 ```ts

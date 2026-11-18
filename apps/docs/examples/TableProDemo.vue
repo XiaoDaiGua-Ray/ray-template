@@ -33,7 +33,12 @@
         columnStateKey="docs-demo"
         autoHeight
         @register="register"
-      />
+      >
+        <template #error="{ reload: retry }">
+          <p role="alert">{{ copy.failed }}</p>
+          <NButton size="small" @click="retry()">{{ copy.retry }}</NButton>
+        </template>
+      </RTablePro>
     </div>
   </DemoFrame>
 </template>
@@ -59,6 +64,8 @@ const copy = computed(() =>
         remote: 'Simulated request',
         virtual: 'Virtual scroll',
         fail: 'Simulate a request failure',
+        failed: 'The request failed. Try loading this page again.',
+        retry: 'Retry',
         cancelled: 'Cancelled requests:',
         name: 'Name',
         searchName: 'Enter a name',
@@ -71,6 +78,8 @@ const copy = computed(() =>
         remote: '模拟远端查询',
         virtual: '虚拟滚动',
         fail: '模拟请求失败',
+        failed: '请求失败，请重新加载当前页。',
+        retry: '重试',
         cancelled: '已取消请求：',
         name: '姓名',
         searchName: '请输入姓名',

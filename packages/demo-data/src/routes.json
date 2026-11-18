@@ -354,14 +354,14 @@
               "path": "router-demo-home",
               "component": "demo/router-demo/router-demo-home",
               "meta": {
-                "noLocalTitle": "人员信息(平级模式)"
+                "i18nKey": "menu.RouterPeople"
               }
             },
             {
               "path": "router-demo-detail",
               "component": "demo/router-demo/router-demo-detail",
               "meta": {
-                "noLocalTitle": "信息详情",
+                "i18nKey": "menu.RouterPersonDetail",
                 "sameLevel": true
               }
             }
@@ -383,7 +383,7 @@
               "name": "MultiMenuOne",
               "component": "demo/multi/views/multi-menu-one",
               "meta": {
-                "noLocalTitle": "多级菜单-1",
+                "i18nKey": "menu.NestedOne",
                 "keepAlive": true
               }
             },
@@ -392,7 +392,7 @@
               "name": "MultiMenuTwo",
               "component": "layout",
               "meta": {
-                "noLocalTitle": "多级菜单-2"
+                "i18nKey": "menu.NestedTwo"
               },
               "children": [
                 {
@@ -400,7 +400,7 @@
                   "name": "SubMenuOther",
                   "component": "demo/multi/views/multi-menu-two/views/sub-menu-other",
                   "meta": {
-                    "noLocalTitle": "多级菜单-2-1",
+                    "i18nKey": "menu.NestedTwoOne",
                     "keepAlive": true
                   }
                 },
@@ -409,7 +409,7 @@
                   "name": "SubMenu",
                   "component": "layout",
                   "meta": {
-                    "noLocalTitle": "多级菜单-2-2",
+                    "i18nKey": "menu.NestedTwoTwo",
                     "keepAlive": true
                   },
                   "children": [
@@ -418,7 +418,7 @@
                       "name": "MultiMenuTwoOne",
                       "component": "demo/multi/views/multi-menu-two/views/sub-menu/views/multi-menu-two-one",
                       "meta": {
-                        "noLocalTitle": "多级菜单-2-2-1",
+                        "i18nKey": "menu.NestedTwoTwoOne",
                         "keepAlive": true
                       }
                     }

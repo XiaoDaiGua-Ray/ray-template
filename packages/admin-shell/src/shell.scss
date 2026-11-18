@@ -1,3 +1,8 @@
+.r-shell-menu [role='menuitem'][tabindex]:focus-visible {
+  outline: 2px solid var(--r-theme-primary-color);
+  outline-offset: -2px;
+}
+
 .r-layout-full {
   position: fixed;
   inset: 0;

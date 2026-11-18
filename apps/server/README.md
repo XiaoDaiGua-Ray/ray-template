@@ -24,7 +24,7 @@ The runtime route configuration requires an active session and filters by `route
 
 When `DEMO_ENABLED=true`, public `/admin/demo/*` endpoints use the same fixtures as Mock. Redis caches only fixed request and chart fixtures and the two search-option locales for five minutes. Demos default to off in production.
 
-Usernames and email addresses have normalized unique database keys. Department queries include descendants. Bulk updates and deletion are atomic, deduplicate IDs, and reject changes to missing/protected targets. A user cannot delete or disable their own account or change their own role. Non-admin actors cannot manage roles with permissions they do not hold.
+Usernames and email addresses have normalized unique database keys. Editor reads for users and the full route configuration return an opaque envelope revision and ETag. Both editors send it in `If-Match`; stale replacements return 412 `editConflict` from the write transaction. Clients that omit the header retain unconditional PUT semantics. Department queries include descendants. Bulk updates and deletion are atomic, deduplicate IDs, and reject changes to missing/protected targets. A user cannot delete or disable their own account or change their own role. Non-admin actors cannot manage roles with permissions they do not hold.
 
 Authentication verifies the JWT signature, issuer, audience and expiry, then checks the token digest and live account grants in PostgreSQL. Passwords use salted scrypt. Logout revokes the current session; password changes, credential reset, account disabling and role changes revoke all affected sessions. The upgrade requires existing opaque-token clients to sign in again. Audits omit passwords, tokens and request bodies.
 

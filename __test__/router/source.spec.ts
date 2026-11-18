@@ -45,3 +45,32 @@ it('ignores previously saved static routes when the backend owns runtime routes'
   await expect(loadRouteConfig()).rejects.toThrow('Route backend unavailable')
   expect(getRoutes).toHaveBeenCalled()
 })
+
+it('activates the read-only legacy source from a local preference without publishing a draft', async () => {
+  vi.stubEnv('VITE_ROUTE_CONFIG_URL', 'https://example.com/routes.json')
+  localStorage.setItem(
+    'rayRouteConfig.v1',
+    JSON.stringify({ source: 'local', local: { version: 1, routes: [] } }),
+  )
+  const request = vi
+    .spyOn(globalThis, 'fetch')
+    .mockResolvedValue(new Response(JSON.stringify({ version: 1, routes: [] })))
+  const reload = vi.spyOn(location, 'reload').mockImplementation(() => {})
+
+  try {
+    const { activateRemoteRouteSource, remoteRoutesReadOnly } =
+      await import('@/router/config/source')
+
+    expect(remoteRoutesReadOnly).toBe(true)
+    await activateRemoteRouteSource()
+    expect(request).toHaveBeenCalledTimes(1)
+    expect(request.mock.calls[0]?.[1]?.method ?? 'GET').toBe('GET')
+    expect(
+      JSON.parse(localStorage.getItem('rayRouteConfig.v1')!),
+    ).toMatchObject({ source: 'remote' })
+    expect(reload).toHaveBeenCalledOnce()
+  } finally {
+    request.mockRestore()
+    reload.mockRestore()
+  }
+})

@@ -1,6 +1,7 @@
 export interface RuntimeState {
   globalSpinning: boolean
   globalDrawerValue: boolean
+  refreshingPath: string | null
   globalMainLayoutLoad: boolean
   layoutContentMaximize: boolean
   layoutContentMaximizeVersion: number
@@ -16,6 +17,7 @@ export const piniaRuntimeStore = defineStore('runtime', () => {
   const state = reactive<RuntimeState>({
     globalSpinning: false,
     globalDrawerValue: false,
+    refreshingPath: null,
     globalMainLayoutLoad: true,
     layoutContentMaximize: false,
     layoutContentMaximizeVersion: 0,
@@ -36,11 +38,13 @@ export const piniaRuntimeStore = defineStore('runtime', () => {
   }
 
   // 刷新会卸载发起调用的页面，计时器必须由 store 持有；重复刷新以最后一次为准。
-  const reloadContent = (wait = 800) => {
+  const reloadContent = (wait = 800, path: string | null = null) => {
     clearTimeout(reloadTimer)
+    state.refreshingPath = path
     state.globalMainLayoutLoad = false
     reloadTimer = setTimeout(() => {
       state.globalMainLayoutLoad = true
+      state.refreshingPath = null
       reloadTimer = void 0
     }, wait)
   }

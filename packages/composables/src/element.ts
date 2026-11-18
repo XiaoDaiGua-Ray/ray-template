@@ -7,6 +7,8 @@ import type { CSSProperties } from 'vue'
 import type { BasicTarget } from './types'
 import { unrefElement } from './vue/unref-element'
 
+export { navigateHorizontalChoice } from './keyboard-choice'
+
 const classTokens = (names: string | string[]) =>
   (typeof names === 'string' ? [names] : names)
     .flatMap((name) => name.split(/[\t\n\f\r ]+/))

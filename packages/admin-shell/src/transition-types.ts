@@ -4,4 +4,5 @@ export interface TransitionProps {
   transitionPropName?: string
   transitionMode?: BaseTransitionProps['mode']
   transitionAppear?: boolean
+  refreshingPath?: string | null
 }

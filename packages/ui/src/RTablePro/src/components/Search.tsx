@@ -9,7 +9,7 @@ import {
   useId,
   useTemplateRef,
 } from 'vue'
-import type { PropType } from 'vue'
+import type { PropType, VNode } from 'vue'
 import { useTableLocale } from '../locale'
 import { normalizeSearchValues } from '../search'
 import type {
@@ -171,13 +171,51 @@ export default defineComponent({
         field.type === 'text' ||
         field.type === 'number' ||
         (!field.type && !field.options)
+      const dateOrTime = field.type === 'time' || field.type?.startsWith('date')
+      const compound =
+        dateOrTime || field.type === 'cascader' || field.type === 'treeSelect'
+      const range = field.type === 'dateRange' || field.type === 'datetimeRange'
+      // 这些控件没有向内部输入框透传标签的接口。范围两端分别命名，保留同一字段的上下文。
+      const labelControls = (node: VNode) => {
+        const root = node.el
+
+        if (!(root instanceof HTMLElement)) return
+
+        const inputs = root.querySelectorAll<HTMLInputElement>(
+          'input:not([type="hidden"])',
+        )
+
+        inputs.forEach((input, index) => {
+          if (dateOrTime) input.id = index ? `${inputId}-end` : inputId
+
+          if (range) {
+            input.setAttribute(
+              'aria-label',
+              t(index ? 'searchRangeEnd' : 'searchRangeStart', {
+                field: field.label,
+              }),
+            )
+          } else {
+            input.setAttribute('aria-labelledby', labelId)
+          }
+        })
+
+        for (const trigger of root.querySelectorAll('div[tabindex="0"]')) {
+          trigger.setAttribute('aria-labelledby', labelId)
+        }
+      }
 
       return (
         <NFormItem
           class="r-table-search__item"
           data-search-field={path}
           label={field.label}
-          labelProps={{ id: labelId, for: hasInput ? inputId : void 0 }}
+          labelProps={{
+            id: labelId,
+            for: hasInput || dateOrTime ? inputId : void 0,
+          }}
+          onVnodeMounted={compound ? labelControls : void 0}
+          onVnodeUpdated={compound ? labelControls : void 0}
           path={path}
           rule={field.type ? field.rules : void 0}
           showFeedback={!!(field.type && field.rules)}

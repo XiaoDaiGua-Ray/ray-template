@@ -13,8 +13,33 @@ import { getRouteJsonSchema } from '@/router/config/json-schema'
 import { expandRoutes } from '@/router/utils/expand-routes'
 import { orderRoutes } from '@/router/utils/order-routes'
 import { validRole } from '@/router/utils/valid-role'
+import { piniaMenuStore } from '@/store/modules/menu'
+import { piniaSigningStore } from '@/store/modules/signing'
+import { createRouteParser } from '@ray-template/api-contracts/route-validation'
+import { nextTick } from 'vue'
+import setupMiniApp from '../utils/setupMiniApp'
 
 const page = { component: 'dashboard', meta: {} }
+
+it('accepts nested icon names for both menu and badge after catalog validation', () => {
+  const icon = 'business/orders/approved'
+  const isIconName = vi.fn((name: string) => name === icon)
+  const parser = createRouteParser({
+    managementPath: '/route-management',
+    findRouteView: () => ({ name: 'Dashboard' }),
+    normalizeIcon: (name) => name,
+    isIconName,
+  })
+  const config = {
+    version: 1,
+    routes: [{ ...page, path: '/reports', meta: { icon, extra: { icon } } }],
+  }
+
+  expect(parser(JSON.stringify(config)).routes[0].meta).toEqual(
+    config.routes[0].meta,
+  )
+  expect(isIconName).toHaveBeenCalledWith(icon)
+})
 const parse = (routes: unknown[]) =>
   parseRouteConfig(JSON.stringify({ version: 1, routes }))
 
@@ -217,4 +242,47 @@ describe('route configuration', () => {
     expect(orderRoutes(input)).toEqual([first, second])
     expect(input).toEqual([second, first])
   })
+})
+
+it('rebuilds the menu when the next account finishes loading its routes', async () => {
+  const { app } = await setupMiniApp()
+  const signing = app.runWithContext(() => piniaSigningStore())
+  const menu = app.runWithContext(() => piniaMenuStore())
+
+  try {
+    signing.signingCallback = { id: 'first', name: 'First', role: 'admin' }
+    setAppRouteModules(getStaticAppRoutes())
+    await nextTick()
+    expect(menu.options.length).toBeGreaterThan(1)
+
+    signing.clearSigningCallback()
+    await nextTick()
+    signing.signingCallback = { id: 'second', name: 'Second', role: 'member' }
+    await nextTick()
+    expect(menu.options).toHaveLength(0)
+    setAppRouteModules(toRuntimeRoutes(parse([{ ...page, path: '/returned' }])))
+    await nextTick()
+    expect(menu.options.map(({ fullPath }) => fullPath)).toEqual(['/returned'])
+  } finally {
+    app.unmount()
+    setAppRouteModules(getStaticAppRoutes())
+  }
+})
+
+it('localizes saved built-in literal menu titles and preserves edited titles', () => {
+  for (const [title, key] of [
+    ['信息详情', 'menu.RouterPersonDetail'],
+    ['已有定制标题', void 0],
+  ]) {
+    const config = parse([
+      {
+        ...page,
+        path: '/router-demo/router-demo-detail',
+        meta: { noLocalTitle: title },
+      },
+    ])
+
+    expect(toRuntimeRoutes(config)[0].meta.i18nKey).toBe(key)
+    expect(config.routes[0].meta.i18nKey).toBeUndefined()
+  }
 })

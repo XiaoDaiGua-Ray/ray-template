@@ -125,12 +125,14 @@ export interface ApiResponse<T> {
   code: number
   msg: string
   data: T
+  revision?: string
   error?: { key: string; fields?: Record<string, string> }
 }
 export const envelopeSchema = v.object({
   code: v.number(),
   msg: v.string(),
   data: v.unknown(),
+  revision: v.optional(v.string()),
   error: v.optional(
     v.object({
       key: v.string(),
@@ -138,6 +140,21 @@ export const envelopeSchema = v.object({
     }),
   ),
 })
+/**
+ *
+ * @param value 编辑接口返回的资源快照
+ *
+ * @returns 快照内容的 SHA-256 摘要，供条件写入核对版本。
+ */
+export async function editRevision(value: unknown): Promise<string> {
+  const bytes = new TextEncoder().encode(JSON.stringify(value))
+  const digest = await crypto.subtle.digest('SHA-256', bytes)
+
+  return Array.from(new Uint8Array(digest), (byte) =>
+    byte.toString(16).padStart(2, '0'),
+  ).join('')
+}
+
 export const userListSchema = v.object({
   items: v.array(userSchema),
   total: v.pipe(v.number(), v.integer(), v.minValue(0)),

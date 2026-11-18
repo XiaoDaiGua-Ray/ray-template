@@ -9,8 +9,10 @@ import {
   Put,
   Query,
   Req,
+  Res,
 } from '@nestjs/common'
-import type { Request } from 'express'
+import { editRevision } from '@ray-template/api-contracts/admin'
+import type { Request, Response } from 'express'
 import { queryInput, requestIdFrom, tokenFrom } from '../../http'
 import { authFrom, RequirePermission } from '../auth/auth.guard'
 import type { AuthenticatedRequest } from '../auth/auth.guard'
@@ -34,8 +36,15 @@ export class UsersController {
 
   @Get(':id')
   @RequirePermission('users:read')
-  get(@Param('id') id: string) {
-    return this.users.get(id)
+  async get(
+    @Param('id') id: string,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const user = await this.users.get(id)
+
+    response.locals.editRevision = await editRevision(user)
+
+    return user
   }
 
   @Post()
@@ -56,6 +65,7 @@ export class UsersController {
       tokenFrom(request),
       requestIdFrom(request),
       id,
+      request.get('If-Match'),
     )
   }
 

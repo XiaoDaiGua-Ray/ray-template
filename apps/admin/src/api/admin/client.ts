@@ -53,6 +53,7 @@ export async function adminRequest<Schema extends v.GenericSchema>(
   path: string,
   schema: Schema,
   options: AppRawRequestConfig<unknown> = {},
+  onRevision?: (revision: string | undefined) => void,
 ): Promise<v.InferOutput<Schema>> {
   let body: unknown
   const version = sessionVersion
@@ -121,5 +122,9 @@ export async function adminRequest<Schema extends v.GenericSchema>(
       ),
     )
 
-  return v.parse(schema, envelope.data)
+  const result = v.parse(schema, envelope.data)
+
+  onRevision?.(envelope.revision)
+
+  return result
 }

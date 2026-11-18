@@ -12,8 +12,16 @@ export function getIconAsset(name: IconName) {
 
   if (!svg) return
 
+  const paint = Object.fromEntries(
+    Array.from(
+      svg[1].matchAll(/\s((?:fill|stroke)(?:-[\w-]+)?|opacity|color|style|preserveAspectRatio)\s*=\s*(["'])([\s\S]*?)\2/g),
+      ([, name, , value]) => [name, value],
+    ),
+  )
+
   return {
     viewBox: svg[1].match(/viewBox=["']([^"']+)["']/i)?.[1],
     body: svg[2],
+    paint,
   }
 }

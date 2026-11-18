@@ -70,11 +70,18 @@ export class EnvelopeInterceptor implements NestInterceptor {
     response.status(200)
 
     return next.handle().pipe(
-      map((data: unknown): ApiResponse<unknown> => ({
-        code: 200,
-        msg: 'OK',
-        data: data ?? null,
-      })),
+      map((data: unknown): ApiResponse<unknown> => {
+        const revision: string | undefined = response.locals.editRevision
+
+        if (revision) response.setHeader('ETag', `"${revision}"`)
+
+        return {
+          code: 200,
+          msg: 'OK',
+          data: data ?? null,
+          ...(revision ? { revision } : {}),
+        }
+      }),
     )
   }
 }

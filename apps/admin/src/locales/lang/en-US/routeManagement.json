@@ -66,5 +66,8 @@
     "group": "Menu group",
     "redirect": "Redirect",
     "external": "External link"
-  }
+  },
+  "editConflict": "Another administrator saved a new configuration. Export any draft you want to keep, then reload the configuration and merge your changes.",
+  "readOnlyHint": "The remote source is read-only. Activating it reloads the workspace. You can export your edits or save them as a local configuration.",
+  "activateRemote": "Activate remote configuration"
 }

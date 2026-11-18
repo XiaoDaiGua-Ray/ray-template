@@ -37,7 +37,7 @@ export const readQuery = () => useVueRouter().router.currentRoute.value.query
 | target          | 行为                                                                                      |
 | --------------- | ----------------------------------------------------------------------------------------- |
 | 完整路径字符串  | 先用 Router 解析，保留动态路径、query 和 hash。未匹配或只匹配兜底路由时返回 `undefined`。 |
-| `AppMenuOption` | 按 `fullPath` 导航。                                                                      |
+| `AppMenuOption` | 按 `fullPath` 导航，保留参数与锚点；可用 `query` 覆盖同名参数。                           |
 | 从 0 开始的整数 | 从当前菜单取项，遇到父菜单沿第一个子项查到叶子。菜单需要先初始化。                        |
 
 `NavigationToOptions.isPush` 默认 `true`；设为 `false` 使用 `router.replace`。`query` 可覆盖字符串路径中的同名查询参数。成功发起时返回 Router Promise。负数、小数、非有限数和越界索引不会导航；实际结果仍受路由守卫影响。
@@ -55,7 +55,9 @@ export function useTableNavigation() {
 }
 ```
 
-## useAppRoot（兼容接口）
+<span id="useapproot-兼容接口"></span>
+
+## useAppRoot（兼容接口） {#useapproot}
 
 此接口已废弃，仅为旧调用方保留历史偏好的读写。`getRootRoute`、`getRootPath`、`getRootName` 是计算引用，`setRootRoute({ name?, path? })` 合并更新该字段；它不再控制登录落点、标签保护或关闭全部后的导航，也没有启动时首页校验。空工作区固定使用 `/welcome`。新代码直接通过 Router 显式导航。
 

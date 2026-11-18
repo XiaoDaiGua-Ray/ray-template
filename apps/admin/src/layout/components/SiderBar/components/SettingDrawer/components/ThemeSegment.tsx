@@ -36,6 +36,7 @@ export default defineComponent({
     })
 
     return {
+      t,
       options,
       modelAppTheme,
     }
@@ -45,6 +46,7 @@ export default defineComponent({
 
     return (
       <RSegment
+        aria-label={this.t('appearance.theme')}
         options={options}
         size="small"
         width="block"

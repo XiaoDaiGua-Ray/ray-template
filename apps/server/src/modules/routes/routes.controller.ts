@@ -1,7 +1,17 @@
-import { Body, Controller, Get, Inject, Put, Query, Req } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Put,
+  Query,
+  Req,
+  Res,
+} from '@nestjs/common'
+import { editRevision } from '@ray-template/api-contracts/admin'
 import { filterRuntimeRoutes } from '@ray-template/api-contracts/routes'
 import { parseApplicationRoutes } from '@ray-template/demo-data'
-import type { Request } from 'express'
+import type { Request, Response } from 'express'
 import { SERVER_CONFIG } from '../../config'
 import type { Prisma } from '../../generated/prisma/client'
 import { ApiError, requestIdFrom, tokenFrom } from '../../http'
@@ -23,6 +33,7 @@ export class RoutesController {
   async get(
     @Req() request: AuthenticatedRequest,
     @Query('view') view: unknown,
+    @Res({ passthrough: true }) response: Response,
   ) {
     if (view !== void 0 && view !== 'editor') throw new ApiError(400, 'invalid')
 
@@ -40,13 +51,17 @@ export class RoutesController {
     try {
       const routes = parseApplicationRoutes(JSON.stringify(record.config))
 
-      return view === 'editor'
-        ? routes
-        : filterRuntimeRoutes(routes, {
-            role: session.user.role,
-            permissions: session.permissions,
-            demoEnabled: this.config.demoEnabled,
-          })
+      if (view === 'editor') {
+        response.locals.editRevision = await editRevision(routes)
+
+        return routes
+      }
+
+      return filterRuntimeRoutes(routes, {
+        role: session.user.role,
+        permissions: session.permissions,
+        demoEnabled: this.config.demoEnabled,
+      })
     } catch {
       throw new ApiError(503, 'invalidRoutes')
     }
@@ -69,6 +84,21 @@ export class RoutesController {
         'routes:write',
         transaction,
       )
+
+      const ifMatch = request.get('If-Match')
+
+      if (ifMatch !== void 0) {
+        const current = await transaction.routeConfig.findUnique({
+          where: { id: 'admin' },
+        })
+
+        if (
+          !current ||
+          ifMatch !==
+            `"${await editRevision(parseApplicationRoutes(JSON.stringify(current.config)))}"`
+        )
+          throw new ApiError(412, 'editConflict')
+      }
 
       await transaction.routeConfig.upsert({
         where: { id: 'admin' },

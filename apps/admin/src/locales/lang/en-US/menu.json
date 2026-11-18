@@ -59,5 +59,12 @@
   "RouteManagementVisual": "Visual editor",
   "RouteManagementJson": "JSON configuration",
   "SystemManagement": "System management",
-  "UserManagement": "Users"
+  "UserManagement": "Users",
+  "RouterPeople": "People (same-level routes)",
+  "RouterPersonDetail": "Person details",
+  "NestedOne": "Nested menu 1",
+  "NestedTwo": "Nested menu 2",
+  "NestedTwoOne": "Nested menu 2-1",
+  "NestedTwoTwo": "Nested menu 2-2",
+  "NestedTwoTwoOne": "Nested menu 2-2-1"
 }

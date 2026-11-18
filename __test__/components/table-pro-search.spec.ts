@@ -15,6 +15,38 @@ const statusOptions = [
   { label: 'Closed', value: 'closed' },
 ]
 
+it('labels compound picker triggers and both endpoints of a date range', async () => {
+  const fields: TableProSearchOptions['fields'] = [
+    { key: 'created', type: 'dateRange', label: 'Created' },
+    { key: 'at', type: 'time', label: 'Time' },
+    { key: 'group', type: 'cascader', label: 'Group' },
+    { key: 'team', type: 'treeSelect', label: 'Team' },
+  ]
+  const wrapper = mount(RTablePro, { props: { columns, search: { fields } } })
+
+  try {
+    await nextTick()
+    const [range, time, ...selections] = wrapper.findAll('.n-form-item')
+    const endpoints = range.findAll('input')
+
+    expect(endpoints.map((input) => input.attributes('aria-label'))).toEqual([
+      'Created start',
+      'Created end',
+    ])
+    expect(range.get('label').attributes('for')).toBe(endpoints[0].element.id)
+    expect(time.get('input').attributes('aria-labelledby')).toBe(
+      time.get('label').element.id,
+    )
+
+    for (const field of selections)
+      expect(field.get('[tabindex="0"]').attributes('aria-labelledby')).toBe(
+        field.get('label').element.id,
+      )
+  } finally {
+    wrapper.unmount()
+  }
+})
+
 it('matches text, multiple values, dates, zero and false before local pagination', async () => {
   const [register, actions] = useTablePro()
   const data = [

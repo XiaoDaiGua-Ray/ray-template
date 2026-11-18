@@ -38,7 +38,7 @@ export function loadOrders(
 }
 ```
 
-默认取消器按 URL、方法、参数和请求体识别重复请求，默认布局在路由更新前取消受管理的请求。示例将信号交给 TablePro 管理，所以关闭模板的默认注入；否则默认取消器会替换调用方传入的 signal。后台任务禁用默认取消后，需要自行管理生命周期。
+默认取消器按 URL、方法、参数和请求体识别重复请求。`URLSearchParams` 比较编码后的参数序列，`FormData` 比较有序字段、文本值和文件实例。默认布局在路由更新前取消受管理的请求。调用方提供 `signal` 或设置 `cancelConfig.cancel: false` 时自行管理取消；示例中的信号由 TablePro 管理。
 
 ## 配置与拦截器
 

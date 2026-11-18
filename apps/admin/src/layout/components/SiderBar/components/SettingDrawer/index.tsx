@@ -5,6 +5,7 @@ import { getDefaultSettingConfig } from '@/store/modules/setting/constant'
 import { PREFERENCE_FILE_LIMIT } from '@/store/modules/setting/preference-file'
 import type { SettingState } from '@/store/modules/setting/types'
 import { downloadAnyFile } from '@/utils/files'
+import { navigateHorizontalChoice } from '@ray-template/composables/element'
 import { RIcon } from '@ray-template/ui/icon'
 import { useModal } from '@ray-template/ui/modal'
 import { cloneDeep, forIn } from 'lodash-es'
@@ -13,7 +14,7 @@ import {
   NButton,
   NDrawer,
   NDrawerContent,
-  NTabPane,
+  NTab,
   NTabs,
 } from 'naive-ui'
 import Appearance from './segment-views/Appearance'
@@ -33,6 +34,15 @@ export default defineComponent({
       { key: 'watermark', icon: 'system/watermark', view: Watermark },
       { key: 'general', icon: 'action/setting', view: Common },
     ] as const
+    const selectedCategory = ref<string | number>('appearance')
+    const tabsId = useId()
+
+    watch(
+      () => props.show,
+      (show) => {
+        if (show) selectedCategory.value = 'appearance'
+      },
+    )
     const { t } = useI18n('preferences')
     const { create } = useModal()
     const {
@@ -144,42 +154,65 @@ export default defineComponent({
               </div>
             ),
             default: () => (
-              <NTabs
-                type="line"
-                defaultValue="appearance"
-                class="r-settings-tabs"
-                tabClass="r-settings-tabs__tab"
-                tabsPadding={14}
-                themeOverrides={{
-                  tabGapMediumLine: '16px',
-                  tabPaddingMediumLine: '10px 4px',
-                  tabTextColorActiveLine: 'var(--r-primary-text)',
-                  tabTextColorHoverLine: 'var(--r-primary-text)',
-                  barColor: 'var(--r-primary-text)',
-                }}
-              >
-                {categories.map(({ key, icon, view: View }) => (
-                  <NTabPane
-                    key={key}
-                    name={key}
-                    tab={() => (
-                      <span class="r-settings-tabs__label">
-                        <RIcon
-                          class="r-settings-tabs__icon"
-                          name={icon}
-                          size={16}
-                          aria-hidden="true"
-                        />
-                        <span class="r-settings-tabs__text">
-                          {t(`section.${key}`)}
+              <>
+                <NTabs
+                  type="line"
+                  v-model:value={selectedCategory.value}
+                  {...{ role: 'tablist' }}
+                  aria-label={t('title')}
+                  class="r-settings-tabs"
+                  tabClass="r-settings-tabs__tab"
+                  tabsPadding={14}
+                  themeOverrides={{
+                    tabGapMediumLine: '16px',
+                    tabPaddingMediumLine: '10px 4px',
+                    tabTextColorActiveLine: 'var(--r-primary-text)',
+                    tabTextColorHoverLine: 'var(--r-primary-text)',
+                    barColor: 'var(--r-primary-text)',
+                  }}
+                >
+                  {categories.map(({ key, icon }) => (
+                    <NTab
+                      key={key}
+                      name={key}
+                      {...{
+                        role: 'tab',
+                        onKeydown: (event: KeyboardEvent) =>
+                          navigateHorizontalChoice(event),
+                        tabindex: selectedCategory.value === key ? 0 : -1,
+                        id: `${tabsId}-tab-${key}`,
+                      }}
+                      aria-controls={`${tabsId}-panel-${key}`}
+                      aria-selected={selectedCategory.value === key}
+                      tab={() => (
+                        <span class="r-settings-tabs__label">
+                          <RIcon
+                            class="r-settings-tabs__icon"
+                            name={icon}
+                            size={16}
+                            aria-hidden="true"
+                          />
+                          <span class="r-settings-tabs__text">
+                            {t(`section.${key}`)}
+                          </span>
                         </span>
-                      </span>
-                    )}
+                      )}
+                    />
+                  ))}
+                </NTabs>
+                {categories.map(({ key, view: View }) => (
+                  <div
+                    key={key}
+                    id={`${tabsId}-panel-${key}`}
+                    class="r-settings-panel"
+                    role="tabpanel"
+                    aria-labelledby={`${tabsId}-tab-${key}`}
+                    hidden={selectedCategory.value !== key}
                   >
-                    <View />
-                  </NTabPane>
+                    {selectedCategory.value === key && <View />}
+                  </div>
                 ))}
-              </NTabs>
+              </>
             ),
             footer: () => (
               <div class="r-settings-drawer__actions">

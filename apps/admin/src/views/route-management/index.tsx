@@ -1,11 +1,14 @@
 import './index.scss'
+import { AdminApiError } from '@/api/admin/client'
 import AppPageHeader from '@/app-components/app/AppPageHeader'
-import { useAccess, useI18n } from '@/hooks'
+import { useI18n } from '@/hooks'
 import { getStaticAppRoutes } from '@/router/app-route-modules'
 import { exportRouteConfig, parseRouteConfig } from '@/router/config/contract'
 import type { RouteConfig } from '@/router/config/schema'
 import {
-  fetchRemoteRouteConfig,
+  activateRemoteRouteSource,
+  readRouteEditorSnapshot,
+  remoteRoutesReadOnly,
   remoteRouteUrl,
   routeSourceStatus,
   saveRemoteRouteConfig,
@@ -33,7 +36,8 @@ export default defineComponent({
   name: 'RouteManagement',
   setup() {
     const { t } = useI18n('routeManagement')
-    const { hasPermission } = useAccess()
+    let revision: string | undefined
+    const remoteReady = ref(false)
     const source = ref<RouteSource>(routeSourceStatus.requested)
     const draft = ref('')
     const checked = shallowRef<RouteConfig>()
@@ -53,7 +57,12 @@ export default defineComponent({
 
     const report = (reason: unknown) => {
       checked.value = void 0
-      error.value = reason instanceof Error ? reason.message : String(reason)
+      error.value =
+        reason instanceof AdminApiError && reason.key === 'editConflict'
+          ? t('editConflict')
+          : reason instanceof Error
+            ? reason.message
+            : String(reason)
     }
     const setDraft = (config: RouteConfig) => {
       draft.value = JSON.stringify(config, null, 2)
@@ -80,6 +89,11 @@ export default defineComponent({
         report(reason)
       }
     }
+    const selectDraftSource = () => {
+      if (remoteRoutesReadOnly && source.value !== 'local')
+        source.value = 'local'
+      else if (source.value === 'static') source.value = 'remote'
+    }
     const addPage = (event: Event) => {
       event.preventDefault()
       const config = validate()
@@ -101,7 +115,7 @@ export default defineComponent({
         newPage.path = ''
         newPage.title = ''
 
-        if (source.value === 'static') source.value = 'remote'
+        selectDraftSource()
       } catch (reason) {
         report(reason)
       }
@@ -118,7 +132,7 @@ export default defineComponent({
 
         draft.value = await selected.text()
 
-        if (source.value === 'static') source.value = 'remote'
+        selectDraftSource()
 
         validate()
       } catch (reason) {
@@ -127,15 +141,17 @@ export default defineComponent({
         input.value = ''
       }
     }
-    const loadRemote = async () => {
+    const loadRemote = async (useDraft = true) => {
+      remoteReady.value = false
       busy.value = true
 
       try {
-        setDraft(
-          await fetchRemoteRouteConfig(
-            hasPermission('routes:write') ? 'editor' : void 0,
-          ),
-        )
+        const snapshot = await readRouteEditorSnapshot()
+
+        revision = snapshot.revision
+        remoteReady.value = true
+
+        if (useDraft) setDraft(snapshot.config)
       } catch (reason) {
         report(reason)
       } finally {
@@ -144,11 +160,28 @@ export default defineComponent({
     }
 
     if (routeSourceStatus.active === 'remote') void loadRemote()
-    else if (routeSourceStatus.config) setDraft(routeSourceStatus.config)
-    else loadStatic()
+    else {
+      if (routeSourceStatus.config) setDraft(routeSourceStatus.config)
+      else loadStatic()
+
+      if (!remoteRoutesReadOnly) void loadRemote(false)
+    }
 
     const apply = async () => {
       if (busy.value) return
+
+      if (source.value === 'remote' && remoteRoutesReadOnly) {
+        try {
+          busy.value = true
+          await activateRemoteRouteSource()
+        } catch (reason) {
+          report(reason)
+        } finally {
+          busy.value = false
+        }
+
+        return
+      }
 
       const config = source.value !== 'static' ? validate() : void 0
 
@@ -158,7 +191,7 @@ export default defineComponent({
         busy.value = true
 
         if (source.value === 'remote' && config)
-          await saveRemoteRouteConfig(config)
+          await saveRemoteRouteConfig(config, revision)
         else saveRouteSource(source.value, config)
       } catch (reason) {
         report(reason)
@@ -233,13 +266,26 @@ export default defineComponent({
               type="primary"
               onClick={apply}
               disabled={
-                busy.value || (source.value === 'remote' && !remoteRouteUrl)
+                busy.value ||
+                (source.value === 'remote' &&
+                  (!remoteRouteUrl ||
+                    (!remoteRoutesReadOnly && !remoteReady.value)))
               }
             >
-              {t('apply')}
+              {t(
+                source.value === 'remote' && remoteRoutesReadOnly
+                  ? 'activateRemote'
+                  : 'apply',
+              )}
             </NButton>
           </NFlex>
-          <p class="route-management__hint">{t(`${source.value}Hint`)}</p>
+          <p class="route-management__hint">
+            {t(
+              source.value === 'remote' && remoteRoutesReadOnly
+                ? 'readOnlyHint'
+                : `${source.value}Hint`,
+            )}
+          </p>
           {remoteRouteUrl && (
             <code class="route-management__endpoint">{remoteRouteUrl}</code>
           )}
@@ -252,7 +298,11 @@ export default defineComponent({
                 {t('loadStatic')}
               </NButton>
               {remoteRouteUrl && (
-                <NButton size="small" loading={busy.value} onClick={loadRemote}>
+                <NButton
+                  size="small"
+                  loading={busy.value}
+                  onClick={() => void loadRemote()}
+                >
                   {t('loadRemote')}
                 </NButton>
               )}
@@ -335,6 +385,7 @@ export default defineComponent({
                 }}
                 onUpdateValue={(value) => {
                   draft.value = value
+                  selectDraftSource()
                   checked.value = void 0
                   error.value = ''
                 }}

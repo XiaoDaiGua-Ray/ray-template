@@ -1,6 +1,9 @@
-import { computed, defineComponent } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import './index.scss'
-import { completeSize } from '@ray-template/composables/element'
+import {
+  completeSize,
+  navigateHorizontalChoice,
+} from '@ray-template/composables/element'
 import { isValueType } from '@ray-template/utils'
 import { NFlex, NPopover, NTab, NTabs } from 'naive-ui'
 import type { TabsProps } from 'naive-ui'
@@ -55,6 +58,22 @@ export default defineComponent({
   name: 'RSegment',
   props,
   setup(props, { expose }) {
+    const uncontrolled = ref(
+      props.value ?? props.activeName ?? props.defaultValue,
+    )
+    const selected = computed(
+      () =>
+        props.value ??
+        props.activeName ??
+        uncontrolled.value ??
+        props.options[0]?.key,
+    )
+    const tabStop = computed(
+      () =>
+        props.options.find(
+          (option) => option.key === selected.value && !option.disabled,
+        )?.key ?? props.options.find((option) => !option.disabled)?.key,
+    )
     const cssVars = computed(() => {
       const { width: propsWidth } = props
       let segmentWidthVar: string
@@ -86,14 +105,23 @@ export default defineComponent({
 
     return {
       cssVars,
+      selected,
+      tabStop,
+      rememberSelection: (key: string | number) => {
+        uncontrolled.value = key
+      },
     }
   },
   render() {
     const { $props, options, cssVars, themeOverrides: _themeOverrides } = this
+    const { onUpdateValue, ...tabsProps } = $props
 
     return (
       <NTabs
-        {...($props as TabsProps)}
+        {...(tabsProps as TabsProps)}
+        value={this.selected}
+        {...{ role: 'radiogroup' }}
+        onUpdateValue={[onUpdateValue ?? [], this.rememberSelection].flat()}
         style={[cssVars]}
         class={[
           'r-segment',
@@ -108,6 +136,14 @@ export default defineComponent({
             <NTab
               key={curr.key}
               name={curr.key}
+              {...{
+                role: 'radio',
+                onKeydown: (event: KeyboardEvent) =>
+                  navigateHorizontalChoice(event, $props.trigger),
+                tabindex: curr.key === this.tabStop ? 0 : -1,
+              }}
+              aria-checked={curr.key === this.selected}
+              aria-disabled={curr.disabled || void 0}
               tab={() =>
                 !curr.popover ? iconSegmentTab(curr) : popoverSegmentTab(curr)
               }

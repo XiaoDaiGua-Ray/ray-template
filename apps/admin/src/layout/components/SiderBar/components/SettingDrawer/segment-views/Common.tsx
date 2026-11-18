@@ -35,7 +35,7 @@ export default defineComponent({
     const { recentPaths, storageUnavailable } = useNavigationHistoryGetters()
     const { clearRecent } = useNavigationHistoryActions()
     const { globalMainLayoutLoad } = useRuntimeGetters()
-    const { reload } = useSpinning()
+    const { reloadWorkspace } = useSpinning()
     const scrollTo = useContentScroll()
     const cacheHintId = useId()
     const status = ref('')
@@ -104,7 +104,7 @@ export default defineComponent({
           <div class="r-settings-actions">
             <NButton
               loading={!globalMainLayoutLoad.value}
-              onClick={() => reload()}
+              onClick={() => reloadWorkspace()}
             >
               {t('general.refresh')}
             </NButton>

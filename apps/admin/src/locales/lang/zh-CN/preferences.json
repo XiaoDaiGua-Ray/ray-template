@@ -20,6 +20,7 @@
     "general": "通用"
   },
   "theme": {
+    "darkMode": "深色模式",
     "light": "浅色",
     "dark": "深色",
     "auto": "跟随系统"
@@ -131,7 +132,7 @@
     "language": "界面语言",
     "workspaceActions": "工作区操作",
     "refresh": "刷新工作区",
-    "refreshHint": "重新加载当前页面并释放工作区中的页面实例；未保存的表单内容会丢失。",
+    "refreshHint": "重新加载工作区并清空所有页面缓存。各标签页未保存的表单内容都会丢失。",
     "scrollTop": "回到内容顶部",
     "cacheLimitHint": "按最近访问顺序管理缓存。设为 0 将停止加入新页面；如需立即停用，请关闭页面缓存。",
     "clearCache": "清理页面缓存",

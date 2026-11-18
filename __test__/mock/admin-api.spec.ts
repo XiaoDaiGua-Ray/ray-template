@@ -1,3 +1,4 @@
+import { locks } from 'node:worker_threads'
 import {
   changeAccountPassword,
   createUser,
@@ -180,37 +181,113 @@ it('invalidates the server-side Mock session on logout', async () => {
   await expect(getUsers({})).rejects.toMatchObject({ code: 401 })
 })
 
-it('restores Mock writes and active sessions after recreating the database', async () => {
+it('preserves simultaneous edits and sessions across independent browser clients', async () => {
   localStorage.clear()
-  const first = createAdminDatabase(localStorage)
-  const session = await first.login({ username: 'admin', password: '123456' })
-  const user = first.saveUser(input, session.accessToken)
-  const second = createAdminDatabase(localStorage)
+  const first = createAdminDatabase(localStorage, locks)
+  const second = createAdminDatabase(localStorage, locks)
+  const { accessToken } = await first((db) =>
+    db.login({ username: 'admin', password: '123456' }),
+  )
+  const [one, two] = await Promise.all([
+    first((db) => db.saveUser(input, accessToken)),
+    second((db) =>
+      db.saveUser(
+        { ...input, username: 'second', email: 'second@example.com' },
+        accessToken,
+      ),
+    ),
+  ])
 
-  expect(second.getUser(user.id, session.accessToken)).toMatchObject(input)
-  expect(second.authorize(session.accessToken).user.id).toBe(session.user.id)
+  await Promise.all([
+    first((db) =>
+      db.saveUser({ ...one, name: 'First changed' }, accessToken, one.id),
+    ),
+    second((db) =>
+      db.saveUser({ ...two, name: 'Second changed' }, accessToken, two.id),
+    ),
+  ])
+  const reopened = createAdminDatabase(localStorage, locks)
+
+  await expect(
+    reopened((db) => [
+      db.getUser(one.id, accessToken).name,
+      db.getUser(two.id, accessToken).name,
+    ]),
+  ).resolves.toEqual(['First changed', 'Second changed'])
 })
 
 it('keeps writes atomic when persistence fails', async () => {
-  const storage: Storage = {
-    length: 0,
-    key: () => null,
-    clear() {},
-    removeItem() {},
-    getItem: () => null,
-    setItem: vi.fn(),
+  const db = createAdminDatabase(localStorage, locks)
+  const { accessToken } = await db((snapshot) =>
+    snapshot.login({ username: 'admin', password: '123456' }),
+  )
+  const persist = vi
+    .spyOn(localStorage, 'setItem')
+    .mockImplementationOnce(() => {
+      throw new Error('Quota exceeded')
+    })
+
+  try {
+    await expect(
+      db((snapshot) => snapshot.saveUser(input, accessToken)),
+    ).rejects.toThrow('storage')
+    expect(
+      await db((snapshot) => snapshot.listUsers({}, accessToken).total),
+    ).toBe(24)
+  } finally {
+    persist.mockRestore()
   }
-  const database = createAdminDatabase(storage)
-  const session = await database.login({
-    username: 'admin',
-    password: '123456',
+})
+
+it('signs in an explicitly provisioned account whose username matches a demo alias', async () => {
+  const candidate = await createUser({ ...input, username: 'member' })
+
+  await setUserCredential(candidate.id, 'new-demo-credential')
+  const session = await loginAdmin('member', 'new-demo-credential')
+
+  expect(session.user.id).toBe(candidate.id)
+  expect((await loginAdmin('user002', '123456')).user.role).toBe('member')
+})
+
+it('rejects stale account and route replacements without losing the committed changes', async () => {
+  const user = await createUser(input)
+  let userRevision: string | undefined
+  const original = await getUser(user.id, void 0, (value) => {
+    userRevision = value
   })
 
-  vi.mocked(storage.setItem).mockImplementation(() => {
-    throw new Error('Quota exceeded')
+  expect(userRevision).toBeTruthy()
+  await updateUserStatus([user.id], 'disabled')
+  await expect(
+    updateUser(user.id, { ...original, name: 'New name' }, userRevision),
+  ).rejects.toMatchObject({ code: 412, key: 'editConflict' })
+  expect((await getUser(user.id)).status).toBe('disabled')
+
+  let routeRevision: string | undefined
+  const config = await getAdminRoutes('editor', void 0, (value) => {
+    routeRevision = value
   })
-  expect(() => database.saveUser(input, session.accessToken)).toThrow('storage')
-  expect(database.listUsers({}, session.accessToken).total).toBe(24)
+
+  expect(routeRevision).toBeTruthy()
+  const next = {
+    ...config,
+    routes: [
+      ...config.routes,
+      { path: '/revision', component: 'dashboard', meta: {} },
+    ],
+  }
+
+  try {
+    await updateAdminRoutes(next, routeRevision)
+    await expect(
+      updateAdminRoutes(config, routeRevision),
+    ).rejects.toMatchObject({ code: 412, key: 'editConflict' })
+    expect((await getAdminRoutes('editor')).routes.at(-1)?.path).toBe(
+      '/revision',
+    )
+  } finally {
+    await updateAdminRoutes(config)
+  }
 })
 
 it('provisions a Mock login and updates only the signed-in profile', async () => {

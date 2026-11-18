@@ -23,6 +23,8 @@
   "collapseSearch": "Hide filters",
   "searchYes": "Yes",
   "searchNo": "No",
+  "searchRangeStart": "{field} start",
+  "searchRangeEnd": "{field} end",
   "searchError": "Couldn't prepare the search",
   "searchOptionsError": "Couldn't load options",
   "reload": "Refresh",

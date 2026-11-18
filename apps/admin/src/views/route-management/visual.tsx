@@ -1,11 +1,13 @@
 import './index.scss'
+import { AdminApiError } from '@/api/admin/client'
 import AppPageHeader from '@/app-components/app/AppPageHeader'
 import { useAccess, useI18n } from '@/hooks'
 import { getStaticAppRoutes } from '@/router/app-route-modules'
 import { exportRouteConfig, parseRouteConfig } from '@/router/config/contract'
 import type { RouteConfigRecord } from '@/router/config/schema'
 import {
-  fetchRemoteRouteConfig,
+  readRouteEditorSnapshot,
+  remoteRoutesReadOnly,
   routeSourceStatus,
   saveRemoteRouteConfig,
 } from '@/router/config/source'
@@ -49,6 +51,8 @@ export default defineComponent({
     const { hasPermission } = useAccess()
     const saving = ref(false)
     const loading = ref(false)
+    let revision: string | undefined
+    const remoteReady = ref(false)
     const loaded = ref(false)
     const text = (key: string) => t<string>(key)
     const { t: translate } = useI18n()
@@ -102,26 +106,36 @@ export default defineComponent({
       valid.value = false
     }
     const report = (reason: unknown) => {
-      error.value = reason instanceof Error ? reason.message : String(reason)
+      error.value =
+        reason instanceof AdminApiError && reason.key === 'editConflict'
+          ? text('editConflict')
+          : reason instanceof Error
+            ? reason.message
+            : String(reason)
       valid.value = false
     }
     const load = async () => {
       loading.value = true
 
       try {
+        remoteReady.value = false
+        const activeRemote = routeSourceStatus.active === 'remote'
+        const snapshot = activeRemote ? await readRouteEditorSnapshot() : void 0
         const config =
-          routeSourceStatus.active === 'remote'
-            ? await fetchRemoteRouteConfig(
-                hasPermission('routes:write') ? 'editor' : void 0,
-              )
-            : (routeSourceStatus.config ??
-              exportRouteConfig(getStaticAppRoutes()))
+          snapshot?.config ??
+          routeSourceStatus.config ??
+          exportRouteConfig(getStaticAppRoutes())
 
         records.value = orderRoutes(structuredClone(config.routes))
         selected.value = tree.value.options[0]?.key as number | undefined
         expanded.value = []
         clearResult()
         loaded.value = true
+
+        if (!remoteRoutesReadOnly) {
+          revision = (snapshot ?? (await readRouteEditorSnapshot())).revision
+          remoteReady.value = true
+        }
       } catch (reason) {
         report(reason)
       } finally {
@@ -148,6 +162,7 @@ export default defineComponent({
     }
     const apply = async () => {
       if (
+        !remoteReady.value ||
         !loaded.value ||
         loading.value ||
         saving.value ||
@@ -161,7 +176,7 @@ export default defineComponent({
 
       try {
         saving.value = true
-        await saveRemoteRouteConfig(config)
+        await saveRemoteRouteConfig(config, revision)
       } catch (reason) {
         report(reason)
       } finally {
@@ -361,14 +376,19 @@ export default defineComponent({
           </NAlert>
         )}
         <NCard title={text('visualDraft')}>
-          <p class="route-management__hint">{text('visualHint')}</p>
+          <p class="route-management__hint">
+            {text(remoteRoutesReadOnly ? 'readOnlyHint' : 'visualHint')}
+          </p>
           <NFlex align="center">
             <NButton
               type="primary"
               onClick={apply}
               loading={saving.value}
               disabled={
-                !loaded.value || loading.value || !hasPermission('routes:write')
+                !remoteReady.value ||
+                !loaded.value ||
+                loading.value ||
+                !hasPermission('routes:write')
               }
             >
               {text('apply')}

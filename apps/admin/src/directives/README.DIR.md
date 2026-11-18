@@ -143,7 +143,7 @@ const Demo = defineComponent({
 
 #### Tip
 
-> 该指令基于 css 层面进行禁用操作，如果元素含有 `disabled` 属性方法，会尝试使用原生 `disabled` 属性。对于组件库而言，本身就提供了丰富的 `disabled props`，所以应该是优先使用组件自带属性。
+> 原生表单控件使用 `disabled` 属性。表单和其他容器使用 `inert` 暂停整棵子树的键盘和指针交互。组件提供 `disabled` prop 时优先使用组件自身的接口。
 
 #### 示例
 

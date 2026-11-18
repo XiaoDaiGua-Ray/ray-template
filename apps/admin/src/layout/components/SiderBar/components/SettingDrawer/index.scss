@@ -82,6 +82,11 @@
 
   &__tab {
     min-block-size: 44px;
+
+    &:focus-visible {
+      outline: 2px solid var(--r-primary-text);
+      outline-offset: -2px;
+    }
   }
 
   > .n-tabs-nav {
@@ -89,10 +94,10 @@
     border-radius: var(--r-radius);
     background: var(--r-surface);
   }
+}
 
-  > .n-tab-pane {
-    padding-block-start: 14px;
-  }
+.r-settings-panel {
+  padding-block-start: 14px;
 }
 
 .r-settings-stack,

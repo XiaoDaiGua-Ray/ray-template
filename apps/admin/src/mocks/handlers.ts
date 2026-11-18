@@ -1,4 +1,4 @@
-import { userListQuerySchema } from '@/api/admin/contracts'
+import { editRevision, userListQuerySchema } from '@/api/admin/contracts'
 import {
   chartsQuerySchema,
   orderSearchInputSchema,
@@ -23,7 +23,7 @@ import { routeDemoPeople } from './data/route-people'
 import { MockApiError } from './database'
 import type { AdminDatabase } from './database'
 
-export function createAdminHandlers(database: AdminDatabase, apiBase: string) {
+export function createAdminHandlers(transact: AdminDatabase, apiBase: string) {
   const url = (path: string) => `${apiBase}${path}`
   const token = (request: Request) =>
     request.headers.get('Authorization')?.replace(/^Bearer /u, '') ?? null
@@ -46,11 +46,20 @@ export function createAdminHandlers(database: AdminDatabase, apiBase: string) {
 
     return v.parse(schema, query)
   }
-  const respond = async (action: () => unknown | Promise<unknown>) => {
+  const respond = async (
+    action: () => unknown | Promise<unknown>,
+    revisioned = false,
+  ) => {
     await delay(120)
 
     try {
-      return HttpResponse.json({ code: 200, msg: 'OK', data: await action() })
+      const data = await action()
+      const revision = revisioned ? await editRevision(data) : void 0
+
+      return HttpResponse.json(
+        { code: 200, msg: 'OK', data, ...(revision ? { revision } : {}) },
+        revision ? { headers: { ETag: `"${revision}"` } } : void 0,
+      )
     } catch (error) {
       const failure =
         error instanceof MockApiError ? error : new MockApiError(400, 'invalid')
@@ -65,6 +74,17 @@ export function createAdminHandlers(database: AdminDatabase, apiBase: string) {
         { status: failure.status },
       )
     }
+  }
+
+  const respondAdmin = (
+    action: Parameters<AdminDatabase>[0],
+    revisioned = false,
+  ) => respond(() => transact(action), revisioned)
+  const checkRevision = async (request: Request, current: unknown) => {
+    const match = request.headers.get('If-Match')
+
+    if (match !== null && match !== `"${await editRevision(current)}"`)
+      throw new MockApiError(412, 'editConflict')
   }
 
   return [
@@ -123,60 +143,66 @@ export function createAdminHandlers(database: AdminDatabase, apiBase: string) {
       }),
     ),
     http.post(url('admin/auth/login'), ({ request }) =>
-      respond(async () => database.login(await request.json())),
+      respondAdmin(async (database) => database.login(await request.json())),
     ),
     http.get(url('admin/auth/session'), ({ request }) =>
-      respond(() => database.authorize(token(request))),
+      respondAdmin((database) => database.authorize(token(request))),
     ),
     http.post(url('admin/auth/logout'), ({ request }) =>
-      respond(() => database.logout(token(request))),
+      respondAdmin((database) => database.logout(token(request))),
     ),
     http.get(url('admin/auth/profile'), ({ request }) =>
-      respond(() => database.getProfile(token(request))),
+      respondAdmin((database) => database.getProfile(token(request))),
     ),
     http.patch(url('admin/auth/profile'), ({ request }) =>
-      respond(async () =>
+      respondAdmin(async (database) =>
         database.updateProfile(await request.json(), token(request)),
       ),
     ),
     http.patch(url('admin/auth/password'), ({ request }) =>
-      respond(async () =>
+      respondAdmin(async (database) =>
         database.changePassword(await request.json(), token(request)),
       ),
     ),
     http.get(url('admin/route-config'), ({ request }) =>
-      respond(() => {
-        const view = new URL(request.url).searchParams.getAll('view')
+      respondAdmin(
+        (database) => {
+          const view = new URL(request.url).searchParams.getAll('view')
 
-        if (view.length && (view.length !== 1 || view[0] !== 'editor'))
-          throw new MockApiError(400, 'invalid')
+          if (view.length && (view.length !== 1 || view[0] !== 'editor'))
+            throw new MockApiError(400, 'invalid')
 
-        return database.getRoutes(token(request), view[0] === 'editor')
-      }),
-    ),
-    http.put(url('admin/route-config'), ({ request }) =>
-      respond(async () =>
-        database.saveRoutes(await request.json(), token(request)),
+          return database.getRoutes(token(request), view[0] === 'editor')
+        },
+        new URL(request.url).searchParams.get('view') === 'editor',
       ),
     ),
+    http.put(url('admin/route-config'), ({ request }) =>
+      respondAdmin(async (database) => {
+        if (request.headers.has('If-Match'))
+          await checkRevision(request, database.getRoutes(token(request), true))
+
+        return database.saveRoutes(await request.json(), token(request))
+      }),
+    ),
     http.get(url('admin/users/options'), ({ request }) =>
-      respond(() => database.getOptions(token(request))),
+      respondAdmin((database) => database.getOptions(token(request))),
     ),
     http.post(url('admin/users/batch-delete'), ({ request }) =>
-      respond(async () =>
+      respondAdmin(async (database) =>
         database.deleteUsers(await request.json(), token(request)),
       ),
     ),
     http.patch(url('admin/users/status'), ({ request }) =>
-      respond(async () =>
+      respondAdmin(async (database) =>
         database.changeStatus(await request.json(), token(request)),
       ),
     ),
     http.post(url('admin/users/reset'), ({ request }) =>
-      respond(() => database.resetUsers(token(request))),
+      respondAdmin((database) => database.resetUsers(token(request))),
     ),
     http.get(url('admin/users'), ({ request }) =>
-      respond(() =>
+      respondAdmin((database) =>
         database.listUsers(
           readQuery(request, userListQuerySchema),
           token(request),
@@ -184,24 +210,35 @@ export function createAdminHandlers(database: AdminDatabase, apiBase: string) {
       ),
     ),
     http.post(url('admin/users'), ({ request }) =>
-      respond(async () =>
+      respondAdmin(async (database) =>
         database.saveUser(await request.json(), token(request)),
       ),
     ),
     http.get(url('admin/users/:id'), ({ request, params }) =>
-      respond(() => database.getUser(String(params.id), token(request))),
+      respondAdmin(
+        (database) => database.getUser(String(params.id), token(request)),
+        true,
+      ),
     ),
     http.put(url('admin/users/:id'), ({ request, params }) =>
-      respond(async () =>
-        database.saveUser(
+      respondAdmin(async (database) => {
+        if (request.headers.has('If-Match')) {
+          database.authorize(token(request), 'users:update')
+          await checkRevision(
+            request,
+            database.getUser(String(params.id), token(request)),
+          )
+        }
+
+        return database.saveUser(
           await request.json(),
           token(request),
           String(params.id),
-        ),
-      ),
+        )
+      }),
     ),
     http.put(url('admin/users/:id/credential'), ({ request, params }) =>
-      respond(async () =>
+      respondAdmin(async (database) =>
         database.setCredential(
           String(params.id),
           await request.json(),

@@ -10,6 +10,7 @@ import {
   useSettingGetters,
 } from '@/store'
 import type { AppMenuOption, NaiveMenuOptions } from '@/types'
+import { useMenuKeyboard } from '@ray-template/admin-shell'
 import { RIcon } from '@ray-template/ui/icon'
 import { NButton, NDrawer, NLayoutContent, NLayoutSider, NMenu } from 'naive-ui'
 import type { MenuInst } from 'naive-ui'
@@ -45,6 +46,8 @@ export default defineComponent({
     const collapsed = computed(
       () => !isTabletOrSmaller.value && getCollapsed.value,
     )
+
+    const keyboard = useMenuKeyboard(false, () => collapsed.value)
 
     watch(
       [getMenuKey, () => props.options, menuRef],
@@ -117,32 +120,40 @@ export default defineComponent({
           }
           ref={LAYOUT_SIDER_REF}
         >
-          <NMenu
-            ref={menuRef}
-            class="r-menu--app"
-            keyField="fullPath"
-            value={getMenuKey.value}
-            options={
-              (props.options ??
-                getMenuOptions.value) as unknown as NaiveMenuOptions[]
-            }
-            indent={getMenuConfig.value.collapsedIndent}
-            collapsed={collapsed.value}
-            collapsedIconSize={getMenuConfig.value.collapsedIconSize}
-            collapsedWidth={getMenuConfig.value.collapsedWidth}
-            onUpdateValue={(key, option) => {
-              changeMenuModelValue(key, option as unknown as AppMenuOption)
+          <nav
+            class="r-shell-menu"
+            aria-label={t('navigation')}
+            onKeydown={keyboard.onKeydown}
+          >
+            <NMenu
+              ref={menuRef}
+              nodeProps={keyboard.nodeProps}
+              dropdownProps={keyboard.dropdownProps}
+              class="r-menu--app"
+              keyField="fullPath"
+              value={getMenuKey.value}
+              options={
+                (props.options ??
+                  getMenuOptions.value) as unknown as NaiveMenuOptions[]
+              }
+              indent={getMenuConfig.value.collapsedIndent}
+              collapsed={collapsed.value}
+              collapsedIconSize={getMenuConfig.value.collapsedIconSize}
+              collapsedWidth={getMenuConfig.value.collapsedWidth}
+              onUpdateValue={(key, option) => {
+                changeMenuModelValue(key, option as unknown as AppMenuOption)
 
-              if (isTabletOrSmaller.value)
-                setRuntimeState('globalDrawerValue', false)
-            }}
-            accordion={getMenuConfig.value.accordion}
-            iconSize={getMenuConfig.value.iconSize}
-            themeOverrides={
-              isTabletOrSmaller.value ? { itemHeight: '44px' } : void 0
-            }
-            inverted={getMenuConfig.value.inverted}
-          />
+                if (isTabletOrSmaller.value)
+                  setRuntimeState('globalDrawerValue', false)
+              }}
+              accordion={getMenuConfig.value.accordion}
+              iconSize={getMenuConfig.value.iconSize}
+              themeOverrides={
+                isTabletOrSmaller.value ? { itemHeight: '44px' } : void 0
+              }
+              inverted={getMenuConfig.value.inverted}
+            />
+          </nav>
         </NLayoutContent>
       </NLayoutSider>
     )

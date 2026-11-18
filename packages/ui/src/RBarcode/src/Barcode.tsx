@@ -18,20 +18,16 @@ export default defineComponent({
     const containerSize = ref({ width: 0, height: 0 })
 
     const cssVars = computed(() => {
-      let width = completeSize(props.width)
-      let height = completeSize(props.height)
-
-      if (props.width === 'responsive' && containerSize.value.width > 0) {
-        width = `${containerSize.value.width}px`
-      }
-
-      if (props.height === 'responsive' && containerSize.value.height > 0) {
-        height = `${containerSize.value.height}px`
-      }
-
+      const relativeSize = props.responsive ? '100%' : 'auto'
       const cssVar = {
-        '--r-barcode-width': width,
-        '--r-barcode-height': height,
+        '--r-barcode-width':
+          props.width === 'responsive'
+            ? relativeSize
+            : completeSize(props.width),
+        '--r-barcode-height':
+          props.height === 'responsive'
+            ? relativeSize
+            : completeSize(props.height),
       }
 
       return cssVar

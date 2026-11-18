@@ -32,6 +32,22 @@ beforeEach(() => {
   vi.mocked(interact).mockClear()
 })
 
+it('uses the rendered body as the drag handle when the card has no title', async () => {
+  const wrapper = mount(RDraggableCard, { slots: { default: 'Body' } })
+
+  try {
+    await flushPromises()
+    const { allowFrom } = mocks.instances[0].draggable.mock.calls[0][0]
+
+    expect(
+      document.querySelector('.r-draggable-card')?.querySelector(allowFrom)
+        ?.textContent,
+    ).toContain('Body')
+  } finally {
+    wrapper.unmount()
+  }
+})
+
 it('releases drag listeners on disable/unmount and removes only the final shared container', async () => {
   const first = mount(RDraggableCard, { props: { title: 'First' } })
   const second = mount(RDraggableCard, { props: { title: 'Second' } })

@@ -24,7 +24,19 @@
         </template>
         <template #sidebar>
           <NLayoutSider :width="132" bordered>
-            <NMenu :options="menu" :value="active" @update:value="navigate" />
+            <nav
+              class="r-shell-menu"
+              :aria-label="copy.navigation"
+              @keydown="keyboard.onKeydown"
+            >
+              <NMenu
+                :options="menu"
+                :value="active"
+                :nodeProps="keyboard.nodeProps"
+                :dropdownProps="keyboard.dropdownProps"
+                @update:value="navigate"
+              />
+            </nav>
           </NLayoutSider>
         </template>
         <template #tabs>
@@ -59,6 +71,7 @@ import {
   LayoutSettings,
   ShellTab,
   ShellTopNavigation,
+  useMenuKeyboard,
 } from '@ray-template/admin-shell'
 import type { LayoutConfig } from '@ray-template/admin-shell'
 import { NButton, NLayoutSider, NMenu } from 'naive-ui'
@@ -66,6 +79,7 @@ import { computed, onMounted, ref } from 'vue'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import DemoFrame from './DemoFrame.vue'
 
+const keyboard = useMenuKeyboard(false)
 const props = withDefaults(defineProps<{ locale?: 'zh-CN' | 'en' }>(), {
   locale: 'zh-CN',
 })

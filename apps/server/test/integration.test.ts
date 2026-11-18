@@ -1138,3 +1138,75 @@ test('disabling demos hides runtime routes and endpoints without dropping editab
     })
   }
 })
+
+test('rejects stale user and route editor replacements in their write transactions', async () => {
+  const admin = await create('revision-admin', { role: 'admin' })
+
+  await setPassword(database, admin.username, password)
+  const otherToken = (await login(admin.username)).accessToken
+  const user = await create('revision-target')
+  const row = await request<AdminUser>(`admin/users/${user.id}`, {
+    token: adminToken,
+  })
+
+  assert.ok(row.body.revision)
+  const disabled = await request('admin/users/status', {
+    method: 'PATCH',
+    token: otherToken,
+    body: { ids: [user.id], status: 'disabled' },
+  })
+
+  assert.equal(disabled.status, 200)
+  const stale = await request(`admin/users/${user.id}`, {
+    method: 'PUT',
+    token: adminToken,
+    headers: { 'If-Match': `"${row.body.revision}"` },
+    body: { ...row.body.data, name: 'Updated' },
+  })
+
+  assert.equal(stale.status, 412)
+  assert.equal(
+    (await database.user.findUniqueOrThrow({ where: { id: user.id } })).status,
+    'disabled',
+  )
+
+  const remote = await request<RouteConfig>('admin/route-config?view=editor', {
+    token: adminToken,
+  })
+
+  assert.ok(remote.body.revision)
+  const publish = (config: RouteConfig, token: string) =>
+    request('admin/route-config', {
+      method: 'PUT',
+      token,
+      headers: { 'If-Match': `"${remote.body.revision}"` },
+      body: config,
+    })
+
+  try {
+    const results = await Promise.all([
+      publish(
+        {
+          ...remote.body.data,
+          routes: [{ path: '/first', component: 'dashboard', meta: {} }],
+        },
+        adminToken,
+      ),
+      publish(
+        {
+          ...remote.body.data,
+          routes: [{ path: '/second', component: 'dashboard', meta: {} }],
+        },
+        otherToken,
+      ),
+    ])
+
+    assert.deepEqual(results.map((result) => result.status).sort(), [200, 412])
+  } finally {
+    await request('admin/route-config', {
+      method: 'PUT',
+      token: adminToken,
+      body: remote.body.data,
+    })
+  }
+})

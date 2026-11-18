@@ -142,7 +142,7 @@ export class PlatformRuntime {
         response.setHeader('Access-Control-Allow-Origin', origin)
         response.setHeader(
           'Access-Control-Expose-Headers',
-          'X-Request-Id, Retry-After',
+          'ETag, X-Request-Id, Retry-After',
         )
       }
 
@@ -153,7 +153,7 @@ export class PlatformRuntime {
         )
         response.setHeader(
           'Access-Control-Allow-Headers',
-          'Authorization, Content-Type, X-Request-Id',
+          'Authorization, Content-Type, If-Match, X-Request-Id',
         )
         response.setHeader('Access-Control-Max-Age', '600')
         response.status(204).end()

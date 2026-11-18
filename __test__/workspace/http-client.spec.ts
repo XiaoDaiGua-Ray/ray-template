@@ -1,6 +1,48 @@
 import { createHttpClient } from '@ray-template/http'
+import RequestCanceler from '@ray-template/http/RequestCanceler'
+import type { AppRawRequestConfig } from '@ray-template/http/types'
 import { AxiosError } from 'axios'
 import type { AxiosAdapter, AxiosResponse } from 'axios'
+
+it('compares repeated form fields, URL parameters and uploaded file identity when cancelling duplicates', () => {
+  const canceler = new RequestCanceler()
+  const submit = (data: FormData | URLSearchParams) => {
+    const config: AppRawRequestConfig = { url: '/upload', method: 'post', data }
+
+    canceler.removePendingRequest(config)
+    canceler.addPendingRequest(config)
+
+    return config.signal!
+  }
+  const first = submit(new URLSearchParams('x=1&x=2'))
+  const second = submit(new URLSearchParams('x=2&x=1'))
+
+  expect(first.aborted).toBe(false)
+  submit(new URLSearchParams('x=1&x=2'))
+  expect(first.aborted).toBe(true)
+  expect(second.aborted).toBe(false)
+
+  const form = (text: string, file: File) => {
+    const body = new FormData()
+
+    body.append('tag', text)
+    body.append('file', file)
+
+    return body
+  }
+  const file = new File(['a'], 'same.txt')
+  const uploaded = submit(form('first', file))
+  const anotherText = submit(form('second', file))
+  const anotherFile = submit(form('first', new File(['b'], 'same.txt')))
+
+  expect(uploaded.aborted).toBe(false)
+  submit(form('first', file))
+  expect(uploaded.aborted).toBe(true)
+  expect(anotherText.aborted).toBe(false)
+  expect(anotherFile.aborted).toBe(false)
+  canceler.cancelAllRequest()
+  expect(anotherFile.aborted).toBe(true)
+})
 
 it('isolates pending requests by client and leaves caller-owned signals intact', async () => {
   const pending: Array<{ signal: unknown; finish: () => void }> = []

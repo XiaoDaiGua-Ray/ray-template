@@ -59,5 +59,12 @@
   "RouteManagementVisual": "可视化配置",
   "RouteManagementJson": "JSON 配置",
   "SystemManagement": "系统管理",
-  "UserManagement": "用户管理"
+  "UserManagement": "用户管理",
+  "RouterPeople": "人员信息(平级模式)",
+  "RouterPersonDetail": "信息详情",
+  "NestedOne": "多级菜单-1",
+  "NestedTwo": "多级菜单-2",
+  "NestedTwoOne": "多级菜单-2-1",
+  "NestedTwoTwo": "多级菜单-2-2",
+  "NestedTwoTwoOne": "多级菜单-2-2-1"
 }
