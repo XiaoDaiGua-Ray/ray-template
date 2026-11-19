@@ -11,9 +11,9 @@ import {
 } from '@/store'
 import type { AppMenuOption, NaiveMenuOptions } from '@/types'
 import { useMenuKeyboard } from '@ray-template/admin-shell'
+import { useMenu } from '@ray-template/composables/useMenu'
 import { RIcon } from '@ray-template/ui/icon'
 import { NButton, NDrawer, NLayoutContent, NLayoutSider, NMenu } from 'naive-ui'
-import type { MenuInst } from 'naive-ui'
 import type { PropType } from 'vue'
 import SiderBarLogo from './components/SiderBarLogo'
 
@@ -28,7 +28,7 @@ export default defineComponent({
     inert: Boolean,
   },
   setup(props) {
-    const menuRef = shallowRef<MenuInst | null>(null)
+    const { menuRef, showOption } = useMenu()
     const { changeMenuModelValue, collapsedMenu } = useMenuActions()
     const { t } = useI18n('layout')
     const { getAppTheme, getMenuConfig } = useSettingGetters()
@@ -56,8 +56,7 @@ export default defineComponent({
       async () => {
         await nextTick()
 
-        if (getMenuKey.value != null)
-          menuRef.value?.showOption(String(getMenuKey.value))
+        if (getMenuKey.value != null) showOption(String(getMenuKey.value))
 
         positionSelectedMenuItem()
       },

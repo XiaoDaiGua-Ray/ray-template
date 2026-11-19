@@ -39,7 +39,12 @@ export default defineComponent({
       getContentTransition,
       getMenuTagSwitch,
       getMenuTagRound,
+      getMenuTagTop,
+      getMenuTagFixed,
+      getMenuTagDrag,
       getBreadcrumbSwitch,
+      getBreadcrumbIcon,
+      getBreadcrumbIconFallback,
       getCopyrightSwitch,
       getColorWeakness,
     } = useSettingGetters()
@@ -79,8 +84,13 @@ export default defineComponent({
     })
     const switches = [
       ['breadcrumbSwitch', getBreadcrumbSwitch],
+      ['breadcrumbIcon', getBreadcrumbIcon],
+      ['breadcrumbIconFallback', getBreadcrumbIconFallback],
       ['menuTagSwitch', getMenuTagSwitch],
       ['menuTagRound', getMenuTagRound],
+      ['menuTagTop', getMenuTagTop],
+      ['menuTagFixed', getMenuTagFixed],
+      ['menuTagDrag', getMenuTagDrag],
       ['copyrightSwitch', getCopyrightSwitch],
       ['colorWeakness', getColorWeakness],
     ] as const

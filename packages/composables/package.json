@@ -12,6 +12,7 @@
     "./element": "./src/element.ts",
     "./types": "./src/types.ts",
     "./usePagination": "./src/usePagination.ts",
+    "./useMenu": "./src/useMenu.ts",
     "./useElementFullscreen": "./src/useElementFullscreen.ts",
     "./vue": "./src/vue/index.ts",
     "./vue/*": "./src/vue/*.ts",

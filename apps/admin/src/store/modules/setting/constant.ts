@@ -11,7 +11,12 @@ type OmitKeys =
   | 'menuConfig'
   | 'menuTagSwitch'
   | 'menuTagRound'
+  | 'menuTagTop'
+  | 'menuTagFixed'
+  | 'menuTagDrag'
   | 'breadcrumbSwitch'
+  | 'breadcrumbIcon'
+  | 'breadcrumbIconFallback'
   | 'copyrightSwitch'
   | 'drawerPlacement'
   | 'colorWeakness'
@@ -59,8 +64,13 @@ const defaultSettingConfig: Readonly<Config> = {
   // 多标签页开关
   menuTagSwitch: true,
   menuTagRound: false,
+  menuTagTop: true,
+  menuTagFixed: true,
+  menuTagDrag: true,
   // 面包屑开关
   breadcrumbSwitch: true,
+  breadcrumbIcon: true,
+  breadcrumbIconFallback: true,
   // 底部区域开关
   copyrightSwitch: true,
   // 默认设置出现位置

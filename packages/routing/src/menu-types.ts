@@ -1,4 +1,4 @@
-import type { VNode } from 'vue'
+import type { VNode, VNodeChild } from 'vue'
 import type { AppRouteMeta } from './types'
 
 export type Key = string | number
@@ -8,6 +8,7 @@ export interface AppMenuOption {
   key: Key
   path: string
   label: string | (() => VNode)
+  icon?: () => VNodeChild
   show?: boolean
   children?: AppMenuOption[]
   meta: AppRouteMeta
@@ -18,6 +19,8 @@ export interface AppMenuOption {
 
 export interface MenuTagOptions extends AppMenuOption {
   closeable?: boolean
+  topped?: boolean
+  fixed?: boolean
 }
 
 export type AppMenuKey = Key | null

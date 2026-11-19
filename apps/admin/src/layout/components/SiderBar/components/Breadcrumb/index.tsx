@@ -1,7 +1,8 @@
 import './index.scss'
 import { useDevice } from '@/hooks'
-import { useMenuActions, useMenuGetters } from '@/store'
+import { useMenuActions, useMenuGetters, useSettingGetters } from '@/store'
 import type { AppMenuOption } from '@/types'
+import { RIcon } from '@ray-template/ui/icon'
 import { NBreadcrumb, NBreadcrumbItem, NDropdown } from 'naive-ui'
 import type { DropdownOption } from 'naive-ui'
 import { TransitionGroup } from 'vue'
@@ -11,6 +12,7 @@ export default defineComponent({
   setup() {
     const { changeMenuModelValue } = useMenuActions()
     const { getBreadcrumbOptions } = useMenuGetters()
+    const { getBreadcrumbIcon, getBreadcrumbIconFallback } = useSettingGetters()
     const { isTabletOrSmaller } = useDevice()
 
     const dropdownSelect = (key: string | number, option: DropdownOption) => {
@@ -33,53 +35,78 @@ export default defineComponent({
       }
     }
 
-    return {
-      getBreadcrumbOptions,
-      dropdownSelect,
-      breadcrumbItemClick,
-      isTabletOrSmaller,
-    }
-  },
-  render() {
-    const { isTabletOrSmaller, getBreadcrumbOptions } = this
-    const { dropdownSelect, breadcrumbItemClick } = this
+    const renderIcon = (option: Pick<AppMenuOption, 'icon'>) => {
+      if (!getBreadcrumbIcon.value) return null
 
-    return isTabletOrSmaller ? (
-      <span class="layout-breadcrumb__current" aria-current="page">
-        {getBreadcrumbOptions.at(-1)?.breadcrumbLabel}
+      const icon =
+        option.icon?.() ??
+        (getBreadcrumbIconFallback.value ? (
+          <RIcon name="navigation/document" size="1em" />
+        ) : null)
+
+      return (
+        icon && (
+          <span class="layout-breadcrumb__icon" aria-hidden="true">
+            {icon}
+          </span>
+        )
+      )
+    }
+
+    const renderLabel = (
+      option: AppMenuOption,
+      current: boolean,
+      compact = false,
+    ) => (
+      <span
+        class={[
+          'layout-breadcrumb__item',
+          { 'layout-breadcrumb__current': compact },
+        ]}
+        aria-current={current ? 'page' : void 0}
+      >
+        {renderIcon(option)}
+        <span class="layout-breadcrumb__label">
+          {!compact && typeof option.label === 'function'
+            ? option.label()
+            : option.breadcrumbLabel}
+        </span>
       </span>
-    ) : (
-      <NBreadcrumb class="layout-breadcrumb">
-        <TransitionGroup tag="li" name="breadcrumb" appear>
-          {getBreadcrumbOptions.map((curr) => (
-            <NBreadcrumbItem
-              key={curr.fullPath}
-              onClick={breadcrumbItemClick.bind(this, curr)}
-            >
-              <NDropdown
-                labelField="breadcrumbLabel"
-                keyField="fullPath"
-                options={
-                  curr.children && curr.children?.length > 1
-                    ? curr.children
-                    : []
-                }
-                onSelect={dropdownSelect.bind(this)}
-              >
-                {{
-                  default: () => (
-                    <span>
-                      {curr.label && typeof curr.label === 'function'
-                        ? curr.label()
-                        : curr.breadcrumbLabel}
-                    </span>
-                  ),
-                }}
-              </NDropdown>
-            </NBreadcrumbItem>
-          ))}
-        </TransitionGroup>
-      </NBreadcrumb>
     )
+
+    return () => {
+      const trail = getBreadcrumbOptions.value
+      const current = trail.at(-1)
+
+      if (isTabletOrSmaller.value)
+        return current && renderLabel(current, true, true)
+
+      return (
+        <NBreadcrumb class="layout-breadcrumb">
+          <TransitionGroup name="breadcrumb" appear>
+            {trail.map((option) => (
+              <NBreadcrumbItem
+                key={option.fullPath}
+                onClick={() => breadcrumbItemClick(option)}
+              >
+                {option.children && option.children.length > 1 ? (
+                  <NDropdown
+                    labelField="breadcrumbLabel"
+                    keyField="fullPath"
+                    options={option.children}
+                    renderIcon={renderIcon}
+                    onSelect={dropdownSelect}
+                  >
+                    {renderLabel(option, option === current)}
+                  </NDropdown>
+                ) : (
+                  renderLabel(option, option === current)
+                )}
+              </NBreadcrumbItem>
+            ))}
+          </TransitionGroup>
+        </NBreadcrumb>
+      )
+    }
   },
 })

@@ -25,7 +25,7 @@
 
 `depthSearchAppMenu(options, key)` 从菜单树按完整路径查找菜单项。`changeMenuModelValue` 不返回 Router 的导航 Promise；需要等待守卫结果时使用 Router 或 `navigationTo`。更新角色后还要同步服务端授权及直接路由校验，菜单过滤本身不能授权。
 
-`piniaMenuStore` 在 Local Storage 只持久化 `menuKey`、`collapsed`。标签列表单独使用 Session Storage 的 `appMenuTagOptions`。当前路由变化会重新同步菜单与面包屑，避免手工写缓存制造冲突。
+`piniaMenuStore` 在 Local Storage 持久化 `collapsed`。标签列表以 Session Storage 的 `appMenuTagOptions` 保存顺序及可选的 `topped`、`fixed` 标记。刷新时根据当前路由与权限恢复，访问被撤销的页面也会移出列表。当前路由变化会同步选中菜单与面包屑。
 
 ## KeepAlive Store
 

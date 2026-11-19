@@ -55,6 +55,53 @@ export function useTableNavigation() {
 }
 ```
 
+## useMenu
+
+`useMenu(options?)` 封装 Naive UI 的 `NMenu`，可用于独立菜单示例、局部导航或选择器。传入原生菜单配置即可使用横向和纵向布局、分组、分隔线、自定义字段和渲染函数。
+
+<AdminExample path="/template-hooks" title="选中与展开菜单项" focus="useMenu" deferred />
+
+| 返回值                    | 用途                                                                     |
+| ------------------------- | ------------------------------------------------------------------------ |
+| `menuRef`                 | 绑定到 `NMenu` 的组件引用。                                              |
+| `menuProps`               | 浅响应式的菜单属性，直接绑定给组件。异步加载时替换 `menuProps.options`。 |
+| `showOption(key?)`        | 展开指定菜单项的父级。省略 key 时展开当前选中项的父级，选中值保持原样。  |
+| `deriveResponsiveState()` | 重新计算启用了 `responsive` 的横向菜单的溢出状态。                       |
+
+传入 `value` 或 `expandedKeys` 后，Hook 会先同步对应的属性，再调用原始更新回调。`value: null` 表示清除选中项，`expandedKeys: []` 表示收起所有分组。省略某个属性时，由 `NMenu` 管理该状态并应用 `defaultValue`、`defaultExpandedKeys` 或 `defaultExpandAll`。组件挂载后即可调用实例方法，异步更新选项后可用 `nextTick()` 等待组件接收新数据。
+
+```tsx
+import { useMenu } from '@/hooks'
+import { NButton, NMenu } from 'naive-ui'
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  setup() {
+    const { menuRef, menuProps, showOption } = useMenu({
+      options: [
+        { key: 'overview', label: '概览' },
+        {
+          key: 'reports',
+          label: '报表',
+          children: [{ key: 'monthly', label: '月报' }],
+        },
+      ],
+      value: 'monthly',
+      expandedKeys: [],
+    })
+
+    return () => (
+      <>
+        <NMenu ref={menuRef} {...menuProps} />
+        <NButton onClick={() => showOption()}>展开选中项</NButton>
+      </>
+    )
+  },
+})
+```
+
+工作区导航由 `useAppNavigation` 和路由菜单 Store 管理。独立菜单可用 `useMenu`，工作区菜单的键盘行为由 `useMenuKeyboard` 提供。[Naive UI Menu API](https://www.naiveui.com/zh-CN/components/menu#API)
+
 <span id="useapproot-兼容接口"></span>
 
 ## useAppRoot（兼容接口） {#useapproot}
@@ -74,14 +121,14 @@ export function useOpenWorkspace() {
 
 操作工作区的标签页。接受 `CloseMenuTag` 的方法可传从 0 开始的索引、与标签 `fullPath` 匹配的字符串或标签对象。
 
-| 方法                                                 | 行为                                                         |
-| ---------------------------------------------------- | ------------------------------------------------------------ |
-| `getCurrentTagIndex()`                               | 当前标签索引；找不到返回 `-1`。                              |
-| `checkCloseLeft(target)` / `checkCloseRight(target)` | 检查目标对应方向是否有标签可关。                             |
-| `close(target)`                                      | 关闭业务标签；激活项切到相邻项，最后一项关闭后进入空工作区。 |
-| `closeLeft(target)` / `closeRight(target)`           | 关闭目标左侧或右侧标签。需要时切换至目标。                   |
-| `closeOther(target)`                                 | 只保留目标并激活。                                           |
-| `closeAll()`                                         | 清空业务标签及其缓存，进入 `/welcome`，不依赖业务首页。      |
+| 方法                                                 | 行为                                                                       |
+| ---------------------------------------------------- | -------------------------------------------------------------------------- |
+| `getCurrentTagIndex()`                               | 当前标签索引；找不到返回 `-1`。                                            |
+| `checkCloseLeft(target)` / `checkCloseRight(target)` | 检查目标对应方向是否有标签可关。                                           |
+| `close(target)`                                      | 关闭可关闭的业务标签。关闭激活项时切到相邻项，关闭最后一项后进入空工作区。 |
+| `closeLeft(target)` / `closeRight(target)`           | 关闭目标对应方向的可关闭标签。激活项被关闭时切换至目标。                   |
+| `closeOther(target)`                                 | 保留目标和固定标签，并激活目标。                                           |
+| `closeAll()`                                         | 关闭可关闭标签，优先保留当前固定页面，再尝试第一个固定标签或 `/welcome`。  |
 
 不要在存在未保存表单的工作流里直接调用批量关闭；这些方法不会替业务处理未保存确认。
 
@@ -114,4 +161,4 @@ export function useUnreadBadge() {
 }
 ```
 
-源码：[useAppNavigation](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/hooks/template/useAppNavigation.ts) · [useAppRoot](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/hooks/template/useAppRoot.ts) · [useSiderBar](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/hooks/template/useSiderBar.ts) · [useBadge](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/hooks/template/useBadge.ts) · [useVueRouter](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/hooks/template/useVueRouter.ts)
+源码：[useMenu](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/packages/composables/src/useMenu.ts) · [useAppNavigation](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/hooks/template/useAppNavigation.ts) · [useAppRoot](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/hooks/template/useAppRoot.ts) · [useSiderBar](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/hooks/template/useSiderBar.ts) · [useBadge](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/hooks/template/useBadge.ts) · [useVueRouter](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/apps/admin/src/hooks/template/useVueRouter.ts)

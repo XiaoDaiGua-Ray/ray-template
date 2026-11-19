@@ -5,6 +5,7 @@ import { setupI18n } from '@/locales'
 import { permissionRouter } from '@/router/utils/permission'
 import { piniaKeepAliveStore } from '@/store/modules/keep-alive'
 import { piniaMenuStore } from '@/store/modules/menu'
+import { getCatchMenuTagOptions } from '@/store/modules/menu/utils'
 import { piniaSettingStore } from '@/store/modules/setting'
 import { piniaSigningStore } from '@/store/modules/signing'
 import { setStorage } from '@/utils/cache'
@@ -183,6 +184,90 @@ it('closes all tags independently of missing or unauthorized root preferences', 
   expect(router.currentRoute.value.path).toBe('/welcome')
 })
 
+it('keeps topped tabs together and restores tab order and flags with the latest URL', async () => {
+  for (const path of ['/reports', '/orders', '/private'])
+    await router.push(path)
+
+  const cachedPages = piniaKeepAliveStore().keepAliveInclude
+
+  menu.toggleMenuTagTop('/private')
+  menu.toggleMenuTagFixed('/orders')
+  expect(menu.moveMenuTag('/orders', '/private', 'before')).toBe(false)
+  expect(menu.moveMenuTag('/orders', '/reports', 'before')).toBe(true)
+  expect(piniaKeepAliveStore().keepAliveInclude).toBe(cachedPages)
+  await router.push('/orders?sort=desc#details')
+  await flushPromises()
+
+  menu.menuTagOptions = getCatchMenuTagOptions()
+  await menu.setupAppMenu()
+  expect(
+    menu.menuTagOptions.map(({ fullPath, topped, fixed }) => [
+      fullPath,
+      topped,
+      fixed,
+    ]),
+  ).toEqual([
+    ['/private', true, false],
+    ['/orders?sort=desc#details', false, true],
+    ['/reports', false, false],
+  ])
+  expect(
+    menu.options.find((option) => option.fullPath === '/private'),
+  ).not.toHaveProperty('topped')
+  expect(menu.currentMenuOption?.fullPath).toBe('/orders?sort=desc#details')
+
+  const settings = piniaSettingStore()
+
+  settings.updateSettingState('menuTagDrag', false)
+  expect(
+    menu.moveMenuTag('/reports', '/orders?sort=desc#details', 'before'),
+  ).toBe(false)
+  settings.updateSettingState('menuTagDrag', true)
+  settings.updateSettingState('menuTagTop', false)
+  expect(menu.moveMenuTag('/reports', '/private', 'before')).toBe(true)
+  settings.updateSettingState('menuTagTop', true)
+  expect(menu.menuTagOptions.map(({ fullPath }) => fullPath)).toEqual([
+    '/private',
+    '/reports',
+    '/orders?sort=desc#details',
+  ])
+})
+
+it('preserves fixed tabs through single and bulk closes until protection is disabled', async () => {
+  for (const path of ['/reports', '/orders', '/private'])
+    await router.push(path)
+
+  menu.toggleMenuTagFixed('/orders')
+  await actions.close('/orders')
+  await actions.closeLeft('/private')
+  expect(actions.checkCloseLeft('/private')).toBe(false)
+  expect(menu.menuTagOptions.map(({ fullPath }) => fullPath)).toEqual([
+    '/orders',
+    '/private',
+  ])
+  await actions.closeRight('/orders')
+  expect(actions.checkCloseRight('/orders')).toBe(false)
+  expect(router.currentRoute.value.path).toBe('/orders')
+
+  await router.push('/reports')
+  await router.push('/private')
+  await actions.closeOther('/private')
+  expect(menu.menuTagOptions.map(({ fullPath }) => fullPath)).toEqual([
+    '/orders',
+    '/private',
+  ])
+  await actions.closeAll()
+  expect(menu.menuTagOptions.map(({ fullPath }) => fullPath)).toEqual([
+    '/orders',
+  ])
+  expect(router.currentRoute.value.path).toBe('/orders')
+
+  piniaSettingStore().updateSettingState('menuTagFixed', false)
+  await actions.close('/orders')
+  expect(menu.menuTagOptions).toEqual([])
+  expect(router.currentRoute.value.path).toBe('/welcome')
+})
+
 it('keeps status routes out of tabs and clears active business navigation', async () => {
   await router.push('/reports')
 
@@ -254,6 +339,7 @@ it('closes a directly opened 403 to the workspace with no business tags', async 
 it('removes revoked tags and cached views without choosing another active page', async () => {
   await router.push('/reports')
   await router.push('/private?mode=edit#section')
+  menu.toggleMenuTagFixed('/private?mode=edit#section')
   piniaSigningStore().signingCallback.role = 'member'
   await flushPromises()
   expect(menu.menuTagOptions.map(({ fullPath }) => fullPath)).toEqual([

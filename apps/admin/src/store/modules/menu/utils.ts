@@ -1,12 +1,17 @@
 import { APP_CATCH_KEY } from '@/app-config'
 import { useI18n } from '@/hooks'
 import { resolveIconName } from '@/icons'
-import type { AppMenuKey, AppMenuOption } from '@/types/modules/app'
+import type {
+  AppMenuKey,
+  AppMenuOption,
+  MenuTagOptions,
+} from '@/types/modules/app'
 import { getStorage } from '@/utils/cache'
 import { isValueType } from '@/utils/core'
 import { RIcon } from '@ray-template/ui/icon'
 import { NTag } from 'naive-ui'
 import type { TagProps } from 'naive-ui'
+import { cloneVNode } from 'vue'
 import { piniaSettingStore } from '../setting'
 
 /**
@@ -148,7 +153,7 @@ export const createMenuIcon = (option: AppMenuOption) => {
   }
 
   if (isValueType<object>(icon, 'Object')) {
-    return () => icon
+    return () => cloneVNode(icon)
   }
 
   const name = resolveIconName(icon)
@@ -228,7 +233,7 @@ export const getCatchMenuKey = () => {
  * @returns 获取缓存的菜单标签页
  */
 export const getCatchMenuTagOptions = () => {
-  const cached = getStorage<AppMenuOption[]>(
+  const cached = getStorage<MenuTagOptions[]>(
     APP_CATCH_KEY.appMenuTagOptions,
     'sessionStorage',
   )

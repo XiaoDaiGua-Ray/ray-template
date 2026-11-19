@@ -38,7 +38,12 @@ export interface SettingState {
   _appTheme: boolean
   menuTagSwitch: boolean
   menuTagRound: boolean
+  menuTagTop: boolean
+  menuTagFixed: boolean
+  menuTagDrag: boolean
   breadcrumbSwitch: boolean
+  breadcrumbIcon: boolean
+  breadcrumbIconFallback: boolean
   localeLanguage: string
   lockScreenSwitch: boolean
   watermarkSwitch: boolean

@@ -20,15 +20,40 @@
 }
 
 .layout-breadcrumb,
-.layout-breadcrumb__current {
+.layout-breadcrumb__item {
   min-inline-size: 0;
 }
 
+.layout-breadcrumb__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-inline-size: 100%;
+}
+
+.layout-breadcrumb__icon {
+  display: inline-flex;
+  flex: none;
+  place-items: center;
+  inline-size: 1em;
+  block-size: 1em;
+
+  img {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: contain;
+  }
+}
+
 .layout-breadcrumb__current {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   font-size: 15px;
   font-weight: 600;
   color: var(--r-text);
+}
+
+.layout-breadcrumb__current .layout-breadcrumb__label {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

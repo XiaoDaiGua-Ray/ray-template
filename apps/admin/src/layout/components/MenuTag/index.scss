@@ -4,3 +4,109 @@
   border: 1px solid var(--r-line);
   border-radius: var(--r-radius);
 }
+
+.menu-tag-wrapper {
+  position: relative;
+  padding-inline: 4px;
+}
+
+.menu-tag__item .n-tag__content {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.menu-tag__handle {
+  display: grid;
+  flex: none;
+  place-items: center;
+  min-inline-size: 24px;
+  min-block-size: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-control-radius);
+  background: transparent;
+  color: var(--r-text-secondary);
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: grab;
+
+  &:is(:hover, :focus-visible) {
+    background: var(--r-surface-hover);
+    color: var(--r-text);
+  }
+
+  &:focus-visible {
+    outline-offset: -2px;
+  }
+}
+
+.menu-tag__indicator {
+  display: inline-flex;
+  flex: none;
+}
+
+.menu-tag__top-icon {
+  rotate: 180deg;
+}
+
+.menu-tag-wrapper--dragging,
+.menu-tag-wrapper--dragging * {
+  cursor: grabbing;
+}
+
+.menu-tag__item[data-menu-tag-dragged] {
+  opacity: 0.55;
+}
+
+.menu-tag__item[data-menu-tag-drop]::after {
+  position: absolute;
+  inset-block: 0;
+  inline-size: 2px;
+  border-radius: var(--r-control-radius);
+  background: var(--r-theme-primary-color);
+  pointer-events: none;
+  content: '';
+}
+
+.menu-tag__item[data-menu-tag-drop='before']::after {
+  inset-inline-start: -4px;
+}
+
+.menu-tag__item[data-menu-tag-drop='after']::after {
+  inset-inline-end: -4px;
+}
+
+.menu-tag-move {
+  transition: transform 150ms var(--r-bezier);
+}
+
+.menu-tag__status {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (hover: none) {
+  .menu-tag__handle {
+    min-inline-size: 32px;
+    min-block-size: 28px;
+  }
+}
+
+@media (forced-colors: active) {
+  .menu-tag__item[data-menu-tag-drop]::after {
+    background: Highlight;
+    forced-color-adjust: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-tag-move {
+    transition: none;
+  }
+}

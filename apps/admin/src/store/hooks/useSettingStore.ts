@@ -39,12 +39,19 @@ export const useSettingGetters = () => {
    */
   const getMenuTagSwitch = computed(() => variable.menuTagSwitch)
   const getMenuTagRound = computed(() => variable.menuTagRound)
+  const getMenuTagTop = computed(() => variable.menuTagTop)
+  const getMenuTagFixed = computed(() => variable.menuTagFixed)
+  const getMenuTagDrag = computed(() => variable.menuTagDrag)
   /**
    *
    * @description
    * 获取面包屑开关。
    */
   const getBreadcrumbSwitch = computed(() => variable.breadcrumbSwitch)
+  const getBreadcrumbIcon = computed(() => variable.breadcrumbIcon)
+  const getBreadcrumbIconFallback = computed(
+    () => variable.breadcrumbIconFallback,
+  )
   /**
    *
    * @description
@@ -134,7 +141,12 @@ export const useSettingGetters = () => {
     getAppTheme,
     getMenuTagSwitch,
     getMenuTagRound,
+    getMenuTagTop,
+    getMenuTagFixed,
+    getMenuTagDrag,
     getBreadcrumbSwitch,
+    getBreadcrumbIcon,
+    getBreadcrumbIconFallback,
     getLocaleLanguage,
     getLockScreenSwitch,
     getCopyrightSwitch,

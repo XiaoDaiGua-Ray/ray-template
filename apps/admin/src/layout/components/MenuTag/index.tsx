@@ -11,10 +11,15 @@ import type { AppMenuOption, MenuTagOptions } from '@/types'
 import { ShellTab } from '@ray-template/admin-shell'
 import { RIcon } from '@ray-template/ui/icon'
 import { RMoreDropdown } from '@ray-template/ui/more-dropdown'
-import { usePreferredReducedMotion, useResizeObserver } from '@vueuse/core'
+import {
+  usePreferredReducedMotion,
+  useResizeObserver,
+  useTimeoutFn,
+} from '@vueuse/core'
 import { NDropdown, NFlex, NLayoutHeader, NScrollbar } from 'naive-ui'
 import type { ScrollbarInst } from 'naive-ui'
-import { useTemplateRef } from 'vue'
+import { TransitionGroup, useTemplateRef } from 'vue'
+import { useTagReorder } from './use-tag-reorder'
 
 const Chevron = ({ direction }: { direction: 'left' | 'right' }) => (
   <RIcon
@@ -30,15 +35,25 @@ export default defineComponent({
     const scrollRef = useTemplateRef<ScrollbarInst | null>('scrollRef')
     const tagsRef = useTemplateRef<HTMLElement>('tags')
     const actionsButton = useTemplateRef<HTMLButtonElement>('actionsButton')
+    const statusRef = useTemplateRef<HTMLSpanElement>('reorderStatus')
     const route = useRoute()
     const showingForbidden = computed(() => route.path === FORBIDDEN_ROUTE_PATH)
     const { t } = useI18n('menuTag')
+    const { t: translate } = useI18n()
     const { getCurrentMenuOption, getMenuTagOptions } = useMenuGetters()
-    const { getMenuTagRound } = useSettingGetters()
+    const { getMenuTagRound, getMenuTagTop, getMenuTagFixed, getMenuTagDrag } =
+      useSettingGetters()
     const getMenuKey = computed(
       () => getCurrentMenuOption.value?.fullPath ?? null,
     )
-    const { changeMenuModelValue } = useMenuActions()
+    const {
+      changeMenuModelValue,
+      isMenuTagTopped,
+      isMenuTagFixed,
+      toggleMenuTagTop,
+      toggleMenuTagFixed,
+      moveMenuTag,
+    } = useMenuActions()
     const { maximize } = useMaximize()
     const { reload } = useSpinning()
     const {
@@ -51,8 +66,15 @@ export default defineComponent({
       checkCloseLeft,
       checkCloseRight,
     } = useSiderBar()
-    // 当前右键标签页索引位置
-    const currentContextmenuIndex = ref(-1)
+    const contextPath = ref<string>()
+    const currentContextmenuIndex = computed(() =>
+      getMenuTagOptions.value.findIndex(
+        ({ fullPath }) => fullPath === contextPath.value,
+      ),
+    )
+    const contextTag = computed(
+      () => getMenuTagOptions.value[currentContextmenuIndex.value],
+    )
     const closeStatus = async (restoreFocus: boolean) => {
       const navigation = closeForbiddenPage()
 
@@ -73,7 +95,7 @@ export default defineComponent({
         key: 'closeCurrentPage',
         disabled:
           !(showingForbidden.value && currentContextmenuIndex.value === -1) &&
-          !canClose(getMenuTagOptions.value[currentContextmenuIndex.value]),
+          !canClose(contextTag.value),
         icon: () => <RIcon name="action/close" size="1em" />,
       },
       {
@@ -89,9 +111,35 @@ export default defineComponent({
       {
         label: t('newWindow'),
         key: 'windowOpenTab',
-        disabled: !getMenuTagOptions.value[currentContextmenuIndex.value],
+        disabled: !contextTag.value,
         icon: () => <RIcon name="navigation/window" size="1em" />,
       },
+      ...(getMenuTagTop.value
+        ? [
+            {
+              label: t(isMenuTagTopped(contextTag.value) ? 'untop' : 'top'),
+              key: 'toggleTop',
+              disabled: !contextTag.value,
+              icon: () => (
+                <RIcon
+                  name="directional/expanded"
+                  size="1em"
+                  customClassName="menu-tag__top-icon"
+                />
+              ),
+            },
+          ]
+        : []),
+      ...(getMenuTagFixed.value
+        ? [
+            {
+              label: t(isMenuTagFixed(contextTag.value) ? 'unfix' : 'fix'),
+              key: 'toggleFixed',
+              disabled: !contextTag.value,
+              icon: () => <RIcon name="action/lock" size="1em" />,
+            },
+          ]
+        : []),
       {
         type: 'divider',
         key: 'd1',
@@ -100,16 +148,14 @@ export default defineComponent({
         label: t('closeLeft'),
         key: 'closeLeft',
         disabled:
-          !getMenuTagOptions.value[currentContextmenuIndex.value] ||
-          !checkCloseLeft(currentContextmenuIndex.value),
+          !contextTag.value || !checkCloseLeft(currentContextmenuIndex.value),
         icon: () => <RIcon name="action/close_left" size="1em" />,
       },
       {
         label: t('closeRight'),
         key: 'closeRight',
         disabled:
-          !getMenuTagOptions.value[currentContextmenuIndex.value] ||
-          !checkCloseRight(currentContextmenuIndex.value),
+          !contextTag.value || !checkCloseRight(currentContextmenuIndex.value),
         icon: () => <RIcon name="action/close_right" size="1em" />,
       },
       {
@@ -120,15 +166,17 @@ export default defineComponent({
         label: t('closeOther'),
         key: 'closeOther',
         disabled:
-          getMenuTagOptions.value.length < 2 ||
-          !getMenuTagOptions.value[currentContextmenuIndex.value],
+          !contextTag.value ||
+          !getMenuTagOptions.value.some(
+            (tag) => tag !== contextTag.value && canClose(tag),
+          ),
         icon: () => <RIcon name="action/close_other" size="1em" />,
       },
       {
         label: t('closeAll'),
         key: 'closeAll',
         icon: () => <RIcon name="action/close_all" size="1em" />,
-        disabled: getMenuTagOptions.value.length === 0,
+        disabled: !getMenuTagOptions.value.some(canClose),
       },
     ])
     const actionMap = {
@@ -139,7 +187,7 @@ export default defineComponent({
         closeCurrentMenuTag(currentContextmenuIndex.value)
       },
       reloadCurrentPage: async () => {
-        const option = getMenuTagOptions.value[currentContextmenuIndex.value]
+        const option = contextTag.value
 
         if (option && route.fullPath !== option.fullPath) {
           await changeMenuModelValue(option.fullPath, option)
@@ -161,8 +209,26 @@ export default defineComponent({
       closeOther: () => {
         $closeOther(currentContextmenuIndex.value)
       },
+      toggleTop: () => {
+        const option = contextTag.value
+
+        if (!option || !toggleMenuTagTop(option.fullPath)) return
+
+        void nextTick(() => {
+          const tag = Array.from(tagsRef.value?.children ?? []).find(
+            (element): element is HTMLElement =>
+              element instanceof HTMLElement &&
+              element.dataset.menuTagPath === option.fullPath,
+          )
+
+          if (tag) revealTag(tag)
+        })
+      },
+      toggleFixed: () => {
+        if (contextTag.value) toggleMenuTagFixed(contextTag.value.fullPath)
+      },
       windowOpenTab: () => {
-        const option = getMenuTagOptions.value[currentContextmenuIndex.value]
+        const option = contextTag.value
 
         if (!option?.fullPath) {
           return
@@ -176,7 +242,7 @@ export default defineComponent({
         window.open(path, '_blank', 'noopener')
       },
       maximizeLayoutContent: () => {
-        const option = getMenuTagOptions.value[currentContextmenuIndex.value]
+        const option = contextTag.value
 
         maximize(true)
         option && menuTagClick(option)
@@ -189,7 +255,12 @@ export default defineComponent({
       actionDropdownShow: false,
     })
     const globalMainLayoutLoad = useRuntimeGetters().globalMainLayoutLoad
-    const canClose = (option?: MenuTagOptions) => !!option
+    const canClose = (option?: MenuTagOptions) =>
+      !!option && !isMenuTagFixed(option)
+    const tagLabel = (tag: MenuTagOptions) =>
+      tag.meta.i18nKey
+        ? translate(tag.meta.i18nKey)
+        : tag.breadcrumbLabel || tag.fullPath
 
     const closeCurrentMenuTag = (index: number, restoreFocus = false) => {
       const option = getMenuTagOptions.value[index]
@@ -223,6 +294,61 @@ export default defineComponent({
     )
     const scrollState = reactive({ left: false, right: false })
     const reducedMotion = usePreferredReducedMotion()
+    const revealTag = (tag: HTMLElement) => {
+      const element = scroller.value
+
+      if (!element) return
+
+      const start = tag.offsetLeft
+      const end = start + tag.offsetWidth
+      const left = element.scrollLeft
+      const right = left + element.clientWidth
+
+      if (start < left || tag.offsetWidth >= element.clientWidth)
+        element.scrollLeft = start
+      else if (end > right) element.scrollLeft = end - element.clientWidth
+    }
+    const { start: scheduleAnnouncement } = useTimeoutFn(
+      (message: string) => {
+        if (statusRef.value) statusRef.value.textContent = message
+      },
+      500,
+      { immediate: false },
+    )
+    const announce = (message: string) => {
+      if (statusRef.value) statusRef.value.textContent = ''
+
+      scheduleAnnouncement(message)
+    }
+    const reorder = useTagReorder(
+      getMenuTagDrag,
+      tagsRef,
+      scroller,
+      (path, target, handle) => {
+        if (!moveMenuTag(path, target.path, target.placement)) return
+
+        const position = getMenuTagOptions.value.findIndex(
+          (tag) => tag.fullPath === path,
+        )
+        const option = getMenuTagOptions.value[position]
+        const wasFocused = document.activeElement === handle
+
+        void nextTick(() => {
+          const tag = handle.closest<HTMLElement>('[data-menu-tag-path]')
+
+          if (!tag?.isConnected) return
+
+          revealTag(tag)
+
+          if (wasFocused) handle.focus({ preventScroll: true })
+
+          announce(
+            t('moved', { name: tagLabel(option), position: position + 1 }),
+          )
+        })
+      },
+      () => announce(t('moveCanceled')),
+    )
     const syncScroll = () => {
       const element = scroller.value
 
@@ -258,12 +384,10 @@ export default defineComponent({
       return fn?.()
     }
 
-    // 右键点击标签页
-    // 缓存当前点击标签页索引值（用于关闭左或者右侧标签页操作）
-    const menuTagContextMenu = (idx: number, e: MouseEvent) => {
+    const menuTagContextMenu = (path: string, e: MouseEvent) => {
       e.preventDefault()
 
-      currentContextmenuIndex.value = idx
+      contextPath.value = path
       actionState.x = e.clientX
       actionState.y = e.clientY
       actionState.actionDropdownShow = true
@@ -282,10 +406,8 @@ export default defineComponent({
       actionState.actionDropdownShow = false
     }
 
-    const setCurrentContextmenuIndex = () => {
-      currentContextmenuIndex.value = getMenuTagOptions.value.findIndex(
-        ({ fullPath }) => fullPath === getMenuKey.value,
-      )
+    const selectActiveContext = () => {
+      contextPath.value = getMenuKey.value ?? void 0
     }
 
     const positionMenuTag = () => {
@@ -326,7 +448,11 @@ export default defineComponent({
     return {
       getMenuTagOptions,
       getMenuTagRound,
-      canClose,
+      getMenuTagDrag,
+      isMenuTagTopped,
+      isMenuTagFixed,
+      reorder,
+      tagLabel,
       closeCurrentMenuTag,
       getMenuKey,
       menuTagClick,
@@ -342,7 +468,7 @@ export default defineComponent({
       actionState,
       menuTagContextMenu,
       dismissContextMenu,
-      setCurrentContextmenuIndex,
+      selectActiveContext,
       maximize,
       reload,
       globalMainLayoutLoad,
@@ -351,7 +477,6 @@ export default defineComponent({
   render() {
     const { getMenuTagOptions, globalMainLayoutLoad } = this
     const {
-      canClose,
       closeCurrentMenuTag,
       $t,
       menuTagClick,
@@ -408,32 +533,102 @@ export default defineComponent({
                 role="group"
                 aria-label={$t('menuTag.pages')}
               >
-                {getMenuTagOptions.map((curr, idx) => {
-                  const active = curr.fullPath === this.getMenuKey
-                  const label = curr.meta.i18nKey
-                    ? $t(curr.meta.i18nKey)
-                    : curr.breadcrumbLabel || curr.fullPath
+                <TransitionGroup name="menu-tag" css={false}>
+                  {getMenuTagOptions.map((curr, idx) => {
+                    const active = curr.fullPath === this.getMenuKey
+                    const label = this.tagLabel(curr)
+                    const topped = this.isMenuTagTopped(curr)
+                    const fixed = this.isMenuTagFixed(curr)
+                    const topLabel = topped ? $t('menuTag.topped') : ''
+                    const fixedLabel = fixed ? $t('menuTag.fixed') : ''
+                    const moveLabel = this.getMenuTagDrag
+                      ? $t('menuTag.moveNamed', { name: label })
+                      : ''
 
-                  return (
-                    <ShellTab
-                      key={curr.fullPath}
-                      label={label}
-                      active={active}
-                      round={this.getMenuTagRound}
-                      select={() => menuTagClick(curr)}
-                      closeLabel={$t('menuTag.closeNamed', { name: label })}
-                      close={
-                        canClose(curr)
-                          ? (restoreFocus) =>
-                              closeCurrentMenuTag(idx, restoreFocus)
-                          : void 0
-                      }
-                      contextMenu={(event) => menuTagContextMenu(idx, event)}
-                    />
-                  )
-                })}
+                    return (
+                      <ShellTab
+                        key={curr.fullPath}
+                        label={label}
+                        active={active}
+                        data-menu-tag-path={curr.fullPath}
+                        data-menu-tag-top={topped ? '' : void 0}
+                        statusLabel={
+                          topLabel && fixedLabel
+                            ? `${topLabel} · ${fixedLabel}`
+                            : topLabel || fixedLabel
+                        }
+                        round={this.getMenuTagRound}
+                        select={() => menuTagClick(curr)}
+                        closeLabel={$t('menuTag.closeNamed', { name: label })}
+                        close={
+                          !fixed
+                            ? (restoreFocus) =>
+                                closeCurrentMenuTag(idx, restoreFocus)
+                            : void 0
+                        }
+                        contextMenu={(event) =>
+                          menuTagContextMenu(curr.fullPath, event)
+                        }
+                      >
+                        {{
+                          prefix: () => (
+                            <>
+                              {this.getMenuTagDrag && (
+                                <button
+                                  type="button"
+                                  class="menu-tag__handle"
+                                  aria-label={moveLabel}
+                                  title={moveLabel}
+                                  aria-keyshortcuts="Shift+ArrowLeft Shift+ArrowRight"
+                                  onClick={(event) => event.stopPropagation()}
+                                  onPointerdown={this.reorder.start}
+                                  onPointermove={this.reorder.track}
+                                  onPointerup={this.reorder.drop}
+                                  onPointercancel={this.reorder.cancelPointer}
+                                  onLostpointercapture={
+                                    this.reorder.cancelPointer
+                                  }
+                                  onKeydown={this.reorder.moveWithKey}
+                                >
+                                  <RIcon
+                                    name="action/draggable"
+                                    size={14}
+                                    aria-hidden="true"
+                                  />
+                                </button>
+                              )}
+                              {topped && (
+                                <span
+                                  class="menu-tag__indicator"
+                                  title={topLabel}
+                                  aria-hidden="true"
+                                >
+                                  <RIcon
+                                    name="directional/expanded"
+                                    size={14}
+                                    customClassName="menu-tag__top-icon"
+                                  />
+                                </span>
+                              )}
+                              {fixed && (
+                                <span
+                                  class="menu-tag__indicator"
+                                  title={fixedLabel}
+                                  aria-hidden="true"
+                                >
+                                  <RIcon name="action/lock" size={14} />
+                                </span>
+                              )}
+                            </>
+                          ),
+                        }}
+                      </ShellTab>
+                    )
+                  })}
+                </TransitionGroup>
               </div>
             </NScrollbar>
+            <span ref="reorderStatus" class="menu-tag__status" role="status" />
             <button
               type="button"
               class="menu-tag__control menu-tag__control--scroll"
@@ -494,7 +689,7 @@ export default defineComponent({
                   class="menu-tag__control"
                   aria-label={$t('menuTag.actions')}
                   title={$t('menuTag.actions')}
-                  onClick={this.setCurrentContextmenuIndex}
+                  onClick={this.selectActiveContext}
                 >
                   <RIcon name="action/more" size={16} />
                 </button>

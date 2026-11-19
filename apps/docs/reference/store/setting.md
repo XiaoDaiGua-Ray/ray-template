@@ -4,24 +4,26 @@
 
 ## Getters
 
-| Getter                                         | 字段与默认行为                                                                             |
-| ---------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| `getLayoutConfig`                              | `layoutConfig`，布局模式和工作区尺寸，见下表。                                             |
-| `getDrawerPlacement`                           | `drawerPlacement`，设置抽屉方向，默认 `right`。                                            |
-| `getPrimaryColorOverride`                      | Naive UI 生效的 token 覆盖，由当前风格、明暗和用户主色计算。                               |
-| `getThemeStyle` / `getCustomPrimaryColor`      | 界面风格与手动主色。默认 `modern`，未指定手动主色时使用风格原色。                          |
-| `getAppTheme` / `getAppThemeStr`               | `_appTheme` 为实际深色布尔值，`appTheme` 为 `light/dark/auto` 模式，初始 `light`。         |
-| `getLocaleLanguage`                            | `localeLanguage`，应用语言，默认读取历史值或系统默认配置。                                 |
-| `getMenuTagSwitch` / `getBreadcrumbSwitch`     | `menuTagSwitch` / `breadcrumbSwitch`，默认显示标签和面包屑。                               |
-| `getLockScreenSwitch`                          | `lockScreenSwitch`，锁屏设置弹窗显隐，默认关，不持久化。                                   |
-| `getCopyrightSwitch`                           | `copyrightSwitch`，默认显示版权区。                                                        |
-| `getContentTransition`                         | `contentTransition`，路由切换动画，默认 `scale`。                                          |
-| `getWatermarkSwitch` / `getWatermarkConfig`    | `watermarkSwitch` 默认关；配置包含文字、字体大小、行高、宽高、偏移、间隔、旋转和 `cross`。 |
-| `getAppRootRoute`                              | `appRootRoute`，默认 `{ name: 'Dashboard', path: '/dashboard' }`。                         |
-| `getSideBarLogo`                               | `sideBarLogo`，`icon`、`title`、`url`、`jumpType`。默认 `logo/ray`，站内跳转到仪表盘。     |
-| `getKeepAliveConfig`                           | `keepAliveConfig`，默认开启、最多 10 个、排除列表为空。                                    |
-| `getMenuConfig`                                | `menuConfig`，侧栏、折叠、图标、手风琴与滚动配置。                                         |
-| `getColorWeakness` / `getDynamicDocumentTitle` | `colorWeakness` 默认关，`dynamicDocumentTitle` 默认开。                                    |
+| Getter                                                 | 字段与默认行为                                                                             |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| `getLayoutConfig`                                      | `layoutConfig`，布局模式和工作区尺寸，见下表。                                             |
+| `getDrawerPlacement`                                   | `drawerPlacement`，设置抽屉方向，默认 `right`。                                            |
+| `getPrimaryColorOverride`                              | Naive UI 生效的 token 覆盖，由当前风格、明暗和用户主色计算。                               |
+| `getThemeStyle` / `getCustomPrimaryColor`              | 界面风格与手动主色。默认 `modern`，未指定手动主色时使用风格原色。                          |
+| `getAppTheme` / `getAppThemeStr`                       | `_appTheme` 为实际深色布尔值，`appTheme` 为 `light/dark/auto` 模式，初始 `light`。         |
+| `getLocaleLanguage`                                    | `localeLanguage`，应用语言，默认读取历史值或系统默认配置。                                 |
+| `getMenuTagSwitch` / `getBreadcrumbSwitch`             | `menuTagSwitch` / `breadcrumbSwitch`，默认显示标签和面包屑。                               |
+| `getMenuTagTop` / `getMenuTagFixed` / `getMenuTagDrag` | `menuTagTop` / `menuTagFixed` / `menuTagDrag`，默认启用标签置顶、固定和拖拽排序。          |
+| `getBreadcrumbIcon` / `getBreadcrumbIconFallback`      | `breadcrumbIcon` / `breadcrumbIconFallback`，默认显示菜单图标和缺图时的占位图标。          |
+| `getLockScreenSwitch`                                  | `lockScreenSwitch`，锁屏设置弹窗显隐，默认关，不持久化。                                   |
+| `getCopyrightSwitch`                                   | `copyrightSwitch`，默认显示版权区。                                                        |
+| `getContentTransition`                                 | `contentTransition`，路由切换动画，默认 `scale`。                                          |
+| `getWatermarkSwitch` / `getWatermarkConfig`            | `watermarkSwitch` 默认关；配置包含文字、字体大小、行高、宽高、偏移、间隔、旋转和 `cross`。 |
+| `getAppRootRoute`                                      | `appRootRoute`，默认 `{ name: 'Dashboard', path: '/dashboard' }`。                         |
+| `getSideBarLogo`                                       | `sideBarLogo`，`icon`、`title`、`url`、`jumpType`。默认 `logo/ray`，站内跳转到仪表盘。     |
+| `getKeepAliveConfig`                                   | `keepAliveConfig`，默认开启、最多 10 个、排除列表为空。                                    |
+| `getMenuConfig`                                        | `menuConfig`，侧栏、折叠、图标、手风琴与滚动配置。                                         |
+| `getColorWeakness` / `getDynamicDocumentTitle`         | `colorWeakness` 默认关，`dynamicDocumentTitle` 默认开。                                    |
 
 `layoutConfig` 的 `mode` 为 `side`（默认）、`top`、`mixed`。`contentWidth` 默认 `fluid`，也可取 `fixed`。`contentMaxWidth` 默认 1200，限制在 640–2560；`contentPadding` 默认 16，限制在 0–48；`fixedHeader`、`fixedFooter` 默认开启。旧缓存水合时补齐字段并规范化范围。
 

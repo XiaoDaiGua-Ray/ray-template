@@ -12,9 +12,11 @@ import {
   useWatermark,
 } from '@/hooks'
 import { useMenuGetters, useRuntimeGetters, useSettingGetters } from '@/store'
+import { useMenuKeyboard } from '@ray-template/admin-shell'
+import { useMenu } from '@ray-template/composables/useMenu'
 import { RIcon } from '@ray-template/ui/icon'
 import { useTimeoutFn } from '@vueuse/core'
-import { NButton, NFlex, NInput, NTag } from 'naive-ui'
+import { NButton, NFlex, NInput, NMenu, NTag } from 'naive-ui'
 import DemoPage from '../components/DemoPage'
 import HookExample from '../hooks/HookExample'
 
@@ -32,6 +34,22 @@ export default defineComponent({
     const spinning = useSpinning()
     const maximize = useMaximize()
     const tags = useSiderBar()
+    const menuKeyboard = useMenuKeyboard(false)
+    const { menuRef, menuProps, showOption } = useMenu({
+      options: [
+        { key: 'overview', label: () => text('menuOverview') },
+        {
+          key: 'reports',
+          label: () => text('menuReports'),
+          children: [
+            { key: 'daily', label: () => text('menuDaily') },
+            { key: 'monthly', label: () => text('menuMonthly') },
+          ],
+        },
+      ],
+      value: 'monthly',
+      expandedKeys: [],
+    })
     const { navigationTo } = useAppNavigation()
     const contentScrollTo = useContentScroll()
     const siderScrollTo = useSiderScroll()
@@ -70,7 +88,7 @@ export default defineComponent({
         title={label('templateTitle')}
         description={text('templateIntro')}
         eyebrow={label('templateEyebrow')}
-        meta="9 Hooks"
+        meta="10 Hooks"
       >
         <h2 class="r-demo-section-heading">{label('appearanceAndPage')}</h2>
         <div class="r-hook-grid">
@@ -253,6 +271,59 @@ export default defineComponent({
                   </NButton>
                   <NButton onClick={tags.closeAll}>{text('closeAll')}</NButton>
                 </NFlex>
+              </NFlex>
+            ),
+          )}
+          {example(
+            'useMenu',
+            `const { menuRef, menuProps, showOption } = useMenu({
+  options: [
+    { key: 'overview', label: 'Overview' },
+    {
+      key: 'reports',
+      label: 'Reports',
+      children: [
+        { key: 'daily', label: 'Daily report' },
+        { key: 'monthly', label: 'Monthly report' },
+      ],
+    },
+  ],
+  value: 'monthly',
+  expandedKeys: [],
+})
+
+// TSX
+<NMenu ref={menuRef} {...menuProps} />
+<NButton onClick={() => showOption('monthly')}>Reveal monthly report</NButton>`,
+            () => (
+              <NFlex vertical>
+                <nav
+                  aria-label={text('menuExample')}
+                  onKeydown={menuKeyboard.onKeydown}
+                >
+                  <NMenu
+                    ref={menuRef}
+                    {...menuProps}
+                    nodeProps={menuKeyboard.nodeProps}
+                  />
+                </nav>
+                <NFlex>
+                  <NButton onClick={() => showOption('monthly')}>
+                    {text('menuReveal')}
+                  </NButton>
+                  <NButton
+                    disabled={menuProps.value === null}
+                    onClick={() => (menuProps.value = null)}
+                  >
+                    {text('menuClear')}
+                  </NButton>
+                </NFlex>
+                <code>
+                  {t('menuState', {
+                    selected: menuProps.value ?? '—',
+                    expanded: menuProps.expandedKeys?.join(', ') || '—',
+                  })}
+                </code>
               </NFlex>
             ),
           )}

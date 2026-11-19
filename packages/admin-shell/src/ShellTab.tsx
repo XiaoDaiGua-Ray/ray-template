@@ -9,6 +9,7 @@ export const ShellTab = defineComponent({
     label: { type: String, required: true },
     active: Boolean,
     round: Boolean,
+    statusLabel: { type: String, default: '' },
     closeLabel: { type: String, default: '' },
     select: { type: Function as PropType<() => void>, required: true },
     close: {
@@ -20,7 +21,7 @@ export const ShellTab = defineComponent({
       default: void 0,
     },
   },
-  setup(props) {
+  setup(props, { slots }) {
     const setNativeCloseLabel = ({ el }: VNode) => {
       if (!(el instanceof HTMLElement)) return
 
@@ -46,10 +47,14 @@ export const ShellTab = defineComponent({
         }}
         onClose={(event) => props.close?.(event.detail === 0)}
       >
+        {slots.prefix?.()}
         <button
           type="button"
           class="menu-tag__tab"
           aria-current={props.active ? 'page' : void 0}
+          aria-label={
+            props.statusLabel ? `${props.label} · ${props.statusLabel}` : void 0
+          }
           title={props.label}
           onKeydown={(event) => {
             if (event.key === 'Delete' && props.close) {

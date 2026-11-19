@@ -133,6 +133,13 @@ describe('layout preferences', () => {
       expect(store.localeLanguage).toBe('en-US')
       expect(store.menuTagSwitch).toBe(false)
       expect(store.menuTagRound).toBe(false)
+      expect(store).toMatchObject({
+        menuTagTop: true,
+        menuTagFixed: true,
+        menuTagDrag: true,
+        breadcrumbIcon: true,
+        breadcrumbIconFallback: true,
+      })
       expect(store.menuConfig).toMatchObject({
         iconSize: 20,
         collapsedIconSize: 22,
@@ -188,6 +195,11 @@ describe('layout preferences', () => {
       store.updateSettingState('appTheme', 'dark')
       store.updateSettingState('themeStyle', 'material')
       store.updateSettingState('menuTagRound', true)
+      store.updateSettingState('menuTagTop', false)
+      store.updateSettingState('menuTagFixed', false)
+      store.updateSettingState('menuTagDrag', false)
+      store.updateSettingState('breadcrumbIcon', false)
+      store.updateSettingState('breadcrumbIconFallback', false)
       store.updateSettingState('watermarkConfig', { content: 'Portable' })
       store.updateSettingState('keepAliveConfig', {
         keepAliveExclude: ['Page'],
@@ -198,6 +210,8 @@ describe('layout preferences', () => {
       store.updateSettingState('layoutConfig', { mode: 'top' })
       store.updateSettingState('appTheme', 'light')
       store.updateSettingState('menuTagRound', false)
+      store.updateSettingState('menuTagDrag', true)
+      store.updateSettingState('breadcrumbIcon', true)
       store.updateSettingState('appRootRoute', { path: '/custom-home' })
       store.changePrimaryColor('#000000')
       store.updateSettingState('themeStyle', 'plain')
@@ -221,6 +235,11 @@ describe('layout preferences', () => {
         appTheme: 'dark',
         themeStyle: 'material',
         menuTagRound: true,
+        menuTagTop: false,
+        menuTagFixed: false,
+        menuTagDrag: false,
+        breadcrumbIcon: false,
+        breadcrumbIconFallback: false,
       })
     } finally {
       app.unmount()
@@ -243,12 +262,24 @@ describe('layout preferences', () => {
       const {
         themeStyle: _style,
         menuTagRound: _round,
+        menuTagTop: _top,
+        menuTagFixed: _fixed,
+        menuTagDrag: _drag,
+        breadcrumbIcon: _icon,
+        breadcrumbIconFallback: _fallback,
         ...legacy
       } = preferences
 
       store.importPreferences(JSON.stringify({ ...file, preferences: legacy }))
       expect(store.themeStyle).toBe('modern')
       expect(store.menuTagRound).toBe(false)
+      expect(store.exportPreferences().preferences).toMatchObject({
+        menuTagTop: true,
+        menuTagFixed: true,
+        menuTagDrag: true,
+        breadcrumbIcon: true,
+        breadcrumbIconFallback: true,
+      })
       expect(store.themeOverrides.Card?.borderRadius).toBe('12px')
       expect(store.themeOverrides.common?.primaryColor).toBe('#3468db')
 

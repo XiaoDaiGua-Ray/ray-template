@@ -19,6 +19,7 @@ import { pick } from 'lodash-es'
 import { NEllipsis } from 'naive-ui'
 import type { LocationQuery } from 'vue-router'
 import { piniaNavigationHistoryStore } from '../navigation-history'
+import { piniaSettingStore } from '../setting'
 import { piniaSigningStore } from '../signing'
 import { pickRouteRecordNormalizedConstant } from './constant'
 import {
@@ -67,16 +68,14 @@ export const piniaMenuStore = defineStore(
       breadcrumbOptions: [], // 面包屑菜单
       currentMenuOption: null, // 当前激活菜单项
     })
+    const settings = piniaSettingStore()
     const signing = piniaSigningStore()
     const navigationHistory = piniaNavigationHistoryStore()
     const menuIndex = new Map<
       string,
       { option: AppMenuOption; parentPath: string }
     >()
-    const cacheTags = () => {
-      retainKeepAliveInclude(
-        new Set(menuState.menuTagOptions.map(({ name }) => name)),
-      )
+    const persistTags = () => {
       setStorage(
         APP_CATCH_KEY.appMenuTagOptions,
         menuState.menuTagOptions.map(
@@ -89,18 +88,117 @@ export const piniaMenuStore = defineStore(
             breadcrumbLabel,
             fullPath,
             closeable,
+            topped,
+            fixed,
           }) => ({
             name,
             key,
             path,
             show,
-            meta,
+            meta: {
+              ...meta,
+              icon: typeof meta.icon === 'string' ? meta.icon : void 0,
+              extra: meta.extra && {
+                ...meta.extra,
+                icon:
+                  typeof meta.extra.icon === 'string'
+                    ? meta.extra.icon
+                    : void 0,
+              },
+            },
             breadcrumbLabel,
             fullPath,
             closeable,
+            topped,
+            fixed,
           }),
         ),
       )
+    }
+
+    const syncOpenTags = () => {
+      retainKeepAliveInclude(
+        new Set(menuState.menuTagOptions.map(({ name }) => name)),
+      )
+      persistTags()
+    }
+
+    const isMenuTagTopped = (tag?: MenuTagOptions) =>
+      settings.menuTagTop && tag?.topped === true
+
+    const isMenuTagFixed = (tag?: MenuTagOptions) =>
+      settings.menuTagFixed && tag?.fixed === true
+
+    const orderMenuTags = (tags: MenuTagOptions[]) =>
+      settings.menuTagTop
+        ? [
+            ...tags.filter(isMenuTagTopped),
+            ...tags.filter((tag) => !isMenuTagTopped(tag)),
+          ]
+        : tags
+
+    const toggleMenuTagTop = (fullPath: string) => {
+      if (!settings.menuTagTop) return false
+
+      const tags = [...menuState.menuTagOptions]
+      const index = tags.findIndex((tag) => tag.fullPath === fullPath)
+
+      if (index < 0) return false
+
+      const [tag] = tags.splice(index, 1)
+      const topped = !tag.topped
+      const firstRegular = tags.findIndex((tag) => !isMenuTagTopped(tag))
+      const insert = topped ? 0 : firstRegular < 0 ? tags.length : firstRegular
+
+      tags.splice(insert, 0, { ...tag, topped })
+      menuState.menuTagOptions = tags
+      persistTags()
+
+      return true
+    }
+
+    const toggleMenuTagFixed = (fullPath: string) => {
+      if (!settings.menuTagFixed) return
+
+      const tags = menuState.menuTagOptions
+      const index = tags.findIndex((tag) => tag.fullPath === fullPath)
+
+      if (index < 0) return
+
+      tags[index] = { ...tags[index], fixed: !tags[index].fixed }
+      persistTags()
+    }
+
+    const moveMenuTag = (
+      fullPath: string,
+      targetPath: string,
+      placement: 'before' | 'after',
+    ) => {
+      if (!settings.menuTagDrag) return false
+
+      const tags = [...menuState.menuTagOptions]
+      const from = tags.findIndex((tag) => tag.fullPath === fullPath)
+      const to = tags.findIndex((tag) => tag.fullPath === targetPath)
+
+      if (
+        from < 0 ||
+        to < 0 ||
+        from === to ||
+        isMenuTagTopped(tags[from]) !== isMenuTagTopped(tags[to])
+      )
+        return false
+
+      const insert = to + Number(placement === 'after') - Number(from < to)
+
+      if (from === insert) return false
+
+      const [tag] = tags.splice(from, 1)
+
+      tags.splice(insert, 0, tag)
+      menuState.menuTagOptions = tags
+      persistTags()
+
+      return true
     }
 
     const clearActiveMenu = () => {
@@ -206,11 +304,11 @@ export const piniaMenuStore = defineStore(
           !option.meta.windowOpen,
       )
 
-      isAppend
-        ? menuState.menuTagOptions.push(...arr)
-        : (menuState.menuTagOptions = arr)
+      menuState.menuTagOptions = orderMenuTags(
+        isAppend ? [...menuState.menuTagOptions, ...arr] : arr,
+      )
 
-      cacheTags()
+      syncOpenTags()
 
       if (!menuState.menuTagOptions.length) clearActiveMenu()
     }
@@ -237,12 +335,14 @@ export const piniaMenuStore = defineStore(
 
       if (tagIndex < 0) {
         menuState.menuTagOptions.push(option)
-        cacheTags()
+        syncOpenTags()
       } else if (
         menuState.menuTagOptions[tagIndex].fullPath !== option.fullPath
       ) {
-        menuState.menuTagOptions[tagIndex] = option
-        cacheTags()
+        const { topped, fixed } = menuState.menuTagOptions[tagIndex]
+
+        menuState.menuTagOptions[tagIndex] = { ...option, topped, fixed }
+        syncOpenTags()
       }
 
       setBreadcrumbOptions(option.key)
@@ -372,22 +472,25 @@ export const piniaMenuStore = defineStore(
       menuState.currentMenuOption = null
       menuState.breadcrumbOptions = []
 
-      const restoredTags = menuState.menuTagOptions.flatMap(({ fullPath }) => {
-        if (typeof fullPath !== 'string' || !fullPath.startsWith('/')) return []
+      const restoredTags = menuState.menuTagOptions.flatMap(
+        ({ fullPath, topped, fixed }) => {
+          if (typeof fullPath !== 'string' || !fullPath.startsWith('/'))
+            return []
 
-        const option = optionForRoute(resolve(fullPath))
+          const option = optionForRoute(resolve(fullPath))
 
-        return option && !option.meta.sameLevel && !option.meta.windowOpen
-          ? [option]
-          : []
-      })
+          return option && !option.meta.sameLevel && !option.meta.windowOpen
+            ? [{ ...option, topped: topped === true, fixed: fixed === true }]
+            : []
+        },
+      )
 
-      menuState.menuTagOptions = [
+      menuState.menuTagOptions = orderMenuTags([
         ...new Map(
           restoredTags.map((option) => [resolve(option.fullPath).path, option]),
         ).values(),
-      ]
-      cacheTags()
+      ])
+      syncOpenTags()
 
       const active = optionForRoute(route)
 
@@ -426,12 +529,28 @@ export const piniaMenuStore = defineStore(
     const spliceMenTagOptions = (idx: number, length = 1) => {
       const r = menuState.menuTagOptions.splice(idx, length)
 
-      cacheTags()
+      syncOpenTags()
 
       if (!menuState.menuTagOptions.length) clearActiveMenu()
 
       return r
     }
+
+    watch(
+      () => settings.menuTagTop,
+      (enabled) => {
+        if (!enabled) return
+
+        const current = menuState.menuTagOptions
+        const ordered = orderMenuTags(current)
+
+        if (ordered.every((tag, index) => tag === current[index])) return
+
+        menuState.menuTagOptions = ordered
+        persistTags()
+      },
+      { flush: 'sync' },
+    )
 
     watch(
       [
@@ -446,7 +565,7 @@ export const piniaMenuStore = defineStore(
           if (!current[1]) {
             menuState.options = []
             menuIndex.clear()
-            cacheTags()
+            syncOpenTags()
             clearActiveMenu()
 
             return
@@ -488,6 +607,11 @@ export const piniaMenuStore = defineStore(
       collapsedMenu,
       spliceMenTagOptions,
       setMenuTagOptions,
+      isMenuTagTopped,
+      isMenuTagFixed,
+      toggleMenuTagTop,
+      toggleMenuTagFixed,
+      moveMenuTag,
       resolveOption,
       updateMenuState,
       setupAppMenu,
