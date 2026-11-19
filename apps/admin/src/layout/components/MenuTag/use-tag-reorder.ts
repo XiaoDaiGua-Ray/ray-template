@@ -7,6 +7,7 @@ import type { Ref } from 'vue'
 
 type Interact = typeof import('interactjs').default
 type Placement = 'before' | 'after'
+type ClientPosition = Pick<PointerEvent, 'clientX' | 'clientY'>
 
 const TAB_SELECTOR = '[data-menu-tag-path]'
 const CLOSE_SELECTOR = '.n-tag__close'
@@ -30,6 +31,14 @@ interface Press {
   tab: HTMLElement
   button: HTMLButtonElement
   path: string
+  offsetX: number
+  offsetY: number
+}
+
+interface Drag {
+  preview: HTMLElement
+  restoreDropMode: () => void
+  release?: PointerEvent
 }
 
 let activeTagDrags = 0
@@ -59,7 +68,7 @@ export function useTagReorder(
   announceCancellation: () => void,
 ) {
   let press: Press | undefined
-  let drag: { restoreDropMode: () => void; release?: PointerEvent } | undefined
+  let drag: Drag | undefined
   let marker: DropMarker | undefined
   let frame: number | undefined
   let suppressPointerClick = false
@@ -81,6 +90,7 @@ export function useTagReorder(
     if (frame !== void 0) cancelAnimationFrame(frame)
 
     frame = void 0
+    drag?.preview.remove()
     drag?.restoreDropMode()
     drag = void 0
     press = void 0
@@ -105,8 +115,18 @@ export function useTagReorder(
     })
   }
 
-  const start = ({ pointer, tab }: Press) => {
+  const movePreview = ({ clientX, clientY }: ClientPosition) => {
+    if (!press || !drag) return
+
+    const x = clientX - press.offsetX
+    const y = clientY - press.offsetY
+
+    drag.preview.style.transform = `translate3d(${x}px, ${y}px, 0)`
+  }
+
+  const start = ({ pointer, tab }: Press, position: ClientPosition) => {
     pointer.interaction.start({ name: 'drag' }, pointer.interactable, tab)
+    movePreview(position)
   }
 
   const startWithPointer = (event: PointerEvent) => {
@@ -123,7 +143,7 @@ export function useTagReorder(
     const x = Math.abs(event.clientX - current.down.clientX)
     const y = Math.abs(event.clientY - current.down.clientY)
 
-    if (Math.max(x, y) >= DRAG_SLOP) start(current)
+    if (Math.max(x, y) >= DRAG_SLOP) start(current, event)
   }
 
   const trackTouch = (event: TouchEvent) => {
@@ -153,7 +173,7 @@ export function useTagReorder(
         return
       }
 
-      start(current)
+      start(current, touch)
     }
 
     // 普通滑动保持原生滚动，长按启动拖动后才接管触摸。
@@ -165,6 +185,10 @@ export function useTagReorder(
     row: HTMLElement,
     viewport: HTMLElement,
   ) => {
+    const previewHost = row.closest('.menu-tag')
+
+    if (!previewHost) return
+
     const zoneRect = (element: Element) => {
       const visible = interact.getElementRect(viewport)
       const origin = interact.getElementRect(row)?.left
@@ -224,12 +248,21 @@ export function useTagReorder(
           start: () => {
             if (!press) return
 
-            drag = { restoreDropMode: retainDynamicDrop(interact) }
+            const preview = press.tab.cloneNode(true) as HTMLElement
+
+            preview.classList.add('menu-tag__drag-preview')
+            preview.removeAttribute('data-menu-tag-path')
+            preview.setAttribute('aria-hidden', 'true')
+            preview.setAttribute('inert', '')
+            // 副本浮在滚动区外，原标签继续占位并参与落点判定。
+            previewHost.append(preview)
+            drag = { preview, restoreDropMode: retainDynamicDrop(interact) }
             suppressPointerClick = true
             row.classList.add('menu-tag-wrapper--dragging')
             press.tab.setAttribute('data-menu-tag-dragged', '')
             refreshDrop()
           },
+          move: movePreview,
           end: finish,
         },
       })
@@ -312,8 +345,20 @@ export function useTagReorder(
         const path = tab.dataset.menuTagPath
         const button = tab.querySelector<HTMLButtonElement>('.menu-tag__tab')
 
-        if (path && button)
-          press = { down: event, pointer, row, tab, button, path }
+        if (!path || !button) return
+
+        const { left, top } = tab.getBoundingClientRect()
+
+        press = {
+          down: event,
+          pointer,
+          row,
+          tab,
+          button,
+          path,
+          offsetX: event.clientX - left,
+          offsetY: event.clientY - top,
+        }
       })
 
     return () => {

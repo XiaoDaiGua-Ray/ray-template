@@ -22,6 +22,7 @@ export const iconNames = [
   'action/more',
   'action/mouse',
   'action/out',
+  'action/pin',
   'action/print',
   'action/reload',
   'action/search',

@@ -29,9 +29,21 @@
   opacity: 0.55;
 }
 
+.menu-tag__item.menu-tag__drag-preview {
+  position: fixed;
+  inset: 0 auto auto 0;
+  z-index: 4;
+  background-color: var(--r-surface);
+  background-image: linear-gradient(var(--n-color), var(--n-color));
+  box-shadow: var(--r-shadow-soft);
+  pointer-events: none;
+  transition: none;
+}
+
 .menu-tag__item[data-menu-tag-drop]::after {
   position: absolute;
   inset-block: 0;
+  z-index: 5;
   inline-size: 2px;
   border-radius: var(--r-control-radius);
   background: var(--r-theme-primary-color);

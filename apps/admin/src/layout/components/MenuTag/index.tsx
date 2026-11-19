@@ -136,7 +136,9 @@ export default defineComponent({
               label: t(isMenuTagFixed(contextTag.value) ? 'unfix' : 'fix'),
               key: 'toggleFixed',
               disabled: !contextTag.value,
-              icon: () => <RIcon name="action/lock" size="1em" />,
+              icon: () => (
+                <RIcon name="action/pin" size="1em" aria-hidden="true" />
+              ),
             },
           ]
         : []),
@@ -573,7 +575,19 @@ export default defineComponent({
                         contextMenu={(event) =>
                           menuTagContextMenu(curr.fullPath, event)
                         }
-                      />
+                      >
+                        {{
+                          prefix: fixed
+                            ? () => (
+                                <RIcon
+                                  name="action/pin"
+                                  size={14}
+                                  aria-hidden="true"
+                                />
+                              )
+                            : void 0,
+                        }}
+                      </ShellTab>
                     )
                   })}
                 </TransitionGroup>

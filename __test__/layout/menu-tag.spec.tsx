@@ -1,5 +1,6 @@
 import MenuTag from '@/layout/components/MenuTag'
 import type { MenuTagOptions } from '@/types'
+import { RIcon } from '@ray-template/ui/icon'
 import { flushPromises, mount } from '@vue/test-utils'
 import type { VueWrapper } from '@vue/test-utils'
 import { NDropdown, NTag } from 'naive-ui'
@@ -131,7 +132,12 @@ const mouse = (element: Element, type: string, button: number) => {
   )
 }
 
-const point = (element: Element, type: string, clientX: number) => {
+const point = (
+  element: Element,
+  type: string,
+  clientX: number,
+  clientY = 16,
+) => {
   const event = new PointerEvent(type, {
     bubbles: true,
     isPrimary: true,
@@ -139,15 +145,18 @@ const point = (element: Element, type: string, clientX: number) => {
     pointerType: 'mouse',
     buttons: type === 'pointerup' ? 0 : 1,
     clientX,
-    clientY: 16,
+    clientY,
   })
 
   Object.defineProperties(event, {
     pageX: { value: clientX },
-    pageY: { value: 16 },
+    pageY: { value: clientY },
   })
   element.dispatchEvent(event)
 }
+
+const dragPreview = () =>
+  document.body.querySelector<HTMLElement>('.menu-tag__drag-preview')
 
 const openContextMenu = async (index: number) => {
   const tab = wrapper.findAll('.menu-tag__tab')[index]!.element
@@ -279,10 +288,12 @@ it('updates tab status and actions while preferences change', async () => {
       .props('options')
       ?.map((option) => option.key)
 
-  expect(tab.find('.n-tag__close').exists()).toBe(false)
-  expect(tab.find('.n-tag__icon').exists()).toBe(false)
+  const pin = tab.get('.n-tag__icon').getComponent(RIcon)
   const label = tab.get('.menu-tag__tab')
 
+  expect(tab.find('.n-tag__close').exists()).toBe(false)
+  expect(pin.props('name')).toBe('action/pin')
+  expect(pin.attributes('aria-hidden')).toBe('true')
   expect(label.attributes('aria-label')).toBe(
     'Reports · menuTag.topped · menuTag.fixed',
   )
@@ -295,6 +306,7 @@ it('updates tab status and actions while preferences change', async () => {
   state.drag.value = false
   await nextTick()
   expect(tab.find('.n-tag__close').exists()).toBe(true)
+  expect(tab.find('.n-tag__icon').exists()).toBe(false)
   expect(label.attributes('aria-label')).toBeUndefined()
   expect(label.attributes('aria-keyshortcuts')).toBeUndefined()
   expect(actions()).not.toContain('toggleTop')
@@ -308,7 +320,6 @@ it('reorders a focused protected tab with Shift and an arrow key', async () => {
   const button = tab.get('.menu-tag__tab')
 
   expect(tab.find('.n-tag__close').exists()).toBe(false)
-  expect(tab.find('.r-icon').exists()).toBe(false)
   expect(button.attributes('aria-keyshortcuts')).toBe(
     'Shift+ArrowLeft Shift+ArrowRight',
   )
@@ -358,7 +369,20 @@ it('reorders from the tab body using the release position and ignores the drag c
   const source = tags[0].element
 
   point(source, 'pointerdown', 10)
-  point(tags[1].element, 'pointermove', 180)
+  expect(dragPreview()).toBeNull()
+  point(tags[1].element, 'pointermove', 180, 22)
+  const preview = dragPreview()!
+
+  expect(preview.parentElement).toBe(row.closest('.menu-tag'))
+  expect(preview.textContent).toBe(source.textContent)
+  expect(preview.dataset.menuTagPath).toBeUndefined()
+  expect(preview.getAttribute('aria-hidden')).toBe('true')
+  expect(preview.hasAttribute('inert')).toBe(true)
+  expect(preview.style.transform).toBe('translate3d(170px, 6px, 0)')
+
+  point(tags[1].element, 'pointermove', 190, 24)
+  expect(dragPreview()).toBe(preview)
+  expect(preview.style.transform).toBe('translate3d(180px, 8px, 0)')
   expect(tags[1].attributes('data-menu-tag-drop')).toBe('after')
   expect(state.move).not.toHaveBeenCalled()
 
@@ -371,6 +395,7 @@ it('reorders from the tab body using the release position and ignores the drag c
   expect(
     row.querySelector('[data-menu-tag-drop],[data-menu-tag-dragged]'),
   ).toBeNull()
+  expect(dragPreview()).toBeNull()
 
   await tags[0].trigger('click', { detail: 1 })
   expect(state.navigate).not.toHaveBeenCalled()
@@ -414,6 +439,9 @@ it('refreshes the drop marker after a scroll with a stationary pointer', () => {
 
   point(source, 'pointerdown', 30)
   point(tags[1].element, 'pointermove', 180)
+  const position = dragPreview()?.style.transform
+
+  expect(position).toBe('translate3d(150px, 0px, 0)')
   expect(tags[1].attributes('data-menu-tag-drop')).toBe('after')
   expect(requestFrame).toHaveBeenCalledTimes(1)
   requestFrame.mock.calls[0][0](16)
@@ -423,6 +451,7 @@ it('refreshes the drop marker after a scroll with a stationary pointer', () => {
   expect(requestFrame).toHaveBeenCalledTimes(2)
   requestFrame.mock.calls[1][0](32)
   expect(tags[2].attributes('data-menu-tag-drop')).toBe('after')
+  expect(dragPreview()?.style.transform).toBe(position)
   point(tags[2].element, 'pointerup', 180)
 })
 
@@ -435,6 +464,7 @@ it('cancels dragging with Escape and preserves keyboard activation', async () =>
   point(button.element, 'pointermove', 60)
   expect(wrapper.find('[data-menu-tag-dragged]').exists()).toBe(true)
   await button.trigger('keydown', { key: 'Escape' })
+  expect(dragPreview()).toBeNull()
   point(button.element, 'pointerup', 60)
   await button.trigger('click', { detail: 0 })
   expect(state.navigate).toHaveBeenCalledExactlyOnceWith(
@@ -446,6 +476,30 @@ it('cancels dragging with Escape and preserves keyboard activation', async () =>
   expect(state.move).not.toHaveBeenCalled()
   expect(state.navigate).toHaveBeenCalledTimes(1)
 })
+
+it.each(['pointercancel', 'disabled'])(
+  'removes the drag preview when the drag is %s',
+  async (reason) => {
+    const { row, tags } = mockTagRects()
+    const source = tags[0].element
+
+    point(source, 'pointerdown', 10)
+    point(tags[1].element, 'pointermove', 180)
+    expect(dragPreview()).not.toBeNull()
+
+    if (reason === 'pointercancel') point(source, 'pointercancel', 180)
+    else {
+      state.drag.value = false
+      await nextTick()
+    }
+
+    expect(dragPreview()).toBeNull()
+    expect(
+      row.querySelector('[data-menu-tag-drop],[data-menu-tag-dragged]'),
+    ).toBeNull()
+    expect(state.move).not.toHaveBeenCalled()
+  },
+)
 
 it.each([
   { hold: 100, claimed: false },
@@ -477,6 +531,7 @@ it.each([
 
     expect(move.defaultPrevented).toBe(claimed)
     expect(wrapper.find('[data-menu-tag-dragged]').exists()).toBe(claimed)
+    expect(Boolean(dragPreview())).toBe(claimed)
   },
 )
 
