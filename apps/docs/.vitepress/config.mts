@@ -1,12 +1,35 @@
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import { defineConfig, postcssIsolateStyles } from 'vitepress'
 import { writeLegacyRedirects } from './legacy.mts'
-import { sidebar } from './sidebar.mts'
+import { createSidebar } from './sidebar.mts'
 import { demo, repository, version } from './source.mts'
 
 const base = '/ray-template/docs/'
 const requestedRef = process.env.RAY_TEMPLATE_SOURCE_REF ?? ''
 const sourceRef = /^[0-9a-f]{40}$/.test(requestedRef) ? requestedRef : 'main'
+
+function createNav(english: boolean) {
+  const prefix = english ? '/en' : ''
+
+  return [
+    {
+      text: english ? 'Guide' : '指南',
+      link: prefix + '/guide/start',
+      activeMatch: '^' + prefix + '/guide/',
+    },
+    {
+      text: english ? 'Architecture' : '架构',
+      link: prefix + '/guide/architecture',
+    },
+    { text: english ? 'Migration' : '版本分界', link: prefix + '/migration' },
+    {
+      text: english ? 'API Reference' : 'API 参考',
+      link: prefix + '/reference/',
+      activeMatch: '^' + prefix + '/reference/',
+    },
+    { text: 'Ray Admin', link: demo },
+  ]
+}
 
 export default defineConfig({
   base,
@@ -14,6 +37,36 @@ export default defineConfig({
   titleTemplate: ':title · Ray Template 文档',
   description: `Ray Template ${version} 的 Monorepo 架构、版本分界、组件与交互示例。`,
   lang: 'zh-CN',
+  locales: {
+    root: {
+      label: '简体中文',
+      themeConfig: {
+        nav: createNav(false),
+        sidebar: createSidebar(false),
+        outline: { label: '本页目录', level: [2, 3] },
+        skipToContentLabel: '跳转到正文',
+        docFooter: { prev: '上一页', next: '下一页' },
+        returnToTopLabel: '回到顶部',
+        sidebarMenuLabel: '文档目录',
+        darkModeSwitchLabel: '主题',
+        lightModeSwitchTitle: '切换到浅色',
+        darkModeSwitchTitle: '切换到深色',
+        langMenuLabel: '切换语言',
+        footer: { copyright: '© 2022–至今 Ray · MIT License' },
+      },
+    },
+    en: {
+      label: 'English',
+      lang: 'en-US',
+      titleTemplate: ':title · Ray Template Docs',
+      description: `Architecture, migration, components, and interactive examples for Ray Template ${version}.`,
+      themeConfig: {
+        nav: createNav(true),
+        sidebar: createSidebar(true),
+        footer: { copyright: '© 2022–present Ray · MIT License' },
+      },
+    },
+  },
   srcExclude: ['README.md', 'AGENTS.md'],
   vite: {
     plugins: [vueJsx()],
@@ -39,47 +92,29 @@ export default defineConfig({
   themeConfig: {
     logo: { src: '/ray-mark.svg', alt: '' },
     siteTitle: 'Ray Template',
-    nav: [
-      { text: '指南', link: '/guide/start', activeMatch: '^/guide/' },
-      { text: '架构', link: '/guide/architecture' },
-      { text: '版本分界', link: '/migration' },
-      {
-        text: 'API 参考',
-        link: '/reference/',
-        activeMatch: '^/reference/',
-      },
-      { text: 'Ray Admin', link: demo },
-    ],
-    sidebar,
-    outline: { label: '本页目录', level: [2, 3] },
+    outline: { level: [2, 3] },
     search: {
       provider: 'local',
       options: {
-        translations: {
-          button: { buttonText: '搜索文档', buttonAriaLabel: '搜索文档' },
-          modal: {
-            noResultsText: '未找到相关内容',
-            resetButtonTitle: '清除搜索',
-            footer: {
-              selectText: '打开',
-              navigateText: '切换',
-              closeText: '关闭',
+        locales: {
+          root: {
+            translations: {
+              button: { buttonText: '搜索文档', buttonAriaLabel: '搜索文档' },
+              modal: {
+                noResultsText: '未找到相关内容',
+                resetButtonTitle: '清除搜索',
+                footer: {
+                  selectText: '打开',
+                  navigateText: '切换',
+                  closeText: '关闭',
+                },
+              },
             },
           },
         },
       },
     },
-    skipToContentLabel: '跳转到正文',
-    docFooter: { prev: '上一页', next: '下一页' },
-    returnToTopLabel: '回到顶部',
-    sidebarMenuLabel: '文档目录',
-    darkModeSwitchLabel: '主题',
-    lightModeSwitchTitle: '切换到浅色',
-    darkModeSwitchTitle: '切换到深色',
     socialLinks: [{ icon: 'github', link: repository }],
-    footer: {
-      copyright: '© 2022–至今 Ray · MIT License',
-    },
   },
   markdown: {
     config(md) {
@@ -88,6 +123,11 @@ export default defineConfig({
       md.renderer.rules.link_open = (tokens, index, options, env, renderer) => {
         const token = tokens[index]
         const href = token.attrGet('href')
+        const label = token.attrGet('aria-label')
+
+        if (token.attrGet('class') === 'header-anchor' && label) {
+          token.attrSet('aria-label', label.replace(/\s+\{#[^}]+\}(?="$)/u, ''))
+        }
 
         for (const kind of ['blob', 'tree']) {
           const prefix = `${repository}/${kind}/main`

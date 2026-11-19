@@ -1,7 +1,9 @@
 <template>
   <div class="ray-demo ray-demo-fields">
     <div>
-      <label :for="id">路由配置 / Route configuration</label>
+      <label :for="id">{{
+        english ? 'Route configuration' : '路由配置'
+      }}</label>
       <textarea
         :id="id"
         v-model="source"
@@ -16,8 +18,11 @@
 
 <script setup lang="ts">
 import { createRouteContract } from '@ray-template/routing'
+import { useData } from 'vitepress'
 import { computed, ref, useId } from 'vue'
 
+const { lang } = useData()
+const english = computed(() => lang.value.startsWith('en'))
 const load = async () => ({})
 const { parseRouteConfig } = createRouteContract({
   layout: load,
@@ -50,7 +55,7 @@ const result = computed(() => {
 
     return {
       invalid: false,
-      message: `有效路由 / Valid routes: ${routes.length}`,
+      message: `${english.value ? 'Valid routes' : '有效路由'}: ${routes.length}`,
     }
   } catch (error) {
     return {

@@ -4,7 +4,7 @@
 
 Give developers and coding agents the same path through the project: **find the implementation, understand its contracts, reuse existing capabilities, and verify the change.**
 
-[简体中文](README.zh-CN.md) · **[Live demo](https://xiaodaigua-ray.github.io/ray-template/)** · **[Documentation](https://xiaodaigua-ray.github.io/ray-template/docs/)** · [Quick start](#quick-start) · [Develop with AI](#develop-with-ai)
+[简体中文](README.zh-CN.md) · **[Live demo](https://xiaodaigua-ray.github.io/ray-template/)** · **[Documentation](https://xiaodaigua-ray.github.io/ray-template/docs/en/)** · [Quick start](#quick-start) · [Develop with AI](#develop-with-ai)
 
 Ray Template uses Vue 3, TypeScript / TSX, and Naive UI for admin dashboards, operations consoles, and internal tools. The repository brings together a working application, shared components, interactive documentation, and engineering context organized by task.
 
@@ -20,19 +20,19 @@ Ray Template uses Vue 3, TypeScript / TSX, and Naive UI for admin dashboards, op
 
 ### Applications, documentation, and examples share source
 
-The admin application and documentation consume the same workspace packages. Interactive examples use real components, and the TablePro documentation includes the source of the examples it runs. Changes to public capabilities can be checked in both the application and documentation. [Explore the examples](apps/docs/reference/table-pro-examples.md) · [Documentation workflow](docs/docs-handoff.md)
+The admin application and documentation consume the same workspace packages. Interactive examples use real components, and the TablePro documentation includes the source of the examples it runs. Changes to public capabilities can be checked in both the application and documentation. [Explore the examples](apps/docs/en/reference/table-pro-examples.md) · [Documentation workflow](docs/docs-handoff.md)
 
 ### Four styles across the business interface
 
-Modern, Naive UI, Material, and Plain cover the shell, controls, tables, and charts, each with light and dark modes. Custom pages inherit colors, corners, and shadows through semantic theme tokens, while runtime layout variables adapt them to the workspace. [Theme integration](apps/docs/guide/appearance.md) · [CSS contract](docs/ui-design.md#custom-css-contract)
+Modern, Naive UI, Material, and Plain cover the shell, controls, tables, and charts, each with light and dark modes. Custom pages inherit colors, corners, and shadows through semantic theme tokens, while runtime layout variables adapt them to the workspace. [Theme integration](apps/docs/en/guide/appearance.md) · [CSS contract](docs/ui-design.md#custom-css-contract)
 
 ### TablePro handles interaction and data state
 
-One table component supports local data, remote requests, and controlled pagination, with advanced search, column settings, export, printing, and instance hooks. Request races, cancellation signals, failure recovery, and export scope have explicit contracts and regression coverage. [11 runnable examples](https://xiaodaigua-ray.github.io/ray-template/docs/reference/table-pro-examples.html) · [Component contract](packages/ui/src/RTablePro/README.md)
+One table component supports local data, remote requests, and controlled pagination, with advanced search, column settings, export, printing, and instance hooks. Request races, cancellation signals, failure recovery, and export scope have explicit contracts and regression coverage. [11 runnable examples](https://xiaodaigua-ray.github.io/ray-template/docs/en/reference/table-pro-examples.html) · [Component contract](packages/ui/src/RTablePro/README.md)
 
 ### One contract from the static demo to your business API
 
-Development and the static hosted demo share MSW HTTP mocks, with pages fetching data through the application's API layer. Shared TypeScript types, Valibot schemas, and generated OpenAPI 3.1 definitions guide backend integration; a dedicated command checks that generated contracts stay in sync. [API contracts](packages/api-contracts/README.md) · [Backend integration](apps/docs/guide/backend.md)
+Development and the static hosted demo share MSW HTTP mocks, with pages fetching data through the application's API layer. Shared TypeScript types, Valibot schemas, and generated OpenAPI 3.1 definitions guide backend integration; a dedicated command checks that generated contracts stay in sync. [API contracts](packages/api-contracts/README.md) · [Backend integration](apps/docs/en/guide/backend.md)
 
 ### Visual route editing with a validated configuration contract
 
@@ -42,7 +42,7 @@ Manage menu order, roles, visibility, and caching through a visual editor or JSO
 
 ### Choose frontend or fullstack source from one project
 
-Export an independently runnable frontend, or include the NestJS, PostgreSQL, and Redis implementation. Distribution scripts use the dependency graph to prune workspaces, the lockfile, and edition-specific documentation, then record the version, source commit, and content digest. [Source distributions and startup](apps/docs/guide/distributions.md)
+Export an independently runnable frontend, or include the NestJS, PostgreSQL, and Redis implementation. Distribution scripts use the dependency graph to prune workspaces, the lockfile, and edition-specific documentation, then record the version, source commit, and content digest. [Source distributions and startup](apps/docs/en/guide/distributions.md)
 
 <!-- fullstack:end -->
 
@@ -63,21 +63,21 @@ pnpm dev
 Open [http://127.0.0.1:9527/ray-template/](http://127.0.0.1:9527/ray-template/) and click **Continue with demo account**. Switch to manager or read-only accounts to explore permission differences. The frontend demo needs no database or business backend.
 
 - **Try the interface.** Open Settings to change styles and layouts, then explore Users and TablePro.
-- **Build your first page.** Follow the [business page guide](apps/docs/guide/first-page.md), reuse components, and register the route with English and Chinese menu labels.
-- **Connect your service.** Follow the [backend integration guide](apps/docs/guide/backend.md) to configure `VITE_API_BASE_URL` and `VITE_API_MOCK=false`.
+- **Build your first page.** Follow the [business page guide](apps/docs/en/guide/first-page.md), reuse components, and register the route with English and Chinese menu labels.
+- **Connect your service.** Follow the [backend integration guide](apps/docs/en/guide/backend.md) to configure `VITE_API_BASE_URL` and `VITE_API_MOCK=false`.
 
 ## Develop with AI
 
 AI support is part of the everyday development workflow. Coding agents that can read the repository and run commands can use the same Markdown documents, source entry points, and verification commands as maintainers.
 
-| Development question                                                             | Evidence in the repository                                                                                                                                                                      |
-| -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Where should I start, and which conventions apply?                               | [AGENTS.md](AGENTS.md): scope, reuse, documentation updates, and acceptance rules.                                                                                                              |
-| Which files matter for this task?                                                | [llms.txt](llms.txt) → [task context](harness/context): implementations, callers, contracts, and tests.                                                                                         |
-| Which module owns the behavior, and where are its boundaries?                    | The [architecture map](docs/architecture.md), public `exports`, and [package boundary checks](scripts/check-package-boundaries.mjs).                                                            |
-| How do existing capabilities work, and what do their parameters and states mean? | [Component references](apps/docs/reference/components.md), [hook references](apps/docs/reference/hooks.md), module READMEs, and [runnable examples](apps/docs/reference/table-pro-examples.md). |
-| How do mocks and business requests agree on API shapes?                          | [Shared schemas and OpenAPI](packages/api-contracts/README.md), with `pnpm api:check` checking generated contract synchronization.                                                              |
-| What should I run after a change, and where are the results?                     | [Verification scopes](harness/scopes.json) and `pnpm harness verify <scope>`, with reports saved under `.harness-local/runs/`.                                                                  |
+| Development question                                                             | Evidence in the repository                                                                                                                                                                               |
+| -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Where should I start, and which conventions apply?                               | [AGENTS.md](AGENTS.md): scope, reuse, documentation updates, and acceptance rules.                                                                                                                       |
+| Which files matter for this task?                                                | [llms.txt](llms.txt) → [task context](harness/context): implementations, callers, contracts, and tests.                                                                                                  |
+| Which module owns the behavior, and where are its boundaries?                    | The [architecture map](docs/architecture.md), public `exports`, and [package boundary checks](scripts/check-package-boundaries.mjs).                                                                     |
+| How do existing capabilities work, and what do their parameters and states mean? | [Component references](apps/docs/en/reference/components.md), [hook references](apps/docs/en/reference/hooks.md), module READMEs, and [runnable examples](apps/docs/en/reference/table-pro-examples.md). |
+| How do mocks and business requests agree on API shapes?                          | [Shared schemas and OpenAPI](packages/api-contracts/README.md), with `pnpm api:check` checking generated contract synchronization.                                                                       |
+| What should I run after a change, and where are the results?                     | [Verification scopes](harness/scopes.json) and `pnpm harness verify <scope>`, with reports saved under `.harness-local/runs/`.                                                                           |
 
 For a TablePro task, read its context first, then select verification for the change:
 
@@ -112,7 +112,7 @@ Here, `llms.txt` is a repository task index that you can explicitly ask an agent
 | **Icons and utilities**           | Typed SVG names and generated sprites, QR codes, barcodes, precision arithmetic, storage, composables, and directives.                                                                |
 | **Engineering and integration**   | pnpm workspaces, request cancellation, type and package boundary checks, Vitest, ESLint / Prettier, and a [Wujie sub-application entry point](apps/admin/src/main.ts).                |
 
-Frontend permissions shape the page experience; your backend validates real sessions and API authorization. See the [backend integration guide](apps/docs/guide/backend.md) for demo data and integration boundaries.
+Frontend permissions shape the page experience; your backend validates real sessions and API authorization. See the [backend integration guide](apps/docs/en/guide/backend.md) for demo data and integration boundaries.
 
 ## Styles and layouts
 
@@ -123,7 +123,7 @@ Frontend permissions shape the page experience; your backend validates real sess
 | **Material** | Tonal surfaces, larger corners, and capsule-shaped buttons.          |
 | **Plain**    | Neutral colors, small corners, and flat surfaces.                    |
 
-**Side · Top · Mixed · Right · Split.** Choose fluid or fixed-width content, adjust spacing, and pin the header or footer. Narrow screens use a menu drawer. Switch layouts in the [live demo](https://xiaodaigua-ray.github.io/ray-template/) or explore the [layout playground](apps/docs/guide/layout.md).
+**Side · Top · Mixed · Right · Split.** Choose fluid or fixed-width content, adjust spacing, and pin the header or footer. Narrow screens use a menu drawer. Switch layouts in the [live demo](https://xiaodaigua-ray.github.io/ray-template/) or explore the [layout playground](apps/docs/en/guide/layout.md).
 
 <details>
 <summary>View the workspace and dark theme previews</summary>
@@ -162,11 +162,11 @@ pnpm fullstack:setup
 pnpm dev:full
 ```
 
-`setup` creates the private `apps/server/.env.local`, starts PostgreSQL and Redis, applies migrations, and initializes the administrator. The generated administrator password is stored in that file; mock demo passwords do not authenticate against the server. For existing databases and Redis, use `pnpm fullstack:setup --external` and follow the [startup guide](apps/docs/guide/distributions.md) for configuration.
+`setup` creates the private `apps/server/.env.local`, starts PostgreSQL and Redis, applies migrations, and initializes the administrator. The generated administrator password is stored in that file; mock demo passwords do not authenticate against the server. For existing databases and Redis, use `pnpm fullstack:setup --external` and follow the [startup guide](apps/docs/en/guide/distributions.md) for configuration.
 
 Alternatively, run `node scripts/fullstack.mjs up` to build and start the entire stack with Docker, without first installing project dependencies on the host. The default entry point is `http://127.0.0.1:8080/ray-template/`. `pnpm fullstack:stop` stops services and retains data volumes.
 
-The [source distributions workflow](.github/workflows/distributions.yaml) provides manual options to verify archives, generate the `frontend` branch, and attach assets to an existing Release. [Container startup and release instructions](apps/docs/guide/distributions.md#容器启动)
+The [source distributions workflow](.github/workflows/distributions.yaml) provides manual options to verify archives, generate the `frontend` branch, and attach assets to an existing Release. [Container startup and release instructions](https://xiaodaigua-ray.github.io/ray-template/docs/en/guide/distributions.html#容器启动)
 
 <!-- fullstack:end -->
 
@@ -196,7 +196,7 @@ The **Pages workflow** builds the admin and documentation on every push to `main
 
 **v6 introduces the monorepo architecture and does not provide an in-place upgrade from v5.** Compatibility with v5 internal imports, APIs, deployment settings, and browser data is not guaranteed.
 
-Existing projects can stay on [legacy/v5](https://github.com/XiaoDaiGua-Ray/ray-template/tree/legacy/v5) or the [v5.2.5 tag](https://github.com/XiaoDaiGua-Ray/ray-template/tree/v5.2.5). Read the [migration notes](apps/docs/migration.md) before adopting v6.
+Existing projects can stay on [legacy/v5](https://github.com/XiaoDaiGua-Ray/ray-template/tree/legacy/v5) or the [v5.2.5 tag](https://github.com/XiaoDaiGua-Ray/ray-template/tree/v5.2.5). Read the [migration notes](apps/docs/en/migration.md) before adopting v6.
 
 ---
 

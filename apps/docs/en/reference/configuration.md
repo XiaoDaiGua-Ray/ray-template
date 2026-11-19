@@ -1,0 +1,25 @@
+# Application Configuration {#应用配置}
+
+The application and documentation site have separate configuration entry points. This page covers `@/app-config`, Vite settings, and runtime preferences in Ray Admin. Saved preferences can override source defaults. Use clean browser storage to verify defaults.
+
+| File                                          | Configuration                                                                                                                                                                                                                                                                                                             |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `apps/admin/src/app-config/app-config.ts`     | `GLOBAL_CLASS_NAMES` for color-mode classes and CSS variables. `MESSAGE_PROVIDER` defaults to five non-dismissible messages. `LAYOUT_CONTENT_SPIN_WHEN_ROUTE_CHANGE` defaults to off. Also defines `APP_GLOBAL_LOADING`, `PRE_LOADING_CONFIG`, `APP_CATCH_KEY`, `APP_CATCH_KEY_PREFIX`, and `CONTENT_TRANSITION_OPTIONS`. |
+| `apps/admin/src/app-config/design-config.ts`  | `APP_THEME` palette, startup brand blue `#3b63d9`, light and dark Modern overrides, and the default ECharts theme. Four presets live in `packages/ui/src/theme-presets.ts`.                                                                                                                                               |
+| `apps/admin/src/app-config/local-config.ts`   | `LOCAL_OPTIONS`, `SYSTEM_DEFAULT_LOCAL`, `SYSTEM_FALLBACK_LOCALE`, `DAYJS_LOCAL_MAP`, and `DEFAULT_DAYJS_LOCAL`. The app default and fallback are `zh-CN`.                                                                                                                                                                |
+| `apps/admin/src/app-config/request-config.ts` | `AXIOS_CONFIG` defaults to a relative same-origin base, a five-second timeout, `withCredentials: false`, and JSON Content-Type.                                                                                                                                                                                           |
+| `apps/admin/src/app-config/router-config.ts`  | `SETUP_ROUTER_ACTION` enables the loading bar and guard by default. Also defines `WHITE_ROUTES` (name allowlist), `SUPER_ADMIN` (empty by default), `LAYOUT_CONTENT_REF`, and `LAYOUT_SIDER_REF`.                                                                                                                         |
+| `apps/admin/src/app-config/regex-config.ts`   | `APP_REGEX` for template CSS sizing rules.                                                                                                                                                                                                                                                                                |
+| `vite.custom.config.ts`                       | `base`, `server`, `buildOptions(mode)`, `alias`, `cdn`, `copyright`, Sass injection, and startup loading configuration.                                                                                                                                                                                                   |
+
+## Choose the configuration entry point {#选择改动入口}
+
+- For defaults for layout, menus, tabs, and cache, see [Setting Store](./store/setting) and `apps/admin/src/store/modules/setting/constant.ts`. Existing users can restore defaults in Preferences to check changes.
+- For themes and language, see [Themes and localization](../guide/appearance). Maintain the translation files and Day.js and Naive UI locale mappings together.
+- For access control, see [Routes, menus, and permissions](../guide/routing). The allowlist matches case-sensitive route names. The guard handles session state before checking the allowlist and role access.
+- For API addresses, auth headers, and failure handling, see [Requests and mocks](../guide/requests). Read the required `VITE_*` variables explicitly in Axios configuration.
+- The default application base is `/ray-template/`. After changing it, rebuild and check icons, proxies, and direct navigation. [Checks and deployment](../guide/tooling)
+
+Vite injects `__APP_CFG__` at build time for application metadata, copyright, and the default primary color. The browser can read injected values. Store interactive preferences in Pinia and build settings in Vite configuration.
+
+[Application config source](https://github.com/XiaoDaiGua-Ray/ray-template/tree/main/apps/admin/src/app-config) · [Custom Vite config](https://github.com/XiaoDaiGua-Ray/ray-template/blob/main/vite.custom.config.ts)

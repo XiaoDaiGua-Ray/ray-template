@@ -25,7 +25,7 @@
 | `getMenuConfig`                                        | `menuConfig`，侧栏、折叠、图标、手风琴与滚动配置。                                         |
 | `getColorWeakness` / `getDynamicDocumentTitle`         | `colorWeakness` 默认关，`dynamicDocumentTitle` 默认开。                                    |
 
-`layoutConfig` 的 `mode` 为 `side`（默认）、`top`、`mixed`。`contentWidth` 默认 `fluid`，也可取 `fixed`。`contentMaxWidth` 默认 1200，限制在 640–2560；`contentPadding` 默认 16，限制在 0–48；`fixedHeader`、`fixedFooter` 默认开启。旧缓存水合时补齐字段并规范化范围。
+`layoutConfig.mode` 支持 `side`（默认）、`top`、`mixed`、`right` 和 `split`。`contentWidth` 支持 `fluid`（默认）或 `fixed`。`contentMaxWidth` 默认 1200，限制在 640–2560。`contentPadding` 默认 24，限制在 0–48。`fixedHeader` 和 `fixedFooter` 默认开启。旧缓存水合时补齐字段并规范化范围。
 
 `menuConfig` 默认菜单宽 272、折叠宽 64、展开与顶部菜单图标 20 px、折叠侧栏图标 22 px、缩进 24。`collapsedMode` 默认 `width`，`transform` 模式改变位置；`accordion`、`inverted`、`nativeScrollbar` 默认关，`menuSiderBarLogo` 默认开。`sideBarLogo.jumpType` 用 `station` 站内跳转或 `outsideStation` 打开外部地址，未传 `url` 时不跳转。旧浏览器缓存中同时为 16 px 的尺寸组合会升级为新默认值；当前应用保存的尺寸和偏好文件中的尺寸会原样保留。缓存中的旧裸图标名会尝试映射成完整名称；需要持久化的 Logo 建议用图标名字符串，VNode 不适合作为缓存值。
 
@@ -38,7 +38,7 @@
 | `changePrimaryColor(value?, alpha = 0.85)`  | 覆盖当前风格的主色；省略 value 恢复当前风格原色。                                       |
 | `toggleColorWeakness(bool)`                 | 更新设置并切换 HTML 反色滤镜。                                                          |
 
-切换主题使用 [useTheme](../hooks/appearance#usetheme)，切换首页使用 [useAppRoot](../hooks/navigation#useapproot)。修改嵌套配置时传入完整的下一级对象，浅合并不会递归保存更深层字段。
+切换主题使用 [useTheme](../hooks/appearance#usetheme)。[useAppRoot](../hooks/navigation#useapproot) 保留历史偏好的兼容读写。修改嵌套配置时传入完整的下一级对象，浅合并不会递归保存更深层字段。
 
 ```ts
 import { useSettingActions, useSettingGetters } from '@/store'

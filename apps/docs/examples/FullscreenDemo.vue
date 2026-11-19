@@ -4,8 +4,12 @@
       <NButton @click="toggleFullscreen">
         {{
           isFullscreen
-            ? '退出全屏 / Exit full screen'
-            : '元素全屏 / Full screen'
+            ? english
+              ? 'Exit fullscreen'
+              : '退出全屏'
+            : english
+              ? 'Enter fullscreen'
+              : '元素全屏'
         }}
       </NButton>
     </div>
@@ -15,9 +19,12 @@
 <script setup lang="ts">
 import { useElementFullscreen } from '@ray-template/composables/useElementFullscreen'
 import { NButton } from 'naive-ui'
-import { useTemplateRef } from 'vue'
+import { useData } from 'vitepress'
+import { computed, useTemplateRef } from 'vue'
 import DemoFrame from './DemoFrame.vue'
 
+const { lang } = useData()
+const english = computed(() => lang.value.startsWith('en'))
 const { isFullscreen, toggleFullscreen } = useElementFullscreen(
   useTemplateRef('preview'),
 )

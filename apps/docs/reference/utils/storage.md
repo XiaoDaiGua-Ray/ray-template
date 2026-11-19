@@ -14,7 +14,7 @@ import AdminExample from '../../examples/AdminExample.vue'
 
 ## Web Storage
 
-默认使用 `sessionStorage`，传 `'localStorage'` 跨刷新保存。所有读写值按 JSON 序列化。类型参数仅影响 TypeScript，不能确认缓存格式。
+默认使用当前标签会话的 `sessionStorage`。传 `'localStorage'` 可在标签关闭后继续保存。所有值按 JSON 序列化。类型参数仅影响 TypeScript，缓存结构需要按实际边界校验。
 
 | API                                              | 行为                                                                                        |
 | ------------------------------------------------ | ------------------------------------------------------------------------------------------- |

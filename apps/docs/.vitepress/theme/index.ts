@@ -9,25 +9,28 @@ export default {
   extends: DefaultTheme,
   Layout: defineComponent({
     setup() {
-      const { page } = useData()
+      const { localeIndex, page } = useData()
 
       return () =>
         h(DefaultTheme.Layout, null, {
           'doc-before': () => {
-            const path = page.value.relativePath
+            const english = localeIndex.value === 'en'
+            const prefix = english ? '/en' : ''
+            const path = page.value.relativePath.replace(/^en\//, '')
             const section = path.startsWith('guide/')
-              ? '开发指南'
+              ? { zh: '开发指南', en: 'Development guide' }
               : path.startsWith('reference/')
-                ? '参考'
-                : '版本迁移'
+                ? { zh: '参考', en: 'Reference' }
+                : { zh: '版本迁移', en: 'Migration' }
 
             return h('div', { class: 'ray-doc-meta' }, [
-              h('span', section),
+              h('span', english ? section.en : section.zh),
               path !== 'reference/source.md'
-                ? h('a', { href: withBase('/reference/source.html') }, [
-                    '版本 ',
-                    h('code', version),
-                  ])
+                ? h(
+                    'a',
+                    { href: withBase(prefix + '/reference/source.html') },
+                    [english ? 'Version ' : '版本 ', h('code', version)],
+                  )
                 : null,
             ])
           },

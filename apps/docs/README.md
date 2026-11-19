@@ -15,13 +15,16 @@ pnpm docs:check
 pnpm docs:preview
 ```
 
-Open `/ray-template/docs/` at the address printed in the terminal. `pnpm docs:check` checks example types, internal links, and the production build. Output goes to `apps/docs/.vitepress/dist`. `pnpm check` includes this check. For production deployment, run `pnpm pages:build` from the root; it generates documentation under `dist/pages/docs`. Setting `RAY_TEMPLATE_SITE_ORIGIN` also generates `dist/legacy-docs` for redirects from the previous documentation site.
+Open `/ray-template/docs/` for Simplified Chinese or `/ray-template/docs/en/` for English at the address printed in the terminal. `pnpm docs:check` checks example types, internal links, and the production build. Output goes to `apps/docs/.vitepress/dist`. `pnpm check` includes this check. For production deployment, run `pnpm pages:build` from the root. It generates documentation under `dist/pages/docs`. Setting `RAY_TEMPLATE_SITE_ORIGIN` also generates `dist/legacy-docs` for redirects from the previous documentation site.
 
 - `guide/`: Getting started, development, and deployment tasks.
 - `migration.md`: Previous and current usage, compatibility boundaries, and verification methods.
 - `reference/`: API references for components, hooks, stores, directives, utilities, and configuration.
 - `examples/`: Vue source for interactive examples; Markdown displays code from those same files.
 - `.vitepress/`: Theme, navigation, and legacy path mappings. Production builds generate redirect pages for preserved legacy relative paths.
+- `en/`: English pages at the same relative paths as their Chinese counterparts.
+
+Update both languages when changing public behavior or examples. Keep the same section IDs across locales so VitePress can switch languages without losing the current section. Use explicit IDs in English when translated headings would generate a different slug. Keep existing Chinese URLs and anchors stable. Both locales use the same runnable examples and source includes.
 
 When application changes affect public APIs, update the corresponding documentation and examples. Examples use public workspace package entry points. Shell previews have their own in-memory router and example menus. Follow the [documentation workflow](../../docs/docs-handoff.md#update-workflow) to check affected content. Verify navigation, search, themes, narrow layouts, legacy paths, and interactions only when they change; use production previews for production paths and release verification.
 
