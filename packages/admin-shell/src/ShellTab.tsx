@@ -11,6 +11,7 @@ export const ShellTab = defineComponent({
     round: Boolean,
     statusLabel: { type: String, default: '' },
     closeLabel: { type: String, default: '' },
+    keyShortcuts: { type: String, default: void 0 },
     select: { type: Function as PropType<() => void>, required: true },
     close: {
       type: Function as PropType<(restoreFocus: boolean) => void>,
@@ -37,7 +38,6 @@ export const ShellTab = defineComponent({
         type={props.active ? 'primary' : 'default'}
         size="medium"
         round={props.round}
-        bordered={props.active}
         closable={!!props.close}
         {...{
           onClick: props.select,
@@ -47,24 +47,31 @@ export const ShellTab = defineComponent({
         }}
         onClose={(event) => props.close?.(event.detail === 0)}
       >
-        {slots.prefix?.()}
-        <button
-          type="button"
-          class="menu-tag__tab"
-          aria-current={props.active ? 'page' : void 0}
-          aria-label={
-            props.statusLabel ? `${props.label} · ${props.statusLabel}` : void 0
-          }
-          title={props.label}
-          onKeydown={(event) => {
-            if (event.key === 'Delete' && props.close) {
-              event.preventDefault()
-              props.close(true)
-            }
-          }}
-        >
-          {props.label}
-        </button>
+        {{
+          icon: slots.prefix,
+          default: () => (
+            <button
+              type="button"
+              class="menu-tag__tab"
+              aria-current={props.active ? 'page' : void 0}
+              aria-label={
+                props.statusLabel
+                  ? `${props.label} · ${props.statusLabel}`
+                  : void 0
+              }
+              aria-keyshortcuts={props.keyShortcuts}
+              title={props.label}
+              onKeydown={(event) => {
+                if (event.key === 'Delete' && props.close) {
+                  event.preventDefault()
+                  props.close(true)
+                }
+              }}
+            >
+              {props.label}
+            </button>
+          ),
+        }}
       </NTag>
     )
   },

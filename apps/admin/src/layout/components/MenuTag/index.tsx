@@ -320,27 +320,27 @@ export default defineComponent({
 
       scheduleAnnouncement(message)
     }
-    const reorder = useTagReorder(
+    const moveTagWithKey = useTagReorder(
       getMenuTagDrag,
       tagsRef,
       scroller,
-      (path, target, handle) => {
+      (path, target, button) => {
         if (!moveMenuTag(path, target.path, target.placement)) return
 
         const position = getMenuTagOptions.value.findIndex(
           (tag) => tag.fullPath === path,
         )
         const option = getMenuTagOptions.value[position]
-        const wasFocused = document.activeElement === handle
+        const wasFocused = document.activeElement === button
 
         void nextTick(() => {
-          const tag = handle.closest<HTMLElement>('[data-menu-tag-path]')
+          const tag = button.closest<HTMLElement>('[data-menu-tag-path]')
 
           if (!tag?.isConnected) return
 
           revealTag(tag)
 
-          if (wasFocused) handle.focus({ preventScroll: true })
+          if (wasFocused) button.focus({ preventScroll: true })
 
           announce(
             t('moved', { name: tagLabel(option), position: position + 1 }),
@@ -451,7 +451,7 @@ export default defineComponent({
       getMenuTagDrag,
       isMenuTagTopped,
       isMenuTagFixed,
-      reorder,
+      moveTagWithKey,
       tagLabel,
       closeCurrentMenuTag,
       getMenuKey,
@@ -530,8 +530,10 @@ export default defineComponent({
               <div
                 ref="tags"
                 class="menu-tag-wrapper"
+                data-menu-tag-sortable={this.getMenuTagDrag ? '' : void 0}
                 role="group"
                 aria-label={$t('menuTag.pages')}
+                onKeydown={this.moveTagWithKey}
               >
                 <TransitionGroup name="menu-tag" css={false}>
                   {getMenuTagOptions.map((curr, idx) => {
@@ -541,9 +543,6 @@ export default defineComponent({
                     const fixed = this.isMenuTagFixed(curr)
                     const topLabel = topped ? $t('menuTag.topped') : ''
                     const fixedLabel = fixed ? $t('menuTag.fixed') : ''
-                    const moveLabel = this.getMenuTagDrag
-                      ? $t('menuTag.moveNamed', { name: label })
-                      : ''
 
                     return (
                       <ShellTab
@@ -558,6 +557,11 @@ export default defineComponent({
                             : topLabel || fixedLabel
                         }
                         round={this.getMenuTagRound}
+                        keyShortcuts={
+                          this.getMenuTagDrag
+                            ? 'Shift+ArrowLeft Shift+ArrowRight'
+                            : void 0
+                        }
                         select={() => menuTagClick(curr)}
                         closeLabel={$t('menuTag.closeNamed', { name: label })}
                         close={
@@ -569,60 +573,7 @@ export default defineComponent({
                         contextMenu={(event) =>
                           menuTagContextMenu(curr.fullPath, event)
                         }
-                      >
-                        {{
-                          prefix: () => (
-                            <>
-                              {this.getMenuTagDrag && (
-                                <button
-                                  type="button"
-                                  class="menu-tag__handle"
-                                  aria-label={moveLabel}
-                                  title={moveLabel}
-                                  aria-keyshortcuts="Shift+ArrowLeft Shift+ArrowRight"
-                                  onClick={(event) => event.stopPropagation()}
-                                  onPointerdown={this.reorder.start}
-                                  onPointermove={this.reorder.track}
-                                  onPointerup={this.reorder.drop}
-                                  onPointercancel={this.reorder.cancelPointer}
-                                  onLostpointercapture={
-                                    this.reorder.cancelPointer
-                                  }
-                                  onKeydown={this.reorder.moveWithKey}
-                                >
-                                  <RIcon
-                                    name="action/draggable"
-                                    size={14}
-                                    aria-hidden="true"
-                                  />
-                                </button>
-                              )}
-                              {topped && (
-                                <span
-                                  class="menu-tag__indicator"
-                                  title={topLabel}
-                                  aria-hidden="true"
-                                >
-                                  <RIcon
-                                    name="directional/expanded"
-                                    size={14}
-                                    customClassName="menu-tag__top-icon"
-                                  />
-                                </span>
-                              )}
-                              {fixed && (
-                                <span
-                                  class="menu-tag__indicator"
-                                  title={fixedLabel}
-                                  aria-hidden="true"
-                                >
-                                  <RIcon name="action/lock" size={14} />
-                                </span>
-                              )}
-                            </>
-                          ),
-                        }}
-                      </ShellTab>
+                      />
                     )
                   })}
                 </TransitionGroup>

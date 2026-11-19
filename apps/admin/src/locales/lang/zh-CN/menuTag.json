@@ -15,7 +15,6 @@
   "fix": "固定标签页",
   "unfix": "取消固定",
   "fixed": "已固定",
-  "moveNamed": "排序 {name}（拖拽或 Shift + ←/→）",
   "moved": "{name} 已移至第 {position} 位",
   "moveCanceled": "已取消标签页排序",
   "scrollLeft": "向左滚动标签页",

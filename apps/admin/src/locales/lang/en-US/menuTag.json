@@ -15,7 +15,6 @@
   "fix": "Protect tab",
   "unfix": "Unprotect tab",
   "fixed": "Protected",
-  "moveNamed": "Reorder {name} (drag or press Shift + Left/Right)",
   "moved": "{name} moved to position {position}",
   "moveCanceled": "Tab reordering canceled",
   "scrollLeft": "Scroll tabs left",

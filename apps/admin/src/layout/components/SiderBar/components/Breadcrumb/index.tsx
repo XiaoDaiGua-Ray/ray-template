@@ -41,7 +41,7 @@ export default defineComponent({
       const icon =
         option.icon?.() ??
         (getBreadcrumbIconFallback.value ? (
-          <RIcon name="navigation/document" size="1em" />
+          <RIcon name="navigation/window" size="1em" />
         ) : null)
 
       return (

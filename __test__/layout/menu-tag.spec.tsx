@@ -102,6 +102,8 @@ beforeEach(async () => {
       },
     },
   })
+  await import('interactjs')
+  await flushPromises()
 })
 
 afterEach(() => {
@@ -129,6 +131,24 @@ const mouse = (element: Element, type: string, button: number) => {
   )
 }
 
+const point = (element: Element, type: string, clientX: number) => {
+  const event = new PointerEvent(type, {
+    bubbles: true,
+    isPrimary: true,
+    pointerId: 2,
+    pointerType: 'mouse',
+    buttons: type === 'pointerup' ? 0 : 1,
+    clientX,
+    clientY: 16,
+  })
+
+  Object.defineProperties(event, {
+    pageX: { value: clientX },
+    pageY: { value: 16 },
+  })
+  element.dispatchEvent(event)
+}
+
 const openContextMenu = async (index: number) => {
   const tab = wrapper.findAll('.menu-tag__tab')[index]!.element
 
@@ -145,6 +165,10 @@ it('closes with the named native tag button without selecting the page', async (
     'button.n-tag__close[aria-label="menuTag.closeNamed:Orders"]',
   )
 
+  point(closeButton.element, 'pointerdown', 10)
+  point(closeButton.element, 'pointermove', 40)
+  expect(wrapper.find('[data-menu-tag-dragged]').exists()).toBe(false)
+  point(closeButton.element, 'pointerup', 40)
   await closeButton.trigger('click', { detail: 1 })
 
   expect(state.close).toHaveBeenCalledExactlyOnceWith(1)
@@ -189,14 +213,16 @@ it.each(['button', 'Delete'])(
   },
 )
 
-it('uses the native primary type only for the current page', async () => {
+it('shares the native border across tabs and highlights the current page', async () => {
   const tagTypes = () =>
     wrapper.findAllComponents(NTag).map((tag) => tag.props('type'))
 
   expect(tagTypes()).toEqual(['primary', 'default', 'default'])
+  state.tags.value[0]!.fixed = true
   state.active.value = state.tags.value[1]!
   await nextTick()
   expect(tagTypes()).toEqual(['default', 'primary', 'default'])
+  expect(wrapper.findAll('.menu-tag__item .n-tag__border')).toHaveLength(3)
 })
 
 it('applies the native round style to open tags when the preference changes', async () => {
@@ -243,7 +269,7 @@ it('keeps context commands tied to the selected page when the order changes', as
   expect(state.toggleFixed).toHaveBeenCalledExactlyOnceWith('/reports')
 })
 
-it('updates tab indicators and actions while preferences change', async () => {
+it('updates tab status and actions while preferences change', async () => {
   state.tags.value[0].topped = true
   state.tags.value[0].fixed = true
   await openContextMenu(0)
@@ -254,7 +280,12 @@ it('updates tab indicators and actions while preferences change', async () => {
       ?.map((option) => option.key)
 
   expect(tab.find('.n-tag__close').exists()).toBe(false)
-  expect(tab.findAll('.menu-tag__indicator')).toHaveLength(2)
+  expect(tab.find('.n-tag__icon').exists()).toBe(false)
+  const label = tab.get('.menu-tag__tab')
+
+  expect(label.attributes('aria-label')).toBe(
+    'Reports · menuTag.topped · menuTag.fixed',
+  )
   expect(actions()).toEqual(
     expect.arrayContaining(['toggleTop', 'toggleFixed']),
   )
@@ -264,20 +295,26 @@ it('updates tab indicators and actions while preferences change', async () => {
   state.drag.value = false
   await nextTick()
   expect(tab.find('.n-tag__close').exists()).toBe(true)
-  expect(tab.findAll('.menu-tag__indicator')).toHaveLength(0)
-  expect(wrapper.findAll('.menu-tag__handle')).toHaveLength(0)
+  expect(label.attributes('aria-label')).toBeUndefined()
+  expect(label.attributes('aria-keyshortcuts')).toBeUndefined()
   expect(actions()).not.toContain('toggleTop')
   expect(actions()).not.toContain('toggleFixed')
 })
 
-it('sends the focused handle’s keyboard reorder to the tab store', async () => {
-  const handle = wrapper.get(
-    '[data-menu-tag-path="/reports"] .menu-tag__handle',
-  )
+it('reorders a focused protected tab with Shift and an arrow key', async () => {
+  state.tags.value[0].fixed = true
+  await nextTick()
+  const tab = wrapper.get('[data-menu-tag-path="/reports"]')
+  const button = tab.get('.menu-tag__tab')
 
-  await handle.trigger('keydown', { key: 'ArrowRight' })
+  expect(tab.find('.n-tag__close').exists()).toBe(false)
+  expect(tab.find('.r-icon').exists()).toBe(false)
+  expect(button.attributes('aria-keyshortcuts')).toBe(
+    'Shift+ArrowLeft Shift+ArrowRight',
+  )
+  await button.trigger('keydown', { key: 'ArrowRight' })
   expect(state.move).not.toHaveBeenCalled()
-  await handle.trigger('keydown', { key: 'ArrowRight', shiftKey: true })
+  await button.trigger('keydown', { key: 'ArrowRight', shiftKey: true })
   expect(state.move).toHaveBeenCalledExactlyOnceWith(
     '/reports',
     '/orders',
@@ -286,64 +323,162 @@ it('sends the focused handle’s keyboard reorder to the tab store', async () =>
   expect(state.navigate).not.toHaveBeenCalled()
 })
 
-it('measures a burst of pointer moves once and uses the release position', () => {
+const mockTagRects = (viewportWidth = 300) => {
   const row = wrapper.get<HTMLElement>('.menu-tag-wrapper').element
   const scroller = row.closest('.n-scrollbar-container')!
-  const measure = vi.fn(() => new DOMRect(0, 0, 300, 32))
+  const mockRect = (element: Element, measure: () => DOMRect) => {
+    element.getBoundingClientRect = measure
+    element.getClientRects = () => [measure()] as unknown as DOMRectList
+  }
 
-  scroller.getBoundingClientRect = measure
-  row.getBoundingClientRect = () => new DOMRect(0, 0, 300, 32)
+  mockRect(scroller, () => new DOMRect(0, 0, viewportWidth, 32))
+  Object.defineProperties(scroller, {
+    clientWidth: { value: viewportWidth },
+    scrollWidth: { value: 300 },
+  })
+  mockRect(row, () => new DOMRect(-scroller.scrollLeft, 0, 300, 32))
   const tags = wrapper.findAll<HTMLElement>('[data-menu-tag-path]')
 
   tags.forEach(({ element }, index) => {
     Object.defineProperties(element, {
       offsetLeft: { value: index * 100 },
-      offsetWidth: { value: 100 },
+      offsetWidth: { value: 94 },
     })
-  })
-  const handle = tags[0].get<HTMLButtonElement>('.menu-tag__handle').element
-  const release = vi.fn()
-
-  handle.setPointerCapture = vi.fn()
-  handle.hasPointerCapture = () => true
-  handle.releasePointerCapture = release
-  const requestFrame = vi.fn((_callback: FrameRequestCallback) => 1)
-
-  vi.stubGlobal('requestAnimationFrame', requestFrame)
-  const point = (type: string, clientX: number) =>
-    handle.dispatchEvent(
-      new PointerEvent(type, {
-        bubbles: true,
-        isPrimary: true,
-        pointerId: 2,
-        clientX,
-        clientY: 16,
-      }),
+    mockRect(
+      element,
+      () => new DOMRect(index * 100 - scroller.scrollLeft, 0, 94, 30),
     )
+  })
 
-  point('pointerdown', 10)
-  point('pointermove', 110)
-  point('pointermove', 180)
-  expect(measure).not.toHaveBeenCalled()
-  expect(requestFrame).toHaveBeenCalledTimes(1)
+  return { row, scroller, tags }
+}
 
-  requestFrame.mock.calls[0][0](16)
-  expect(measure).toHaveBeenCalledTimes(1)
-  expect(requestFrame).toHaveBeenCalledTimes(1)
-  expect(tags[2].attributes('data-menu-tag-drop')).toBe('before')
+it('reorders from the tab body using the release position and ignores the drag click', async () => {
+  const { row, tags } = mockTagRects()
+  const source = tags[0].element
+
+  point(source, 'pointerdown', 10)
+  point(tags[1].element, 'pointermove', 180)
+  expect(tags[1].attributes('data-menu-tag-drop')).toBe('after')
   expect(state.move).not.toHaveBeenCalled()
 
-  point('pointerup', 285)
+  point(tags[2].element, 'pointerup', 285)
   expect(state.move).toHaveBeenCalledExactlyOnceWith(
     '/reports',
     '/users',
     'after',
   )
-  expect(release).toHaveBeenCalledExactlyOnceWith(2)
   expect(
     row.querySelector('[data-menu-tag-drop],[data-menu-tag-dragged]'),
   ).toBeNull()
+
+  await tags[0].trigger('click', { detail: 1 })
+  expect(state.navigate).not.toHaveBeenCalled()
+
+  point(source, 'pointerdown', 10)
+  point(source, 'pointermove', 12)
+  point(source, 'pointerup', 12)
+  await tags[0].trigger('click', { detail: 1 })
+
+  expect(state.navigate).toHaveBeenCalledExactlyOnceWith(
+    '/reports',
+    state.tags.value[0],
+  )
+  expect(state.move).toHaveBeenCalledTimes(1)
 })
+
+it.each([
+  { target: 'outside the horizontal viewport', x: -10, firstTopped: false },
+  { target: 'over the other tab group', x: 20, firstTopped: true },
+])('rejects a drop $target', async ({ x, firstTopped }) => {
+  state.tags.value[0]!.topped = firstTopped
+  await nextTick()
+  const { row, tags } = mockTagRects()
+  const source = tags[2].element
+  const target = firstTopped ? tags[0].element : outside
+
+  point(source, 'pointerdown', 240)
+  point(target, 'pointermove', x)
+  expect(source.hasAttribute('data-menu-tag-dragged')).toBe(true)
+  expect(row.querySelector('[data-menu-tag-drop]')).toBeNull()
+  point(target, 'pointerup', x)
+  expect(state.move).not.toHaveBeenCalled()
+})
+
+it('refreshes the drop marker after a scroll with a stationary pointer', () => {
+  const { scroller, tags } = mockTagRects(220)
+  const source = tags[0].element
+  const requestFrame = vi.fn((_callback: FrameRequestCallback) => 1)
+
+  vi.stubGlobal('requestAnimationFrame', requestFrame)
+
+  point(source, 'pointerdown', 30)
+  point(tags[1].element, 'pointermove', 180)
+  expect(tags[1].attributes('data-menu-tag-drop')).toBe('after')
+  expect(requestFrame).toHaveBeenCalledTimes(1)
+  requestFrame.mock.calls[0][0](16)
+
+  scroller.scrollLeft = 80
+  scroller.dispatchEvent(new Event('scroll'))
+  expect(requestFrame).toHaveBeenCalledTimes(2)
+  requestFrame.mock.calls[1][0](32)
+  expect(tags[2].attributes('data-menu-tag-drop')).toBe('after')
+  point(tags[2].element, 'pointerup', 180)
+})
+
+it('cancels dragging with Escape and preserves keyboard activation', async () => {
+  const button = wrapper.get<HTMLButtonElement>(
+    '[data-menu-tag-path="/orders"] .menu-tag__tab',
+  )
+
+  point(button.element, 'pointerdown', 10)
+  point(button.element, 'pointermove', 60)
+  expect(wrapper.find('[data-menu-tag-dragged]').exists()).toBe(true)
+  await button.trigger('keydown', { key: 'Escape' })
+  point(button.element, 'pointerup', 60)
+  await button.trigger('click', { detail: 0 })
+  expect(state.navigate).toHaveBeenCalledExactlyOnceWith(
+    '/orders',
+    state.tags.value[1],
+  )
+  await button.trigger('click', { detail: 1 })
+
+  expect(state.move).not.toHaveBeenCalled()
+  expect(state.navigate).toHaveBeenCalledTimes(1)
+})
+
+it.each([
+  { hold: 100, claimed: false },
+  { hold: 400, claimed: true },
+])(
+  'claims a horizontal touch after $hold ms: $claimed',
+  ({ hold, claimed }) => {
+    const button = wrapper.get<HTMLButtonElement>('.menu-tag__tab').element
+    const start = new PointerEvent('pointerdown', {
+      bubbles: true,
+      isPrimary: true,
+      pointerId: 2,
+      pointerType: 'touch',
+      buttons: 1,
+      clientX: 10,
+      clientY: 16,
+    })
+    const move = new TouchEvent('touchmove', {
+      bubbles: true,
+      cancelable: true,
+      touches: [
+        new Touch({ identifier: 2, target: button, clientX: 30, clientY: 16 }),
+      ],
+    })
+
+    Object.defineProperty(move, 'timeStamp', { value: start.timeStamp + hold })
+    button.dispatchEvent(start)
+    button.dispatchEvent(move)
+
+    expect(move.defaultPrevented).toBe(claimed)
+    expect(wrapper.find('[data-menu-tag-dragged]').exists()).toBe(claimed)
+  },
+)
 
 it.each([0, 2])(
   'dismisses when mouse button %i is clicked outside the tags and menu',
