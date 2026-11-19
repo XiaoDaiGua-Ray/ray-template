@@ -353,9 +353,9 @@ importers:
       postcss:
         specifier: 8.5.32
         version: 8.5.32
-      postcss-px-to-viewport-8-with-include:
-        specifier: 1.2.2
-        version: 1.2.2
+      postcss-px-conversion:
+        specifier: 1.0.0
+        version: 1.0.0(postcss@8.5.32)
       prettier:
         specifier: 3.9.10
         version: 3.9.10
@@ -4752,8 +4752,11 @@ packages:
   pkg-types@2.4.0:
     resolution: {integrity: sha512-07Fys7iVx0X6TcviMOgogM1Lk33ZyqOezMnU79S+kffWqwolG/5W9V8EgQSeYCIfFTYVgssRbnH630Oa2+soBA==}
 
-  postcss-px-to-viewport-8-with-include@1.2.2:
-    resolution: {integrity: sha512-UFegTU9a1IsLsst+qpqH2uEBBlGB5NRFVouaj4ci9HJcCdpBDdhLPf4Z7rtXfMrFfi2MUQTpJu9xjfmz9S07Tg==}
+  postcss-px-conversion@1.0.0:
+    resolution: {integrity: sha512-/vicAqWK/4IzfjVstRcnkVBf+915wBDqYDqEvJAe/S1LIbY9jWvR5UUv8qejH9qBXZI6qVsW78+FWlFCQXiOSQ==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      postcss: ^8.0.0
 
   postcss-selector-parser@7.1.7:
     resolution: {integrity: sha512-wWBro/7hJ40ye6TPiXkUQoXKCw23xSsjriUvqd7Uls9Sso3oLiON1flc18cCdnjgCRXw4fBVqUJJeOdDTh3P3g==}
@@ -9682,9 +9685,9 @@ snapshots:
       exsolve: 1.2.0
       pathe: 2.0.3
 
-  postcss-px-to-viewport-8-with-include@1.2.2:
+  postcss-px-conversion@1.0.0(postcss@8.5.32):
     dependencies:
-      object-assign: 4.1.1
+      postcss: 8.5.32
 
   postcss-selector-parser@7.1.7:
     dependencies:

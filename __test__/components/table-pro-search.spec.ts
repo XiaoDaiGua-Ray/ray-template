@@ -6,7 +6,7 @@ import type {
   TableProSearchOptions,
 } from '@ray-template/ui/table-pro'
 import { flushPromises, mount } from '@vue/test-utils'
-import { NDataTable, NDatePicker, NSelect } from 'naive-ui'
+import { NDataTable, NDatePicker, NGrid, NSelect } from 'naive-ui'
 import { defineComponent, h, nextTick, shallowRef } from 'vue'
 
 const columns = [{ key: 'name', title: 'Name' }]
@@ -14,6 +14,69 @@ const statusOptions = [
   { label: 'Open', value: 'open' },
   { label: 'Closed', value: 'closed' },
 ]
+
+it('applies the latest measured search column count on the next frame', async () => {
+  let resizeSearch: ((width: number) => void) | undefined
+
+  vi.useFakeTimers({
+    toFake: ['requestAnimationFrame', 'cancelAnimationFrame'],
+  })
+  vi.stubGlobal(
+    'ResizeObserver',
+    class {
+      readonly callback: ResizeObserverCallback
+
+      constructor(callback: ResizeObserverCallback) {
+        this.callback = callback
+      }
+
+      observe(target: Element) {
+        if (target.matches('.r-table-search-shell'))
+          resizeSearch = (width) =>
+            this.callback(
+              [
+                {
+                  target,
+                  contentRect: new DOMRect(0, 0, width, 200),
+                } as ResizeObserverEntry,
+              ],
+              this,
+            )
+      }
+
+      disconnect() {}
+      unobserve() {}
+    },
+  )
+
+  const wrapper = mount(RTablePro, {
+    props: { columns, search: { fields: [{ key: 'name', label: 'Name' }] } },
+  })
+
+  try {
+    await nextTick()
+    const grid = wrapper.getComponent(NGrid)
+
+    expect(resizeSearch).toBeTypeOf('function')
+    expect(grid.props('cols')).toBe(1)
+
+    resizeSearch?.(864)
+    await nextTick()
+    expect(grid.props('cols')).toBe(1)
+
+    resizeSearch?.(1310)
+    await nextTick()
+    expect(grid.props('cols')).toBe(1)
+
+    vi.advanceTimersToNextFrame()
+    await nextTick()
+    expect(grid.props('cols')).toBe(3)
+  } finally {
+    wrapper.unmount()
+    vi.unstubAllGlobals()
+    vi.useRealTimers()
+  }
+})
 
 it('labels compound picker triggers and both endpoints of a date range', async () => {
   const fields: TableProSearchOptions['fields'] = [

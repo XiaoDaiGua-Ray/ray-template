@@ -124,7 +124,7 @@
     "husky": "9.1.7",
     "lint-staged": "17.6.0",
     "postcss": "8.5.32",
-    "postcss-px-to-viewport-8-with-include": "1.2.2",
+    "postcss-px-conversion": "1.0.0",
     "prettier": "3.9.10",
     "rollup-plugin-gzip": "4.2.1",
     "sass": "1.107.1",

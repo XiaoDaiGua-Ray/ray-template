@@ -43,6 +43,7 @@
     "display": "界面显示",
     "breadcrumbSwitch": "面包屑导航",
     "menuTagSwitch": "页面标签",
+    "menuTagRound": "胶囊形页面标签",
     "copyrightSwitch": "页脚信息",
     "colorWeakness": "色弱模式",
     "displayHint": "批量调整面包屑、页面标签和页脚，也可继续逐项设置。",

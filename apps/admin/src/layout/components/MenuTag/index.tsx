@@ -1,7 +1,12 @@
 import './index.scss'
 import { useI18n, useMaximize, useSiderBar, useSpinning } from '@/hooks'
 import { FORBIDDEN_ROUTE_PATH } from '@/router/constant'
-import { useMenuActions, useMenuGetters, useRuntimeGetters } from '@/store'
+import {
+  useMenuActions,
+  useMenuGetters,
+  useRuntimeGetters,
+  useSettingGetters,
+} from '@/store'
 import type { AppMenuOption, MenuTagOptions } from '@/types'
 import { ShellTab } from '@ray-template/admin-shell'
 import { RIcon } from '@ray-template/ui/icon'
@@ -29,6 +34,7 @@ export default defineComponent({
     const showingForbidden = computed(() => route.path === FORBIDDEN_ROUTE_PATH)
     const { t } = useI18n('menuTag')
     const { getCurrentMenuOption, getMenuTagOptions } = useMenuGetters()
+    const { getMenuTagRound } = useSettingGetters()
     const getMenuKey = computed(
       () => getCurrentMenuOption.value?.fullPath ?? null,
     )
@@ -305,7 +311,12 @@ export default defineComponent({
     }
 
     watch(
-      [getMenuKey, () => getMenuTagOptions.value.length, tagsRef],
+      [
+        getMenuKey,
+        () => getMenuTagOptions.value.length,
+        getMenuTagRound,
+        tagsRef,
+      ],
       positionMenuTag,
       { flush: 'post' },
     )
@@ -314,6 +325,7 @@ export default defineComponent({
 
     return {
       getMenuTagOptions,
+      getMenuTagRound,
       canClose,
       closeCurrentMenuTag,
       getMenuKey,
@@ -407,6 +419,7 @@ export default defineComponent({
                       key={curr.fullPath}
                       label={label}
                       active={active}
+                      round={this.getMenuTagRound}
                       select={() => menuTagClick(curr)}
                       closeLabel={$t('menuTag.closeNamed', { name: label })}
                       close={

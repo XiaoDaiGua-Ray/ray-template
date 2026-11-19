@@ -10,6 +10,7 @@ type OmitKeys =
   | 'keepAliveConfig'
   | 'menuConfig'
   | 'menuTagSwitch'
+  | 'menuTagRound'
   | 'breadcrumbSwitch'
   | 'copyrightSwitch'
   | 'drawerPlacement'
@@ -57,6 +58,7 @@ const defaultSettingConfig: Readonly<Config> = {
   },
   // 多标签页开关
   menuTagSwitch: true,
+  menuTagRound: false,
   // 面包屑开关
   breadcrumbSwitch: true,
   // 底部区域开关

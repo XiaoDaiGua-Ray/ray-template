@@ -43,6 +43,7 @@
     "display": "Interface display",
     "breadcrumbSwitch": "Breadcrumbs",
     "menuTagSwitch": "Page tabs",
+    "menuTagRound": "Pill-shaped page tabs",
     "copyrightSwitch": "Footer",
     "colorWeakness": "Color vision mode",
     "displayHint": "Show or hide breadcrumbs, page tabs, and the footer together, or adjust each below.",

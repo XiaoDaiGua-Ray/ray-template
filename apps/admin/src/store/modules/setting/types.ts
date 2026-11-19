@@ -37,6 +37,7 @@ export interface SettingState {
   appTheme: 'dark' | 'light' | 'auto'
   _appTheme: boolean
   menuTagSwitch: boolean
+  menuTagRound: boolean
   breadcrumbSwitch: boolean
   localeLanguage: string
   lockScreenSwitch: boolean

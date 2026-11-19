@@ -133,17 +133,26 @@ describe('workspace preference shortcuts', () => {
         .trigger('click')
 
     try {
+      const pillToggle = wrapper.get(
+        '[role="switch"][aria-label="preferences.appearance.menuTagRound"]',
+      )
+
+      expect(pillToggle.attributes('aria-checked')).toBe('false')
+      await pillToggle.trigger('click')
+      expect(store.menuTagRound).toBe(true)
       await click('appearance.minimal')
       expect([
         store.breadcrumbSwitch,
         store.menuTagSwitch,
         store.copyrightSwitch,
       ]).toEqual([false, false, false])
+      expect(store.menuTagRound).toBe(true)
       await click('appearance.reset')
       expect(store.contentTransition).toBe(
         getDefaultSettingConfig().contentTransition,
       )
       expect(store.menuTagSwitch).toBe(getDefaultSettingConfig().menuTagSwitch)
+      expect(store.menuTagRound).toBe(false)
       expect(store.themeStyle).toBe(getDefaultSettingConfig().themeStyle)
       expect(store.primaryColorOverride).toEqual({})
       expect(store.appTheme).toBe('auto')

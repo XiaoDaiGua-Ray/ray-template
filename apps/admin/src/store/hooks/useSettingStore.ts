@@ -38,6 +38,7 @@ export const useSettingGetters = () => {
    * 获取菜单标签开关。
    */
   const getMenuTagSwitch = computed(() => variable.menuTagSwitch)
+  const getMenuTagRound = computed(() => variable.menuTagRound)
   /**
    *
    * @description
@@ -132,6 +133,7 @@ export const useSettingGetters = () => {
     getThemeStyle,
     getAppTheme,
     getMenuTagSwitch,
+    getMenuTagRound,
     getBreadcrumbSwitch,
     getLocaleLanguage,
     getLockScreenSwitch,

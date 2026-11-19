@@ -1,0 +1,98 @@
+{
+  "languages": {
+    "TypeScript": {
+      "formatter": "prettier",
+      "format_on_save": "on",
+      "language_servers": ["vtsls", "eslint", "!intl-lens", "..."]
+    },
+    "TSX": {
+      "formatter": "prettier",
+      "format_on_save": "on",
+      "language_servers": ["vtsls", "eslint", "!intl-lens", "..."]
+    },
+    "JavaScript": {
+      "formatter": "prettier",
+      "format_on_save": "on",
+      "language_servers": ["vtsls", "eslint", "!intl-lens", "..."]
+    },
+    "JSX": {
+      "formatter": "prettier",
+      "format_on_save": "on",
+      "language_servers": ["vtsls", "eslint", "!intl-lens", "..."]
+    },
+    "Vue.js": {
+      "formatter": "prettier",
+      "format_on_save": "on",
+      "language_servers": ["!intl-lens", "..."]
+    },
+    "JSON": {
+      "formatter": "prettier",
+      "format_on_save": "on"
+    },
+    "SCSS": {
+      "formatter": "prettier",
+      "format_on_save": "on"
+    },
+    "CSS": {
+      "formatter": "prettier",
+      "format_on_save": "on"
+    },
+    "HTML": {
+      "formatter": "prettier",
+      "format_on_save": "on",
+      "language_servers": ["!intl-lens", "..."]
+    },
+    "Markdown": {
+      "formatter": "prettier",
+      "format_on_save": "on"
+    }
+  },
+  "lsp": {
+    "cspell": {
+      "initialization_options": {
+        "defaultSettings": {
+          "words": [
+            "baomitu",
+            "bezier",
+            "Cascader",
+            "Clickoutside",
+            "codabar",
+            "commitmsg",
+            "crossorigin",
+            "daterange",
+            "datetimerange",
+            "depcheckrc",
+            "domtoimage",
+            "echart",
+            "EDITMSG",
+            "ianvs",
+            "iife",
+            "internalkey",
+            "jsbarcode",
+            "linebreak",
+            "logicflow",
+            "macarons",
+            "menutag",
+            "ndata",
+            "persistedstate",
+            "pharmacode",
+            "Popselect",
+            "precommit",
+            "qrcode",
+            "rgba",
+            "sider",
+            "siderbar",
+            "snapline",
+            "stylelint",
+            "unocss",
+            "VITE",
+            "vitepress",
+            "vueuse",
+            "WUJIE",
+            "zlevel"
+          ]
+        }
+      }
+    }
+  }
+}

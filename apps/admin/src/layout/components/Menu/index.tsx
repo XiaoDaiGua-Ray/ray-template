@@ -17,6 +17,8 @@ import type { MenuInst } from 'naive-ui'
 import type { PropType } from 'vue'
 import SiderBarLogo from './components/SiderBarLogo'
 
+const triggerStyle = { top: 'max(24px, calc(50% - 240px))' }
+
 export default defineComponent({
   name: 'AppMenu',
   props: {
@@ -72,6 +74,8 @@ export default defineComponent({
         class={['app-menu__sider', { 'app-menu__sider--end': props.end }]}
         {...{ inert: props.inert }}
         showTrigger={!isTabletOrSmaller.value}
+        triggerStyle={triggerStyle}
+        collapsedTriggerStyle={triggerStyle}
         collapseMode={getMenuConfig.value.collapsedMode}
         collapsedWidth={getMenuConfig.value.collapsedWidth}
         onUpdateCollapsed={collapsedMenu}

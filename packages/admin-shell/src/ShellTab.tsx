@@ -1,13 +1,14 @@
 import './Tabs.scss'
-import { RIcon } from '@ray-template/ui/icon'
+import { NTag } from 'naive-ui'
 import { defineComponent } from 'vue'
-import type { PropType } from 'vue'
+import type { PropType, VNode } from 'vue'
 
 export const ShellTab = defineComponent({
   name: 'ShellTab',
   props: {
     label: { type: String, required: true },
     active: Boolean,
+    round: Boolean,
     closeLabel: { type: String, default: '' },
     select: { type: Function as PropType<() => void>, required: true },
     close: {
@@ -20,17 +21,36 @@ export const ShellTab = defineComponent({
     },
   },
   setup(props) {
+    const setNativeCloseLabel = ({ el }: VNode) => {
+      if (!(el instanceof HTMLElement)) return
+
+      el.querySelector('.n-tag__close')?.setAttribute(
+        'aria-label',
+        props.closeLabel || 'close',
+      )
+    }
+
     return () => (
-      <div
+      <NTag
         class={['menu-tag__item', { 'menu-tag__item--active': props.active }]}
-        onContextmenu={props.contextMenu}
+        type={props.active ? 'primary' : 'default'}
+        size="medium"
+        round={props.round}
+        bordered={props.active}
+        closable={!!props.close}
+        {...{
+          onClick: props.select,
+          onContextmenu: props.contextMenu,
+          onVnodeMounted: setNativeCloseLabel,
+          onVnodeUpdated: setNativeCloseLabel,
+        }}
+        onClose={(event) => props.close?.(event.detail === 0)}
       >
         <button
           type="button"
           class="menu-tag__tab"
           aria-current={props.active ? 'page' : void 0}
           title={props.label}
-          onClick={props.select}
           onKeydown={(event) => {
             if (event.key === 'Delete' && props.close) {
               event.preventDefault()
@@ -40,17 +60,7 @@ export const ShellTab = defineComponent({
         >
           {props.label}
         </button>
-        {props.close ? (
-          <button
-            type="button"
-            class="menu-tag__close"
-            aria-label={props.closeLabel}
-            onClick={(event) => props.close?.(event.detail === 0)}
-          >
-            <RIcon name="action/close" size={14} aria-hidden="true" />
-          </button>
-        ) : null}
-      </div>
+      </NTag>
     )
   },
 })

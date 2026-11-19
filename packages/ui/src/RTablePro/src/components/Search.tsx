@@ -1,4 +1,4 @@
-import { useElementSize } from '@vueuse/core'
+import { useElementSize, useRafFn } from '@vueuse/core'
 import { NButton, NForm, NFormItem, NGrid, NGridItem } from 'naive-ui'
 import type { FormInst } from 'naive-ui'
 import {
@@ -8,6 +8,7 @@ import {
   ref,
   useId,
   useTemplateRef,
+  watch,
 } from 'vue'
 import type { PropType, VNode } from 'vue'
 import { useTableLocale } from '../locale'
@@ -67,7 +68,7 @@ export default defineComponent({
     const form = useTemplateRef<FormInst>('form')
     const { width } = useElementSize(wrapper)
     const collapsed = ref(props.options?.defaultCollapsed ?? false)
-    const columns = computed(() =>
+    const measuredColumns = computed(() =>
       Math.min(
         gridSize(props.options?.maxColumns, 4),
         width.value >= 1320
@@ -79,6 +80,16 @@ export default defineComponent({
               : 1,
       ),
     )
+    const columns = ref(measuredColumns.value)
+    const { resume: scheduleColumnUpdate } = useRafFn(
+      () => {
+        columns.value = measuredColumns.value
+      },
+      { immediate: false, once: true },
+    )
+
+    watch(measuredColumns, scheduleColumnUpdate)
+
     const collapsedRows = computed(() =>
       gridSize(props.options?.collapsedRows, 1),
     )

@@ -38,6 +38,7 @@ export default defineComponent({
       getDrawerPlacement,
       getContentTransition,
       getMenuTagSwitch,
+      getMenuTagRound,
       getBreadcrumbSwitch,
       getCopyrightSwitch,
       getColorWeakness,
@@ -79,6 +80,7 @@ export default defineComponent({
     const switches = [
       ['breadcrumbSwitch', getBreadcrumbSwitch],
       ['menuTagSwitch', getMenuTagSwitch],
+      ['menuTagRound', getMenuTagRound],
       ['copyrightSwitch', getCopyrightSwitch],
       ['colorWeakness', getColorWeakness],
     ] as const

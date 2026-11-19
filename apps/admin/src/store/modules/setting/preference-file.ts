@@ -62,6 +62,7 @@ const preferences = v.strictObject({
   drawerPlacement: v.picklist(['left', 'right']),
   breadcrumbSwitch: flag,
   menuTagSwitch: flag,
+  menuTagRound: v.optional(flag, false),
   copyrightSwitch: flag,
   colorWeakness: flag,
   menuConfig: v.strictObject({

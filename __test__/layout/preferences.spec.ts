@@ -132,6 +132,7 @@ describe('layout preferences', () => {
       })
       expect(store.localeLanguage).toBe('en-US')
       expect(store.menuTagSwitch).toBe(false)
+      expect(store.menuTagRound).toBe(false)
       expect(store.menuConfig).toMatchObject({
         iconSize: 20,
         collapsedIconSize: 22,
@@ -186,6 +187,7 @@ describe('layout preferences', () => {
       store.updateSettingState('layoutConfig', { mode: 'right' })
       store.updateSettingState('appTheme', 'dark')
       store.updateSettingState('themeStyle', 'material')
+      store.updateSettingState('menuTagRound', true)
       store.updateSettingState('watermarkConfig', { content: 'Portable' })
       store.updateSettingState('keepAliveConfig', {
         keepAliveExclude: ['Page'],
@@ -195,6 +197,7 @@ describe('layout preferences', () => {
 
       store.updateSettingState('layoutConfig', { mode: 'top' })
       store.updateSettingState('appTheme', 'light')
+      store.updateSettingState('menuTagRound', false)
       store.updateSettingState('appRootRoute', { path: '/custom-home' })
       store.changePrimaryColor('#000000')
       store.updateSettingState('themeStyle', 'plain')
@@ -202,6 +205,7 @@ describe('layout preferences', () => {
       await nextTick()
 
       expect(store.exportPreferences()).toEqual(file)
+      expect(store.menuTagRound).toBe(true)
       expect(store._appTheme).toBe(true)
       expect(store.themeOverrides.common?.primaryColor).toBe('#3468db')
       expect(store.themeOverrides.Card?.borderRadius).toBe('20px')
@@ -216,6 +220,7 @@ describe('layout preferences', () => {
         layoutConfig: { mode: 'right' },
         appTheme: 'dark',
         themeStyle: 'material',
+        menuTagRound: true,
       })
     } finally {
       app.unmount()
@@ -232,12 +237,18 @@ describe('layout preferences', () => {
 
     try {
       store.updateSettingState('themeStyle', 'material')
+      store.updateSettingState('menuTagRound', true)
       store.changePrimaryColor('#3468db')
       const { preferences, ...file } = store.exportPreferences()
-      const { themeStyle: _style, ...legacy } = preferences
+      const {
+        themeStyle: _style,
+        menuTagRound: _round,
+        ...legacy
+      } = preferences
 
       store.importPreferences(JSON.stringify({ ...file, preferences: legacy }))
       expect(store.themeStyle).toBe('modern')
+      expect(store.menuTagRound).toBe(false)
       expect(store.themeOverrides.Card?.borderRadius).toBe('12px')
       expect(store.themeOverrides.common?.primaryColor).toBe('#3468db')
 

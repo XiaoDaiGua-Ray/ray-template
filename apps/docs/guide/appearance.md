@@ -135,6 +135,8 @@ TSX 使用相同的 class 和 CSS，样式放在组件旁并从入口 `import '.
 
 修改 Naive 控件优先用 props、插槽或 `themeOverrides`；必要的内部选择器必须限定在自己的组件 class 下。检查实际受影响的风格、明暗模式和窄屏，不必为纯文档修改重跑整站视觉矩阵。
 
+大屏页面确需按设计稿等比缩放时，在根目录 `postcss.config.cjs` 的 `viewportIncludeFiles` 中加入目标样式的路径规则，例如 `[/[/\\]large-screen[/\\]/]`。留空时不启用 `postcss-px-conversion`。启用后，匹配的后台样式以 `1920px` 为基准换算成 `vw`，不转换第三方依赖、`.ignore` 选择器及媒体查询或容器查询中的样式。
+
 ## 中英文同时维护
 
 把页面文案放进 `apps/admin/src/locales/lang/zh-CN` 和 `apps/admin/src/locales/lang/en-US` 的对应 JSON；同一语言内的命名空间要唯一。新增语言时同时补 `apps/admin/src/locales/lang/<locale>.ts` 与应用的语言配置。
